@@ -150,22 +150,21 @@
     <ClInclude Include="COP1.h" />
     <ClInclude Include="EECore.h" />
     <ClInclude Include="GlobalMacros.h" />
-    <ClInclude Include="GlobalMacros_PS2_Namespace.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="IInstruction.h" />
-    <ClInclude Include="Instruction.h" />
-    <ClInclude Include="JInstruction.h" />
+    <ClInclude Include="IInstruction_t.h" />
+    <ClInclude Include="Instruction_t.h" />
+    <ClInclude Include="JInstruction_t.h" />
     <ClInclude Include="PS2Types.h" />
     <ClInclude Include="R5900.h" />
-    <ClInclude Include="RInstruction.h" />
+    <ClInclude Include="RInstruction_t.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IInstruction.cpp" />
-    <ClCompile Include="Instruction.cpp" />
-    <ClCompile Include="JInstruction.cpp" />
-    <ClCompile Include="RInstruction.cpp" />
+    <ClCompile Include="IInstruction_t.cpp" />
+    <ClCompile Include="Instruction_t.cpp" />
+    <ClCompile Include="JInstruction_t.cpp" />
+    <ClCompile Include="RInstruction_t.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

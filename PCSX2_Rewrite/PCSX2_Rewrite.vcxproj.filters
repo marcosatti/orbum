@@ -49,6 +49,9 @@
     <Filter Include="PS2\EE\EECore\R5900\Instruction">
       <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Global">
+      <UniqueIdentifier>{c72f174a-12b5-4026-ba14-bb6af8fe7eac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -72,45 +75,42 @@
     <ClInclude Include="R5900.h">
       <Filter>PS2\EE\EECore\R5900</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalMacros.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="PS2Types.h">
       <Filter>Common\PS2</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalMacros_PS2_Namespace.h">
-      <Filter>Common\PS2</Filter>
-    </ClInclude>
-    <ClInclude Include="IInstruction.h">
+    <ClInclude Include="IInstruction_t.h">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
-    <ClInclude Include="Instruction.h">
+    <ClInclude Include="Instruction_t.h">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
-    <ClInclude Include="JInstruction.h">
+    <ClInclude Include="JInstruction_t.h">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
-    <ClInclude Include="RInstruction.h">
+    <ClInclude Include="RInstruction_t.h">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Common\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalMacros.h">
+      <Filter>Common\Global</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>MSVC</Filter>
     </ClCompile>
-    <ClCompile Include="IInstruction.cpp">
+    <ClCompile Include="IInstruction_t.cpp">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
-    <ClCompile Include="Instruction.cpp">
+    <ClCompile Include="Instruction_t.cpp">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
-    <ClCompile Include="JInstruction.cpp">
+    <ClCompile Include="JInstruction_t.cpp">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
-    <ClCompile Include="RInstruction.cpp">
+    <ClCompile Include="RInstruction_t.cpp">
       <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
   </ItemGroup>
