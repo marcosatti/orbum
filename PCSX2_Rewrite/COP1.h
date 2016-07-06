@@ -1,0 +1,13 @@
+#pragma once
+
+#include "Globals.h"
+#include "PS2Types.h"
+
+class COP1_t {
+public:
+	/*
+	COP1 refers to the FPU (floating-point unit) coprocessor.
+	See EE Core Users Manual.
+	*/
+
+} // class COP1

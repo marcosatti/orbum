@@ -1,17 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="MSVC">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="VM_Manager">
+      <UniqueIdentifier>{eeb1eda8-cbe4-4eb8-bd46-c71ef6530a89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8dbb59f4-1cc4-419b-8618-5cbc6867c6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2">
+      <UniqueIdentifier>{111662a9-6417-433f-a25d-2958fb06bcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE">
+      <UniqueIdentifier>{58693e4e-36c7-4938-a6bb-866d359d7b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\EECore">
+      <UniqueIdentifier>{4fea961f-fc61-4415-b0fb-30d8cbe52222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\EECore\COP0">
+      <UniqueIdentifier>{484c052b-0e7e-4c74-8a49-a0990e09939c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\EECore\COP1">
+      <UniqueIdentifier>{f4331725-feb3-4219-9175-3dcd49d2e6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\EECore\R5900">
+      <UniqueIdentifier>{b7f43c43-a867-4d03-9ed6-155f95de7f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\VPU">
+      <UniqueIdentifier>{256b7efe-dda5-42f1-9a01-17fccd9ee8e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\VPU\VIF">
+      <UniqueIdentifier>{c54e4c72-f916-4eba-a90a-9944b796d50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\VPU\VU">
+      <UniqueIdentifier>{2f055b2b-3205-4ce2-838b-71420d6a6418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PS2\EE\EECore\R5900\Instruction">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,18 +55,63 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
+      <Filter>MSVC</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
+      <Filter>MSVC</Filter>
+    </ClInclude>
+    <ClInclude Include="EECore.h">
+      <Filter>PS2\EE\EECore</Filter>
+    </ClInclude>
+    <ClInclude Include="COP1.h">
+      <Filter>PS2\EE\EECore\COP1</Filter>
+    </ClInclude>
+    <ClInclude Include="COP0.h">
+      <Filter>PS2\EE\EECore\COP0</Filter>
+    </ClInclude>
+    <ClInclude Include="R5900.h">
+      <Filter>PS2\EE\EECore\R5900</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalMacros.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PS2Types.h">
+      <Filter>Common\PS2</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalMacros_PS2_Namespace.h">
+      <Filter>Common\PS2</Filter>
+    </ClInclude>
+    <ClInclude Include="IInstruction.h">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Instruction.h">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClInclude>
+    <ClInclude Include="JInstruction.h">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClInclude>
+    <ClInclude Include="RInstruction.h">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>MSVC</Filter>
     </ClCompile>
-    <ClCompile Include="PCSX2_Rewrite.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="IInstruction.cpp">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Instruction.cpp">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClCompile>
+    <ClCompile Include="JInstruction.cpp">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+    </ClCompile>
+    <ClCompile Include="RInstruction.cpp">
+      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
