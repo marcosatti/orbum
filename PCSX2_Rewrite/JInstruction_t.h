@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 #include "Instruction_t.h"
 
 /*
@@ -32,7 +32,7 @@ namespace PS2 {
 			- getAddress returns the real address based on the pseudo-address and the other factors mentioned above.
 			*/
 			u32 getPAddress();
-			u32 getJumpAddress(Register32 PC);
+			u32 getJumpAddress(Register32_t PC);
 		};
 
 	} // namespace EE

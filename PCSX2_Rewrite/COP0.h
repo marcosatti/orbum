@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 
 namespace PS2 {
 	namespace EE {
@@ -20,7 +20,7 @@ namespace PS2 {
 			Comments are provided for each register. See EE Core Users Manual, pg 62 for more information.
 			*/
 			struct {
-				Register32 Index, // r0:  Index that specifies TLB entry for reading for writing.
+				Register32_t Index, // r0:  Index that specifies TLB entry for reading for writing.
 					Random,       // r1:  Pseudo-random index for TLB replacement.
 					EntryLo0,     // r2:  Low half of TLB entry (for even PFN).
 					EntryLo1,     // r3:  Low half of TLB entry (for odd PFN).
@@ -45,17 +45,13 @@ namespace PS2 {
 					reserved6,    // r22: Reserved.
 					BadPAddr,     // r23: Bad Physical Address value (for exceptions).
 					Debug,        // r24: Registers related to debug function.
-					unused0,      // r25: **SPECIAL**: Unused. This is normally the Perf register, however PCSX2 deviates from this due to it not being constrained by hardware. 
-								  //                   Instead r32, r33, r34 are used as the PCCR, PCR0 and PCR1 respectively. See EE Core Users Manual, pg 143-145 for descriptions on how it is normally accessed.
+					Perf,         // r25: Performance counter and control register. // TODO: Look at optimisation by moving the sub registers of Perf into own registers.
 					reserved7,    // r26: Reserved.
 					reserved8,    // r27: Reserved.
 					TagLo,        // r28: Low bits of the Cache Tag.
 					TagHi,        // r29: High bits of the Cache Tag.
 					ErrorEPC,     // r30: Error Exception Program Counter.
 					reserved9,    // r31: Reserved.
-					PCCR,         // r32: Performance counter control register. See note from r25.
-					PCR0,         // r33: Counter register PCR0. See note from r25.
-					PCR1;         // r34: Counter register PCR1. See note from r25.
 			} Registers;
 
 		};

@@ -5,10 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="MSVC">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="VM_Manager">
       <UniqueIdentifier>{eeb1eda8-cbe4-4eb8-bd46-c71ef6530a89}</UniqueIdentifier>
     </Filter>
@@ -18,9 +14,6 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{8dbb59f4-1cc4-419b-8618-5cbc6867c6a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\PS2">
-      <UniqueIdentifier>{111662a9-6417-433f-a25d-2958fb06bcfb}</UniqueIdentifier>
     </Filter>
     <Filter Include="PS2\EE">
       <UniqueIdentifier>{58693e4e-36c7-4938-a6bb-866d359d7b96}</UniqueIdentifier>
@@ -46,23 +39,38 @@
     <Filter Include="PS2\EE\VPU\VU">
       <UniqueIdentifier>{2f055b2b-3205-4ce2-838b-71420d6a6418}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PS2\EE\EECore\R5900\Instruction">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\Global">
       <UniqueIdentifier>{c72f174a-12b5-4026-ba14-bb6af8fe7eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types">
+      <UniqueIdentifier>{af068465-91f9-4b8a-9dda-3946f7b308a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2">
+      <UniqueIdentifier>{111662a9-6417-433f-a25d-2958fb06bcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE">
+      <UniqueIdentifier>{e74d6ccb-c6db-43cc-8a73-30ea78f0617b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE\EECore">
+      <UniqueIdentifier>{acfb6f1a-3d78-4f5c-b1f8-9219179f473a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE\EECore\COP0">
+      <UniqueIdentifier>{03491942-df5a-489b-b63b-b10147dae629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE\EECore\COP0\Subclassed Registers">
+      <UniqueIdentifier>{ae6bf768-07f0-470d-9e56-9c0861229faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE\EECore\R5900">
+      <UniqueIdentifier>{e971d169-09f9-4b95-b36e-6f3837e04cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Types\PS2\EE\EECore\R5900\Instruction">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>MSVC</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>MSVC</Filter>
-    </ClInclude>
     <ClInclude Include="EECore.h">
       <Filter>PS2\EE\EECore</Filter>
     </ClInclude>
@@ -75,20 +83,17 @@
     <ClInclude Include="R5900.h">
       <Filter>PS2\EE\EECore\R5900</Filter>
     </ClInclude>
-    <ClInclude Include="PS2Types.h">
-      <Filter>Common\PS2</Filter>
-    </ClInclude>
     <ClInclude Include="IInstruction_t.h">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
     <ClInclude Include="Instruction_t.h">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
     <ClInclude Include="JInstruction_t.h">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
     <ClInclude Include="RInstruction_t.h">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Common\Global</Filter>
@@ -96,22 +101,43 @@
     <ClInclude Include="GlobalMacros.h">
       <Filter>Common\Global</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalTypes.h">
+      <Filter>Common\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="Register_t.h">
+      <Filter>Common\Types\PS2</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterIndex_t.h">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterRandom_t.h">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>MSVC</Filter>
-    </ClCompile>
     <ClCompile Include="IInstruction_t.cpp">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
     <ClCompile Include="Instruction_t.cpp">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
     <ClCompile Include="JInstruction_t.cpp">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
     <ClCompile Include="RInstruction_t.cpp">
-      <Filter>PS2\EE\EECore\R5900\Instruction</Filter>
+      <Filter>Common\Types\PS2\EE\EECore\R5900\Instruction</Filter>
     </ClCompile>
+    <ClCompile Include="Register_t.cpp">
+      <Filter>Common\Types\PS2</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterIndex_t.cpp">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterRandom_t.cpp">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
 </Project>

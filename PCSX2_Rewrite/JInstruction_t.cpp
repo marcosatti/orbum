@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 #include "Instruction_t.h"
 #include "JInstruction_t.h"
 
@@ -21,7 +21,7 @@ namespace PS2 {
 			return (instruction & 0x03ffffff);
 		}
 
-		u32 JInstruction_t::getJumpAddress(Register32 PC)
+		u32 JInstruction_t::getJumpAddress(Register32_t PC)
 		{
 			u32 address = getPAddress();
 			return ((address << 2) + (PC.UW & 0xf0000000));

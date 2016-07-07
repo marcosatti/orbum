@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 #include "Instruction_t.h"
 
 /*
@@ -37,7 +37,7 @@ namespace PS2 {
 			u16 getImmU();
 			s16 getImmS();
 			u8 getSignBit();
-			u32 getBranchAddress(Register32 PC);
+			u32 getBranchAddress(Register32_t PC);
 			u16 getTrapCode();
 		};
 

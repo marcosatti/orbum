@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 
 /*
 A base instruction class which is extended by other instruction classes.

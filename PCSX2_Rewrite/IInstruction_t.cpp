@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 #include "Instruction_t.h"
 #include "IInstruction_t.h"
 
@@ -41,7 +41,7 @@ namespace PS2 {
 			return ((u8)(instruction >> 15) & 0x1);
 		}
 
-		u32 IInstruction_t::getBranchAddress(Register32 PC)
+		u32 IInstruction_t::getBranchAddress(Register32_t PC)
 		{
 			s32 IMM32 = (s32)getImmS();
 			return (u32)((IMM32 << 2) + PC.UW);

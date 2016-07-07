@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
-
+#include "Register_t.h"
 #include "Instruction_t.h"
 
 namespace PS2 {
@@ -30,7 +29,7 @@ namespace PS2 {
 			- r31 is the link register used by the link and jump instructions. This is not to be used by other instructions.
 			*/
 			struct {
-				Register128 r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31;
+				Register128_t r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31;
 			} GPR;
 
 			/*
@@ -38,15 +37,15 @@ namespace PS2 {
 			These registers are used to hold the results of integer multiply and divide operations.
 			They are 128-bit long.
 			*/
-			Register128 HI;      // The HI register. Divided into 2 64-bit segments: the upper 64-bits (HI1) and the lower 64-bits (HI0).
-			Register128 LO;      // The LO register. Divided into 2 64-bit segments: the upper 64-bits (LO1) and the lower 64-bits (LO0).
+			Register128_t HI;      // The HI register. Divided into 2 64-bit segments: the upper 64-bits (HI1) and the lower 64-bits (HI0).
+			Register128_t LO;      // The LO register. Divided into 2 64-bit segments: the upper 64-bits (LO1) and the lower 64-bits (LO0).
 
 			/*
 			The Shift Amount (SA) register. See EE Core Users manual, pg 61.
 			The SA register is used for holding funnel shift instruction results. See the EE Core instruction QFSRV for more details (SA is only used for this instruction).
 			It is a 32-bit register.
 			*/
-			Register32 SA;
+			Register32_t SA;
 
 			/*
 			The Program Counter (PC) register. See EE Core Users manual, pg 61.
@@ -56,7 +55,7 @@ namespace PS2 {
 			3) When an exception occurs, the PC is changed to point to the exception vector address.
 			It is a 32-bit register.
 			*/
-			Register32 PC;
+			Register32_t PC;
 
 			/*
 			The instruction holder, used as a temporary holder for the current instruction.

@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -151,10 +151,13 @@
     <ClInclude Include="EECore.h" />
     <ClInclude Include="GlobalMacros.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="GlobalTypes.h" />
     <ClInclude Include="IInstruction_t.h" />
     <ClInclude Include="Instruction_t.h" />
     <ClInclude Include="JInstruction_t.h" />
-    <ClInclude Include="PS2Types.h" />
+    <ClInclude Include="RegisterIndex_t.h" />
+    <ClInclude Include="RegisterRandom_t.h" />
+    <ClInclude Include="Register_t.h" />
     <ClInclude Include="R5900.h" />
     <ClInclude Include="RInstruction_t.h" />
     <ClInclude Include="stdafx.h" />
@@ -164,6 +167,9 @@
     <ClCompile Include="IInstruction_t.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="JInstruction_t.cpp" />
+    <ClCompile Include="RegisterIndex_t.cpp" />
+    <ClCompile Include="RegisterRandom_t.cpp" />
+    <ClCompile Include="Register_t.cpp" />
     <ClCompile Include="RInstruction_t.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

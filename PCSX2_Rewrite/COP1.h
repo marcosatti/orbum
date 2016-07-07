@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Globals.h"
-#include "PS2Types.h"
+#include "Register_t.h"
 
 namespace PS2 {
 	namespace EE {
