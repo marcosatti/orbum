@@ -97,5 +97,6 @@ public:
 	// Convenience function to insert a value (bit array) with a specified length at startPos in the register.
 	// This will overwrite the bits currently set at the startPos to (startPos + length).
 	// This function is primarily used for setting bit masks in a register.
+	// Note: If there are more bits set in value than bitLength allows for, the extra bits will not be written.
 	void setBitRange32(u8 startPos, u8 bitLength, u32 value);
 };

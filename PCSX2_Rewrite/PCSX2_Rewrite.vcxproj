@@ -155,6 +155,7 @@
     <ClInclude Include="IInstruction_t.h" />
     <ClInclude Include="Instruction_t.h" />
     <ClInclude Include="JInstruction_t.h" />
+    <ClInclude Include="RegisterEntryLo0_t.h" />
     <ClInclude Include="RegisterIndex_t.h" />
     <ClInclude Include="RegisterRandom_t.h" />
     <ClInclude Include="Register_t.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="IInstruction_t.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="JInstruction_t.cpp" />
+    <ClCompile Include="RegisterEntryLo0_t.cpp" />
     <ClCompile Include="RegisterIndex_t.cpp" />
     <ClCompile Include="RegisterRandom_t.cpp" />
     <ClCompile Include="Register_t.cpp" />

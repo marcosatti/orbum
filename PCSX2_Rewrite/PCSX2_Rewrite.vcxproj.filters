@@ -115,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="RegisterEntryLo0_t.h">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IInstruction_t.cpp">
@@ -139,5 +142,8 @@
       <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="RegisterEntryLo0_t.cpp">
+      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
