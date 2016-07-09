@@ -51,7 +51,7 @@ namespace PS2 {
 					TagLo,        // r28: Low bits of the Cache Tag.
 					TagHi,        // r29: High bits of the Cache Tag.
 					ErrorEPC,     // r30: Error Exception Program Counter.
-					reserved9,    // r31: Reserved.
+					reserved9;    // r31: Reserved.
 			} Registers;
 
 		};

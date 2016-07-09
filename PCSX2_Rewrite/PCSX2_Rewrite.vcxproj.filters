@@ -107,15 +107,9 @@
     <ClInclude Include="Register_t.h">
       <Filter>Common\Types\PS2</Filter>
     </ClInclude>
-    <ClInclude Include="RegisterIndex_t.h">
-      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="RegisterRandom_t.h">
-      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="RegisterEntryLo0_t.h">
+    <ClInclude Include="COP0_Register_t.h">
       <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -135,14 +129,8 @@
     <ClCompile Include="Register_t.cpp">
       <Filter>Common\Types\PS2</Filter>
     </ClCompile>
-    <ClCompile Include="RegisterIndex_t.cpp">
-      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="RegisterRandom_t.cpp">
-      <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="RegisterEntryLo0_t.cpp">
+    <ClCompile Include="COP0_Register_t.cpp">
       <Filter>Common\Types\PS2\EE\EECore\COP0\Subclassed Registers</Filter>
     </ClCompile>
   </ItemGroup>

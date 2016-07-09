@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="COP0.h" />
+    <ClInclude Include="COP0_Register_t.h" />
     <ClInclude Include="COP1.h" />
     <ClInclude Include="EECore.h" />
     <ClInclude Include="GlobalMacros.h" />
@@ -155,9 +156,6 @@
     <ClInclude Include="IInstruction_t.h" />
     <ClInclude Include="Instruction_t.h" />
     <ClInclude Include="JInstruction_t.h" />
-    <ClInclude Include="RegisterEntryLo0_t.h" />
-    <ClInclude Include="RegisterIndex_t.h" />
-    <ClInclude Include="RegisterRandom_t.h" />
     <ClInclude Include="Register_t.h" />
     <ClInclude Include="R5900.h" />
     <ClInclude Include="RInstruction_t.h" />
@@ -165,12 +163,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="COP0_Register_t.cpp" />
     <ClCompile Include="IInstruction_t.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="JInstruction_t.cpp" />
-    <ClCompile Include="RegisterEntryLo0_t.cpp" />
-    <ClCompile Include="RegisterIndex_t.cpp" />
-    <ClCompile Include="RegisterRandom_t.cpp" />
     <ClCompile Include="Register_t.cpp" />
     <ClCompile Include="RInstruction_t.cpp" />
     <ClCompile Include="stdafx.cpp">
