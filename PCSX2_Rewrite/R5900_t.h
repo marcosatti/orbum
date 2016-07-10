@@ -60,7 +60,7 @@ namespace PS2 {
 			/*
 			The instruction holder, used as a temporary holder for the current instruction.
 			This is used in the recompiler and interpreter.
-			Convenience funcions are also defined as part of the Instruction object to access differnt parts of the opcode.
+			Convenience funcions are also defined as part of the Instruction object to access differnt parts of the opcode, but you will need to cast the Instruction_t to one of the sub-classes (I, J, R).
 			*/
 			Instruction_t instruction;
 

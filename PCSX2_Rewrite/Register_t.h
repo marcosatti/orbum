@@ -9,6 +9,7 @@ Register32, Register64 and Register128 define the register sizes used thoughout 
 These registers are implemented (at core) as a union of the signed and unsigned sums (to the register size) of these types, meaning you are able to tell the compiler 
  to access them as signed or unsigned, and also only a subsection of the registers.
 Mnemonic: variables are accessed by signed or unsigned (S or U) then by the word size (ie: Q for quadword, D for doubleword, W for word, H for halfword, B for byte).
+Normally you would access the registers by eg: Register32_t.UW
 
 You are able to get and set individual bits using the getBit()/setBit() function.
 As bitmask registers are often 32-bit, Register32_t contains an additional function setBitRange32() for setting bit masks in the register. See the function documentation.
@@ -92,11 +93,11 @@ public:
 
 	// Convenience function to get a value (bit array) with a specified length at startPos in the register.
 	// This function is primarily used for getting a bitmask field in a register.
-	u32 getBitRange32(u8 startPos, u8 bitLength);
+	u32 getBitRange32(u8 startPosition, u8 bitLength);
 
 	// Convenience function to insert a value (bit array) with a specified length at startPos in the register.
 	// This will overwrite the bits currently set at the startPos to (startPos + length).
 	// This function is primarily used for setting bit masks in a register.
 	// Note: If there are more bits set in value than bitLength allows for, the extra bits will not be written.
-	void setBitRange32(u8 startPos, u8 bitLength, u32 value);
+	void setBitRange32(u8 startPosition, u8 bitLength, u32 value);
 };

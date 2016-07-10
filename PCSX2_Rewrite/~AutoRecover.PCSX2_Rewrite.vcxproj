@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -147,9 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitfieldRegister_t.h" />
-    <ClInclude Include="COP0_t.h" />
-    <ClInclude Include="COP0_Registers_t.h" />
-    <ClInclude Include="COP1_t.h" />
+    <ClInclude Include="COP0.h" />
+    <ClInclude Include="COP0_Register_t.h" />
+    <ClInclude Include="COP1.h" />
     <ClInclude Include="EECore.h" />
     <ClInclude Include="GlobalMacros.h" />
     <ClInclude Include="Globals.h" />
@@ -158,14 +158,13 @@
     <ClInclude Include="Instruction_t.h" />
     <ClInclude Include="JInstruction_t.h" />
     <ClInclude Include="Register_t.h" />
-    <ClInclude Include="R5900_t.h" />
+    <ClInclude Include="R5900.h" />
     <ClInclude Include="RInstruction_t.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitfieldRegister_t.cpp" />
-    <ClCompile Include="EECore.cpp" />
     <ClCompile Include="IInstruction_t.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="JInstruction_t.cpp" />
