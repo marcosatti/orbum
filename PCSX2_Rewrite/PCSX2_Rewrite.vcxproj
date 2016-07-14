@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -102,6 +102,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,13 +152,23 @@
     <ClInclude Include="COP0_t.h" />
     <ClInclude Include="COP0_Registers_t.h" />
     <ClInclude Include="COP1_t.h" />
-    <ClInclude Include="EECore.h" />
+    <ClInclude Include="EECore_t.h" />
+    <ClInclude Include="EE_t.h" />
+    <ClInclude Include="ExceptionHandler.h" />
     <ClInclude Include="GlobalMacros.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GlobalTypes.h" />
     <ClInclude Include="IInstruction_t.h" />
     <ClInclude Include="Instruction_t.h" />
+    <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="VMBaseComponent.h" />
     <ClInclude Include="JInstruction_t.h" />
+    <ClInclude Include="VMExceptionHandlerComponent.h" />
+    <ClInclude Include="VMExecutionCoreComponent.h" />
+    <ClInclude Include="VMMain.h" />
+    <ClInclude Include="PS2Exception_t.h" />
+    <ClInclude Include="PS2Constants.h" />
+    <ClInclude Include="PS2Resources_t.h" />
     <ClInclude Include="Register_t.h" />
     <ClInclude Include="R5900_t.h" />
     <ClInclude Include="RInstruction_t.h" />
@@ -165,10 +177,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitfieldRegister_t.cpp" />
-    <ClCompile Include="EECore.cpp" />
+    <ClCompile Include="ExceptionHandler.cpp" />
     <ClCompile Include="IInstruction_t.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
+    <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="JInstruction_t.cpp" />
+    <ClCompile Include="VMMain.cpp" />
+    <ClCompile Include="Memleak_PS2Resources.cpp" />
+    <ClCompile Include="PS2Exception_t.cpp" />
+    <ClCompile Include="PS2Resources_t.cpp" />
     <ClCompile Include="Register_t.cpp" />
     <ClCompile Include="RInstruction_t.cpp" />
     <ClCompile Include="stdafx.cpp">

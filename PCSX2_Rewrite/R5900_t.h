@@ -22,15 +22,13 @@ namespace PS2 {
 			See EE Core Users Manual, pg 60.
 
 			GPR defines the 32 GPR's contained within the R5900.
-			This is implemented as the register numbers from r0 -> r31.
+			This is implemented as an array of register numbers from GPR0 -> GPR31 (which translates to r0 -> r31).
 
 			From the EE Core Users Manual, r0 and r31 are reserved:
 			- r0 is the zero register, meaning it is always set to a constant 0.
 			- r31 is the link register used by the link and jump instructions. This is not to be used by other instructions.
 			*/
-			struct {
-				Register128_t r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31;
-			} GPR;
+			Register128_t GPR[32];
 
 			/*
 			The HI and LO registers. See EE Core Users manual, pg 60.
@@ -56,13 +54,6 @@ namespace PS2 {
 			It is a 32-bit register.
 			*/
 			Register32_t PC;
-
-			/*
-			The instruction holder, used as a temporary holder for the current instruction.
-			This is used in the recompiler and interpreter.
-			Convenience funcions are also defined as part of the Instruction object to access differnt parts of the opcode, but you will need to cast the Instruction_t to one of the sub-classes (I, J, R).
-			*/
-			Instruction_t instruction;
 
 		}; // class R5900
 
