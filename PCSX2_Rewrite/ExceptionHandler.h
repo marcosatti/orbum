@@ -15,6 +15,6 @@ class ExceptionHandler : public VMExceptionHandlerComponent
 public:
 	explicit ExceptionHandler(const VMMain *const _mainVM);
 
-	void handleException(PS2Exception_t&& ps2Exception);
+	void handleException(const PS2Exception_t& ps2Exception);
 };
 

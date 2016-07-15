@@ -20,7 +20,7 @@ void bad_memory_leak()
 	PS2Resources_t * memleak = new PS2Resources_t();
 }
 
-int main(int argc, char *argv[])
+int main1(int argc, char *argv[])
 {
 	shared_ptr<PS2Resources_t> resources = make_shared<PS2Resources_t>();
 

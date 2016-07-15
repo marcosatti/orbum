@@ -1,14 +1,99 @@
 #include "stdafx.h"
 
 #include "Globals.h"
-#include "Instruction_t.h"
 
-Instruction_t::Instruction_t(u32 instruction)
+#include "Instruction_t.h"
+#include "Register_t.h"
+
+Instruction_t::Instruction_t(u32 instructionValue)
 {
-	this->instruction = instruction;
+	this->_instructionValue = instructionValue;
 }
 
-u8 Instruction_t::getOpcode()
+void Instruction_t::setInstruction(const u32 instructionValue)
 {
-	return ((u8)(instruction >> 26) & 0x3F);
+	_instructionValue = instructionValue;
+}
+
+INLINE u8 Instruction_t::getOpcode() const
+{
+	return (static_cast<u8>(_instructionValue >> 26) & 0x3F);
+}
+
+// R instruction functions
+
+INLINE u8 Instruction_t::getRRs() const
+{
+	return (static_cast<u8>(_instructionValue >> 21) & 0x1F);
+}
+
+INLINE u8 Instruction_t::getRRt() const
+{
+	return (static_cast<u8>(_instructionValue >> 16) & 0x1F);
+}
+
+INLINE u8 Instruction_t::getRRd() const
+{
+	return (static_cast<u8>(_instructionValue >> 11) & 0x1F);
+}
+
+INLINE u8 Instruction_t::getRShamt() const
+{
+	return (static_cast<u8>(_instructionValue >> 6) & 0x1F);
+}
+
+INLINE u8 Instruction_t::getRFunct() const
+{
+	return (static_cast<u8>(_instructionValue) & 0x3F);
+}
+
+// J instruction functions
+
+INLINE u32 Instruction_t::getJPAddress() const
+{
+	return (_instructionValue & 0x03ffffff);
+}
+
+INLINE u32 Instruction_t::getJJumpAddress(Register32_t& PC) const
+{
+	u32 address = getJPAddress();
+	return ((address << 2) + (PC.UW & 0xf0000000));
+}
+
+// I instruction functions
+
+INLINE u8 Instruction_t::getIRs() const
+{
+	return (static_cast<u8>(_instructionValue >> 21) & 0x1F);
+}
+
+INLINE u8 Instruction_t::getIRd() const
+{
+	return (static_cast<u8>(_instructionValue >> 16) & 0x1F);
+}
+
+INLINE u16 Instruction_t::getIImmU() const
+{
+	return static_cast<u16>(_instructionValue & 0xFFFF);
+}
+
+INLINE s16 Instruction_t::getIImmS() const
+{
+	return (static_cast<s16>(_instructionValue) & 0xFFFF);
+}
+
+INLINE u8 Instruction_t::getISignBit() const
+{
+	return (static_cast<u8>(_instructionValue >> 15) & 0x1);
+}
+
+INLINE u32 Instruction_t::getIBranchAddress(Register32_t& PC) const
+{
+	s32 IMM32 = static_cast<s32>(getIImmS());
+	return static_cast<u32>((IMM32 << 2) + PC.UW);
+}
+
+INLINE u16 Instruction_t::getITrapCode() const
+{
+	return static_cast<u16>((getIImmU() >> 6) & 0x3FF);
 }

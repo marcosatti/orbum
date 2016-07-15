@@ -6,6 +6,7 @@
 #include "VMMain.h"
 #include "Interpreter.h"
 #include "ExceptionHandler.h"
+#include "PS2Exception_t.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType) 
@@ -43,6 +44,14 @@ void VMMain::Reset() const
 void VMMain::Run() const
 {
 	// TODO: Implement.
+	try
+	{
+		_executionCoreComponent->executionLoop();
+	}
+	catch (const PS2Exception_t& ps2Exception)
+	{
+		_exceptionHandlerComponent->handleException(ps2Exception);
+	}
 }
 
 void VMMain::Stop() const

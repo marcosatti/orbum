@@ -22,7 +22,7 @@ public:
 	All PS2 VM exception handlers must implement a way to handle PS2 exceptions (duh).
 	Yes, this interface is a bit redundant. Although there will only be one component that does this, it allows for expandibility if the situation arises.
 	*/ 
-	virtual void handleException(PS2Exception_t&& ps2Exception)
+	virtual void handleException(const PS2Exception_t& ps2Exception)
 	{
 #if defined(PCSX2_DEBUG)
 		DEBUG_HANDLED_EXCEPTION_COUNT += 1;

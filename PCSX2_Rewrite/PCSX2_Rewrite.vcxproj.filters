@@ -43,9 +43,6 @@
     <Filter Include="Common\PS2 Types\Registers">
       <UniqueIdentifier>{8fe87a6f-96f9-476b-83b3-c9da1b47f016}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\PS2 Types\Instructions">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\PS2 Types\Exceptions">
       <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
     </Filter>
@@ -70,21 +67,15 @@
     <Filter Include="VM\Interfaces">
       <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\PS2 Types\Instructions">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IInstruction_t.h">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClInclude>
     <ClInclude Include="Instruction_t.h">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClInclude>
-    <ClInclude Include="JInstruction_t.h">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClInclude>
-    <ClInclude Include="RInstruction_t.h">
       <Filter>Common\PS2 Types\Instructions</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
@@ -151,16 +142,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IInstruction_t.cpp">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClCompile>
     <ClCompile Include="Instruction_t.cpp">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClCompile>
-    <ClCompile Include="JInstruction_t.cpp">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClCompile>
-    <ClCompile Include="RInstruction_t.cpp">
       <Filter>Common\PS2 Types\Instructions</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
@@ -187,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="ExceptionHandler.cpp">
       <Filter>VM\ExceptionHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Instruction_Test.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

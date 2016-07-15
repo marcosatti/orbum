@@ -12,4 +12,5 @@ Interpreter::Interpreter(const VMMain* const _mainVM) : VMExecutionCoreComponent
 void Interpreter::emulationLoop()
 {
 	// TODO: Implement.
+
 }
