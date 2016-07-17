@@ -8,3 +8,4 @@ Globals.h is to be included with every file (except for the files that this incl
 
 #include "GlobalMacros.h"
 #include "GlobalTypes.h"
+#include "GlobalLog.h"

@@ -12,7 +12,8 @@
 VMMain::VMMain(ExecutionCoreType executionCoreType) 
 	: _executionCoreType(executionCoreType),
 	_resources(std::make_unique<PS2Resources_t>()),
-	_exceptionHandlerComponent(std::make_unique<ExceptionHandler>(this))
+	_exceptionHandlerComponent(std::make_unique<ExceptionHandler>(this)),
+	_status(VMMain::VMStatus::CREATED)
 
 {
 	// Initialise ExecutionCore based on parsed type
@@ -46,7 +47,10 @@ void VMMain::Run() const
 	// TODO: Implement.
 	try
 	{
-		_executionCoreComponent->executionLoop();
+		while (getStatus() == VMStatus::RUNNING)
+		{
+			_executionCoreComponent->executionLoop();
+		}
 	}
 	catch (const PS2Exception_t& ps2Exception)
 	{
@@ -63,7 +67,7 @@ VMMain::~VMMain()
 {
 }
 
-const VMMain::VMStatus& VMMain::getVMStatus() const
+const VMMain::VMStatus& VMMain::getStatus() const
 {
 	return _status;
 }

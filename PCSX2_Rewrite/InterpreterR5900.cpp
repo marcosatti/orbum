@@ -1,0 +1,44 @@
+#include "stdafx.h"
+
+#include "Globals.h"
+#include "InterpreterR5900.h"
+#include "PS2Resources_t.h"
+#include "VMMain.h"
+
+InterpreterR5900::InterpreterR5900(const VMMain* const _mainVM, const Interpreter* const _interpreter) :
+	VMInterpreterComponent(_mainVM, _interpreter)
+{
+}
+
+InterpreterR5900::~InterpreterR5900()
+{
+}
+
+void InterpreterR5900::runInterpreterComponent()
+{
+	// Set the instruction holder to the instruction at the current PC.
+	const u32 instructionValue = getVM()->getResources()->MainMemory.readWord(getR5900PCValue());
+	instruction.setInstruction(instructionValue);
+
+	// Get the instruction opcode and look it up in opcodeTable. The corresponding function will be called to further handle the instruction.
+	const u8 & opcodeValue = instruction.getOpcode();
+	(this->*opcodeTable[opcodeValue])();
+}
+
+INLINE u32 & InterpreterR5900::getR5900PCValue() const
+{
+	return getVM()->getResources()->EE.EECore.R5900.PC.UW;
+}
+
+INLINE void InterpreterR5900::setR5900PCValueRelative(s32 relativeLocation) const
+{
+	getVM()->getResources()->EE.EECore.R5900.PC.UW += relativeLocation;
+}
+
+void InterpreterR5900::opcodeUnknown()
+{
+	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
+#if defined(PCSX2_DEBUG)
+	logDebug("Unknown R5900 opcode encountered!");
+#endif
+}

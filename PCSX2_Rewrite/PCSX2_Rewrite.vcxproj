@@ -155,14 +155,18 @@
     <ClInclude Include="EECore_t.h" />
     <ClInclude Include="EE_t.h" />
     <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="GlobalLog.h" />
     <ClInclude Include="GlobalMacros.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GlobalTypes.h" />
     <ClInclude Include="Instruction_t.h" />
     <ClInclude Include="Interpreter.h" />
+    <ClInclude Include="InterpreterR5900.h" />
+    <ClInclude Include="MainMemory_t.h" />
     <ClInclude Include="VMBaseComponent.h" />
     <ClInclude Include="VMExceptionHandlerComponent.h" />
     <ClInclude Include="VMExecutionCoreComponent.h" />
+    <ClInclude Include="VMInterpreterComponent.h" />
     <ClInclude Include="VMMain.h" />
     <ClInclude Include="PS2Exception_t.h" />
     <ClInclude Include="PS2Constants.h" />
@@ -171,17 +175,19 @@
     <ClInclude Include="R5900_t.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VMMMUComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitfieldRegister_t.cpp" />
     <ClCompile Include="ExceptionHandler.cpp" />
+    <ClCompile Include="GlobalLog.cpp" />
     <ClCompile Include="Instruction_Test.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="Interpreter.cpp" />
+    <ClCompile Include="InterpreterR5900.cpp" />
     <ClCompile Include="VMMain.cpp" />
     <ClCompile Include="Memleak_PS2Resources.cpp" />
     <ClCompile Include="PS2Exception_t.cpp" />
-    <ClCompile Include="PS2Resources_t.cpp" />
     <ClCompile Include="Register_t.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

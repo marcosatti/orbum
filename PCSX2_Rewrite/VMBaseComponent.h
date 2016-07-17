@@ -11,13 +11,17 @@ class VMMain;
 class VMBaseComponent
 {
 public:
-	explicit VMBaseComponent(const VMMain *const _mainVM) : main_vm(_mainVM)
+	explicit VMBaseComponent(const VMMain *const vmMain) : _vmMain(vmMain)
+	{
+	}
+
+	virtual ~VMBaseComponent()
 	{
 	}
 
 	INLINE const VMMain *const &getVM() const
 	{
-		return main_vm;
+		return _vmMain;
 	}
 
 private:
@@ -26,5 +30,5 @@ private:
 	Using a raw pointer here is ok, as VMMain will be the one creating any objects that are subclassed from VMBaseComponent.
 	Ie: VMMain will not be destroyed before any VM component will be, so in theory the pointer will always be valid.
 	*/
-	const VMMain *const main_vm;
+	const VMMain *const _vmMain;
 };

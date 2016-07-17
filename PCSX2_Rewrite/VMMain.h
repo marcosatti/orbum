@@ -63,7 +63,7 @@ public:
 	/*
 	VMMain state functions
 	*/
-	const VMStatus& getVMStatus() const;
+	INLINE const VMStatus& getStatus() const;
 	const std::unique_ptr<PS2Resources_t>& getResources() const;
 	void copyResourcesTo(std::unique_ptr<PS2Resources_t> &uniquePtrTo) const;
 

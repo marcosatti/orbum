@@ -70,6 +70,12 @@
     <Filter Include="Common\PS2 Types\Instructions">
       <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VM\ExecutionCore\Interpreter\R5900">
+      <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Resources\Memory">
+      <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -140,6 +146,21 @@
     <ClInclude Include="ExceptionHandler.h">
       <Filter>VM\ExceptionHandler</Filter>
     </ClInclude>
+    <ClInclude Include="VMInterpreterComponent.h">
+      <Filter>VM\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMemory_t.h">
+      <Filter>Common\PS2 Resources\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalLog.h">
+      <Filter>Common\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpreterR5900.h">
+      <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
+    </ClInclude>
+    <ClInclude Include="VMMMUComponent.h">
+      <Filter>VM\Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Instruction_t.cpp">
@@ -151,9 +172,6 @@
     </ClCompile>
     <ClCompile Include="Register_t.cpp">
       <Filter>Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="PS2Resources_t.cpp">
-      <Filter>Common\PS2 Resources</Filter>
     </ClCompile>
     <ClCompile Include="Memleak_PS2Resources.cpp">
       <Filter>Tests</Filter>
@@ -172,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="Instruction_Test.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalLog.cpp">
+      <Filter>Common\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="InterpreterR5900.cpp">
+      <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

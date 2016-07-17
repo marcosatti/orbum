@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EE_t.h"
+#include "MainMemory_t.h"
 
 /*
 TODO: finish writing documentation.
@@ -20,6 +21,9 @@ public:
 
 	// The EE structure.
 	EE_t EE;
+
+	// The Main Memory (32MB)
+	MainMemory_t MainMemory;
 
 private:
 	
