@@ -60,7 +60,7 @@ public:
 	- getPAddress returns the raw pseudo-address contained in the instruction.
 	- getAddress returns the real address based on the pseudo-address and the other factors mentioned above.
 	*/
-	INLINE u32 getJPAddress() const;
+	INLINE s32 getJPAddress() const;
 	INLINE u32 getJJumpAddress(Register32_t& PC) const;
 
 	/*

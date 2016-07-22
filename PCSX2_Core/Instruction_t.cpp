@@ -49,9 +49,10 @@ INLINE u8 Instruction_t::getRFunct() const
 
 // J instruction functions
 
-INLINE u32 Instruction_t::getJPAddress() const
+INLINE s32 Instruction_t::getJPAddress() const
 {
-	return (mInstructionValue & 0x03ffffff);
+	// A sign-extension is needed. Done by testing if the 25th bit is eq to 1. If so, OR's the original result with the value that contains 1's in the upper bits. Else OR's with 0.
+	return (mInstructionValue & 0x03ffffff) | ((mInstructionValue & 0x02000000) ? 0xFC000000 : 0x00);
 }
 
 INLINE u32 Instruction_t::getJJumpAddress(Register32_t& PC) const

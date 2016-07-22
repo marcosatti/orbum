@@ -13,14 +13,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PCSX2_Core_UnitTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Memleak_PS2Resources.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Instruction_Test.cpp">
+    <ClCompile Include="R5900Instruction_Test.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
