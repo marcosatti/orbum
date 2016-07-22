@@ -35,7 +35,7 @@ public:
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 127.
-	u8 getBit128(u8 index);
+	u8 getBit128(u8 index) const;
 
 	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
 	// Index must be between 0 -> 127.
@@ -62,7 +62,7 @@ public:
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 63.
-	u8 getBit64(u8 index);
+	u8 getBit64(u8 index) const;
 
 	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
 	// Index must be between 0 -> 63.
@@ -85,7 +85,7 @@ public:
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 31.
-	u8 getBit32(u8 index);
+	u8 getBit32(u8 index) const;
 
 	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
 	// Index must be between 0 -> 31.
@@ -93,7 +93,7 @@ public:
 
 	// Convenience function to get a value (bit array) with a specified length at startPos in the register.
 	// This function is primarily used for getting a bitmask field in a register.
-	u32 getBitRange32(u8 startPosition, u8 bitLength);
+	u32 getBitRange32(u8 startPosition, u8 bitLength) const;
 
 	// Convenience function to insert a value (bit array) with a specified length at startPos in the register.
 	// This will overwrite the bits currently set at the startPos to (startPos + length).

@@ -14,9 +14,9 @@ class Interpreter;
 class VMInterpreterComponent : public VMBaseComponent
 {
 public:
-	explicit VMInterpreterComponent(const VMMain *const _mainVM, const Interpreter *const _interpreter) :
-		VMBaseComponent(_mainVM),
-		interpreter(_interpreter)
+	explicit VMInterpreterComponent(const VMMain *const vmMain, const Interpreter *const interpreter) :
+		VMBaseComponent(vmMain),
+		mInterpreter(interpreter)
 	{
 	}
 
@@ -26,7 +26,7 @@ public:
 
 	INLINE const Interpreter *const &getInterpreter() const
 	{
-		return interpreter;
+		return mInterpreter;
 	}
 
 	/*
@@ -39,6 +39,6 @@ private:
 	/*
 	Interpreter pointer in order to communicate with the other interpreter components if required.
 	*/
-	const Interpreter *const interpreter;
+	const Interpreter *const mInterpreter;
 };
 

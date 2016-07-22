@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Globals.h"
+
 #include "VMExceptionHandlerComponent.h"
 
 /*
@@ -13,8 +14,8 @@ class PS2Exception_t;
 class ExceptionHandler : public VMExceptionHandlerComponent
 {
 public:
-	explicit ExceptionHandler(const VMMain *const _mainVM);
+	explicit ExceptionHandler(const VMMain *const vmMain);
 
-	void handleException(const PS2Exception_t& ps2Exception);
+	void handleException(const PS2Exception_t& PS2Exception);
 };
 

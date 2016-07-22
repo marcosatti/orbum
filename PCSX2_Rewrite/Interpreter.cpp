@@ -5,7 +5,7 @@
 #include "VMMain.h"
 #include "Interpreter.h"
 
-Interpreter::Interpreter(const VMMain* const _mainVM) : VMExecutionCoreComponent(_mainVM)
+Interpreter::Interpreter(const VMMain* const vmMain) : VMExecutionCoreComponent(vmMain)
 {
 }
 

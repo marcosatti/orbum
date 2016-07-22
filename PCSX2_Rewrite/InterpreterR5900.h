@@ -8,7 +8,7 @@
 class InterpreterR5900 : public VMInterpreterComponent
 {
 public:
-	InterpreterR5900(const VMMain *const _mainVM, const Interpreter *const _interpreter);
+	InterpreterR5900(const VMMain *const vmMain, const Interpreter *const interpreter);
 	~InterpreterR5900();
 	void runInterpreterComponent() override;
 
@@ -21,7 +21,7 @@ private:
 	typedef void(InterpreterR5900::*voidfunc_ptr)();
 
 	/*
-	Convenience function to get/set the R5900 PC.
+	Convenience functions to get/set the R5900 PC.
 	*/
 	INLINE u32& getR5900PCValue() const;
 	INLINE void setR5900PCValueRelative(s32 relativeLocation) const;
@@ -32,7 +32,7 @@ private:
 	Convenience funcions are also defined as part of the Instruction object to access differnt parts of the opcode, but you will need to cast the Instruction_t to one of the sub-classes (I, J, R).
 	This is done in the instruction lookup table.
 	*/
-	Instruction_t instruction;
+	Instruction_t mInstruction;
 
 	/*
 	Unknown opcode function - does nothing when executed.

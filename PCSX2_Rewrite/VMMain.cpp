@@ -7,21 +7,22 @@
 #include "Interpreter.h"
 #include "ExceptionHandler.h"
 #include "PS2Exception_t.h"
+#include "MMUHandler.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType) 
-	: _executionCoreType(executionCoreType),
-	_resources(std::make_unique<PS2Resources_t>()),
-	_exceptionHandlerComponent(std::make_unique<ExceptionHandler>(this)),
-	_status(VMMain::VMStatus::CREATED)
-
+	: mStatus(VMMain::VMStatus::CREATED),
+	mExecutionCoreType(executionCoreType),
+	mPS2Resources(std::make_unique<PS2Resources_t>()),
+	mExceptionHandlerComponent(std::make_unique<ExceptionHandler>(this)),
+	mMMUComponent(std::make_unique<MMUHandler>(this))
 {
 	// Initialise ExecutionCore based on parsed type
-	switch(_executionCoreType)
+	switch(mExecutionCoreType)
 	{
 	case ExecutionCoreType::INTERPRETER:
 	{
-		_executionCoreComponent = std::make_unique<Interpreter>(this);
+		mExecutionCoreComponent = std::make_unique<Interpreter>(this);
 		break;
 	}
 	case ExecutionCoreType::RECOMPILER: 
@@ -49,12 +50,12 @@ void VMMain::Run() const
 	{
 		while (getStatus() == VMStatus::RUNNING)
 		{
-			_executionCoreComponent->executionLoop();
+			mExecutionCoreComponent->executionLoop();
 		}
 	}
 	catch (const PS2Exception_t& ps2Exception)
 	{
-		_exceptionHandlerComponent->handleException(ps2Exception);
+		mExceptionHandlerComponent->handleException(ps2Exception);
 	}
 }
 
@@ -69,16 +70,16 @@ VMMain::~VMMain()
 
 const VMMain::VMStatus& VMMain::getStatus() const
 {
-	return _status;
+	return mStatus;
 }
 
 const std::unique_ptr<PS2Resources_t>& VMMain::getResources() const
 {
-	return _resources;
+	return mPS2Resources;
 }
 
 void VMMain::copyResourcesTo(std::unique_ptr<PS2Resources_t>& uniquePtrTo) const
 {
-	uniquePtrTo = std::make_unique<PS2Resources_t>(*_resources);
+	uniquePtrTo = std::make_unique<PS2Resources_t>(*mPS2Resources);
 }
 

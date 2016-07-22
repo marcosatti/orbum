@@ -7,12 +7,12 @@
 #include "ExceptionHandler.h"
 
 
-ExceptionHandler::ExceptionHandler(const VMMain *const _mainVM) : VMExceptionHandlerComponent(_mainVM)
+ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) : VMExceptionHandlerComponent(vmMain)
 {
 }
 
-void ExceptionHandler::handleException(const PS2Exception_t& ps2Exception)
+void ExceptionHandler::handleException(const PS2Exception_t& PS2Exception)
 {
-	VMExceptionHandlerComponent::handleException(ps2Exception);
+	VMExceptionHandlerComponent::handleException(PS2Exception);
 	//TODO: Implement.
 }

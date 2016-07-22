@@ -59,19 +59,20 @@ public:
 private:
 	/*
 	Used internally for storing the information parsed though registerField().
+	This is used in the field map as well as the 'value' in the key-value pair.
 	*/
 	struct BitfieldProperties_t
 	{
-		BitfieldProperties_t(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue) : name(fieldName), startPosition(fieldStartPosition), length(fieldLength), value(fieldInitialValue) {}
-		const std::string name;
-		const u8 startPosition;
-		const u8 length;
-		u32 value; // Set to a specified initial value when created;
+		BitfieldProperties_t(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue) : mFieldName(fieldName), mFieldStartPosition(fieldStartPosition), mFieldLength(fieldLength), mFieldValue(fieldInitialValue) {}
+		const std::string mFieldName;
+		const u8 mFieldStartPosition;
+		const u8 mFieldLength;
+		u32 mFieldValue; // Set to a specified initial value when created, but can be changed.
 	};
 
 	/*
 	Map which stores all of the registered fields, along with their associated properties.
 	*/
-	std::unordered_map<std::string, std::shared_ptr<BitfieldProperties_t>> fieldMap;
+	std::unordered_map<std::string, std::shared_ptr<BitfieldProperties_t>> mFieldMap;
 };
 

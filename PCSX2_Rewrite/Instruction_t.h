@@ -19,7 +19,7 @@ public:
 	Also see the EE Core Instruction Set Manual.
 	An instruction is always 4 bytes long (32-bit), and always has an opcode field occupying bits 26-31 throughout the types of instructions.
 	*/
-	u32 _instructionValue;
+	u32 mInstructionValue;
 
 	/*
 	Initialise an Instruction object with the specified 32-bit MIPS instruction. Defaults to 0.

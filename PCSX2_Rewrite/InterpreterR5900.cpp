@@ -5,8 +5,8 @@
 #include "PS2Resources_t.h"
 #include "VMMain.h"
 
-InterpreterR5900::InterpreterR5900(const VMMain* const _mainVM, const Interpreter* const _interpreter) :
-	VMInterpreterComponent(_mainVM, _interpreter)
+InterpreterR5900::InterpreterR5900(const VMMain* const vmMain, const Interpreter* const interpreter) :
+	VMInterpreterComponent(vmMain, interpreter)
 {
 }
 
@@ -18,10 +18,10 @@ void InterpreterR5900::runInterpreterComponent()
 {
 	// Set the instruction holder to the instruction at the current PC.
 	const u32 instructionValue = getVM()->getResources()->MainMemory.readWord(getR5900PCValue());
-	instruction.setInstruction(instructionValue);
+	mInstruction.setInstruction(instructionValue);
 
 	// Get the instruction opcode and look it up in opcodeTable. The corresponding function will be called to further handle the instruction.
-	const u8 & opcodeValue = instruction.getOpcode();
+	const u8 & opcodeValue = mInstruction.getOpcode();
 	(this->*opcodeTable[opcodeValue])();
 }
 

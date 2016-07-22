@@ -14,7 +14,7 @@ class VMMain;
 class Interpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit Interpreter(const VMMain *const _mainVM);
+	explicit Interpreter(const VMMain *const vmMain);
 
 	void emulationLoop();
 };

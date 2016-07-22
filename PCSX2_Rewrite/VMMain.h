@@ -7,6 +7,7 @@
 #include "PS2Resources_t.h"
 #include "VMExceptionHandlerComponent.h"
 #include "VMExecutionCoreComponent.h"
+#include "VMMMUComponent.h"
 
 /*
 TODO: Fill in documentation.
@@ -14,6 +15,7 @@ TODO: Fill in documentation.
 
 /*
 Entry point into all PCSX2 core emulation.
+This virtual machine (VM) acts as a hypervisor (manager) for the PS2's execution. All user interface & host OS functionality will eventually come through here.
 */
 class VMMain
 {
@@ -68,10 +70,11 @@ public:
 	void copyResourcesTo(std::unique_ptr<PS2Resources_t> &uniquePtrTo) const;
 
 private:
-	VMStatus _status;
-	ExecutionCoreType _executionCoreType;
-	const std::unique_ptr<PS2Resources_t> _resources;
-	const std::unique_ptr<VMExceptionHandlerComponent> _exceptionHandlerComponent;
-	std::unique_ptr<VMExecutionCoreComponent> _executionCoreComponent;
+	VMStatus mStatus;
+	ExecutionCoreType mExecutionCoreType;
+	const std::unique_ptr<PS2Resources_t> mPS2Resources;
+	const std::unique_ptr<VMExceptionHandlerComponent> mExceptionHandlerComponent;
+	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
+	const std::unique_ptr<VMMMUComponent> mMMUComponent;
 };
 

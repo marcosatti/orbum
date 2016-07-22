@@ -155,6 +155,7 @@
     <ClInclude Include="EECore_t.h" />
     <ClInclude Include="EE_t.h" />
     <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="GlobalLog.h" />
     <ClInclude Include="GlobalMacros.h" />
     <ClInclude Include="Globals.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Interpreter.h" />
     <ClInclude Include="InterpreterR5900.h" />
     <ClInclude Include="MainMemory_t.h" />
+    <ClInclude Include="MMUHandler.h" />
     <ClInclude Include="VMBaseComponent.h" />
     <ClInclude Include="VMExceptionHandlerComponent.h" />
     <ClInclude Include="VMExecutionCoreComponent.h" />
@@ -185,6 +187,7 @@
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="InterpreterR5900.cpp" />
+    <ClCompile Include="MMUHandler.cpp" />
     <ClCompile Include="VMMain.cpp" />
     <ClCompile Include="Memleak_PS2Resources.cpp" />
     <ClCompile Include="PS2Exception_t.cpp" />

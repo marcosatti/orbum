@@ -76,6 +76,9 @@
     <Filter Include="Common\PS2 Resources\Memory">
       <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="VM\MMU">
+      <UniqueIdentifier>{a76f836c-dd19-440a-bb7b-281523bdcc9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -161,6 +164,12 @@
     <ClInclude Include="VMMMUComponent.h">
       <Filter>VM\Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="MMUHandler.h">
+      <Filter>VM\MMU</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalConstants.h">
+      <Filter>Common\Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Instruction_t.cpp">
@@ -196,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="InterpreterR5900.cpp">
       <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
+    </ClCompile>
+    <ClCompile Include="MMUHandler.cpp">
+      <Filter>VM\MMU</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
