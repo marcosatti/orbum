@@ -34,9 +34,6 @@
     <Filter Include="Common\PS2 Resources\EE\VPU\VU">
       <UniqueIdentifier>{2f055b2b-3205-4ce2-838b-71420d6a6418}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests">
-      <UniqueIdentifier>{d798bc67-52d2-411d-a2cd-4ab9fd36a21e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\PS2 Types">
       <UniqueIdentifier>{af068465-91f9-4b8a-9dda-3946f7b308a8}</UniqueIdentifier>
     </Filter>
@@ -76,7 +73,7 @@
     <Filter Include="Common\PS2 Resources\Memory">
       <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="VM\MMU">
+    <Filter Include="VM\MMUHandler">
       <UniqueIdentifier>{a76f836c-dd19-440a-bb7b-281523bdcc9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -165,7 +162,7 @@
       <Filter>VM\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="MMUHandler.h">
-      <Filter>VM\MMU</Filter>
+      <Filter>VM\MMUHandler</Filter>
     </ClInclude>
     <ClInclude Include="GlobalConstants.h">
       <Filter>Common\Global</Filter>
@@ -182,9 +179,6 @@
     <ClCompile Include="Register_t.cpp">
       <Filter>Common\PS2 Types\Registers</Filter>
     </ClCompile>
-    <ClCompile Include="Memleak_PS2Resources.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="Interpreter.cpp">
       <Filter>VM\ExecutionCore\Interpreter</Filter>
     </ClCompile>
@@ -197,9 +191,6 @@
     <ClCompile Include="ExceptionHandler.cpp">
       <Filter>VM\ExceptionHandler</Filter>
     </ClCompile>
-    <ClCompile Include="Instruction_Test.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="GlobalLog.cpp">
       <Filter>Common\Global</Filter>
     </ClCompile>
@@ -207,7 +198,7 @@
       <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
     </ClCompile>
     <ClCompile Include="MMUHandler.cpp">
-      <Filter>VM\MMU</Filter>
+      <Filter>VM\MMUHandler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

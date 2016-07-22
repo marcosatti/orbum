@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "Globals.h"
-#include "PS2Resources_t.h"
+#include <Globals.h>
+#include <PS2Resources_t.h>
 
 using namespace std;
 

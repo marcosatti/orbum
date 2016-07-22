@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core", "PCSX2_Rewrite\PCSX2_Rewrite.vcxproj", "{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core", "PCSX2_Core\PCSX2_Core.vcxproj", "{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core_UnitTest", "PCSX2_Core_UnitTest\PCSX2_Core_UnitTest.vcxproj", "{7421784C-922A-47F7-8ED7-86AE3A0F8E64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D} = {BB19A4C8-C662-41B0-8399-EAB7536F4F3D}
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E} = {CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTestLibrary", "GoogleTestLibrary\GoogleTestLibrary.vcxproj", "{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,22 @@ Global
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x64.Build.0 = Release|x64
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x86.ActiveCfg = Release|Win32
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x86.Build.0 = Release|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug|x64.ActiveCfg = Debug|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug|x64.Build.0 = Debug|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug|x86.ActiveCfg = Debug|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug|x86.Build.0 = Debug|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x64.ActiveCfg = Release|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x64.Build.0 = Release|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x86.ActiveCfg = Release|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x86.Build.0 = Release|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug|x64.ActiveCfg = Debug|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug|x64.Build.0 = Debug|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug|x86.ActiveCfg = Debug|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug|x86.Build.0 = Debug|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x64.ActiveCfg = Release|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x64.Build.0 = Release|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x86.ActiveCfg = Release|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

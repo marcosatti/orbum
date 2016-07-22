@@ -2,11 +2,11 @@
 
 #include <cassert>
 
-#include "Globals.h"
+#include <Globals.h>
 
-#include "Instruction_t.h"
+#include <Instruction_t.h>
 
-int main(int argc, char * argv[])
+int main2(int argc, char * argv[])
 {
 	Instruction_t a;
 

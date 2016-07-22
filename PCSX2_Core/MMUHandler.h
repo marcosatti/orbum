@@ -44,7 +44,7 @@ public:
 	static constexpr u32 PAGE_TABLE_MAX_SIZE = Constants::SIZE_512MB;
 	static constexpr u32 PAGE_TABLE_ENTRIES =  PAGE_TABLE_MAX_SIZE/ PAGE_SIZE;
 
-	MMUHandler(const VMMain *const vmMain);
+	explicit MMUHandler(const VMMain *const vmMain);
 	~MMUHandler();
 
 	/*
@@ -58,7 +58,7 @@ public:
 	clientMemoryLength = Length of memory parsed into clientMemoryAddress. This will be used to divide the map into pages.
 	PS2MemoryAddress = The PS2 "physical" address which will be mapped.
 	*/
-	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const;
+	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const override;
 
 	/*
 	These functions, given a PS2 "physical" address, will read or write a value from/to the address.
@@ -66,22 +66,22 @@ public:
 	You cannot use these functions before mapMemory() has been called - it will return an runtime_error exception otherwise.
 	The functions have the syntax "{read or write}{type}{[U]nsigned or [S]igned}()".
 	*/
-	u8 readByteU(u32 PS2MemoryAddress) const;
-	void writeByteU(u32 PS2MemoryAddress, u8 value) const;
-	s8 readByteS(s32 PS2MemoryAddress) const;
-	void writeByteS(s32 PS2MemoryAddress, s8 value) const;
-	u16 readHwordU(u32 PS2MemoryAddress) const;
-	void writeHwordU(u32 PS2MemoryAddress, u16 value) const;
-	s16 readHwordS(s32 PS2MemoryAddress) const;
-	void writeHwordS(s32 PS2MemoryAddress, s16 value) const;
-	u32 readWordU(u32 PS2MemoryAddress) const;
-	void writeWordU(u32 PS2MemoryAddress, u32 value) const;
-	s32 readWordS(s32 PS2MemoryAddress) const;
-	void writeWordS(s32 PS2MemoryAddress, s32 value) const;
-	u64 readDwordU(u32 PS2MemoryAddress) const;
-	void writeDwordU(u32 PS2MemoryAddress, u64 value) const;
-	s64 readDwordS(s32 PS2MemoryAddress) const;
-	void writeDwordS(s32 PS2MemoryAddress, s64 value) const;
+	u8 readByteU(u32 PS2MemoryAddress) const override;
+	void writeByteU(u32 PS2MemoryAddress, u8 value) const override;
+	s8 readByteS(u32 PS2MemoryAddress) const override;
+	void writeByteS(u32 PS2MemoryAddress, s8 value) const override;
+	u16 readHwordU(u32 PS2MemoryAddress) const override;
+	void writeHwordU(u32 PS2MemoryAddress, u16 value) const override;
+	s16 readHwordS(u32 PS2MemoryAddress) const override;
+	void writeHwordS(u32 PS2MemoryAddress, s16 value) const override;
+	u32 readWordU(u32 PS2MemoryAddress) const override;
+	void writeWordU(u32 PS2MemoryAddress, u32 value) const override;
+	s32 readWordS(u32 PS2MemoryAddress) const override;
+	void writeWordS(u32 PS2MemoryAddress, s32 value) const override;
+	u64 readDwordU(u32 PS2MemoryAddress) const override;
+	void writeDwordU(u32 PS2MemoryAddress, u64 value) const override;
+	s64 readDwordS(u32 PS2MemoryAddress) const override;
+	void writeDwordS(u32 PS2MemoryAddress, s64 value) const override;
 
 private:
 	/*

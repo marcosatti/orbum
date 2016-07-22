@@ -87,7 +87,7 @@ void MMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) const
 	*clientMemoryAddress = value;
 }
 
-s8 MMUHandler::readByteS(s32 PS2MemoryAddress) const
+s8 MMUHandler::readByteS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -96,7 +96,7 @@ s8 MMUHandler::readByteS(s32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeByteS(s32 PS2MemoryAddress, s8 value) const
+void MMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value) const
 {
 	// Get client base address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -123,7 +123,7 @@ void MMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value) const
 	*clientMemoryAddress = value;
 }
 
-s16 MMUHandler::readHwordS(s32 PS2MemoryAddress) const
+s16 MMUHandler::readHwordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -132,7 +132,7 @@ s16 MMUHandler::readHwordS(s32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeHwordS(s32 PS2MemoryAddress, s16 value) const
+void MMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) const
 {
 	// Get client base address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -159,7 +159,7 @@ void MMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value) const
 	*clientMemoryAddress = value;
 }
 
-s32 MMUHandler::readWordS(s32 PS2MemoryAddress) const
+s32 MMUHandler::readWordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -168,7 +168,7 @@ s32 MMUHandler::readWordS(s32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeWordS(s32 PS2MemoryAddress, s32 value) const
+void MMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value) const
 {
 	// Get client base address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -195,7 +195,7 @@ void MMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value) const
 	*clientMemoryAddress = value;
 }
 
-s64 MMUHandler::readDwordS(s32 PS2MemoryAddress) const
+s64 MMUHandler::readDwordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -204,7 +204,7 @@ s64 MMUHandler::readDwordS(s32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeDwordS(s32 PS2MemoryAddress, s64 value) const
+void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
 {
 	// Get client base address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(getclientMemoryAddress(PS2MemoryAddress));
