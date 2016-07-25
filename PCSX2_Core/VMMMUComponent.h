@@ -8,7 +8,7 @@ class VMMain;
 /*
 The VM MMU component interface.
 When the PS2 reads or writes to a "PHYSICAL" address, this unit will be consulted for the correct memory read and write location.
-For when the PS2 reads or writes to a virtual address, there is another MMU unit within the Interpreter component - see that for details.
+For when the PS2 reads or writes to a virtual address, there is another MMU unit within ExecutionCore component - see that for details.
 */
 class VMMMUComponent : public VMBaseComponent
 {

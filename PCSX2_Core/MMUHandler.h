@@ -7,42 +7,61 @@
 
 /*
 The VM MMU component is responsible for converting the PS2's physical addresses into client virtual addresses (which is required to properly run a program on the client system).
-The remapping method is actually just another page table... but sort of in reverse!
+The remapping method is actually just a page table... but sort of in reverse (PS2 "physical" -> client virtual)!
 This means that in the emulator, there are 2 page tables:
 - One will be a page table for mapping PS2 virtual addresses into PS2 physical addresses (implmented as sub components in the Interpreter & Recompliler).
 - The other (this one) is a page table for mapping PS2 physical addresses into x86 virtual addresses.
 
-The page table is implemented with a page size of 4KB. Since the PS2 has an effective physical address space of 512MB (see EE Users Manual page 20 and the note below about the Extended memory and NO MOUNT area),
-this equates to 512MB / 4KB = 131,072 page table entries (and assuming that we are using a 64-bit x86 address space, the table occupies 131,072 * 8 bytes = 1MB of memory; not much).
+The page table is implemented as a 2 level system with a primary "directory" size of 4,194,304B (4MB addressing chunks) and a secondary "page" size of 16B. 
+ 2 Levels are used to reduce memory usage by only allocating the page tables within a directory that are needed.
+
+The reason that 16B is used on the second levelis due to the physical memory map of the EE registers (timers, vu's, dmac, etc, starting on page 21 of the EE Users Manual). 
+ Each register is (at minimum) aligned on a 16B boundary, and we need to reflect this. If a larger page size was used (say 4KB which is a normal value), then we would need
+ to somehow make sure that each offset within a page which is a multiple of 16 pointed to a different client memory region - but this is a problem because the physical 
+ frame number only points to 1 address. Therefore for now we need to make the page size 16B until a better solution comes along.
+
+The old PCSX2 code seems to align all of the registers continuously, so that the client memory exactly reflects the PS2's physical memory map... This works but has the side effect
+ of not being able to change the order of the registers memory, which is a dangerous thing as a compiler might break this, as well as making it harder to read.
 
 According to the PS2 docs mentioned above, the PS2's physical address space is as follows:
 
 0x00000000 - 0x0FFFFFFF 256MB main memory (of which I assume 32MB is accessable from 0x00000000 onwards and the other space has undefined behaviour?).
-0x10000000 - 0x11FFFFFF EE Registers.
+0x10000000 - 0x11FFFFFF EE Registers (timers, vu's, dmac, etc).
 0x12000000 - 0x13FFFFFF GS Registers.
 0x14000000 - 0x1FBFFFFF Reserved (undefined behaviour).
 0x1FC00000 - 0x1FFFFFFF Boot rom area (max 4MB).
 0x20000000 - 0xFFFFFFFF Extended memory and NO MOUNT (but there is no extended memory in the PS2, so it is undefined and hence not mapped or used).
 
-Assuming the PS2 never tries to access the extended memory or the NO MOUNT area, this will work.
+We can leave out the extended memory and NO MOUNT region from the page table, as these are never used and there is no utilised memory onwards from them.
+Therefore, we can limit the map to 512MB (0x00000000 - 0x1FFFFFFF).
 
-By using a 4KB page size with a 512MB remap space, 12 bits are used as an offset, and 17 bits are used as the page number (for a total of 29 bits).
-The least sized unit this fits into is still 32-bits however.
+By using a directory size of 4MB and a page size of 16B:
+ - Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
+ - Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
+ - The offset (within 16B) requires 4 bits.
+ - Total number of bits required = 29, which is correct for addressing 512MB. This is done within a 32-bit integer type (upper bits unused).
+ =============================================================
+ | 28            23 | 22                       5  | 4      0 |
+ | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
+ =============================================================
 
-By using this, it is up to the user to make sure no addresses overlap - they will be overwritten and existing data lost.
+By using this, it is up to the user to make sure no addresses overlap - they will be overwritten and existing map data lost.
 
 It will throw different runtime errors when the following conditions occur:
  - range_error exception if more than PAGE_TABLE_MAX_SIZE in the page tableis accessed.
- - runtime_error exception if the returned PFN from the page table was null (indicates invalid entry).
+ - runtime_error exception if the returned PFN from the page table was null (indicates invalid entry, needs to be mapped first).
+
+TODO: Reduce memory footprint from 256MB (see note above).
  */
 class MMUHandler : public VMMMUComponent
 {
 public:
-	static constexpr u32 PAGE_SIZE = 4096;
-	static constexpr u32 PAGE_BITS = 12;
-	static constexpr u32 PAGE_MASK = PAGE_SIZE - 1;
-	static constexpr u32 PAGE_TABLE_MAX_SIZE = Constants::SIZE_512MB;
-	static constexpr u32 PAGE_TABLE_ENTRIES =  PAGE_TABLE_MAX_SIZE/ PAGE_SIZE;
+	/*
+	Page Table parameters.
+	*/
+	static constexpr u32 TABLE_MAX_SIZE = Constants::SIZE_512MB;
+	static constexpr u32 DIRECTORY_SIZE_BYTES = 4194304; // 4MB
+	static constexpr u32 PAGE_SIZE_BYTES = 16;
 
 	explicit MMUHandler(const VMMain *const vmMain);
 	~MMUHandler();
@@ -61,10 +80,19 @@ public:
 	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const override;
 
 	/*
+	Translates the given PS2 physical address to the client memory address by using the page table.
+	*/
+	void* getclientMemoryAddress(u32 PS2MemoryAddress) const;
+
+	/*
 	These functions, given a PS2 "physical" address, will read or write a value from/to the address.
 	The address is automatically translated into the correct address through the page table.
 	You cannot use these functions before mapMemory() has been called - it will return an runtime_error exception otherwise.
 	The functions have the syntax "{read or write}{type}{[U]nsigned or [S]igned}()".
+	Unfortunately C++ does not allow templating of virtual functions defined in the parent class, so a read/write for each type has to be made.
+
+	Currently results are not guaranteed to be correct for reads or writes across a page boundary; for continuous linear mappings however it *should* (untested) be correct, as there is an implicit overflow
+	 into the next page table entry.
 	*/
 	u8 readByteU(u32 PS2MemoryAddress) const override;
 	void writeByteU(u32 PS2MemoryAddress, u8 value) const override;
@@ -83,24 +111,43 @@ public:
 	s64 readDwordS(u32 PS2MemoryAddress) const override;
 	void writeDwordS(u32 PS2MemoryAddress, s64 value) const override;
 
+	// Test/Debug usage.
+	u32 getTotalPageEntries() const;
+	u32 getTableMaxSize() const;
+	u32 getPageSizeBytes() const;
 private:
 	/*
-	The page table which holds all of the page table entries, mapping the addresses.
+	Internal parameters calculated in the constructor from the above page table parameters.
 	*/
-	const std::unique_ptr<void**> pageTable; // Allocate new array of pointers (double pointer variable). Remember, a pointer on x86 is 8 bytes in 64 bit mode, and so will take up 8 * PAGE_TABLE_SIZE bytes.
+	const u32 OFFSET_BITS;
+	const u32 OFFSET_MASK;
+	const u32 DIRECTORY_BITS;
+	const u32 DIRECTORY_MASK;
+	const u32 DIRECTORY_ENTRIES;
+	const u32 PAGE_BITS;
+	const u32 PAGE_MASK;
+	const u32 PAGE_ENTRIES;
 
 	/*
-	Gets the VPN from a given PS2 physical address.
+	The page table which holds all of the page table entries, mapping the addresses.
+	The directories are kept in this, which point to individual pages.
+	The individual pages are only allocated on access, thereby saving memory.
+	(A pointer to an array of directories, each directory pointing to an array of pages, each page pointing to some memory.)
 	*/
-	static u32 getVPN(u32 PS2MemoryAddress);
+	void*** mPageTable; 
+
+	/*
+	Gets the VDN (virtual directory number) from a given PS2 physical address.
+	*/
+	u32 getVDN(u32 PS2MemoryAddress) const;
+
+	/*
+	Gets the VPN (virtual page number) from a given PS2 physical address.
+	*/
+	u32 getVPN(u32 PS2MemoryAddress) const;
 
 	/*
 	Gets the offset from a given PS2 physical address.
 	*/
-	static u32 getOffset(u32 PS2MemoryAddress);
-
-	/*
-	Translates the given PS2 physical address to the client memory address by using the page table.
-	*/
-	void* getclientMemoryAddress(u32 PS2MemoryAddress) const;
+	u32 getOffset(u32 PS2MemoryAddress) const;
 };

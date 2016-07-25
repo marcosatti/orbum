@@ -1,6 +1,10 @@
 #pragma once
 
+#include <memory>
+
+#include "Globals.h"
 #include "EECore_t.h"
+#include "MainMemory_t.h"
 
 /*
 TODO: finish writing documentation.

@@ -1,64 +1,117 @@
 #include "stdafx.h"
 
 #include <stdexcept>
+#include <cmath>
 
 #include "Globals.h"
 #include "MMUHandler.h"
 
 MMUHandler::MMUHandler(const VMMain* const vmMain):
 	VMMMUComponent(vmMain),
-	pageTable(std::make_unique<void**>(new void*[PAGE_TABLE_ENTRIES]))
+	// 1st level directory.
+	DIRECTORY_ENTRIES(TABLE_MAX_SIZE / DIRECTORY_SIZE_BYTES),
+	DIRECTORY_BITS(static_cast<u32>(log2(DIRECTORY_ENTRIES))),
+	DIRECTORY_MASK(DIRECTORY_ENTRIES - 1),
+	// 2nd level pages.
+	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
+	PAGE_BITS(static_cast<u32>(log2(PAGE_ENTRIES))),
+	PAGE_MASK(PAGE_ENTRIES - 1),
+	// Individual page.
+	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),
+	OFFSET_MASK(PAGE_SIZE_BYTES - 1)
 {
-	// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it?
-	memset((*pageTable), 0, PAGE_TABLE_ENTRIES * sizeof((*pageTable)[0]));
+	// Allocate the page table (directories).
+	mPageTable = new void**[DIRECTORY_ENTRIES];
+
+	// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
+	// Sets all of the directory to nullptr's.
+	memset(mPageTable, 0, DIRECTORY_ENTRIES * sizeof(mPageTable[0]));
 }
 
 MMUHandler::~MMUHandler()
 {
+	// Destroy any allocated pages.
+	for (u32 i = 0; i < DIRECTORY_ENTRIES; i++)
+	{
+		if (mPageTable[i] != nullptr) delete[] mPageTable[i];
+	}
+	// Destroy the page table (directories).
+	delete[] mPageTable;
 }
 
 void MMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const
 {
-	// Get the virtual page number (VPN).
-	u32 vpn = getVPN(PS2MemoryAddress);
+	// Do not do anything for clientMemoryLength equal to 0.
+	if (clientMemoryLength == 0) return;
 
-	// Work out how many pages the memory block occupies & check if 
-	u32 pagesCount = clientMemoryLength / PAGE_SIZE;
-
-	// Check that the end page number doesnt exceed the maximum allowed pages.
-	if ((vpn + pagesCount) > PAGE_TABLE_ENTRIES) throw std::range_error("Not mapped: clientMemoryAddress + clientMemoryLength combined exceeds the maximum allowable address translation range.");
-
-	// C++11 does not allow any aritmetic to be done on pointers. Need to cast to uintptr_t first (defined in <cstdint>) then cast back.
+	// C++11 does not allow any aritmetic to be done on pointers. Need to cast to uintptr_t first (defined in <cstdint>) then cast back. This is to get the memory addresses.
 	uintptr_t clientMemoryAddressInt = reinterpret_cast<uintptr_t>(clientMemoryAddress);
 
-	// Allocate the pages in the table.
-	for (u32 i = 0; i < pagesCount; i++)
+	// Get the base virtual directory number (VDN) and virtual page number (VPN).
+	u32 baseVDN = getVDN(PS2MemoryAddress);
+	u32 baseVPN = getVPN(PS2MemoryAddress);
+
+	// Work out how many directories & remaining pages the memory block occupies.
+	u32 directoriesCount = clientMemoryLength / DIRECTORY_SIZE_BYTES;
+	u32 pagesCountRem = (clientMemoryLength / PAGE_SIZE_BYTES) % PAGE_ENTRIES;
+
+	// Check that the given client length is not more than the number of directories available.
+	if (directoriesCount > DIRECTORY_ENTRIES) throw std::range_error("Not mapped: clientMemoryLength exceeds the maximum allowable address translation range.");
+
+	// Allocate the pages in the directories and assign PFN to VDN/VPN.
+	u32 directoryIndexStop = baseVDN + directoriesCount;
+	for (u32 directoryIndex = baseVDN; directoryIndex < directoryIndexStop; directoryIndex++)
 	{
-		(*pageTable)[vpn + i] = reinterpret_cast<void*>(clientMemoryAddressInt + (i * PAGE_SIZE));
+		// Allocate VDN only if empty and set to null initially.
+		if (mPageTable[directoryIndex] == nullptr) {
+			mPageTable[directoryIndex] = new void*[PAGE_ENTRIES];
+			// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
+			memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
+		}
+
+		// Add in the page entries.
+		// If we are on directory index 0 then we must start from baseVPN page.
+		// If we are on the last directory index then we must stop at pagesCountRem.
+		// Else it must be in a middle directory, and all of the pages are used.
+		u32 directoryDelta = directoryIndex - baseVDN;
+		u32 pageIndexStart = (directoryIndex == 0 ? baseVPN : 0);
+		u32 pageIndexStop = (directoryIndex == (directoryIndexStop - 1) ? pagesCountRem : PAGE_ENTRIES);
+		for (u32 pageIndex = pageIndexStart; pageIndex < pageIndexStop; pageIndex++)
+		{
+			u32 pageDelta = pageIndex - pageIndexStart;
+			mPageTable[directoryIndex][pageIndex] = reinterpret_cast<void*>(clientMemoryAddressInt + directoryDelta*PAGE_ENTRIES*PAGE_SIZE_BYTES + pageDelta*PAGE_SIZE_BYTES);
+		}		
 	}
 }
 
-u32 MMUHandler::getVPN(u32 PS2MemoryAddress)
+u32 MMUHandler::getVDN(u32 PS2MemoryAddress) const
 {
-	return PS2MemoryAddress >> PAGE_BITS;
+	return (PS2MemoryAddress >> (OFFSET_BITS + PAGE_BITS)) & DIRECTORY_MASK;
 }
 
-u32 MMUHandler::getOffset(u32 PS2MemoryAddress)
+u32 MMUHandler::getVPN(u32 PS2MemoryAddress) const
 {
-	return PS2MemoryAddress & PAGE_MASK;
+	return (PS2MemoryAddress >> OFFSET_BITS) & PAGE_MASK;
+}
+
+u32 MMUHandler::getOffset(u32 PS2MemoryAddress) const
+{
+	return PS2MemoryAddress & OFFSET_MASK;
 }
 
 void* MMUHandler::getclientMemoryAddress(u32 PS2MemoryAddress) const
 {
-	// Get the virtual page number (VPN) & offset.
-	u32 vpn = getVPN(PS2MemoryAddress);
-	if (vpn > (PAGE_TABLE_ENTRIES - 1)) throw std::range_error("Not found: Given PS2MemoryAddress's VPN exceeds the number of pages indexable. Check input or you may need to increase the page table size.");
+	// Get the virtual directory number (VDN), virtual page number (VPN) & offset.
+	u32 baseVPN = getVPN(PS2MemoryAddress);
+	u32 baseVDN = getVDN(PS2MemoryAddress);
 	u32 offset = getOffset(PS2MemoryAddress);
 
 	// Lookup the page in the page table to get the client base memory address (aka page frame number (PFN)).
-	// If the client memory address base comes back as nullptr (= 0), throw a runtime exception.
+	// If the directory or client memory address base comes back as nullptr (= 0), throw a runtime exception.
 	// C++11 does not allow any aritmetic to be done on pointers. Need to cast to uintptr_t first (defined in <cstdint>) then cast back.
-	void* clientMemoryAddressBase = (*pageTable)[vpn];
+	void** tableDirectory = mPageTable[baseVDN];
+	if (tableDirectory == nullptr) throw std::runtime_error("Not found: Given PS2MemoryAddress returned a null VDN. Check input for error, or maybe it has not been mapped in the first place.");
+	void* clientMemoryAddressBase = tableDirectory[baseVPN];
 	if (clientMemoryAddressBase == nullptr) throw std::runtime_error("Not found: Given PS2MemoryAddress returned a null PFN. Check input for error, or maybe it has not been mapped in the first place.");
 	uintptr_t clientMemoryAddressInt = reinterpret_cast<uintptr_t>(clientMemoryAddressBase);
 
@@ -211,4 +264,19 @@ void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
 
 	// Write the value.
 	*clientMemoryAddress = value;
+}
+
+u32 MMUHandler::getTotalPageEntries() const
+{
+	return DIRECTORY_ENTRIES*PAGE_ENTRIES;
+}
+
+u32 MMUHandler::getTableMaxSize() const
+{
+	return TABLE_MAX_SIZE;
+}
+
+u32 MMUHandler::getPageSizeBytes() const
+{
+	return PAGE_SIZE_BYTES;
 }

@@ -40,7 +40,12 @@ void VMMain::LoadExecutable(std::string&& excutablePath) const
 
 void VMMain::Reset() const
 {
-	// TODO: Implement
+	// TODO: Implement.
+	
+	// A reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual is raised.
+	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
+	// After this is done, call Run() to begin execution.
+	mExceptionHandlerComponent->handleException(PS2Exception_t(PS2Exception_t::ExceptionType::EX_RESET));
 }
 
 void VMMain::Run() const
@@ -78,8 +83,18 @@ const std::unique_ptr<PS2Resources_t>& VMMain::getResources() const
 	return mPS2Resources;
 }
 
+const std::unique_ptr<VMMMUComponent>& VMMain::getMMU() const
+{
+	return mMMUComponent;
+}
+
 void VMMain::copyResourcesTo(std::unique_ptr<PS2Resources_t>& uniquePtrTo) const
 {
 	uniquePtrTo = std::make_unique<PS2Resources_t>(*mPS2Resources);
 }
 
+void VMMain::initalisePS2PhysicalMemory() const
+{
+	// Main memory 32MB
+	getMMU()->mapMemory(getResources()->MainMemory.getBaseAddress(), PS2Constants::EE::SIZE_MAIN_MEMORY, PS2Constants::EE::PADDRESS_MAIN_MEMORY);
+}

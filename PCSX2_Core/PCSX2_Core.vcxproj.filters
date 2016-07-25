@@ -70,11 +70,11 @@
     <Filter Include="VM\ExecutionCore\Interpreter\R5900">
       <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\PS2 Resources\Memory">
-      <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VM\MMUHandler">
       <UniqueIdentifier>{a76f836c-dd19-440a-bb7b-281523bdcc9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Resources\EE\MainMemory">
+      <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +150,7 @@
       <Filter>VM\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="MainMemory_t.h">
-      <Filter>Common\PS2 Resources\Memory</Filter>
+      <Filter>Common\PS2 Resources\EE\MainMemory</Filter>
     </ClInclude>
     <ClInclude Include="GlobalLog.h">
       <Filter>Common\Global</Filter>

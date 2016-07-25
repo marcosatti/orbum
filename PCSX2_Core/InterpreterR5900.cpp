@@ -17,8 +17,7 @@ InterpreterR5900::~InterpreterR5900()
 void InterpreterR5900::runInterpreterComponent()
 {
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 instructionValue = getVM()->getResources()->MainMemory.readWord(getR5900PCValue());
-	mInstruction.setInstruction(instructionValue);
+	mInstruction.setInstruction(getVM()->getMMU()->readWordU(getR5900PCValue()));
 
 	// Get the instruction opcode and look it up in opcodeTable. The corresponding function will be called to further handle the instruction.
 	const u8 & opcodeValue = mInstruction.getOpcode();

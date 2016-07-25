@@ -50,7 +50,6 @@ public:
 	
 	// Initialise
 	void LoadExecutable(std::string&& excutablePath) const;
-
 	void Reset() const;
 
 	// Run
@@ -63,18 +62,31 @@ public:
 	~VMMain();
 
 	/*
-	VMMain state functions
+	VMMain state functions.
 	*/
 	INLINE const VMStatus& getStatus() const;
-	const std::unique_ptr<PS2Resources_t>& getResources() const;
+	INLINE const std::unique_ptr<PS2Resources_t>& getResources() const;
+	INLINE const std::unique_ptr<VMMMUComponent>& getMMU() const;
+
+	/*
+	Misc helper functions.
+	*/
 	void copyResourcesTo(std::unique_ptr<PS2Resources_t> &uniquePtrTo) const;
 
 private:
+	/*
+	VM State variables.
+	*/
 	VMStatus mStatus;
 	ExecutionCoreType mExecutionCoreType;
 	const std::unique_ptr<PS2Resources_t> mPS2Resources;
 	const std::unique_ptr<VMExceptionHandlerComponent> mExceptionHandlerComponent;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
 	const std::unique_ptr<VMMMUComponent> mMMUComponent;
+
+	/*
+	Initalise the PS2 Physical memory by mapping it to the memory regions allocated by mPS2Resources.
+	*/
+	void initalisePS2PhysicalMemory() const;
 };
 
