@@ -118,15 +118,16 @@ public:
 private:
 	/*
 	Internal parameters calculated in the constructor from the above page table parameters.
+	Do not change this order - this is to do with how the C++ initalisation list order works (it is defined in the language standard).
 	*/
+	const u32 DIRECTORY_ENTRIES;
+	const u32 PAGE_ENTRIES;
 	const u32 OFFSET_BITS;
 	const u32 OFFSET_MASK;
 	const u32 DIRECTORY_BITS;
 	const u32 DIRECTORY_MASK;
-	const u32 DIRECTORY_ENTRIES;
 	const u32 PAGE_BITS;
 	const u32 PAGE_MASK;
-	const u32 PAGE_ENTRIES;
 
 	/*
 	The page table which holds all of the page table entries, mapping the addresses.
@@ -150,4 +151,14 @@ private:
 	Gets the offset from a given PS2 physical address.
 	*/
 	u32 getOffset(u32 PS2MemoryAddress) const;
+
+	/*
+	Helper functions for mapMemory to 
+	 - Determine which directory a page belongs to (if they were layed out end to end), and;
+	 - The page offset in a directory.
+	 - Allocate a new directory of pages if it doesnt exist.
+	*/
+	INLINE u32 getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
+	INLINE u32 getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
+	INLINE void allocDirectory(u32 directoryIndex) const;
 };

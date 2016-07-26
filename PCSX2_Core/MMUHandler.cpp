@@ -8,17 +8,14 @@
 
 MMUHandler::MMUHandler(const VMMain* const vmMain):
 	VMMMUComponent(vmMain),
-	// 1st level directory.
 	DIRECTORY_ENTRIES(TABLE_MAX_SIZE / DIRECTORY_SIZE_BYTES),
+	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
+	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),
+	OFFSET_MASK(PAGE_SIZE_BYTES - 1),
 	DIRECTORY_BITS(static_cast<u32>(log2(DIRECTORY_ENTRIES))),
 	DIRECTORY_MASK(DIRECTORY_ENTRIES - 1),
-	// 2nd level pages.
-	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
 	PAGE_BITS(static_cast<u32>(log2(PAGE_ENTRIES))),
-	PAGE_MASK(PAGE_ENTRIES - 1),
-	// Individual page.
-	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),
-	OFFSET_MASK(PAGE_SIZE_BYTES - 1)
+	PAGE_MASK(PAGE_ENTRIES - 1)
 {
 	// Allocate the page table (directories).
 	mPageTable = new void**[DIRECTORY_ENTRIES];
@@ -51,36 +48,27 @@ void MMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u3
 	u32 baseVDN = getVDN(PS2MemoryAddress);
 	u32 baseVPN = getVPN(PS2MemoryAddress);
 
-	// Work out how many directories & remaining pages the memory block occupies.
-	u32 directoriesCount = clientMemoryLength / DIRECTORY_SIZE_BYTES;
-	u32 pagesCountRem = (clientMemoryLength / PAGE_SIZE_BYTES) % PAGE_ENTRIES;
+	// Work out how many pages the memory block occupies. If it is not evenly divisible, need to add on an extra page to account for the extra length.
+	// Thank you to Ian Nelson: http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division, a very good solution.
+	u32 pagesCount = (clientMemoryLength + PAGE_SIZE_BYTES - 1) / PAGE_SIZE_BYTES;
 
-	// Check that the given client length is not more than the number of directories available.
-	if (directoriesCount > DIRECTORY_ENTRIES) throw std::range_error("Not mapped: clientMemoryLength exceeds the maximum allowable address translation range.");
+	// Get absolute linear page position that we start mapping memory from.
+	u32 absPageStartIndex = baseVDN * PAGE_ENTRIES + baseVPN;
 
-	// Allocate the pages in the directories and assign PFN to VDN/VPN.
-	u32 directoryIndexStop = baseVDN + directoriesCount;
-	for (u32 directoryIndex = baseVDN; directoryIndex < directoryIndexStop; directoryIndex++)
+	// Iterate through the pages to set the client addresses.
+	u32 absDirectoryIndex;
+	u32 absPageIndex;
+	for (u32 i = 0; i < pagesCount; i++)
 	{
-		// Allocate VDN only if empty and set to null initially.
-		if (mPageTable[directoryIndex] == nullptr) {
-			mPageTable[directoryIndex] = new void*[PAGE_ENTRIES];
-			// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
-			memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
-		}
+		// Get absolute directory and page index.
+		absDirectoryIndex = getAbsDirectoryFromPageOffset(absPageStartIndex, i);
+		absPageIndex = getAbsDirPageFromPageOffset(absPageStartIndex, i);
 
-		// Add in the page entries.
-		// If we are on directory index 0 then we must start from baseVPN page.
-		// If we are on the last directory index then we must stop at pagesCountRem.
-		// Else it must be in a middle directory, and all of the pages are used.
-		u32 directoryDelta = directoryIndex - baseVDN;
-		u32 pageIndexStart = (directoryIndex == 0 ? baseVPN : 0);
-		u32 pageIndexStop = (directoryIndex == (directoryIndexStop - 1) ? pagesCountRem : PAGE_ENTRIES);
-		for (u32 pageIndex = pageIndexStart; pageIndex < pageIndexStop; pageIndex++)
-		{
-			u32 pageDelta = pageIndex - pageIndexStart;
-			mPageTable[directoryIndex][pageIndex] = reinterpret_cast<void*>(clientMemoryAddressInt + directoryDelta*PAGE_ENTRIES*PAGE_SIZE_BYTES + pageDelta*PAGE_SIZE_BYTES);
-		}		
+		// Make sure directory is allocated.
+		allocDirectory(absDirectoryIndex);
+
+		// Map memory entry.
+		mPageTable[absDirectoryIndex][absPageIndex] = reinterpret_cast<void*>(clientMemoryAddressInt + i * PAGE_SIZE_BYTES);
 	}
 }
 
@@ -99,11 +87,31 @@ u32 MMUHandler::getOffset(u32 PS2MemoryAddress) const
 	return PS2MemoryAddress & OFFSET_MASK;
 }
 
+u32 MMUHandler::getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+{
+	return (absPageIndexStart + pageOffset) / PAGE_ENTRIES;
+}
+
+u32 MMUHandler::getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+{
+	return (absPageIndexStart + pageOffset) % PAGE_ENTRIES;
+}
+
+void MMUHandler::allocDirectory(u32 directoryIndex) const
+{
+	// Allocate VDN only if empty and set to null initially.
+	if (mPageTable[directoryIndex] == nullptr) {
+		mPageTable[directoryIndex] = new void*[PAGE_ENTRIES];
+		// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
+		memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
+	}
+}
+
 void* MMUHandler::getclientMemoryAddress(u32 PS2MemoryAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN) & offset.
-	u32 baseVPN = getVPN(PS2MemoryAddress);
 	u32 baseVDN = getVDN(PS2MemoryAddress);
+	u32 baseVPN = getVPN(PS2MemoryAddress);
 	u32 offset = getOffset(PS2MemoryAddress);
 
 	// Lookup the page in the page table to get the client base memory address (aka page frame number (PFN)).
