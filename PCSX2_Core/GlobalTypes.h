@@ -32,6 +32,10 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
+// Single precision float (needs to be 32-bit for emulation to work, see Types_Test.cpp).
+// If the test fails, you may need to add in a platform specific definition based on an #if directive.
+typedef float f32;
+
 // 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
 // Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2.
 // Mnemonic: v64 stands for value (64-bit), v32 stands for value (32-bit), etc.

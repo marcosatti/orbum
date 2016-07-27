@@ -150,11 +150,13 @@
   <ItemGroup>
     <ClInclude Include="BitfieldRegister_t.h" />
     <ClInclude Include="COP0_t.h" />
-    <ClInclude Include="COP0_Registers_t.h" />
+    <ClInclude Include="COP0_BitfieldRegisters_t.h" />
+    <ClInclude Include="COP1_BitfieldRegisters_t.h" />
     <ClInclude Include="COP1_t.h" />
     <ClInclude Include="EECore_t.h" />
     <ClInclude Include="EE_t.h" />
     <ClInclude Include="ExceptionHandler.h" />
+    <ClInclude Include="FPURegister_t.h" />
     <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="GlobalLog.h" />
     <ClInclude Include="GlobalMacros.h" />
@@ -182,6 +184,7 @@
   <ItemGroup>
     <ClCompile Include="BitfieldRegister_t.cpp" />
     <ClCompile Include="ExceptionHandler.cpp" />
+    <ClCompile Include="FPURegister_t.cpp" />
     <ClCompile Include="GlobalLog.cpp" />
     <ClCompile Include="Instruction_t.cpp" />
     <ClCompile Include="Interpreter.cpp" />

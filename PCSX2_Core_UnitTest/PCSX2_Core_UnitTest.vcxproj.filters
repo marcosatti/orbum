@@ -23,5 +23,8 @@
     <ClCompile Include="MMUHandler_Test.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Types_Test.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

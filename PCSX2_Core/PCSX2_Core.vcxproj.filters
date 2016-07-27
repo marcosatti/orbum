@@ -73,8 +73,14 @@
     <Filter Include="VM\MMUHandler">
       <UniqueIdentifier>{a76f836c-dd19-440a-bb7b-281523bdcc9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\PS2 Resources\EE\MainMemory">
+    <Filter Include="Common\PS2 Resources\MainMemory">
       <UniqueIdentifier>{1bb81ba9-bde2-4015-94c1-a609b3164bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers">
+      <UniqueIdentifier>{6973ef0e-c95c-4691-a8c1-23ddbd476952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers">
+      <UniqueIdentifier>{f83163e4-ae7e-43bb-84b9-6ed64d8fb684}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="COP0_Registers_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore\COP0</Filter>
-    </ClInclude>
     <ClInclude Include="COP0_t.h">
       <Filter>Common\PS2 Resources\EE\EECore\COP0</Filter>
     </ClInclude>
@@ -150,7 +153,7 @@
       <Filter>VM\Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="MainMemory_t.h">
-      <Filter>Common\PS2 Resources\EE\MainMemory</Filter>
+      <Filter>Common\PS2 Resources\MainMemory</Filter>
     </ClInclude>
     <ClInclude Include="GlobalLog.h">
       <Filter>Common\Global</Filter>
@@ -166,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="GlobalConstants.h">
       <Filter>Common\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="COP0_BitfieldRegisters_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="FPURegister_t.h">
+      <Filter>Common\PS2 Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="COP1_BitfieldRegisters_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="MMUHandler.cpp">
       <Filter>VM\MMUHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="FPURegister_t.cpp">
+      <Filter>Common\PS2 Types\Registers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

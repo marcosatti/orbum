@@ -15,5 +15,5 @@ class EE_t
 {
 public:
 	// The EECore structure.
-	PS2::EE::EECore_t EECore;
+	EECore_t EECore;
 };

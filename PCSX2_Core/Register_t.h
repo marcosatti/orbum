@@ -18,7 +18,8 @@ class Register128_t {
 public:
 	// The PS2 never operates or manipulates values above 32-bit - but it can do parallel operations on for example 4 x 32-bit values. 
 	// It is meaningless to provide a signed/unsigned combo of 64-bit and 128-bit variables since they can't be manipulated.
-	union {
+	union
+	{
 		u128 UQ;     // Unsigned Qword.
 		u64  UD[2];  // Unsigned Dword.
 
@@ -46,7 +47,8 @@ class Register64_t {
 public:
 	// The PS2 never operates or manipulates values above 32-bit - but it can do parallel operations on for example 4 x 32-bit values. 
 	// It is meaningless to provide a signed/unsigned combo of 64-bit and 128-bit variables since they can't be manipulated.
-	union {
+	union 
+	{
 		u64  UD;    // Unsigned Dword.
 
 		u32  UW[2]; // Unsigned Word.
@@ -71,7 +73,8 @@ public:
 
 class Register32_t {
 public:
-	union {
+	union 
+	{
 		u32  UW;    // Unsigned Word.
 		s32  SW;    // Signed Word.
 		u16  UH[2]; // Unsigned Hword.
