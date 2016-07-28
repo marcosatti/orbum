@@ -25,23 +25,11 @@
     <Filter Include="Common\PS2 Resources\EE\EECore\COP1">
       <UniqueIdentifier>{f4331725-feb3-4219-9175-3dcd49d2e6cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\PS2 Resources\EE\VPU">
-      <UniqueIdentifier>{256b7efe-dda5-42f1-9a01-17fccd9ee8e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\PS2 Resources\EE\VPU\VIF">
-      <UniqueIdentifier>{c54e4c72-f916-4eba-a90a-9944b796d50a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\PS2 Resources\EE\VPU\VU">
-      <UniqueIdentifier>{2f055b2b-3205-4ce2-838b-71420d6a6418}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\PS2 Types">
       <UniqueIdentifier>{af068465-91f9-4b8a-9dda-3946f7b308a8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\PS2 Types\Registers">
       <UniqueIdentifier>{8fe87a6f-96f9-476b-83b3-c9da1b47f016}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\PS2 Types\Exceptions">
-      <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\PS2 Constants">
       <UniqueIdentifier>{8a73cfce-df01-43ec-a0ac-b46e9451270c}</UniqueIdentifier>
@@ -61,15 +49,6 @@
     <Filter Include="VM\ExceptionHandler">
       <UniqueIdentifier>{866e343f-bd57-48c5-8ef6-957def2db35a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="VM\Interfaces">
-      <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\PS2 Types\Instructions">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VM\ExecutionCore\Interpreter\R5900">
-      <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
-    </Filter>
     <Filter Include="VM\MMUHandler">
       <UniqueIdentifier>{a76f836c-dd19-440a-bb7b-281523bdcc9a}</UniqueIdentifier>
     </Filter>
@@ -82,138 +61,150 @@
     <Filter Include="Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers">
       <UniqueIdentifier>{f83163e4-ae7e-43bb-84b9-6ed64d8fb684}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\PS2 Types\MIPSInstruction">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Types\PS2Exception">
+      <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VM\ExecutionCore\Interpreter\InterpreterR5900">
+      <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VM\Component Interfaces">
+      <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Instruction_t.h">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
+    <ClInclude Include="Source\stdafx.h" />
+    <ClInclude Include="Source\targetver.h" />
+    <ClInclude Include="Source\Common\Global\GlobalConstants.h">
       <Filter>Common\Global</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalMacros.h">
+    <ClInclude Include="Source\Common\Global\GlobalLog.h">
       <Filter>Common\Global</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalTypes.h">
+    <ClInclude Include="Source\Common\Global\GlobalMacros.h">
       <Filter>Common\Global</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="COP0_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore\COP0</Filter>
+    <ClInclude Include="Source\Common\Global\Globals.h">
+      <Filter>Common\Global</Filter>
     </ClInclude>
-    <ClInclude Include="R5900_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore\R5900</Filter>
+    <ClInclude Include="Source\Common\Global\GlobalTypes.h">
+      <Filter>Common\Global</Filter>
     </ClInclude>
-    <ClInclude Include="COP1_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore\COP1</Filter>
-    </ClInclude>
-    <ClInclude Include="Register_t.h">
-      <Filter>Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="BitfieldRegister_t.h">
-      <Filter>Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="EECore_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore</Filter>
-    </ClInclude>
-    <ClInclude Include="EE_t.h">
-      <Filter>Common\PS2 Resources\EE</Filter>
-    </ClInclude>
-    <ClInclude Include="PS2Resources_t.h">
-      <Filter>Common\PS2 Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Interpreter.h">
-      <Filter>VM\ExecutionCore\Interpreter</Filter>
-    </ClInclude>
-    <ClInclude Include="PS2Constants.h">
+    <ClInclude Include="Source\Common\PS2 Constants\PS2Constants.h">
       <Filter>Common\PS2 Constants</Filter>
     </ClInclude>
-    <ClInclude Include="PS2Exception_t.h">
-      <Filter>Common\PS2 Types\Exceptions</Filter>
+    <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h">
+      <Filter>Common\PS2 Resources</Filter>
     </ClInclude>
-    <ClInclude Include="VMMain.h">
-      <Filter>VM</Filter>
-    </ClInclude>
-    <ClInclude Include="VMBaseComponent.h">
-      <Filter>VM\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="VMExecutionCoreComponent.h">
-      <Filter>VM\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="VMExceptionHandlerComponent.h">
-      <Filter>VM\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="ExceptionHandler.h">
-      <Filter>VM\ExceptionHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="VMInterpreterComponent.h">
-      <Filter>VM\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMemory_t.h">
+    <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h">
       <Filter>Common\PS2 Resources\MainMemory</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalLog.h">
-      <Filter>Common\Global</Filter>
-    </ClInclude>
-    <ClInclude Include="InterpreterR5900.h">
-      <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
-    </ClInclude>
-    <ClInclude Include="VMMMUComponent.h">
-      <Filter>VM\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="MMUHandler.h">
-      <Filter>VM\MMUHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="GlobalConstants.h">
-      <Filter>Common\Global</Filter>
-    </ClInclude>
-    <ClInclude Include="COP0_BitfieldRegisters_t.h">
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers\COP0_BitfieldRegisters_t.h">
       <Filter>Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers</Filter>
     </ClInclude>
-    <ClInclude Include="FPURegister_t.h">
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers\COP1_BitfieldRegisters_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\COP0</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\COP1_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\COP1</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EE_t.h">
+      <Filter>Common\PS2 Resources\EE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\EECore_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.h">
+      <Filter>Common\PS2 Resources\EE\EECore\R5900</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.h">
+      <Filter>Common\PS2 Types\MIPSInstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.h">
+      <Filter>Common\PS2 Types\PS2Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\Registers\Register_t.h">
       <Filter>Common\PS2 Types\Registers</Filter>
     </ClInclude>
-    <ClInclude Include="COP1_BitfieldRegisters_t.h">
-      <Filter>Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers</Filter>
+    <ClInclude Include="Source\Common\PS2 Types\Registers\FPURegister_t.h">
+      <Filter>Common\PS2 Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.h">
+      <Filter>Common\PS2 Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\ExceptionHandler\ExceptionHandler.h">
+      <Filter>VM\ExceptionHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h">
+      <Filter>VM\ExecutionCore\Interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900.h">
+      <Filter>VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\MMUHandler\MMUHandler.h">
+      <Filter>VM\MMUHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMBaseComponent.h">
+      <Filter>VM\Component Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMExceptionHandlerComponent.h">
+      <Filter>VM\Component Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMExecutionCoreComponent.h">
+      <Filter>VM\Component Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMInterpreterComponent.h">
+      <Filter>VM\Component Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\VMMain.h">
+      <Filter>VM</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h">
+      <Filter>VM\Component Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Instruction_t.cpp">
-      <Filter>Common\PS2 Types\Instructions</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="BitfieldRegister_t.cpp">
-      <Filter>Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Register_t.cpp">
-      <Filter>Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Interpreter.cpp">
-      <Filter>VM\ExecutionCore\Interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="PS2Exception_t.cpp">
-      <Filter>Common\PS2 Types\Exceptions</Filter>
-    </ClCompile>
-    <ClCompile Include="VMMain.cpp">
-      <Filter>VM</Filter>
-    </ClCompile>
-    <ClCompile Include="ExceptionHandler.cpp">
-      <Filter>VM\ExceptionHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalLog.cpp">
+    <ClCompile Include="Source\stdafx.cpp" />
+    <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
       <Filter>Common\Global</Filter>
     </ClCompile>
-    <ClCompile Include="InterpreterR5900.cpp">
-      <Filter>VM\ExecutionCore\Interpreter\R5900</Filter>
+    <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp">
+      <Filter>Common\PS2 Types\MIPSInstruction</Filter>
     </ClCompile>
-    <ClCompile Include="MMUHandler.cpp">
-      <Filter>VM\MMUHandler</Filter>
+    <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp">
+      <Filter>Common\PS2 Types\PS2Exception</Filter>
     </ClCompile>
-    <ClCompile Include="FPURegister_t.cpp">
+    <ClCompile Include="Source\Common\PS2 Types\Registers\Register_t.cpp">
       <Filter>Common\PS2 Types\Registers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister_t.cpp">
+      <Filter>Common\PS2 Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.cpp">
+      <Filter>Common\PS2 Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\ExceptionHandler\ExceptionHandler.cpp">
+      <Filter>VM\ExceptionHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp">
+      <Filter>VM\ExecutionCore\Interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900.cpp">
+      <Filter>VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp">
+      <Filter>VM\MMUHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\VMMain.cpp">
+      <Filter>VM</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Source\ReadMe.txt" />
   </ItemGroup>
 </Project>

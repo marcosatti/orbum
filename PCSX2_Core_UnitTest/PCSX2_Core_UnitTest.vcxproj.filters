@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Tests">
+    <Filter Include="Source">
       <UniqueIdentifier>{07613a86-2f1a-4f59-b91f-0043347a3d8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -9,22 +9,28 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="Source\targetver.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stdafx.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Main.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="R5900Instruction_Test.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Source\MMUHandler_Test.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="MMUHandler_Test.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Source\R5900Instruction_Test.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Types_Test.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Source\Types_Test.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stdafx.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
