@@ -2,7 +2,7 @@
 
 
 #include "VM/Component Interfaces/VMInterpreterComponent.h"
-#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/PS2 Types/MIPSInstructionHelper/MIPSInstructionHelper_t.h"
 
 class VMMain;
 class InterpreterR5900 : public VMInterpreterComponent
@@ -10,6 +10,7 @@ class InterpreterR5900 : public VMInterpreterComponent
 public:
 	InterpreterR5900(const VMMain *const vmMain, const Interpreter *const interpreter);
 	~InterpreterR5900();
+
 	void runInterpreterComponent() override;
 
 private:
@@ -27,19 +28,16 @@ private:
 	INLINE void setR5900PCValueRelative(s32 relativeLocation) const;
 
 	/*
-	The instruction holder, used as a temporary holder for the current instruction.
-	This is used in the interpreter whilst looking up the instruction to determine what operation to perform.
-	Convenience funcions are also defined as part of the Instruction object to access differnt parts of the opcode, but you will need to cast the MIPSInstruction_t to one of the sub-classes (I, J, R).
-	This is done in the instruction lookup table.
+	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
 	*/
-	MIPSInstruction_t mInstruction;
+	MIPSInstructionHelper_t mInstruction;
 
 	/*
 	Unknown opcode function - does nothing when executed.
-	If enabled, can be used to debug an unknown opcode by logging a message.
+	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	Will increase PC by 4 regardless.
 	*/
-	void opcodeUnknown();
+	NO_INLINE void unknownOperation();
 
 	/*
 	MIPS Instruction Opcode table. Calls functions based on opcode field.
@@ -49,14 +47,14 @@ private:
 	*/
 	voidfunc_ptr opcodeTable[64] = 
 	{
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown,
-		&InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown, &InterpreterR5900::opcodeUnknown
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
+		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation
 	};
 };
 

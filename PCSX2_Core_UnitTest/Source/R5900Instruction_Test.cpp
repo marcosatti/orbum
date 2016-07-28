@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <Common/Global/Globals.h>
-#include <Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h>
+#include <Common/PS2 Types/MIPSInstructionHelper/MIPSInstructionHelper_t.h>
 
 
 TEST(R5900Instruction_Test, RType)
@@ -10,7 +10,7 @@ TEST(R5900Instruction_Test, RType)
 	// SUB $7, $8, $9
 	u32 rawInstruction = 0x01093822; // (8 << 21) | (9 << 16) | (7 << 11) | 34;
 
-	MIPSInstruction_t instruction;
+	MIPSInstructionHelper_t instruction;
 	instruction.setInstruction(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 0);
@@ -26,7 +26,7 @@ TEST(R5900Instruction_Test, IType)
 	// LHU $5, +254($10)
 	u32 rawInstruction = 0x954500FE; // (37 << 26) | (10 << 21) | (5 << 16) | 254;
 
-	MIPSInstruction_t instruction;
+	MIPSInstructionHelper_t instruction;
 	instruction.setInstruction(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 37);
@@ -40,7 +40,7 @@ TEST(R5900Instruction_Test, JType)
 	// J -4096
 	u32 rawInstruction = 0x0BFFF000;
 
-	MIPSInstruction_t instruction;
+	MIPSInstructionHelper_t instruction;
 	instruction.setInstruction(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 2);

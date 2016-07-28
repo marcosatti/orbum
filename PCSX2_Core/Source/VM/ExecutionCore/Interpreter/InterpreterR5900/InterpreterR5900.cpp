@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Common/Global/GlobalConstants.h"
+
 #include "VM/ExecutionCore/Interpreter/InterpreterR5900/InterpreterR5900.h"
 #include "VM/VMMain.h"
 
@@ -32,10 +34,13 @@ INLINE void InterpreterR5900::setR5900PCValueRelative(s32 relativeLocation) cons
 	getVM()->getResources()->EE.EECore.R5900.PC.UW += relativeLocation;
 }
 
-void InterpreterR5900::opcodeUnknown()
+// ReSharper disable once CppMemberFunctionMayBeConst
+void InterpreterR5900::unknownOperation()
 {
 	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
 #if defined(BUILD_DEBUG)
 	logDebug("Unknown R5900 opcode encountered!");
 #endif
+
+	setR5900PCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
 }

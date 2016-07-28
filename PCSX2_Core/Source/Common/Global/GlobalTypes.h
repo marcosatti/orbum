@@ -32,7 +32,7 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-// Single precision float (needs to be 32-bit for emulation to work, see Types_Test.cpp).
+// Single precision float (needs to be 32-bit for emulation to work, see Types_Test.cpp in the ).
 // If the test fails, you may need to add in a platform specific definition based on an #if directive.
 typedef float f32;
 

@@ -13,6 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core_UnitTest", "PCSX
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTestLibrary", "GoogleTestLibrary\GoogleTestLibrary.vcxproj", "{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{DFE250AB-2868-4197-885A-31E81165E3D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{69D468DB-F5D3-4F0E-82F6-CDC24C11E194}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,5 +52,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E} = {69D468DB-F5D3-4F0E-82F6-CDC24C11E194}
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64} = {69D468DB-F5D3-4F0E-82F6-CDC24C11E194}
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D} = {DFE250AB-2868-4197-885A-31E81165E3D6}
 	EndGlobalSection
 EndGlobal

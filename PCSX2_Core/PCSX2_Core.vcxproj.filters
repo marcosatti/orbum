@@ -61,9 +61,6 @@
     <Filter Include="Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers">
       <UniqueIdentifier>{f83163e4-ae7e-43bb-84b9-6ed64d8fb684}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\PS2 Types\MIPSInstruction">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\PS2 Types\PS2Exception">
       <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
     </Filter>
@@ -72,6 +69,9 @@
     </Filter>
     <Filter Include="VM\Component Interfaces">
       <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\PS2 Types\MIPSInstructionHelper">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -122,9 +122,6 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.h">
       <Filter>Common\PS2 Resources\EE\EECore\R5900</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.h">
-      <Filter>Common\PS2 Types\MIPSInstruction</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.h">
       <Filter>Common\PS2 Types\PS2Exception</Filter>
     </ClInclude>
@@ -167,14 +164,14 @@
     <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h">
       <Filter>VM\Component Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.h">
+      <Filter>Common\PS2 Types\MIPSInstructionHelper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp" />
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
       <Filter>Common\Global</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp">
-      <Filter>Common\PS2 Types\MIPSInstruction</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp">
       <Filter>Common\PS2 Types\PS2Exception</Filter>
@@ -202,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="Source\VM\VMMain.cpp">
       <Filter>VM</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.cpp">
+      <Filter>Common\PS2 Types\MIPSInstructionHelper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

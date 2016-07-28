@@ -3,15 +3,14 @@
 #include "Common/Global/Globals.h"
 
 /*
-An instruction class which is used to hold any valid MIPS instruction.
-Convenience functions are provided for I, J and R instruction types.
-These convenience functions are all but 1 of the get functions, which are suffixed with the instruction type after "get".
-getOpcode() is common to all instruction types.
+A MIPS instruction helper class which is used to hold any valid MIPS instruction and read specific values from it.
+Convenience functions are provided for I, J and R instruction types, which are prefixed with 'get'.
+getOpcode() is common to all instruction types, and you can use this to determine which instruction type you have.
 */
 
 class Register32_t;
 
-class MIPSInstruction_t {
+class MIPSInstructionHelper_t {
 public:
 	/*
 	instruction holds the entire MIPS instruction, which the child class' convenience functions operate off.
@@ -24,7 +23,7 @@ public:
 	/*
 	Initialise an Instruction object with the specified 32-bit MIPS instruction. Defaults to 0.
 	*/
-	MIPSInstruction_t(const u32 instructionValue = 0);
+	MIPSInstructionHelper_t(const u32 instructionValue = 0);
 
 	/*
 	Set the instruction value. Allows an object to be reused so memory allocations are not wasted.
@@ -42,7 +41,7 @@ public:
 	- Rs					@ bits 21-25
 	- Rt					@ bits 16-20
 	- Rd					@ bits 11-15
-	- shamt (shift amount) @ bits 6-10
+	- shamt (shift amount)  @ bits 6-10
 	- funct (function)		@ bits 0-5
 	*/
 	INLINE u8 getRRs() const;
