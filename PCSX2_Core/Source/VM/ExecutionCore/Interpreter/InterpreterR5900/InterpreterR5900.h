@@ -11,9 +11,32 @@ public:
 	InterpreterR5900(const VMMain *const vmMain, const Interpreter *const interpreter);
 	~InterpreterR5900();
 
+	/*
+	This is the "main loop" function called by the base interpreter component.
+	*/
 	void runInterpreterComponent() override;
 
 private:
+
+	// General functions
+
+	/*
+	Convenience functions to get/set the R5900 PC.
+	*/
+	INLINE u32& getR5900PCValue() const;
+	INLINE void setR5900PCValueRelative(s32 relativeLocation) const;
+	INLINE void setR5900PCValueAbsolute(s32 absoluteLocation) const;
+	INLINE void setR5900PCValueNext() const; // Increments the PC by 4.
+
+	// Component state functions
+
+	/*
+	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
+	*/
+	MIPSInstructionHelper_t mInstruction;
+
+	// Instruction functions.
+
 	/*
 	Void function pointer type.
 	This type specifies a pointer to a function which returns nothing and has no parameters.
@@ -22,22 +45,11 @@ private:
 	typedef void(InterpreterR5900::*voidfunc_ptr)();
 
 	/*
-	Convenience functions to get/set the R5900 PC.
-	*/
-	INLINE u32& getR5900PCValue() const;
-	INLINE void setR5900PCValueRelative(s32 relativeLocation) const;
-
-	/*
-	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
-	*/
-	MIPSInstructionHelper_t mInstruction;
-
-	/*
 	Unknown opcode function - does nothing when executed.
 	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	Will increase PC by 4 regardless.
 	*/
-	NO_INLINE void unknownOperation();
+	void unknownOperation();
 
 	/*
 	MIPS Instruction Opcode table. Calls functions based on opcode field.

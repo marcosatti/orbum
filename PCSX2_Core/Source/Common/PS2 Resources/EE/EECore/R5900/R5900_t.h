@@ -9,6 +9,22 @@ public:
 	The R5900 is the EE Core's CPU. It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
 	It uses a little-endian configuration (bit 0 is always the LSB).
 	*/
+	
+	// CPU state implementations.
+
+	/*
+	The branch delay slot toggle. If the flag is set to true, next cycle will execute the instruction contained at the address mBranchDelayInstructionPC.
+	Use the function provided to set the flag, which will automatically assign the correct branch delay instruction address.
+	*/
+	bool bIsNextCycleBranchDelaySlot;
+	u32 mBranchDelayInstructionPC;
+	void setBranchDelayInstruction()
+	{
+
+		bIsNextCycleBranchDelaySlot = true;
+		mBranchDelayInstructionPC = PC.UW + Constants::SIZE_MIPS_INSTRUCTION;
+
+	}
 
 	// Register implementations.
 

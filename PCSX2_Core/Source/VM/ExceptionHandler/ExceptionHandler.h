@@ -15,7 +15,7 @@ class ExceptionHandler : public VMExceptionHandlerComponent
 {
 public:
 	/*
-	ExceptionProperties(_t) describes the exception context parameters to be set when an exception of that type is handled.
+	ExceptionProperties_t describes the exception context parameters to be set when an exception of that type is handled.
 	*/
 	struct ExceptionProperties_t
 	{

@@ -24,17 +24,26 @@ void InterpreterR5900::runInterpreterComponent()
 	(this->*opcodeTable[opcodeValue])();
 }
 
-INLINE u32 & InterpreterR5900::getR5900PCValue() const
+u32 & InterpreterR5900::getR5900PCValue() const
 {
 	return getVM()->getResources()->EE.EECore.R5900.PC.UW;
 }
 
-INLINE void InterpreterR5900::setR5900PCValueRelative(s32 relativeLocation) const
+void InterpreterR5900::setR5900PCValueRelative(s32 relativeLocation) const
 {
 	getVM()->getResources()->EE.EECore.R5900.PC.UW += relativeLocation;
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
+void InterpreterR5900::setR5900PCValueAbsolute(s32 absoluteLocation) const
+{
+	getVM()->getResources()->EE.EECore.R5900.PC.UW = absoluteLocation;
+}
+
+void InterpreterR5900::setR5900PCValueNext() const
+{
+	setR5900PCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
+}
+
 void InterpreterR5900::unknownOperation()
 {
 	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
@@ -42,5 +51,5 @@ void InterpreterR5900::unknownOperation()
 	logDebug("Unknown R5900 opcode encountered!");
 #endif
 
-	setR5900PCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
+	setR5900PCValueNext();
 }
