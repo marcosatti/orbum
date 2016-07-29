@@ -13,14 +13,14 @@ It is probably faster when compiled to use a u32 for each field and perfoming on
 In order to use this, first you must register a field with the registerField() function. 
 Once done, you may get and set the fields using the unique name you provided to registerField() function.
 
-Compatibility with a hardware bitfield register is provided though the get and setBitfieldRegister() functions.
+Compatibility with a hardware bitfield register is provided though the get and setRegisterValue() functions.
 These functions manipulate the Register32_t.UW variable to produce the condensed u32 bitfield.
-Note that the values set through setFieldValue() will not reflect through Register32_t.UW until getBitfieldRegister() is called. This is done to reduce overhead.
+Note that the values set through setFieldValue() will not reflect through Register32_t.UW until getRegisterValue() is called. This is done to reduce overhead.
 
 It is the users responsibility to make sure the values set are appropriate. For example if you:
  1) Have declared a field to be 3 bits long.
  2) Set the field value to a number which requires more than 3 bits (eg: decimal 10).
- 3) Request the full bitfield through getBitfieldRegister().
+ 3) Request the full bitfield through getRegisterValue().
 You will only get 3 bits worth back, even though the field value may still reflect decimal 10.
 
 TODO: Implement checks for invalid values on initalisation and get and setting fields.
@@ -48,12 +48,12 @@ public:
 	/*
 	Gets the combined bitfield value from the individual fields. Also syncs Register32_t.UW to reflect the same value.
 	*/
-	u32 getBitfieldRegister();
+	u32 getRegisterValue();
 
 	/*
 	Sets the Register32_t.UW register value to reflect the parsed value, and updates all of the registered fields to reflect the bitfield values from Register32_t.UW.
 	*/
-	void setBitfieldRegister(u32 value);
+	void setRegisterValue(u32 value);
 
 private:
 	/*

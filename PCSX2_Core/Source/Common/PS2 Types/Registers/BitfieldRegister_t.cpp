@@ -19,7 +19,7 @@ void BitfieldRegister_t::setFieldValue(const std::string & fieldName, const u32 
 	mFieldMap[fieldName]->mFieldValue = value;
 }
 
-u32 BitfieldRegister_t::getBitfieldRegister()
+u32 BitfieldRegister_t::getRegisterValue()
 {
 	// Need to sync Register value with the individual fields first.
 	std::shared_ptr<BitfieldProperties_t> props;
@@ -33,7 +33,7 @@ u32 BitfieldRegister_t::getBitfieldRegister()
 	return this->UW;
 }
 
-void BitfieldRegister_t::setBitfieldRegister(u32 value)
+void BitfieldRegister_t::setRegisterValue(u32 value)
 {
 	// Need to sync the parsed value with the Register first.
 	this->UW = value;

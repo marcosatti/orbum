@@ -52,7 +52,7 @@ public:
 	void handleException(const PS2Exception_t& PS2Exception) override;
 
 private:
-	void handleException_L1(const PS2Exception_t& PS2Exception);
-	void handleException_L2(const PS2Exception_t& PS2Exception);
+	void handleException_L1(const ExceptionProperties_t & exceptionProperties) const;
+	void handleException_L2(const ExceptionProperties_t & exceptionProperties) const;
 };
 

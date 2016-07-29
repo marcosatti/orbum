@@ -5,10 +5,11 @@
 
 Interpreter::Interpreter(const VMMain* const vmMain) : VMExecutionCoreComponent(vmMain)
 {
+	mInterpreterR5900 = std::make_unique<InterpreterR5900>(vmMain, this);
 }
 
-void Interpreter::emulationLoop()
+void Interpreter::executionLoop() const
 {
 	// TODO: Implement.
-
+	mInterpreterR5900->runInterpreterComponent();
 }

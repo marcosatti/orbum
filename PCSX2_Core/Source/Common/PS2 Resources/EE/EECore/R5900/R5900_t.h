@@ -13,16 +13,16 @@ public:
 	// CPU state implementations.
 
 	/*
-	The branch delay slot toggle. If the flag is set to true, next cycle will execute the instruction contained at the address mBranchDelayInstructionPC.
+	The branch delay slot toggle. If the flag is set to true, next cycle will execute the instruction contained at the address mBranchDelaySlotInstructionPC.
 	Use the function provided to set the flag, which will automatically assign the correct branch delay instruction address.
 	*/
-	bool bIsNextCycleBranchDelaySlot;
-	u32 mBranchDelayInstructionPC;
-	void setBranchDelayInstruction()
+	bool mIsInBranchDelaySlot;
+	u32 mBranchDelaySlotInstructionPC;
+	void setBranchDelaySlotInstruction()
 	{
 
-		bIsNextCycleBranchDelaySlot = true;
-		mBranchDelayInstructionPC = PC.UW + Constants::SIZE_MIPS_INSTRUCTION;
+		mIsInBranchDelaySlot = true;
+		mBranchDelaySlotInstructionPC = PC.UW + Constants::SIZE_MIPS_INSTRUCTION;
 
 	}
 
