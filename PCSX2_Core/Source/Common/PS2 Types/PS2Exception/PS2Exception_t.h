@@ -19,7 +19,7 @@ class PS2Exception_t
 public:
 	/*
 	Lists all of the 20 exceptions that can be encountered when running a PS2 system. For reference, see EE Core Users Manual page 94.
-	Due to macro issues caused by <math>(?), all of the exceptions have EX_ as a prefix.
+	Due to macro issues caused by <math>, all of the exceptions have EX_ as a prefix.
 	*/
 	enum ExceptionType
 	{
@@ -45,10 +45,9 @@ public:
 		EX_TRAP = 19
 	};
 
-
 	PS2Exception_t(const ExceptionType & exceptionType);
-	PS2Exception_t(const ExceptionType & exceptionType, const std::string & exceptionMessage);
-	PS2Exception_t(const ExceptionType & exceptionType, const std::string & exceptionMessage, const PS2Resources_t & resourcesState);
+	PS2Exception_t(const ExceptionType & exceptionType, const std::string & exceptionMessage); // Useful for debugging.
+	PS2Exception_t(const ExceptionType & exceptionType, const std::string & exceptionMessage, const PS2Resources_t & resourcesState); // Useful for debugging.
 	~PS2Exception_t();
 
 	const ExceptionType & getExceptionType() const;
@@ -57,6 +56,6 @@ public:
 private:
 	const ExceptionType mExceptionType;
 	const std::string mExceptionMessage;
-	const std::unique_ptr<PS2Resources_t> mResourcesDump;
+	const std::shared_ptr<PS2Resources_t> mResourcesDump;
 };
 

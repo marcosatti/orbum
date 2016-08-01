@@ -3,6 +3,7 @@
 #include "Common/PS2 Resources/EE/EECore/R5900/R5900_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP1/COP1_t.h"
+#include "Common/PS2 Resources/EE/EECore/ScratchpadMemory/ScratchpadMemory.h"
 
 /*
 TODO: finish off documentation when all components are ready.
@@ -16,6 +17,9 @@ class EECore_t {
 public:
 	// R5900 CPU
 	R5900_t R5900;
+
+	// Scratchpad memory
+	ScratchpadMemory_t ScratchpadMemory;
 
 	// COP0 coprocessor
 	COP0_t COP0;

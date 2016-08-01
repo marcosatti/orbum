@@ -20,7 +20,7 @@ PS2Exception_t::PS2Exception_t(const ExceptionType & exceptionType, const std::s
 PS2Exception_t::PS2Exception_t(const ExceptionType & exceptionType, const std::string & exceptionMessage, const PS2Resources_t & resourcesState) :
 	mExceptionType(exceptionType),
 	mExceptionMessage(exceptionMessage),
-	mResourcesDump(std::make_unique<PS2Resources_t>(resourcesState))
+	mResourcesDump(std::make_shared<PS2Resources_t>(resourcesState))
 {
 }
 

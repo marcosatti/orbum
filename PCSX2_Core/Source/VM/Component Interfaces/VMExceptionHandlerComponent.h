@@ -9,8 +9,7 @@ class PS2Exception_t;
 class VMExceptionHandlerComponent : public VMBaseComponent
 {
 public:
-	explicit VMExceptionHandlerComponent(const VMMain* vmMain)
-		: VMBaseComponent(vmMain)
+	explicit VMExceptionHandlerComponent(const VMMain *const vmMain) : VMBaseComponent(vmMain)
 	{
 	}
 

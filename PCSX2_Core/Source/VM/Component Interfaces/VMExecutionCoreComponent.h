@@ -5,7 +5,7 @@
 class VMExecutionCoreComponent : public VMBaseComponent
 {
 public:
-	explicit VMExecutionCoreComponent(const VMMain* vmMain) : VMBaseComponent(vmMain)
+	explicit VMExecutionCoreComponent(const VMMain *const vmMain) : VMBaseComponent(vmMain)
 	{
 	}
 

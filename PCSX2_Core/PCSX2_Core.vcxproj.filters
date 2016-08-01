@@ -73,6 +73,18 @@
     <Filter Include="Common\PS2 Types\MIPSInstructionHelper">
       <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\PS2 Resources\EE\EECore\ScratchpadMemory">
+      <UniqueIdentifier>{13769b44-89f3-4142-bcb4-c848d5d50886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VM\Common">
+      <UniqueIdentifier>{6b2f8126-7340-4d91-a42d-aac417fe49f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VM\Common\PS2 Components">
+      <UniqueIdentifier>{ed34c6ef-55df-43e6-941f-25e8558b329f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VM\Common\PS2 Components\PS2MMUHandler">
+      <UniqueIdentifier>{fd995361-4a05-4633-b6d1-fdd2aee746ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h" />
@@ -167,6 +179,13 @@
     <ClInclude Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.h">
       <Filter>Common\PS2 Types\MIPSInstructionHelper</Filter>
     </ClInclude>
+    <ClInclude Include="Source\VM\Component Interfaces\VMPS2Component.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h">
+      <Filter>Common\PS2 Resources\EE\EECore\ScratchpadMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\Common\PS2 Components\PS2MMUHandler\PS2MMUHandler.h">
+      <Filter>VM\Common\PS2 Components\PS2MMUHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp" />
@@ -202,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.cpp">
       <Filter>Common\PS2 Types\MIPSInstructionHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\Common\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp">
+      <Filter>VM\Common\PS2 Components\PS2MMUHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
