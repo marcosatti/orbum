@@ -18,9 +18,6 @@ public:
 	// R5900 CPU
 	R5900_t R5900;
 
-	// Scratchpad memory
-	ScratchpadMemory_t ScratchpadMemory;
-
 	// COP0 coprocessor
 	COP0_t COP0;
 
@@ -34,5 +31,8 @@ public:
 	*/
 	// TODO: Implement. As there is VPU0/VPU1, need to develop a VPU_t.h file and reuse it here.
 	// VPU_t VPU0;
+
+	// Scratchpad memory
+	ScratchpadMemory_t ScratchpadMemory;
 
 };

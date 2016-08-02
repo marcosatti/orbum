@@ -6,6 +6,10 @@
 #include "Common/PS2 Constants/PS2Constants.h"
 
 class VMMain;
+
+/*
+PS2MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB)
+*/
 class PS2MMUHandler : public VMPS2Component
 {
 public:
@@ -19,7 +23,8 @@ public:
 	Access type information is needed in order to throw the correct exception if an error occurs (eventually it is handled by one of the PS2 bios exception handler vectors).
 	*/
 	enum AccessType {READ, WRITE};
-	u32 getPS2PhysicalAddress_Stage1(u32 PS2VirtualAddress, AccessType accessType) const;
+	u32 getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const; // Convenience function for Stage 1 (looks nicer).
+	u32 getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const;
 
 private:
 	/*
@@ -65,15 +70,15 @@ private:
 	Stage 3 of a physical address lookup. See diagram on EE Core Users Manual page 122.
 	Tests the valid and dirty flags. Also determines if the VPN in PS2VirtualAddress is for the Odd or Even PFN (by testing the LSB). Calls either the Stage4 Odd or Even functions based on this.
 	*/
-	u32 getPS2PhysicalAddress_Stage3(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation & tlbEntry) const;
+	u32 getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const;
 
 	/*
 	Stage 4 of a physical address lookup. See diagram on EE Core Users Manual page 122.
 	Split up into Odd or Even functions, based on the LSB of the VPN from PS2VirtualAddress.
 	Returns the PS2 Physical Address, based on which memory is accessed (scratchpad, cache or main memory).
 	*/
-	u32 getPS2PhysicalAddress_Stage4Odd(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation & tlbEntry) const;
-	u32 getPS2PhysicalAddress_Stage4Even(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation & tlbEntry) const;
+	u32 getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const;
+	u32 getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const;
 
 	/*
 	Performs an iterative lookup on the TLB for the given VPN contained in the PS2VirtualAddress.

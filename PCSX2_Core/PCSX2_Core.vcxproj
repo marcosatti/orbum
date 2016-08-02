@@ -152,6 +152,7 @@
     <Text Include="Source\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h" />
@@ -186,7 +187,7 @@
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h" />
-    <ClInclude Include="Source\VM\Common\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
+    <ClInclude Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.cpp" />
@@ -206,7 +207,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\VM\Common\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp" />
+    <ClCompile Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

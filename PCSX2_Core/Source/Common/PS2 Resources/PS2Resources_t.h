@@ -2,6 +2,7 @@
 
 #include "Common/PS2 Resources/EE/EE_t.h"
 #include "Common/PS2 Resources/MainMemory/MainMemory_t.h"
+#include "Common/PS2 Resources/BootROM/BootRom.h"
 
 /*
 TODO: finish writing documentation.
@@ -22,8 +23,11 @@ public:
 	// The EE structure.
 	EE_t EE;
 	
-	// The Main Memory (32MB)
+	// Main Memory (32MB)
 	MainMemory_t MainMemory;
+
+	// Boot ROM (4MB)
+	BootROM_t BootROM;
 
 private:
 	

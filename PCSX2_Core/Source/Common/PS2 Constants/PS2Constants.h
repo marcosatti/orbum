@@ -28,7 +28,8 @@ public:
 			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
 			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
 
-			// Scratchpad memory.
+			// Scratchpad memory - see 'Memory Mappings.xlsx' for information as this is PCSX2 specific.
+			static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x14000000;
 			static constexpr u32 SIZE_SCRATCHPAD_MEMORY = 0x00004000; // 16KB
 
 			struct MMU {
@@ -75,10 +76,14 @@ public:
 			};
 
 		};
-
-		// Main memory. See EE Users Manual page 20 onwards.
-		static constexpr u32 PADDRESS_MAIN_MEMORY = 0x00000000;
-		static constexpr u32 SIZE_MAIN_MEMORY = 0x02000000; // 32MB.. which isn't actually documented anywhere in the offical docs?
 	};
+
+	// Main memory. See EE Users Manual page 20 onwards.
+	static constexpr u32 PADDRESS_MAIN_MEMORY = 0x00000000;
+	static constexpr u32 SIZE_MAIN_MEMORY = 0x02000000; // 32MB.. which isn't actually documented anywhere in the offical docs?
+
+	// Boot Rom. See EE Users Manual page 20.
+	static constexpr u32 PADDRESS_BOOT_ROM = 0x1FC00000;
+	static constexpr u32 SIZE_BOOT_ROM = 0x00400000;
 };
 

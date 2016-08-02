@@ -5,22 +5,22 @@
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
-class MainMemory_t
+class BootROM_t
 {
 public:
-	MainMemory_t() : mainMemory(new u8[PS2Constants::SIZE_MAIN_MEMORY])
+	BootROM_t() : bootROM(new u8[PS2Constants::SIZE_BOOT_ROM])
 	{
 	}
 
-	~MainMemory_t()
+	~BootROM_t()
 	{
-		delete mainMemory;
+		delete bootROM;
 	}
 
 	INLINE void * getBaseAddress() const
 	{
-		return reinterpret_cast<void*>(mainMemory);
+		return reinterpret_cast<void*>(bootROM);
 	}
 private:
-	u8 *const mainMemory;
+	u8 *const bootROM;
 };

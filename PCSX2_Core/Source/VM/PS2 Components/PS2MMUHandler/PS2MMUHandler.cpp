@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Common/PS2 Components/PS2MMUHandler/PS2MMUHandler.h"
+#include "VM/PS2 Components/PS2MMUHandler/PS2MMUHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
@@ -13,7 +13,12 @@ PS2MMUHandler::PS2MMUHandler(const VMMain *const vmMain) : VMPS2Component(vmMain
 {
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(u32 PS2VirtualAddress, AccessType accessType) const
+u32 PS2MMUHandler::getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const
+{
+	return getPS2PhysicalAddress_Stage1(PS2VirtualAddress, accessType);
+}
+
+u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const
 {
 	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
@@ -69,6 +74,7 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(u32 PS2VirtualAddress, AccessTyp
 		if (PS2VirtualAddress >= PS2Constants::EE::EECore::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && PS2VirtualAddress <= PS2Constants::EE::EECore::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
 		{
 			// We are in kseg0, so to get the physical address we just minus the kseg0 base address of 0x80000000.
+			// We also do not test for the Config.K0 status, as we do not involve caches unless it is an explicit request.
 			return (PS2VirtualAddress - PS2Constants::EE::EECore::MMU::VADDRESS_KERNEL_LOWER_BOUND_2);
 		}
 
@@ -130,7 +136,7 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, c
 	return getPS2PhysicalAddress_Stage3(PS2VirtualAddress, accessType, tlbEntry);
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation & tlbEntry) const
+u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const
 {
 	// Stage 3: Assess if the page is valid and it is marked dirty.
 	// Need to check now before continuing if the VPN is for a even or odd page. This is done by checking the LSB of the VPN from the original address accessed.
@@ -181,21 +187,23 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(u32 PS2VirtualAddress, AccessTyp
 	}
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Odd(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation& tlbEntry) const
+u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
 {
 	// Check if accessing scratchpad
 	if (tlbEntry.mS)
 	{
 		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		return 0;
+		throw std::runtime_error("PS2MMUHandler: scratchpad access not yet implemented.");
 	}
 
 	// Or cache access?
+	// Note: We actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
+	// See EE Core Users Manual page 126.
+	/*
 	if (tlbEntry.mCOdd > 0)
 	{
-		// TODO: implement accessing cache. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the cache using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		return 0;
 	}
+	*/
 
 	// Else we are accessing main memory.
 	// Combine PFN with offset using the TLB entry mask.
@@ -203,21 +211,23 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Odd(u32 PS2VirtualAddress, Access
 	return ((tlbEntry.mPFNOdd << PFNBitPos) || (PS2VirtualAddress & tlbEntry.mMask));
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Even(u32 PS2VirtualAddress, AccessType accessType, const TLBEntryInformation& tlbEntry) const
+u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
 {
 	// Check if accessing scratchpad
 	if (tlbEntry.mS)
 	{
 		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		return 0;
+		throw std::runtime_error("PS2MMUHandler: scratchpad access not yet implemented.");
 	}
 
 	// Or cache access?
-	if (tlbEntry.mCEven > 0)
+	// Note: We actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
+	// See EE Core Users Manual page 126.
+	/*
+	if (tlbEntry.mCOdd > 0)
 	{
-		// TODO: implement accessing cache. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the cache using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		return 0;
 	}
+	*/
 
 	// Else we are accessing main memory.
 	// Combine PFN with offset using the TLB entry mask.
