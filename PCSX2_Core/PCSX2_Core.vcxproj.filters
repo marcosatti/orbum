@@ -55,9 +55,6 @@
     <Filter Include="Source\Common\PS2 Types\PS2Exception">
       <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Common\PS2 Types\MIPSInstructionHelper">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Common\PS2 Constants">
       <UniqueIdentifier>{8a73cfce-df01-43ec-a0ac-b46e9451270c}</UniqueIdentifier>
     </Filter>
@@ -90,6 +87,12 @@
     </Filter>
     <Filter Include="Source\VM\PS2 Components\PS2MMUHandler">
       <UniqueIdentifier>{fd995361-4a05-4633-b6d1-fdd2aee746ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\PS2 Types\MIPSInstruction">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\PS2 Types\R5900InstructionUtil">
+      <UniqueIdentifier>{5a2259f2-f767-450d-91e1-953c9a9da096}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,9 +183,6 @@
     <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h">
       <Filter>Source\VM\Component Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.h">
-      <Filter>Source\Common\PS2 Types\MIPSInstructionHelper</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory</Filter>
     </ClInclude>
@@ -201,7 +201,12 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.h" />
+    <ClInclude Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.h">
+      <Filter>Source\Common\PS2 Types\MIPSInstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.h">
+      <Filter>Source\Common\PS2 Types\R5900InstructionUtil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -234,16 +239,18 @@
     <ClCompile Include="Source\VM\VMMain.cpp">
       <Filter>Source\VM</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\MIPSInstructionHelper\MIPSInstructionHelper_t.cpp">
-      <Filter>Source\Common\PS2 Types\MIPSInstructionHelper</Filter>
-    </ClCompile>
     <ClCompile Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp">
       <Filter>Source\VM\PS2 Components\PS2MMUHandler</Filter>
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp">
+      <Filter>Source\Common\PS2 Types\MIPSInstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp">
+      <Filter>Source\Common\PS2 Types\R5900InstructionUtil</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

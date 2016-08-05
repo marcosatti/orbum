@@ -10,7 +10,7 @@ getOpcode() is common to all instruction types, and you can use this to determin
 
 class Register32_t;
 
-class MIPSInstructionHelper_t {
+class MIPSInstruction_t {
 public:
 	/*
 	instruction holds the entire MIPS instruction, which the child class' convenience functions operate off.
@@ -23,7 +23,7 @@ public:
 	/*
 	Initialise an Instruction object with the specified 32-bit MIPS instruction. Defaults to 0.
 	*/
-	MIPSInstructionHelper_t(const u32 instructionValue = 0);
+	MIPSInstruction_t(const u32 instructionValue = 0);
 
 	/*
 	Set the instruction value. Allows an object to be reused so memory allocations are not wasted.

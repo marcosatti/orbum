@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/MIPSInstructionHelper/MIPSInstructionHelper_t.h""
+
+#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
 
 /*
 Static class used as the R5900 instruction lookup.
@@ -15,7 +16,7 @@ For example (pseduo-code):
  Info = R5900InstructionUtil::getInstructionInfo(MIPSInstruction)
  ExecutionCore.ExecuteInstruction(Info.mImplementationIndex)
 
-The mImplementationIndex is a linear UNIQUE index of all of the instructions - there should be no two instructions with the same index.
+The mImplementationIndex is a linear UNIQUE index of all of the instructions for the R5900 - there should be no two instructions with the same index.
 Therefore in an execution core, a simple function pointer array of size = MAX(Implementation Indexes) will be enough, which is simply used as in the example above.
 */
 class R5900InstructionUtil
@@ -41,7 +42,7 @@ public:
 		};
 
 		// Constructor.
-		R5900InstructionInfo_t(const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u8 cycles, const R5900InstructionInfo_t&(*const lookupFunction)(const MIPSInstructionHelper_t& instruction))
+		R5900InstructionInfo_t(const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u8 cycles, const R5900InstructionInfo_t&(*const lookupFunction)(const MIPSInstruction_t& instruction))
 			: mClassIndex(classIndex),
 			mInstructionType(instructionType),
 			mMnemonic(mnemonic),
@@ -58,33 +59,33 @@ public:
 		const u32                      mImplementationIndex;                                           // A unique index which is used by an execution core to define and run an instruction. See the example in the header of this file.
 		const BranchDelayType          mBranchDelayType;                                               // Some instructions have a branch delay feature, where the next instruction immediately after is executed regardless if a branch is taken or not. Most of the time it will be NONE. See the EE Core Users Manual page 44 for more information.
 		const u8                       mCycles;                                                        // An approximate number of CPU cycles the instruction takes to execute, which is useful for performance tracking and timing.
-		const R5900InstructionInfo_t & (*mLookupFuncion)(const MIPSInstructionHelper_t & instruction); // When a sub-class is encountered, this variable points to a lookup function containing the logic needed for accessing the sub-class table properly.
+		const R5900InstructionInfo_t & (*const mLookupFuncion)(const MIPSInstruction_t & instruction); // When a sub-class is encountered, this variable points to a lookup function containing the logic needed for accessing the sub-class table properly.
 	};
 
 	/*
 	The main lookup function. Use this to return a information struct with the type of instruction given.
 	*/
-	static const R5900InstructionInfo_t & getInstructionInfo(const MIPSInstructionHelper_t & instruction);
+	static const R5900InstructionInfo_t & getInstructionInfo(const MIPSInstruction_t & instruction);
 
 	/*
 	Sub lookup functions. Contain logic for accessing any child instruction table.
 	*/
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI0_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI1_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI2_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI3_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP0_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_BC0_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_C0_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP1_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_BC1_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_S_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_W_LOOKUP(const MIPSInstructionHelper_t & instruction);
-	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP2_LOOKUP(const MIPSInstructionHelper_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI0_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI1_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI2_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_MMI3_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_BC0_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_C0_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP1_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_BC1_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_S_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_W_LOOKUP(const MIPSInstruction_t & instruction);
+	static const R5900InstructionInfo_t & R5900_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t & instruction);
 
 	/*
 	Instruction Tables. Each table contains either instructions or classes (sub-groups of instructions), in the form of R5900InstructionInfo_t.

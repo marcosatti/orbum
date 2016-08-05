@@ -2,8 +2,9 @@
 
 
 #include "VM/Component Interfaces/VMInterpreterComponent.h"
-#include "Common/PS2 Types/MIPSInstructionHelper/MIPSInstructionHelper_t.h"
+#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
 
+class PS2Resources_t;
 class VMMain;
 class InterpreterR5900 : public VMInterpreterComponent
 {
@@ -18,55 +19,25 @@ public:
 
 private:
 
-	// General functions
-
-	/*
-	Convenience functions to get/set the R5900 PC.
-	*/
-	INLINE u32& getR5900PCValue() const;
-	INLINE void setR5900PCValueRelative(s32 relativeLocation) const;
-	INLINE void setR5900PCValueAbsolute(s32 absoluteLocation) const;
-	INLINE void setR5900PCValueNext() const; // Increments the PC by 4.
-
 	// Component state functions
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
 	*/
-	MIPSInstructionHelper_t mInstruction;
+	MIPSInstruction_t mInstruction;
 
-	// Instruction functions.
+	// Static R5900 Instruction functions.
 
 	/*
-	Void function pointer type.
-	This type specifies a pointer to a function which returns nothing and has no parameters.
-	This is used extensively in the look-up tables when decoding instructions (see below).
+	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See R5900InstructionUtil for more details.
 	*/
-	typedef void(InterpreterR5900::*voidfunc_ptr)();
+	static void(*const R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(PS2Resources_t & PS2Resources);
 
 	/*
-	Unknown opcode function - does nothing when executed.
+	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
 	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	Will increase PC by 4 regardless.
 	*/
-	void unknownOperation();
-
-	/*
-	MIPS Instruction Opcode table. Calls functions based on opcode field.
-	From here, either a subroutine will be called to handle the Instruction after determining the opcode.
-	In total, there are 64 opcode posibilities (5 bits occupy the opcode field).
-	Defined as an 8x8 grid.
-	*/
-	voidfunc_ptr opcodeTable[64] = 
-	{
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation,
-		&InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation, &InterpreterR5900::unknownOperation
-	};
+	static void INSTRUCTION_UNKNOWN(PS2Resources_t & PS2Resources);
 };
 

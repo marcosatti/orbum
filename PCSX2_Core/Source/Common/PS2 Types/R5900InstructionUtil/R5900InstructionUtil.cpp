@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "R5900InstructionUtil.h"
 
-const R5900InstructionUtil::R5900InstructionInfo_t & R5900InstructionUtil::getInstructionInfo(const MIPSInstructionHelper_t & instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t & R5900InstructionUtil::getInstructionInfo(const MIPSInstruction_t & instruction)
 {
 	const R5900InstructionInfo_t rootInfo = { 0, R5900InstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, R5900InstructionInfo_t::BranchDelayType::NONE, 0, R5900_INSTRUCTION_OPCODE_LOOKUP };
 	const R5900InstructionInfo_t * returnInfo = &rootInfo;
@@ -13,82 +14,82 @@ const R5900InstructionUtil::R5900InstructionInfo_t & R5900InstructionUtil::getIn
 	return *returnInfo;
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t & R5900InstructionUtil::R5900_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstructionHelper_t & instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t & R5900InstructionUtil::R5900_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
 {
 	return R5900_OPCODE_TABLE[instruction.getOpcode()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_SPECIAL_TABLE[instruction.getRFunct()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_REGIMM_TABLE[instruction.getRRt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_MMI_TABLE[instruction.getRFunct()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI0_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_MMI0_TABLE[instruction.getRShamt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI1_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_MMI1_TABLE[instruction.getRShamt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI2_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_MMI2_TABLE[instruction.getRShamt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI3_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_MMI3_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_MMI3_TABLE[instruction.getRShamt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP0_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_COP0_TABLE[instruction.getRRs()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_BC0_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_BC0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_BC0_TABLE[instruction.getRRt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_C0_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_C0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_C0_TABLE[instruction.getRFunct()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP1_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_COP1_TABLE[instruction.getRRs()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_BC1_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_BC1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_BC1_TABLE[instruction.getRRt()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_S_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_S_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_S_TABLE[instruction.getRFunct()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_W_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_W_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_W_TABLE[instruction.getRFunct()];
 }
 
-const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP2_LOOKUP(const MIPSInstructionHelper_t& instruction)
+const R5900InstructionUtil::R5900InstructionInfo_t& R5900InstructionUtil::R5900_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return R5900_INSTRUCTION_UNDEFINED;
 }
