@@ -251,6 +251,9 @@
     <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp">
       <Filter>Source\Common\PS2 Types\R5900InstructionUtil</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900_INTEGER_ADD_SUB.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

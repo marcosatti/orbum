@@ -24,7 +24,7 @@ public:
 		s8 mExeCode;
 		s8 mEXC2;
 	};
-	static constexpr ExceptionProperties_t ExceptionProperties[] = {
+	static constexpr ExceptionProperties_t ExceptionProperties[] = { 
 		{PS2Exception_t::EX_RESET, 2, -1, 0 },
 		{PS2Exception_t::EX_NMI, 2, -1, 1 },
 		{PS2Exception_t::EX_PERFORMANCE_COUNTER, 2, -1, 2 },
@@ -49,6 +49,7 @@ public:
 
 	explicit ExceptionHandler(const VMMain *const vmMain);
 
+	// TODO: Check again for any missed settings that the individual exceptions require to be set. IE: Coprocessor unusable requires Cause.CE set to the coprocessor that caused it.
 	void handleException(const PS2Exception_t& PS2Exception) override;
 
 private:

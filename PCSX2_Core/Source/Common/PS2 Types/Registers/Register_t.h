@@ -16,13 +16,13 @@ As bitmask registers are often 32-bit, Register32_t contains an additional funct
 */
 class Register128_t {
 public:
-	// The PS2 never operates or manipulates values above 32-bit - but it can do parallel operations on for example 4 x 32-bit values. 
-	// It is meaningless to provide a signed/unsigned combo of 64-bit and 128-bit variables since they can't be manipulated.
+	// The PS2 never operates or manipulates values above 64-bit - but it can do parallel operations on for example 4 x 32-bit values. 
+	// It is meaningless to provide a signed/unsigned combo of 128-bit variables since they can't be manipulated.
 	union
 	{
 		u128 UQ;     // Unsigned Qword.
 		u64  UD[2];  // Unsigned Dword.
-
+		s64  SD[2];  // Signed Dword.
 		u32  UW[4];  // Unsigned Word.
 		s32  SW[4];  // Signed Word.
 		u16  UH[8];  // Unsigned Hword.
@@ -45,12 +45,10 @@ public:
 
 class Register64_t {
 public:
-	// The PS2 never operates or manipulates values above 32-bit - but it can do parallel operations on for example 4 x 32-bit values. 
-	// It is meaningless to provide a signed/unsigned combo of 64-bit and 128-bit variables since they can't be manipulated.
 	union 
 	{
 		u64  UD;    // Unsigned Dword.
-
+		s64  SD; // Signed Dword.
 		u32  UW[2]; // Unsigned Word.
 		s32  SW[2]; // Signed Word.
 		u16  UH[4]; // Unsigned Hword.

@@ -26,7 +26,7 @@ private:
 	*/
 	MIPSInstruction_t mInstruction;
 
-	// Static R5900 Instruction functions.
+	// Static R5900 Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See R5900InstructionUtil for more details.
@@ -39,5 +39,15 @@ private:
 	Will increase PC by 4 regardless.
 	*/
 	static void INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+
+	/*
+	Integer Add/Sub Instructions. See InterpreterR5900_INTEGER_ADD_SUB.cpp for implementation.
+	*/
+	static void ADD(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void ADDI(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void ADDIU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void ADDU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+
+
 };
 

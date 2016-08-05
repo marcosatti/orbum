@@ -199,6 +199,7 @@
     <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900_INTEGER_ADD_SUB.cpp" />
     <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\VM\VMMain.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp" />
