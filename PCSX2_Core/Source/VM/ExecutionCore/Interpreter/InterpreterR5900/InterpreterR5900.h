@@ -31,13 +31,13 @@ private:
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See R5900InstructionUtil for more details.
 	*/
-	static void(*const R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(PS2Resources_t & PS2Resources);
+	static void(*const R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
 	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	Will increase PC by 4 regardless.
 	*/
-	static void INSTRUCTION_UNKNOWN(PS2Resources_t & PS2Resources);
+	static void INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 

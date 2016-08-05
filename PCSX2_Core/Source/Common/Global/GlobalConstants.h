@@ -15,5 +15,5 @@ struct Constants
 
 	static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 
-	static constexpr u32 NUMBER_R5900_INSTRUCTIONS = 258;
+	static constexpr u32 NUMBER_R5900_INSTRUCTIONS = 259;
 };

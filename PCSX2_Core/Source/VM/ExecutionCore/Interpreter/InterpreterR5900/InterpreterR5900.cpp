@@ -32,11 +32,11 @@ void InterpreterR5900::runInterpreterComponent()
 
 // Begin Static R5900 Instruction Implementation
 
-void (*const InterpreterR5900::R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(PS2Resources_t & PS2Resources) = {
+void (*const InterpreterR5900::R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources) = {
 	INSTRUCTION_UNKNOWN
 };
 
-void InterpreterR5900::INSTRUCTION_UNKNOWN(PS2Resources_t & PS2Resources)
+void InterpreterR5900::INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources)
 {
 	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
 #if defined(BUILD_DEBUG)
