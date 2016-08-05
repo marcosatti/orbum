@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h" />
+    <ClInclude Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers\COP0_BitfieldRegisters_t.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.cpp" />
     <ClCompile Include="Source\VM\ExceptionHandler\ExceptionHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister_t.cpp" />
@@ -208,6 +210,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\Memory Mappings.xlsx" />
+    <None Include="Docs\R5900 Instruction Implementation Register.xlsx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
