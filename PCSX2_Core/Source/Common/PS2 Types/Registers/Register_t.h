@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Common/Global/Globals.h"
 
@@ -13,6 +13,12 @@ Normally you would access the registers by eg: Register32_t.UW
 
 You are able to get and set individual bits using the getBit()/setBit() function.
 As bitmask registers are often 32-bit, Register32_t contains an additional function setBitRange32() for setting bit masks in the register. See the function documentation.
+
+TODO: Check byte order / endianess - it is assumed within the emulator that for example in a 128-bit register:
+ Register128_t.(S or U)W[0] = bits 0-31.    Least significant bits
+ Register128_t.(S or U)W[1] = bits 32-63.              |
+ Register128_t.(S or U)W[2] = bits 64-95.              ↓
+ Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 */
 class Register128_t {
 public:

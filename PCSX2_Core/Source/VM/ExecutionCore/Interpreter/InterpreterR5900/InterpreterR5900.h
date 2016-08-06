@@ -41,13 +41,38 @@ private:
 	static void INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 
 	/*
-	Integer Add/Sub Instructions. See InterpreterR5900_INTEGER_ADD_SUB.cpp for implementation.
+	Integer Add/Sub Instructions. See InterpreterR5900_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
 	*/
 	static void ADD(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void ADDI(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void ADDIU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void ADDU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
-
-
+	static void DADD(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DADDI(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DADDIU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DADDU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DSUB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DSUBU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void SUB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void SUBU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDSB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDSH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDSW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDUB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDUH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADDW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PADSBH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBSB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBSH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBSW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBUB(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBUH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PSUBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 
