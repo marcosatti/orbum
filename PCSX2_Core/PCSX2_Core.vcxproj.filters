@@ -254,6 +254,9 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900_INTEGER_ADD_SUB.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
     </ClCompile>
+    <ClCompile Include="InterpreterR5900_INTEGER_MULT_DIV.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

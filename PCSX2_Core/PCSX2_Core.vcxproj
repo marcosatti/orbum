@@ -191,6 +191,7 @@
     <ClInclude Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InterpreterR5900_INTEGER_MULT_DIV.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.cpp" />
     <ClCompile Include="Source\VM\ExceptionHandler\ExceptionHandler.cpp" />

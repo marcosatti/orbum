@@ -10,9 +10,9 @@
 using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 
 /*
-Add instruction family.
-Note: the EE Core Instruction Manual says that the 32-bit results must be sign extended to 64-bit, which is why they are casted to 64-bit before writing the result (C handles this automatically).
+Integer Addition/Subtraction instruction family.
 */
+
 void InterpreterR5900::ADD(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
@@ -498,3 +498,4 @@ void InterpreterR5900::PSUBW(const MIPSInstruction_t& instruction, PS2Resources_
 		destReg.SW[i] = source1Reg.SW[i] - source2Reg.SW[i];
 	}
 }
+

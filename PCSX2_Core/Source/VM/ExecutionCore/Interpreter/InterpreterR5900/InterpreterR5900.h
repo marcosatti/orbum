@@ -74,5 +74,16 @@ private:
 	static void PSUBUH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PSUBUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PSUBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+
+	/*
+	Integer Mult/Div Instructions. See InterpreterR5900_INTEGER_MULT_DIV.cpp for implementations ( instructions total).
+	*/
+	static void DIV(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	//static void DIV1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources); Does not exist?
+	static void DIVU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MULT(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MULTU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PDIVBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PDIVUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 
