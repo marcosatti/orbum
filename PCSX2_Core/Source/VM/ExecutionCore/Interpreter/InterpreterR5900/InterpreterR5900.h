@@ -27,6 +27,7 @@ private:
 	MIPSInstruction_t mInstruction;
 
 	// Static R5900 Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
+	// Note: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See R5900InstructionUtil for more details.
@@ -79,11 +80,18 @@ private:
 	Integer Mult/Div Instructions. See InterpreterR5900_INTEGER_MULT_DIV.cpp for implementations ( instructions total).
 	*/
 	static void DIV(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
-	//static void DIV1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources); Does not exist?
+	static void DIV1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void DIVU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void DIVU1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void MULT(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MULT1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void MULTU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MULTU1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PDIVBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PDIVUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PDIVW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMULTH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMULTUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMULTW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 
