@@ -77,7 +77,7 @@ private:
 	static void PSUBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 
 	/*
-	Integer Mult/Div Instructions. See InterpreterR5900_INTEGER_MULT_DIV.cpp for implementations ( instructions total).
+	Integer Mult/Div Instructions. See InterpreterR5900_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
 	*/
 	static void DIV(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void DIV1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
@@ -93,5 +93,20 @@ private:
 	static void PMULTH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PMULTUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PMULTW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+
+	/*
+	Integer Mult-Add Instructions. See InterpreterR5900_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
+	*/
+	static void MADD(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MADD1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MADDU(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MADDU1(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PHMADH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PHMSBH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMADDH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMADDUW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMADDW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMSUBH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void PMSUBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 
