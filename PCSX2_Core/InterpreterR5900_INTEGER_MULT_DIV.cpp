@@ -226,7 +226,6 @@ void InterpreterR5900::PMULTH(const MIPSInstruction_t& instruction, PS2Resources
 		else
 			PS2Resources.EE.EECore.R5900.HI.SW[((i / 2 > 1) ? i - 4 : i - 2)] = result; // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
 	}
-	
 }
 
 void InterpreterR5900::PMULTUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
