@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "VM/Component Interfaces/VMExecutionCoreComponent.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterR5900/InterpreterR5900.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 
 
 /*
@@ -20,6 +20,6 @@ public:
 	void executionLoop() const override;
 
 private:
-	std::unique_ptr<InterpreterR5900> mInterpreterR5900;
+	std::unique_ptr<InterpreterEECore> mInterpreterR5900;
 };
 

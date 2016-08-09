@@ -14,7 +14,6 @@ ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) : VMExceptionHand
 }
 
 void ExceptionHandler::handleException(const PS2Exception_t& PS2Exception)
-void ExceptionHandler::handleException(const PS2Exception_t& PS2Exception)
 {
 	// Call the super class method. Contains useful debugging info if needed.
 	VMExceptionHandlerComponent::handleException(PS2Exception);

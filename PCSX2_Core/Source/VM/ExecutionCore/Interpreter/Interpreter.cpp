@@ -5,7 +5,7 @@
 
 Interpreter::Interpreter(const VMMain* const vmMain) : VMExecutionCoreComponent(vmMain)
 {
-	mInterpreterR5900 = std::make_unique<InterpreterR5900>(vmMain, this);
+	mInterpreterR5900 = std::make_unique<InterpreterEECore>(vmMain, this);
 }
 
 void Interpreter::executionLoop() const

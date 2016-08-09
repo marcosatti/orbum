@@ -67,9 +67,6 @@
     <Filter Include="Source\VM\ExecutionCore\Interpreter">
       <UniqueIdentifier>{47851830-a975-4672-8b7a-21823b98237c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900">
-      <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\VM\ExecutionCore\Recompiler">
       <UniqueIdentifier>{fbe0cc9b-4f3b-4df9-9652-b11acd1ff575}</UniqueIdentifier>
     </Filter>
@@ -93,6 +90,9 @@
     </Filter>
     <Filter Include="Source\Common\PS2 Types\R5900InstructionUtil">
       <UniqueIdentifier>{5a2259f2-f767-450d-91e1-953c9a9da096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore">
+      <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +159,6 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900.h">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\MMUHandler\MMUHandler.h">
       <Filter>Source\VM\MMUHandler</Filter>
     </ClInclude>
@@ -207,6 +204,9 @@
     <ClInclude Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.h">
       <Filter>Source\Common\PS2 Types\R5900InstructionUtil</Filter>
     </ClInclude>
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.h">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -230,9 +230,6 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
-    </ClCompile>
     <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp">
       <Filter>Source\VM\MMUHandler</Filter>
     </ClCompile>
@@ -251,15 +248,19 @@
     <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp">
       <Filter>Source\Common\PS2 Types\R5900InstructionUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterR5900\InterpreterR5900_INTEGER_ADD_SUB.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
-    <ClCompile Include="InterpreterR5900_INTEGER_MULT_DIV.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_ADD_SUB.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
-    <ClCompile Include="InterpreterR5900_INTEGER_MULT_ADD.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterR5900</Filter>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_MULT_ADD.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_MULT_DIV.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_FLOAT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

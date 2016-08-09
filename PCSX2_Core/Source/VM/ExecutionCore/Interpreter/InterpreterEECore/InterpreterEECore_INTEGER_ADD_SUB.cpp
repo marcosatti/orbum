@@ -2,10 +2,10 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterR5900/InterpreterR5900.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/PS2 Types/R5900InstructionUtil/R5900InstructionUtil.h"
-#include <Common/PS2 Types/PS2Exception/PS2Exception_t.h>
+#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
 using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 
@@ -13,7 +13,7 @@ using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 Integer Addition/Subtraction instruction family.
 */
 
-void InterpreterR5900::ADD(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::ADD(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -33,7 +33,7 @@ void InterpreterR5900::ADD(const MIPSInstruction_t& instruction, PS2Resources_t&
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::ADDI(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::ADDI(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getIRd()];
@@ -53,7 +53,7 @@ void InterpreterR5900::ADDI(const MIPSInstruction_t& instruction, PS2Resources_t
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::ADDIU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::ADDIU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rt = Rs + Imm (signed).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getIRd()];
@@ -62,7 +62,7 @@ void InterpreterR5900::ADDIU(const MIPSInstruction_t& instruction, PS2Resources_
 	destReg.SD[0] = static_cast<s64>(sourceReg.SW[0] + instruction.getIImmS());
 }
 
-void InterpreterR5900::ADDU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::ADDU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs + Rt
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -72,7 +72,7 @@ void InterpreterR5900::ADDU(const MIPSInstruction_t& instruction, PS2Resources_t
 	destReg.SD[0] = static_cast<s64>(source1Reg.SW[0] + source2Reg.SW[0]);
 }
 
-void InterpreterR5900::DADD(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DADD(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -91,7 +91,7 @@ void InterpreterR5900::DADD(const MIPSInstruction_t& instruction, PS2Resources_t
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::DADDI(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DADDI(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getIRd()];
@@ -110,7 +110,7 @@ void InterpreterR5900::DADDI(const MIPSInstruction_t& instruction, PS2Resources_
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::DADDIU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DADDIU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rt = Rs + Imm (signed).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getIRd()];
@@ -119,7 +119,7 @@ void InterpreterR5900::DADDIU(const MIPSInstruction_t& instruction, PS2Resources
 	destReg.SD[0] = static_cast<s64>(sourceReg.SD[0] + instruction.getIImmS());
 }
 
-void InterpreterR5900::DADDU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DADDU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs + Rt
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -129,7 +129,7 @@ void InterpreterR5900::DADDU(const MIPSInstruction_t& instruction, PS2Resources_
 	destReg.SD[0] = static_cast<s64>(source1Reg.SD[0] + source2Reg.SD[0]);
 }
 
-void InterpreterR5900::DSUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DSUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs - Rt (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -148,7 +148,7 @@ void InterpreterR5900::DSUB(const MIPSInstruction_t& instruction, PS2Resources_t
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::DSUBU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DSUBU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs - Rt
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -158,7 +158,7 @@ void InterpreterR5900::DSUBU(const MIPSInstruction_t& instruction, PS2Resources_
 	destReg.SD[0] = static_cast<s64>(source1Reg.SD[0] - source2Reg.SD[0]);
 }
 
-void InterpreterR5900::SUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::SUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs - Rt (Exception on Integer Overflow).
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -178,7 +178,7 @@ void InterpreterR5900::SUB(const MIPSInstruction_t& instruction, PS2Resources_t&
 	destReg.SD[0] = result;
 }
 
-void InterpreterR5900::SUBU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::SUBU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Rd = Rs - Rt
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -188,7 +188,7 @@ void InterpreterR5900::SUBU(const MIPSInstruction_t& instruction, PS2Resources_t
 	destReg.SD[0] = static_cast<s64>(source1Reg.SW[0] - source2Reg.SW[0]);
 }
 
-void InterpreterR5900::PADDB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SB] = Rs[SB] + Rt[SB]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -201,7 +201,7 @@ void InterpreterR5900::PADDB(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PADDH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -214,7 +214,7 @@ void InterpreterR5900::PADDH(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PADDSB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDSB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SB] = Rs[SB] + Rt[SB] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -233,7 +233,7 @@ void InterpreterR5900::PADDSB(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDSH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDSH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -252,7 +252,7 @@ void InterpreterR5900::PADDSH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDSW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDSW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SW] = Rs[SW] + Rt[SW] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -271,7 +271,7 @@ void InterpreterR5900::PADDSW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UB] = Rs[UB] + Rt[UB]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -288,7 +288,7 @@ void InterpreterR5900::PADDUB(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDUH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDUH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UH] = Rs[UH] + Rt[UH]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -305,7 +305,7 @@ void InterpreterR5900::PADDUH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UW] = Rs[UW] + Rt[UW] 
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -322,7 +322,7 @@ void InterpreterR5900::PADDUW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PADDW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADDW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SW] = Rs[SW] + Rt[SW]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -335,7 +335,7 @@ void InterpreterR5900::PADDW(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PADSBH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PADSBH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SH] = Rs[SH] -/+ Rt[SH] (minus for lower hwords, plus for higher hwords)
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -352,7 +352,7 @@ void InterpreterR5900::PADSBH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SB] = Rs[SB] - Rt[SB]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -365,7 +365,7 @@ void InterpreterR5900::PSUBB(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PSUBH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SH] = Rs[SH] - Rt[SH]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -378,7 +378,7 @@ void InterpreterR5900::PSUBH(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PSUBSB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBSB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SB] = Rs[SB] - Rt[SB] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -397,7 +397,7 @@ void InterpreterR5900::PSUBSB(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBSH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBSH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -416,7 +416,7 @@ void InterpreterR5900::PSUBSH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBSW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBSW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SW] = Rs[SW] - Rt[SW] Saturated
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -435,7 +435,7 @@ void InterpreterR5900::PSUBSW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBUB(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UB] = Rs[UB] - Rt[UB]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -452,7 +452,7 @@ void InterpreterR5900::PSUBUB(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBUH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBUH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UH] = Rs[UH] - Rt[UH]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -469,7 +469,7 @@ void InterpreterR5900::PSUBUH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[UW] = Rs[UW] - Rt[UW] 
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];
@@ -486,7 +486,7 @@ void InterpreterR5900::PSUBUW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PSUBW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PSUBW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Parallel Rd[SW] = Rs[SW] - Rt[SW]
 	auto& destReg = PS2Resources.EE.EECore.R5900.GPR[instruction.getRRd()];

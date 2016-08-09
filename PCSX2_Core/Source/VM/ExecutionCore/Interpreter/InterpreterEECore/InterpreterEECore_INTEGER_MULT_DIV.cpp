@@ -2,10 +2,9 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterR5900/InterpreterR5900.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/PS2 Types/R5900InstructionUtil/R5900InstructionUtil.h"
-#include <Common/PS2 Types/PS2Exception/PS2Exception_t.h>
 
 using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 
@@ -13,7 +12,7 @@ using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 Integer Multiply/Divide instruction family.
 */
 
-void InterpreterR5900::DIV(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DIV(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
@@ -43,13 +42,13 @@ void InterpreterR5900::DIV(const MIPSInstruction_t& instruction, PS2Resources_t&
 	}
 }
 
-void InterpreterR5900::DIV1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DIV1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIV(instruction, PS2Resources);
 }
 
-void InterpreterR5900::DIVU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DIVU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI) = SignExtend<u64>(Rs[UW] / Rt[UW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -72,13 +71,13 @@ void InterpreterR5900::DIVU(const MIPSInstruction_t& instruction, PS2Resources_t
 	}
 }
 
-void InterpreterR5900::DIVU1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::DIVU1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIVU(instruction, PS2Resources);
 }
 
-void InterpreterR5900::MULT(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::MULT(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -90,13 +89,13 @@ void InterpreterR5900::MULT(const MIPSInstruction_t& instruction, PS2Resources_t
 	PS2Resources.EE.EECore.R5900.HI.SD[0] = static_cast<s64>(static_cast<s32>(result >> 32));
 }
 
-void InterpreterR5900::MULT1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::MULT1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MULT(instruction, PS2Resources);
 }
 
-void InterpreterR5900::MULTU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::MULTU(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI) = Rs[UW] * Rt[UW]
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -108,13 +107,13 @@ void InterpreterR5900::MULTU(const MIPSInstruction_t& instruction, PS2Resources_
 	PS2Resources.EE.EECore.R5900.HI.UD[0] = static_cast<u64>(static_cast<u32>(result >> 32));
 }
 
-void InterpreterR5900::MULTU1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::MULTU1(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
-	MULTU1(instruction, PS2Resources);
+	MULTU(instruction, PS2Resources);
 }
 
-void InterpreterR5900::PDIVBW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PDIVBW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SH,0]) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
@@ -147,7 +146,7 @@ void InterpreterR5900::PDIVBW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PDIVUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PDIVUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI)(0,1) = SignExtend<u64>(Rs[UW](0,2) / Rt[UW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -173,7 +172,7 @@ void InterpreterR5900::PDIVUW(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PDIVW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PDIVW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI)(0,1) = SignExtend<u64>(Rs[SW](0,2) / Rt[SW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -206,7 +205,7 @@ void InterpreterR5900::PDIVW(const MIPSInstruction_t& instruction, PS2Resources_
 	}
 }
 
-void InterpreterR5900::PMULTH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PMULTH(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI, Rd) = SignExtend<s32>(Rs[SH] * Rt[SH]) (varying indexes - see EE Core Instruction Manual page 246).
 	// No Exceptions generated.
@@ -228,7 +227,7 @@ void InterpreterR5900::PMULTH(const MIPSInstruction_t& instruction, PS2Resources
 	}
 }
 
-void InterpreterR5900::PMULTUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PMULTUW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI, Rd) = SignExtend<u64>(Rs[UW] * Rt[UW]) (varying indexes - see EE Core Instruction Manual page 248).
 	// No Exceptions generated.
@@ -246,7 +245,7 @@ void InterpreterR5900::PMULTUW(const MIPSInstruction_t& instruction, PS2Resource
 	}
 }
 
-void InterpreterR5900::PMULTW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
+void InterpreterEECore::PMULTW(const MIPSInstruction_t& instruction, PS2Resources_t& PS2Resources)
 {
 	// (LO, HI, Rd) = SignExtend<s64>(Rs[SW] * Rt[SW]) (varying indexes - see EE Core Instruction Manual page 250).
 	// No Exceptions generated.

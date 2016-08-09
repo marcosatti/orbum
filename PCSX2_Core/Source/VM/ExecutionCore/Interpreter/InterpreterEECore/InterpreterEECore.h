@@ -6,11 +6,11 @@
 
 class PS2Resources_t;
 class VMMain;
-class InterpreterR5900 : public VMInterpreterComponent
+class InterpreterEECore : public VMInterpreterComponent
 {
 public:
-	InterpreterR5900(const VMMain *const vmMain, const Interpreter *const interpreter);
-	~InterpreterR5900();
+	InterpreterEECore(const VMMain *const vmMain, const Interpreter *const interpreter);
+	~InterpreterEECore();
 
 	/*
 	This is the "main loop" function called by the base interpreter component.
@@ -28,6 +28,7 @@ private:
 
 	// Static R5900 Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
+	// Dots in mnemonics & function names are represented by the underscore character.
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See R5900InstructionUtil for more details.
@@ -108,5 +109,19 @@ private:
 	static void PMADDW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PMSUBH(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 	static void PMSUBW(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+
+	/*
+	Floating-Point Instructions. See InterpreterR5900_FLOAT.cpp for implementations (10 instructions total).
+	*/
+	static void ADD_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void ADDA_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MADD_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MADDA_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MUL_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MULA_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MSUB_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void MSUBA_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void SUB_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
+	static void SUBA_S(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources);
 };
 

@@ -2,22 +2,22 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterR5900/InterpreterR5900.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
 #include "Common/PS2 Types/R5900InstructionUtil/R5900InstructionUtil.h"
 
 using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
 
-InterpreterR5900::InterpreterR5900(const VMMain* const vmMain, const Interpreter* const interpreter) :
+InterpreterEECore::InterpreterEECore(const VMMain* const vmMain, const Interpreter* const interpreter) :
 	VMInterpreterComponent(vmMain, interpreter)
 {
 }
 
-InterpreterR5900::~InterpreterR5900()
+InterpreterEECore::~InterpreterEECore()
 {
 }
 
-void InterpreterR5900::runInterpreterComponent()
+void InterpreterEECore::runInterpreterComponent()
 {
 	// Set the instruction holder to the instruction at the current PC.
 	// TODO: FIX! Not correct to use the PC value as a PS2 physical address - it is PS2 VIRTUAL! Need to use the PS2MMUHandler to get the correct PS2 physical address.
@@ -32,11 +32,11 @@ void InterpreterR5900::runInterpreterComponent()
 
 // Begin Static R5900 Instruction Implementation
 
-void (*const InterpreterR5900::R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources) = {
+void (*const InterpreterEECore::R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources) = {
 	INSTRUCTION_UNKNOWN
 };
 
-void InterpreterR5900::INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources)
+void InterpreterEECore::INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, PS2Resources_t & PS2Resources)
 {
 	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
 #if defined(BUILD_DEBUG)
