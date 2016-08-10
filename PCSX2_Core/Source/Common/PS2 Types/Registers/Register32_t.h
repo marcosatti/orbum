@@ -20,75 +20,39 @@ TODO: Check byte order / endianess - it is assumed within the emulator that, for
  Register128_t.(S or U)W[2] = bits 64-95.              ↓
  Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 */
-class Register128_t {
-public:
-	// The PS2 never operates or manipulates values above 64-bit - but it can do parallel operations on for example 4 x 32-bit values. 
-	// It is meaningless to provide a signed/unsigned combo of 128-bit variables since they can't be manipulated.
-	union
-	{
-		u128 UQ;     // Unsigned Qword.
-		u64  UD[2];  // Unsigned Dword.
-		s64  SD[2];  // Signed Dword.
-		u32  UW[4];  // Unsigned Word.
-		s32  SW[4];  // Signed Word.
-		u16  UH[8];  // Unsigned Hword.
-		s16  SH[8];  // Signed Hword.
-		u8   UB[16]; // Unsigned Byte.
-		s8   SB[16]; // Signed Byte.
-	};
-
-	// Initialise union with 0 value. The 128-bit UQ type contains a custom initaliser to do this.
-	Register128_t();
-
-	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
-	// Index must be between 0 -> 127.
-	u8 getBit128(u8 index) const;
-
-	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
-	// Index must be between 0 -> 127.
-	void setBit128(u8 index, u64 bitValue);
-};
-
-class Register64_t {
-public:
-	union 
-	{
-		u64  UD;    // Unsigned Dword.
-		s64  SD; // Signed Dword.
-		u32  UW[2]; // Unsigned Word.
-		s32  SW[2]; // Signed Word.
-		u16  UH[4]; // Unsigned Hword.
-		s16  SH[4]; // Signed Hword.
-		u8   UB[8]; // Unsigned Byte.
-		s8   SB[8]; // Signed Byte.
-	};
-
-	// Initialise union with 0 value.
-	Register64_t();
-
-	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
-	// Index must be between 0 -> 63.
-	u8 getBit64(u8 index) const;
-
-	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
-	// Index must be between 0 -> 63.
-	void setBit64(u8 index, u64 bitValue);
-};
 
 class Register32_t {
 public:
+	virtual ~Register32_t()
+	{
+	}
+
 	union 
 	{
-		u32  UW;    // Unsigned Word.
-		s32  SW;    // Signed Word.
-		u16  UH[2]; // Unsigned Hword.
-		s16  SH[2]; // Signed Hword.
-		u8   UB[4]; // Unsigned Byte.
-		s8   SB[4]; // Signed Byte.
+		u32  UW;                                   // Unsigned Word.
+		s32  SW;                                   // Signed Word.
+		u16  UH[Constants::NUMBER_HWORDS_IN_WORD]; // Unsigned Hword.
+		s16  SH[Constants::NUMBER_HWORDS_IN_WORD]; // Signed Hword.
+		u8   UB[Constants::NUMBER_BYTES_IN_WORD];  // Unsigned Byte.
+		s8   SB[Constants::NUMBER_BYTES_IN_WORD];  // Signed Byte.
 	};
 
 	// Initialise union with 0 value.
 	Register32_t();
+
+	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
+	virtual u8 readByteU(u32 arrayIndex);
+	virtual void writeByteU(u32 arrayIndex, u8 value);
+	virtual s8 readByteS(u32 arrayIndex);
+	virtual void writeByteS(u32 arrayIndex, s8 value);
+	virtual u16 readHwordU(u32 arrayIndex);
+	virtual void writeHwordU(u32 arrayIndex, u16 value);
+	virtual s16 readHwordS(u32 arrayIndex);
+	virtual void writeHwordS(u32 arrayIndex, s16 value);
+	virtual u32 readWordU();
+	virtual void writeWordU(u32 value);
+	virtual s32 readWordS();
+	virtual void writeWordS(s32 value);
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 31.

@@ -8,19 +8,15 @@
 class ScratchpadMemory_t
 {
 public:
-	ScratchpadMemory_t() : scratchpadMemory(new u8[PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY])
+	ScratchpadMemory_t() : scratchpadMemory(std::make_shared<u8*>(new u8[PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY]))
 	{
 	}
 
-	~ScratchpadMemory_t()
+	void * getBaseAddress() const
 	{
-		delete scratchpadMemory;
+		return reinterpret_cast<void*>(scratchpadMemory.get());
 	}
 
-	INLINE void * getBaseAddress() const
-	{
-		return reinterpret_cast<void*>(scratchpadMemory);
-	}
 private:
-	u8 *const scratchpadMemory;
+	const std::shared_ptr<u8*> scratchpadMemory;
 };

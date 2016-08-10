@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 /*
-FPURegister_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
+FPURegister32_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
 All FPR's are 32-bit according to the documentation, and the floating point value is accessed by the 'F' union field defined below.
 
 See EE Core Users Manual, chapter 8, especially page 157 which define the aritmetic registers.
@@ -17,7 +17,7 @@ In particular, the FPU does not support (in comparison to IEEE-754):
  - Plus and minus infinity.
  - 'NaN' (not a number) representation.
 */
-class FPURegister_t
+class FPURegister32_t
 {
 public:
 	union
@@ -27,7 +27,7 @@ public:
 	};
 	
 	// Initalise the value to +0.
-	FPURegister_t();
+	FPURegister32_t();
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 31.

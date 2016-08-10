@@ -3,9 +3,9 @@
 
 #include <Common/Global/Globals.h>
 #include <Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h>
-#include <Common/PS2 Types/R5900InstructionUtil/R5900InstructionUtil.h>
+#include <Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h>
 
-using R5900InstructionInfo_t = R5900InstructionUtil::R5900InstructionInfo_t;
+using R5900InstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
 TEST(R5900Instruction_Test_Raw, RType)
 {
@@ -56,7 +56,7 @@ TEST(R5900Instruction_Test_Info, RType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstruction(rawInstruction);
-	R5900InstructionInfo_t info = R5900InstructionUtil::getInstructionInfo(instruction);
+	R5900InstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info.mMnemonic, "RESERVED");
@@ -70,7 +70,7 @@ TEST(R5900Instruction_Test_Info, IType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstruction(rawInstruction);
-	R5900InstructionInfo_t info = R5900InstructionUtil::getInstructionInfo(instruction);
+	R5900InstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info.mMnemonic, "RESERVED");
@@ -84,7 +84,7 @@ TEST(R5900Instruction_Test_Info, JType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstruction(rawInstruction);
-	R5900InstructionInfo_t info = R5900InstructionUtil::getInstructionInfo(instruction);
+	R5900InstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info.mMnemonic, "RESERVED");

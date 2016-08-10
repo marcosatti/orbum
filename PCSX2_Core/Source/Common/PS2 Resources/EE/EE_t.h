@@ -13,5 +13,5 @@ class EE_t
 {
 public:
 	// The EECore structure.
-	EECore_t EECore;
+	std::shared_ptr<EECore_t> EECore = std::make_shared<EECore_t>();
 };

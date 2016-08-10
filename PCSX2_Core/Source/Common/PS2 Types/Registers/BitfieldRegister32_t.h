@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "Common/PS2 Types/Registers/Register_t.h"
+#include "Common/PS2 Types/Registers/Register32_t.h"
 
 /*
 The BitfieldRegiser_t class extends the Register32_t class, providing methods for manipulating 32-bit bit fields.
@@ -25,7 +25,7 @@ You will only get 3 bits worth back, even though the field value may still refle
 
 TODO: Implement checks for invalid values on initalisation and get and setting fields.
 */
-class BitfieldRegister_t : public Register32_t
+class BitfieldRegister32_t : public Register32_t
 {
 public:
 	

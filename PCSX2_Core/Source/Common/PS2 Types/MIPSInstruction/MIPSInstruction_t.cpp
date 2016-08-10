@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/PS2 Types/Registers/Register_t.h"
+#include "Common/PS2 Types/Registers/Register32_t.h"
 
 MIPSInstruction_t::MIPSInstruction_t(u32 instructionValue)
 {

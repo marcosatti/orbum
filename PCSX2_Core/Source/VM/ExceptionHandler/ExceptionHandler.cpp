@@ -41,10 +41,10 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::ExcCode, exceptionProperties.mExeCode);
+	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::ExcCode, exceptionProperties.mExeCode);
 
 	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
-	if (getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::EXL) == 1)
+	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL) == 1)
 	{
 		vectorOffset = PS2Constants::EE::EECore::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 	}
@@ -52,21 +52,21 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 	else
 	{
 		// Set EPC and Cause.BD fields.
-		if (getVM()->getResources()->EE.EECore.R5900.mIsInBranchDelaySlot) // Check if in the branch delay slot.
+		if (getVM()->getResources()->EE->EECore->R5900->mIsInBranchDelaySlot) // Check if in the branch delay slot.
 		{
-			u32 newPCValue = getVM()->getResources()->EE.EECore.R5900.PC.UW - 4;
-			getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.EPC.setFieldValue(RegisterEPC_t::Fields::EPC, newPCValue);
-			getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::BD, 1);
+			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
+			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(RegisterEPC_t::Fields::EPC, pcValue);
+			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD, 1);
 		}
 		else
 		{
-			u32 newPCValue = getVM()->getResources()->EE.EECore.R5900.PC.UW;
-			getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.EPC.setFieldValue(RegisterEPC_t::Fields::EPC, newPCValue);
-			getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::BD, 0);
+			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
+			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(RegisterEPC_t::Fields::EPC, pcValue);
+			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD, 0);
 		}
 
 		// Set to kernel mode and disable interrupts.
-		getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.setFieldValue(RegisterStatus_t::Fields::EXL, 1);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::EXL, 1);
 
 		// Select the vector to use (set vectorOffset).
 		if (exceptionProperties.mExceptionType == PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
@@ -84,13 +84,13 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::BEV) == 1)
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::BEV) == 1)
 		{
-			getVM()->getResources()->EE.EECore.R5900.PC.UW = PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A1 + vectorOffset;
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		} 
 		else
 		{
-			getVM()->getResources()->EE.EECore.R5900.PC.UW = PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A0 + vectorOffset;
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }
@@ -103,30 +103,30 @@ void ExceptionHandler::handleException_L2(const ExceptionProperties_t & exceptio
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.EXC2 value.
-	getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::EXC2, exceptionProperties.mEXC2);
+	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::EXC2, exceptionProperties.mEXC2);
 
 	// Set EPC and Cause.BD fields.
-	if (getVM()->getResources()->EE.EECore.R5900.mIsInBranchDelaySlot) // Check if in the branch delay slot.
+	if (getVM()->getResources()->EE->EECore->R5900->mIsInBranchDelaySlot) // Check if in the branch delay slot.
 	{
-		u32 newPCValue = getVM()->getResources()->EE.EECore.R5900.PC.UW - 4;
-		getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.ErrorEPC.setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, newPCValue);
-		getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::BD2, 1);
+		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
+		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD2, 1);
 	}
 	else
 	{
-		u32 newPCValue = getVM()->getResources()->EE.EECore.R5900.PC.UW;
-		getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.ErrorEPC.setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, newPCValue);
-		getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Cause.setFieldValue(RegisterCause_t::Fields::BD2, 0);
+		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
+		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD2, 0);
 	}
 
 	// Set to kernel mode and disable interrupts.
-	getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.setFieldValue(RegisterStatus_t::Fields::ERL, 1);
+	getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 1);
 
 	// Select vector to use and set PC to use it.
 	if (exceptionProperties.mExceptionType == PS2Exception_t::ExceptionType::EX_NMI 
 		|| exceptionProperties.mExceptionType == PS2Exception_t::ExceptionType::EX_RESET) 
 	{
-		getVM()->getResources()->EE.EECore.R5900.PC.UW = PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_V_RESET_NMI;
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 	}
 	else
 	{
@@ -145,13 +145,13 @@ void ExceptionHandler::handleException_L2(const ExceptionProperties_t & exceptio
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::DEV) == 1)
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::DEV) == 1)
 		{
-			getVM()->getResources()->EE.EECore.R5900.PC.UW = PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A1 + vectorOffset;
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		}
 		else
 		{
-			getVM()->getResources()->EE.EECore.R5900.PC.UW = PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A0 + vectorOffset;
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::PADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }

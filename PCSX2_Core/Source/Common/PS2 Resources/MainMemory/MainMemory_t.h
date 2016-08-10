@@ -8,19 +8,15 @@
 class MainMemory_t
 {
 public:
-	MainMemory_t() : mainMemory(new u8[PS2Constants::SIZE_MAIN_MEMORY])
+	MainMemory_t() : mainMemory(std::make_shared<u8*>(new u8[PS2Constants::SIZE_MAIN_MEMORY]))
 	{
 	}
 
-	~MainMemory_t()
+	void * getBaseAddress() const
 	{
-		delete mainMemory;
+		return reinterpret_cast<void*>(mainMemory.get());
 	}
 
-	INLINE void * getBaseAddress() const
-	{
-		return reinterpret_cast<void*>(mainMemory);
-	}
 private:
-	u8 *const mainMemory;
+	const std::shared_ptr<u8*> mainMemory;
 };

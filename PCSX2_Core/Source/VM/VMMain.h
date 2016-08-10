@@ -71,7 +71,6 @@ public:
 	/*
 	Misc helper functions.
 	*/
-	void copyResourcesTo(std::unique_ptr<PS2Resources_t> &uniquePtrTo) const;
 
 private:
 	/*

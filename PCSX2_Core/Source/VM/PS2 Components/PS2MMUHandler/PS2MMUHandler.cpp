@@ -28,9 +28,9 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, c
 	// BIG NOTE: where the lower bound of memory segments is 0x00000000, it has been omitted from the test statement (as it is implied through the use of u32).
 
 	// Provide convencience access to these variables (KSU, ERL, EXL).
-	auto KSU = getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::KSU);
-	auto ERL = getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::ERL);
-	auto EXL = getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.Status.getFieldValue(RegisterStatus_t::Fields::EXL);
+	auto KSU = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::KSU);
+	auto ERL = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL);
+	auto EXL = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL);
 
 	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
@@ -123,7 +123,7 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, c
 	if (tlbEntry.mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (getVM()->getResources()->EE.EECore.COP0.BitfieldRegisters.EntryHi.getFieldValue(RegisterEntryHi_t::Fields::ASID) != tlbEntry.mASID)
+		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID) != tlbEntry.mASID)
 		{
 			// Generate TLB refill exception.
 			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);

@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/Register_t.h"
+#include "Common/PS2 Types/Registers/Register32_t.h"
+#include "Common/PS2 Types/Registers/Register128_t.h"
+#include "Common/PS2 Types/Registers/ZeroRegister128_t.h"
+#include "Common/PS2 Types/Registers/PCRegister32_t.h"
 
 
 class R5900_t {
@@ -22,7 +25,7 @@ public:
 	{
 
 		mIsInBranchDelaySlot = true;
-		mBranchDelaySlotInstructionPC = PC.UW + Constants::SIZE_MIPS_INSTRUCTION;
+		mBranchDelaySlotInstructionPC = PC->getPCValue() + Constants::SIZE_MIPS_INSTRUCTION;
 
 	}
 
@@ -37,25 +40,31 @@ public:
 	This is implemented as an array of register numbers from GPR0 -> GPR31 (which translates to r0 -> r31).
 
 	From the EE Core Users Manual, r0 and r31 are reserved:
-	- r0 is the zero register, meaning it is always set to a constant 0.
+	- r0 is the zero register, meaning it is always set to a constant 0. This is subclassed from Register128_t.
 	- r31 is the link register used by the link and jump instructions. This is not to be used by other instructions.
+	In an 8x4 grid.
 	*/
-	Register128_t GPR[32];
+	std::shared_ptr<Register128_t> GPR[32] = {
+		std::make_shared<ZeroRegister128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>()
+	};
 
 	/*
 	The HI and LO registers. See EE Core Users manual, pg 60.
 	These registers are used to hold the results of integer multiply and divide operations.
 	They are 128-bit long.
 	*/
-	Register128_t HI;      // The HI register. Divided into 2 64-bit segments: the upper 64-bits (HI1) and the lower 64-bits (HI0).
-	Register128_t LO;      // The LO register. Divided into 2 64-bit segments: the upper 64-bits (LO1) and the lower 64-bits (LO0).
+	std::shared_ptr<Register128_t> HI = std::make_shared<Register128_t>();      // The HI register. Divided into 2 64-bit segments: the upper 64-bits (HI1) and the lower 64-bits (HI0).
+	std::shared_ptr<Register128_t> LO = std::make_shared<Register128_t>();      // The LO register. Divided into 2 64-bit segments: the upper 64-bits (LO1) and the lower 64-bits (LO0).
 
 	/*
 	The Shift Amount (SA) register. See EE Core Users manual, pg 61.
 	The SA register is used for holding funnel shift instruction results. See the EE Core instruction QFSRV for more details (SA is only used for this instruction).
 	It is a 32-bit register.
 	*/
-	Register32_t SA;
+	std::shared_ptr<Register32_t> SA = std::make_shared<Register32_t>();
 
 	/*
 	The Program Counter (PC) register. See EE Core Users manual, pg 61.
@@ -66,22 +75,6 @@ public:
 	It is a 32-bit register, pointing to a virtual address (NOT a PHYSICAL address! This means you need to use the PS2MMUHandler component to get the proper PS2 physical address.)
 	Some convience functions are provided for manipulating this value.
 	*/
-	Register32_t PC;
-	const u32 & getPCValue() const
-	{
-		return PC.UW;
-	}
-	void setPCValueRelative(const s32 & relativeLocation)
-	{
-		PC.UW += relativeLocation;
-	}
-	void setPCValueAbsolute(const u32 & absoluteLocation)
-	{
-		PC.UW = absoluteLocation;
-	}
-	void setPCValueNext() // Increments the PC by 4.
-	{
-		setPCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
-	}
+	std::shared_ptr<PCRegister32_t> PC = std::make_shared<PCRegister32_t>();
 
 }; // class R5900

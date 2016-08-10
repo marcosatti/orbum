@@ -80,11 +80,6 @@ const std::unique_ptr<VMMMUComponent>& VMMain::getMMU() const
 	return mMMUComponent;
 }
 
-void VMMain::copyResourcesTo(std::unique_ptr<PS2Resources_t>& uniquePtrTo) const
-{
-	uniquePtrTo = std::make_unique<PS2Resources_t>(*mPS2Resources);
-}
-
 void VMMain::initaliseResources()
 {
 	// Any old resources are destroyed automatically through unique_ptr.
@@ -94,13 +89,13 @@ void VMMain::initaliseResources()
 void VMMain::initalisePS2MemoryMap() const
 {
 	// Main memory 32MB
-	getMMU()->mapMemory(getResources()->MainMemory.getBaseAddress(), PS2Constants::SIZE_MAIN_MEMORY, PS2Constants::PADDRESS_MAIN_MEMORY);
+	getMMU()->mapMemory(getResources()->MainMemory->getBaseAddress(), PS2Constants::SIZE_MAIN_MEMORY, PS2Constants::PADDRESS_MAIN_MEMORY);
 
 	// Scratchpad memory 16KB
-	getMMU()->mapMemory(getResources()->EE.EECore.ScratchpadMemory.getBaseAddress(), PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY, PS2Constants::EE::EECore::PADDRESS_SCRATCHPAD_MEMORY);
+	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory->getBaseAddress(), PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY, PS2Constants::EE::EECore::PADDRESS_SCRATCHPAD_MEMORY);
 
 	// Boot ROM 4MB
-	getMMU()->mapMemory(getResources()->MainMemory.getBaseAddress(), PS2Constants::SIZE_BOOT_ROM, PS2Constants::PADDRESS_BOOT_ROM);
+	getMMU()->mapMemory(getResources()->BootROM->getBaseAddress(), PS2Constants::SIZE_BOOT_ROM, PS2Constants::PADDRESS_BOOT_ROM);
 }
 
 void VMMain::initaliseExecutionCore()
@@ -122,7 +117,7 @@ void VMMain::initaliseExecutionCore()
 
 void VMMain::initaliseBootROM() const
 {
-	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM.getBaseAddress());
+	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getBaseAddress());
 	std::ifstream file(mBootROMPath, std::ifstream::binary);
 	file.seekg(std::ifstream::beg);
 	file.read(memoryBase, PS2Constants::SIZE_BOOT_ROM);

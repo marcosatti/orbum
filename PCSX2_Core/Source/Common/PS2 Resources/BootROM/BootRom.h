@@ -8,19 +8,14 @@
 class BootROM_t
 {
 public:
-	BootROM_t() : bootROM(new u8[PS2Constants::SIZE_BOOT_ROM])
+	BootROM_t() : bootROM(std::make_shared<u8*>(new u8[PS2Constants::SIZE_BOOT_ROM]))
 	{
 	}
 
-	~BootROM_t()
+	void * getBaseAddress() const
 	{
-		delete bootROM;
-	}
-
-	INLINE void * getBaseAddress() const
-	{
-		return reinterpret_cast<void*>(bootROM);
+		return reinterpret_cast<void*>(bootROM.get());
 	}
 private:
-	u8 *const bootROM;
+	const std::shared_ptr<u8*> bootROM;
 };

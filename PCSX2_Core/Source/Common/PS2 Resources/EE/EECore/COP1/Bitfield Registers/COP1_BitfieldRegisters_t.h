@@ -1,22 +1,22 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/BitfieldRegister_t.h"
+#include "Common/PS2 Types/Registers/BitfieldRegister32_t.h"
 
 /*
 COP1_BitfieldRegister_t.h implements all of the bitfields in each of the COP1 control registers. This is used primarily by COP1_t.h.
 Each register will have documentation attached to it.
 Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
 
-It is recommended that you read the documentation of the BitfieldRegister_t class, which documents how to access bitfields.
+It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
 All of the fields available within each register are defined within the Fields struct located inside.
 ie: to access a field in a register object from outside this file, you would use:
 - RegisterIndex.setFieldValue(RegisterIndex::Fields::Index, u32 value) or
 - u32 value = RegisterIndex.getFieldValue(RegisterIndex::Fields::Index)
-All of the available field functions are listed in the BitfieldRegister_t class.
+All of the available field functions are listed in the BitfieldRegister32_t class.
 */
 
 /*
-The IRR (Implementation and Revision Register (FCR0)) of COP1, subclassed off the base BitfieldRegister_t & Register32_t class.
+The IRR (Implementation and Revision Register (FCR0)) of COP1, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 158.
 
 Bitfield map (defined as constants in the class below):
@@ -24,7 +24,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterIRR_t : public BitfieldRegister_t
+class RegisterIRR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -41,7 +41,7 @@ public:
 };
 
 /*
-The CSR (Control/Status Register (FCR31)) of COP1, subclassed off the base BitfieldRegister_t & Register32_t class.
+The CSR (Control/Status Register (FCR31)) of COP1, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 158.
 
 Bitfield map (defined as constants in the class below):
@@ -62,7 +62,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24 (length 1): Constant 1.
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterCSR_t : public BitfieldRegister_t
+class RegisterCSR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields

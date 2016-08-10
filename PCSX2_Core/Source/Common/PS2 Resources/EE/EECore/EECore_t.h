@@ -16,13 +16,13 @@ For reference documentation, see:
 class EECore_t {
 public:
 	// R5900 CPU
-	R5900_t R5900;
+	std::shared_ptr<R5900_t> R5900 = std::make_shared<R5900_t>();
 
 	// COP0 coprocessor
-	COP0_t COP0;
+	std::shared_ptr<COP0_t> COP0 = std::make_shared<COP0_t>();
 
 	// COP1 coprocessor
-	COP1_t COP1;
+	std::shared_ptr<COP1_t> COP1 = std::make_shared<COP1_t>();
 
 	/*
 	COP2 refers to VPU0. As the Sony doc's include it with the EE Core, it is also included here.
@@ -33,6 +33,6 @@ public:
 	// VPU_t VPU0;
 
 	// Scratchpad memory
-	ScratchpadMemory_t ScratchpadMemory;
+	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>();
 
 };

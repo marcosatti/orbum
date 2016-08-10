@@ -1,19 +1,78 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/FPURegister_t.h"
+#include "Common/PS2 Types/Registers/Register32_t.h"
 
-
-FPURegister_t::FPURegister_t() : F(0)
+Register32_t::Register32_t() : UW(0)
 {
 }
 
-u8 FPURegister_t::getBit32(u8 index) const
+u8 Register32_t::readByteU(u32 arrayIndex)
+{
+	return UB[arrayIndex];
+}
+
+void Register32_t::writeByteU(u32 arrayIndex, u8 value)
+{
+	UB[arrayIndex] = value;
+}
+
+s8 Register32_t::readByteS(u32 arrayIndex)
+{
+	return SB[arrayIndex];
+}
+
+void Register32_t::writeByteS(u32 arrayIndex, s8 value)
+{
+	SB[arrayIndex] = value;
+}
+
+u16 Register32_t::readHwordU(u32 arrayIndex)
+{
+	return UH[arrayIndex];
+}
+
+void Register32_t::writeHwordU(u32 arrayIndex, u16 value)
+{
+	UH[arrayIndex] = value;
+}
+
+s16 Register32_t::readHwordS(u32 arrayIndex)
+{
+	return SH[arrayIndex];
+}
+
+void Register32_t::writeHwordS(u32 arrayIndex, s16 value)
+{
+	SH[arrayIndex] = value;
+}
+
+u32 Register32_t::readWordU()
+{
+	return UW;
+}
+
+void Register32_t::writeWordU(u32 value)
+{
+	UW = value;
+}
+
+s32 Register32_t::readWordS()
+{
+	return SW;
+}
+
+void Register32_t::writeWordS(s32 value)
+{
+	SW = value;
+}
+
+u8 Register32_t::getBit32(u8 index) const
 {
 	return (UW >> index) & 0x1;
 }
 
-void FPURegister_t::setBit32(u8 index, u32 bitValue)
+void Register32_t::setBit32(u8 index, u32 bitValue)
 {
 	u32 resetBitMask = 0x0;
 	u32 oneMask = 0x1;
@@ -21,7 +80,7 @@ void FPURegister_t::setBit32(u8 index, u32 bitValue)
 	UW = (UW & resetBitMask) | (bitValue << index);
 }
 
-u32 FPURegister_t::getBitRange32(u8 startPosition, u8 bitLength) const
+u32 Register32_t::getBitRange32(u8 startPosition, u8 bitLength) const
 {
 	u32 endPos = startPosition + bitLength;
 	u32 maskTemp1 = (static_cast<u32>(~0x0) << startPosition);
@@ -37,7 +96,7 @@ u32 FPURegister_t::getBitRange32(u8 startPosition, u8 bitLength) const
 	return value;
 }
 
-void FPURegister_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
+void Register32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
 {
 	u32 endPos = startPosition + bitLength;
 	u32 maskTemp1 = (static_cast<u32>(~0x0) << startPosition);

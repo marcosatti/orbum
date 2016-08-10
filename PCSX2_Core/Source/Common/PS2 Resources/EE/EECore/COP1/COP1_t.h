@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/FPURegister_t.h"
+#include "Common/PS2 Types/Registers/FPURegister32_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP1/Bitfield Registers/COP1_BitfieldRegisters_t.h"
 
 class COP1_t {
@@ -15,24 +15,28 @@ public:
 	/*
 	COP1 defines 32 general purpose registers, called FPR's.
 	See EE Core Users Manual, page 157.
+	In an 8x4 grid.
 	*/
-	FPURegister_t FPR[32];
+	std::shared_ptr<FPURegister32_t> FPR[32] = {
+		std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(),
+		std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(),
+		std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(),
+		std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>(), std::make_shared<FPURegister32_t>()
+	};
 
 	/*
 	COP1 defines an accumulator register, used for multiply-accumulate type instructions.
 	See EE Core Users Manual, page 157.
 	*/
-	FPURegister_t ACC;
+	std::shared_ptr<FPURegister32_t> ACC = std::make_shared<FPURegister32_t>();
 
+	// Bitfield Register Implementations.
 	/*
 	COP1 defines 2 control registers, which are implemented as BitfieldRegisters.
 	See EE Core Users Manual, page 158.
 	*/
-	struct
-	{
-		RegisterIRR_t IRR;
-		RegisterCSR_t CSR;
-	} BitfieldRegisters;
+	std::shared_ptr<RegisterIRR_t> IRR = std::make_shared<RegisterIRR_t>();
+	std::shared_ptr<RegisterCSR_t> CSR = std::make_shared<RegisterCSR_t>();
 
 
 }; // class COP1

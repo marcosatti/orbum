@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/BitfieldRegister_t.h"
+#include "Common/PS2 Types/Registers/BitfieldRegister32_t.h"
 
 
 /*
@@ -8,19 +8,19 @@ COP0_BitfieldRegister_t.h implements all of the bitfields in each of the COP0 co
 Each register will have documentation attached to it.
 Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
 
-It is recommended that you read the documentation of the BitfieldRegister_t class, which documents how to access bitfields.
+It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
 All of the fields available within each register are defined within the Fields struct located inside.
 ie: to access a field in a register object from outside this file, you would use:
  - RegisterIndex.setFieldValue(RegisterIndex::Fields::Index, u32 value) or 
  - u32 value = RegisterIndex.getFieldValue(RegisterIndex::Fields::Index)
-All of the available field functions are listed in the BitfieldRegister_t class.
+All of the available field functions are listed in the BitfieldRegister32_t class.
 */
 
 /*
 RegisterUnknown_t represents an unknown (blank) register. It is up to the user at runtime to define fields.
 Aliased to RegisterReserved_t, as their contents are also unknown.
 */
-class RegisterUnknown_t : public BitfieldRegister_t
+class RegisterUnknown_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -34,7 +34,7 @@ public:
 typedef RegisterUnknown_t RegisterReserved_t;
 
 /*
-The Index register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Index register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 63.
 
 Bitfield map (defined as constants in the class below):
@@ -42,7 +42,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-30 (length 25): Constant 0.
 - Bits 31 (length 1): "P".
 */
-class RegisterIndex_t : public BitfieldRegister_t
+class RegisterIndex_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -59,14 +59,14 @@ public:
 };
 
 /*
-The Random register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Random register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 64.
 		
 Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Random".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterRandom_t : public BitfieldRegister_t
+class RegisterRandom_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -81,7 +81,7 @@ public:
 };
 
 /*
-The EntryLo0 register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The EntryLo0 register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 65.
 
 Bitfield map (defined as constants in the class below):
@@ -93,7 +93,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 26-30 (length 5): Constant 0.
 - Bits 31 (length 1): "S"
 */
-class RegisterEntryLo0_t : public BitfieldRegister_t
+class RegisterEntryLo0_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -118,7 +118,7 @@ public:
 };
 
 /*
-The EntryLo1 register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The EntryLo1 register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 65.
 
 Bitfield map (defined as constants in the class below):
@@ -129,7 +129,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-25 (length 20): "PFN".
 - Bits 26-31 (length 6): Constant 0.
 */
-class RegisterEntryLo1_t : public BitfieldRegister_t
+class RegisterEntryLo1_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -152,7 +152,7 @@ public:
 };
 
 /*
-The Context register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Context register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 66.
 		
 Bitfield map (defined as constants in the class below):
@@ -160,7 +160,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 4-22 (length 19): "BadVPN2".
 - Bits 23-31 (length 9): "PTEBase".
 */
-class RegisterContext_t : public BitfieldRegister_t
+class RegisterContext_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -178,7 +178,7 @@ private:
 };
 
 /*
-The PageMask register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The PageMask register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 67.
 		
 Bitfield map (defined as constants in the class below):
@@ -186,7 +186,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 13-24 (length 12): "MASK".
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterPageMask_t : public BitfieldRegister_t
+class RegisterPageMask_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -201,14 +201,14 @@ public:
 };
 
 /*
-The Wired register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Wired register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 68.
 		
 Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Wired".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterWired_t : public BitfieldRegister_t
+class RegisterWired_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -223,13 +223,13 @@ public:
 };
 
 /*
-The BadVAddr register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The BadVAddr register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 69.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "BadVAddr".
 */
-class RegisterBadVAddr_t : public BitfieldRegister_t
+class RegisterBadVAddr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -244,13 +244,13 @@ public:
 };
 
 /*
-The Count register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Count register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 70.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Count".
 */
-class RegisterCount_t : public BitfieldRegister_t
+class RegisterCount_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -265,7 +265,7 @@ public:
 };
 
 /*
-The EntryHI register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The EntryHI register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 71.
 
 Bitfield map (defined as constants in the class below):
@@ -273,7 +273,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-12 (length 5): Constant 0.
 - Bits 13-31 (length 19): "VPN2".
 */
-class RegisterEntryHi_t : public BitfieldRegister_t
+class RegisterEntryHi_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -290,13 +290,13 @@ public:
 };
 
 /*
-The Compare register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Compare register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 72.
 		
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Compare".
 */
-class RegisterCompare_t : public BitfieldRegister_t
+class RegisterCompare_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -311,7 +311,7 @@ public:
 };
 
 /*
-The Status register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Status register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 73.
 
 Bitfield map (defined as constants in the class below):
@@ -333,7 +333,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24-27 (length 4): Constant 0.
 - Bits 28-31 (length 4): "CU".
 */
-class RegisterStatus_t : public BitfieldRegister_t
+class RegisterStatus_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -372,7 +372,7 @@ public:
 };
 
 /*
-The Cause register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Cause register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 75.
 
 Bitfield map (defined as constants in the class below):
@@ -389,7 +389,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "BD2".
 - Bits 31 (length 1): "BD".
 */
-class RegisterCause_t : public BitfieldRegister_t
+class RegisterCause_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -418,13 +418,13 @@ public:
 };
 
 /*
-The EPC register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The EPC register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 76.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "EPC".
 */
-class RegisterEPC_t : public BitfieldRegister_t
+class RegisterEPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -439,7 +439,7 @@ public:
 };
 
 /*
-The PRId register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The PRId register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 77.
 		
 Bitfield map (defined as constants in the class below):
@@ -447,7 +447,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterPRId_t : public BitfieldRegister_t
+class RegisterPRId_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -464,7 +464,7 @@ public:
 };
 
 /*
-The Config register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Config register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 78.
 		
 Bitfield map (defined as constants in the class below):
@@ -482,7 +482,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 28-30 (length 3): "EC".
 - Bits 31 (length 1): Constant 0.
 */
-class RegisterConfig_t : public BitfieldRegister_t
+class RegisterConfig_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -513,14 +513,14 @@ public:
 };
 
 /*
-The BadPAddr register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The BadPAddr register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 79.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-3 (length 4): Constant 0.
 - Bits 4-31 (length 28): "BadPAddr".
 */
-class RegisterBadPAddr_t : public BitfieldRegister_t
+class RegisterBadPAddr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -535,7 +535,7 @@ public:
 };
 
 /*
-The Status register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The Status register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 80.
 
 Bitfield map (defined as constants in the class below):
@@ -561,7 +561,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "DRE".
 - Bits 31 (length 1): "IAE".
 */
-class RegisterBPC_t : public BitfieldRegister_t
+class RegisterBPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -610,13 +610,13 @@ public:
 };
 
 /*
-The IAB register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The IAB register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 81.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IAB".
 */
-class RegisterIAB_t : public BitfieldRegister_t
+class RegisterIAB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -631,13 +631,13 @@ public:
 };
 
 /*
-The IABM register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The IABM register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 81.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IABM".
 */
-class RegisterIABM_t : public BitfieldRegister_t
+class RegisterIABM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -652,13 +652,13 @@ public:
 };
 
 /*
-The DAB register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The DAB register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 82.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DAB".
 */
-class RegisterDAB_t : public BitfieldRegister_t
+class RegisterDAB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -673,13 +673,13 @@ public:
 };
 
 /*
-The DABM register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The DABM register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 82.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DABM".
 */
-class RegisterDABM_t : public BitfieldRegister_t
+class RegisterDABM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -694,13 +694,13 @@ public:
 };
 
 /*
-The DVB register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The DVB register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 83.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVB".
 */
-class RegisterDVB_t : public BitfieldRegister_t
+class RegisterDVB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -715,13 +715,13 @@ public:
 };
 
 /*
-The DVBM register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The DVBM register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 83.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVBM".
 */
-class RegisterDVBM_t : public BitfieldRegister_t
+class RegisterDVBM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -736,7 +736,7 @@ public:
 };
 
 /*
-The PCCR register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The PCCR register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 84.
 
 Bitfield map (defined as constants in the class below):
@@ -755,7 +755,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 20-30 (length 11): Constant 0.
 - Bits 31 (length 1): "CTE".
 */
-class RegisterPCCR_t : public BitfieldRegister_t
+class RegisterPCCR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -790,14 +790,14 @@ public:
 };
 
 /*
-The PCR0 register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The PCR0 register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 85.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR0_t : public BitfieldRegister_t
+class RegisterPCR0_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -814,14 +814,14 @@ public:
 };
 
 /*
-The PCR1 register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The PCR1 register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 85.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR1_t : public BitfieldRegister_t
+class RegisterPCR1_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -838,7 +838,7 @@ public:
 };
 
 /*
-The TagLo register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The TagLo register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 86.
 
 Bitfield map (defined as constants in the class below):
@@ -852,7 +852,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagLo_t : public BitfieldRegister_t
+class RegisterTagLo_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -875,7 +875,7 @@ public:
 };
 
 /*
-The TagHi register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The TagHi register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 87.
 
 Bitfield map (defined as constants in the class below):
@@ -889,7 +889,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagHi_t : public BitfieldRegister_t
+class RegisterTagHi_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -912,13 +912,13 @@ public:
 };
 
 /*
-The ErrorEPC register of COP0, subclassed off the base BitfieldRegister_t & Register32_t class.
+The ErrorEPC register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 88.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "ErrorEPC".
 */
-class RegisterErrorEPC_t : public BitfieldRegister_t
+class RegisterErrorEPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields

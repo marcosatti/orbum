@@ -23,6 +23,13 @@ struct Constants
 	static constexpr u32 NUMBER_WORDS_IN_QWORD = 4;
 	static constexpr u32 NUMBER_DWORDS_IN_QWORD = 2;
 
+	static constexpr u32 NUMBER_BYTES_IN_DWORD = 8;
+	static constexpr u32 NUMBER_HWORDS_IN_DWORD = 4;
+	static constexpr u32 NUMBER_WORDS_IN_DWORD = 2;
+
+	static constexpr u32 NUMBER_BYTES_IN_WORD = 4;
+	static constexpr u32 NUMBER_HWORDS_IN_WORD = 2;
+
 	// Thanks Microsoft! https://msdn.microsoft.com/en-AU/library/296az74e.aspx
 	static constexpr u8   VALUE_U8_MAX = 255;
 	static constexpr s8   VALUE_S8_MAX = 127;

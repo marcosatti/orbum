@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\MMUHandler_Test.cpp" />
-    <ClCompile Include="Source\R5900Instruction_Test.cpp" />
+    <ClCompile Include="Source\EECoreInstruction_Test.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

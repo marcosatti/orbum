@@ -23,13 +23,13 @@
     <ClCompile Include="Source\MMUHandler_Test.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R5900Instruction_Test.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Types_Test.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EECoreInstruction_Test.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

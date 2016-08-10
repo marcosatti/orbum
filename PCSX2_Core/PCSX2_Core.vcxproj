@@ -149,13 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="Source\ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Source\Common\PS2 Types\Registers\PCRegister32_t.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\Register64_t.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\Register128_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h" />
-    <ClInclude Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.h" />
-    <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.h" />
+    <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers\COP0_BitfieldRegisters_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers\COP1_BitfieldRegisters_t.h" />
@@ -164,7 +164,7 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EE_t.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMPS2Component.h" />
     <ClInclude Include="Source\VM\ExceptionHandler\ExceptionHandler.h" />
-    <ClInclude Include="Source\Common\PS2 Types\Registers\FPURegister_t.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\FPURegister32_t.h" />
     <ClInclude Include="Source\Common\Global\GlobalConstants.h" />
     <ClInclude Include="Source\Common\Global\GlobalLog.h" />
     <ClInclude Include="Source\Common\Global\GlobalMacros.h" />
@@ -183,21 +183,25 @@
     <ClInclude Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.h" />
     <ClInclude Include="Source\Common\PS2 Constants\PS2Constants.h" />
     <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h" />
-    <ClInclude Include="Source\Common\PS2 Types\Registers\Register_t.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\Register32_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.h" />
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h" />
     <ClInclude Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
+    <ClInclude Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2 Types\Registers\PCRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\Register64_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\Register128_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_FLOAT.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_MULT_ADD.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_MULT_DIV.cpp" />
-    <ClCompile Include="Source\Common\PS2 Types\R5900InstructionUtil\R5900InstructionUtil.cpp" />
-    <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister_t.cpp" />
+    <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\VM\ExceptionHandler\ExceptionHandler.cpp" />
-    <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister32_t.cpp" />
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp" />
@@ -206,7 +210,7 @@
     <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\VM\VMMain.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp" />
-    <ClCompile Include="Source\Common\PS2 Types\Registers\Register_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\Register32_t.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -214,10 +218,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp" />
+    <ClCompile Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx" />
-    <None Include="Docs\R5900 Instruction Implementation Register.xlsx" />
+    <None Include="Docs\EECore Instruction Implementation Register.xlsm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
