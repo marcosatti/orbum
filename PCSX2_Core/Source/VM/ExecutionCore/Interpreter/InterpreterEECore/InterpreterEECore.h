@@ -124,5 +124,34 @@ private:
 	static void MSUBA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void SUB_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void SUBA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+
+	/*
+	Shift Instructions. See InterpreterR5900_SHIFT.cpp for implementations (25 instructions total).
+	*/
+	static void DSRA(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSLL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSLL32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSLLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSRA32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSRAV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSRL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSRL32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void DSRLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SLL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SLLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SRA(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SRAV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SRL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SRLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSLLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSLLVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSLLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRAH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRAVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRAW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRLVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PSRLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void QFSRV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 };
 

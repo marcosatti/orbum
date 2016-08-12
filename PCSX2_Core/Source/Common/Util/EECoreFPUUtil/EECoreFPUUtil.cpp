@@ -6,6 +6,36 @@
 #include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
+bool EECoreFPUUtil::isOverflowed(const f32& value)
+{
+	switch (std::fpclassify(value))
+	{
+	case FP_INFINITE:
+	{
+		return true;
+	}
+	default: 
+	{
+		return false;
+	}
+	}
+}
+
+bool EECoreFPUUtil::isUnderflowed(const f32& value)
+{
+	switch (std::fpclassify(value))
+	{
+	case FP_SUBNORMAL:
+	{
+		return true;
+	}
+	default:
+	{
+		return false;
+	}
+	}
+}
+
 f32 EECoreFPUUtil::formatIEEEToPS2Float(const f32 & value)
 {
 	// Intended to format incoming IEEE754 spec values into PS2 spec values.
@@ -31,7 +61,7 @@ f32 EECoreFPUUtil::formatIEEEToPS2Float(const f32 & value)
 	}
 	default:
 	{
-		return value;
+		throw std::runtime_error("Parsed float value was NOT abnormal to the PS2 spec. Requires debugging.");
 	}
 	}
 }

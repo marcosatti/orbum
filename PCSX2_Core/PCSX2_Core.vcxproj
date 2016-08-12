@@ -209,6 +209,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_ADD_SUB.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp" />
     <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\VM\VMMain.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp" />

@@ -32,8 +32,8 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-// Single precision float (needs to be 32-bit for emulation to work, see Types_Test.cpp in the ).
-// If the test fails, you may need to add in a platform specific definition based on an #if directive.
+// Single precision (32-bit) IEEE754 float (needs to be exactly this for emulation to work, see Types_Test.cpp in the project PCSX2_Core_UnitTest).
+// If the test fails, you may need to add in a platform specific definition based on an #if directive, or use a software emulation library.
 typedef float f32;
 
 // 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
