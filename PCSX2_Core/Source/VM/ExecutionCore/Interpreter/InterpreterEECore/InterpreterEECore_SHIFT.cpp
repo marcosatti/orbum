@@ -1,12 +1,13 @@
 #include "stdafx.h"
 
+#include <bitset>
+
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-#include <bitset>
+
 
 /*
 Shift instruction family.
