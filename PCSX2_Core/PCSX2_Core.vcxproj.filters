@@ -299,7 +299,9 @@
     <ClCompile Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.cpp">
       <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">
