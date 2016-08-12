@@ -30,6 +30,16 @@ public:
 	static u32 getXORSign(const f32 & value1, const f32 & value2);
 
 	/*
+	Gets the sign (bit 31).
+	*/
+	static bool getSign(const f32 & value);
+
+	/*
+	Gets the exponent (8 bits starting from position 23).
+	*/
+	static u8 getExponent(const f32 & value);
+
+	/*
 	Checks if the FPU coprocessor (COP1) is unusable.
 	*/
 	static bool isCOP1Unusable(std::shared_ptr<PS2Resources_t> & PS2Resources);

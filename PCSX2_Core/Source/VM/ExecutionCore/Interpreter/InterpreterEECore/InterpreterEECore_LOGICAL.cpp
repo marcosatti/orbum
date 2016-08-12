@@ -6,7 +6,6 @@
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
-
 /*
 Logical instruction family.
 */

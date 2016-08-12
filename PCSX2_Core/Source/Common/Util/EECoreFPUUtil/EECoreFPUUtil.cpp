@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 #include <cmath>
 
 #include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
@@ -71,4 +70,16 @@ u32 EECoreFPUUtil::getXORSign(const f32& value1, const f32& value2)
 	u32 value1_u32 = static_cast<u32>(value1);
 	u32 value2_u32 = static_cast<u32>(value2);
 	return (value1_u32 ^ value2_u32) & 0x80000000;
+}
+
+bool EECoreFPUUtil::getSign(const f32& value)
+{
+	return std::signbit(value);
+}
+
+u8 EECoreFPUUtil::getExponent(const f32& value)
+{
+	s32 exp;
+	std::frexp(value, &exp);
+	return static_cast<u8>(exp);
 }

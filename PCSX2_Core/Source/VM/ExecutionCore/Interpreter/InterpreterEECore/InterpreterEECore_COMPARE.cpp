@@ -8,6 +8,9 @@
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
 
+/*
+Compare instruction family.
+*/
 
 void InterpreterEECore::SLT(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
@@ -171,7 +174,7 @@ void InterpreterEECore::PCETW(const MIPSInstruction_t& instruction, std::shared_
 
 void InterpreterEECore::C_EQ_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
-	// (FPR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
+	// (FCR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
 	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
@@ -192,7 +195,7 @@ void InterpreterEECore::C_EQ_S(const MIPSInstruction_t& instruction, std::shared
 void InterpreterEECore::C_F_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
 	// TODO: Whats the point of this instruction? Docs say something about a comparison but it always sets the C field to 0 regardless...
-	// (FPR[31] or CSR, C field) = 0
+	// (FCR[31] or CSR, C field) = 0
 	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
 	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
@@ -203,7 +206,7 @@ void InterpreterEECore::C_F_S(const MIPSInstruction_t& instruction, std::shared_
 
 void InterpreterEECore::C_LE_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
-	// (FPR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
+	// (FCR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
 	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
@@ -223,7 +226,7 @@ void InterpreterEECore::C_LE_S(const MIPSInstruction_t& instruction, std::shared
 
 void InterpreterEECore::C_LT_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
-	// (FPR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
+	// (FCR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
 	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
@@ -240,3 +243,5 @@ void InterpreterEECore::C_LT_S(const MIPSInstruction_t& instruction, std::shared
 	else
 		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
 }
+
+

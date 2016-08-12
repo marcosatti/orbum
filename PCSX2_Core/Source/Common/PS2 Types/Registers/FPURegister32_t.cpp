@@ -18,6 +18,16 @@ void FPURegister32_t::writeWordU(u32 value)
 	UW = value;
 }
 
+s32 FPURegister32_t::readWordS()
+{
+	return SW;
+}
+
+void FPURegister32_t::writeWordS(s32 value)
+{
+	SW = value;
+}
+
 f32 FPURegister32_t::readFloat()
 {
 	return F;

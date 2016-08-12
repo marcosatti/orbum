@@ -27,6 +27,7 @@ public:
 	union
 	{
 		u32 UW;
+		s32 SW;
 		f32 F;
 	};
 	
@@ -34,9 +35,11 @@ public:
 	FPURegister32_t();
 
 	// Functions to access the register value - you should use these functions instead of accessing them directly.
-	// NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the writeIEEEFloat() function to attempt a conversion automatically.
+	// NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the EECoreFPUUtil static class functions to help with conversion.
 	virtual u32 readWordU();
-	virtual void writeWordU(u32 value);
+	virtual void writeWordU(u32 value);	
+	virtual s32 readWordS();
+	virtual void writeWordS(s32 value);
 	virtual f32 readFloat();
 	virtual void writeFloat(f32 value);
 
