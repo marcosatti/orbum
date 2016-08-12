@@ -305,6 +305,9 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOGICAL.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
+    <ClCompile Include="InterpreterEECore_COMPARE.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

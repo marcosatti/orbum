@@ -193,6 +193,7 @@
     <ClInclude Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InterpreterEECore_COMPARE.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOGICAL.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\PCRegister32_t.cpp" />

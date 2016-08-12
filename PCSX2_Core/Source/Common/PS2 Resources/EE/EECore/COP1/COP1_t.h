@@ -35,8 +35,8 @@ public:
 	COP1 defines 2 control registers, which are implemented as BitfieldRegisters.
 	See EE Core Users Manual, page 158.
 	*/
-	std::shared_ptr<RegisterIRR_t> IRR = std::make_shared<RegisterIRR_t>();
-	std::shared_ptr<RegisterCSR_t> CSR = std::make_shared<RegisterCSR_t>();
+	std::shared_ptr<RegisterIRR_t> IRR = std::make_shared<RegisterIRR_t>(); // Also known as FCR[0].
+	std::shared_ptr<RegisterCSR_t> CSR = std::make_shared<RegisterCSR_t>(); // Also known as FCR[31].
 
 
 }; // class COP1

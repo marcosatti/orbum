@@ -155,7 +155,7 @@ private:
 	static void QFSRV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Logical Instructions. See InterpreterR5900_Logical.cpp for implementations (11 instructions total).
+	Logical Instructions. See InterpreterR5900_LOGICAL.cpp for implementations (11 instructions total).
 	*/
 	static void AND(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void ANDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -168,5 +168,33 @@ private:
 	static void PNOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void POR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PXOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+
+	/*
+	Logical Instructions. See InterpreterR5900_COMPARE.cpp for implementations (14 instructions total).
+	*/
+	static void SLT(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
+	static void SLTI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SLTIU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SLTU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCEQB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCEQH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCEQW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCETB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCETH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCETW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void C_EQ_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void C_F_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void C_LE_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void C_LT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+
+	/*
+	Min/Max Instructions. See InterpreterR5900_MIN_MAX.cpp for implementations (6 instructions total).
+	*/
+	static void PMAXH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PMAXW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PMINH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PMINW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void MAX_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void MIN_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 };
 
