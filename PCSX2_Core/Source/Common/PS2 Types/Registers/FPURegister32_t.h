@@ -20,6 +20,10 @@ In particular, the FPU does not support (in comparison to IEEE-754):
 class FPURegister32_t
 {
 public:
+	virtual ~FPURegister32_t()
+	{
+	}
+
 	union
 	{
 		u32 UW;
@@ -28,6 +32,13 @@ public:
 	
 	// Initalise the value to +0.
 	FPURegister32_t();
+
+	// Functions to access the register value - you should use these functions instead of accessing them directly.
+	// NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the writeIEEEFloat() function to attempt a conversion automatically.
+	virtual u32 readWordU();
+	virtual void writeWordU(u32 value);
+	virtual f32 readFloat();
+	virtual void writeFloat(f32 value);
 
 	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
 	// Index must be between 0 -> 31.

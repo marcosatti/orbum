@@ -71,8 +71,12 @@ public:
 			struct FPU
 			{
 				// FPU Constants Fmax (positive) and Fmax (negative), used as the upper and lower bounds of a float value (instead of plus and minus infinity?).
-				static constexpr u32 FMAX_POS = 0x7FFFFFFF; // Sign bit = 0 -> positive.
-				static constexpr u32 FMAX_NEG = 0xFFFFFFFF; // Sign bit = 1 -> negative.
+				static constexpr u32 FMAX_POS = 0x7F7FFFFF; // Sign bit = 0 -> positive.
+				static constexpr u32 FMAX_NEG = 0xFF7FFFFF; // Sign bit = 1 -> negative.
+
+				// FPU Constants +/- zero.
+				static constexpr u32 ZERO_POS = 0x00000000; // Sign bit = 0 -> positive.
+				static constexpr u32 ZERO_NEG = 0x80000000; // Sign bit = 1 -> negative.
 			};
 
 		};

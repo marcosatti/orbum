@@ -8,6 +8,27 @@ FPURegister32_t::FPURegister32_t() : F(0)
 {
 }
 
+u32 FPURegister32_t::readWordU()
+{
+	return UW;
+}
+
+void FPURegister32_t::writeWordU(u32 value)
+{
+	UW = value;
+}
+
+f32 FPURegister32_t::readFloat()
+{
+	return F;
+}
+
+void FPURegister32_t::writeFloat(f32 value)
+{
+	
+	F = value;
+}
+
 u8 FPURegister32_t::getBit32(u8 index) const
 {
 	return (UW >> index) & 0x1;

@@ -91,8 +91,14 @@
     <Filter Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore">
       <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Common\PS2 Types\EECoreInstructionUtil">
+    <Filter Include="Source\Common\Util">
+      <UniqueIdentifier>{f36709da-f132-405c-aa87-f2b9c6386bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Util\EECoreInstructionUtil">
       <UniqueIdentifier>{5a2259f2-f767-450d-91e1-953c9a9da096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Util\EECoreFPUUtil">
+      <UniqueIdentifier>{70076534-28ad-447d-b4e8-afcf745cb4ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +223,10 @@
       <Filter>Source\Common\PS2 Types\Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h">
-      <Filter>Source\Common\PS2 Types\EECoreInstructionUtil</Filter>
+      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.h">
+      <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -285,7 +294,10 @@
       <Filter>Source\Common\PS2 Types\Registers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp">
-      <Filter>Source\Common\PS2 Types\EECoreInstructionUtil</Filter>
+      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.cpp">
+      <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
