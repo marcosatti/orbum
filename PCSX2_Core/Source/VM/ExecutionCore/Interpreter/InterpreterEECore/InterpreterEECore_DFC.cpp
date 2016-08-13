@@ -6,7 +6,7 @@
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-#include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
+#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 
 /*
 Data Format Conversion (DFC) instruction family.
@@ -56,7 +56,7 @@ void InterpreterEECore::CVT_S_W(const MIPSInstruction_t& instruction, std::share
 	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
@@ -68,14 +68,14 @@ void InterpreterEECore::CVT_W_S(const MIPSInstruction_t& instruction, std::share
 	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
 
-	if (EECoreFPUUtil::getExponent(source1Val) <= 0x9D)
+	if (EECoreCOP1Util::getExponent(source1Val) <= 0x9D)
 		destReg->writeWordS(static_cast<s32>(source1Val));
-	else if (EECoreFPUUtil::getSign(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
+	else if (EECoreCOP1Util::getSign(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
 		destReg->writeWordS(Constants::VALUE_S32_MIN);
 	else
 		destReg->writeWordS(Constants::VALUE_S32_MAX);

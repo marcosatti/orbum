@@ -5,7 +5,7 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
+#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
 /*
@@ -21,20 +21,20 @@ void InterpreterEECore::ADD_S(const MIPSInstruction_t & instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 	
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -50,20 +50,20 @@ void InterpreterEECore::ADDA_S(const MIPSInstruction_t & instruction, std::share
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -81,20 +81,20 @@ void InterpreterEECore::MADD_S(const MIPSInstruction_t & instruction, std::share
 	auto& source3Reg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -111,20 +111,20 @@ void InterpreterEECore::MADDA_S(const MIPSInstruction_t & instruction, std::shar
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -140,20 +140,20 @@ void InterpreterEECore::MUL_S(const MIPSInstruction_t & instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -169,20 +169,20 @@ void InterpreterEECore::MULA_S(const MIPSInstruction_t & instruction, std::share
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -200,20 +200,20 @@ void InterpreterEECore::MSUB_S(const MIPSInstruction_t & instruction, std::share
 	auto& source3Reg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -230,20 +230,20 @@ void InterpreterEECore::MSUBA_S(const MIPSInstruction_t & instruction, std::shar
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -259,20 +259,20 @@ void InterpreterEECore::SUB_S(const MIPSInstruction_t & instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}
@@ -288,20 +288,20 @@ void InterpreterEECore::SUBA_S(const MIPSInstruction_t & instruction, std::share
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& destReg = PS2Resources->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
-	if (EECoreFPUUtil::isOverflowed(result))
+	if (EECoreCOP1Util::isOverflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreFPUUtil::isUnderflowed(result))
+	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
-		result = EECoreFPUUtil::formatIEEEToPS2Float(result);
+		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
 		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
 	}

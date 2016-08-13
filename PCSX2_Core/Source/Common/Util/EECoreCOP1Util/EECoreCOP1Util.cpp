@@ -2,10 +2,10 @@
 
 #include <cmath>
 
-#include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
+#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
-bool EECoreFPUUtil::isOverflowed(const f32& value)
+bool EECoreCOP1Util::isOverflowed(const f32& value)
 {
 	switch (std::fpclassify(value))
 	{
@@ -20,7 +20,7 @@ bool EECoreFPUUtil::isOverflowed(const f32& value)
 	}
 }
 
-bool EECoreFPUUtil::isUnderflowed(const f32& value)
+bool EECoreCOP1Util::isUnderflowed(const f32& value)
 {
 	switch (std::fpclassify(value))
 	{
@@ -35,7 +35,7 @@ bool EECoreFPUUtil::isUnderflowed(const f32& value)
 	}
 }
 
-f32 EECoreFPUUtil::formatIEEEToPS2Float(const f32 & value)
+f32 EECoreCOP1Util::formatIEEEToPS2Float(const f32 & value)
 {
 	// Intended to format incoming IEEE754 spec values into PS2 spec values.
 	// In the PS2 there is no support for NaN's, +/- Inf, or denormalised (subnormal) values.
@@ -65,21 +65,32 @@ f32 EECoreFPUUtil::formatIEEEToPS2Float(const f32 & value)
 	}
 }
 
-u32 EECoreFPUUtil::getXORSign(const f32& value1, const f32& value2)
+u32 EECoreCOP1Util::getXORSign(const f32& value1, const f32& value2)
 {
 	u32 value1_u32 = static_cast<u32>(value1);
 	u32 value2_u32 = static_cast<u32>(value2);
 	return (value1_u32 ^ value2_u32) & 0x80000000;
 }
 
-bool EECoreFPUUtil::getSign(const f32& value)
+bool EECoreCOP1Util::getSign(const f32& value)
 {
 	return std::signbit(value);
 }
 
-u8 EECoreFPUUtil::getExponent(const f32& value)
+u8 EECoreCOP1Util::getExponent(const f32& value)
 {
 	s32 exp;
 	std::frexp(value, &exp);
 	return static_cast<u8>(exp);
+}
+
+bool EECoreCOP1Util::isCOP1Unusable(std::shared_ptr<PS2Resources_t>& PS2Resources)
+{
+	// First check for kernel mode (Status.EXL == 1) - the coprocessor is always available in this mode. If not, then check that CU[bit 1] == 1 in the status register.
+	if (PS2Resources->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL) == 1)
+		return true;
+	else if ((PS2Resources->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::CU) & 0x2) > 0)
+		return true;
+	else 
+		return false;
 }

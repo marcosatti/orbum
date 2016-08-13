@@ -6,7 +6,7 @@
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-#include "Common/Util/EECoreFPUUtil/EECoreFPUUtil.h"
+#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 
 /*
 Compare instruction family.
@@ -180,7 +180,7 @@ void InterpreterEECore::C_EQ_S(const MIPSInstruction_t& instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
@@ -198,7 +198,7 @@ void InterpreterEECore::C_F_S(const MIPSInstruction_t& instruction, std::shared_
 	// (FCR[31] or CSR, C field) = 0
 	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
@@ -212,7 +212,7 @@ void InterpreterEECore::C_LE_S(const MIPSInstruction_t& instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
@@ -232,7 +232,7 @@ void InterpreterEECore::C_LT_S(const MIPSInstruction_t& instruction, std::shared
 	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
 	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreFPUUtil::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();

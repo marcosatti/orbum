@@ -204,5 +204,29 @@ private:
 	static void PPAC5(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void CVT_S_W(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void CVT_W_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+
+	/*
+	Reordering Instructions. See InterpreterR5900_REORDERING.cpp for implementations (20 instructions total).
+	*/
+	static void PCPYH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCPYLD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PCPYUD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXCH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXCW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXEH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXEW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTLB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTUH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PEXTUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PINTEH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PINTH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PPACB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PPACH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PPACW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PREVH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PROT3W(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 };
 

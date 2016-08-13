@@ -3,7 +3,7 @@
 #include "Common/PS2 Resources/PS2Resources_t.h"
 
 
-class EECoreFPUUtil
+class EECoreCOP1Util
 {
 public:
 	/*

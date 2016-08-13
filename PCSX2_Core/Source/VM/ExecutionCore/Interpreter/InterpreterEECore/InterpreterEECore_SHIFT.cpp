@@ -337,10 +337,10 @@ void InterpreterEECore::QFSRV(const MIPSInstruction_t& instruction, std::shared_
 	// Can use the STL class "bitset" to perform what we need... MUCH more cleaner than the old PCSX2 code.
 	// This forms our 256-bit 'type' from 4 x 64-bits.
 	std::bitset<256> result;
-	result |= source1Reg->readDwordU(0) << 64;
-	result |= source1Reg->readDwordU(1) << 64;
-	result |= source2Reg->readDwordU(0) << 64;
-	result |= source2Reg->readDwordU(1);
+	(result |= source1Reg->readDwordU(0)) <<= 64;
+	(result |= source1Reg->readDwordU(1)) <<= 64;
+	(result |= source2Reg->readDwordU(0)) <<= 64;
+	(result |= source2Reg->readDwordU(1));
 
 	// Perform the right shift.
 	result >>= shamt;

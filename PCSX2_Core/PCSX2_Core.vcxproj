@@ -149,7 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.h" />
+    <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\PCRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\Register64_t.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\Register128_t.h" />
@@ -197,7 +197,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_DFC.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_MIN_MAX.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOGICAL.cpp" />
-    <ClCompile Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.cpp" />
+    <ClCompile Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\PCRegister32_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\Register64_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\Register128_t.cpp" />
@@ -213,6 +213,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_ADD_SUB.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REORDERING.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp" />
     <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\VM\VMMain.cpp" />

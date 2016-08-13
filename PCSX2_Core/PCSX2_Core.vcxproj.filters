@@ -225,7 +225,7 @@
     <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.h">
+    <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h">
       <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClInclude>
   </ItemGroup>
@@ -296,9 +296,6 @@
     <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\EECoreFPUUtil\EECoreFPUUtil.cpp">
-      <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
-    </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
@@ -312,6 +309,12 @@
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_MIN_MAX.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.cpp">
+      <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REORDERING.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
   </ItemGroup>
