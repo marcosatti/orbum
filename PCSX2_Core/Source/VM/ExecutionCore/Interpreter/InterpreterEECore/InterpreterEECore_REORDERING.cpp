@@ -348,3 +348,4 @@ void InterpreterEECore::PROT3W(const MIPSInstruction_t& instruction, std::shared
 	destReg->writeWordU(2, source2Reg->readWordU(0));
 	destReg->writeWordU(3, source2Reg->readWordU(3));
 }
+

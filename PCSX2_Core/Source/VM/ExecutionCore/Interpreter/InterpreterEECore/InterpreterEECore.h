@@ -44,7 +44,7 @@ private:
 	static void INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Integer Add/Sub Instructions. See InterpreterR5900_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
+	Integer Add/Sub Instructions. See InterpreterEECore_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
 	*/
 	static void ADD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void ADDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -79,7 +79,7 @@ private:
 	static void PSUBW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Integer Mult/Div Instructions. See InterpreterR5900_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
+	Integer Mult/Div Instructions. See InterpreterEECore_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
 	*/
 	static void DIV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void DIV1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -97,7 +97,7 @@ private:
 	static void PMULTW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Integer Mult-Add Instructions. See InterpreterR5900_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
+	Integer Mult-Add Instructions. See InterpreterEECore_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
 	*/
 	static void MADD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void MADD1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -112,7 +112,7 @@ private:
 	static void PMSUBW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Floating-Point Instructions. See InterpreterR5900_FLOAT.cpp for implementations (10 instructions total).
+	Floating-Point Instructions. See InterpreterEECore_FLOAT.cpp for implementations (10 instructions total).
 	*/
 	static void ADD_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void ADDA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -126,7 +126,7 @@ private:
 	static void SUBA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Shift Instructions. See InterpreterR5900_SHIFT.cpp for implementations (25 instructions total).
+	Shift Instructions. See InterpreterEECore_SHIFT.cpp for implementations (25 instructions total).
 	*/
 	static void DSRA(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void DSLL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -155,7 +155,7 @@ private:
 	static void QFSRV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Logical Instructions. See InterpreterR5900_LOGICAL.cpp for implementations (11 instructions total).
+	Logical Instructions. See InterpreterEECore_LOGICAL.cpp for implementations (11 instructions total).
 	*/
 	static void AND(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void ANDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -170,7 +170,7 @@ private:
 	static void PXOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Logical Instructions. See InterpreterR5900_COMPARE.cpp for implementations (14 instructions total).
+	Logical Instructions. See InterpreterEECore_COMPARE.cpp for implementations (14 instructions total).
 	*/
 	static void SLT(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
 	static void SLTI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -188,7 +188,7 @@ private:
 	static void C_LT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Min/Max Instructions. See InterpreterR5900_MIN_MAX.cpp for implementations (6 instructions total).
+	Min/Max Instructions. See InterpreterEECore_MIN_MAX.cpp for implementations (6 instructions total).
 	*/
 	static void PMAXH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PMAXW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -198,7 +198,7 @@ private:
 	static void MIN_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Data Format Conversion (DFC) Instructions. See InterpreterR5900_DFC.cpp for implementations (4 instructions total).
+	Data Format Conversion (DFC) Instructions. See InterpreterEECore_DFC.cpp for implementations (4 instructions total).
 	*/
 	static void PEXT5(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PPAC5(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -206,7 +206,7 @@ private:
 	static void CVT_W_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
-	Reordering Instructions. See InterpreterR5900_REORDERING.cpp for implementations (20 instructions total).
+	Reordering Instructions. See InterpreterEECore_REORDERING.cpp for implementations (20 instructions total).
 	*/
 	static void PCPYH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PCPYLD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
@@ -228,5 +228,16 @@ private:
 	static void PPACW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PREVH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 	static void PROT3W(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+
+	/*
+	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (7 instructions total).
+	*/
+	static void PABSH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PABSW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void PLZCW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void ABS_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void NEG_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void RSQRT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static void SQRT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 };
 

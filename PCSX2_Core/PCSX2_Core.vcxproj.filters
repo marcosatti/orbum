@@ -228,6 +228,7 @@
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h">
       <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -317,6 +318,10 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REORDERING.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_OTHERS.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

@@ -10,13 +10,11 @@ bool EECoreCOP1Util::isOverflowed(const f32& value)
 	switch (std::fpclassify(value))
 	{
 	case FP_INFINITE:
-	{
 		return true;
-	}
+	case FP_NAN:
+		return true;
 	default: 
-	{
 		return false;
-	}
 	}
 }
 
@@ -25,13 +23,9 @@ bool EECoreCOP1Util::isUnderflowed(const f32& value)
 	switch (std::fpclassify(value))
 	{
 	case FP_SUBNORMAL:
-	{
 		return true;
-	}
 	default:
-	{
 		return false;
-	}
 	}
 }
 
