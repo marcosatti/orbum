@@ -100,6 +100,9 @@
     <Filter Include="Source\Common\Util\EECoreFPUUtil">
       <UniqueIdentifier>{70076534-28ad-447d-b4e8-afcf745cb4ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\Util\MathUtil">
+      <UniqueIdentifier>{33842a11-dc7c-4650-b01a-a96393a3bbde}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\Global\GlobalConstants.h">
@@ -228,7 +231,9 @@
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h">
       <Filter>Source\Common\Util\EECoreFPUUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h" />
+    <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h">
+      <Filter>Source\Common\Util\MathUtil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -321,7 +326,9 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_OTHERS.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp" />
+    <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp">
+      <Filter>Source\Common\Util\MathUtil</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">
