@@ -27,3 +27,23 @@ u32 MathUtil::countLeadingBits(s32 value)
 
 	return num_leading_bits;
 }
+
+s16 MathUtil::saturateWordToHword(s32 value)
+{
+	if (value > Constants::VALUE_S16_MAX)
+		return Constants::VALUE_S16_MAX;
+	else if (value < Constants::VALUE_S16_MIN)
+		return Constants::VALUE_S16_MIN;
+	else 
+		return static_cast<s16>(value);
+}
+
+s32 MathUtil::saturateDwordToWord(s64 value)
+{
+	if (value > Constants::VALUE_S32_MAX)
+		return Constants::VALUE_S32_MAX;
+	else if (value < Constants::VALUE_S32_MIN)
+		return Constants::VALUE_S32_MIN;
+	else
+		return static_cast<s32>(value);
+}

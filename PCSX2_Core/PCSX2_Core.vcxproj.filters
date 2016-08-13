@@ -329,6 +329,9 @@
     <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp">
       <Filter>Source\Common\Util\MathUtil</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REG_TRANSFER.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

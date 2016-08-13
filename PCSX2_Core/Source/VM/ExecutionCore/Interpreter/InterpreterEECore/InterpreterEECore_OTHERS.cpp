@@ -9,7 +9,7 @@
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-#include <Common/Util/MathUtil/MathUtil.h>
+#include "Common/Util/MathUtil/MathUtil.h"
 
 void InterpreterEECore::PABSH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
 {
@@ -156,3 +156,4 @@ void InterpreterEECore::SQRT_S(const MIPSInstruction_t& instruction, std::shared
 
 	destReg->writeFloat(result);
 }
+
