@@ -4,9 +4,9 @@
 #include <cmath>
 
 #include "VM/VMMain.h"
-#include "VM/MMUHandler/MMUHandler.h"
+#include "VM/VMMMUHandler/VMMMUHandler.h"
 
-MMUHandler::MMUHandler(const VMMain* const vmMain):
+VMMMUHandler::VMMMUHandler(const VMMain* const vmMain) :
 	VMMMUComponent(vmMain),
 	DIRECTORY_ENTRIES(TABLE_MAX_SIZE / DIRECTORY_SIZE_BYTES),
 	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
@@ -25,7 +25,7 @@ MMUHandler::MMUHandler(const VMMain* const vmMain):
 	memset(mPageTable, 0, DIRECTORY_ENTRIES * sizeof(mPageTable[0]));
 }
 
-MMUHandler::~MMUHandler()
+VMMMUHandler::~VMMMUHandler()
 {
 	// Destroy any allocated pages.
 	for (u32 i = 0; i < DIRECTORY_ENTRIES; i++)
@@ -36,7 +36,7 @@ MMUHandler::~MMUHandler()
 	delete[] mPageTable;
 }
 
-void MMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const
+void VMMMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const
 {
 	// Do not do anything for clientMemoryLength equal to 0.
 	if (clientMemoryLength == 0) return;
@@ -72,32 +72,32 @@ void MMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u3
 	}
 }
 
-u32 MMUHandler::getVDN(u32 PS2MemoryAddress) const
+u32 VMMMUHandler::getVDN(u32 PS2MemoryAddress) const
 {
 	return (PS2MemoryAddress >> (OFFSET_BITS + PAGE_BITS)) & DIRECTORY_MASK;
 }
 
-u32 MMUHandler::getVPN(u32 PS2MemoryAddress) const
+u32 VMMMUHandler::getVPN(u32 PS2MemoryAddress) const
 {
 	return (PS2MemoryAddress >> OFFSET_BITS) & PAGE_MASK;
 }
 
-u32 MMUHandler::getOffset(u32 PS2MemoryAddress) const
+u32 VMMMUHandler::getOffset(u32 PS2MemoryAddress) const
 {
 	return PS2MemoryAddress & OFFSET_MASK;
 }
 
-u32 MMUHandler::getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+u32 VMMMUHandler::getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
 {
 	return (absPageIndexStart + pageOffset) / PAGE_ENTRIES;
 }
 
-u32 MMUHandler::getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+u32 VMMMUHandler::getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
 {
 	return (absPageIndexStart + pageOffset) % PAGE_ENTRIES;
 }
 
-void MMUHandler::allocDirectory(u32 directoryIndex) const
+void VMMMUHandler::allocDirectory(u32 directoryIndex) const
 {
 	// Allocate VDN only if empty and set to null initially.
 	if (mPageTable[directoryIndex] == nullptr) {
@@ -107,7 +107,7 @@ void MMUHandler::allocDirectory(u32 directoryIndex) const
 	}
 }
 
-void* MMUHandler::getclientMemoryAddress(u32 PS2MemoryAddress) const
+void* VMMMUHandler::getclientMemoryAddress(u32 PS2MemoryAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN) & offset.
 	u32 baseVDN = getVDN(PS2MemoryAddress);
@@ -130,7 +130,7 @@ void* MMUHandler::getclientMemoryAddress(u32 PS2MemoryAddress) const
 	return reinterpret_cast<void*>(clientMemoryAddressInt);
 }
 
-u8 MMUHandler::readByteU(u32 PS2MemoryAddress) const
+u8 VMMMUHandler::readByteU(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	u8 * clientMemoryAddress = reinterpret_cast<u8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -139,7 +139,7 @@ u8 MMUHandler::readByteU(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) const
+void VMMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) const
 {
 	// Get client base address.
 	u8 * clientMemoryAddress = reinterpret_cast<u8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -148,7 +148,7 @@ void MMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) const
 	*clientMemoryAddress = value;
 }
 
-s8 MMUHandler::readByteS(u32 PS2MemoryAddress) const
+s8 VMMMUHandler::readByteS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -157,7 +157,7 @@ s8 MMUHandler::readByteS(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value) const
+void VMMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value) const
 {
 	// Get client base address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -166,7 +166,7 @@ void MMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value) const
 	*clientMemoryAddress = value;
 }
 
-u16 MMUHandler::readHwordU(u32 PS2MemoryAddress) const
+u16 VMMMUHandler::readHwordU(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	u16 * clientMemoryAddress = reinterpret_cast<u16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -175,7 +175,7 @@ u16 MMUHandler::readHwordU(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value) const
+void VMMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value) const
 {
 	// Get client base address.
 	u16 * clientMemoryAddress = reinterpret_cast<u16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -184,7 +184,7 @@ void MMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value) const
 	*clientMemoryAddress = value;
 }
 
-s16 MMUHandler::readHwordS(u32 PS2MemoryAddress) const
+s16 VMMMUHandler::readHwordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -193,7 +193,7 @@ s16 MMUHandler::readHwordS(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) const
+void VMMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) const
 {
 	// Get client base address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -202,7 +202,7 @@ void MMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) const
 	*clientMemoryAddress = value;
 }
 
-u32 MMUHandler::readWordU(u32 PS2MemoryAddress) const
+u32 VMMMUHandler::readWordU(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	u32 * clientMemoryAddress = reinterpret_cast<u32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -211,7 +211,7 @@ u32 MMUHandler::readWordU(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value) const
+void VMMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value) const
 {
 	// Get client base address.
 	u32 * clientMemoryAddress = reinterpret_cast<u32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -220,7 +220,7 @@ void MMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value) const
 	*clientMemoryAddress = value;
 }
 
-s32 MMUHandler::readWordS(u32 PS2MemoryAddress) const
+s32 VMMMUHandler::readWordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -229,7 +229,7 @@ s32 MMUHandler::readWordS(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value) const
+void VMMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value) const
 {
 	// Get client base address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -238,7 +238,7 @@ void MMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value) const
 	*clientMemoryAddress = value;
 }
 
-u64 MMUHandler::readDwordU(u32 PS2MemoryAddress) const
+u64 VMMMUHandler::readDwordU(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	u64 * clientMemoryAddress = reinterpret_cast<u64*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -247,7 +247,7 @@ u64 MMUHandler::readDwordU(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value) const
+void VMMMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value) const
 {
 	// Get client base address.
 	u64 * clientMemoryAddress = reinterpret_cast<u64*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -256,7 +256,7 @@ void MMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value) const
 	*clientMemoryAddress = value;
 }
 
-s64 MMUHandler::readDwordS(u32 PS2MemoryAddress) const
+s64 VMMMUHandler::readDwordS(u32 PS2MemoryAddress) const
 {
 	// Get client base address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -265,7 +265,7 @@ s64 MMUHandler::readDwordS(u32 PS2MemoryAddress) const
 	return *clientMemoryAddress;
 }
 
-void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
+void VMMMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
 {
 	// Get client base address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(getclientMemoryAddress(PS2MemoryAddress));
@@ -274,17 +274,17 @@ void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
 	*clientMemoryAddress = value;
 }
 
-u32 MMUHandler::getTotalPageEntries() const
+u32 VMMMUHandler::getTotalPageEntries() const
 {
 	return DIRECTORY_ENTRIES*PAGE_ENTRIES;
 }
 
-u32 MMUHandler::getTableMaxSize() const
+u32 VMMMUHandler::getTableMaxSize() const
 {
 	return TABLE_MAX_SIZE;
 }
 
-u32 MMUHandler::getPageSizeBytes() const
+u32 VMMMUHandler::getPageSizeBytes() const
 {
 	return PAGE_SIZE_BYTES;
 }

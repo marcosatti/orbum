@@ -33,7 +33,7 @@ TEST(R5900Instruction_Test_Raw, IType)
 
 	ASSERT_EQ(instruction.getOpcode(), 37);
 	EXPECT_EQ(instruction.getIRs(), 10);
-	EXPECT_EQ(instruction.getIRd(), 5);
+	EXPECT_EQ(instruction.getIRt(), 5);
 	EXPECT_EQ(instruction.getIImmS(), 254);
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../Common/Global/Globals.h"
+#include "Common/Global/Globals.h"
 
-#include "../Component Interfaces/VMExceptionHandlerComponent.h"
-#include "../../Common/PS2 Types/PS2Exception/PS2Exception_t.h"
+#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
+#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
 /*
 TODO: Fill in documentation.
@@ -11,7 +11,7 @@ TODO: Fill in documentation.
 
 class VMMain;
 
-class ExceptionHandler : public VMExceptionHandlerComponent
+class ExceptionHandler : public VMExecutionCoreComponent
 {
 public:
 	/*
@@ -50,10 +50,14 @@ public:
 	explicit ExceptionHandler(const VMMain *const vmMain);
 
 	// TODO: Check again for any missed settings that the individual exceptions require to be set. IE: Coprocessor unusable requires Cause.CE set to the coprocessor that caused it.
-	void handleException(const PS2Exception_t& PS2Exception) override;
+	void handleException(const PS2Exception_t& PS2Exception);
 
 private:
 	void handleException_L1(const ExceptionProperties_t & exceptionProperties) const;
 	void handleException_L2(const ExceptionProperties_t & exceptionProperties) const;
+
+#if defined(BUILD_DEBUG)
+	u32 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
+#endif
 };
 

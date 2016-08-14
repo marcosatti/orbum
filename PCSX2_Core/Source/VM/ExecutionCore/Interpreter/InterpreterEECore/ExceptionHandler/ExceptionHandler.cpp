@@ -2,21 +2,23 @@
 
 #include <stdexcept>
 
-#include "VM/ExceptionHandler/ExceptionHandler.h"
-#include "VM/Component Interfaces/VMExceptionHandlerComponent.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
+#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP0/Bitfield Registers/COP0_BitfieldRegisters_t.h"
 #include "VM/VMMain.h"
 
 
-ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) : VMExceptionHandlerComponent(vmMain)
+ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) : VMExecutionCoreComponent(vmMain)
 {
 }
 
 void ExceptionHandler::handleException(const PS2Exception_t& PS2Exception)
 {
 	// Call the super class method. Contains useful debugging info if needed.
-	VMExceptionHandlerComponent::handleException(PS2Exception);
+#if defined(BUILD_DEBUG)
+	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
+#endif
 
 	// Call the Level 1 or Level 2 exception handler based on the exception, or throw runtime_error if exception type/properties does not exist.
 	const ExceptionProperties_t & exceptionProperties = ExceptionProperties[PS2Exception.getExceptionType()];

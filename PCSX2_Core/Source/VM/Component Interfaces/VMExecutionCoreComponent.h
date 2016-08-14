@@ -1,19 +1,42 @@
 #pragma once
 
+#include "Common/Global/Globals.h"
+
 #include "VM/Component Interfaces/VMBaseComponent.h"
+
+/*
+TODO: Fill in documentation.
+*/
+
+class VMMain;
 
 class VMExecutionCoreComponent : public VMBaseComponent
 {
 public:
-	explicit VMExecutionCoreComponent(const VMMain *const vmMain) : VMBaseComponent(vmMain)
+	explicit VMExecutionCoreComponent(const VMMain *const vmMain) :
+		VMBaseComponent(vmMain)
+	{
+	}
+
+	~VMExecutionCoreComponent()
 	{
 	}
 
 	/*
-	All execution cores must implement a looping function to run the virtual machine and process the state.
-	Note that the implementation does not need to have a while(true) loop of any sort - this is done though the VM.
+	For each execution core component, this is called as a way to update the state of individual components. 
+	This does not have to be implemented for all components (ie: for reactive components).
 	*/
-	virtual void executionLoop() const
+	virtual void executionStep()
 	{
 	}
+
+	/*
+	For each execution core component, this is called as a way to initalise/reset the state.
+	This does not have to be implemented for all components (ie: for reactive components).
+	*/
+	virtual void initalise()
+	{
+	}
+private:
 };
+

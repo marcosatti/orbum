@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
@@ -12,12 +12,12 @@
 Data Format Conversion (DFC) instruction family.
 */
 
-void InterpreterEECore::PEXT5(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXT5()
 {
 	// Rd = EXTEND[1-5-5-5 -> 32](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -31,12 +31,12 @@ void InterpreterEECore::PEXT5(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PPAC5(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PPAC5()
 {
 	// Rd = PACK[32 -> 1-5-5-5](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -50,25 +50,25 @@ void InterpreterEECore::PPAC5(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::CVT_S_W(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::CVT_S_W()
 {
 	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on COP1 unusable).
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
 }
 
-void InterpreterEECore::CVT_W_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::CVT_W_S()
 {
 	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on COP1 unusable). Clamping occurs if exponent is > 0x9D.
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();

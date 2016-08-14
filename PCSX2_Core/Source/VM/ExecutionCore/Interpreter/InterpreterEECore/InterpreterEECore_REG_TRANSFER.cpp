@@ -3,122 +3,122 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-void InterpreterEECore::MFHI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MFHI()
 {
 	// Rd = HI. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MFLO(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MFLO()
 {
 	// Rd = LO. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MOVN(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MOVN()
 {
 	// Rd = Rs, if Rt =/= 0. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	if (source2Reg->readDwordU(0) != 0)
 		destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MOVZ(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MOVZ()
 {
 	// Rd = Rs, if Rt == 0. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	if (source2Reg->readDwordU(0) == 0)
 		destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MTHI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MTHI()
 {
 	// HI = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->HI;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MTLO(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MTLO()
 {
 	// LO = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->LO;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MFHI1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MFHI1()
 {
 	// Rd = HI1. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(1));
 }
 
-void InterpreterEECore::MFLO1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MFLO1()
 {
 	// Rd = LO1. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(1));
 }
 
-void InterpreterEECore::MTHI1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MTHI1()
 {
 	// HI1 = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->HI;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(1, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::MTLO1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MTLO1()
 {
 	// LO1 = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->LO;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	destReg->writeDwordU(1, source1Reg->readDwordU(0));
 }
 
-void InterpreterEECore::PMFHI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHI()
 {
 	// Rd = HI. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 	destReg->writeDwordU(1, source1Reg->readDwordU(1));
 }
 
-void InterpreterEECore::PMFHL_LH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHL_LH()
 {
 	// Rd = (HI, LO). No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
 	s32 HIIndex[] = { 2, -1, 3, -1, 6, -1, 7, -1 };
@@ -132,12 +132,12 @@ void InterpreterEECore::PMFHL_LH(const MIPSInstruction_t& instruction, std::shar
 	}
 }
 
-void InterpreterEECore::PMFHL_LW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHL_LW()
 {
 	// Rd = (HI, LO). No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
 	s32 HIIndex[] = { 1, -1, 3, -1 };
@@ -151,12 +151,12 @@ void InterpreterEECore::PMFHL_LW(const MIPSInstruction_t& instruction, std::shar
 	}
 }
 
-void InterpreterEECore::PMFHL_SH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHL_SH()
 {
 	// Rd = (HI, LO). No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
 	s32 HIIndex[] = { 2, 3, 6, 7 };
@@ -170,12 +170,12 @@ void InterpreterEECore::PMFHL_SH(const MIPSInstruction_t& instruction, std::shar
 	}
 }
 
-void InterpreterEECore::PMFHL_SLW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHL_SLW()
 {
 	// Rd = (HI, LO). No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	// Indexes 0 and 2 get copied.
 	s64 tempValue;
@@ -190,12 +190,12 @@ void InterpreterEECore::PMFHL_SLW(const MIPSInstruction_t& instruction, std::sha
 	destReg->writeDwordS(1, result);
 }
 
-void InterpreterEECore::PMFHL_UW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFHL_UW()
 {
 	// Rd = (HI, LO). No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
 	s32 HIIndex[] = { -1, 1, -1, 3 };
@@ -209,32 +209,32 @@ void InterpreterEECore::PMFHL_UW(const MIPSInstruction_t& instruction, std::shar
 	}
 }
 
-void InterpreterEECore::PMFLO(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMFLO()
 {
 	// Rd = LO. No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
-	destReg->writeWordU(0, source2Reg->readDwordU(0));
-	destReg->writeWordU(1, source2Reg->readDwordU(1));
+	destReg->writeDwordU(0, source2Reg->readDwordU(0));
+	destReg->writeDwordU(1, source2Reg->readDwordU(1));
 }
 
-void InterpreterEECore::PMTHI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMTHI()
 {
 	// HI = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->HI;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->HI;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 	destReg->writeDwordU(1, source1Reg->readDwordU(1));
 }
 
-void InterpreterEECore::PMTHL_LW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMTHL_LW()
 {
 	// (HI, LO) = Rs. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& dest1Reg = PS2Resources->EE->EECore->R5900->HI;
-	auto& dest2Reg = PS2Resources->EE->EECore->R5900->LO;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& dest1Reg = getVM()->getResources()->EE->EECore->R5900->HI;
+	auto& dest2Reg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -245,22 +245,22 @@ void InterpreterEECore::PMTHL_LW(const MIPSInstruction_t& instruction, std::shar
 	}
 }
 
-void InterpreterEECore::PMTLO(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PMTLO()
 {
 	// LO = Rd. No exceptions.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->LO;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->LO;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 	destReg->writeDwordU(1, source1Reg->readDwordU(1));
 }
 
-void InterpreterEECore::MFC1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MFC1()
 {
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeWordU(0, source1Reg->readWordU());
@@ -280,24 +280,25 @@ void InterpreterEECore::MFC1(const MIPSInstruction_t& instruction, std::shared_p
 	}
 }
 
-void InterpreterEECore::MOV_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MOV_S()
 {
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeFloat(source1Reg->readFloat());
 }
 
-void InterpreterEECore::MTC1(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::MTC1()
 {
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeWordU(source1Reg->readWordU(0));
 }
+

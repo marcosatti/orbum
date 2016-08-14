@@ -5,17 +5,17 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-void InterpreterEECore::PABSH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PABSH()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -27,11 +27,11 @@ void InterpreterEECore::PABSH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PABSW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PABSW()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -43,11 +43,11 @@ void InterpreterEECore::PABSW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PLZCW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PLZCW()
 {
 	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
@@ -57,44 +57,44 @@ void InterpreterEECore::PLZCW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::ABS_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::ABS_S()
 {
 	// Fd = ABS(Fs) (Exception on COP1 unusable only).
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
-	PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
 }
 
-void InterpreterEECore::NEG_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::NEG_S()
 {
 	// Fd = NEG(Fs) (Exception on COP1 unusable only).
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
-	PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
 }
 
-void InterpreterEECore::RSQRT_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::RSQRT_S()
 {
 	// Fd = RSQRT(Fs, Ft) (Exception on COP1 unusable only).
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
@@ -104,14 +104,14 @@ void InterpreterEECore::RSQRT_S(const MIPSInstruction_t& instruction, std::share
 	// Set flags and special values, writes a result to the above variable.
 	if (source2Val == 0.0F)
 	{
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -126,13 +126,13 @@ void InterpreterEECore::RSQRT_S(const MIPSInstruction_t& instruction, std::share
 	destReg->writeFloat(result);
 }
 
-void InterpreterEECore::SQRT_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SQRT_S()
 {
 	// Fd = SQRT(Ft) (Exception on COP1 unusable only).
-	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
-	auto& destReg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRShamt()]; // Fd
+	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source2Val = source2Reg->readFloat();
@@ -145,8 +145,8 @@ void InterpreterEECore::SQRT_S(const MIPSInstruction_t& instruction, std::shared
 	}
 	else if (source2Val < 0.0F)
 	{
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
-		PS2Resources->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

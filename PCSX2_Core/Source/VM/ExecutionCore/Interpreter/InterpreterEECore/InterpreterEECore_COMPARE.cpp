@@ -2,8 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
@@ -12,13 +12,13 @@
 Compare instruction family.
 */
 
-void InterpreterEECore::SLT(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLT()
 {
 	// Rd = SignExtended<s64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	s64 source1Val = source1Reg->readDwordS(0);
 	s64 source2Val = source2Reg->readDwordS(0);
@@ -27,41 +27,41 @@ void InterpreterEECore::SLT(const MIPSInstruction_t& instruction, std::shared_pt
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SLTI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLTI()
 {
 	// Rd = SignExtended<s64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getIRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getIRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 
 	s64 source1Val = source1Reg->readDwordS(0);
-	s64 imm = static_cast<s64>(instruction.getIImmS());
+	s64 imm = static_cast<s64>(getInstruction().getIImmS());
 	s64 result = (source1Val < imm) ? 1 : 0;
 
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SLTIU(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLTIU()
 {
 	// Rd = SignExtended<u64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getIRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getIRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 
 	u64 source1Val = source1Reg->readDwordU(0);
-	u64 imm = static_cast<u64>(instruction.getIImmU());
+	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 	u64 result = (source1Val < imm) ? 1 : 0;
 
 	destReg->writeDwordU(0, result);
 }
 
-void InterpreterEECore::SLTU(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLTU()
 {
 	// Rd = SignExtended<u64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	u64 source1Val = source1Reg->readDwordU(0);
 	u64 source2Val = source2Reg->readDwordU(0);
@@ -70,13 +70,13 @@ void InterpreterEECore::SLTU(const MIPSInstruction_t& instruction, std::shared_p
 	destReg->writeDwordU(0, result);
 }
 
-void InterpreterEECore::PCEQB(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCEQB()
 {
 	// Rd = SignExtended<u8>((Rs == Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
@@ -87,13 +87,13 @@ void InterpreterEECore::PCEQB(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCEQH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCEQH()
 {
 	// Rd = SignExtended<u16>((Rs == Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -104,13 +104,13 @@ void InterpreterEECore::PCEQH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCEQW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCEQW()
 {
 	// Rd = SignExtended<u32>((Rs == Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -121,13 +121,13 @@ void InterpreterEECore::PCEQW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCETB(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCETB()
 {
 	// Rd = SignExtended<u8>((Rs > Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
@@ -138,13 +138,13 @@ void InterpreterEECore::PCETB(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCETH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCETH()
 {
 	// Rd = SignExtended<u16>((Rs > Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -155,13 +155,13 @@ void InterpreterEECore::PCETH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCETW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCETW()
 {
 	// Rd = SignExtended<u32>((Rs > Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -172,15 +172,15 @@ void InterpreterEECore::PCETW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::C_EQ_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::C_EQ_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
-	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
+	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
@@ -192,27 +192,27 @@ void InterpreterEECore::C_EQ_S(const MIPSInstruction_t& instruction, std::shared
 		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
 }
 
-void InterpreterEECore::C_F_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::C_F_S()
 {
 	// TODO: Whats the point of this instruction? Docs say something about a comparison but it always sets the C field to 0 regardless...
 	// (FCR[31] or CSR, C field) = 0
-	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
+	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
 }
 
-void InterpreterEECore::C_LE_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::C_LE_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
-	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
+	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
@@ -224,15 +224,15 @@ void InterpreterEECore::C_LE_S(const MIPSInstruction_t& instruction, std::shared
 		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
 }
 
-void InterpreterEECore::C_LT_S(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::C_LT_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	auto& source1Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRd()]; // Fs
-	auto& source2Reg = PS2Resources->EE->EECore->COP1->FPR[instruction.getRRt()]; // Ft
-	auto& CSR = PS2Resources->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
+	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
+	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(PS2Resources))
+	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();

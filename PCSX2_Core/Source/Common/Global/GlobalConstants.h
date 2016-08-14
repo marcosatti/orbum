@@ -16,7 +16,7 @@ struct Constants
 
 	static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 
-	static constexpr u32 NUMBER_R5900_INSTRUCTIONS = 259;
+	static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 259;
 
 	static constexpr u32 NUMBER_BYTES_IN_QWORD = 16;
 	static constexpr u32 NUMBER_HWORDS_IN_QWORD = 8;

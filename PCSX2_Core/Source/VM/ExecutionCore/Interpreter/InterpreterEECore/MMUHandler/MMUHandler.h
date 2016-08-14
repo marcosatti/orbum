@@ -2,19 +2,39 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Component Interfaces/VMPS2Component.h"
+#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
 class VMMain;
 
 /*
-PS2MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB)
+MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB)
 */
-class PS2MMUHandler : public VMPS2Component
+class MMUHandler : public VMExecutionCoreComponent
 {
 public:
-	
-	PS2MMUHandler(const VMMain *const vmMain);
+	MMUHandler(const VMMain *const vmMain);
+
+	/*
+	Convenience functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.
+	This is the main access point that any PS2 reads or writes will come through.
+	*/
+	u8 readByteU(u32 PS2VirtualAddress) const;
+	void writeByteU(u32 PS2VirtualAddress, u8 value) const;
+	s8 readByteS(u32 PS2VirtualAddress) const;
+	void writeByteS(u32 PS2VirtualAddress, s8 value) const;
+	u16 readHwordU(u32 PS2VirtualAddress) const;
+	void writeHwordU(u32 PS2VirtualAddress, u16 value) const;
+	s16 readHwordS(u32 PS2VirtualAddress) const;
+	void writeHwordS(u32 PS2VirtualAddress, s16 value) const;
+	u32 readWordU(u32 PS2VirtualAddress) const;
+	void writeWordU(u32 PS2VirtualAddress, u32 value) const;
+	s32 readWordS(u32 PS2VirtualAddress) const;
+	void writeWordS(u32 PS2VirtualAddress, s32 value) const;
+	u64 readDwordU(u32 PS2VirtualAddress) const;
+	void writeDwordU(u32 PS2VirtualAddress, u64 value) const;
+	s64 readDwordS(u32 PS2VirtualAddress) const;
+	void writeDwordS(u32 PS2VirtualAddress, s64 value) const;
 
 	/*
 	Stage 1 of a physical address lookup. See diagram on EE Core Users Manual page 122.

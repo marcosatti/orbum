@@ -3,97 +3,97 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 /*
 Logical instruction family.
 */
 
-void InterpreterEECore::AND(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::AND()
 {
 	// Rd = Rt AND Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) & source2Reg->readDwordU(0));
 }
 
-void InterpreterEECore::ANDI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::ANDI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u64 imm = static_cast<u64>(instruction.getIImmU());
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) & imm);
 }
 
-void InterpreterEECore::NOR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::NOR()
 {
 	// Rd = NOT (Rt OR Rs).
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, ~(source1Reg->readDwordU(0) | source2Reg->readDwordU(0)));
 }
 
-void InterpreterEECore::OR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::OR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) | source2Reg->readDwordU(0));
 }
 
-void InterpreterEECore::ORI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::ORI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u64 imm = static_cast<u64>(instruction.getIImmU());
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) | imm);
 }
 
-void InterpreterEECore::XOR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::XOR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) ^ source2Reg->readDwordU(0));
 }
 
-void InterpreterEECore::XORI(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::XORI()
 {
 	// Rd = Rt XOR Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u64 imm = static_cast<u64>(instruction.getIImmU());
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) ^ imm);
 }
 
-void InterpreterEECore::PAND(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PAND()
 {
 	// Rd = Rt AND Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -101,13 +101,13 @@ void InterpreterEECore::PAND(const MIPSInstruction_t& instruction, std::shared_p
 	}
 }
 
-void InterpreterEECore::PNOR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PNOR()
 {
 	// Rd = NOT (Rt OR Rs).
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -115,13 +115,13 @@ void InterpreterEECore::PNOR(const MIPSInstruction_t& instruction, std::shared_p
 	}
 }
 
-void InterpreterEECore::POR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::POR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -129,13 +129,13 @@ void InterpreterEECore::POR(const MIPSInstruction_t& instruction, std::shared_pt
 	}
 }
 
-void InterpreterEECore::PXOR(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PXOR()
 {
 	// Rd = Rt XOR Rs.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{

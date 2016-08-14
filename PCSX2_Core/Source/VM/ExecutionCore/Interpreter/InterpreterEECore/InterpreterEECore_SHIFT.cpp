@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 
@@ -13,190 +13,190 @@
 Shift instruction family.
 */
 
-void InterpreterEECore::DSRA(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
 }
 
-void InterpreterEECore::DSLL(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSLL()
 {
 	// Rd = Rt << shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
 }
 
-void InterpreterEECore::DSLL32(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSLL32()
 {
 	// Rd = Rt << shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() + 32;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() + 32;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
 }
 
-void InterpreterEECore::DSLLV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSLLV()
 {
 	// Rd = Rt << Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
 }
 
-void InterpreterEECore::DSRA32(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRA32()
 {
 	// Rd = Rt >> shamt(32->61). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() + 32;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() + 32;
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
 }
 
-void InterpreterEECore::DSRAV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRAV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
 }
 
-void InterpreterEECore::DSRL(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
 }
 
-void InterpreterEECore::DSRL32(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRL32()
 {
 	// Rd = Rt >> shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() + 32;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() + 32;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
 }
 
-void InterpreterEECore::DSRLV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::DSRLV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
 }
 
-void InterpreterEECore::SLL(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLL()
 {
 	// Rd = SignExtend<s64>(Rt << shamt(0->31)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) << shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SLLV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SLLV()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) << shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SRA(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordS(0) >> shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SRAV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SRAV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordS(0) >> shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SRL(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) >> shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::SRLV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::SRLV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) >> shamt);
 	destReg->writeDwordS(0, result);
 }
 
-void InterpreterEECore::PSLLH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSLLH()
 {
 	// Rd = Rt << shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() & 0xF;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -204,13 +204,13 @@ void InterpreterEECore::PSLLH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PSLLVW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSLLVW()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -220,13 +220,13 @@ void InterpreterEECore::PSLLVW(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PSLLW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSLLW()
 {
 	// Rd = Rt << shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -234,13 +234,13 @@ void InterpreterEECore::PSLLW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PSRAH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRAH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() & 0xF;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -248,13 +248,13 @@ void InterpreterEECore::PSRAH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PSRAVW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRAVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -264,13 +264,13 @@ void InterpreterEECore::PSRAVW(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PSRAW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRAW()
 {
 	// Rd = Rt >> shamt. Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -278,13 +278,13 @@ void InterpreterEECore::PSRAW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PSRLH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRLH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt() & 0xF;
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -292,13 +292,13 @@ void InterpreterEECore::PSRLH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PSRLVW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRLVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -308,13 +308,13 @@ void InterpreterEECore::PSRLVW(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PSRLW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PSRLW()
 {
 	// Rd = Rt >> shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	u8 shamt = instruction.getRShamt();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	u8 shamt = getInstruction().getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -322,15 +322,15 @@ void InterpreterEECore::PSRLW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::QFSRV(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::QFSRV()
 {
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.
-	// TODO: check this instruction... were they high when they created this???
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& SAReg = PS2Resources->EE->EECore->R5900->SA;
+	// TODO: check this getInstruction()... were they high when they created this???
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& SAReg = getVM()->getResources()->EE->EECore->R5900->SA;
 
 	u32 shamt = SAReg->readWordU(); // From the docs it must be a multiple of bytes or halfwords, as you use the MTSAB or MTSAH instructions to write to the SA register.
 

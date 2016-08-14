@@ -73,10 +73,10 @@ public:
 	A convenience get trap code function (from a valid trap instruction such as TEQ) is available (from bits 6-15 of IMM).
 	*/
 	INLINE u8 getIRs() const;
-	INLINE u8 getIRd() const;
+	INLINE u8 getIRt() const;
 	INLINE u16 getIImmU() const;
 	INLINE s16 getIImmS() const;
-	INLINE u8 getISignBit() const;
+	INLINE u8 getIImmSignBit() const;
 	INLINE u32 getIBranchAddress(Register32_t& PC) const;
 	INLINE u16 getITrapCode() const;
 };

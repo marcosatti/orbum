@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include <gtest/gtest.h>
 
-#include <VM/MMUHandler/MMUHandler.h>
+#include <VM/VMMMUHandler/VMMMUHandler.h>
 
 TEST(MMUHandler_Test, AllPTEsValidNotNull_MAX_MAP_SIZE) {
-	MMUHandler a(nullptr);
+	VMMMUHandler a(nullptr);
 
 	u8 * MEMORYBLOCK = new u8[a.getTableMaxSize()];
 	a.mapMemory(MEMORYBLOCK, a.getTableMaxSize(), 0x0);
@@ -19,8 +19,8 @@ TEST(MMUHandler_Test, AllPTEsValidNotNull_MAX_MAP_SIZE) {
 }
 
 TEST(MMUHandler_Test, AllPTEsValidNotNull_MIN_PAGE_SIZE) {
-	// Seems to require a lot of memory (3.5GB).. not sure where it is coming from though... it is not from the MMUHandler. Maybe because of client OS page size?
-	MMUHandler a(nullptr);
+	// Seems to require a lot of memory (3.5GB).. not sure where it is coming from though... it is not from the VMMMUHandler. Maybe because of client OS page size?
+	VMMMUHandler a(nullptr);
 
 	u8 ** MEMORYBLOCKS = new u8*[a.getTotalPageEntries()];
 	for (u32 i = 0; i < a.getTotalPageEntries(); i++)
@@ -44,7 +44,7 @@ TEST(MMUHandler_Test, AllPTEsValidNotNull_MIN_PAGE_SIZE) {
 }
 
 TEST(MMUHandler_Test, ReadAndWrite) {
-	MMUHandler a(nullptr);
+	VMMMUHandler a(nullptr);
 	u32 PS2MemoryAddress = 0x00017FF4;
 	u8 * MEMORYBLOCK = new u8[16];
 	a.mapMemory(MEMORYBLOCK, 1, PS2MemoryAddress);

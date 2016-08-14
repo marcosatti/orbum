@@ -17,9 +17,11 @@ class Interpreter : public VMExecutionCoreComponent
 public:
 	explicit Interpreter(const VMMain *const vmMain);
 
-	void executionLoop() const override;
+	void executionStep() override;
+
+	void initalise() override;
 
 private:
-	std::unique_ptr<InterpreterEECore> mInterpreterR5900;
+	std::unique_ptr<InterpreterEECore> mInterpreterEECore;
 };
 

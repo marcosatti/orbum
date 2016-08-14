@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\PCRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\Register64_t.h" />
@@ -164,8 +165,7 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\EECore_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EE_t.h" />
     <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h" />
-    <ClInclude Include="Source\VM\Component Interfaces\VMPS2Component.h" />
-    <ClInclude Include="Source\VM\ExceptionHandler\ExceptionHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler\ExceptionHandler.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\FPURegister32_t.h" />
     <ClInclude Include="Source\Common\Global\GlobalConstants.h" />
     <ClInclude Include="Source\Common\Global\GlobalLog.h" />
@@ -176,27 +176,25 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.h" />
     <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h" />
-    <ClInclude Include="Source\VM\MMUHandler\MMUHandler.h" />
+    <ClInclude Include="Source\VM\VMMMUHandler\VMMMUHandler.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMBaseComponent.h" />
-    <ClInclude Include="Source\VM\Component Interfaces\VMExceptionHandlerComponent.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMExecutionCoreComponent.h" />
-    <ClInclude Include="Source\VM\Component Interfaces\VMInterpreterComponent.h" />
     <ClInclude Include="Source\VM\VMMain.h" />
     <ClInclude Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.h" />
     <ClInclude Include="Source\Common\PS2 Constants\PS2Constants.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\Register32_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.h" />
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h" />
-    <ClInclude Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h" />
     <ClInclude Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_COMPARE.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_DFC.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOAD_MEM.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_MIN_MAX.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOGICAL.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.cpp" />
@@ -208,7 +206,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_MULT_DIV.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister32_t.cpp" />
-    <ClCompile Include="Source\VM\ExceptionHandler\ExceptionHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler\ExceptionHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister32_t.cpp" />
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp" />
@@ -219,7 +217,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REG_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REORDERING.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp" />
-    <ClCompile Include="Source\VM\MMUHandler\MMUHandler.cpp" />
+    <ClCompile Include="Source\VM\VMMMUHandler\VMMMUHandler.cpp" />
     <ClCompile Include="Source\VM\VMMain.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\Register32_t.cpp" />
@@ -229,7 +227,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\VM\PS2 Components\PS2MMUHandler\PS2MMUHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.cpp" />
   </ItemGroup>
   <ItemGroup>

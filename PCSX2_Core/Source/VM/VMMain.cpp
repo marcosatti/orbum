@@ -4,16 +4,14 @@
 #include <fstream>
 
 #include "VM/VMMain.h"
-#include "VM/ExceptionHandler/ExceptionHandler.h"
-#include "VM/MMUHandler/MMUHandler.h"
+#include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) 
 	: mStatus(VMMain::VMStatus::CREATED),
 	mExecutionCoreType(executionCoreType),
-	mExceptionHandlerComponent(std::make_unique<ExceptionHandler>(this)),
-	mMMUComponent(std::make_unique<MMUHandler>(this)),
+	mVMMMUComponent(std::make_unique<VMMMUHandler>(this)),
 	mBootROMPath(bootROMPath)
 {
 	// Initialise everything.
@@ -34,25 +32,16 @@ void VMMain::Reset()
 	initaliseExecutionCore();
 	initalisePS2MemoryMap();
 	
-	// A PS2 reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
-	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
-	// After this is done, call Run() to begin execution.
-	mExceptionHandlerComponent->handleException(PS2Exception_t(PS2Exception_t::ExceptionType::EX_RESET));
+	// Initalise the execution core.
+	mExecutionCoreComponent->initalise();
 }
 
 void VMMain::Run() const
 {
-	// TODO: Implement.
-	try
+	// TODO: Implement	
+	while (getStatus() == VMMain::VMStatus::RUNNING)
 	{
-		while (getStatus() == VMStatus::RUNNING)
-		{
-			mExecutionCoreComponent->executionLoop();
-		}
-	}
-	catch (const PS2Exception_t& ps2Exception)
-	{
-		mExceptionHandlerComponent->handleException(ps2Exception);
+		mExecutionCoreComponent->executionStep();
 	}
 }
 
@@ -77,7 +66,7 @@ const std::unique_ptr<PS2Resources_t>& VMMain::getResources() const
 
 const std::unique_ptr<VMMMUComponent>& VMMain::getMMU() const
 {
-	return mMMUComponent;
+	return mVMMMUComponent;
 }
 
 void VMMain::initaliseResources()

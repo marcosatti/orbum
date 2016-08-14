@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
+#include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 /*
@@ -11,11 +11,11 @@ Reordering instruction family.
 */
 
 
-void InterpreterEECore::PCPYH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCPYH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 4)
 	{
@@ -30,12 +30,12 @@ void InterpreterEECore::PCPYH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PCPYLD(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCPYLD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
@@ -47,12 +47,12 @@ void InterpreterEECore::PCPYLD(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PCPYUD(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PCPYUD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
@@ -64,11 +64,11 @@ void InterpreterEECore::PCPYUD(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXCH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXCH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -87,11 +87,11 @@ void InterpreterEECore::PEXCH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PEXCW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXCW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -107,11 +107,11 @@ void InterpreterEECore::PEXCW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PEXEH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXEH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -130,11 +130,11 @@ void InterpreterEECore::PEXEH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PEXEW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXEW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -150,12 +150,12 @@ void InterpreterEECore::PEXEW(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PEXTLB(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTLB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD / 2; i++)
 	{
@@ -164,12 +164,12 @@ void InterpreterEECore::PEXTLB(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXTLH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTLH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
@@ -178,12 +178,12 @@ void InterpreterEECore::PEXTLH(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXTLW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTLW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -192,12 +192,12 @@ void InterpreterEECore::PEXTLW(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXTUB(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTUB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = Constants::NUMBER_BYTES_IN_QWORD / 2; i > 0 ; i--)
 	{
@@ -206,12 +206,12 @@ void InterpreterEECore::PEXTUB(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXTUH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTUH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = Constants::NUMBER_HWORDS_IN_QWORD / 2; i > 0; i--)
 	{
@@ -220,12 +220,12 @@ void InterpreterEECore::PEXTUH(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PEXTUW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PEXTUW()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = Constants::NUMBER_WORDS_IN_QWORD / 2; i > 0; i--)
 	{
@@ -234,12 +234,12 @@ void InterpreterEECore::PEXTUW(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PINTEH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PINTEH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -248,12 +248,12 @@ void InterpreterEECore::PINTEH(const MIPSInstruction_t& instruction, std::shared
 	}
 }
 
-void InterpreterEECore::PINTH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PINTH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 
@@ -266,12 +266,12 @@ void InterpreterEECore::PINTH(const MIPSInstruction_t& instruction, std::shared_
 		destReg->writeHwordU((i - 1) * 2 + 1, source1Reg->readHwordU((i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
 }
 
-void InterpreterEECore::PPACB(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PPACB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use halfwords for this, just read the low-order bytes directly.
@@ -285,12 +285,12 @@ void InterpreterEECore::PPACB(const MIPSInstruction_t& instruction, std::shared_
 		destReg->writeByteU(i / 2 + (Constants::NUMBER_BYTES_IN_QWORD / 2), source1Reg->readByteU(i));
 }
 
-void InterpreterEECore::PPACH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PPACH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use words for this, just read the low-order hwords directly.
@@ -304,12 +304,12 @@ void InterpreterEECore::PPACH(const MIPSInstruction_t& instruction, std::shared_
 		destReg->writeHwordU(i / 2 + (Constants::NUMBER_HWORDS_IN_QWORD / 2), source1Reg->readHwordU(i));
 }
 
-void InterpreterEECore::PPACW(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PPACW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source1Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRs()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use dwords for this, just read the low-order words directly.
@@ -323,11 +323,11 @@ void InterpreterEECore::PPACW(const MIPSInstruction_t& instruction, std::shared_
 		destReg->writeWordU(i / 2 + (Constants::NUMBER_WORDS_IN_QWORD / 2), source1Reg->readWordU(i));
 }
 
-void InterpreterEECore::PREVH(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PREVH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
@@ -337,11 +337,11 @@ void InterpreterEECore::PREVH(const MIPSInstruction_t& instruction, std::shared_
 	}
 }
 
-void InterpreterEECore::PROT3W(const MIPSInstruction_t& instruction, std::shared_ptr<PS2Resources_t>& PS2Resources)
+void InterpreterEECore::PROT3W()
 {
 	// Rd = COPY_W(Rt), No exceptions. Bit of a weird one...
-	auto& destReg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRd()];
-	auto& source2Reg = PS2Resources->EE->EECore->R5900->GPR[instruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	destReg->writeWordU(0, source2Reg->readWordU(1));
 	destReg->writeWordU(1, source2Reg->readWordU(2));

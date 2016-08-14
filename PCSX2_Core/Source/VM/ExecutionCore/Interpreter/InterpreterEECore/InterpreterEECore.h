@@ -1,270 +1,296 @@
 #pragma once
 
-
-#include "VM/Component Interfaces/VMInterpreterComponent.h"
-#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
 #include <memory>
+
+#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
+#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
+
 
 class PS2Resources_t;
 class VMMain;
-class InterpreterEECore : public VMInterpreterComponent
+class InterpreterEECore : public VMExecutionCoreComponent
 {
 public:
-	InterpreterEECore(const VMMain *const vmMain, const Interpreter *const interpreter);
+	InterpreterEECore(const VMMain *const vmMain);
 	~InterpreterEECore();
 
 	/*
 	This is the "main loop" function called by the base interpreter component.
 	*/
-	void runInterpreterComponent() override;
+	void executionStep() override;
+
+	// Component state functions
+	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
+	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
+	const MIPSInstruction_t & getInstruction() const;
 
 private:
 
 	// Component state functions
+	/*
+	The PS2 exception handler.
+	*/
+	const std::unique_ptr<ExceptionHandler> mExceptionHandler;
+
+	/*
+	The PS2 MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
+	*/
+	const std::unique_ptr<MMUHandler> mMMUHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
+	It is also used while an instruction is being performed.
 	*/
 	MIPSInstruction_t mInstruction;
 
-	// Static R5900 Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
+	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
 	// Dots in mnemonics & function names are represented by the underscore character.
-
-	/*
-	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.
-	*/
-	static void(*const R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
 	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	Will increase PC by 4 regardless.
 	*/
-	static void INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void INSTRUCTION_UNKNOWN();
 
 	/*
 	Integer Add/Sub Instructions. See InterpreterEECore_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
 	*/
-	static void ADD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ADDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ADDIU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ADDU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DADD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DADDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DADDIU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DADDU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSUBU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SUBU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDSB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDSH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDSW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDUH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADDW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PADSBH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBSB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBSH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBSW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBUH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSUBW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void ADD();
+	void ADDI();
+	void ADDIU();
+	void ADDU();
+	void DADD();
+	void DADDI();
+	void DADDIU();
+	void DADDU();
+	void DSUB();
+	void DSUBU();
+	void SUB();
+	void SUBU();
+	void PADDB();
+	void PADDH();
+	void PADDSB();
+	void PADDSH();
+	void PADDSW();
+	void PADDUB();
+	void PADDUH();
+	void PADDUW();
+	void PADDW();
+	void PADSBH();
+	void PSUBB();
+	void PSUBH();
+	void PSUBSB();
+	void PSUBSH();
+	void PSUBSW();
+	void PSUBUB();
+	void PSUBUH();
+	void PSUBUW();
+	void PSUBW();
 
 	/*
 	Integer Mult/Div Instructions. See InterpreterEECore_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
 	*/
-	static void DIV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DIV1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DIVU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DIVU1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MULT(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MULT1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MULTU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MULTU1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PDIVBW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PDIVUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PDIVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMULTH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMULTUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMULTW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void DIV();
+	void DIV1();
+	void DIVU();
+	void DIVU1();
+	void MULT();
+	void MULT1();
+	void MULTU();
+	void MULTU1();
+	void PDIVBW();
+	void PDIVUW();
+	void PDIVW();
+	void PMULTH();
+	void PMULTUW();
+	void PMULTW();
 
 	/*
 	Integer Mult-Add Instructions. See InterpreterEECore_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
 	*/
-	static void MADD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MADD1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MADDU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MADDU1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PHMADH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PHMSBH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMADDH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMADDUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMADDW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMSUBH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMSUBW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void MADD();
+	void MADD1();
+	void MADDU();
+	void MADDU1();
+	void PHMADH();
+	void PHMSBH();
+	void PMADDH();
+	void PMADDUW();
+	void PMADDW();
+	void PMSUBH();
+	void PMSUBW();
 
 	/*
 	Floating-Point Instructions. See InterpreterEECore_FLOAT.cpp for implementations (10 instructions total).
 	*/
-	static void ADD_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ADDA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MADD_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MADDA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MUL_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MULA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MSUB_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MSUBA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SUB_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SUBA_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void ADD_S();
+	void ADDA_S();
+	void MADD_S();
+	void MADDA_S();
+	void MUL_S();
+	void MULA_S();
+	void MSUB_S();
+	void MSUBA_S();
+	void SUB_S();
+	void SUBA_S();
 
 	/*
 	Shift Instructions. See InterpreterEECore_SHIFT.cpp for implementations (25 instructions total).
 	*/
-	static void DSRA(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSLL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSLL32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSLLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSRA32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSRAV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSRL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSRL32(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void DSRLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SLL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SLLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SRA(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SRAV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SRL(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SRLV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSLLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSLLVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSLLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRAH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRAVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRAW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRLVW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PSRLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void QFSRV(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void DSRA();
+	void DSLL();
+	void DSLL32();
+	void DSLLV();
+	void DSRA32();
+	void DSRAV();
+	void DSRL();
+	void DSRL32();
+	void DSRLV();
+	void SLL();
+	void SLLV();
+	void SRA();
+	void SRAV();
+	void SRL();
+	void SRLV();
+	void PSLLH();
+	void PSLLVW();
+	void PSLLW();
+	void PSRAH();
+	void PSRAVW();
+	void PSRAW();
+	void PSRLH();
+	void PSRLVW();
+	void PSRLW();
+	void QFSRV();
 
 	/*
 	Logical Instructions. See InterpreterEECore_LOGICAL.cpp for implementations (11 instructions total).
 	*/
-	static void AND(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ANDI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void NOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void OR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ORI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void XOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void XORI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PAND(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PNOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void POR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PXOR(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void AND();
+	void ANDI();
+	void NOR();
+	void OR();
+	void ORI();
+	void XOR();
+	void XORI();
+	void PAND();
+	void PNOR();
+	void POR();
+	void PXOR();
 
 	/*
 	Logical Instructions. See InterpreterEECore_COMPARE.cpp for implementations (14 instructions total).
 	*/
-	static void SLT(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
-	static void SLTI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SLTIU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SLTU(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCEQB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCEQH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCEQW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCETB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCETH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCETW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void C_EQ_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void C_F_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void C_LE_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void C_LT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void SLT(); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
+	void SLTI();
+	void SLTIU();
+	void SLTU();
+	void PCEQB();
+	void PCEQH();
+	void PCEQW();
+	void PCETB();
+	void PCETH();
+	void PCETW();
+	void C_EQ_S();
+	void C_F_S();
+	void C_LE_S();
+	void C_LT_S();
 
 	/*
 	Min/Max Instructions. See InterpreterEECore_MIN_MAX.cpp for implementations (6 instructions total).
 	*/
-	static void PMAXH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMAXW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMINH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMINW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MAX_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MIN_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void PMAXH();
+	void PMAXW();
+	void PMINH();
+	void PMINW();
+	void MAX_S();
+	void MIN_S();
 
 	/*
 	Data Format Conversion (DFC) Instructions. See InterpreterEECore_DFC.cpp for implementations (4 instructions total).
 	*/
-	static void PEXT5(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PPAC5(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void CVT_S_W(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void CVT_W_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void PEXT5();
+	void PPAC5();
+	void CVT_S_W();
+	void CVT_W_S();
 
 	/*
 	Reordering Instructions. See InterpreterEECore_REORDERING.cpp for implementations (20 instructions total).
 	*/
-	static void PCPYH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCPYLD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PCPYUD(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXCH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXCW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXEH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXEW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTLB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTLH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTUB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTUH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PEXTUW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PINTEH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PINTH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PPACB(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PPACH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PPACW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PREVH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PROT3W(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void PCPYH();
+	void PCPYLD();
+	void PCPYUD();
+	void PEXCH();
+	void PEXCW();
+	void PEXEH();
+	void PEXEW();
+	void PEXTLB();
+	void PEXTLH();
+	void PEXTLW();
+	void PEXTUB();
+	void PEXTUH();
+	void PEXTUW();
+	void PINTEH();
+	void PINTH();
+	void PPACB();
+	void PPACH();
+	void PPACW();
+	void PREVH();
+	void PROT3W();
 
 	/*
 	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (7 instructions total).
 	*/
-	static void PABSH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PABSW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PLZCW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void ABS_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void NEG_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void RSQRT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void SQRT_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void PABSH();
+	void PABSW();
+	void PLZCW();
+	void ABS_S();
+	void NEG_S();
+	void RSQRT_S();
+	void SQRT_S();
 
 	/*
 	Register-Register Transfer Instructions. See InterpreterEECore_REG_TRANSFER.cpp for implementations (23 instructions total).
 	*/
-	static void MFHI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MFLO(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MOVN(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MOVZ(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MTHI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MTLO(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MFHI1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MFLO1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MTHI1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MTLO1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHL_LH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHL_LW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHL_SH(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHL_SLW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFHL_UW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMFLO(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMTHI(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMTHL_LW(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void PMTLO(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MFC1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MOV_S(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
-	static void MTC1(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources);
+	void MFHI();
+	void MFLO();
+	void MOVN();
+	void MOVZ();
+	void MTHI();
+	void MTLO();
+	void MFHI1();
+	void MFLO1();
+	void MTHI1();
+	void MTLO1();
+	void PMFHI();
+	void PMFHL_LH();
+	void PMFHL_LW();
+	void PMFHL_SH();
+	void PMFHL_SLW();
+	void PMFHL_UW();
+	void PMFLO();
+	void PMTHI();
+	void PMTHL_LW();
+	void PMTLO();
+	void MFC1();
+	void MOV_S();
+	void MTC1();
+
+	/*
+	Load from Memory Instructions. See InterpreterEECore_LOAD_MEM.cpp for implementations (14 instructions total).
+	*/
+	void LB();
+
+	/*
+	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.
+	*/
+	void(InterpreterEECore::*const EECORE_INSTRUCTION_TABLE[Constants::NUMBER_EECORE_INSTRUCTIONS])() = {
+		&InterpreterEECore::INSTRUCTION_UNKNOWN,
+	};
+
 };
 

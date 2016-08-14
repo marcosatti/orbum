@@ -8,8 +8,8 @@
 
 using R5900InstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
-InterpreterEECore::InterpreterEECore(const VMMain* const vmMain, const Interpreter* const interpreter) :
-	VMInterpreterComponent(vmMain, interpreter)
+InterpreterEECore::InterpreterEECore(const VMMain* const vmMain) :
+	VMExecutionCoreComponent(vmMain)
 {
 }
 
@@ -17,26 +17,45 @@ InterpreterEECore::~InterpreterEECore()
 {
 }
 
-void InterpreterEECore::runInterpreterComponent()
+void InterpreterEECore::executionStep()
 {
-	// Set the instruction holder to the instruction at the current PC.
-	// TODO: FIX! Not correct to use the PC value as a PS2 physical address - it is PS2 VIRTUAL! Need to use the PS2MMUHandler to get the correct PS2 physical address.
-	const u32 & PC = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
-	const u32 & instructionValue = getVM()->getMMU()->readWordU(PC);
-	mInstruction.setInstruction(instructionValue);
+	try
+	{
+		// Set the instruction holder to the instruction at the current PC.
+		const u32 & PC = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
+		const u32 & instructionValue = getMMUHandler()->readWordU(PC);
+		mInstruction.setInstruction(instructionValue);
 
-	// Get the instruction details
-	R5900InstructionInfo_t instructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
+		// Get the instruction details
+		R5900InstructionInfo_t instructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
 
+		// Run the instruction, which is based on the implementation index.
+		EECORE_INSTRUCTION_TABLE[instructionInfo.mImplementationIndex];
+	}
+	catch (const PS2Exception_t& PS2Exception)
+	{
+		mExceptionHandler->handleException(PS2Exception);
+	}
 }
 
-// Begin Static R5900 Instruction Implementation
+const std::unique_ptr<ExceptionHandler> & InterpreterEECore::getExceptionHandler() const
+{
+	return mExceptionHandler;
+}
 
-void (*const InterpreterEECore::R5900_INSTRUCTION_TABLE[Constants::NUMBER_R5900_INSTRUCTIONS])(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources) = {
-	INSTRUCTION_UNKNOWN
-};
+const std::unique_ptr<MMUHandler>& InterpreterEECore::getMMUHandler() const
+{
+	return mMMUHandler;
+}
 
-void InterpreterEECore::INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instruction, std::shared_ptr<PS2Resources_t> & PS2Resources)
+const MIPSInstruction_t & InterpreterEECore::getInstruction() const
+{
+	return mInstruction;
+}
+
+// Begin EECore Instruction Implementation
+
+void InterpreterEECore::INSTRUCTION_UNKNOWN()
 {
 	// Unknown opcode, log if debug is enabled and increment PC by 4 regardless.
 #if defined(BUILD_DEBUG)
@@ -44,5 +63,5 @@ void InterpreterEECore::INSTRUCTION_UNKNOWN(const MIPSInstruction_t & instructio
 #endif
 
 	// Set PC to next instruction.
-	PS2Resources->EE->EECore->R5900->PC->setPCValueNext();
+	getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext();
 }

@@ -68,7 +68,7 @@ INLINE u8 MIPSInstruction_t::getIRs() const
 	return (static_cast<u8>(mInstructionValue >> 21) & 0x1F);
 }
 
-INLINE u8 MIPSInstruction_t::getIRd() const
+INLINE u8 MIPSInstruction_t::getIRt() const
 {
 	return (static_cast<u8>(mInstructionValue >> 16) & 0x1F);
 }
@@ -83,7 +83,7 @@ INLINE s16 MIPSInstruction_t::getIImmS() const
 	return (static_cast<s16>(mInstructionValue) & 0xFFFF);
 }
 
-INLINE u8 MIPSInstruction_t::getISignBit() const
+INLINE u8 MIPSInstruction_t::getIImmSignBit() const
 {
 	return (static_cast<u8>(mInstructionValue >> 15) & 0x1);
 }

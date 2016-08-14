@@ -42,6 +42,6 @@ public:
 	/*
 	Checks if the FPU coprocessor (COP1) is unusable.
 	*/
-	static bool isCOP1Unusable(std::shared_ptr<PS2Resources_t> & PS2Resources);
+	static bool isCOP1Unusable(const std::unique_ptr<PS2Resources_t> & PS2Resources);
 };
 

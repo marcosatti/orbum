@@ -56,7 +56,7 @@ It will throw different runtime errors when the following conditions occur:
 
 TODO: Reduce memory footprint from 256MB (see note above).
  */
-class MMUHandler : public VMMMUComponent
+class VMMMUHandler : public VMMMUComponent
 {
 public:
 	/*
@@ -66,8 +66,8 @@ public:
 	static constexpr u32 DIRECTORY_SIZE_BYTES = 4194304; // 4MB
 	static constexpr u32 PAGE_SIZE_BYTES = 16;
 
-	explicit MMUHandler(const VMMain *const vmMain);
-	~MMUHandler();
+	explicit VMMMUHandler(const VMMain *const vmMain);
+	~VMMMUHandler();
 
 	/*
 	Maps the given client virtual memory address and length to a given PS2 "physical" address.
@@ -97,22 +97,22 @@ public:
 	Currently results are not guaranteed to be correct for reads or writes across a page boundary; for continuous linear mappings however it *should* (untested) be correct, as there is an implicit overflow
 	 into the next page table entry.
 	*/
-	u8 readByteU(u32 PS2MemoryAddress) const override;
-	void writeByteU(u32 PS2MemoryAddress, u8 value) const override;
-	s8 readByteS(u32 PS2MemoryAddress) const override;
-	void writeByteS(u32 PS2MemoryAddress, s8 value) const override;
-	u16 readHwordU(u32 PS2MemoryAddress) const override;
-	void writeHwordU(u32 PS2MemoryAddress, u16 value) const override;
-	s16 readHwordS(u32 PS2MemoryAddress) const override;
-	void writeHwordS(u32 PS2MemoryAddress, s16 value) const override;
-	u32 readWordU(u32 PS2MemoryAddress) const override;
-	void writeWordU(u32 PS2MemoryAddress, u32 value) const override;
-	s32 readWordS(u32 PS2MemoryAddress) const override;
-	void writeWordS(u32 PS2MemoryAddress, s32 value) const override;
-	u64 readDwordU(u32 PS2MemoryAddress) const override;
-	void writeDwordU(u32 PS2MemoryAddress, u64 value) const override;
-	s64 readDwordS(u32 PS2MemoryAddress) const override;
-	void writeDwordS(u32 PS2MemoryAddress, s64 value) const override;
+	u8 readByteU(u32 PS2PhysicalAddress) const override;
+	void writeByteU(u32 PS2PhysicalAddress, u8 value) const override;
+	s8 readByteS(u32 PS2PhysicalAddress) const override;
+	void writeByteS(u32 PS2PhysicalAddress, s8 value) const override;
+	u16 readHwordU(u32 PS2PhysicalAddress) const override;
+	void writeHwordU(u32 PS2PhysicalAddress, u16 value) const override;
+	s16 readHwordS(u32 PS2PhysicalAddress) const override;
+	void writeHwordS(u32 PS2PhysicalAddress, s16 value) const override;
+	u32 readWordU(u32 PS2PhysicalAddress) const override;
+	void writeWordU(u32 PS2PhysicalAddress, u32 value) const override;
+	s32 readWordS(u32 PS2PhysicalAddress) const override;
+	void writeWordS(u32 PS2PhysicalAddress, s32 value) const override;
+	u64 readDwordU(u32 PS2PhysicalAddress) const override;
+	void writeDwordU(u32 PS2PhysicalAddress, u64 value) const override;
+	s64 readDwordS(u32 PS2PhysicalAddress) const override;
+	void writeDwordS(u32 PS2PhysicalAddress, s64 value) const override;
 
 	// Test/Debug usage.
 	u32 getTotalPageEntries() const;

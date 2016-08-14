@@ -6,7 +6,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "VM/Component Interfaces/VMMMUComponent.h"
-#include "VM/Component Interfaces/VMExceptionHandlerComponent.h"
 #include "VM/Component Interfaces/VMExecutionCoreComponent.h"
 
 /*
@@ -64,9 +63,9 @@ public:
 	/*
 	VMMain state functions.
 	*/
-	INLINE const VMStatus& getStatus() const;
-	INLINE const std::unique_ptr<PS2Resources_t>& getResources() const;
-	INLINE const std::unique_ptr<VMMMUComponent>& getMMU() const;
+	const VMStatus& getStatus() const;
+	const std::unique_ptr<PS2Resources_t>& getResources() const;
+	const std::unique_ptr<VMMMUComponent>& getMMU() const;
 	
 	/*
 	Misc helper functions.
@@ -79,9 +78,8 @@ private:
 	VMStatus mStatus;
 	ExecutionCoreType mExecutionCoreType;
 	std::unique_ptr<PS2Resources_t> mPS2Resources;
-	const std::unique_ptr<VMExceptionHandlerComponent> mExceptionHandlerComponent;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
-	const std::unique_ptr<VMMMUComponent> mMMUComponent;
+	const std::unique_ptr<VMMMUComponent> mVMMMUComponent;
 	const std::string mBootROMPath;
 
 	// Initalisation (called through reset()).

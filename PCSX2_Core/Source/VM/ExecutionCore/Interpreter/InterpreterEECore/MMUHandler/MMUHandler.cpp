@@ -4,21 +4,117 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/PS2 Components/PS2MMUHandler/PS2MMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
 
-PS2MMUHandler::PS2MMUHandler(const VMMain *const vmMain) : VMPS2Component(vmMain)
+MMUHandler::MMUHandler(const VMMain *const vmMain) : VMExecutionCoreComponent(vmMain)
 {
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const
+u8 MMUHandler::readByteU(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readByteU(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeByteU(PS2PhysicalAddress, value);
+}
+
+s8 MMUHandler::readByteS(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readByteS(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeByteS(PS2PhysicalAddress, value);
+}
+
+u16 MMUHandler::readHwordU(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readHwordU(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeHwordU(PS2PhysicalAddress, value);
+}
+
+s16 MMUHandler::readHwordS(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readHwordS(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeHwordS(PS2PhysicalAddress, value);
+}
+
+u32 MMUHandler::readWordU(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readWordU(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeWordU(PS2PhysicalAddress, value);
+}
+
+s32 MMUHandler::readWordS(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readWordS(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeWordS(PS2PhysicalAddress, value);
+}
+
+u64 MMUHandler::readDwordU(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readDwordU(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeDwordU(PS2PhysicalAddress, value);
+}
+
+s64 MMUHandler::readDwordS(u32 PS2MemoryAddress) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::READ);
+	return getVM()->getMMU()->readDwordS(PS2PhysicalAddress);
+}
+
+void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, AccessType::WRITE);
+	getVM()->getMMU()->writeDwordS(PS2PhysicalAddress, value);
+}
+
+u32 MMUHandler::getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const
 {
 	return getPS2PhysicalAddress_Stage1(PS2VirtualAddress, accessType);
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const
+u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const
 {
 	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
@@ -41,9 +137,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, c
 		if (PS2VirtualAddress > PS2Constants::EE::EECore::MMU::VADDRESS_USER_UPPER_BOUND)
 		{
 			// Throw address error if not within bounds.
-			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD);
-			else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_STORE);
-			else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = address error).");
+			if (accessType == READ) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD);
+			else if (accessType == WRITE) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_STORE);
+			else 
+				throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = address error).");
 		}
 
 		return getPS2PhysicalAddress_Stage2(PS2VirtualAddress, accessType);
@@ -56,9 +155,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, c
 			(PS2VirtualAddress > PS2Constants::EE::EECore::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_2))
 		{
 			// Throw address error if not within bounds.
-			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD);
-			else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_STORE);
-			else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = address error).");
+			if (accessType == READ) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD);
+			else if (accessType == WRITE) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_ADDRESS_ERROR_STORE);
+			else 
+				throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = address error).");
 		}
 
 		return getPS2PhysicalAddress_Stage2(PS2VirtualAddress, accessType);
@@ -100,11 +202,11 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, c
 	else
 	{
 		// Throw runtime error as this should never happen.
-		throw std::runtime_error("PS2MMUHandler: could not determine context. Needs debugging!");
+		throw std::runtime_error("MMUHandler: could not determine context. Needs debugging!");
 	}
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, const AccessType & accessType) const
+u32 MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, const AccessType & accessType) const
 {
 	// Stage 2 is to search through the TLB to see if there is a VPN match. 
 	// Check if its in the TLB and get the information.
@@ -113,9 +215,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, c
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
 		// Throw address error if not within bounds.
-		if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);
-		else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_STORE);
-		else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = tlb refill).");
+		if (accessType == READ) 
+			throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);
+		else if (accessType == WRITE) 
+			throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_STORE);
+		else 
+			throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = tlb refill).");
 	}
 	auto tlbEntry = mTLBEntries[index];
 
@@ -126,9 +231,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, c
 		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID) != tlbEntry.mASID)
 		{
 			// Generate TLB refill exception.
-			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);
-			else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_STORE);
-			else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = tlb refill).");
+			if (accessType == READ) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);
+			else if (accessType == WRITE) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_STORE);
+			else 
+				throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = tlb refill).");
 		}
 	}
 
@@ -136,7 +244,7 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, c
 	return getPS2PhysicalAddress_Stage3(PS2VirtualAddress, accessType, tlbEntry);
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const
+u32 MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const
 {
 	// Stage 3: Assess if the page is valid and it is marked dirty.
 	// Need to check now before continuing if the VPN is for a even or odd page. This is done by checking the LSB of the VPN from the original address accessed.
@@ -148,9 +256,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, c
 		if (!tlbEntry.mVOdd)
 		{
 			// Raise TLB invalid exception
-			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD);
-			else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_STORE);
-			else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = tlb invalid).");
+			if (accessType == READ) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD);
+			else if (accessType == WRITE) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_STORE);
+			else 
+				throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = tlb invalid).");
 		}	
 		
 		// Check if entry is allowed writes (dirty flag)
@@ -170,9 +281,12 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, c
 		if (!tlbEntry.mVEven)
 		{
 			// Raise TLB invalid exception
-			if (accessType == READ) PS2Exception_t a(PS2Exception_t::ExceptionType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD);
-			else if (accessType == WRITE) throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_STORE);
-			else throw std::runtime_error("PS2MMUHandler: could not throw internal PS2Exception_t error (type = tlb invalid).");
+			if (accessType == READ) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD);
+			else if (accessType == WRITE) 
+				throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_INVALID_STORE);
+			else 
+				throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = tlb invalid).");
 		}
 
 		// Check if entry is allowed writes (dirty flag)
@@ -187,13 +301,13 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage3(const u32 & PS2VirtualAddress, c
 	}
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
+u32 MMUHandler::getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
 {
 	// Check if accessing scratchpad
 	if (tlbEntry.mS)
 	{
 		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		throw std::runtime_error("PS2MMUHandler: scratchpad access not yet implemented.");
+		throw std::runtime_error("MMUHandler: scratchpad access not yet implemented.");
 	}
 
 	// Or cache access?
@@ -211,13 +325,13 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress
 	return ((tlbEntry.mPFNOdd << PFNBitPos) || (PS2VirtualAddress & tlbEntry.mMask));
 }
 
-u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
+u32 MMUHandler::getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation& tlbEntry) const
 {
 	// Check if accessing scratchpad
 	if (tlbEntry.mS)
 	{
 		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		throw std::runtime_error("PS2MMUHandler: scratchpad access not yet implemented.");
+		throw std::runtime_error("MMUHandler: scratchpad access not yet implemented.");
 	}
 
 	// Or cache access?
@@ -235,7 +349,7 @@ u32 PS2MMUHandler::getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddres
 	return ((tlbEntry.mPFNEven << PFNBitPos) || (PS2VirtualAddress & tlbEntry.mMask));
 }
 
-s32 PS2MMUHandler::getTLBIndex(u32 PS2VirtualAddress) const
+s32 MMUHandler::getTLBIndex(u32 PS2VirtualAddress) const
 {
 	// Since the VPN can be a number of sizes, we start with the largest page size of 16MB or the most significant 8 bits (which means smallest VPN number) and search for that.
 	// If a match is found, then we get the proper page size from the TLB entry and check to see if the VA is within the page. If not we continue searching.
