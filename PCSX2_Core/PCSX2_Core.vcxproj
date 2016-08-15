@@ -236,6 +236,7 @@
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Docs\FPU Notes.xlsx" />
     <None Include="Docs\Memory Mappings.xlsx" />
     <None Include="Docs\EECore Instruction Implementation Register.xlsm" />
   </ItemGroup>

@@ -346,5 +346,8 @@
     <None Include="Docs\EECore Instruction Implementation Register.xlsm">
       <Filter>Docs</Filter>
     </None>
+    <None Include="Docs\FPU Notes.xlsx">
+      <Filter>Docs</Filter>
+    </None>
   </ItemGroup>
 </Project>
