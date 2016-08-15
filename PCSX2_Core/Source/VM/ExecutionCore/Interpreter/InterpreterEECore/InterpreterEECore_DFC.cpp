@@ -5,7 +5,6 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 
 /*
@@ -56,9 +55,6 @@ void InterpreterEECore::CVT_S_W()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
 }
 
@@ -67,9 +63,6 @@ void InterpreterEECore::CVT_W_S()
 	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on COP1 unusable). Clamping occurs if exponent is > 0x9D.
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
 

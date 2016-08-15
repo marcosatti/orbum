@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/Register64_t.h"
+#include "Common/Types/Registers/Register64_t.h"
 
 Register64_t::Register64_t() : UD(0)
 {

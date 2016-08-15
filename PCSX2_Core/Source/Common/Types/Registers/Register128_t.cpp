@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/Register128_t.h"
+#include "Common/Types/Registers/Register128_t.h"
 
 Register128_t::Register128_t() : UD{ 0,0 }
 {

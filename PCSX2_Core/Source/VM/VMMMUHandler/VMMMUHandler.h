@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Component Interfaces/VMMMUComponent.h"
+#include "Common/Interfaces/VMMMUComponent.h"
 
 class VMMain;
 

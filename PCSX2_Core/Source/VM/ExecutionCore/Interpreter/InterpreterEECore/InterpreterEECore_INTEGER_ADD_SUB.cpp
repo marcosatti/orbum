@@ -5,7 +5,7 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
+#include "Common/Types/PS2Exception/PS2Exception_t.h"
 
 /*
 Integer Addition/Subtraction instruction family.

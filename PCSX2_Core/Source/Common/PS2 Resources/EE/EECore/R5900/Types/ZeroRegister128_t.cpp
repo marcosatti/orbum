@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/ZeroRegister128_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
 
 void ZeroRegister128_t::writeByteU(u32 arrayIndex, u8 value)
 {

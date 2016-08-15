@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2 Resources/EE/EECore/COP1/Types/COP1ResourcesSubobject.h"
 
 /*
-FPURegister32_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
+FPRegister32_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
 All FPR's are 32-bit according to the documentation, and the floating point value is accessed by the 'F' union field defined below.
 
 See EE Core Users Manual, chapter 8, especially page 157 which define the aritmetic registers.
@@ -17,10 +19,13 @@ In particular, the FPU does not support (in comparison to IEEE-754):
  - Plus and minus infinity.
  - 'NaN' (not a number) representation.
 */
-class FPURegister32_t
+class FPRegister32_t : public COP1ResourcesSubobject
 {
 public:
-	virtual ~FPURegister32_t()
+
+	explicit FPRegister32_t(const PS2Resources_t* const PS2Resources);
+
+	virtual ~FPRegister32_t()
 	{
 	}
 
@@ -30,12 +35,12 @@ public:
 		s32 SW;
 		f32 F;
 	};
-	
-	// Initalise the value to +0.
-	FPURegister32_t();
 
-	// Functions to access the register value - you should use these functions instead of accessing them directly.
-	// NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the EECoreCOP1Util static class functions to help with conversion.
+	/*
+	Functions to access the register value - you should use these functions instead of accessing them directly.
+	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the EECoreCOP1Util static class functions to help with conversion.
+	Accessing any of these functions will raise a coprocessor unavailable PS2Exception_t if the context is incorrect (ie: Status.CU[1] bit is not set or otherwise).
+	*/
 	virtual u32 readWordU();
 	virtual void writeWordU(u32 value);	
 	virtual s32 readWordS();

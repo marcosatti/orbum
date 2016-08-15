@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 
@@ -46,8 +46,11 @@ private:
 	MIPSInstruction_t mInstruction;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
-	// Note: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
-	// Dots in mnemonics & function names are represented by the underscore character.
+	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
+	// Note 2: Dots in mnemonics & function names are represented by the underscore character.
+	// Note 3: Where exceptions are declared in the instruction information (ie: see EE Core Instruction Manual), some may be thrown in the instruction body itself (for example
+	//         with integer overflows), while others may be thrown elsewhere in the emulator (such as the coprocessors being unacessible, which are defined when a read or write
+	//         occurs in a subobject).
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
@@ -284,6 +287,19 @@ private:
 	Load from Memory Instructions. See InterpreterEECore_LOAD_MEM.cpp for implementations (14 instructions total).
 	*/
 	void LB();
+	void LBU();
+	void LD();
+	void LDL();
+	void LDR();
+	void LH();
+	void LHU();
+	void LUI();
+	void LW();
+	void LWL();
+	void LWR();
+	void LWU();
+	void LQ();
+	void LWC1();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.

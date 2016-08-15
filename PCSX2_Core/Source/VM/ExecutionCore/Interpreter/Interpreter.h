@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 
 

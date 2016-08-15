@@ -6,7 +6,6 @@
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 
 /*
 Floating-Point instruction family.
@@ -20,9 +19,6 @@ void InterpreterEECore::ADD_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 	
@@ -49,9 +45,6 @@ void InterpreterEECore::ADDA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 
@@ -81,9 +74,6 @@ void InterpreterEECore::MADD_S()
 	auto& source3Reg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -111,9 +101,6 @@ void InterpreterEECore::MADDA_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -140,9 +127,6 @@ void InterpreterEECore::MUL_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -168,9 +152,6 @@ void InterpreterEECore::MULA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
@@ -200,9 +181,6 @@ void InterpreterEECore::MSUB_S()
 	auto& source3Reg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -230,9 +208,6 @@ void InterpreterEECore::MSUBA_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -259,9 +234,6 @@ void InterpreterEECore::SUB_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
 	if (EECoreCOP1Util::isOverflowed(result))
@@ -287,9 +259,6 @@ void InterpreterEECore::SUBA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 

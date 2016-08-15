@@ -5,7 +5,6 @@
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
 
 /*
@@ -180,9 +179,6 @@ void InterpreterEECore::C_EQ_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
 
@@ -198,9 +194,6 @@ void InterpreterEECore::C_F_S()
 	// (FCR[31] or CSR, C field) = 0
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
 }
 
@@ -211,9 +204,6 @@ void InterpreterEECore::C_LE_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
@@ -231,9 +221,6 @@ void InterpreterEECore::C_LT_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/PS2 Resources/EE/EECore/COP1/Types/COP1ResourcesSubobject.h"
 
 /*
 COP1_BitfieldRegister_t.h implements all of the bitfields in each of the COP1 control registers. This is used primarily by COP1_t.h.
@@ -16,6 +17,20 @@ All of the available field functions are listed in the BitfieldRegister32_t clas
 */
 
 /*
+The class below is a convenience subclass for the COP1 registers - tt checks that COP1 is usable before performing the function.
+*/
+class COP1BitfieldRegister32_t : public BitfieldRegister32_t, public COP1ResourcesSubobject
+{
+public:
+	explicit COP1BitfieldRegister32_t(const PS2Resources_t* const PS2Resources);
+
+	u32 getFieldValue(const std::string &fieldName) override;
+	void setFieldValue(const std::string &fieldName, const u32 &value) override;
+	u32 getRegisterValue() override;
+	void setRegisterValue(u32 value) override;
+};
+
+/*
 The IRR (Implementation and Revision Register (FCR0)) of COP1, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 158.
 
@@ -24,7 +39,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterIRR_t : public BitfieldRegister32_t
+class RegisterIRR_t : public COP1BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -33,7 +48,7 @@ public:
 		static constexpr auto Imp = "Imp";
 	};
 
-	RegisterIRR_t()
+	explicit RegisterIRR_t(const PS2Resources_t *const PS2Resources) : COP1BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Rev, 0, 8, 0);
 		registerField(Fields::Imp, 8, 8, 0x2E);
@@ -62,7 +77,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24 (length 1): Constant 1.
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterCSR_t : public BitfieldRegister32_t
+class RegisterCSR_t : public COP1BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -78,7 +93,7 @@ public:
 		static constexpr auto C = "C";
 	};
 
-	RegisterCSR_t()
+	explicit RegisterCSR_t(const PS2Resources_t *const PS2Resources) : COP1BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::SU, 3, 1, 0);
 		registerField(Fields::SO, 4, 1, 0);

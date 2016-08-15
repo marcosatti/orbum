@@ -8,8 +8,6 @@
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-
 
 /*
 Min/Max instruction family.
@@ -92,9 +90,6 @@ void InterpreterEECore::MAX_S()
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
 	f32 result = (source1Val >= source2Val) ? source1Val : source2Val;
@@ -112,9 +107,6 @@ void InterpreterEECore::MIN_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();

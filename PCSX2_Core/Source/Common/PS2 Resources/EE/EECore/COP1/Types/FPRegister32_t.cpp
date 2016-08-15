@@ -1,87 +1,71 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/Register32_t.h"
+#include "Common/PS2 Resources/EE/EECore/COP1/Types/FPRegister32_t.h"
+#include "Common/PS2 Resources/PS2Resources_t.h"
 
-Register32_t::Register32_t() : UW(0)
+FPRegister32_t::FPRegister32_t(const PS2Resources_t* const PS2Resources) : 
+	COP1ResourcesSubobject(PS2Resources),
+	F(0)
 {
 }
 
-u8 Register32_t::readByteU(u32 arrayIndex)
+u32 FPRegister32_t::readWordU()
 {
-	return UB[arrayIndex];
-}
-
-void Register32_t::writeByteU(u32 arrayIndex, u8 value)
-{
-	UB[arrayIndex] = value;
-}
-
-s8 Register32_t::readByteS(u32 arrayIndex)
-{
-	return SB[arrayIndex];
-}
-
-void Register32_t::writeByteS(u32 arrayIndex, s8 value)
-{
-	SB[arrayIndex] = value;
-}
-
-u16 Register32_t::readHwordU(u32 arrayIndex)
-{
-	return UH[arrayIndex];
-}
-
-void Register32_t::writeHwordU(u32 arrayIndex, u16 value)
-{
-	UH[arrayIndex] = value;
-}
-
-s16 Register32_t::readHwordS(u32 arrayIndex)
-{
-	return SH[arrayIndex];
-}
-
-void Register32_t::writeHwordS(u32 arrayIndex, s16 value)
-{
-	SH[arrayIndex] = value;
-}
-
-u32 Register32_t::readWordU()
-{
+	checkCOP1Usable();
 	return UW;
 }
 
-void Register32_t::writeWordU(u32 value)
+void FPRegister32_t::writeWordU(u32 value)
 {
+	checkCOP1Usable();
 	UW = value;
 }
 
-s32 Register32_t::readWordS()
+s32 FPRegister32_t::readWordS()
 {
+	checkCOP1Usable();
 	return SW;
 }
 
-void Register32_t::writeWordS(s32 value)
+void FPRegister32_t::writeWordS(s32 value)
 {
+	checkCOP1Usable();
 	SW = value;
 }
 
-u8 Register32_t::getBit32(u8 index) const
+f32 FPRegister32_t::readFloat()
 {
+	checkCOP1Usable();
+	return F;
+}
+
+void FPRegister32_t::writeFloat(f32 value)
+{
+	checkCOP1Usable();
+	F = value;
+}
+
+u8 FPRegister32_t::getBit32(u8 index) const
+{
+	checkCOP1Usable();
 	return (UW >> index) & 0x1;
 }
 
-void Register32_t::setBit32(u8 index, u32 bitValue)
+void FPRegister32_t::setBit32(u8 index, u32 bitValue)
 {
+	checkCOP1Usable();
+
 	u32 resetBitMask = 0x0;
 	u32 oneMask = 0x1;
 	resetBitMask = ~(resetBitMask | (oneMask << index));
 	UW = (UW & resetBitMask) | (bitValue << index);
 }
 
-u32 Register32_t::getBitRange32(u8 startPosition, u8 bitLength) const
+u32 FPRegister32_t::getBitRange32(u8 startPosition, u8 bitLength) const
 {
+	checkCOP1Usable();
+
 	u32 endPos = startPosition + bitLength;
 	u32 maskTemp1 = (static_cast<u32>(~0x0) << startPosition);
 	u32 maskTemp2 = static_cast<u32>(~0x0);
@@ -96,8 +80,10 @@ u32 Register32_t::getBitRange32(u8 startPosition, u8 bitLength) const
 	return value;
 }
 
-void Register32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
+void FPRegister32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
 {
+	checkCOP1Usable();
+
 	u32 endPos = startPosition + bitLength;
 	u32 maskTemp1 = (static_cast<u32>(~0x0) << startPosition);
 	u32 maskTemp2 = static_cast<u32>(~0x0);

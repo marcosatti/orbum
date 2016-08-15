@@ -2,8 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Types/PS2Exception/PS2Exception_t.h"
 
 /*
 TODO: Fill in documentation.

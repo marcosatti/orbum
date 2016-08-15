@@ -25,17 +25,11 @@
     <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP0">
       <UniqueIdentifier>{03491942-df5a-489b-b63b-b10147dae629}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers">
-      <UniqueIdentifier>{6973ef0e-c95c-4691-a8c1-23ddbd476952}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Common\PS2 Resources\EE\EECore\R5900">
       <UniqueIdentifier>{e971d169-09f9-4b95-b36e-6f3837e04cc4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP1">
       <UniqueIdentifier>{f4331725-feb3-4219-9175-3dcd49d2e6cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers">
-      <UniqueIdentifier>{f83163e4-ae7e-43bb-84b9-6ed64d8fb684}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory">
       <UniqueIdentifier>{13769b44-89f3-4142-bcb4-c848d5d50886}</UniqueIdentifier>
@@ -45,15 +39,6 @@
     </Filter>
     <Filter Include="Source\Common\PS2 Resources\BootROM">
       <UniqueIdentifier>{fc26f826-3728-41ad-affb-1beb4c5ea3f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Common\PS2 Types">
-      <UniqueIdentifier>{af068465-91f9-4b8a-9dda-3946f7b308a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Common\PS2 Types\Registers">
-      <UniqueIdentifier>{8fe87a6f-96f9-476b-83b3-c9da1b47f016}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Common\PS2 Types\PS2Exception">
-      <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Common\PS2 Constants">
       <UniqueIdentifier>{8a73cfce-df01-43ec-a0ac-b46e9451270c}</UniqueIdentifier>
@@ -66,12 +51,6 @@
     </Filter>
     <Filter Include="Source\VM\ExecutionCore\Interpreter">
       <UniqueIdentifier>{47851830-a975-4672-8b7a-21823b98237c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\VM\Component Interfaces">
-      <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Common\PS2 Types\MIPSInstruction">
-      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore">
       <UniqueIdentifier>{e5e3ef58-0177-4bac-a147-8b573d1d2585}</UniqueIdentifier>
@@ -97,6 +76,30 @@
     <Filter Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler">
       <UniqueIdentifier>{866e343f-bd57-48c5-8ef6-957def2db35a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\Types">
+      <UniqueIdentifier>{af068465-91f9-4b8a-9dda-3946f7b308a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Types\Registers">
+      <UniqueIdentifier>{8fe87a6f-96f9-476b-83b3-c9da1b47f016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Types\PS2Exception">
+      <UniqueIdentifier>{38bbc1c1-12c4-48f0-b738-52346dcd082b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Types\MIPSInstruction">
+      <UniqueIdentifier>{223709e7-2b52-4f62-8e53-9da7ebb243a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types">
+      <UniqueIdentifier>{6973ef0e-c95c-4691-a8c1-23ddbd476952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types">
+      <UniqueIdentifier>{f83163e4-ae7e-43bb-84b9-6ed64d8fb684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types">
+      <UniqueIdentifier>{5d19d984-a7cd-4cf5-a5c1-f49519c6a8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common\Interfaces">
+      <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\Global\GlobalConstants.h">
@@ -117,20 +120,11 @@
     <ClInclude Include="Source\Common\PS2 Constants\PS2Constants.h">
       <Filter>Source\Common\PS2 Constants</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.h">
-      <Filter>Source\Common\PS2 Types\PS2Exception</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\Component Interfaces\VMBaseComponent.h">
-      <Filter>Source\VM\Component Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\VMMain.h">
       <Filter>Source\VM</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\VM\Component Interfaces\VMMMUComponent.h">
-      <Filter>Source\VM\Component Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Source\targetver.h">
       <Filter>Source</Filter>
@@ -138,32 +132,8 @@
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.h">
-      <Filter>Source\Common\PS2 Types\MIPSInstruction</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\Register128_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\Register32_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\Register64_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\BitfieldRegister32_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\FPURegister32_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\PCRegister32_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.h">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
@@ -177,14 +147,8 @@
     <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h">
       <Filter>Source\Common\PS2 Resources\BootROM</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers\COP0_BitfieldRegisters_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Bitfield Registers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers\COP1_BitfieldRegisters_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Bitfield Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\COP1_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1</Filter>
@@ -213,19 +177,61 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\Component Interfaces\VMExecutionCoreComponent.h">
-      <Filter>Source\VM\Component Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h">
       <Filter>Source\Common\PS2 Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Interfaces\VMBaseComponent.h">
+      <Filter>Source\Common\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Interfaces\VMExecutionCoreComponent.h">
+      <Filter>Source\Common\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Interfaces\VMMMUComponent.h">
+      <Filter>Source\Common\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h">
+      <Filter>Source\Common\Types\MIPSInstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\PS2Exception\PS2Exception_t.h">
+      <Filter>Source\Common\Types\PS2Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register64_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register128_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\PCRegister32_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\FPRegister32_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1ResourcesSubobject.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Interfaces\PS2ResourcesSubobject.h">
+      <Filter>Source\Common\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
       <Filter>Source\Common\Global</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\PS2Exception\PS2Exception_t.cpp">
-      <Filter>Source\Common\PS2 Types\PS2Exception</Filter>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
@@ -235,9 +241,6 @@
     </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\MIPSInstruction\MIPSInstruction_t.cpp">
-      <Filter>Source\Common\PS2 Types\MIPSInstruction</Filter>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
@@ -253,27 +256,6 @@
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_FLOAT.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\Register128_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\Register32_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\Register64_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\BitfieldRegister32_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\FPURegister32_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\PCRegister32_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Types\Registers\ZeroRegister128_t.cpp">
-      <Filter>Source\Common\PS2 Types\Registers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
@@ -319,6 +301,42 @@
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOAD_MEM.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.cpp">
+      <Filter>Source\Common\Types\MIPSInstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\PS2Exception\PS2Exception_t.cpp">
+      <Filter>Source\Common\Types\PS2Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register64_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register128_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\PCRegister32_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\FPRegister32_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\COP1_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1ResourcesSubobject.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

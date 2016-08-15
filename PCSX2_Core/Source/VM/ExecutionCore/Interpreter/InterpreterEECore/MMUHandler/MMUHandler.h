@@ -2,13 +2,13 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
 class VMMain;
 
 /*
-MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB)
+MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB).
 */
 class MMUHandler : public VMExecutionCoreComponent
 {
@@ -41,6 +41,7 @@ public:
 	Stage 1 tests the PS2VirtualAddress against the context of the CPU, to see if the address if valid. If running in kernel mode, and a kseg0 or kseg1 address is supplied,
 	 the function returns the physical address immediately.
 	Access type information is needed in order to throw the correct exception if an error occurs (eventually it is handled by one of the PS2 bios exception handler vectors).
+	TODO: Implement an Address Error exception. See for example the instruction LDL on page 72 of the EE Core Instruction manual.
 	*/
 	enum AccessType {READ, WRITE};
 	u32 getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const; // Convenience function for Stage 1 (looks nicer).

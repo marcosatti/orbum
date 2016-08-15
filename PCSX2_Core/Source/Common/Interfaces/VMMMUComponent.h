@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Component Interfaces/VMBaseComponent.h"
+#include "Common/Interfaces/VMBaseComponent.h"
 
 class VMMain;
 

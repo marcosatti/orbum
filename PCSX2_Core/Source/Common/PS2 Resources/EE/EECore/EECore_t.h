@@ -4,6 +4,7 @@
 #include "Common/PS2 Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2 Resources/EE/EECore/ScratchpadMemory/ScratchpadMemory.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 /*
 TODO: finish off documentation when all components are ready.
@@ -13,16 +14,22 @@ For reference documentation, see:
  - R5900_t.h, COP0_t.h, COP1_t.h for the component inners.
 */
 
-class EECore_t {
+class EECore_t : public PS2ResourcesSubobject
+{
 public:
+	explicit EECore_t(const PS2Resources_t* const PS2Resources)
+		: PS2ResourcesSubobject(PS2Resources)
+	{
+	}
+
 	// R5900 CPU
-	std::shared_ptr<R5900_t> R5900 = std::make_shared<R5900_t>();
+	std::shared_ptr<R5900_t> R5900 = std::make_shared<R5900_t>(getRootResources());
 
 	// COP0 coprocessor
-	std::shared_ptr<COP0_t> COP0 = std::make_shared<COP0_t>();
+	std::shared_ptr<COP0_t> COP0 = std::make_shared<COP0_t>(getRootResources());
 
 	// COP1 coprocessor
-	std::shared_ptr<COP1_t> COP1 = std::make_shared<COP1_t>();
+	std::shared_ptr<COP1_t> COP1 = std::make_shared<COP1_t>(getRootResources());
 
 	/*
 	COP2 refers to VPU0. As the Sony doc's include it with the EE Core, it is also included here.
@@ -33,6 +40,6 @@ public:
 	// VPU_t VPU0;
 
 	// Scratchpad memory
-	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>();
+	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>(getRootResources());
 
 };

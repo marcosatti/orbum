@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <Common/Global/Globals.h>
-#include <Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h>
+#include <Common/Types/MIPSInstruction/MIPSInstruction_t.h>
 #include <Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h>
 
 using R5900InstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;

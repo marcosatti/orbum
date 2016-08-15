@@ -2,7 +2,7 @@
 
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2 Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
 
 void BitfieldRegister32_t::registerField(const std::string & fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue)
 {

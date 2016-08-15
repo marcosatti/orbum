@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
+#include "Common/Types/PS2Exception/PS2Exception_t.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 
 PS2Exception_t::PS2Exception_t(const ExceptionType & exceptionType) :

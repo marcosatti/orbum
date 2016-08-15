@@ -6,7 +6,6 @@
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 void InterpreterEECore::MFHI()
@@ -260,9 +259,6 @@ void InterpreterEECore::MFC1()
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	destReg->writeWordU(0, source1Reg->readWordU());
 
 	// Sign extend
@@ -285,9 +281,6 @@ void InterpreterEECore::MOV_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
-
 	destReg->writeFloat(source1Reg->readFloat());
 }
 
@@ -295,9 +288,6 @@ void InterpreterEECore::MTC1()
 {
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-
-	if (EECoreCOP1Util::isCOP1Unusable(getVM()->getResources()))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 
 	destReg->writeWordU(source1Reg->readWordU(0));
 }

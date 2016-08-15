@@ -1,13 +1,20 @@
 #pragma once
 
-#include "Common/PS2 Types/Registers/Register32_t.h"
-#include "Common/PS2 Types/Registers/Register128_t.h"
-#include "Common/PS2 Types/Registers/ZeroRegister128_t.h"
-#include "Common/PS2 Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 
-class R5900_t {
+class R5900_t : public PS2ResourcesSubobject
+{
 public:
+	explicit R5900_t(const PS2Resources_t* const PS2Resources)
+		: PS2ResourcesSubobject(PS2Resources)
+	{
+	}
+
 	/*
 	The R5900 is the EE Core's CPU. It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
 	It uses a little-endian configuration (bit 0 is always the LSB).
@@ -21,6 +28,7 @@ public:
 	*/
 	bool mIsInBranchDelaySlot;
 	u32 mBranchDelaySlotInstructionPC;
+
 	void setBranchDelaySlotInstruction()
 	{
 

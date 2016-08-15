@@ -6,7 +6,7 @@
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "VM/VMMain.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
+#include "Common/Types/PS2Exception/PS2Exception_t.h"
 
 
 MMUHandler::MMUHandler(const VMMain *const vmMain) : VMExecutionCoreComponent(vmMain)

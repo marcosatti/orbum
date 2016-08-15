@@ -3,9 +3,9 @@
 #include <stdexcept>
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Types/PS2Exception/PS2Exception_t.h"
-#include "Common/PS2 Resources/EE/EECore/COP0/Bitfield Registers/COP0_BitfieldRegisters_t.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Types/PS2Exception/PS2Exception_t.h"
+#include "Common/PS2 Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "VM/VMMain.h"
 
 

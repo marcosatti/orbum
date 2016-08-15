@@ -38,10 +38,5 @@ public:
 	Gets the exponent (8 bits starting from position 23).
 	*/
 	static u8 getExponent(const f32 & value);
-
-	/*
-	Checks if the FPU coprocessor (COP1) is unusable.
-	*/
-	static bool isCOP1Unusable(const std::unique_ptr<PS2Resources_t> & PS2Resources);
 };
 

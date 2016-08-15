@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2 Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 
 /*
 Static class used as the EECore instruction lookup.

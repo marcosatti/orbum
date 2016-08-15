@@ -5,8 +5,8 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
-#include "VM/Component Interfaces/VMMMUComponent.h"
-#include "VM/Component Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Interfaces/VMMMUComponent.h"
+#include "Common/Interfaces/VMExecutionCoreComponent.h"
 
 /*
 TODO: Fill in documentation.

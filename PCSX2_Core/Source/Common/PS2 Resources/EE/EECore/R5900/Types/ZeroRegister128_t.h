@@ -1,5 +1,5 @@
 #pragma once
-#include "Common\PS2 Types\Registers\Register128_t.h"
+#include "Common\Types\Registers\Register128_t.h"
 
 /*
 ZeroRegister128_t is used as a register with a constant 0 value. Any writes are discarded, and any reads are always 0. Used for the EECore GPR register r0.

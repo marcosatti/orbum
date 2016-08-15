@@ -77,14 +77,3 @@ u8 EECoreCOP1Util::getExponent(const f32& value)
 	std::frexp(value, &exp);
 	return static_cast<u8>(exp);
 }
-
-bool EECoreCOP1Util::isCOP1Unusable(const std::unique_ptr<PS2Resources_t>& PS2Resources)
-{
-	// First check for kernel mode (Status.EXL == 1) - the coprocessor is always available in this mode. If not, then check that CU[bit 1] == 1 in the status register.
-	if (PS2Resources->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL) == 1)
-		return true;
-	else if ((PS2Resources->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::CU) & 0x2) > 0)
-		return true;
-	else 
-		return false;
-}

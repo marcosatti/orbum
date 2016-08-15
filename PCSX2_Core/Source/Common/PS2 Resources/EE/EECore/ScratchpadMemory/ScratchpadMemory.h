@@ -4,11 +4,14 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Constants/PS2Constants.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
-class ScratchpadMemory_t
+class ScratchpadMemory_t : public PS2ResourcesSubobject
 {
 public:
-	ScratchpadMemory_t() : scratchpadMemory(std::make_shared<u8*>(new u8[PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY]))
+	explicit ScratchpadMemory_t(const PS2Resources_t *const PS2Resources) : 
+		PS2ResourcesSubobject(PS2Resources),
+		scratchpadMemory(std::make_shared<u8*>(new u8[PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY]))
 	{
 	}
 

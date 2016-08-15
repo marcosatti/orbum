@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "Common/PS2 Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/Register32_t.h"
 
 /*
 The BitfieldRegiser_t class extends the Register32_t class, providing methods for manipulating 32-bit bit fields.
@@ -38,22 +38,22 @@ public:
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	u32 getFieldValue(const std::string &fieldName);
+	virtual u32 getFieldValue(const std::string &fieldName);
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	void setFieldValue(const std::string &fieldName, const u32 &value);
+	virtual void setFieldValue(const std::string &fieldName, const u32 &value);
 
 	/*
 	Gets the combined bitfield value from the individual fields. Also syncs Register32_t.UW to reflect the same value.
 	*/
-	u32 getRegisterValue();
+	virtual u32 getRegisterValue();
 
 	/*
 	Sets the Register32_t.UW register value to reflect the parsed value, and updates all of the registered fields to reflect the bitfield values from Register32_t.UW.
 	*/
-	void setRegisterValue(u32 value);
+	virtual void setRegisterValue(u32 value);
 
 private:
 	/*
