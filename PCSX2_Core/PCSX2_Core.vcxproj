@@ -193,6 +193,7 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_STORE_MEM.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\COP1_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1ResourcesSubobject.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.cpp" />

@@ -302,6 +302,20 @@ private:
 	void LWC1();
 
 	/*
+	Store to Memory Instructions. See InterpreterEECore_STORE_MEM.cpp for implementations (14 instructions total).
+	*/
+	void SB();
+	void SD();
+	void SDL();
+	void SDR();
+	void SH();
+	void SW();
+	void SWL();
+	void SWR();
+	void SQ();
+	void SWC1();
+
+	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.
 	*/
 	void(InterpreterEECore::*const EECORE_INSTRUCTION_TABLE[Constants::NUMBER_EECORE_INSTRUCTIONS])() = {

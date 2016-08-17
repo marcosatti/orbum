@@ -338,6 +338,9 @@
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1ResourcesSubobject.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClCompile>
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_STORE_MEM.cpp">
+      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

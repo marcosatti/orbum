@@ -42,7 +42,7 @@ void InterpreterEECore::LD()
 void InterpreterEECore::LDL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
-	// Rd = MEM[UD]. Exceptions generated through other components.
+	// MEM[UD] = Rd. Exceptions generated through other components.
 	// Unaligned memory read. Alignment occurs on an 8 byte boundary, but this instruction allows an unaligned read. LDL is to be used with LDR, to read in a full 64-bit value.
 	// LDL reads in the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LDR.
@@ -200,11 +200,11 @@ void InterpreterEECore::LQ()
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()]; // "Base"
 	const s16 imm = getInstruction().getIImmS();
 
-	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned.
+	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
 
 	// TODO: Im not sure if this is correct for big-endian.
-	destReg->writeDwordU(0, static_cast<u64>(getMMUHandler()->readWordU(PS2VirtualAddress))); // Get first 8 bytes (bytes 0 -> 7).
-	destReg->writeDwordU(1, static_cast<u64>(getMMUHandler()->readWordU(PS2VirtualAddress + 8))); // Get second 8 bytes (bytes 8 -> 15).
+	destReg->writeDwordU(0, getMMUHandler()->readDwordU(PS2VirtualAddress)); // Get first 8 bytes (bytes 0 -> 7).
+	destReg->writeDwordU(1, getMMUHandler()->readDwordU(PS2VirtualAddress + 8)); // Get second 8 bytes (bytes 8 -> 15).
 }
 
 void InterpreterEECore::LWC1()
