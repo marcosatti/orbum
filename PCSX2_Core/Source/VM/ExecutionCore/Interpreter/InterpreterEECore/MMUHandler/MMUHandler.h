@@ -18,6 +18,7 @@ public:
 	/*
 	Convenience functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.
 	This is the main access point that any PS2 reads or writes will come through.
+	TODO: Add in address error exceptions. These will occur when an unaligned access is tried.
 	*/
 	u8 readByteU(u32 PS2VirtualAddress) const;
 	void writeByteU(u32 PS2VirtualAddress, u8 value) const;
