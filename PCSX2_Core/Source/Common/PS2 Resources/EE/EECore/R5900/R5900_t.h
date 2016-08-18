@@ -4,6 +4,7 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 
@@ -50,13 +51,15 @@ public:
 	From the EE Core Users Manual, r0 and r31 are reserved:
 	- r0 is the zero register, meaning it is always set to a constant 0. This is subclassed from Register128_t.
 	- r31 is the link register used by the link and jump instructions. This is not to be used by other instructions.
-	In an 8x4 grid.
+	In an 8x4 grid. Special registers can be accessed through the R5900_t class, but are also included in the GPR array.
 	*/
+	std::shared_ptr<ZeroRegister128_t> ZeroRegister = std::make_shared<ZeroRegister128_t>();
+	std::shared_ptr<LinkRegister128_t> LinkRegister = std::make_shared<LinkRegister128_t>(getRootResources());
 	std::shared_ptr<Register128_t> GPR[32] = {
-		std::make_shared<ZeroRegister128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		ZeroRegister, std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
 		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
 		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
-		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>()
+		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), LinkRegister
 	};
 
 	/*

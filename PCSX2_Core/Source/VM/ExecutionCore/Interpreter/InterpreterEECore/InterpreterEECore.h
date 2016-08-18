@@ -246,7 +246,7 @@ private:
 	void PROT3W();
 
 	/*
-	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (7 instructions total).
+	Others (ALU) Instructions. See InterpreterEECore_ALU_OTHERS.cpp for implementations (7 instructions total).
 	*/
 	void PABSH();
 	void PABSW();
@@ -344,6 +344,73 @@ private:
 	void MTPS();
 	void CFC1();
 	void CTC1();
+
+	/*
+	Conditional Branch and Jump Instructions. See InterpreterEECore_COND_BRANCH_JUMP.cpp for implementations (26 instructions total).
+	*/
+	void BEQ();
+	void BEQL();
+	void BGEZ();
+	void BGEZL();
+	void BGTZ();
+	void BGTZL();
+	void BLEZ();
+	void BLEZL();
+	void BLTZ();
+	void BLTZL();
+	void BNE();
+	void BNEL();
+	void BC0F();
+	void BC0FL();
+	void BC0T();
+	void BC0TL();
+	void BC1F();
+	void BC1FL();
+	void BC1T();
+	void BC1TL();
+	void BC2F();
+	void BC2FL();
+	void BC2T();
+	void BC2TL();
+	void J();
+	void JR();
+
+	/*
+	Subroutine Call Instructions. See InterpreterEECore_CALL.cpp for implementations (6 instructions total).
+	*/
+	void BGEZAL();
+	void BGEZALL();
+	void BLTZAL();
+	void BLTZALL();
+	void JAL();
+	void JALR();
+
+	/*
+	Break and Trap Instructions. See InterpreterEECore_BREAK_TRAP.cpp for implementations (15 instructions total).
+	*/
+	void BREAK();
+	void SYSCALL();
+	void TEQ();
+	void TEQI();
+	void TGE();
+	void TGEI();
+	void TGEIU();
+	void TGEU();
+	void TLT();
+	void TLTI();
+	void TLTIU();
+	void TLTU();
+	void TNE();
+	void TNEI();
+	void ERET();
+
+	/*
+	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (4 instructions total).
+	*/
+	void SYNC_STYPE();
+	void PREF();
+	void DI();
+	void EI();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.

@@ -152,6 +152,8 @@
     <ClInclude Include="Source\Common\Interfaces\PS2ResourcesSubobject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0ResourcesSubobject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1ResourcesSubobject.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\R5900ResourcesSubobject.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\LinkRegister128_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\PCRegister32_t.h" />
@@ -197,6 +199,11 @@
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0ResourcesSubobject.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\LinkRegister128_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_BREAK_TRAP.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_CALL.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_COND_BRANCH_JUMP.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_OTHERS.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_STORE_MEM.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP1\COP1_t.cpp" />
@@ -224,7 +231,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_INTEGER_ADD_SUB.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_OTHERS.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_ALU_OTHERS.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REG_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_REORDERING.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_SHIFT.cpp" />

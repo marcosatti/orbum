@@ -56,10 +56,10 @@ public:
 
 	The pseudo-address (PA) is not the jump location - rather it is calculated based on the PA, the 4 high bits of the PC of the next instruction (branch delay slot) at the most significant bits and 2 bits set to 0 at the least significant bits.
 	See documentation mentioned above for a more elaborate explanation.
-	- getPAddress returns the raw pseudo-address contained in the instruction.
+	- getOffsetAddress returns the raw pseudo-address contained in the instruction.
 	- getAddress returns the real address based on the pseudo-address and the other factors mentioned above.
 	*/
-	INLINE s32 getJPAddress() const;
+	INLINE s32 getJOffsetAddress() const;
 	INLINE u32 getJJumpAddress(Register32_t& PC) const;
 
 	/*
