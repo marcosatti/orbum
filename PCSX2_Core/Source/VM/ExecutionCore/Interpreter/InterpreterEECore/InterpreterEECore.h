@@ -302,7 +302,7 @@ private:
 	void LWC1();
 
 	/*
-	Store to Memory Instructions. See InterpreterEECore_STORE_MEM.cpp for implementations (14 instructions total).
+	Store to Memory Instructions. See InterpreterEECore_STORE_MEM.cpp for implementations (10 instructions total).
 	*/
 	void SB();
 	void SD();
@@ -314,6 +314,36 @@ private:
 	void SWR();
 	void SQ();
 	void SWC1();
+
+	/*
+	Special Data Transfer Instructions. See InterpreterEECore_SPECIAL_TRANSFER.cpp for implementations (26 instructions total).
+	*/
+	void MFSA();
+	void MTSA();
+	void MTSAB();
+	void MTSAH();
+	void MFBPC();
+	void MFC0();
+	void MFDAB();
+	void MFDABM();
+	void MFDVB();
+	void MFDVBM();
+	void MFIAB();
+	void MFIABM();
+	void MFPC();
+	void MFPS();
+	void MTBPC();
+	void MTC0();
+	void MTDAB();
+	void MTDABM();
+	void MTDVB();
+	void MTDVBM();
+	void MTIAB();
+	void MTIABM();
+	void MTPC();
+	void MTPS();
+	void CFC1();
+	void CTC1();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.

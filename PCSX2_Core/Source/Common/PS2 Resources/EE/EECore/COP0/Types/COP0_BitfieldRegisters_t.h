@@ -2,6 +2,8 @@
 
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2 Resources/EE/EECore/COP0/Types/COP0ResourcesSubobject.h"
+
 
 /*
 COP0_BitfieldRegister_t.h implements all of the bitfields in each of the COP0 control registers. This is used primarily by COP0_t.h.
@@ -11,23 +13,37 @@ Note: where register fields have a constant 0, this is already done due to the b
 It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
 All of the fields available within each register are defined within the Fields struct located inside.
 ie: to access a field in a register object from outside this file, you would use:
- - RegisterIndex.setFieldValue(RegisterIndex::Fields::Index, u32 value) or 
- - u32 value = RegisterIndex.getFieldValue(RegisterIndex::Fields::Index)
+- RegisterIndex.setFieldValue(RegisterIndex::Fields::Index, u32 value) or
+- u32 value = RegisterIndex.getFieldValue(RegisterIndex::Fields::Index)
 All of the available field functions are listed in the BitfieldRegister32_t class.
 */
+
+/*
+The class below is a convenience subclass for the COP1 registers - it checks that COP1 is usable before performing the function.
+*/
+class COP0BitfieldRegister32_t : public BitfieldRegister32_t, public COP0ResourcesSubobject
+{
+public:
+	explicit COP0BitfieldRegister32_t(const PS2Resources_t* const PS2Resources);
+
+	u32 getFieldValue(const std::string &fieldName) override;
+	void setFieldValue(const std::string &fieldName, const u32 &value) override;
+	u32 getRegisterValue() override;
+	void setRegisterValue(u32 value) override;
+};
 
 /*
 RegisterUnknown_t represents an unknown (blank) register. It is up to the user at runtime to define fields.
 Aliased to RegisterReserved_t, as their contents are also unknown.
 */
-class RegisterUnknown_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterUnknown_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
 	};
 
-	explicit RegisterUnknown_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterUnknown_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 	}
 };
@@ -42,7 +58,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-30 (length 25): Constant 0.
 - Bits 31 (length 1): "P".
 */
-class RegisterIndex_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterIndex_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -51,7 +67,7 @@ public:
 		static constexpr auto P = "P";
 	};
 
-	explicit RegisterIndex_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterIndex_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Index, 0, 6, 0);
 		registerField(Fields::P, 31, 1, 0);
@@ -61,12 +77,12 @@ public:
 /*
 The Random register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 64.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Random".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterRandom_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterRandom_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -74,7 +90,7 @@ public:
 		static constexpr auto Random = "Random";
 	};
 
-	explicit RegisterRandom_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterRandom_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Random, 0, 6, 47);
 	}
@@ -93,7 +109,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 26-30 (length 5): Constant 0.
 - Bits 31 (length 1): "S"
 */
-class RegisterEntryLo0_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterEntryLo0_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -106,7 +122,7 @@ public:
 		static constexpr auto S = "S";
 	};
 
-	explicit RegisterEntryLo0_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterEntryLo0_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::G, 0, 1, 0);
 		registerField(Fields::V, 1, 1, 0);
@@ -129,7 +145,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-25 (length 20): "PFN".
 - Bits 26-31 (length 6): Constant 0.
 */
-class RegisterEntryLo1_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterEntryLo1_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -141,7 +157,7 @@ public:
 		static constexpr auto PFN = "PFN";
 	};
 
-	explicit RegisterEntryLo1_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterEntryLo1_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::G, 0, 1, 0);
 		registerField(Fields::V, 1, 1, 0);
@@ -154,13 +170,13 @@ public:
 /*
 The Context register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 66.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-3 (length 4): Constant 0.
 - Bits 4-22 (length 19): "BadVPN2".
 - Bits 23-31 (length 9): "PTEBase".
 */
-class RegisterContext_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterContext_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -169,7 +185,7 @@ public:
 		static constexpr auto PTEBase = "PTEBase";
 	};
 
-	explicit RegisterContext_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterContext_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::BadVPN2, 4, 19, 0);
 		registerField(Fields::PTEBase, 23, 9, 0);
@@ -180,13 +196,13 @@ private:
 /*
 The PageMask register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 67.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-12 (length 13): Constant 0.
 - Bits 13-24 (length 12): "MASK".
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterPageMask_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterPageMask_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -194,7 +210,7 @@ public:
 		static constexpr auto MASK = "MASK";
 	};
 
-	explicit RegisterPageMask_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterPageMask_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::MASK, 13, 12, 0);
 	}
@@ -203,12 +219,12 @@ public:
 /*
 The Wired register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 68.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Wired".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterWired_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterWired_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -216,7 +232,7 @@ public:
 		static constexpr auto Wired = "Wired";
 	};
 
-	explicit RegisterWired_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterWired_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Wired, 0, 6, 0);
 	}
@@ -229,7 +245,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 69
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "BadVAddr".
 */
-class RegisterBadVAddr_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterBadVAddr_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -237,7 +253,7 @@ public:
 		static constexpr auto BadVAddr = "BadVAddr";
 	};
 
-	explicit RegisterBadVAddr_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterBadVAddr_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::BadVAddr, 0, 32, 0);
 	}
@@ -250,7 +266,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 70
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Count".
 */
-class RegisterCount_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterCount_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -258,7 +274,7 @@ public:
 		static constexpr auto Count = "Count";
 	};
 
-	explicit RegisterCount_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterCount_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Count, 0, 32, 0);
 	}
@@ -273,7 +289,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-12 (length 5): Constant 0.
 - Bits 13-31 (length 19): "VPN2".
 */
-class RegisterEntryHi_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterEntryHi_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -282,7 +298,7 @@ public:
 		static constexpr auto VPN2 = "VPN2";
 	};
 
-	explicit RegisterEntryHi_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterEntryHi_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::ASID, 0, 8, 0);
 		registerField(Fields::VPN2, 13, 19, 0);
@@ -292,11 +308,11 @@ public:
 /*
 The Compare register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 72.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Compare".
 */
-class RegisterCompare_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterCompare_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -304,7 +320,7 @@ public:
 		static constexpr auto Compare = "Compare";
 	};
 
-	explicit RegisterCompare_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterCompare_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Compare, 0, 32, 0);
 	}
@@ -333,7 +349,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24-27 (length 4): Constant 0.
 - Bits 28-31 (length 4): "CU".
 */
-class RegisterStatus_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterStatus_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -353,7 +369,7 @@ public:
 		static constexpr auto CU = "CU";
 	};
 
-	explicit RegisterStatus_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterStatus_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::IE, 0, 1, 0);
 		registerField(Fields::EXL, 1, 1, 0);
@@ -389,7 +405,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "BD2".
 - Bits 31 (length 1): "BD".
 */
-class RegisterCause_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterCause_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -404,7 +420,7 @@ public:
 		static constexpr auto BD = "BD";
 	};
 
-	explicit RegisterCause_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterCause_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::ExcCode, 2, 5, 0);
 		registerField(Fields::IP2, 10, 1, 0);
@@ -424,7 +440,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 76
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "EPC".
 */
-class RegisterEPC_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterEPC_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -432,7 +448,7 @@ public:
 		static constexpr auto EPC = "EPC";
 	};
 
-	explicit RegisterEPC_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterEPC_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::EPC, 0, 32, 0);
 	}
@@ -441,13 +457,13 @@ public:
 /*
 The PRId register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 77.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-7 (length 8): "Rev".
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterPRId_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterPRId_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -456,7 +472,7 @@ public:
 		static constexpr auto Imp = "Imp";
 	};
 
-	explicit RegisterPRId_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterPRId_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::Rev, 0, 8, 1);
 		registerField(Fields::Imp, 8, 15, 0x2E);
@@ -466,7 +482,7 @@ public:
 /*
 The Config register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 78.
-		
+
 Bitfield map (defined as constants in the class below):
 - Bits 0-2 (length 3): "K0".
 - Bits 3-5 (length 3): Constant 0.
@@ -482,7 +498,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 28-30 (length 3): "EC".
 - Bits 31 (length 1): Constant 0.
 */
-class RegisterConfig_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterConfig_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -498,7 +514,7 @@ public:
 		static constexpr auto EC = "EC";
 	};
 
-	explicit RegisterConfig_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterConfig_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::K0, 0, 3, 0);
 		registerField(Fields::DC, 6, 3, 0);
@@ -520,7 +536,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-3 (length 4): Constant 0.
 - Bits 4-31 (length 28): "BadPAddr".
 */
-class RegisterBadPAddr_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterBadPAddr_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -528,7 +544,7 @@ public:
 		static constexpr auto BadPAddr = "BadPAddr";
 	};
 
-	explicit RegisterBadPAddr_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterBadPAddr_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::BadPAddr, 4, 28, 0);
 	}
@@ -561,7 +577,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "DRE".
 - Bits 31 (length 1): "IAE".
 */
-class RegisterBPC_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterBPC_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -586,7 +602,7 @@ public:
 		static constexpr auto IAE = "IAE";
 	};
 
-	explicit RegisterBPC_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterBPC_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::IAB, 0, 1, 0);
 		registerField(Fields::DRB, 1, 1, 0);
@@ -616,7 +632,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 81
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IAB".
 */
-class RegisterIAB_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterIAB_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -624,7 +640,7 @@ public:
 		static constexpr auto IAB = "IAB";
 	};
 
-	explicit RegisterIAB_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterIAB_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::IAB, 0, 32, 0);
 	}
@@ -637,7 +653,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 81
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IABM".
 */
-class RegisterIABM_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterIABM_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -645,7 +661,7 @@ public:
 		static constexpr auto IABM = "IABM";
 	};
 
-	explicit RegisterIABM_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterIABM_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::IABM, 0, 32, 0);
 	}
@@ -658,7 +674,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 82
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DAB".
 */
-class RegisterDAB_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterDAB_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -666,7 +682,7 @@ public:
 		static constexpr auto DAB = "DAB";
 	};
 
-	explicit RegisterDAB_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterDAB_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::DAB, 0, 32, 0);
 	}
@@ -679,7 +695,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 82
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DABM".
 */
-class RegisterDABM_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterDABM_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -687,7 +703,7 @@ public:
 		static constexpr auto DABM = "DABM";
 	};
 
-	explicit RegisterDABM_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterDABM_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::DABM, 0, 32, 0);
 	}
@@ -700,7 +716,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 83
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVB".
 */
-class RegisterDVB_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterDVB_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -708,7 +724,7 @@ public:
 		static constexpr auto DVB = "DVB";
 	};
 
-	explicit RegisterDVB_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterDVB_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::DVB, 0, 32, 0);
 	}
@@ -721,7 +737,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 83
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVBM".
 */
-class RegisterDVBM_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterDVBM_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -729,7 +745,7 @@ public:
 		static constexpr auto DVBM = "DVBM";
 	};
 
-	explicit RegisterDVBM_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterDVBM_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::DVBM, 0, 32, 0);
 	}
@@ -755,7 +771,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 20-30 (length 11): Constant 0.
 - Bits 31 (length 1): "CTE".
 */
-class RegisterPCCR_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterPCCR_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -773,7 +789,7 @@ public:
 		static constexpr auto CTE = "CTE";
 	};
 
-	explicit RegisterPCCR_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterPCCR_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::EXL0, 1, 1, 0);
 		registerField(Fields::K0, 2, 1, 0);
@@ -797,7 +813,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR0_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterPCR0_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -806,7 +822,7 @@ public:
 		static constexpr auto OVFL = "OVFL";
 	};
 
-	explicit RegisterPCR0_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterPCR0_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::VALUE, 0, 31, 0);
 		registerField(Fields::OVFL, 31, 1, 0);
@@ -821,7 +837,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR1_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterPCR1_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -830,7 +846,7 @@ public:
 		static constexpr auto OVFL = "OVFL";
 	};
 
-	explicit RegisterPCR1_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterPCR1_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::VALUE, 0, 31, 0);
 		registerField(Fields::OVFL, 31, 1, 0);
@@ -852,7 +868,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagLo_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterTagLo_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -864,7 +880,7 @@ public:
 		static constexpr auto PTagLo = "PTagLo";
 	};
 
-	explicit RegisterTagLo_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterTagLo_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::L, 3, 1, 0);
 		registerField(Fields::R, 4, 1, 0);
@@ -889,7 +905,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagHi_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterTagHi_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -901,7 +917,7 @@ public:
 		static constexpr auto PTagHi = "PTagHi";
 	};
 
-	explicit RegisterTagHi_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterTagHi_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::L, 3, 1, 0);
 		registerField(Fields::R, 4, 1, 0);
@@ -918,7 +934,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 88
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "ErrorEPC".
 */
-class RegisterErrorEPC_t : public PS2ResourcesSubobject, public BitfieldRegister32_t
+class RegisterErrorEPC_t : public COP0BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -926,7 +942,7 @@ public:
 		static constexpr auto ErrorEPC = "ErrorEPC";
 	};
 
-	explicit RegisterErrorEPC_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
+	explicit RegisterErrorEPC_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::ErrorEPC, 0, 32, 0);
 	}

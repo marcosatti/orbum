@@ -17,7 +17,7 @@ All of the available field functions are listed in the BitfieldRegister32_t clas
 */
 
 /*
-The class below is a convenience subclass for the COP1 registers - tt checks that COP1 is usable before performing the function.
+The class below is a convenience subclass for the COP1 registers - it checks that COP1 is usable before performing the function.
 */
 class COP1BitfieldRegister32_t : public BitfieldRegister32_t, public COP1ResourcesSubobject
 {

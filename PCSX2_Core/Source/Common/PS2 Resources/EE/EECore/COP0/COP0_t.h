@@ -77,4 +77,17 @@ public:
 	std::shared_ptr<RegisterPCR0_t>		PCR0		= std::make_shared<RegisterPCR0_t>(getRootResources());     // r38: Performance counter.
 	std::shared_ptr<RegisterPCR1_t>		PCR1		= std::make_shared<RegisterPCR1_t>(getRootResources());     // r39: Performance counter.
 
+	// Array of above registers (needed by some EECore instructions to access by index). Generally you will never access registers through this, only the PS2 OS will.
+	const std::shared_ptr<COP0BitfieldRegister32_t> BitfieldRegisters[32] = {
+		Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, reserved0, BadVAddr, Count, EntryHi, Compare, Status, Cause, EPC, PRId, Config, reserved1, reserved2, reserved3, reserved4, reserved5, reserved6, BadPAddr, BPC, PCCR, reserved7, reserved8, TagLo, TagHi, ErrorEPC, reserved9
+	};
+	// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
+	const std::shared_ptr<COP0BitfieldRegister32_t> PCRRegisters[2] = {
+		PCR0, PCR1
+	};
+
+	/*
+	Checks if the COP0 coprocessor is usable. Throws a PS2Exception_t(coprocessor unusable) if not available.
+	*/
+	bool isCOP0Usable() const;
 };

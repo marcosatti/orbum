@@ -173,3 +173,4 @@ void InterpreterEECore::SWC1()
 	u32 PS2VirtualAddress = (source1Reg->readWordU(0) + imm);
 	getMMUHandler()->writeWordU(PS2VirtualAddress, source2Reg->readWordU());
 }
+

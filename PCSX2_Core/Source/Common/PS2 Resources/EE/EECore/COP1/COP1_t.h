@@ -45,8 +45,13 @@ public:
 	std::shared_ptr<RegisterIRR_t> IRR = std::make_shared<RegisterIRR_t>(getRootResources()); // Also known as FCR[0].
 	std::shared_ptr<RegisterCSR_t> CSR = std::make_shared<RegisterCSR_t>(getRootResources()); // Also known as FCR[31].
 
+	// Array of above registers (needed by some EECore instructions to access by index). Generally you will never access registers through this, only the PS2 OS will.
+	const std::shared_ptr<COP1BitfieldRegister32_t> BitfieldRegisters[32] = {
+		IRR, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, CSR
+	};
+
 	/*
-	Checks if the FPU coprocessor (COP1) is unusable. Throws a PS2Exception_t(coprocessor unusable) if not available.
+	Checks if the FPU coprocessor (COP1) is usable. Throws a PS2Exception_t(coprocessor unusable) if not available.
 	*/
 	bool isCOP1Usable() const;
 private:
