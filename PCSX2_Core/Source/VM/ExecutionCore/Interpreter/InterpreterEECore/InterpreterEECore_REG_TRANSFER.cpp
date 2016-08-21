@@ -112,6 +112,38 @@ void InterpreterEECore::PMFHI()
 	destReg->writeDwordU(1, source1Reg->readDwordU(1));
 }
 
+void InterpreterEECore::PMFHL()
+{
+	switch (getInstruction().getRShamt())
+	{
+	case 0x0:
+	{
+		PMFHL_LW();
+		break;
+	}
+	case 0x1:
+	{
+		PMFHL_UW();
+		break;
+	}
+	case 0x2:
+	{
+		PMFHL_SLW();
+		break;
+	}
+	case 0x3:
+	{
+		PMFHL_LH();
+		break;
+	}
+	case 0x4:
+	{
+		PMFHL_SH();
+		break;
+	}
+	}
+}
+
 void InterpreterEECore::PMFHL_LH()
 {
 	// Rd = (HI, LO). No exceptions.

@@ -43,6 +43,8 @@ public:
 				static constexpr u32 MASK_PAGE_SIZE_16MB = 4095;
 
 				static constexpr u32 SIZE_TLB_ENTRIES = 48;
+				static constexpr u32 MASK_VPN2_FIELD = 0x0007F000;
+
 				static constexpr u32 VADDRESS_USER_UPPER_BOUND = 0x7FFFFFFF; // Memory segment 'useg'.
 				static constexpr u32 VADDRESS_USER_LOWER_BOUND = 0x00000000; 
 

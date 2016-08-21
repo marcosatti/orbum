@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cstdio>
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Constants/PS2Constants.h"
@@ -11,14 +12,27 @@ class BootROM_t : public PS2ResourcesSubobject
 public:
 	explicit BootROM_t(const PS2Resources_t *const PS2Resources) : 
 		PS2ResourcesSubobject(PS2Resources),
-		bootROM(std::make_shared<u8*>(new u8[PS2Constants::SIZE_BOOT_ROM]))
+		mBootROM(new u8[PS2Constants::SIZE_BOOT_ROM])
 	{
+#if defined(BUILD_DEBUG)
+		char message[1000];
+		sprintf_s(message, 1000, "BootROM allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(getBaseAddress()));
+		logDebug(message);
+#endif
+
+		// Set memory to zero.
+		memset(getBaseAddress(), 0, PS2Constants::SIZE_BOOT_ROM);
+	}
+
+	~BootROM_t()
+	{
+		delete[] mBootROM;
 	}
 
 	void * getBaseAddress() const
 	{
-		return reinterpret_cast<void*>(bootROM.get());
+		return reinterpret_cast<void*>(mBootROM);
 	}
 private:
-	const std::shared_ptr<u8*> bootROM;
+	u8 *const mBootROM;
 };

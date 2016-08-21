@@ -20,7 +20,7 @@ void InterpreterEECore::SB()
 
 void InterpreterEECore::SD()
 {
-	// MEM[UD] = Rd. Exceptions generated through other components.
+	// MEM[UD] = Rt. Exceptions generated through other components.
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()]; // "Base"
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 	const s16 imm = getInstruction().getIImmS();

@@ -34,7 +34,7 @@ public:
 	Returns the opcode field of the instruction.
 	The opcode field is always located at bits 26-31 of the instruction.
 	*/
-	INLINE u8 getOpcode() const;
+	u8 getOpcode() const;
 
 	/*
 	Get functions for the various R instruction fields:
@@ -44,11 +44,11 @@ public:
 	- shamt (shift amount)  @ bits 6-10
 	- funct (function)		@ bits 0-5
 	*/
-	INLINE u8 getRRs() const;
-	INLINE u8 getRRt() const;
-	INLINE u8 getRRd() const;
-	INLINE u8 getRShamt() const;
-	INLINE u8 getRFunct() const;
+	u8 getRRs() const;
+	u8 getRRt() const;
+	u8 getRRd() const;
+	u8 getRShamt() const;
+	u8 getRFunct() const;
 	
 	/*
 	Get functions for the various J instruction fields:
@@ -59,8 +59,8 @@ public:
 	- getOffsetAddress returns the raw pseudo-address contained in the instruction.
 	- getAddress returns the real address based on the pseudo-address and the other factors mentioned above.
 	*/
-	INLINE s32 getJOffsetAddress() const;
-	INLINE u32 getJJumpAddress(Register32_t& PC) const;
+	s32 getJOffsetAddress() const;
+	u32 getJJumpAddress(Register32_t& PC) const;
 
 	/*
 	Get functions for the various I instruction fields:
@@ -72,11 +72,11 @@ public:
 	A branch address calculation function is provided based on the signed IMM value shitfted left by 2, added to the PC of the next instruction (branch delay slot).
 	A convenience get trap code function (from a valid trap instruction such as TEQ) is available (from bits 6-15 of IMM).
 	*/
-	INLINE u8 getIRs() const;
-	INLINE u8 getIRt() const;
-	INLINE u16 getIImmU() const;
-	INLINE s16 getIImmS() const;
-	INLINE u8 getIImmSignBit() const;
-	INLINE u32 getIBranchAddress(Register32_t& PC) const;
-	INLINE u16 getITrapCode() const;
+	u8 getIRs() const;
+	u8 getIRt() const;
+	u16 getIImmU() const;
+	s16 getIImmS() const;
+	u8 getIImmSignBit() const;
+	u32 getIBranchAddress(Register32_t& PC) const;
+	u16 getITrapCode() const;
 };

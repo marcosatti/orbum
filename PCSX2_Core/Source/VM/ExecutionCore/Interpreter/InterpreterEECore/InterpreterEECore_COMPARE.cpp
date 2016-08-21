@@ -120,7 +120,7 @@ void InterpreterEECore::PCEQW()
 	}
 }
 
-void InterpreterEECore::PCETB()
+void InterpreterEECore::PCGTB()
 {
 	// Rd = SignExtended<u8>((Rs > Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
@@ -137,7 +137,7 @@ void InterpreterEECore::PCETB()
 	}
 }
 
-void InterpreterEECore::PCETH()
+void InterpreterEECore::PCGTH()
 {
 	// Rd = SignExtended<u16>((Rs > Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
@@ -154,7 +154,7 @@ void InterpreterEECore::PCETH()
 	}
 }
 
-void InterpreterEECore::PCETW()
+void InterpreterEECore::PCGTW()
 {
 	// Rd = SignExtended<u32>((Rs > Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.

@@ -11,6 +11,6 @@ COP0ResourcesSubobject::COP0ResourcesSubobject(const PS2Resources_t* const PS2Re
 
 void COP0ResourcesSubobject::checkCOP0Usable() const
 {
-	if (!getRootResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getRootResources()->EE->EECore->COP0->isCOP0Usable())
 		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_COPROCESSOR_UNUSABLE);
 }

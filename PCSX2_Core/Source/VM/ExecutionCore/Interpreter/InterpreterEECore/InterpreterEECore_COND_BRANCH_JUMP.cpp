@@ -14,7 +14,7 @@ void InterpreterEECore::BEQ()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) == source2Reg->readDwordS(0))
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BEQL()
@@ -25,7 +25,7 @@ void InterpreterEECore::BEQL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) == source2Reg->readDwordS(0))
-		;// branch likely 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BGEZ()
@@ -35,7 +35,7 @@ void InterpreterEECore::BGEZ()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) >= 0)
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BGEZL()
@@ -45,7 +45,7 @@ void InterpreterEECore::BGEZL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) >= 0)
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BGTZ()
@@ -55,7 +55,7 @@ void InterpreterEECore::BGTZ()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) > 0)
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BGTZL()
@@ -65,7 +65,7 @@ void InterpreterEECore::BGTZL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) > 0)
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BLEZ()
@@ -75,7 +75,7 @@ void InterpreterEECore::BLEZ()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) <= 0)
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BLEZL()
@@ -85,7 +85,7 @@ void InterpreterEECore::BLEZL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) <= 0)
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BLTZ()
@@ -95,7 +95,7 @@ void InterpreterEECore::BLTZ()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) < 0)
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BLTZL()
@@ -105,7 +105,7 @@ void InterpreterEECore::BLTZL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) < 0)
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BNE()
@@ -115,7 +115,7 @@ void InterpreterEECore::BNE()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) != 0)
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BNEL()
@@ -125,7 +125,7 @@ void InterpreterEECore::BNEL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (source1Reg->readDwordS(0) != 0)
-		;// branch likely;
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BC0F()
@@ -136,7 +136,11 @@ void InterpreterEECore::BC0F()
 
 	// if (CPCOND0 == false)
 		// branch; 
+#if defined(BUILD_DEBUG)
+	logDebug("BC0F: Not implemented.");
+#else
 	throw std::runtime_error("BC0F: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC0FL()
@@ -147,7 +151,11 @@ void InterpreterEECore::BC0FL()
 
 	// if (CPCOND0 == false)
 		// branch likely; 
-	throw std::runtime_error("BC0F: Not implemented.");
+#if defined(BUILD_DEBUG)
+	logDebug("BC0FL: Not implemented.");
+#else
+	throw std::runtime_error("BC0FL: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC0T()
@@ -158,7 +166,11 @@ void InterpreterEECore::BC0T()
 
 	// if (CPCOND0 == true)
 	// branch; 
+#if defined(BUILD_DEBUG)
+	logDebug("BC0T: Not implemented.");
+#else
 	throw std::runtime_error("BC0T: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC0TL()
@@ -169,7 +181,11 @@ void InterpreterEECore::BC0TL()
 
 	// if (CPCOND0 == true)
 	// branch likely; 
+#if defined(BUILD_DEBUG)
+	logDebug("BC0TL: Not implemented.");
+#else
 	throw std::runtime_error("BC0TL: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC1F()
@@ -178,7 +194,7 @@ void InterpreterEECore::BC1F()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 0)
-		;// branch;
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BC1FL()
@@ -187,7 +203,7 @@ void InterpreterEECore::BC1FL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 0)
-		;// branch likely;
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BC1T()
@@ -196,7 +212,7 @@ void InterpreterEECore::BC1T()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 1)
-		;// branch;
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BC1TL()
@@ -205,43 +221,59 @@ void InterpreterEECore::BC1TL()
 	const s16 offset = getInstruction().getIImmS();
 
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 1)
-		;// branch likely;
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BC2F()
 {
 	// TODO: Implement.
+#if defined(BUILD_DEBUG)
+	logDebug("BC2F: Not implemented.");
+#else
 	throw std::runtime_error("BC2F: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC2FL()
 {
 	// TODO: Implement.
+#if defined(BUILD_DEBUG)
+	logDebug("BC2FL: Not implemented.");
+#else
 	throw std::runtime_error("BC2FL: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC2T()
 {
 	// TODO: Implement.
+#if defined(BUILD_DEBUG)
+	logDebug("BC2T: Not implemented.");
+#else
 	throw std::runtime_error("BC2T: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::BC2TL()
 {
 	// TODO: Implement.
+#if defined(BUILD_DEBUG)
+	logDebug("BC2TL: Not implemented.");
+#else
 	throw std::runtime_error("BC2TL: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::J()
 {
 	// JUMP(). No Exceptions.
 	const s32 offset = getInstruction().getJOffsetAddress();
-	// branch; 
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJOffset(offset, 1);
 }
 
 void InterpreterEECore::JR()
 {
 	// JUMP(). Exceptions generated by other components.
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	// branch to address in source1Reg->readWordU(0);
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(source1Reg->readWordU(0), 1);
 }

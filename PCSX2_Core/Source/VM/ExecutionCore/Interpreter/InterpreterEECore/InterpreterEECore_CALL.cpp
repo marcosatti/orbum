@@ -15,7 +15,7 @@ void InterpreterEECore::BGEZAL()
 	if (source1Reg->readDwordS(0) >= 0)
 	{
 		getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 }
 
@@ -28,7 +28,7 @@ void InterpreterEECore::BGEZALL()
 	if (source1Reg->readDwordS(0) >= 0)
 	{
 		getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 }
 
@@ -41,7 +41,7 @@ void InterpreterEECore::BLTZAL()
 	if (source1Reg->readDwordS(0) < 0)
 	{
 		getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		;// branch; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 }
 
@@ -54,7 +54,7 @@ void InterpreterEECore::BLTZALL()
 	if (source1Reg->readDwordS(0) < 0)
 	{
 		getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		;// branch likely; 
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 }
 
@@ -63,7 +63,7 @@ void InterpreterEECore::JAL()
 	// JUMP_LINK(). No exceptions.
 	getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
 	const s32 offset = getInstruction().getJOffsetAddress();
-	// branch; 
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJOffset(offset, 1);
 }
 
 void InterpreterEECore::JALR()
@@ -73,5 +73,5 @@ void InterpreterEECore::JALR()
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, static_cast<u64>(getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() + 8));
-	// branch to address in sourceReg->readWordU(0);
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWordU(0), 1);
 }

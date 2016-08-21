@@ -326,7 +326,7 @@ void InterpreterEECore::QFSRV()
 {
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.
-	// TODO: check this getInstruction()... were they high when they created this???
+	// TODO: check this instruction... were they high when they created this???
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];

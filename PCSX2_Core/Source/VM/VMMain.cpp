@@ -25,27 +25,31 @@ void VMMain::LoadExecutable(std::string&& excutablePath) const
 
 void VMMain::Reset()
 {
-	// TODO: Implement.
-
 	// Initalise VM.
 	initaliseResources();
 	initaliseExecutionCore();
 	initalisePS2MemoryMap();
+
+	// Initiaise BIOS (BootROM).
+	initaliseBootROM();
 	
 	// Initalise the execution core.
 	mExecutionCoreComponent->initalise();
 }
 
-void VMMain::Run() const
+void VMMain::Run()
 {
-	// TODO: Implement	
-	while (getStatus() == VMMain::VMStatus::RUNNING)
+	// Set to running.
+	mStatus = VMStatus::RUNNING;
+
+	// Run the VM.
+	while (mStatus == VMStatus::RUNNING)
 	{
 		mExecutionCoreComponent->executionStep();
 	}
 }
 
-void VMMain::Stop() const
+void VMMain::Stop()
 {
 	// TODO: Implement.
 }

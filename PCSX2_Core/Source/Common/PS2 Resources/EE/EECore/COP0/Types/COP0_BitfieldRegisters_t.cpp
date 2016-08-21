@@ -14,9 +14,19 @@ u32 COP0BitfieldRegister32_t::getFieldValue(const std::string& fieldName)
 	return BitfieldRegister32_t::getFieldValue(fieldName);
 }
 
+u32 COP0BitfieldRegister32_t::getRawFieldValue(const std::string& fieldName)
+{
+	return BitfieldRegister32_t::getFieldValue(fieldName);
+}
+
 void COP0BitfieldRegister32_t::setFieldValue(const std::string& fieldName, const u32& value)
 {
 	checkCOP0Usable();
+	BitfieldRegister32_t::setFieldValue(fieldName, value);
+}
+
+void COP0BitfieldRegister32_t::setRawFieldValue(const std::string& fieldName, const u32& value)
+{
 	BitfieldRegister32_t::setFieldValue(fieldName, value);
 }
 

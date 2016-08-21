@@ -115,7 +115,6 @@ void InterpreterEECore::LUI()
 {
 	// Rd = Imm << 16. Exceptions generated through other components.
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()]; // "Base"
 	const s16 imm = getInstruction().getIImmS();
 
 	destReg->writeDwordS(0, static_cast<s64>(imm << 16));

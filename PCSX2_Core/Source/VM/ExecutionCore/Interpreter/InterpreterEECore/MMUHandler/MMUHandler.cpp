@@ -4,10 +4,12 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "VM/VMMain.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "Common/Types/PS2Exception/PS2Exception_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/MMU/MMU_t.h"
 
+using TLBEntryInformation = MMU_t::TLBEntryInformation;
 
 MMUHandler::MMUHandler(const VMMain *const vmMain) : VMExecutionCoreComponent(vmMain)
 {
@@ -124,9 +126,9 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, cons
 	// BIG NOTE: where the lower bound of memory segments is 0x00000000, it has been omitted from the test statement (as it is implied through the use of u32).
 
 	// Provide convencience access to these variables (KSU, ERL, EXL).
-	auto KSU = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::KSU);
-	auto ERL = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL);
-	auto EXL = getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL);
+	const u32 & KSU = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::KSU);
+	const u32 & ERL = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::ERL);
+	const u32 & EXL = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::EXL);
 
 	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
@@ -210,11 +212,10 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, cons
 {
 	// Stage 2 is to search through the TLB to see if there is a VPN match. 
 	// Check if its in the TLB and get the information.
-	s32 index = getTLBIndex(PS2VirtualAddress);
+	s32 index = getVM()->getResources()->EE->EECore->R5900->MMU->findTLBIndex(PS2VirtualAddress);
 	if (index == -1)
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
-		// Throw address error if not within bounds.
 		if (accessType == READ) 
 			throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD);
 		else if (accessType == WRITE) 
@@ -222,13 +223,13 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, cons
 		else 
 			throw std::runtime_error("MMUHandler: could not throw internal PS2Exception_t error (type = tlb refill).");
 	}
-	auto tlbEntry = mTLBEntries[index];
+	TLBEntryInformation tlbEntry = getVM()->getResources()->EE->EECore->R5900->MMU->getTLBEntry(index);
 
 	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
 	if (tlbEntry.mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID) != tlbEntry.mASID)
+		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getRawFieldValue(RegisterEntryHi_t::Fields::ASID) != tlbEntry.mASID)
 		{
 			// Generate TLB refill exception.
 			if (accessType == READ) 
@@ -347,33 +348,4 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, 
 	// Combine PFN with offset using the TLB entry mask.
 	u32 PFNBitPos = static_cast<u32>(log2(tlbEntry.mMask + 1));
 	return ((tlbEntry.mPFNEven << PFNBitPos) || (PS2VirtualAddress & tlbEntry.mMask));
-}
-
-s32 MMUHandler::getTLBIndex(u32 PS2VirtualAddress) const
-{
-	// Since the VPN can be a number of sizes, we start with the largest page size of 16MB or the most significant 8 bits (which means smallest VPN number) and search for that.
-	// If a match is found, then we get the proper page size from the TLB entry and check to see if the VA is within the page. If not we continue searching.
-	// Note that the TLB entries' VPN are stored as VPN / 2 (aka VPN2), so we need to search by using the same. This is done as each VPN represents 2 physical pages (named 'even' and 'odd').
-	//  Therefore the LSB of the VPN is ommitted and only 19 bits are used at most. I am not 100% sure on the details on this, however. If the above is true, then we need to search using the
-	//  last 7 bits.
-	u32 searchVPN2 = (PS2VirtualAddress >> 25); // End up with 7 bits. Normally this would be ((value >> 24) / 2) but dividing by 2 is exactly the same as shifting it right by 1 (ie: >> 25).
-	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::SIZE_TLB_ENTRIES; i++)
-	{
-		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18), so we need to mask out bits 12-18 (length 7).
-		auto tlbEntry = mTLBEntries[i];
-		u32 tlbMaskedVPN2 = tlbEntry.mVPN2 & MASK_VPN2_FIELD;
-		if (searchVPN2 == tlbMaskedVPN2)
-		{
-			// A potential match was found. Need to now check if the VPN is actually correct by using the TLB entry mask.
-			u32 realVPN2 = (PS2VirtualAddress & ~tlbEntry.mMask) / 2;
-			if (realVPN2 == tlbEntry.mVPN2)
-			{
-				// A match was found. I will assume that there will never be 2 entries with the same VPN.
-				return i;
-			}
-		}
-	}
-
-	// No match was found, return -1 for the caller to deal with.
-	return -1;
 }

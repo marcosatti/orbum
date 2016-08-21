@@ -52,10 +52,10 @@ public:
 	void Reset();
 
 	// Run
-	void Run() const;
+	void Run();
 
 	// Run
-	void Stop() const;
+	void Stop();
 
 	// Destroy
 	~VMMain();

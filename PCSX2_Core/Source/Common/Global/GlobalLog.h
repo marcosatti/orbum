@@ -7,6 +7,6 @@ Global logging functions.
 */
 
 #if defined(BUILD_DEBUG)
-INLINE void logDebug(const char * message);
+void logDebug(char * message);
 #endif
-INLINE void logInfo(const char * message);
+void logInfo(char * message);

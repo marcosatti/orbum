@@ -140,18 +140,18 @@ void InterpreterEECore::TNEI()
 
 void InterpreterEECore::ERET()
 {
-	// ERET is an outlier, where it does not cause a branch delay instruction to be executed.
+	// ERET is an outlier, where it does not cause a branch delay instruction to be executed. However, still use the R5900->setBranchDelay* functions with cycles = 0.
 	// ERET()
 	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL) == 1)
 	{
 		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC);
-		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(pcValue);
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
 		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 0);
 	}
 	else
 	{
 		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->EPC->getFieldValue(RegisterEPC_t::Fields::EPC);
-		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(pcValue);
+		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
 		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::EXL, 0);
 	}
 }

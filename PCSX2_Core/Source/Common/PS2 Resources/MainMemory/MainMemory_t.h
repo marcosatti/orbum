@@ -11,15 +11,28 @@ class MainMemory_t : public PS2ResourcesSubobject
 public:
 	explicit MainMemory_t(const PS2Resources_t *const PS2Resources) : 
 		PS2ResourcesSubobject(PS2Resources),
-		mainMemory(std::make_shared<u8*>(new u8[PS2Constants::SIZE_MAIN_MEMORY]))
+		mMainMemory(new u8[PS2Constants::SIZE_MAIN_MEMORY])
 	{
+#if defined(BUILD_DEBUG)
+		char message[1000];
+		sprintf_s(message, 1000, "MainMemory allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(getBaseAddress()));
+		logDebug(message);
+#endif
+
+		// Set memory to zero.
+		memset(getBaseAddress(), 0, PS2Constants::SIZE_MAIN_MEMORY);
+	}
+
+	~MainMemory_t()
+	{
+		delete[] mMainMemory;
 	}
 
 	void * getBaseAddress() const
 	{
-		return reinterpret_cast<void*>(mainMemory.get());
+		return reinterpret_cast<void*>(mMainMemory);
 	}
 
 private:
-	const std::shared_ptr<u8*> mainMemory;
+	u8 *const mMainMemory;
 };

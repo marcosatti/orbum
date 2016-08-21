@@ -1,20 +1,20 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/MMU/MMU_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 
 class R5900_t : public PS2ResourcesSubobject
 {
 public:
-	explicit R5900_t(const PS2Resources_t* const PS2Resources)
-		: PS2ResourcesSubobject(PS2Resources)
-	{
-	}
+	explicit R5900_t(const PS2Resources_t* const PS2Resources);
 
 	/*
 	The R5900 is the EE Core's CPU. It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
@@ -24,19 +24,18 @@ public:
 	// CPU state implementations.
 
 	/*
-	The branch delay slot toggle. If the flag is set to true, next cycle will execute the instruction contained at the address mBranchDelaySlotInstructionPC.
-	Use the function provided to set the flag, which will automatically assign the correct branch delay instruction address.
+	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles), then 
+	 call checkBranchDelaySlot() to check if its time for the branch to happen - if cycles == 0, it will set the PC to the held value automatically.
+	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
+	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
 	*/
-	bool mIsInBranchDelaySlot;
-	u32 mBranchDelaySlotInstructionPC;
-
-	void setBranchDelaySlotInstruction()
-	{
-
-		mIsInBranchDelaySlot = true;
-		mBranchDelaySlotInstructionPC = PC->getPCValue() + Constants::SIZE_MIPS_INSTRUCTION;
-
-	}
+	bool mIsBranchDelayPending;
+	u8 mBranchDelayCycles;
+	u32 mBranchDelayPCTarget;
+	void setBranchDelayPCTarget(u32 pcTarget, u8 cycles);
+	void setBranchDelayPCJOffset(s32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
+	void setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles); // Convenience function for MIPS I Instruction types.
+	void checkBranchDelaySlot();
 
 	// Register implementations.
 
@@ -87,5 +86,8 @@ public:
 	Some convience functions are provided for manipulating this value.
 	*/
 	std::shared_ptr<PCRegister32_t> PC = std::make_shared<PCRegister32_t>();
+
+	// MMU Implementation
+	std::shared_ptr<MMU_t> MMU = std::make_shared<MMU_t>(getRootResources());
 
 }; // class R5900

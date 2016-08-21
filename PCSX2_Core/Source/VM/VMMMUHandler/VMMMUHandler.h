@@ -78,14 +78,14 @@ public:
 
 	clientMemoryAddress = Base address of memory to map (ie: parse the base address of a block of memory allocated in code).
 	clientMemoryLength = Length of memory parsed into clientMemoryAddress. This will be used to divide the map into pages.
-	PS2MemoryAddress = The PS2 "physical" address which will be mapped.
+	PS2PhysicalAddress = The PS2 "physical" address which will be mapped.
 	*/
-	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const override;
+	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2PhysicalAddress) const override;
 
 	/*
 	Translates the given PS2 physical address to the client memory address by using the page table.
 	*/
-	void* getclientMemoryAddress(u32 PS2MemoryAddress) const;
+	void* getclientMemoryAddress(u32 PS2PhysicalAddress) const;
 
 	/*
 	These functions, given a PS2 "physical" address, will read or write a value from/to the address.
@@ -161,7 +161,7 @@ private:
 	 - The page offset in a directory.
 	 - Allocate a new directory of pages if it doesnt exist.
 	*/
-	INLINE u32 getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
-	INLINE u32 getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
-	INLINE void allocDirectory(u32 directoryIndex) const;
+	u32 getAbsDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
+	u32 getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
+	void allocDirectory(u32 directoryIndex) const;
 };

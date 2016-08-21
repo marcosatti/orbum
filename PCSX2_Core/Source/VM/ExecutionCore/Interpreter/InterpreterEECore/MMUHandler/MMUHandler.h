@@ -3,9 +3,11 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Constants/PS2Constants.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/MMU/MMU_t.h"
 
 class VMMain;
+
+using TLBEntryInformation = MMU_t::TLBEntryInformation;
 
 /*
 MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB).
@@ -49,38 +51,7 @@ public:
 	u32 getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const;
 
 private:
-	/*
-	TLB entry information. Used as the backbone of storing information in the TLB.
-	A TLB entry is heavily related to the COP0 registers Entry{Hi, Lo0, Lo1} and PageMask.
-	See EE Core Users Manual page 120 - 123 about the TLB.
-	*/
-	struct TLBEntryInformation
-	{
-		u32 mMask;
-		u32 mVPN2;
-		u32 mG;
-		u32 mASID;
-		u32 mS;
-		u32 mPFNOdd;
-		u32 mCOdd;
-		u32 mDOdd;
-		u32 mVOdd;
-		u32 mPFNEven;
-		u32 mCEven;
-		u32 mDEven;
-		u32 mVEven;
-	};
-
-	/*
-	Constants needed to figure out VPN2's etc.
-	*/
-	static constexpr u32 MASK_VPN2_FIELD = 0x0007F000;
-
-	/*
-	TLB entries. See EE Core Users Manual page 120.
-	In total there are 48 entries.
-	*/
-	TLBEntryInformation mTLBEntries[PS2Constants::EE::EECore::MMU::SIZE_TLB_ENTRIES];
+	
 
 	/*
 	Stage 2 of a physical address lookup. See diagram on EE Core Users Manual page 122.
@@ -101,11 +72,5 @@ private:
 	*/
 	u32 getPS2PhysicalAddress_Stage4Odd(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const;
 	u32 getPS2PhysicalAddress_Stage4Even(const u32 & PS2VirtualAddress, const AccessType & accessType, const TLBEntryInformation & tlbEntry) const;
-
-	/*
-	Performs an iterative lookup on the TLB for the given VPN contained in the PS2VirtualAddress.
-	A return value of -1 indicates an entry was not found. Any functions that call this may throw a TLB refill exception if an entry was not found (this function doesn't do this automatically).
-	*/
-	s32 getTLBIndex(u32 PS2VirtualAddress) const; // -1 indicates not found.
 };
 

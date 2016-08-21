@@ -6,7 +6,9 @@
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
+#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
+using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
 class PS2Resources_t;
 class VMMain;
@@ -44,6 +46,13 @@ private:
 	It is also used while an instruction is being performed.
 	*/
 	MIPSInstruction_t mInstruction;
+	const EECoreInstructionInfo_t * mInstructionInfo;
+
+	/*
+	Pre and Post instruction execution functions, to perform any additional actions.
+	*/
+	void executionStep_Pre() const;
+	void executionStep_Post() const;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
@@ -136,6 +145,7 @@ private:
 	void MADDA_S();
 	void MUL_S();
 	void MULA_S();
+	void DIV_S();
 	void MSUB_S();
 	void MSUBA_S();
 	void SUB_S();
@@ -186,7 +196,7 @@ private:
 	void PXOR();
 
 	/*
-	Logical Instructions. See InterpreterEECore_COMPARE.cpp for implementations (14 instructions total).
+	Compare Instructions. See InterpreterEECore_COMPARE.cpp for implementations (14 instructions total).
 	*/
 	void SLT(); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
 	void SLTI();
@@ -195,9 +205,9 @@ private:
 	void PCEQB();
 	void PCEQH();
 	void PCEQW();
-	void PCETB();
-	void PCETH();
-	void PCETW();
+	void PCGTB();
+	void PCGTH();
+	void PCGTW();
 	void C_EQ_S();
 	void C_F_S();
 	void C_LE_S();
@@ -270,6 +280,7 @@ private:
 	void MTHI1();
 	void MTLO1();
 	void PMFHI();
+	void PMFHL(); // Calls one of the sub functions below.
 	void PMFHL_LH();
 	void PMFHL_LW();
 	void PMFHL_SH();
@@ -405,19 +416,279 @@ private:
 	void ERET();
 
 	/*
-	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (4 instructions total).
+	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (5 instructions total).
 	*/
 	void SYNC_STYPE();
 	void PREF();
 	void DI();
 	void EI();
+	void CACHE();
 
 	/*
-	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. See EECoreInstructionUtil for more details.
+	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
+	See EECoreInstructionUtil and "EECore Instruction Implementation Register.xlsm" for more details.
 	*/
 	void(InterpreterEECore::*const EECORE_INSTRUCTION_TABLE[Constants::NUMBER_EECORE_INSTRUCTIONS])() = {
 		&InterpreterEECore::INSTRUCTION_UNKNOWN,
+		&InterpreterEECore::J,
+		&InterpreterEECore::JAL,
+		&InterpreterEECore::BEQ,
+		&InterpreterEECore::BNE,
+		&InterpreterEECore::BLEZ,
+		&InterpreterEECore::BGTZ,
+		&InterpreterEECore::ADDI,
+		&InterpreterEECore::ADDIU,
+		&InterpreterEECore::SLTI,
+		&InterpreterEECore::SLTIU,
+		&InterpreterEECore::ANDI,
+		&InterpreterEECore::ORI,
+		&InterpreterEECore::XORI,
+		&InterpreterEECore::LUI,
+		&InterpreterEECore::BEQL,
+		&InterpreterEECore::BNEL,
+		&InterpreterEECore::BLEZL,
+		&InterpreterEECore::BGTZL,
+		&InterpreterEECore::DADDI,
+		&InterpreterEECore::DADDIU,
+		&InterpreterEECore::LDL,
+		&InterpreterEECore::LDR,
+		&InterpreterEECore::LQ,
+		&InterpreterEECore::SQ,
+		&InterpreterEECore::LB,
+		&InterpreterEECore::LH,
+		&InterpreterEECore::LWL,
+		&InterpreterEECore::LW,
+		&InterpreterEECore::LBU,
+		&InterpreterEECore::LHU,
+		&InterpreterEECore::LWR,
+		&InterpreterEECore::LWU,
+		&InterpreterEECore::SB,
+		&InterpreterEECore::SH,
+		&InterpreterEECore::SWL,
+		&InterpreterEECore::SW,
+		&InterpreterEECore::SDL,
+		&InterpreterEECore::SDR,
+		&InterpreterEECore::SWR,
+		&InterpreterEECore::CACHE,
+		&InterpreterEECore::LWC1,
+		&InterpreterEECore::PREF,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &LQC2,
+		&InterpreterEECore::LD,
+		&InterpreterEECore::SWC1,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &SQC2,
+		&InterpreterEECore::SD,
+		&InterpreterEECore::SLL,
+		&InterpreterEECore::SRL,
+		&InterpreterEECore::SRA,
+		&InterpreterEECore::SLLV,
+		&InterpreterEECore::SRLV,
+		&InterpreterEECore::SRAV,
+		&InterpreterEECore::JR,
+		&InterpreterEECore::JALR,
+		&InterpreterEECore::MOVZ,
+		&InterpreterEECore::MOVN,
+		&InterpreterEECore::SYSCALL,
+		&InterpreterEECore::BREAK,
+		&InterpreterEECore::SYNC_STYPE,
+		&InterpreterEECore::MFHI,
+		&InterpreterEECore::MTHI,
+		&InterpreterEECore::MFLO,
+		&InterpreterEECore::MTLO,
+		&InterpreterEECore::DSLLV,
+		&InterpreterEECore::DSRLV,
+		&InterpreterEECore::DSRAV,
+		&InterpreterEECore::MULT,
+		&InterpreterEECore::MULTU,
+		&InterpreterEECore::DIV,
+		&InterpreterEECore::DIVU,
+		&InterpreterEECore::ADD,
+		&InterpreterEECore::ADDU,
+		&InterpreterEECore::SUB,
+		&InterpreterEECore::SUBU,
+		&InterpreterEECore::AND,
+		&InterpreterEECore::OR,
+		&InterpreterEECore::XOR,
+		&InterpreterEECore::NOR,
+		&InterpreterEECore::MFSA,
+		&InterpreterEECore::MTSA,
+		&InterpreterEECore::SLT,
+		&InterpreterEECore::SLTU,
+		&InterpreterEECore::DADD,
+		&InterpreterEECore::DADDU,
+		&InterpreterEECore::DSUB,
+		&InterpreterEECore::DSUBU,
+		&InterpreterEECore::TGE,
+		&InterpreterEECore::TGEU,
+		&InterpreterEECore::TLT,
+		&InterpreterEECore::TLTU,
+		&InterpreterEECore::TEQ,
+		&InterpreterEECore::TNE,
+		&InterpreterEECore::DSLL,
+		&InterpreterEECore::DSRL,
+		&InterpreterEECore::DSRA,
+		&InterpreterEECore::DSLL32,
+		&InterpreterEECore::DSRL32,
+		&InterpreterEECore::DSRA32,
+		&InterpreterEECore::BLTZ,
+		&InterpreterEECore::BGEZ,
+		&InterpreterEECore::BLTZL,
+		&InterpreterEECore::BGEZL,
+		&InterpreterEECore::TGEI,
+		&InterpreterEECore::TGEIU,
+		&InterpreterEECore::TLTI,
+		&InterpreterEECore::TLTIU,
+		&InterpreterEECore::TEQI,
+		&InterpreterEECore::TNEI,
+		&InterpreterEECore::BLTZAL,
+		&InterpreterEECore::BGEZAL,
+		&InterpreterEECore::BLTZALL,
+		&InterpreterEECore::BGEZALL,
+		&InterpreterEECore::MTSAB,
+		&InterpreterEECore::MTSAH,
+		&InterpreterEECore::MADD,
+		&InterpreterEECore::MADDU,
+		&InterpreterEECore::PLZCW,
+		&InterpreterEECore::MFHI1,
+		&InterpreterEECore::MTHI1,
+		&InterpreterEECore::MFLO1,
+		&InterpreterEECore::MTLO1,
+		&InterpreterEECore::MULT1,
+		&InterpreterEECore::MULTU1,
+		&InterpreterEECore::DIV1,
+		&InterpreterEECore::DIVU1,
+		&InterpreterEECore::MADD1,
+		&InterpreterEECore::MADDU1,
+		&InterpreterEECore::PMFHL,
+		&InterpreterEECore::PMTHL_LW, // &PMTHL,
+		&InterpreterEECore::PSLLH,
+		&InterpreterEECore::PSRLH,
+		&InterpreterEECore::PSRAH,
+		&InterpreterEECore::PSLLW,
+		&InterpreterEECore::PSRLW,
+		&InterpreterEECore::PSRAW,
+		&InterpreterEECore::PADDW,
+		&InterpreterEECore::PSUBW,
+		&InterpreterEECore::PCGTW,
+		&InterpreterEECore::PMAXW,
+		&InterpreterEECore::PADDH,
+		&InterpreterEECore::PSUBH,
+		&InterpreterEECore::PCGTH,
+		&InterpreterEECore::PMAXH,
+		&InterpreterEECore::PADDB,
+		&InterpreterEECore::PSUBB,
+		&InterpreterEECore::PCGTB,
+		&InterpreterEECore::PADDSW,
+		&InterpreterEECore::PSUBSW,
+		&InterpreterEECore::PEXTLW,
+		&InterpreterEECore::PPACW,
+		&InterpreterEECore::PADDSH,
+		&InterpreterEECore::PSUBSH,
+		&InterpreterEECore::PEXTLH,
+		&InterpreterEECore::PPACH,
+		&InterpreterEECore::PADDSB,
+		&InterpreterEECore::PSUBSB,
+		&InterpreterEECore::PEXTLB,
+		&InterpreterEECore::PPACB,
+		&InterpreterEECore::PEXT5,
+		&InterpreterEECore::PPAC5,
+		&InterpreterEECore::PABSW,
+		&InterpreterEECore::PCEQW,
+		&InterpreterEECore::PMINW,
+		&InterpreterEECore::PADSBH,
+		&InterpreterEECore::PABSH,
+		&InterpreterEECore::PCEQH,
+		&InterpreterEECore::PMINH,
+		&InterpreterEECore::PCEQB,
+		&InterpreterEECore::PADDUW,
+		&InterpreterEECore::PSUBUW,
+		&InterpreterEECore::PEXTUW,
+		&InterpreterEECore::PADDUH,
+		&InterpreterEECore::PSUBUH,
+		&InterpreterEECore::PEXTUH,
+		&InterpreterEECore::PADDUB,
+		&InterpreterEECore::PSUBUB,
+		&InterpreterEECore::PEXTUB,
+		&InterpreterEECore::QFSRV,
+		&InterpreterEECore::PMADDW,
+		&InterpreterEECore::PSLLVW,
+		&InterpreterEECore::PSRLVW,
+		&InterpreterEECore::PMSUBW,
+		&InterpreterEECore::PMFHI,
+		&InterpreterEECore::PMFLO,
+		&InterpreterEECore::PINTH,
+		&InterpreterEECore::PMULTW,
+		&InterpreterEECore::PDIVW,
+		&InterpreterEECore::PCPYLD,
+		&InterpreterEECore::PMADDH,
+		&InterpreterEECore::PHMADH,
+		&InterpreterEECore::PAND,
+		&InterpreterEECore::PXOR,
+		&InterpreterEECore::PMSUBH,
+		&InterpreterEECore::PHMSBH,
+		&InterpreterEECore::PEXEH,
+		&InterpreterEECore::PREVH,
+		&InterpreterEECore::PMULTH,
+		&InterpreterEECore::PDIVBW,
+		&InterpreterEECore::PEXEW,
+		&InterpreterEECore::PROT3W,
+		&InterpreterEECore::PMADDUW,
+		&InterpreterEECore::PSRAVW,
+		&InterpreterEECore::PMTHI,
+		&InterpreterEECore::PMTLO,
+		&InterpreterEECore::PINTEH,
+		&InterpreterEECore::PMULTUW,
+		&InterpreterEECore::PDIVUW,
+		&InterpreterEECore::PCPYUD,
+		&InterpreterEECore::POR,
+		&InterpreterEECore::PNOR,
+		&InterpreterEECore::PEXCH,
+		&InterpreterEECore::PCPYH,
+		&InterpreterEECore::PEXCW,
+		&InterpreterEECore::MFC0, // &MF0,
+		&InterpreterEECore::MTC0, // &MT0,
+		&InterpreterEECore::BC0F,
+		&InterpreterEECore::BC0T,
+		&InterpreterEECore::BC0FL,
+		&InterpreterEECore::BC0TL,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBR,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBWI,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBWR,
+		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBP,
+		&InterpreterEECore::ERET,
+		&InterpreterEECore::EI,
+		&InterpreterEECore::DI,
+		&InterpreterEECore::MFC1,
+		&InterpreterEECore::CFC1,
+		&InterpreterEECore::MTC1,
+		&InterpreterEECore::CTC1,
+		&InterpreterEECore::BC1F,
+		&InterpreterEECore::BC1T,
+		&InterpreterEECore::BC1FL,
+		&InterpreterEECore::BC1TL,
+		&InterpreterEECore::ADD_S, // &ADD,
+		&InterpreterEECore::SUB_S, // &SUB,
+		&InterpreterEECore::MUL_S, // &MUL,
+		&InterpreterEECore::DIV_S, // &DIV,
+		&InterpreterEECore::SQRT_S, // &SQRT,
+		&InterpreterEECore::ABS_S, // &ABS,
+		&InterpreterEECore::MOV_S, // &MOV,
+		&InterpreterEECore::NEG_S, // &NEG,
+		&InterpreterEECore::RSQRT_S, // &RSQRT,
+		&InterpreterEECore::ADDA_S, // &ADDA,
+		&InterpreterEECore::SUBA_S, // &SUBA,
+		&InterpreterEECore::MULA_S, // &MULA,
+		&InterpreterEECore::MADD_S, // &MADD,
+		&InterpreterEECore::MSUB_S, // &MSUB,
+		&InterpreterEECore::MADDA_S, // &MADDA,
+		&InterpreterEECore::MSUBA_S, // &MSUBA,
+		&InterpreterEECore::CVT_W_S, // &CVTW,
+		&InterpreterEECore::MAX_S, // &MAX,
+		&InterpreterEECore::MIN_S, // &MIN,
+		&InterpreterEECore::C_F_S, // &C_F,
+		&InterpreterEECore::C_EQ_S, // &C_EQ,
+		&InterpreterEECore::C_LT_S, // &C_LT,
+		&InterpreterEECore::C_LE_S, // &C_LE,
+		&InterpreterEECore::CVT_S_W // &CVTS,
 	};
-
 };
 

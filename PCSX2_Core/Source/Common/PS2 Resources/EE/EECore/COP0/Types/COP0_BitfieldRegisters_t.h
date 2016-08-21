@@ -27,7 +27,9 @@ public:
 	explicit COP0BitfieldRegister32_t(const PS2Resources_t* const PS2Resources);
 
 	u32 getFieldValue(const std::string &fieldName) override;
+	u32 getRawFieldValue(const std::string &fieldName); // Does not perform any checks compared to getFieldValue().
 	void setFieldValue(const std::string &fieldName, const u32 &value) override;
+	void setRawFieldValue(const std::string &fieldName, const u32 &value); // Does not perform any checks compared to setFieldValue().
 	u32 getRegisterValue() override;
 	void setRegisterValue(u32 value) override;
 };
@@ -373,7 +375,7 @@ public:
 	{
 		registerField(Fields::IE, 0, 1, 0);
 		registerField(Fields::EXL, 1, 1, 0);
-		registerField(Fields::ERL, 2, 1, 0);
+		registerField(Fields::ERL, 2, 1, 1);
 		registerField(Fields::KSU, 3, 2, 0);
 		registerField(Fields::IM, 5, 5, 0);
 		registerField(Fields::BEM, 12, 1, 0);
@@ -381,7 +383,7 @@ public:
 		registerField(Fields::EIE, 16, 1, 0);
 		registerField(Fields::EDI, 17, 1, 0);
 		registerField(Fields::CH, 18, 1, 0);
-		registerField(Fields::BEV, 22, 1, 0);
+		registerField(Fields::BEV, 22, 1, 1);
 		registerField(Fields::DEV, 23, 1, 0);
 		registerField(Fields::CU, 28, 4, 0);
 	}
@@ -517,8 +519,8 @@ public:
 	explicit RegisterConfig_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
 		registerField(Fields::K0, 0, 3, 0);
-		registerField(Fields::DC, 6, 3, 0);
-		registerField(Fields::IC, 9, 3, 0);
+		registerField(Fields::DC, 6, 3, 1);
+		registerField(Fields::IC, 9, 3, 2);
 		registerField(Fields::BPE, 12, 1, 0);
 		registerField(Fields::NBE, 13, 1, 0);
 		registerField(Fields::DCE, 16, 1, 0);

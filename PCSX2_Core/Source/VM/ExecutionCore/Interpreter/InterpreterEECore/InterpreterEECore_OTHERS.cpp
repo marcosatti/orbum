@@ -9,11 +9,21 @@
 void InterpreterEECore::SYNC_STYPE()
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
+#if defined(BUILD_DEBUG)
+	logDebug("SYNC_STYPE: Not implemented.");
+#else
+	throw std::runtime_error("SYNC_STYPE: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::PREF()
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
+#if defined(BUILD_DEBUG)
+	logDebug("PREF: Not implemented.");
+#else
+	throw std::runtime_error("PREF: Not implemented.");
+#endif
 }
 
 void InterpreterEECore::DI()
@@ -42,4 +52,13 @@ void InterpreterEECore::EI()
 	{
 		statusReg->setFieldValue(RegisterStatus_t::Fields::EIE, 1);
 	}
+}
+
+void InterpreterEECore::CACHE()
+{
+#if defined(BUILD_DEBUG)
+	logDebug("CACHE: Not implemented.");
+#else
+	throw std::runtime_error("CACHE: Not implemented.");
+#endif
 }

@@ -5,7 +5,7 @@
 
 PS2Exception_t::PS2Exception_t(const ExceptionType & exceptionType) :
 	mExceptionType(exceptionType),
-	mExceptionMessage(nullptr),
+	mExceptionMessage(""),
 	mResourcesDump(nullptr)
 {
 }
