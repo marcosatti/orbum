@@ -87,6 +87,13 @@ public:
 	};
 
 	/*
+	Operating mode functionality (User, Supervisor or Kernel). See EE Core Users Manual page 74 (truth table at bottom). Thanks to gregory38 @ PCSX2 for helping me!
+	*/
+	bool isOperatingUserMode() const;
+	bool isOperatingSupervisorMode() const;
+	bool isOperatingKernelMode() const;
+
+	/*
 	Checks if the COP0 coprocessor is usable. Throws a PS2Exception_t(coprocessor unusable) if not available.
 	*/
 	bool isCOP0Usable() const;

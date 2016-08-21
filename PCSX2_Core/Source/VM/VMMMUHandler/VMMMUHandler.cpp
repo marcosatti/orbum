@@ -126,6 +126,12 @@ void* VMMMUHandler::getclientMemoryAddress(u32 PS2PhysicalAddress) const
 	// Add the offset to the PFN to complete the address.
 	clientMemoryAddressInt += offset;
 
+#if defined(BUILD_DEBUG)
+	char messsage[1000];
+	sprintf_s(messsage, 1000, "VM MMU: Returned address for PS2 PA = 0x%08lX to client address = 0x%016llX.", PS2PhysicalAddress, clientMemoryAddressInt);
+	logDebug(messsage);
+#endif
+
 	// Return address.
 	return reinterpret_cast<void*>(clientMemoryAddressInt);
 }

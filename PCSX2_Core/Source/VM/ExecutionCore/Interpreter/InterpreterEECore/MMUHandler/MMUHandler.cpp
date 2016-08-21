@@ -113,7 +113,13 @@ void MMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) const
 
 u32 MMUHandler::getPS2PhysicalAddress(const u32 & PS2VirtualAddress, const AccessType & accessType) const
 {
-	return getPS2PhysicalAddress_Stage1(PS2VirtualAddress, accessType);
+	const u32 & PS2PhysicalAddress = getPS2PhysicalAddress_Stage1(PS2VirtualAddress, accessType);
+#if defined(BUILD_DEBUG)
+	char messsage[1000];
+	sprintf_s(messsage, 1000, "EECore MMU: Returned address for PS2 VA = 0x%08lX to PS2 PA = 0x%08lX.", PS2VirtualAddress, PS2PhysicalAddress);
+	logDebug(messsage);
+#endif
+	return PS2PhysicalAddress;
 }
 
 u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, const AccessType & accessType) const
@@ -125,14 +131,9 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, cons
 
 	// BIG NOTE: where the lower bound of memory segments is 0x00000000, it has been omitted from the test statement (as it is implied through the use of u32).
 
-	// Provide convencience access to these variables (KSU, ERL, EXL).
-	const u32 & KSU = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::KSU);
-	const u32 & ERL = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::ERL);
-	const u32 & EXL = getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::EXL);
-
 	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
-	if (KSU == 2 && ERL == 0 && EXL == 0)
+	if (getVM()->getResources()->EE->EECore->COP0->isOperatingUserMode())
 	{
 		// Operating in user mode.
 		// First we check if the VA is within the context bounds.
@@ -149,7 +150,7 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, cons
 
 		return getPS2PhysicalAddress_Stage2(PS2VirtualAddress, accessType);
 	}
-	else if (KSU == 1 && ERL == 0 && EXL == 0)
+	else if (getVM()->getResources()->EE->EECore->COP0->isOperatingSupervisorMode())
 	{
 		// Operating in supervisor mode.
 		// First we check if the VA is within the context bounds.
@@ -167,7 +168,7 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, cons
 
 		return getPS2PhysicalAddress_Stage2(PS2VirtualAddress, accessType);
 	} 
-	else if ((KSU == 0 && EXL == 1) || ERL == 1)
+	else if (getVM()->getResources()->EE->EECore->COP0->isOperatingKernelMode())
 	{
 		// Operating in kernel mode.
 		// We do not need to check if the VA is valid - it is always valid over the full 4GB (U32) address space. However, kseg0 and kseg1 are not mapped, 
@@ -190,7 +191,7 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage1(const u32 & PS2VirtualAddress, cons
 		}
 		
 		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (ERL == 1) {
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getRawFieldValue(RegisterStatus_t::Fields::ERL) == 1) {
 			if (PS2VirtualAddress <= PS2Constants::EE::EECore::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
 			{
 				// We are in kuseg unmapped region, so just return the VA.

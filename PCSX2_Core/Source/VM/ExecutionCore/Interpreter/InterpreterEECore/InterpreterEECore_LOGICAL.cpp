@@ -58,9 +58,9 @@ void InterpreterEECore::ORI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
-	u64 imm = static_cast<u64>(getInstruction().getIImmU());
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
+	s64 imm = static_cast<s64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) | imm);
 }
@@ -80,8 +80,8 @@ void InterpreterEECore::XORI()
 {
 	// Rd = Rt XOR Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) ^ imm);

@@ -476,7 +476,7 @@ public:
 
 	explicit RegisterPRId_t(const PS2Resources_t *const PS2Resources) : COP0BitfieldRegister32_t(PS2Resources)
 	{
-		registerField(Fields::Rev, 0, 8, 1);
+		registerField(Fields::Rev, 0, 8, 0x20); // Same as old PCSX2.
 		registerField(Fields::Imp, 8, 15, 0x2E);
 	}
 };

@@ -100,6 +100,9 @@
     <Filter Include="Source\Common\Interfaces">
       <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU">
+      <UniqueIdentifier>{27e683a9-47da-4672-99a2-968e641fe0d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\Global\GlobalConstants.h">
@@ -237,7 +240,9 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\R5900ResourcesSubobject.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\MMU</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -381,7 +386,9 @@
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\MMU</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

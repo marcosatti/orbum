@@ -48,12 +48,6 @@ private:
 	MIPSInstruction_t mInstruction;
 	const EECoreInstructionInfo_t * mInstructionInfo;
 
-	/*
-	Pre and Post instruction execution functions, to perform any additional actions.
-	*/
-	void executionStep_Pre() const;
-	void executionStep_Post() const;
-
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
 	// Note 2: Dots in mnemonics & function names are represented by the underscore character.
