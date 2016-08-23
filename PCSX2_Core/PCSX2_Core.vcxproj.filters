@@ -101,7 +101,7 @@
       <UniqueIdentifier>{94c884e7-3dc9-426b-a2d7-b983d1318740}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU">
-      <UniqueIdentifier>{27e683a9-47da-4672-99a2-968e641fe0d4}</UniqueIdentifier>
+      <UniqueIdentifier>{46877ab8-d180-4d48-9767-1b4256569ae7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\MMU</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Interfaces\VMMMUMappedStorageObject.h">
+      <Filter>Source\Common\Interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

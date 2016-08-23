@@ -1,6 +1,11 @@
 #pragma once
 
 /*
+Include access to size_t.
+*/
+#include <cstddef>
+
+/*
 Basic Atomic Types
 These are used extensively throughout the emulator.
 

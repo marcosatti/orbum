@@ -36,7 +36,7 @@ VMMMUHandler::~VMMMUHandler()
 	delete[] mPageTable;
 }
 
-void VMMMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2PhysicalAddress) const
+void VMMMUHandler::mapMemory(void* const& clientMemoryAddress, const size_t & clientMemoryLength, const u32 & PS2PhysicalAddress) const
 {
 	// Do not do anything for clientMemoryLength equal to 0.
 	if (clientMemoryLength == 0) return;
@@ -50,7 +50,7 @@ void VMMMUHandler::mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, 
 
 	// Work out how many pages the memory block occupies. If it is not evenly divisible, need to add on an extra page to account for the extra length.
 	// Thank you to Ian Nelson: http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division, a very good solution.
-	u32 pagesCount = (clientMemoryLength + PAGE_SIZE_BYTES - 1) / PAGE_SIZE_BYTES;
+	size_t pagesCount = (clientMemoryLength + PAGE_SIZE_BYTES - 1) / PAGE_SIZE_BYTES;
 
 	// Get absolute linear page position that we start mapping memory from.
 	u32 absPageStartIndex = baseVDN * PAGE_ENTRIES + baseVPN;

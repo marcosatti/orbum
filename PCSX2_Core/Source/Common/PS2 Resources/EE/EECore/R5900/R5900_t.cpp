@@ -40,8 +40,19 @@ void R5900_t::checkBranchDelaySlot()
 		{
 			PC->setPCValueAbsolute(mBranchDelayPCTarget);
 			mIsBranchDelayPending = false;
+			mIsInBranchDelay = true;
 		}
 		else
+		{
 			mBranchDelayCycles--;
+			mIsInBranchDelay = false;
+		}
 	}
+	else
+		mIsInBranchDelay = false;
+}
+
+const bool & R5900_t::isInBranchDelaySlot() const
+{
+	return mIsInBranchDelay;
 }

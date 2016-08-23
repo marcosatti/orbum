@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/Interfaces/VMMMUMappedStorageObject.h"
 
 /*
 Register type and size definitions.
@@ -20,13 +21,14 @@ Register128_t.(S or U)W[1] = bits 32-63.              |
 Register128_t.(S or U)W[2] = bits 64-95.              ↓
 Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 */
-class Register128_t {
+class Register128_t : public VMMMUMappedStorageObject
+{
 public:
 	virtual ~Register128_t()
 	{
 	}
 
-	// The PS2 never operates or manipulates values above 64-bit - but it can do parallel operations on for example 4 x 32-bit values. 
+	// The PS2 never operates or manipulates values above 64-bit - but it can do parallel operations on for example 2 x 64-bit or 16 x 8-bit values. 
 	// It is meaningless to provide a signed/unsigned combo of 128-bit variables since they can't be manipulated.
 	union
 	{
@@ -42,6 +44,10 @@ public:
 
 	// Initialise union with 0 value. The 128-bit UQ type contains a custom initaliser to do this.
 	Register128_t();
+
+	// Memory Mapped IO functionality. Note that if there are subclassed registers with additional functionality, it will not run - this is provided as a raw access method.
+	void* getClientMemoryAddress() override;
+	size_t getClientMemoryLength() override;
 
 	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
 	virtual u8 readByteU(u32 arrayIndex);

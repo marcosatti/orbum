@@ -93,7 +93,7 @@ private:
 	See the function definition for the memory allocation details.
 	Also see 'Memory Mappings.xlsx' for information as some parts are PCSX2 specific.
 	*/
-	void initalisePS2MemoryMap() const;
+	void initalisePS2PhysicalMemoryMap() const;
 
 	/*
 	Initalise the execution core (interpreter or recompiler).

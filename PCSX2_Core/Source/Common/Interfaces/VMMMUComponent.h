@@ -3,6 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMBaseComponent.h"
+#include "Common/Interfaces/VMMMUMappedStorageObject.h"
 
 class VMMain;
 
@@ -19,7 +20,15 @@ public:
 	{
 	}
 
-	virtual void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2MemoryAddress) const  = 0;
+	virtual void mapMemory(void* const& clientMemoryAddress, const size_t & clientMemoryLength, const u32 & PS2MemoryAddress) const  = 0;
+	virtual void mapMemory(VMMMUMappedStorageObject & storageObject, const u32 & PS2MemoryAddress) const
+	{
+		mapMemory(storageObject.getClientMemoryAddress(), storageObject.getClientMemoryLength(), PS2MemoryAddress);
+	}
+	virtual void mapMemory(std::shared_ptr<VMMMUMappedStorageObject> storageObject, const u32 & PS2MemoryAddress) const
+	{
+		mapMemory(storageObject->getClientMemoryAddress(), storageObject->getClientMemoryLength(), PS2MemoryAddress);
+	}
 
 	/*
 	Unfortunately C++ does not allow templated virtual functions... So we have to implement each possible case.

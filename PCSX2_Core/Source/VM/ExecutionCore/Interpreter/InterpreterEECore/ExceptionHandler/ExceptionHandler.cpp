@@ -54,7 +54,7 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 	else
 	{
 		// Set EPC and Cause.BD fields.
-		if (getVM()->getResources()->EE->EECore->R5900->mIsBranchDelayPending) // Check if in the branch delay slot.
+		if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
 		{
 			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
 			getVM()->getResources()->EE->EECore->COP0->EPC->setRawFieldValue(RegisterEPC_t::Fields::EPC, pcValue);
@@ -108,7 +108,7 @@ void ExceptionHandler::handleException_L2(const ExceptionProperties_t & exceptio
 	getVM()->getResources()->EE->EECore->COP0->Cause->setRawFieldValue(RegisterCause_t::Fields::EXC2, exceptionProperties.mEXC2);
 
 	// Set EPC and Cause.BD fields.
-	if (getVM()->getResources()->EE->EECore->R5900->mIsBranchDelayPending) // Check if in the branch delay slot.
+	if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
 	{
 		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
 		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setRawFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);

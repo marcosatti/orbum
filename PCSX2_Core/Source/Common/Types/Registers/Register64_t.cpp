@@ -7,6 +7,16 @@ Register64_t::Register64_t() : UD(0)
 {
 }
 
+void* Register64_t::getClientMemoryAddress()
+{
+	return reinterpret_cast<void*>(&UD);
+}
+
+size_t Register64_t::getClientMemoryLength()
+{
+	return sizeof(UD);
+}
+
 u8 Register64_t::readByteU(u32 arrayIndex)
 {
 	return UB[arrayIndex];

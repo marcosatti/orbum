@@ -28,7 +28,7 @@ void VMMain::Reset()
 	// Initalise VM.
 	initaliseResources();
 	initaliseExecutionCore();
-	initalisePS2MemoryMap();
+	initalisePS2PhysicalMemoryMap();
 
 	// Initiaise BIOS (BootROM).
 	initaliseBootROM();
@@ -79,16 +79,16 @@ void VMMain::initaliseResources()
 	mPS2Resources = std::make_unique<PS2Resources_t>();
 }
 
-void VMMain::initalisePS2MemoryMap() const
+void VMMain::initalisePS2PhysicalMemoryMap() const
 {
 	// Main memory 32MB
-	getMMU()->mapMemory(getResources()->MainMemory->getBaseAddress(), PS2Constants::SIZE_MAIN_MEMORY, PS2Constants::PADDRESS_MAIN_MEMORY);
+	getMMU()->mapMemory(getResources()->MainMemory, PS2Constants::PADDRESS_MAIN_MEMORY);
 
 	// Scratchpad memory 16KB
-	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory->getBaseAddress(), PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY, PS2Constants::EE::EECore::PADDRESS_SCRATCHPAD_MEMORY);
+	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory, PS2Constants::EE::EECore::PADDRESS_SCRATCHPAD_MEMORY);
 
 	// Boot ROM 4MB
-	getMMU()->mapMemory(getResources()->BootROM->getBaseAddress(), PS2Constants::SIZE_BOOT_ROM, PS2Constants::PADDRESS_BOOT_ROM);
+	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::PADDRESS_BOOT_ROM);
 }
 
 void VMMain::initaliseExecutionCore()
@@ -110,7 +110,7 @@ void VMMain::initaliseExecutionCore()
 
 void VMMain::initaliseBootROM() const
 {
-	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getBaseAddress());
+	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getClientMemoryAddress());
 	std::ifstream file(mBootROMPath, std::ifstream::binary);
 	file.seekg(std::ifstream::beg);
 	file.read(memoryBase, PS2Constants::SIZE_BOOT_ROM);

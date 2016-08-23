@@ -80,7 +80,7 @@ public:
 	clientMemoryLength = Length of memory parsed into clientMemoryAddress. This will be used to divide the map into pages.
 	PS2PhysicalAddress = The PS2 "physical" address which will be mapped.
 	*/
-	void mapMemory(void* clientMemoryAddress, u32 clientMemoryLength, u32 PS2PhysicalAddress) const override;
+	void mapMemory(void* const& clientMemoryAddress, const size_t & clientMemoryLength, const u32 & PS2PhysicalAddress) const override;
 
 	/*
 	Translates the given PS2 physical address to the client memory address by using the page table.

@@ -30,12 +30,14 @@ public:
 	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
 	*/
 	bool mIsBranchDelayPending;
+	bool mIsInBranchDelay;
 	u8 mBranchDelayCycles;
 	u32 mBranchDelayPCTarget;
 	void setBranchDelayPCTarget(u32 pcTarget, u8 cycles);
 	void setBranchDelayPCJOffset(s32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
 	void setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles); // Convenience function for MIPS I Instruction types.
 	void checkBranchDelaySlot();
+	const bool & isInBranchDelaySlot() const;
 
 	// Register implementations.
 

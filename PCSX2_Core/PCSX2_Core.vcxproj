@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\Interfaces\VMMMUMappedStorageObject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\MMU\MMU_t.h" />
     <ClInclude Include="Source\Common\Interfaces\PS2ResourcesSubobject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0ResourcesSubobject.h" />
