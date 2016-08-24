@@ -82,13 +82,13 @@ void VMMain::initaliseResources()
 void VMMain::initalisePS2PhysicalMemoryMap() const
 {
 	// Main memory 32MB
-	getMMU()->mapMemory(getResources()->MainMemory, PS2Constants::PADDRESS_MAIN_MEMORY);
+	getMMU()->mapMemory(getResources()->MainMemory, PS2Constants::MainMemory::PADDRESS_MAIN_MEMORY);
 
 	// Scratchpad memory 16KB
-	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory, PS2Constants::EE::EECore::PADDRESS_SCRATCHPAD_MEMORY);
+	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory, PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY);
 
 	// Boot ROM 4MB
-	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::PADDRESS_BOOT_ROM);
+	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::BootROM::PADDRESS_BOOT_ROM);
 }
 
 void VMMain::initaliseExecutionCore()
@@ -112,6 +112,7 @@ void VMMain::initaliseBootROM() const
 {
 	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getClientMemoryAddress());
 	std::ifstream file(mBootROMPath, std::ifstream::binary);
+	if (file.fail()) throw std::runtime_error("initaliseBootROM(): tried to open BIOS file, but it failed! Check file exists and has read permissions.");
 	file.seekg(std::ifstream::beg);
-	file.read(memoryBase, PS2Constants::SIZE_BOOT_ROM);
+	file.read(memoryBase, PS2Constants::BootROM::SIZE_BOOT_ROM);
 }

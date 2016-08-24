@@ -19,7 +19,7 @@ s32 MMU_t::findTLBIndex(u32 PS2VirtualAddress) const
 	//  Therefore the LSB of the VPN is ommitted and only 19 bits are used at most. I am not 100% sure on the details on this, however. If the above is true, then we need to search using the
 	//  last 7 bits.
 	u32 searchVPN2 = (PS2VirtualAddress >> 25); // End up with 7 bits. Normally this would be ((value >> 24) / 2) but dividing by 2 is exactly the same as shifting it right by 1 (ie: >> 25).
-	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::SIZE_TLB_ENTRIES; i++)
+	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)
 	{
 		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18), so we need to mask out bits 12-18 (length 7).
 		auto tlbEntry = mTLBEntries[i];

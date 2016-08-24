@@ -24,7 +24,7 @@ public:
 	static f32 formatIEEEToPS2Float(const f32 & value);
 
 	/*
-	Gets the resulting sign according to the PS2 FPU spec when a instruction is carried out that has a XOR-type sign (eg: multiply or divide).
+	Gets the resulting sign according to the PS2 COP1 spec when a instruction is carried out that has a XOR-type sign (eg: multiply or divide).
 	0 = positive, 1 = negative.
 	*/
 	static u32 getXORSign(const f32 & value1, const f32 & value2);

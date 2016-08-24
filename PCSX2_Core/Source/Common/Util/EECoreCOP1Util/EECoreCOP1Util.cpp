@@ -40,17 +40,17 @@ f32 EECoreCOP1Util::formatIEEEToPS2Float(const f32 & value)
 	case FP_INFINITE:
 	{
 		// Clamp to +/- Fmax.
-		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::FPU::FMAX_NEG : PS2Constants::EE::EECore::FPU::FMAX_POS);
+		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::COP1::FMAX_NEG : PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	case FP_NAN:
 	{
 		// Clamp to +/- Fmax.
-		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::FPU::FMAX_NEG : PS2Constants::EE::EECore::FPU::FMAX_POS);
+		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::COP1::FMAX_NEG : PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	case FP_SUBNORMAL:
 	{
 		// Round to +/- 0.
-		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::FPU::ZERO_NEG : PS2Constants::EE::EECore::FPU::ZERO_POS);
+		return static_cast<f32>(isNegative ? PS2Constants::EE::EECore::COP1::ZERO_NEG : PS2Constants::EE::EECore::COP1::ZERO_POS);
 	}
 	default:
 	{

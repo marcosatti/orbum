@@ -53,6 +53,6 @@ private:
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	TLBEntryInformation mTLBEntries[PS2Constants::EE::EECore::MMU::SIZE_TLB_ENTRIES];
+	TLBEntryInformation mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
 };
 

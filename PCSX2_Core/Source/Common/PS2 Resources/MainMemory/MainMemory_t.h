@@ -10,7 +10,7 @@ class MainMemory_t : public PS2ResourcesSubobject, public VMMMUMappedStorageObje
 public:
 	explicit MainMemory_t(const PS2Resources_t *const PS2Resources) : 
 		PS2ResourcesSubobject(PS2Resources),
-		mMainMemory(new u8[PS2Constants::SIZE_MAIN_MEMORY])
+		mMainMemory(new u8[PS2Constants::MainMemory::SIZE_MAIN_MEMORY])
 	{
 #if defined(BUILD_DEBUG)
 		char message[1000];
@@ -35,7 +35,7 @@ public:
 
 	size_t getClientMemoryLength() override
 	{
-		return PS2Constants::SIZE_MAIN_MEMORY;
+		return PS2Constants::MainMemory::SIZE_MAIN_MEMORY;
 	}
 private:
 	u8 *const mMainMemory;

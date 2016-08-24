@@ -185,13 +185,13 @@ void InterpreterEECore::DIV_S()
 	{
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
+		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	else if (source1Reg->readFloat() == 0 && source2Reg->readFloat() == 0)
 	{
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
+		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 
 	result = source1Reg->readFloat() / source2Reg->readFloat();

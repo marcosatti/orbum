@@ -10,7 +10,7 @@ class ScratchpadMemory_t : public PS2ResourcesSubobject, public VMMMUMappedStora
 public:
 	explicit ScratchpadMemory_t(const PS2Resources_t *const PS2Resources) : 
 		PS2ResourcesSubobject(PS2Resources),
-		mScratchpadMemory(new u8[PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY])
+		mScratchpadMemory(new u8[PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY])
 	{
 #if defined(BUILD_DEBUG)
 		char message[1000];
@@ -35,7 +35,7 @@ public:
 
 	size_t getClientMemoryLength() override
 	{
-		return PS2Constants::EE::EECore::SIZE_SCRATCHPAD_MEMORY;
+		return PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY;
 	}
 private:
 	u8 *const mScratchpadMemory;

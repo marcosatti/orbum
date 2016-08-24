@@ -4,6 +4,7 @@
 #include "Common/PS2 Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2 Resources/EE/EECore/ScratchpadMemory/ScratchpadMemory.h"
+#include "Common/PS2 Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 /*
@@ -41,5 +42,8 @@ public:
 
 	// Scratchpad memory
 	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>(getRootResources());
+
+	// Exception/Interrupt State. The INTC etc will communicate through here.
+	std::shared_ptr<Exceptions_t> Exceptions = std::make_shared<Exceptions_t>();
 
 };

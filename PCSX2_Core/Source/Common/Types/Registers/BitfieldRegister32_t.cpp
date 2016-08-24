@@ -4,6 +4,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
+BitfieldRegister32_t::BitfieldRegister32_t()
+{
+}
+
 void BitfieldRegister32_t::registerField(const std::string & fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue)
 {
 	mFieldMap[fieldName] = std::make_shared<BitfieldProperties_t>(fieldName, fieldStartPosition, fieldLength, fieldInitialValue);
@@ -45,4 +49,21 @@ void BitfieldRegister32_t::setRegisterValue(u32 value)
 		props = field.second;
 		props->mFieldValue = getBitRange32(props->mFieldStartPosition, props->mFieldLength);
 	}
+}
+
+void BitfieldRegister32_t::initaliseAllFields()
+{
+	// Initialse all fields to its initial value.
+	std::shared_ptr<BitfieldProperties_t> props;
+	for (auto &field : mFieldMap)
+	{
+		props = field.second;
+		props->mFieldValue = props->mInitialFieldValue;
+	}
+}
+
+void BitfieldRegister32_t::initaliseField(const std::string& fieldName)
+{
+	std::shared_ptr<BitfieldProperties_t> props = mFieldMap[fieldName];
+	props->mFieldValue = props->mInitialFieldValue;
 }

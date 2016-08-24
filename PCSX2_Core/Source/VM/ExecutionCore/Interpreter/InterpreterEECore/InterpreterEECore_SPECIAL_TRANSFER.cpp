@@ -51,7 +51,7 @@ void InterpreterEECore::MFBPC()
 void InterpreterEECore::MFC0()
 {
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->BitfieldRegisters[getInstruction().getRRd()];
+	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->Registers[getInstruction().getRRd()];
 
 	destReg->writeDwordU(0, static_cast<u64>(sourceReg->getRegisterValue()));
 }
@@ -132,7 +132,7 @@ void InterpreterEECore::MTBPC()
 void InterpreterEECore::MTC0()
 {
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->COP0->BitfieldRegisters[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->COP0->Registers[getInstruction().getRRd()];
 
 	destReg->setRegisterValue(sourceReg->readWordU(0));
 }

@@ -13,7 +13,7 @@ public:
 	}
 
 	/*
-	COP1 refers to the FPU (floating-point unit) coprocessor.
+	COP1 refers to the COP1 (floating-point unit) coprocessor.
 	See EE Core Users Manual, chapter 8.
 	*/
 
@@ -39,7 +39,7 @@ public:
 
 	// Bitfield Register Implementations.
 	/*
-	COP1 defines 2 control registers, which are implemented as BitfieldRegisters.
+	COP1 defines 2 control registers, which are implemented as Registers.
 	See EE Core Users Manual, page 158.
 	*/
 	std::shared_ptr<RegisterIRR_t> IRR = std::make_shared<RegisterIRR_t>(getRootResources()); // Also known as FCR[0].
@@ -51,7 +51,7 @@ public:
 	};
 
 	/*
-	Checks if the FPU coprocessor (COP1) is usable. Throws a PS2Exception_t(coprocessor unusable) if not available.
+	Checks if the COP1 coprocessor (COP1) is usable. Throws a PS2Exception_t(coprocessor unusable) if not available.
 	*/
 	bool isCOP1Usable() const;
 private:

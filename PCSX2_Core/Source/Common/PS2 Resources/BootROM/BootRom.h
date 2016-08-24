@@ -10,7 +10,7 @@ class BootROM_t : public PS2ResourcesSubobject, public VMMMUMappedStorageObject
 public:
 	explicit BootROM_t(const PS2Resources_t *const PS2Resources) : 
 		PS2ResourcesSubobject(PS2Resources),
-		mBootROM(new u8[PS2Constants::SIZE_BOOT_ROM])
+		mBootROM(new u8[PS2Constants::BootROM::SIZE_BOOT_ROM])
 	{
 #if defined(BUILD_DEBUG)
 		char message[1000];
@@ -35,7 +35,7 @@ public:
 
 	size_t getClientMemoryLength() override
 	{
-		return PS2Constants::SIZE_BOOT_ROM;
+		return PS2Constants::BootROM::SIZE_BOOT_ROM;
 	}
 private:
 	u8 *const mBootROM;

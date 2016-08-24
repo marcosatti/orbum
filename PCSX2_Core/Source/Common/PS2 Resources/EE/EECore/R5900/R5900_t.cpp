@@ -6,53 +6,54 @@
 
 R5900_t::R5900_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobject(PS2Resources)
 {
-	mIsBranchDelayPending = false;
+	// TODO: Logic subject to change. May not work once everything is in place.
+	mIsInBranchDelay = false;
 	mBranchDelayCycles = 0;
 	mBranchDelayPCTarget = 0x0;
 }
 
 void R5900_t::setBranchDelayPCTarget(u32 pcTarget, u8 cycles)
 {
-	mIsBranchDelayPending = true;
+	// TODO: Logic subject to change. May not work once everything is in place.
+	mIsInBranchDelay = true;
 	mBranchDelayCycles = cycles;
 	mBranchDelayPCTarget = pcTarget;
 }
 
 void R5900_t::setBranchDelayPCJOffset(s32 JInstructionTarget, u8 cycles)
 {
-	mIsBranchDelayPending = true;
+	// TODO: Logic subject to change. May not work once everything is in place.
+	mIsInBranchDelay = true;
 	mBranchDelayCycles = cycles;
 	mBranchDelayPCTarget = (JInstructionTarget << 2) + (PC->getPCValue() & 0xF0000000);
 }
 
 void R5900_t::setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles)
 {
-	mIsBranchDelayPending = true;
+	// TODO: Logic subject to change. May not work once everything is in place.
+	mIsInBranchDelay = true;
 	mBranchDelayCycles = cycles;
 	mBranchDelayPCTarget = (IInstructionOffset << 2) + PC->getPCValue();
 }
 
 void R5900_t::checkBranchDelaySlot()
 {
-	if (mIsBranchDelayPending)
+	// TODO: Logic subject to change. May not work once everything is in place.
+	if (mIsInBranchDelay)
 	{
 		if (mBranchDelayCycles == 0)
 		{
 			PC->setPCValueAbsolute(mBranchDelayPCTarget);
-			mIsBranchDelayPending = false;
-			mIsInBranchDelay = true;
+			mIsInBranchDelay = false;
+			
 		}
 		else
-		{
 			mBranchDelayCycles--;
-			mIsInBranchDelay = false;
-		}
 	}
-	else
-		mIsInBranchDelay = false;
 }
 
 const bool & R5900_t::isInBranchDelaySlot() const
 {
+	// TODO: Logic subject to change. May not work once everything is in place.
 	return mIsInBranchDelay;
 }

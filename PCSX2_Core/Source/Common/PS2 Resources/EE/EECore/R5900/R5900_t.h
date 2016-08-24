@@ -29,7 +29,6 @@ public:
 	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
 	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
 	*/
-	bool mIsBranchDelayPending;
 	bool mIsInBranchDelay;
 	u8 mBranchDelayCycles;
 	u32 mBranchDelayPCTarget;

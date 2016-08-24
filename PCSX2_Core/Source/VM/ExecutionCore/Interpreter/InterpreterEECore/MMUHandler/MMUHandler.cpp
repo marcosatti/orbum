@@ -227,6 +227,7 @@ u32 MMUHandler::getPS2PhysicalAddress_Stage2(const u32 & PS2VirtualAddress, cons
 	TLBEntryInformation tlbEntry = getVM()->getResources()->EE->EECore->R5900->MMU->getTLBEntry(index);
 
 	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
+	// TODO: Check if ASID checking is correct.
 	if (tlbEntry.mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.

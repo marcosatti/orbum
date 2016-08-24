@@ -96,7 +96,7 @@ void InterpreterEECore::RSQRT_S()
 	{
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
 		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
+		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{

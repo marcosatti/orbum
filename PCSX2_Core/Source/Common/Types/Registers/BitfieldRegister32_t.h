@@ -28,6 +28,7 @@ TODO: Implement checks for invalid values on initalisation and get and setting f
 class BitfieldRegister32_t : public Register32_t
 {
 public:
+	BitfieldRegister32_t();
 	
 	/*
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
@@ -55,6 +56,16 @@ public:
 	*/
 	virtual void setRegisterValue(u32 value);
 
+	/*
+	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
+	*/
+	virtual void initaliseAllFields();
+
+	/*
+	Initalise a specific field to its initial value defined in the BitfieldProperties_t.
+	*/
+	virtual void initaliseField(const std::string &fieldName);
+
 private:
 	/*
 	Used internally for storing the information parsed though registerField().
@@ -62,10 +73,12 @@ private:
 	*/
 	struct BitfieldProperties_t
 	{
-		BitfieldProperties_t(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue) : mFieldName(fieldName), mFieldStartPosition(fieldStartPosition), mFieldLength(fieldLength), mFieldValue(fieldInitialValue) {}
+		BitfieldProperties_t(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue) 
+			: mFieldName(fieldName), mFieldStartPosition(fieldStartPosition), mFieldLength(fieldLength), mInitialFieldValue(fieldInitialValue), mFieldValue(fieldInitialValue) {}
 		const std::string mFieldName;
 		const u8 mFieldStartPosition;
 		const u8 mFieldLength;
+		const u32 mInitialFieldValue;
 		u32 mFieldValue; // Set to a specified initial value when created, but can be changed.
 	};
 
