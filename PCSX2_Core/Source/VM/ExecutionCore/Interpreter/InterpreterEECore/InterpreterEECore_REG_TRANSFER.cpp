@@ -288,6 +288,14 @@ void InterpreterEECore::PMTLO()
 
 void InterpreterEECore::MFC1()
 {
+	// Rt = COP1_FPR[Fs]. Exception on COP1 unusable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 
@@ -310,6 +318,14 @@ void InterpreterEECore::MFC1()
 
 void InterpreterEECore::MOV_S()
 {
+	// Fd = Fs. Exception on COP1 unusable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
@@ -318,6 +334,14 @@ void InterpreterEECore::MOV_S()
 
 void InterpreterEECore::MTC1()
 {
+	// COP1_FPR[Fs] = Rt. Exception on COP1 unusable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 

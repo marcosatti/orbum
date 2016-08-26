@@ -36,22 +36,6 @@ void R5900_t::setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles)
 	mBranchDelayPCTarget = (IInstructionOffset << 2) + PC->getPCValue();
 }
 
-void R5900_t::checkBranchDelaySlot()
-{
-	// TODO: Logic subject to change. May not work once everything is in place.
-	if (mIsInBranchDelay)
-	{
-		if (mBranchDelayCycles == 0)
-		{
-			PC->setPCValueAbsolute(mBranchDelayPCTarget);
-			mIsInBranchDelay = false;
-			
-		}
-		else
-			mBranchDelayCycles--;
-	}
-}
-
 const bool & R5900_t::isInBranchDelaySlot() const
 {
 	// TODO: Logic subject to change. May not work once everything is in place.

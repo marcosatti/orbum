@@ -5,7 +5,7 @@
 #include "Common/PS2 Constants/PS2Constants.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/R5900ResourcesSubobject.h"
-#include "Common/PS2 Resources/EE/EECore/R5900/MMU/MMU_t.h"
+#include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
 
 MMU_t::MMU_t(const PS2Resources_t* const PS2Resources) : R5900ResourcesSubobject(PS2Resources) 
 {
@@ -40,12 +40,25 @@ s32 MMU_t::findTLBIndex(u32 PS2VirtualAddress) const
 	return -1;
 }
 
-const MMU_t::TLBEntryInformation& MMU_t::getTLBEntry(s32 index) const
+const MMU_t::TLBEntryInfo& MMU_t::getTLBEntry(s32 index) const
 {
 	return mTLBEntries[index];
 }
 
-void MMU_t::setTLBEntry(const TLBEntryInformation& entry, const s32& index)
+s32 MMU_t::getNewTLBIndex()
+{
+	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)
+	{
+		auto tlbEntry = mTLBEntries[i];
+		if (tlbEntry.mVPN2 == 0)
+			return i;
+	}
+
+	// No empty spot was found, so return the first index.
+	return 0;
+}
+
+void MMU_t::setTLBEntry(const TLBEntryInfo& entry, const s32& index)
 {
 	mTLBEntries[index] = entry;
 }

@@ -26,7 +26,7 @@ void InterpreterEECore::MADD()
 
 void InterpreterEECore::MADD1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	MADD();
 }
 
@@ -46,7 +46,7 @@ void InterpreterEECore::MADDU()
 
 void InterpreterEECore::MADDU1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	MADDU();
 }
 

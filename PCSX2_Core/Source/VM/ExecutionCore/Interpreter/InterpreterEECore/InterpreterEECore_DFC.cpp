@@ -52,6 +52,13 @@ void InterpreterEECore::PPAC5()
 void InterpreterEECore::CVT_S_W()
 {
 	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on COP1 unusable).
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 
@@ -61,6 +68,13 @@ void InterpreterEECore::CVT_S_W()
 void InterpreterEECore::CVT_W_S()
 {
 	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on COP1 unusable). Clamping occurs if exponent is > 0x9D.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
 

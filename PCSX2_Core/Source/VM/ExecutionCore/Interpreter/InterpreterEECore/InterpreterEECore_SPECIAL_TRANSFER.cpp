@@ -42,6 +42,13 @@ void InterpreterEECore::MTSAH()
 
 void InterpreterEECore::MFBPC()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->BPC;
 
@@ -50,6 +57,13 @@ void InterpreterEECore::MFBPC()
 
 void InterpreterEECore::MFC0()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->Registers[getInstruction().getRRd()];
 
@@ -58,6 +72,13 @@ void InterpreterEECore::MFC0()
 
 void InterpreterEECore::MFDAB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->DAB;
 
@@ -66,6 +87,13 @@ void InterpreterEECore::MFDAB()
 
 void InterpreterEECore::MFDABM()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->DABM;
 
@@ -74,6 +102,13 @@ void InterpreterEECore::MFDABM()
 
 void InterpreterEECore::MFDVB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->DVB;
 
@@ -82,6 +117,13 @@ void InterpreterEECore::MFDVB()
 
 void InterpreterEECore::MFDVBM()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->DVBM;
 
@@ -90,6 +132,13 @@ void InterpreterEECore::MFDVBM()
 
 void InterpreterEECore::MFIAB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->IAB;
 
@@ -98,6 +147,13 @@ void InterpreterEECore::MFIAB()
 
 void InterpreterEECore::MFIABM()
 {
+	if(!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->IABM;
 
@@ -106,6 +162,13 @@ void InterpreterEECore::MFIABM()
 
 void InterpreterEECore::MFPC()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	u8 perfRegisterIndex = getInstruction().getRFunct() & 0x3E; // Last 5 bits of the funct field contain the performace counter register number to use. Must be 0 or 1 (but not checked).
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->PCRRegisters[perfRegisterIndex];
@@ -115,6 +178,13 @@ void InterpreterEECore::MFPC()
 
 void InterpreterEECore::MFPS()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->PCCR; // The reg field in the documentation must be 0, meaning the PCCR register.
 
@@ -123,6 +193,13 @@ void InterpreterEECore::MFPS()
 
 void InterpreterEECore::MTBPC()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->BPC;
 
@@ -131,6 +208,13 @@ void InterpreterEECore::MTBPC()
 
 void InterpreterEECore::MTC0()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->Registers[getInstruction().getRRd()];
 
@@ -139,6 +223,13 @@ void InterpreterEECore::MTC0()
 
 void InterpreterEECore::MTDAB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->DAB;
 
@@ -147,6 +238,13 @@ void InterpreterEECore::MTDAB()
 
 void InterpreterEECore::MTDABM()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->DABM;
 
@@ -155,6 +253,13 @@ void InterpreterEECore::MTDABM()
 
 void InterpreterEECore::MTDVB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->DVB;
 
@@ -163,6 +268,13 @@ void InterpreterEECore::MTDVB()
 
 void InterpreterEECore::MTDVBM()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->DVBM;
 
@@ -171,6 +283,13 @@ void InterpreterEECore::MTDVBM()
 
 void InterpreterEECore::MTIAB()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->IAB;
 
@@ -179,6 +298,13 @@ void InterpreterEECore::MTIAB()
 
 void InterpreterEECore::MTIABM()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->IABM;
 
@@ -187,6 +313,13 @@ void InterpreterEECore::MTIABM()
 
 void InterpreterEECore::MTPC()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	u8 perfRegisterIndex = getInstruction().getRFunct() & 0x3E; // Last 5 bits of the funct field contain the performace counter register number to use. Must be 0 or 1 (but not checked).
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->PCRRegisters[perfRegisterIndex];
@@ -196,6 +329,13 @@ void InterpreterEECore::MTPC()
 
 void InterpreterEECore::MTPS()
 {
+	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP0->PCCR; // The reg field in the documentation must be 0, meaning the PCCR register.
 
@@ -204,6 +344,13 @@ void InterpreterEECore::MTPS()
 
 void InterpreterEECore::CFC1()
 {
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->COP1->BitfieldRegisters[getInstruction().getRRd()]; // Fs, can only be 0 or 31.
 
@@ -212,6 +359,13 @@ void InterpreterEECore::CFC1()
 
 void InterpreterEECore::CTC1()
 {
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->BitfieldRegisters[getInstruction().getRRd()];
 

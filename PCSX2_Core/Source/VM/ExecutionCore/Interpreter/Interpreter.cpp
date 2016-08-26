@@ -5,6 +5,7 @@
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 Interpreter::Interpreter(const VMMain* const vmMain) : VMExecutionCoreComponent(vmMain)
 {
@@ -23,5 +24,5 @@ void Interpreter::initalise()
 	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
 	// After this is done, call Run() to begin execution.
 	
-	mInterpreterEECore->getExceptionHandler()->handleException(PS2Exception_t(PS2Exception_t::ExceptionType::EX_RESET));
+	mInterpreterEECore->getExceptionHandler()->handleException(EECoreException_t(EECoreException_t::ExType::EX_RESET));
 }

@@ -5,6 +5,7 @@
 #include "Common/PS2 Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2 Resources/EE/EECore/ScratchpadMemory/ScratchpadMemory.h"
 #include "Common/PS2 Resources/EE/EECore/Exceptions/Exceptions_t.h"
+#include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 /*
@@ -45,5 +46,8 @@ public:
 
 	// Exception/Interrupt State. The INTC etc will communicate through here.
 	std::shared_ptr<Exceptions_t> Exceptions = std::make_shared<Exceptions_t>();
+
+	// MMU Implementation
+	std::shared_ptr<MMU_t> MMU = std::make_shared<MMU_t>(getRootResources());
 
 };

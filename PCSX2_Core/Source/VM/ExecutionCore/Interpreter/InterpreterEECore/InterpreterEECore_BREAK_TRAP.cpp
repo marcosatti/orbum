@@ -9,139 +9,153 @@
 void InterpreterEECore::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
-	throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_BREAK);
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+	ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_BREAK));
 }
 
 void InterpreterEECore::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
-	throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_SYSTEMCALL);
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+	ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_SYSTEMCALL));
 }
 
 void InterpreterEECore::TEQ()
 {
 	// TRAP_EXCEPTION(Rs == Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordS(0) == source2Reg->readDwordS(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TEQI()
 {
 	// TRAP_EXCEPTION(Rs == imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	s64 imm = static_cast<s64>(getInstruction().getIImmS());
 
 	if (source1Reg->readDwordS(0) == imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TGE()
 {
 	// TRAP_EXCEPTION(Rs >= Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordS(0) >= source2Reg->readDwordS(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TGEI()
 {
 	// TRAP_EXCEPTION(Rs >= imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	s64 imm = static_cast<s64>(getInstruction().getIImmS());
 
 	if (source1Reg->readDwordS(0) >= imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TGEIU()
 {
 	// TRAP_EXCEPTION(Rs >= imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	u64 imm = static_cast<u64>(static_cast<s64>(getInstruction().getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
 
 	if (source1Reg->readDwordU(0) >= imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TGEU()
 {
 	// TRAP_EXCEPTION(Rs >= Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordU(0) >= source2Reg->readDwordU(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TLT()
 {
 	// TRAP_EXCEPTION(Rs < Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordS(0) < source2Reg->readDwordS(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TLTI()
 {
 	// TRAP_EXCEPTION(Rs < imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	s64 imm = static_cast<s64>(getInstruction().getIImmS());
 
 	if (source1Reg->readDwordS(0) < imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TLTIU()
 {
 	// TRAP_EXCEPTION(Rs < imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	u64 imm = static_cast<u64>(static_cast<s64>(getInstruction().getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
 
 	if (source1Reg->readDwordU(0) < imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TLTU()
 {
 	// TRAP_EXCEPTION(Rs < Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordU(0) < source2Reg->readDwordU(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TNE()
 {
 	// TRAP_EXCEPTION(Rs != Rt).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	if (source1Reg->readDwordS(0) != source2Reg->readDwordS(0))
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::TNEI()
 {
 	// TRAP_EXCEPTION(Rs != imm).
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	s64 imm = static_cast<s64>(getInstruction().getIImmS());
 
 	if (source1Reg->readDwordS(0) != imm)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_TRAP);
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
 void InterpreterEECore::ERET()
 {
 	// ERET is an outlier, where it does not cause a branch delay instruction to be executed. However, still use the R5900->setBranchDelay* functions with cycles = 0.
-	// ERET()
+	// ERET(). No exceptions.
 	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL) == 1)
 	{
 		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC);

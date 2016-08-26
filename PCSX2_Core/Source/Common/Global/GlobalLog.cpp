@@ -5,13 +5,13 @@
 #include "GlobalMacros.h"
 
 #if defined(BUILD_DEBUG)
-void logDebug(char * message)
+void logDebug(const char * const message)
 {
 	std::cout << "[DEBUG] " << message << std::endl;
 }
 #endif
 
-void logInfo(char * message)
+void logInfo(const char * const message)
 {
 	std::cout << "[INFO] " << message << std::endl;
 }

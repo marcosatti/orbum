@@ -175,6 +175,13 @@ void InterpreterEECore::C_EQ_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
@@ -192,6 +199,14 @@ void InterpreterEECore::C_F_S()
 {
 	// TODO: Whats the point of this instruction? Docs say something about a comparison but it always sets the C field to 0 regardless...
 	// (FCR[31] or CSR, C field) = 0
+	// No Exceptions generated, except for coprocessor unavailable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
 	CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
@@ -201,6 +216,13 @@ void InterpreterEECore::C_LE_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
@@ -218,6 +240,13 @@ void InterpreterEECore::C_LT_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
+	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	{
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	}
+
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.

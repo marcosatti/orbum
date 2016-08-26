@@ -89,6 +89,9 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 
 	// Boot ROM 4MB
 	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::BootROM::PADDRESS_BOOT_ROM);
+
+	// DEBUG
+	getMMU()->mapMemory(new u8[0x04000000], 0x04000000, 0x10000000);
 }
 
 void VMMain::initaliseExecutionCore()
@@ -112,7 +115,8 @@ void VMMain::initaliseBootROM() const
 {
 	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getClientMemoryAddress());
 	std::ifstream file(mBootROMPath, std::ifstream::binary);
-	if (file.fail()) throw std::runtime_error("initaliseBootROM(): tried to open BIOS file, but it failed! Check file exists and has read permissions.");
+	if (file.fail()) 
+		throw std::runtime_error("initaliseBootROM(): tried to open BIOS file, but it failed! Check file exists and has read permissions.");
 	file.seekg(std::ifstream::beg);
 	file.read(memoryBase, PS2Constants::BootROM::SIZE_BOOT_ROM);
 }

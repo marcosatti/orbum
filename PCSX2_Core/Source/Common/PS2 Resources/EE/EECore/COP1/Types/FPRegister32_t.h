@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include "Common/PS2 Resources/EE/EECore/COP1/Types/COP1ResourcesSubobject.h"
 
 /*
 FPRegister32_t is an additional register type defined within the PS2's floating point unit (COP1) system, which are used for operating on floating point numbers.
@@ -19,11 +17,11 @@ In particular, the COP1 does not support (in comparison to IEEE-754):
  - Plus and minus infinity.
  - 'NaN' (not a number) representation.
 */
-class FPRegister32_t : public COP1ResourcesSubobject
+class FPRegister32_t
 {
 public:
 
-	explicit FPRegister32_t(const PS2Resources_t* const PS2Resources);
+	explicit FPRegister32_t();
 
 	virtual ~FPRegister32_t()
 	{
@@ -39,7 +37,6 @@ public:
 	/*
 	Functions to access the register value - you should use these functions instead of accessing them directly.
 	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the EECoreCOP1Util static class functions to help with conversion.
-	Accessing any of these functions will raise a coprocessor unavailable PS2Exception_t if the context is incorrect (ie: Status.CU[1] bit is not set or otherwise).
 	*/
 	virtual u32 readWordU();
 	virtual void writeWordU(u32 value);	

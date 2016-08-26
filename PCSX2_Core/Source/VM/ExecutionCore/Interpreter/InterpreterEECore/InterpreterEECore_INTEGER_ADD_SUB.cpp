@@ -5,7 +5,6 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/Types/PS2Exception/PS2Exception_t.h"
 
 /*
 Integer Addition/Subtraction instruction family.
@@ -25,7 +24,8 @@ void InterpreterEECore::ADD()
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
 	{
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 	}
 	
 	destReg->writeDwordS(0, result);
@@ -45,7 +45,8 @@ void InterpreterEECore::ADDI()
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
 	{
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 	}
 
 	destReg->writeDwordS(0, result);
@@ -81,8 +82,12 @@ void InterpreterEECore::DADD()
 
 	// Check for over/under flow. Logic adapted from old PCSX2.
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
-	if (((~(source1Reg->readDwordS(0)^source2Reg->readDwordS(0)))&(source1Reg->readDwordS(0)^result)) < 0) 
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+	if (((~(source1Reg->readDwordS(0)^source2Reg->readDwordS(0)))&(source1Reg->readDwordS(0)^result)) < 0)
+	{
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+	}
+		
 
 	destReg->writeDwordS(0, result);
 }
@@ -99,7 +104,10 @@ void InterpreterEECore::DADDI()
 	// Check for over/under flow. Logic adapted from old PCSX2.
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
 	if (((~(sourceReg->readDwordS(0) ^ imm))&(sourceReg->readDwordS(0) ^ result)) < 0)
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+	{
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+	}
 
 	destReg->writeDwordS(0, result);
 }
@@ -135,7 +143,10 @@ void InterpreterEECore::DSUB()
 	// Check for over/under flow. Logic adapted from old PCSX2.
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
 	if (((~(source1Reg->readDwordS(0) ^ -source2Reg->readDwordS(0)))&(source1Reg->readDwordS(0) ^ result)) < 0) 
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+	{
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+	}
 
 	destReg->writeDwordS(0, result);
 }
@@ -163,7 +174,10 @@ void InterpreterEECore::SUB()
 	// This 32 bit method relies on the MIPS documented method of checking for overflow, which when adapted, involves comparing bit 32 against bit 31.
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
-		throw PS2Exception_t(PS2Exception_t::ExceptionType::EX_OVERFLOW);
+	{
+		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+	}
 
 	destReg->writeDwordS(0, result);
 }

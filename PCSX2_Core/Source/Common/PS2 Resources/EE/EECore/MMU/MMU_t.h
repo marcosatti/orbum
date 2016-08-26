@@ -15,7 +15,7 @@ public:
 	A TLB entry is heavily related to the COP0 registers Entry{Hi, Lo0, Lo1} and PageMask.
 	See EE Core Users Manual page 120 - 123 about the TLB.
 	*/
-	struct TLBEntryInformation
+	struct TLBEntryInfo
 	{
 		u32 mMask;
 		u32 mVPN2;
@@ -41,18 +41,28 @@ public:
 	/*
 	Gets the TLB entry at the specified index - use findTLBIndex() to make sure it exists first.
 	*/
-	const TLBEntryInformation & getTLBEntry(s32 index) const;
+	const TLBEntryInfo & getTLBEntry(s32 index) const;
 
 	/*
 	Sets the TLB entry at the specified index.
 	*/
-	void setTLBEntry(const TLBEntryInformation & entry, const s32 & index);
+	void setTLBEntry(const TLBEntryInfo & entry, const s32 & index);
+
+	/*
+	Gets an index to a new TLB entry position.
+	*/
+	s32 getNewTLBIndex();
+
+	/*
+	A zeroed-TLB entry, pointed to by the MMUHandler initially.
+	*/
+	static constexpr TLBEntryInfo EMPTY_TLB_ENTRY = {0};
 
 private:
 	/*
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	TLBEntryInformation mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
+	TLBEntryInfo mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
 };
 

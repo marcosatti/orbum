@@ -27,10 +27,18 @@ public:
 	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
 	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
 	const MIPSInstruction_t & getInstruction() const;
+	void checkExceptionQueue() const;
+	void checkBranchDelaySlot() const;
 
 private:
 
 	// Component state functions
+
+#if defined(BUILD_DEBUG)
+	// Debug loop counter 
+	u64 DEBUG_LOOP_COUNTER = 0;
+#endif
+
 	/*
 	The PS2 exception handler.
 	*/
@@ -51,9 +59,6 @@ private:
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
 	// Note 2: Dots in mnemonics & function names are represented by the underscore character.
-	// Note 3: Where exceptions are declared in the instruction information (ie: see EE Core Instruction Manual), some may be thrown in the instruction body itself (for example
-	//         with integer overflows), while others may be thrown elsewhere in the emulator (such as the coprocessors being unacessible, which are defined when a read or write
-	//         occurs in a subobject).
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).

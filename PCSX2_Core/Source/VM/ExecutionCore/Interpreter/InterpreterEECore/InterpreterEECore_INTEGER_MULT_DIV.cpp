@@ -42,7 +42,7 @@ void InterpreterEECore::DIV()
 
 void InterpreterEECore::DIV1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	DIV();
 }
 
@@ -71,7 +71,7 @@ void InterpreterEECore::DIVU()
 
 void InterpreterEECore::DIVU1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	DIVU();
 }
 
@@ -89,7 +89,7 @@ void InterpreterEECore::MULT()
 
 void InterpreterEECore::MULT1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	MULT();
 }
 
@@ -107,7 +107,7 @@ void InterpreterEECore::MULTU()
 
 void InterpreterEECore::MULTU1()
 {
-	// Pipeline 1 instruction - delegate to normal getInstruction().
+	// Pipeline 1 instruction - delegate to normal instruction.
 	MULTU();
 }
 

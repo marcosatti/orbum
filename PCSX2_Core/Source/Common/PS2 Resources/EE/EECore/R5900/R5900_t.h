@@ -7,7 +7,6 @@
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
 #include "Common/PS2 Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
-#include "Common/PS2 Resources/EE/EECore/R5900/MMU/MMU_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 
@@ -24,10 +23,10 @@ public:
 	// CPU state implementations.
 
 	/*
-	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles), then 
-	 call checkBranchDelaySlot() to check if its time for the branch to happen - if cycles == 0, it will set the PC to the held value automatically.
+	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles).
 	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
 	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
+	See the InterpreterEECore::checkBranchDelaySlot() for the logic that controls this.
 	*/
 	bool mIsInBranchDelay;
 	u8 mBranchDelayCycles;
@@ -35,7 +34,6 @@ public:
 	void setBranchDelayPCTarget(u32 pcTarget, u8 cycles);
 	void setBranchDelayPCJOffset(s32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
 	void setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles); // Convenience function for MIPS I Instruction types.
-	void checkBranchDelaySlot();
 	const bool & isInBranchDelaySlot() const;
 
 	// Register implementations.
@@ -87,8 +85,5 @@ public:
 	Some convience functions are provided for manipulating this value.
 	*/
 	std::shared_ptr<PCRegister32_t> PC = std::make_shared<PCRegister32_t>();
-
-	// MMU Implementation
-	std::shared_ptr<MMU_t> MMU = std::make_shared<MMU_t>(getRootResources());
 
 }; // class R5900
