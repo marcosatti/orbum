@@ -21,6 +21,7 @@ void InterpreterEECore::ADD_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -54,6 +55,7 @@ void InterpreterEECore::ADDA_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -87,6 +89,7 @@ void InterpreterEECore::MADD_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
@@ -122,6 +125,7 @@ void InterpreterEECore::MADDA_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
@@ -156,6 +160,7 @@ void InterpreterEECore::MUL_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -189,6 +194,7 @@ void InterpreterEECore::MULA_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -222,6 +228,7 @@ void InterpreterEECore::DIV_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -263,6 +270,7 @@ void InterpreterEECore::MSUB_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -298,6 +306,7 @@ void InterpreterEECore::MSUBA_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -331,6 +340,7 @@ void InterpreterEECore::SUB_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
@@ -364,6 +374,7 @@ void InterpreterEECore::SUBA_S()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs

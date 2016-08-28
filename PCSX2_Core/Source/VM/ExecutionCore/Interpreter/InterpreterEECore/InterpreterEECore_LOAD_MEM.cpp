@@ -20,9 +20,8 @@ void InterpreterEECore::LB()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
-		
+		return;
 	}
 	else
 		destReg->writeDwordS(0, static_cast<s64>(value));
@@ -42,9 +41,8 @@ void InterpreterEECore::LBU()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
-		
+		return;
 	}
 	else
 		destReg->writeDwordU(0, static_cast<u64>(value));
@@ -65,6 +63,7 @@ void InterpreterEECore::LD()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeDwordU(0, value);
@@ -151,9 +150,8 @@ void InterpreterEECore::LH()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
-		
+		return;
 	}
 	else
 		destReg->writeDwordS(0, static_cast<s64>(value));
@@ -174,6 +172,7 @@ void InterpreterEECore::LHU()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeDwordU(0, static_cast<u64>(value));
@@ -203,6 +202,7 @@ void InterpreterEECore::LW()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeDwordS(0, static_cast<s64>(value));
@@ -289,6 +289,7 @@ void InterpreterEECore::LWU()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeDwordU(0, static_cast<u64>(value));
@@ -322,6 +323,7 @@ void InterpreterEECore::LQ()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeDwordU(1, value); // Get second 8 bytes (bytes 8 -> 15).
@@ -349,6 +351,7 @@ void InterpreterEECore::LWC1()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 	else
 		destReg->writeWordU(value);

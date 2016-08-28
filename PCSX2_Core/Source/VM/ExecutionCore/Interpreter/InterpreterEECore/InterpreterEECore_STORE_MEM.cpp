@@ -22,6 +22,7 @@ void InterpreterEECore::SB()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -40,6 +41,7 @@ void InterpreterEECore::SD()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -72,6 +74,7 @@ void InterpreterEECore::SDL()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -104,6 +107,7 @@ void InterpreterEECore::SDR()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -122,6 +126,7 @@ void InterpreterEECore::SH()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -139,9 +144,8 @@ void InterpreterEECore::SW()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
-		
+		return;
 	}
 }
 
@@ -174,6 +178,7 @@ void InterpreterEECore::SWL()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -206,6 +211,7 @@ void InterpreterEECore::SWR()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -233,6 +239,7 @@ void InterpreterEECore::SQ()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 
@@ -258,6 +265,7 @@ void InterpreterEECore::SWC1()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		return;
 	}
 }
 

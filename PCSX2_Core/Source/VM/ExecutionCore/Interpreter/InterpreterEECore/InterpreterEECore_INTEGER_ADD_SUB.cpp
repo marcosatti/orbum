@@ -26,6 +26,7 @@ void InterpreterEECore::ADD()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 	
 	destReg->writeDwordS(0, result);
@@ -47,6 +48,7 @@ void InterpreterEECore::ADDI()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 
 	destReg->writeDwordS(0, result);
@@ -86,6 +88,7 @@ void InterpreterEECore::DADD()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 		
 
@@ -107,6 +110,7 @@ void InterpreterEECore::DADDI()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 
 	destReg->writeDwordS(0, result);
@@ -146,6 +150,7 @@ void InterpreterEECore::DSUB()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 
 	destReg->writeDwordS(0, result);
@@ -177,6 +182,7 @@ void InterpreterEECore::SUB()
 	{
 		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return;
 	}
 
 	destReg->writeDwordS(0, result);

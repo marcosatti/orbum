@@ -149,6 +149,7 @@ void InterpreterEECore::BC0F()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -171,6 +172,7 @@ void InterpreterEECore::BC0FL()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -193,6 +195,7 @@ void InterpreterEECore::BC0T()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -215,6 +218,7 @@ void InterpreterEECore::BC0TL()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -236,6 +240,7 @@ void InterpreterEECore::BC1F()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -252,6 +257,7 @@ void InterpreterEECore::BC1FL()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -270,6 +276,7 @@ void InterpreterEECore::BC1T()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
@@ -286,6 +293,7 @@ void InterpreterEECore::BC1TL()
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return;
 	}
 
 	const s16 offset = getInstruction().getIImmS();
