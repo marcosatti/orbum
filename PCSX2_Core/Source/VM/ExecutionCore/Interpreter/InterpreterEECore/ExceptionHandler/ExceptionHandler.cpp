@@ -26,6 +26,13 @@ void ExceptionHandler::handleException(const EECoreException_t& PS2Exception)
 	// Get the exception properties.
 	auto& exceptionProperties = ExceptionProperties[static_cast<size_t>(mPS2Exception->mExType)];
 
+#if defined(BUILD_DEBUG)
+	// Debug print exception type.
+	char message[1000];
+	sprintf_s(message, "ExceptionHandler called! Type = %s", exTypeStrings[static_cast<size_t>(PS2Exception.mExType)]);
+	logDebug(message);
+#endif
+
 	// Call the exception specific handler contained in the ExceptionProperties_t.
 	(this->*exceptionProperties.ExceptionHandlerFunction)();
 

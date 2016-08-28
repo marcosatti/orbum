@@ -40,11 +40,14 @@ void InterpreterEECore::executionStep()
 #if defined(BUILD_DEBUG)
 	// Debug print loop counter and mnemonic.
 	char message[1000];
-	sprintf_s(message, "InterpreterEECore loop %llu: Instruction = %s", DEBUG_LOOP_COUNTER, mInstructionInfo->mMnemonic);
+	sprintf_s(message, "InterpreterEECore loop %llu: "
+					   "PC = 0x%08X, "
+					   "Instruction = %s",
+					   DEBUG_LOOP_COUNTER, PC->getPCValue(), (rawInstruction == 0) ? "NOP (SLL)" : mInstructionInfo->mMnemonic);
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER == 54)
+	if (DEBUG_LOOP_COUNTER == 100)
 		logDebug("Breakpoint hit.");
 #endif
 

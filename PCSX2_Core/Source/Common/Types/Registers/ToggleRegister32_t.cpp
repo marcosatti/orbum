@@ -11,7 +11,7 @@ void ToggleRegister32_t::setToggle()
 
 bool ToggleRegister32_t::getToggle()
 {
-	bool temp = static_cast<bool>(readWordU());
+	bool temp = readWordU() != 0;
 	writeWordU(static_cast<u32>(false));
 	return temp;
 }

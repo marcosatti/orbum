@@ -39,14 +39,14 @@ TEST(R5900Instruction_Test_Raw, IType)
 
 TEST(R5900Instruction_Test_Raw, JType)
 {
-	// J -4096
-	u32 rawInstruction = 0x0BFFF000;
+	// J 4096
+	u32 rawInstruction = 0x08001000;
 
 	MIPSInstruction_t instruction;
 	instruction.setInstruction(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 2);
-	EXPECT_EQ(instruction.getJOffsetAddress(), (-4096));
+	EXPECT_EQ(instruction.getJRegionAddress(), 4096);
 }
 
 TEST(R5900Instruction_Test_Info, RType)

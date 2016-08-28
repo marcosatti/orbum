@@ -339,8 +339,8 @@ void InterpreterEECore::BC2TL()
 void InterpreterEECore::J()
 {
 	// JUMP(). No Exceptions.
-	const s32 offset = getInstruction().getJOffsetAddress();
-	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJOffset(offset, 1);
+	const s32 offset = getInstruction().getJRegionAddress();
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJRegion(offset, 1);
 }
 
 void InterpreterEECore::JR()

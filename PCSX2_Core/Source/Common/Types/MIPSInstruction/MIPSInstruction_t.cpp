@@ -49,16 +49,9 @@ u8 MIPSInstruction_t::getRFunct() const
 
 // J instruction functions
 
-s32 MIPSInstruction_t::getJOffsetAddress() const
+u32 MIPSInstruction_t::getJRegionAddress() const
 {
-	// A sign-extension is needed. Done by testing if the 25th bit is eq to 1. If so, OR's the original result with the value that contains 1's in the upper bits. Else OR's with 0.
-	return (mInstructionValue & 0x03ffffff) | ((mInstructionValue & 0x02000000) ? 0xFC000000 : 0x00);
-}
-
-u32 MIPSInstruction_t::getJJumpAddress(Register32_t& PC) const
-{
-	u32 address = getJOffsetAddress();
-	return ((address << 2) + (PC.UW & 0xf0000000));
+	return (mInstructionValue & 0x03ffffff);
 }
 
 // I instruction functions

@@ -99,9 +99,32 @@ private:
 		{ EECoreException_t::ExType::EX_TRAP,                                 1, 13, -1, &ExceptionHandler::EX_HANDLER_TRAP }
 	};
 
-	// Debug for counting the number of exceptions raised/handled.
+	// Debug for counting the number of exceptions raised/handled and string representations.
 #if defined(BUILD_DEBUG)
 	u32 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
+	static constexpr char *const exTypeStrings[] = 
+	{
+		"EX_RESET",
+		"EX_NMI",
+		"EX_PERFORMANCE_COUNTER",
+		"EX_DEBUG",
+		"EX_INTERRUPT",
+		"EX_TLB_MODIFIED",
+		"EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD",
+		"EX_TLB_REFILL_STORE",
+		"EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD",
+		"EX_TLB_INVALID_STORE",
+		"EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD",
+		"EX_ADDRESS_ERROR_STORE",
+		"EX_BUS_ERROR_INSTRUCTION_FETCH",
+		"EX_BUS_ERROR_LOAD_STORE",
+		"EX_SYSTEMCALL",
+		"EX_BREAK",
+		"EX_RESERVED_INSTRUCTION",
+		"EX_COPROCESSOR_UNUSABLE",
+		"EX_OVERFLOW",
+		"EX_TRAP"
+	};
 #endif
 };
 

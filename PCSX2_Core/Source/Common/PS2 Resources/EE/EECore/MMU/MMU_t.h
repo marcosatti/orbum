@@ -10,9 +10,10 @@ class MMU_t : public R5900ResourcesSubobject
 public:
 	explicit MMU_t(const PS2Resources_t* const PS2Resources);
 
+	// TLB state functions.
 	/*
 	TLB entry information. Used as the backbone of storing information in the TLB.
-	A TLB entry is heavily related to the COP0 registers Entry{Hi, Lo0, Lo1} and PageMask.
+	A TLB entry is heavily related to the COP0 registers Entry{Hi, Lo0, Lo1}, PageMask and others.
 	See EE Core Users Manual page 120 - 123 about the TLB.
 	*/
 	struct TLBEntryInfo
@@ -63,6 +64,6 @@ private:
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	TLBEntryInfo mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
+	TLBEntryInfo mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES] = {0};
 };
 

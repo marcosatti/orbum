@@ -32,7 +32,7 @@ public:
 	u8 mBranchDelayCycles;
 	u32 mBranchDelayPCTarget;
 	void setBranchDelayPCTarget(u32 pcTarget, u8 cycles);
-	void setBranchDelayPCJOffset(s32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
+	void setBranchDelayPCJRegion(u32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
 	void setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles); // Convenience function for MIPS I Instruction types.
 	const bool & isInBranchDelaySlot() const;
 

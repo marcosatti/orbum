@@ -415,13 +415,17 @@ private:
 	void ERET();
 
 	/*
-	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (5 instructions total).
+	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (9 instructions total). Includes the TLB instructions as they are missing in the overview manual...
 	*/
 	void SYNC_STYPE();
 	void PREF();
 	void DI();
 	void EI();
 	void CACHE();
+	void TLBP();
+	void TLBR();
+	void TLBWI();
+	void TLBWR();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
@@ -649,10 +653,10 @@ private:
 		&InterpreterEECore::BC0T,
 		&InterpreterEECore::BC0FL,
 		&InterpreterEECore::BC0TL,
-		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBR,
-		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBWI,
-		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBWR,
-		&InterpreterEECore::INSTRUCTION_UNKNOWN, // &TLBP,
+		&InterpreterEECore::TLBR,
+		&InterpreterEECore::TLBWI,
+		&InterpreterEECore::TLBWR,
+		&InterpreterEECore::TLBP,
 		&InterpreterEECore::ERET,
 		&InterpreterEECore::EI,
 		&InterpreterEECore::DI,

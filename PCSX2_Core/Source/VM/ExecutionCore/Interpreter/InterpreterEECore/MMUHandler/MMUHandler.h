@@ -58,6 +58,7 @@ public:
 private:
 	/*
 	Exception handling state variables - see above.
+	mHasExceptionOccured is set whenever an exception in the MMU occurs, with exception type of mExType.
 	*/
 	bool mHasExceptionOccurred;
 	EECoreException_t::ExType mExType;

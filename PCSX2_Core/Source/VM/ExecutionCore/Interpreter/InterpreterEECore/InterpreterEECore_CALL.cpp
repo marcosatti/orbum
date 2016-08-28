@@ -66,8 +66,8 @@ void InterpreterEECore::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-	const s32 offset = getInstruction().getJOffsetAddress();
-	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJOffset(offset, 1);
+	const s32 offset = getInstruction().getJRegionAddress();
+	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJRegion(offset, 1);
 }
 
 void InterpreterEECore::JALR()

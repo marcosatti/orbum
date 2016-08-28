@@ -52,15 +52,13 @@ public:
 	
 	/*
 	Get functions for the various J instruction fields:
-	- Pseudo-address @ bits 0-25
+	- Region-address @ bits 0-25
 
-	The pseudo-address (PA) is not the jump location - rather it is calculated based on the PA, the 4 high bits of the PC of the next instruction (branch delay slot) at the most significant bits and 2 bits set to 0 at the least significant bits.
+	The region-address (RA) is not the jump location - rather the real jump address is calculated based on the RA, the 4 high bits of the PC of the next instruction (branch delay slot) at the most significant bits and 2 bits set to 0 at the least significant bits.
 	See documentation mentioned above for a more elaborate explanation.
-	- getOffsetAddress returns the raw pseudo-address contained in the instruction.
-	- getAddress returns the real address based on the pseudo-address and the other factors mentioned above.
+	- getJRegionAddress returns the raw region-address contained in the instruction.
 	*/
-	s32 getJOffsetAddress() const;
-	u32 getJJumpAddress(Register32_t& PC) const;
+	u32 getJRegionAddress() const;
 
 	/*
 	Get functions for the various I instruction fields:

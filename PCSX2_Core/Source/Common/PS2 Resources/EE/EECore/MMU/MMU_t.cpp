@@ -21,13 +21,15 @@ s32 MMU_t::findTLBIndex(u32 PS2VirtualAddress) const
 	u32 searchVPN2 = (PS2VirtualAddress >> 25); // End up with 7 bits. Normally this would be ((value >> 24) / 2) but dividing by 2 is exactly the same as shifting it right by 1 (ie: >> 25).
 	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)
 	{
-		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18), so we need to mask out bits 12-18 (length 7).
-		auto tlbEntry = mTLBEntries[i];
-		u32 tlbMaskedVPN2 = tlbEntry.mVPN2 & PS2Constants::EE::EECore::MMU::MASK_VPN2_FIELD;
+		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18).
+		// For the MSB 7 bits (for a page size of 16MB), we need to mask out bits 12-18 (length 7), in order to make a comparison.
+		const TLBEntryInfo & tlbEntry = mTLBEntries[i];
+		u32 tlbMaskedVPN2 = (tlbEntry.mVPN2 & PS2Constants::EE::EECore::MMU::MASK_VPN2_FIELD_16MB) >> 12;
 		if (searchVPN2 == tlbMaskedVPN2)
 		{
-			// A potential match was found. Need to now check if the VPN is actually correct by using the TLB entry mask.
-			u32 realVPN2 = (PS2VirtualAddress & ~tlbEntry.mMask) / 2;
+			// A potential match was found. Need to now check if the VPN is actually correct by using the TLB entry mask. It is up to the callee to check for the ASID and G bits.
+			u32 realTlbMask = (~tlbEntry.mMask) & 0x0007FFFF;
+			u32 realVPN2 = (PS2VirtualAddress >> 13) & (realTlbMask);
 			if (realVPN2 == tlbEntry.mVPN2)
 			{
 				// A match was found. I will assume that there will never be 2 entries with the same VPN.
@@ -55,6 +57,7 @@ s32 MMU_t::getNewTLBIndex()
 	}
 
 	// No empty spot was found, so return the first index.
+	// TODO: Create a better algorithm for determining which index to use. See old PCSX2.
 	return 0;
 }
 
