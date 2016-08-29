@@ -325,7 +325,23 @@ void MMUHandler::getPS2PhysicalAddress_Stage2()
 
 void MMUHandler::getPS2PhysicalAddress_Stage3()
 {
-	// Stage 3: Assess if the page is valid and it is marked dirty.
+	// Stage 3: Assess if the page is valid and it is marked dirty. Also check for the scratchpad ram access (deviates from the documentation a little).
+
+	// Check if accessing scratchpad
+	if (mTLBEntryInfo->mS)
+	{
+		// As mentioned in the TLB implementation (see the class MMU_t), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
+		// This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
+
+		// In order to access the SPR within the emulator, we are utilising the 'reserved' region of the PS2's physical memory map. Since there is nothing allocated
+		//  in this region for the PS2, we are free to use it for our own purposes. See Docs/Memory Mappings.xlsx for all of PCSX2's PS2 physical memory maps, 
+		//  including non-standard maps.
+		// The scratchpad ram (in PCSX2) corresponds to PS2 physical address 0x14000000.
+		u32 offset16KB = mPS2VirtualAddress & Constants::MASK_16KB;
+		mPS2PhysicalAddress = PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + offset16KB;
+		return;
+	}
+
 	// Need to check now before continuing if the VPN is for a even or odd page. This is done by checking the LSB of the VPN from the original address accessed.
 	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN.
 	if (mPS2VirtualAddress & (mTLBEntryInfo->mMask + 1))
@@ -402,14 +418,7 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 
 void MMUHandler::getPS2PhysicalAddress_Stage4Odd()
 {
-	// Check if accessing scratchpad
-	if (mTLBEntryInfo->mS)
-	{
-		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		throw std::runtime_error("MMUHandler: scratchpad access not yet implemented.");
-	}
-
-	// Or cache access?
+	// Cache access?
 	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
 	// See EE Core Users Manual page 126.
 	/*
@@ -426,18 +435,11 @@ void MMUHandler::getPS2PhysicalAddress_Stage4Odd()
 
 void MMUHandler::getPS2PhysicalAddress_Stage4Even()
 {
-	// Check if accessing scratchpad
-	if (mTLBEntryInfo->mS)
-	{
-		// TODO: implement accessing scratchpad. Idea on how to do this: map the reserved region 0x14000000 -> 0x1FBFFFFF to point to the SPRAM, using the VM MMU as this region will be unmapped anyway. The reserved region is 192 MB, plenty of space.
-		throw std::runtime_error("MMUHandler: scratchpad access not yet implemented.");
-	}
-
-	// Or cache access?
+	// Cache access?
 	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
 	// See EE Core Users Manual page 126.
 	/*
-	if (tlbEntry.mCOdd > 0)
+	if (tlbEntry.mCEven > 0)
 	{
 	}
 	*/

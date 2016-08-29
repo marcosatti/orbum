@@ -44,7 +44,7 @@ public:
 			};
 
 			struct MMU {
-				// Page mask sizes. See EE Core Users Manual page 67.
+				// Page mask sizes, used within a TLB MASK field. See EE Core Users Manual page 67.
 				static constexpr u32 MASK_PAGE_SIZE_4KB = 0;
 				static constexpr u32 MASK_PAGE_SIZE_16KB = 3;
 				static constexpr u32 MASK_PAGE_SIZE_64KB = 15;
@@ -99,6 +99,8 @@ public:
 				static constexpr u32 ZERO_NEG = 0x80000000; // Sign bit = 1 -> negative.
 			};
 
+			static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
+			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
 		};
 	};
 

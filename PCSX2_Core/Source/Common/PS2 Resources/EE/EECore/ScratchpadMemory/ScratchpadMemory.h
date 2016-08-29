@@ -14,12 +14,12 @@ public:
 	{
 #if defined(BUILD_DEBUG)
 		char message[1000];
-		sprintf_s(message, 1000, "ScratchpadMemory allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(getClientMemoryAddress()));
+		sprintf_s(message, 1000, "ScratchpadMemory allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(ScratchpadMemory_t::getClientMemoryAddress()));
 		logDebug(message);
 #endif
 
 		// Set memory to zero.
-		memset(getClientMemoryAddress(), 0, getClientMemoryLength());
+		memset(ScratchpadMemory_t::getClientMemoryAddress(), 0, ScratchpadMemory_t::getClientMemoryLength());
 	}
 
 	~ScratchpadMemory_t()

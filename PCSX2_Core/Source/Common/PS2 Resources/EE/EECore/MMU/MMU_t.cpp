@@ -31,9 +31,17 @@ s32 MMU_t::findTLBIndex(u32 PS2VirtualAddress) const
 			u32 realTlbMask = (~tlbEntry.mMask) & 0x0007FFFF;
 			u32 realVPN2 = (PS2VirtualAddress >> 13) & (realTlbMask);
 			if (realVPN2 == tlbEntry.mVPN2)
+				return i; // A match was found. I will assume that there will never be 2 entries with the same VPN.
+
+			// Need to also check for the scratchpad RAM mapping. In this case, MASK will be 0 (indicating page size of 4KB), but the SPRAM occupies 16KB of continuous space (4 x 4KB pages).
+			if (tlbEntry.mS)
 			{
-				// A match was found. I will assume that there will never be 2 entries with the same VPN.
-				return i;
+				// If it is the scratchpad entry, the VPN is 20 bits long, with the LSB 2 bits indicating which 4KB page it is of the 16KB (0 -> 3).
+				// Ie: we need to check the upper 18 bits (bits 31-14) against the upper 18 bits of the tlb VPN2 (which is always of length 19 bits).
+				u32 sprRealVPN2 = (PS2VirtualAddress >> 14);
+				u32 sprTLBVPN2 = (tlbEntry.mVPN2 >> 1);
+				if (sprRealVPN2 == sprTLBVPN2)
+					return i;
 			}
 		}
 	}

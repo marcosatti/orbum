@@ -13,10 +13,7 @@ VALUE = Constant value.
 struct Constants
 {
 	static constexpr u32 SIZE_512MB = 512 * 1024 * 1024;
-
-	static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
-
-	static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
+	static constexpr u32 MASK_16KB = 0x00003FFF;
 
 	static constexpr u32 NUMBER_BYTES_IN_QWORD = 16;
 	static constexpr u32 NUMBER_HWORDS_IN_QWORD = 8;

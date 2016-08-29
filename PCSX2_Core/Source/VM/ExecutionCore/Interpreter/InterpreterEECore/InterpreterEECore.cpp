@@ -47,7 +47,7 @@ void InterpreterEECore::executionStep()
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER == 100)
+	if (DEBUG_LOOP_COUNTER == 89)
 		logDebug("Breakpoint hit.");
 #endif
 

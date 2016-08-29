@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include "PCRegister32_t.h"
+#include "Common/PS2 Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/PS2 Constants/PS2Constants.h"
 
 u32 PCRegister32_t::getPCValue()
 {
@@ -18,5 +19,5 @@ void PCRegister32_t::setPCValueAbsolute(const u32& absoluteLocation)
 
 void PCRegister32_t::setPCValueNext()
 {
-	setPCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
+	setPCValueRelative(PS2Constants::EE::EECore::SIZE_MIPS_INSTRUCTION);
 }

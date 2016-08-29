@@ -14,12 +14,12 @@ public:
 	{
 #if defined(BUILD_DEBUG)
 		char message[1000];
-		sprintf_s(message, 1000, "BootROM allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(getClientMemoryAddress()));
+		sprintf_s(message, 1000, "BootROM allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(BootROM_t::getClientMemoryAddress()));
 		logDebug(message);
 #endif
 
 		// Set memory to zero.
-		memset(getClientMemoryAddress(), 0, getClientMemoryLength());
+		memset(BootROM_t::getClientMemoryAddress(), 0, BootROM_t::getClientMemoryLength());
 	}
 
 	~BootROM_t()
