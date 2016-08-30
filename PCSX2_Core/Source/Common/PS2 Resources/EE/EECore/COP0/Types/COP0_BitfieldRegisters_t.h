@@ -3,6 +3,7 @@
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
+class PS2Resources; // Forward declaration.
 
 /*
 COP0_BitfieldRegister_t.h implements all of the bitfields in each of the COP0 control registers. This is used primarily by COP0_t.h.
@@ -263,6 +264,9 @@ public:
 	{
 		registerField(Fields::Count, 0, 32, 0);
 	}
+
+	// Convenience function that increments the count field value by the specified amount. 
+	void increment(u32 value);
 };
 
 /*
@@ -293,11 +297,12 @@ public:
 /*
 The Compare register of COP0, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 72.
+Note: Also clears the COP0.Cause.IP7 field when written to (see overridden functions). This is from the documentation on the same page.
 
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Compare".
 */
-class RegisterCompare_t : public BitfieldRegister32_t
+class RegisterCompare_t : public BitfieldRegister32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -305,10 +310,13 @@ public:
 		static constexpr auto Compare = "Compare";
 	};
 
-	explicit RegisterCompare_t()
+	explicit RegisterCompare_t(const PS2Resources_t *const PS2Resources) : PS2ResourcesSubobject(PS2Resources)
 	{
 		registerField(Fields::Compare, 0, 32, 0);
 	}
+
+	void setFieldValue(const std::string& fieldName, const u32& value) override;
+	void setRegisterValue(u32 value) override;
 };
 
 /*

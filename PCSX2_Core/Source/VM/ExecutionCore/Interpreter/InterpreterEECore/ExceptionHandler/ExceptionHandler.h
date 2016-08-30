@@ -6,8 +6,12 @@
 #include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 #include "Common/PS2 Constants/PS2Constants.h"
 
+/*
+The exception handler provides 2 main points of functionality:
+ 1. Handles the exception queue for the EE Core, in which any events are queued into, such as interrupts or TLB exceptions.
+ 2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
+*/
 class VMMain;
-
 class ExceptionHandler : public VMExecutionCoreComponent
 {
 public:
@@ -15,6 +19,12 @@ public:
 
 	// TODO: Check again for any missed settings that the individual exceptions require to be set. IE: Coprocessor unusable requires Cause.CE set to the coprocessor that caused it.
 	
+	/*
+	Check the exception queue, and executes the exception handler if there are items to be processed.	
+	// TODO: Not sure if we need to handle them all in one go, or only 1 per step cycle, or on jump-type instructions ala PCSX2. Currently 1 per cycle.
+	*/
+	void checkExceptionQueue();
+
 	/*
 	Handles a given exception by:
 	 1. Running the specific exception operation ("EX_HANDLER_*" defined below). This is done before 2. below.

@@ -6,6 +6,7 @@
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
@@ -19,16 +20,17 @@ public:
 	~InterpreterEECore();
 
 	/*
-	This is the "main loop" function called by the base interpreter component.
+	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
 	void executionStep() override;
+	void checkBranchDelaySlot() const;
+	void executeInstruction();
 
 	// Component state functions
 	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
 	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
-	const MIPSInstruction_t & getInstruction() const;
-	void checkExceptionQueue() const;
-	void checkBranchDelaySlot() const;
+	const std::unique_ptr<TimerHandler> & getTimerHandler() const;
+	MIPSInstruction_t & getInstruction();
 
 private:
 
@@ -48,6 +50,11 @@ private:
 	The PS2 MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
 	*/
 	const std::unique_ptr<MMUHandler> mMMUHandler;
+
+	/*
+	The timer handler, responsible for updating and raising interrupts of various PS2 registers (mostly to do with COP0).
+	*/
+	const std::unique_ptr<TimerHandler> mTimerHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.

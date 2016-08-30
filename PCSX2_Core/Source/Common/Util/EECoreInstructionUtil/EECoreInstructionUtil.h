@@ -28,13 +28,13 @@ public:
 	*/
 	struct EECoreInstructionInfo_t
 	{
-		enum InstructionType
+		enum class InstructionType
 		{
 			CLASS,
 			INSTRUCTION
 		};
 
-		enum BranchDelayType
+		enum class BranchDelayType
 		{
 			NONE,
 			BRANCH_DELAY,
@@ -43,7 +43,7 @@ public:
 		};
 
 		// Constructor.
-		EECoreInstructionInfo_t(const char *const baseClass, const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u8 cycles, const EECoreInstructionInfo_t&(*const lookupFunction)(const MIPSInstruction_t& instruction))
+		EECoreInstructionInfo_t(const char *const baseClass, const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t&(*const lookupFunction)(const MIPSInstruction_t& instruction))
 			: mBaseClass(baseClass),
 			mClassIndex(classIndex),
 			mInstructionType(instructionType),
@@ -61,7 +61,7 @@ public:
 		const char *const               mMnemonic;                                                      // A string representation of the instruction or subclass.
 		const u32                       mImplementationIndex;                                           // A unique index which is used by an execution core to define and run an instruction. See the example in the header of this file.
 		const BranchDelayType           mBranchDelayType;                                               // Some instructions have a branch delay feature, where the next instruction immediately after is executed regardless if a branch is taken or not. Most of the time it will be NONE. See the EE Core Users Manual page 44 for more information.
-		const u8                        mCycles;                                                        // An approximate number of CPU cycles the instruction takes to execute, which is useful for performance tracking and timing.
+		const u32                       mCycles;                                                        // An approximate number of CPU cycles the instruction takes to execute, which is useful for performance tracking and timing.
 		const EECoreInstructionInfo_t & (*const mLookupFuncion)(const MIPSInstruction_t & instruction); // When a sub-class is encountered, this variable points to a lookup function containing the logic needed for accessing the sub-class table properly.
 	};
 
@@ -114,5 +114,32 @@ public:
 	An unknown instruction constant, used in tables not implemented.
 	*/
 	static const EECoreInstructionInfo_t EECORE_INSTRUCTION_UNDEFINED;
+
+	/*
+	EE Core CPU (R5900 & COP) cycle constants - most instructions will use one of these values for the EECoreInstructionInfo_t::mCycles field.
+	These constants represent the number of cycles needed to perform an instruction by the CPU. They are approximate values.
+	Most have been copied over from the old PCSX2, not sure on the accuracy.
+	*/
+	struct CycleConstants
+	{
+		// R5900 instructions.
+		static constexpr u32 R5900_DEFAULT  = 9;
+		static constexpr u32 R5900_BRANCH   = 11;
+		static constexpr u32 R5900_MULTIPLY = 16;
+		static constexpr u32 R5900_DIVIDE   = 112;
+		static constexpr u32 R5900_STORE    = 14;
+		static constexpr u32 R5900_LOAD     = 14;
+
+		// MMI instructions.
+		static constexpr u32 MMI_DEFAULT    = 14;
+		static constexpr u32 MMI_MULTIPLY   = 16;
+		static constexpr u32 MMI_DIVIDE     = 112;
+
+		// COP0/1 instructions.
+		static constexpr u32 COP_DEFAULT    = 11;
+		static constexpr u32 COP_BRANCH     = 20; // TODO: This is a very rough guess. Needs testing.
+		static constexpr u32 COP1_MULTIPLY  = 32;
+		static constexpr u32 COP1_DIVIDE    = 200; // TODO: This is a very rough guess. Needs testing.
+	};
 };
 

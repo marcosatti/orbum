@@ -28,7 +28,7 @@ public:
 	/*
 	Set the instruction value. Allows an object to be reused so memory allocations are not wasted.
 	*/
-	void setInstruction(const u32 instructionValue);
+	void setInstructionValue(const u32 instructionValue);
 
 	/*
 	Returns the opcode field of the instruction.

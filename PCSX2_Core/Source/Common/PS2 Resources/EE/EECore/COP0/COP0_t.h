@@ -42,7 +42,7 @@ public:
 	std::shared_ptr<RegisterBadVAddr_t> BadVAddr	= std::make_shared<RegisterBadVAddr_t>(); // r8:  Bad virtual address value (for exceptions).
 	std::shared_ptr<RegisterCount_t>	Count		= std::make_shared<RegisterCount_t>();    // r9:  Timer Compare.
 	std::shared_ptr<RegisterEntryHi_t>	EntryHi		= std::make_shared<RegisterEntryHi_t>();  // r10: High half (Virtual page number and ASID) of TLB entry.
-	std::shared_ptr<RegisterCompare_t>	Compare		= std::make_shared<RegisterCompare_t>();  // r11: Timer reference value.
+	std::shared_ptr<RegisterCompare_t>	Compare		= std::make_shared<RegisterCompare_t>(getRootResources());  // r11: Timer reference value.
 	std::shared_ptr<RegisterStatus_t>	Status		= std::make_shared<RegisterStatus_t>();   // r12: Processor Status Register.
 	std::shared_ptr<RegisterCause_t>	Cause		= std::make_shared<RegisterCause_t>();    // r13: Result of last exception taken.
 	std::shared_ptr<RegisterEPC_t>		EPC			= std::make_shared<RegisterEPC_t>();      // r14: Exception Program Counter.

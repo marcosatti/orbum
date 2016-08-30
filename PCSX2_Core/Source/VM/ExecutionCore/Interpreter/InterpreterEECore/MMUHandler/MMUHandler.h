@@ -6,13 +6,16 @@
 #include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
-class VMMain;
-
-using TLBEntryInfo = MMU_t::TLBEntryInfo;
-
 /*
-MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB).
+MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the VM MMU (which is responsible for 
+ converting a PS2 physical address -> client memory address).
+It handles any requests from reading or writing from a virtual address.
+
+Any request performed must be followed by a check for any errors (similar to how Linux ERRNO handling works). This is because the PS2's MMU may generate an exception,
+ and the instruction must perform differently when an error is raised (it can not automatically enter the exception queue for this reason).
 */
+class VMMain;
+using TLBEntryInfo = MMU_t::TLBEntryInfo;
 class MMUHandler : public VMExecutionCoreComponent
 {
 public:

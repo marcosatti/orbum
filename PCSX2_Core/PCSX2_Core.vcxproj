@@ -197,8 +197,10 @@
     <ClInclude Include="Source\Common\Interfaces\VMMMUComponent.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ToggleRegister32_t.cpp" />
@@ -250,6 +252,7 @@
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\FPU Notes.xlsx" />

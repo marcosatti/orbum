@@ -14,6 +14,16 @@ ExceptionHandler::ExceptionHandler(const VMMain *const vmMain)
 {
 }
 
+void ExceptionHandler::checkExceptionQueue()
+{
+	auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+	if (!ExceptionQueue->empty())
+	{
+		handleException(ExceptionQueue->front());
+		ExceptionQueue->pop();
+	}
+}
+
 void ExceptionHandler::handleException(const EECoreException_t& PS2Exception)
 {
 #if defined(BUILD_DEBUG)

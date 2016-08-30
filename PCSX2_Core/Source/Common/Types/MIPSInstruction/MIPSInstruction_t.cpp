@@ -10,7 +10,7 @@ MIPSInstruction_t::MIPSInstruction_t(u32 instructionValue)
 	this->mInstructionValue = instructionValue;
 }
 
-void MIPSInstruction_t::setInstruction(const u32 instructionValue)
+void MIPSInstruction_t::setInstructionValue(const u32 instructionValue)
 {
 	mInstructionValue = instructionValue;
 }
