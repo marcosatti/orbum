@@ -122,7 +122,7 @@ void InterpreterEECore::DADDIU()
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 
-	destReg->writeDwordS(0, static_cast<s64>(sourceReg->readDwordS(0) + getInstruction().getIImmS()));
+	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readDwordS(0) + getInstruction().getIImmS()));
 }
 
 void InterpreterEECore::DADDU()
@@ -132,7 +132,7 @@ void InterpreterEECore::DADDU()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
-	destReg->writeDwordU(0, static_cast<s64>(source1Reg->readDwordU(0) + source2Reg->readDwordU(0)));
+	destReg->writeDwordU(0, static_cast<u64>(source1Reg->readDwordS(0) + source2Reg->readDwordS(0)));
 }
 
 void InterpreterEECore::DSUB()

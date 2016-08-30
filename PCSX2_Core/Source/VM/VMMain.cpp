@@ -91,7 +91,9 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::BootROM::PADDRESS_BOOT_ROM);
 
 	// DEBUG
-	getMMU()->mapMemory(new u8[0x04000000], 0x04000000, 0x10000000);
+	u8 * hwmem = new u8[0x04000000];
+	memset(hwmem, 0, 0x04000000);
+	getMMU()->mapMemory(hwmem, 0x04000000, 0x10000000);
 }
 
 void VMMain::initaliseExecutionCore()

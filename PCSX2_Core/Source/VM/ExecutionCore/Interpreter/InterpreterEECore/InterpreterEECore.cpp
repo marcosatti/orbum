@@ -42,12 +42,13 @@ void InterpreterEECore::executionStep()
 	char message[1000];
 	sprintf_s(message, "InterpreterEECore loop %llu: "
 					   "PC = 0x%08X, "
+					   "BD = %d, "
 					   "Instruction = %s",
-					   DEBUG_LOOP_COUNTER, PC->getPCValue(), (rawInstruction == 0) ? "NOP (SLL)" : mInstructionInfo->mMnemonic);
+					   DEBUG_LOOP_COUNTER, PC->getPCValue(), getVM()->getResources()->EE->EECore->R5900->mIsInBranchDelay, (rawInstruction == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER == 89)
+	if (DEBUG_LOOP_COUNTER == 10000)
 		logDebug("Breakpoint hit.");
 #endif
 
@@ -98,7 +99,6 @@ void InterpreterEECore::checkBranchDelaySlot() const
 		{
 			R5900->PC->setPCValueAbsolute(R5900->mBranchDelayPCTarget);
 			R5900->mIsInBranchDelay = false;
-
 		}
 		else
 			R5900->mBranchDelayCycles--;

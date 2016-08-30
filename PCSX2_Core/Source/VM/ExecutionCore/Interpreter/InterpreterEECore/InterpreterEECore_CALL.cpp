@@ -31,7 +31,7 @@ void InterpreterEECore::BGEZALL()
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BLTZAL()
@@ -59,7 +59,7 @@ void InterpreterEECore::BLTZALL()
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	}
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::JAL()

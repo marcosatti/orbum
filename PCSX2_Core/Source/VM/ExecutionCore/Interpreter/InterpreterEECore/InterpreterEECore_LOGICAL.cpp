@@ -25,8 +25,8 @@ void InterpreterEECore::ANDI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
 	u64 imm = static_cast<u64>(getInstruction().getIImmU());
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) & imm);

@@ -27,7 +27,7 @@ void InterpreterEECore::BEQL()
 	if (source1Reg->readDwordS(0) == source2Reg->readDwordS(0))
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BGEZ()
@@ -49,7 +49,7 @@ void InterpreterEECore::BGEZL()
 	if (source1Reg->readDwordS(0) >= 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BGTZ()
@@ -71,7 +71,7 @@ void InterpreterEECore::BGTZL()
 	if (source1Reg->readDwordS(0) > 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BLEZ()
@@ -93,7 +93,7 @@ void InterpreterEECore::BLEZL()
 	if (source1Reg->readDwordS(0) <= 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BLTZ()
@@ -115,29 +115,31 @@ void InterpreterEECore::BLTZL()
 	if (source1Reg->readDwordS(0) < 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BNE()
 {
-	// BRANCH(Rs != 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	// BRANCH(Rs != Rt). No exceptions.
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	const s16 offset = getInstruction().getIImmS();
 
-	if (source1Reg->readDwordS(0) != 0)
+	if (source1Reg->readDwordS(0) != source2Reg->readDwordS(0))
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void InterpreterEECore::BNEL()
 {
-	// BRANCH(Rs != 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
+	// BRANCH(Rs != Rt). No exceptions.
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRt()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
 	const s16 offset = getInstruction().getIImmS();
 
-	if (source1Reg->readDwordS(0) != 0)
+	if (source1Reg->readDwordS(0) != source2Reg->readDwordS(0))
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BC0F()
@@ -265,7 +267,7 @@ void InterpreterEECore::BC1FL()
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BC1T()
@@ -301,7 +303,7 @@ void InterpreterEECore::BC1TL()
 	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(RegisterCSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
-		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(8, 0); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void InterpreterEECore::BC2F()

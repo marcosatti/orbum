@@ -34,7 +34,7 @@ void R5900_t::setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles)
 	// TODO: Logic subject to change. May not work once everything is in place.
 	mIsInBranchDelay = true;
 	mBranchDelayCycles = cycles;
-	mBranchDelayPCTarget = (PC->getPCValue() + PS2Constants::EE::EECore::SIZE_MIPS_INSTRUCTION) + (IInstructionOffset << 2); // New PC = (Current PC + 4) + (JInstructionTarget << 2). See for example the instruction BGEZALL for more info.
+	mBranchDelayPCTarget = (PC->getPCValue() + PS2Constants::EE::EECore::SIZE_MIPS_INSTRUCTION) + (IInstructionOffset << 2); // New PC = Current PC + 4 + JInstructionTarget. See for example the instruction BGEZALL for more info.
 }
 
 const bool & R5900_t::isInBranchDelaySlot() const
