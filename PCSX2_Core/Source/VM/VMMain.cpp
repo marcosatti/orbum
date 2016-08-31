@@ -6,6 +6,7 @@
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
+#include "Common/Types/StorageObject/DeadStorage_t.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) 
@@ -91,9 +92,8 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::BootROM::PADDRESS_BOOT_ROM);
 
 	// DEBUG
-	u8 * hwmem = new u8[0x04000000];
-	memset(hwmem, 0, 0x04000000);
-	getMMU()->mapMemory(hwmem, 0x04000000, 0x10000000);
+	std::shared_ptr<DeadStorage_t> eereg_mem = std::make_shared<DeadStorage_t>(0x04000000, "EE & GS Register Memory (Dead)");
+	getMMU()->mapMemory(eereg_mem, 0x10000000);
 }
 
 void VMMain::initaliseExecutionCore()

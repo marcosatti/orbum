@@ -7,16 +7,6 @@ Register32_t::Register32_t() : UW(0)
 {
 }
 
-void* Register32_t::getClientMemoryAddress()
-{
-	return reinterpret_cast<void*>(&UW);
-}
-
-size_t Register32_t::getClientMemoryLength()
-{
-	return sizeof(UW);
-}
-
 u8 Register32_t::readByteU(u32 arrayIndex)
 {
 	return UB[arrayIndex];

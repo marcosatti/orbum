@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
 
 /*
 Register type and size definitions.
@@ -22,7 +21,7 @@ Register128_t.(S or U)W[2] = bits 64-95.              ↓
 Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 */
 
-class Register64_t : public VMMMUMappedStorageObject
+class Register64_t 
 {
 public:
 	virtual ~Register64_t()
@@ -43,10 +42,6 @@ public:
 
 	// Initialise union with 0 value.
 	Register64_t();
-
-	// Memory Mapped IO functionality. Note that if there are subclassed registers with additional functionality, it will not run - this is provided as a raw access method.
-	void* getClientMemoryAddress() override;
-	size_t getClientMemoryLength() override;
 
 	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
 	virtual u8 readByteU(u32 arrayIndex);

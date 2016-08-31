@@ -2,10 +2,10 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2 Resources/EE/EECore/R5900/Types/R5900ResourcesSubobject.h"
 #include "Common/PS2 Constants/PS2Constants.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
-class MMU_t : public R5900ResourcesSubobject
+class MMU_t : public PS2ResourcesSubobject
 {
 public:
 	explicit MMU_t(const PS2Resources_t* const PS2Resources);

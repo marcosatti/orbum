@@ -4,10 +4,9 @@
 
 #include "Common/PS2 Constants/PS2Constants.h"
 #include "Common/PS2 Resources/PS2Resources_t.h"
-#include "Common/PS2 Resources/EE/EECore/R5900/Types/R5900ResourcesSubobject.h"
 #include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
 
-MMU_t::MMU_t(const PS2Resources_t* const PS2Resources) : R5900ResourcesSubobject(PS2Resources) 
+MMU_t::MMU_t(const PS2Resources_t* const PS2Resources) : PS2ResourcesSubobject(PS2Resources) 
 {
 }
 

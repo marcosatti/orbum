@@ -42,10 +42,10 @@ public:
 	// VPU_t VPU0;
 
 	// Scratchpad memory
-	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>(getRootResources());
+	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>();
 
 	// Exception/Interrupt State. The INTC etc will communicate through here.
-	std::shared_ptr<Exceptions_t> Exceptions = std::make_shared<Exceptions_t>();
+	std::shared_ptr<Exceptions_t> Exceptions = std::make_shared<Exceptions_t>(getRootResources());
 
 	// MMU Implementation
 	std::shared_ptr<MMU_t> MMU = std::make_shared<MMU_t>(getRootResources());

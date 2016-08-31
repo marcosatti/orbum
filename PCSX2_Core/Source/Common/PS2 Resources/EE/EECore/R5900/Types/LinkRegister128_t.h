@@ -3,14 +3,14 @@
 #include  "Common/Global/Globals.h"
 
 #include "Common/Types/Registers/Register128_t.h"
-#include "Common/PS2 Resources/EE/EECore/R5900/Types/R5900ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 
-class LinkRegister128_t : public Register128_t, public R5900ResourcesSubobject
+class LinkRegister128_t : public Register128_t, public PS2ResourcesSubobject
 {
 public:
 	explicit LinkRegister128_t(const PS2Resources_t* const PS2Resources)
-		: R5900ResourcesSubobject(PS2Resources)
+		: PS2ResourcesSubobject(PS2Resources)
 	{
 	}
 

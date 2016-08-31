@@ -2,41 +2,19 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Constants/PS2Constants.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
+#include "Common/Types/StorageObject/StorageObject_t.h"
 
-class MainMemory_t : public PS2ResourcesSubobject, public VMMMUMappedStorageObject
+class MainMemory_t : public StorageObject_t
 {
 public:
-	explicit MainMemory_t(const PS2Resources_t *const PS2Resources) : 
-		PS2ResourcesSubobject(PS2Resources),
-		mMainMemory(new u8[PS2Constants::MainMemory::SIZE_MAIN_MEMORY])
-	{
-#if defined(BUILD_DEBUG)
-		char message[1000];
-		sprintf_s(message, 1000, "MainMemory allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(MainMemory_t::getClientMemoryAddress()));
-		logDebug(message);
-#endif
 
-		// Set memory to zero.
-		memset(MainMemory_t::getClientMemoryAddress(), 0, MainMemory_t::getClientMemoryLength());
+	static constexpr char * MEMORY_REGION_NAME = "Main Memory";
+
+	explicit MainMemory_t() :
+		StorageObject_t(PS2Constants::MainMemory::SIZE_MAIN_MEMORY, MEMORY_REGION_NAME)
+	{
 	}
 
-	~MainMemory_t()
-	{
-		delete[] mMainMemory;
-	}
-
-	// Memory Mapped IO functionality.
-	void* getClientMemoryAddress() override
-	{
-		return reinterpret_cast<void*>(mMainMemory);
-	}
-
-	size_t getClientMemoryLength() override
-	{
-		return PS2Constants::MainMemory::SIZE_MAIN_MEMORY;
-	}
 private:
-	u8 *const mMainMemory;
+
 };

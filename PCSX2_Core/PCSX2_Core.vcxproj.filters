@@ -174,9 +174,6 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EE_t.h">
       <Filter>Source\Common\PS2 Resources\EE</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h">
-      <Filter>Source\Common\PS2 Resources\MainMemory</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler\ExceptionHandler.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler</Filter>
     </ClInclude>
@@ -201,21 +198,6 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h">
-      <Filter>Source\Common\Types\MIPSInstruction</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister32_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\Register32_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\Register64_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\Register128_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClInclude>
@@ -231,9 +213,6 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\LinkRegister128_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\R5900ResourcesSubobject.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Interfaces\VMMMUMappedStorageObject.h">
       <Filter>Source\Common\Interfaces</Filter>
     </ClInclude>
@@ -242,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Exceptions_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\ToggleRegister32_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h">
       <Filter>Source\Common\PS2 Resources</Filter>
@@ -256,6 +232,29 @@
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h">
+      <Filter>Source\Common\PS2 Resources\MainMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h">
+      <Filter>Source\Common\Types\MIPSInstruction</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register64_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\Register128_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Registers\ToggleRegister32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\StorageObject\StorageObject_t.h" />
+    <ClInclude Include="Source\Common\Types\StorageObject\DeadStorage_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -327,21 +326,6 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore_LOAD_MEM.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.cpp">
-      <Filter>Source\Common\Types\MIPSInstruction</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister32_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\Register64_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\Register128_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClCompile>
@@ -387,9 +371,6 @@
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\MMU\MMU_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\MMU</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\ToggleRegister32_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Types\EECoreException_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions\Types</Filter>
     </ClCompile>
@@ -398,6 +379,26 @@
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
+    <ClCompile Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.cpp">
+      <Filter>Source\Common\Types\MIPSInstruction</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register64_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\Register128_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Registers\ToggleRegister32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\StorageObject\StorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\Types\StorageObject\DeadStorage_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

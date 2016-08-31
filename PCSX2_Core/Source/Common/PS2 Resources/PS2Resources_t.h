@@ -30,10 +30,10 @@ public:
 	std::shared_ptr<EE_t> EE = std::make_shared<EE_t>(this);
 
 	// Main Memory (32MB)
-	std::shared_ptr<MainMemory_t> MainMemory = std::make_shared<MainMemory_t>(this);
+	std::shared_ptr<MainMemory_t> MainMemory = std::make_shared<MainMemory_t>();
 
 	// Boot ROM (4MB)
-	std::shared_ptr<BootROM_t> BootROM = std::make_shared<BootROM_t>(this);
+	std::shared_ptr<BootROM_t> BootROM = std::make_shared<BootROM_t>();
 
 private:
 

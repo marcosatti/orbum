@@ -99,8 +99,10 @@ void InterpreterEECore::executeInstruction()
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER == 10000)
+	if (DEBUG_LOOP_COUNTER == 8100)
+	{
 		logDebug("Breakpoint hit.");
+	}
 #endif
 
 	// Run the instruction, which is based on the implementation index.

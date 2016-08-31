@@ -6,9 +6,14 @@
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
-class Exceptions_t
+class Exceptions_t : public PS2ResourcesSubobject
 {
 public:
+	explicit Exceptions_t(const PS2Resources_t* const PS2Resources)
+		: PS2ResourcesSubobject(PS2Resources)
+	{
+	}
+
 	// Global exception functionality.
 	/*
 	Exception Queue. Any exceptions generated should come through here.

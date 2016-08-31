@@ -7,16 +7,6 @@ Register128_t::Register128_t() : UD{ 0,0 }
 {
 }
 
-void* Register128_t::getClientMemoryAddress()
-{
-	return reinterpret_cast<void*>(&UD);
-}
-
-size_t Register128_t::getClientMemoryLength()
-{
-	return sizeof(UD);
-}
-
 u8 Register128_t::readByteU(u32 arrayIndex)
 {
 	return UB[arrayIndex];

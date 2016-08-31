@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
 
 /*
 Register type and size definitions.
@@ -22,7 +21,7 @@ TODO: Check byte order / endianess - it is assumed within the emulator that, for
  Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 */
 
-class Register32_t : public VMMMUMappedStorageObject
+class Register32_t
 {
 public:
 	virtual ~Register32_t()
@@ -41,10 +40,6 @@ public:
 
 	// Initialise union with 0 value.
 	Register32_t();
-
-	// Memory Mapped IO functionality. Note that if there are subclassed registers with additional functionality, it will not run - this is provided as a raw access method.
-	void* getClientMemoryAddress() override;
-	size_t getClientMemoryLength() override;
 
 	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
 	virtual u8 readByteU(u32 arrayIndex);

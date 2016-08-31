@@ -149,13 +149,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\Types\StorageObject\DeadStorage_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.h" />
     <ClInclude Include="Source\Common\Interfaces\VMMMUMappedStorageObject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Exceptions_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ToggleRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\MMU\MMU_t.h" />
     <ClInclude Include="Source\Common\Interfaces\PS2ResourcesSubobject.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\R5900ResourcesSubobject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\LinkRegister128_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\PS2Resources_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h" />
@@ -198,8 +198,10 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.h" />
+    <ClInclude Include="Source\Common\Types\StorageObject\StorageObject_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\Types\StorageObject\DeadStorage_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.cpp" />
@@ -253,6 +255,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.cpp" />
+    <ClCompile Include="Source\Common\Types\StorageObject\StorageObject_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\FPU Notes.xlsx" />

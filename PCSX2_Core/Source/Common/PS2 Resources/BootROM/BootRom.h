@@ -2,41 +2,19 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2 Constants/PS2Constants.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
+#include "Common/Types/StorageObject/StorageObject_t.h"
 
-class BootROM_t : public PS2ResourcesSubobject, public VMMMUMappedStorageObject
+class BootROM_t : public StorageObject_t
 {
 public:
-	explicit BootROM_t(const PS2Resources_t *const PS2Resources) : 
-		PS2ResourcesSubobject(PS2Resources),
-		mBootROM(new u8[PS2Constants::BootROM::SIZE_BOOT_ROM])
-	{
-#if defined(BUILD_DEBUG)
-		char message[1000];
-		sprintf_s(message, 1000, "BootROM allocated at 0x%016llX.", reinterpret_cast<uintptr_t>(BootROM_t::getClientMemoryAddress()));
-		logDebug(message);
-#endif
 
-		// Set memory to zero.
-		memset(BootROM_t::getClientMemoryAddress(), 0, BootROM_t::getClientMemoryLength());
+	static constexpr char * MEMORY_REGION_NAME = "Boot ROM";
+
+	explicit BootROM_t() :
+		StorageObject_t(PS2Constants::BootROM::SIZE_BOOT_ROM, MEMORY_REGION_NAME)
+	{
 	}
 
-	~BootROM_t()
-	{
-		delete[] mBootROM;
-	}
-
-	// Memory Mapped IO functionality.
-	void* getClientMemoryAddress() override
-	{
-		return reinterpret_cast<void*>(mBootROM);
-	}
-
-	size_t getClientMemoryLength() override
-	{
-		return PS2Constants::BootROM::SIZE_BOOT_ROM;
-	}
 private:
-	u8 *const mBootROM;
+
 };
