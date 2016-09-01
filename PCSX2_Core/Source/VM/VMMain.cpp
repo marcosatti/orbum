@@ -92,6 +92,8 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 
 	// EE Registers.
 	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_SIO);
+	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_MCH);
+	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_EXT);
 	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F410);
 }
 

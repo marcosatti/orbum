@@ -32,7 +32,7 @@ public:
 	std::shared_ptr<PS2StorageObject_t> MainMemory = std::make_shared<PS2StorageObject_t>(PS2Constants::MainMemory::SIZE_MAIN_MEMORY, "Main Memory", PS2Constants::MainMemory::PADDRESS_MAIN_MEMORY);
 
 	// Boot ROM (4MB)
-	std::shared_ptr<PS2StorageObject_t> BootROM = std::make_shared<PS2StorageObject_t>(PS2Constants::BootROM::SIZE_BOOT_ROM, "Boot ROM", PS2Constants::BootROM::SIZE_BOOT_ROM);
+	std::shared_ptr<PS2StorageObject_t> BootROM = std::make_shared<PS2StorageObject_t>(PS2Constants::BootROM::SIZE_BOOT_ROM, "Boot ROM", PS2Constants::BootROM::PADDRESS_BOOT_ROM);
 
 private:
 

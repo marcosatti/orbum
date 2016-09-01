@@ -10,15 +10,7 @@ int main()
 {
 	VMMain vm(VMMain::ExecutionCoreType::INTERPRETER, "C:\\Shared\\scph10000.bin");
 
-	try
-	{
-		vm.Run();
-	}
-	catch (std::runtime_error ex)
-	{
-		std::cout << ex.what();
-		throw ex;
-	}
+	vm.Run();
 	
     return 0;
 }
