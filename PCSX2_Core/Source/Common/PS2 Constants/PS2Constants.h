@@ -102,6 +102,13 @@ public:
 			static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
 		};
+	
+		struct EE_REGISTER_SIO
+		{
+			// SIO (serial I/O) register. Not really documented official, but see the Toshiba Tx79 architecture manual (very similar to the EE) for some info, as well as old PCSX2.
+			static constexpr u32 PADDRESS_EE_REGISTER_SIO = 0x1000F100;
+			static constexpr u32 SIZE_EE_REGISTER_SIO = 0x00000100;
+		};
 	};
 
 	struct MainMemory

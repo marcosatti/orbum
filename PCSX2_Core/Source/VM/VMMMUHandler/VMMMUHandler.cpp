@@ -118,9 +118,9 @@ std::shared_ptr<VMMMUMappedStorageObject> & VMMMUHandler::getClientStorageObject
 	// Lookup the page in the page table to get the client storage object (aka page frame number (PFN)).
 	// If the directory or client storage object comes back as nullptr (= 0), throw a runtime exception.
 	std::shared_ptr<VMMMUMappedStorageObject>* tableDirectory = mPageTable[baseVDN];
-	if (tableDirectory == nullptr) throw std::runtime_error("Not found: Given PS2PhysicalAddress returned a null VDN. Check input for error, or maybe it has not been mapped in the first place.");
+	if (tableDirectory == nullptr) throw std::runtime_error("Not found: Given baseVDN returned a null VDN. Check input for error, or maybe it has not been mapped in the first place.");
 	std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = tableDirectory[baseVPN];
-	if (clientStorageObject == nullptr) throw std::runtime_error("Not found: Given PS2PhysicalAddress returned a null PFN. Check input for error, or maybe it has not been mapped in the first place.");
+	if (clientStorageObject == nullptr) throw std::runtime_error("Not found: Given baseVPN returned a null PFN. Check input for error, or maybe it has not been mapped in the first place.");
 
 	// Return storage object.
 	return clientStorageObject;

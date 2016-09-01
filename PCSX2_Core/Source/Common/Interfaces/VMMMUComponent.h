@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMBaseComponent.h"
 
 class VMMain;
 class VMMMUMappedStorageObject;
+class PS2StorageObject_t;
 
 /*
 The VM MMU component interface.
@@ -21,6 +24,7 @@ public:
 	}
 
 	virtual void mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress) = 0;
+	virtual void mapMemory(const std::shared_ptr<PS2StorageObject_t> & clientStorage); // Convenience function for above.
 
 	/*
 	Unfortunately C++ does not allow templated virtual functions... So we have to implement each possible case.

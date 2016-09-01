@@ -3,8 +3,7 @@
 #include <memory>
 
 #include "Common/PS2 Resources/EE/EE_t.h"
-#include "Common/PS2 Resources/MainMemory/MainMemory_t.h"
-#include "Common/PS2 Resources/BootROM/BootRom.h"
+#include "Common/PS2 Resources/Types/PS2StorageObject/PS2StorageObject_t.h"
 
 /*
 TODO: finish writing documentation, and to create copy constructors for each of the elements.
@@ -30,10 +29,10 @@ public:
 	std::shared_ptr<EE_t> EE = std::make_shared<EE_t>(this);
 
 	// Main Memory (32MB)
-	std::shared_ptr<MainMemory_t> MainMemory = std::make_shared<MainMemory_t>();
+	std::shared_ptr<PS2StorageObject_t> MainMemory = std::make_shared<PS2StorageObject_t>(PS2Constants::MainMemory::SIZE_MAIN_MEMORY, "Main Memory", PS2Constants::MainMemory::PADDRESS_MAIN_MEMORY);
 
 	// Boot ROM (4MB)
-	std::shared_ptr<BootROM_t> BootROM = std::make_shared<BootROM_t>();
+	std::shared_ptr<PS2StorageObject_t> BootROM = std::make_shared<PS2StorageObject_t>(PS2Constants::BootROM::SIZE_BOOT_ROM, "Boot ROM", PS2Constants::BootROM::SIZE_BOOT_ROM);
 
 private:
 

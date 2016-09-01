@@ -3,10 +3,10 @@
 #include "Common/PS2 Resources/EE/EECore/R5900/R5900_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2 Resources/EE/EECore/COP1/COP1_t.h"
-#include "Common/PS2 Resources/EE/EECore/ScratchpadMemory/ScratchpadMemory.h"
 #include "Common/PS2 Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2 Resources/Types/PS2StorageObject/PS2StorageObject_t.h"
 
 /*
 TODO: finish off documentation when all components are ready.
@@ -42,7 +42,7 @@ public:
 	// VPU_t VPU0;
 
 	// Scratchpad memory
-	std::shared_ptr<ScratchpadMemory_t> ScratchpadMemory = std::make_shared<ScratchpadMemory_t>();
+	std::shared_ptr<PS2StorageObject_t> ScratchpadMemory = std::make_shared<PS2StorageObject_t>(PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "Scratchpad Memory", PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY);
 
 	// Exception/Interrupt State. The INTC etc will communicate through here.
 	std::shared_ptr<Exceptions_t> Exceptions = std::make_shared<Exceptions_t>(getRootResources());

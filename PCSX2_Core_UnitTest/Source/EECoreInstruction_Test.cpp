@@ -5,8 +5,6 @@
 #include <Common/Types/MIPSInstruction/MIPSInstruction_t.h>
 #include <Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h>
 
-using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
-
 TEST(R5900Instruction_Test_Raw, RType)
 {
 	// SUB $7, $8, $9
@@ -56,11 +54,11 @@ TEST(R5900Instruction_Test_Info, RType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	EECoreInstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
-	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
-	EXPECT_STRNE(info.mMnemonic, "RESERVED");
-	EXPECT_STRNE(info.mMnemonic, "UNDEFINED") << "Mnemonic was: " << info.mMnemonic << "\n";
+	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
+	EXPECT_STRNE(info->mMnemonic, "RESERVED");
+	EXPECT_STRNE(info->mMnemonic, "UNDEFINED") << "Mnemonic was: " << info->mMnemonic << "\n";
 }
 
 TEST(R5900Instruction_Test_Info, IType)
@@ -70,11 +68,11 @@ TEST(R5900Instruction_Test_Info, IType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	EECoreInstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
-	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
-	EXPECT_STRNE(info.mMnemonic, "RESERVED");
-	EXPECT_STRNE(info.mMnemonic, "UNDEFINED") << "Mnemonic was: " << info.mMnemonic << "\n";
+	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
+	EXPECT_STRNE(info->mMnemonic, "RESERVED");
+	EXPECT_STRNE(info->mMnemonic, "UNDEFINED") << "Mnemonic was: " << info->mMnemonic << "\n";
 }
 
 TEST(R5900Instruction_Test_Info, JType)
@@ -84,9 +82,9 @@ TEST(R5900Instruction_Test_Info, JType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	EECoreInstructionInfo_t info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
 
-	EXPECT_STRNE(info.mMnemonic, "UNSUPPORTED");
-	EXPECT_STRNE(info.mMnemonic, "RESERVED");
-	EXPECT_STRNE(info.mMnemonic, "UNDEFINED") << "Mnemonic was: " << info.mMnemonic << "\n";
+	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
+	EXPECT_STRNE(info->mMnemonic, "RESERVED");
+	EXPECT_STRNE(info->mMnemonic, "UNDEFINED") << "Mnemonic was: " << info->mMnemonic << "\n";
 }

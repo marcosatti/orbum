@@ -153,9 +153,6 @@
     <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h">
       <Filter>Source\Common\Util\MathUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h">
-      <Filter>Source\Common\PS2 Resources\BootROM</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
     </ClInclude>
@@ -164,9 +161,6 @@
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\R5900_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\EECore_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore</Filter>
@@ -232,9 +226,6 @@
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h">
-      <Filter>Source\Common\PS2 Resources\MainMemory</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h">
       <Filter>Source\Common\Types\MIPSInstruction</Filter>
     </ClInclude>
@@ -254,7 +245,9 @@
       <Filter>Source\Common\Types\Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Types\StorageObject\StorageObject_t.h" />
-    <ClInclude Include="Source\Common\Types\StorageObject\DeadStorage_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\Types\PS2StorageObject\PS2StorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\Types\EERegisters_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\Types\PS2DeadStorageObject\PS2DeadStorageObject_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -398,7 +391,9 @@
       <Filter>Source\Common\Types\Registers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Types\StorageObject\StorageObject_t.cpp" />
-    <ClCompile Include="Source\Common\Types\StorageObject\DeadStorage_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\Types\PS2StorageObject\PS2StorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\Interfaces\VMMMUComponent.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\Types\PS2DeadStorageObject\PS2DeadStorageObject_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

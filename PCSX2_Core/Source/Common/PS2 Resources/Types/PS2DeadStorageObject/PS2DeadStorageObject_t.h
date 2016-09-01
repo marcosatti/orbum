@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Common/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2 Resources/Types/PS2StorageObject/PS2StorageObject_t.h"
 
 /*
 A 'dead' storage object, where reads return 0 and writes do nothing.
 Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
 */
-class DeadStorage_t : public StorageObject_t
+class PS2DeadStorageObject_t : public PS2StorageObject_t
 {
 public:
-	DeadStorage_t(const size_t & size, const std::string mnemonic);
-	~DeadStorage_t();
+	PS2DeadStorageObject_t(const size_t & size, const std::string mnemonic, const u32 & PS2PhysicalAddress);
+	~PS2DeadStorageObject_t();
 
 	u8 readByteU(u32 storageIndex) const override;
 	void writeByteU(u32 storageIndex, u8 value) override;

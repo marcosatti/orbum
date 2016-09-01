@@ -8,6 +8,7 @@
 
 class VMMain;
 class VMMMUMappedStorageObject;
+class PS2StorageObject;
 
 /*
 The VM MMU component is responsible for converting the PS2's physical addresses into client storage objects (which is required to properly run a program on the client system).

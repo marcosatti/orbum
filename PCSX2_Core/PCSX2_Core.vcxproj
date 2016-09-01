@@ -149,7 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Common\Types\StorageObject\DeadStorage_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\EE\Types\EERegisters_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\Types\PS2StorageObject\PS2StorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2 Resources\Types\PS2DeadStorageObject\PS2DeadStorageObject_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.h" />
     <ClInclude Include="Source\Common\Interfaces\VMMMUMappedStorageObject.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Exceptions_t.h" />
@@ -162,8 +164,6 @@
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\R5900\Types\PCRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register64_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register128_t.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\BootROM\BootRom.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\ScratchpadMemory\ScratchpadMemory.h" />
     <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h" />
     <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2 Resources\EE\EECore\COP0\COP0_t.h" />
@@ -183,7 +183,6 @@
     <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\InterpreterEECore.h" />
-    <ClInclude Include="Source\Common\PS2 Resources\MainMemory\MainMemory_t.h" />
     <ClInclude Include="Source\VM\VMMMUHandler\VMMMUHandler.h" />
     <ClInclude Include="Source\Common\Interfaces\VMBaseComponent.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCoreComponent.h" />
@@ -201,7 +200,9 @@
     <ClInclude Include="Source\Common\Types\StorageObject\StorageObject_t.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Common\Types\StorageObject\DeadStorage_t.cpp" />
+    <ClCompile Include="Source\Common\Interfaces\VMMMUComponent.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\Types\PS2StorageObject\PS2StorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\PS2 Resources\Types\PS2DeadStorageObject\PS2DeadStorageObject_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2 Resources\EE\EECore\Exceptions\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.cpp" />

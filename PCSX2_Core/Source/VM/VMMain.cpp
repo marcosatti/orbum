@@ -6,7 +6,6 @@
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
-#include "Common/Types/StorageObject/DeadStorage_t.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) 
@@ -83,17 +82,17 @@ void VMMain::initaliseResources()
 void VMMain::initalisePS2PhysicalMemoryMap() const
 {
 	// Main memory 32MB
-	getMMU()->mapMemory(getResources()->MainMemory, PS2Constants::MainMemory::PADDRESS_MAIN_MEMORY);
+	getMMU()->mapMemory(getResources()->MainMemory);
 
 	// Scratchpad memory 16KB
-	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory, PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY);
+	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory);
 
 	// Boot ROM 4MB
-	getMMU()->mapMemory(getResources()->BootROM, PS2Constants::BootROM::PADDRESS_BOOT_ROM);
+	getMMU()->mapMemory(getResources()->BootROM);
 
-	// DEBUG
-	std::shared_ptr<DeadStorage_t> eereg_mem = std::make_shared<DeadStorage_t>(0x04000000, "EE & GS Register Memory (Dead)");
-	getMMU()->mapMemory(eereg_mem, 0x10000000);
+	// EE Registers.
+	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_SIO);
+	getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F410);
 }
 
 void VMMain::initaliseExecutionCore()
