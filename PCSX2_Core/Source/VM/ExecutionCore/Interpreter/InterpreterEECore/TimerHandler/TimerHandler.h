@@ -3,6 +3,9 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+
+using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
 /*
 TimerHandler is responisble for updating any EECore timer related registers or functionality.
@@ -20,7 +23,7 @@ public:
 	TimerHandler(const VMMain *const vmMain);
 
 	// COP0.Count register functionality.
-	void incrementCountTimer(const u32 & cyclesCount) const;
+	void incrementCountTimer(const EECoreInstructionInfo_t *const EECoreInstructionInfo) const;
 
 	// Check for any timer events.
 	void checkTimerEvents() const;

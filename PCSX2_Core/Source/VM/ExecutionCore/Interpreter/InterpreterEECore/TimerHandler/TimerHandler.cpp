@@ -13,10 +13,10 @@ TimerHandler::TimerHandler(const VMMain *const vmMain)
 {
 }
 
-void TimerHandler::incrementCountTimer(const u32& cyclesCount) const
+void TimerHandler::incrementCountTimer(const EECoreInstructionInfo_t *const EECoreInstructionInfo) const
 {
 	auto& EECore = getVM()->getResources()->EE->EECore;
-	EECore->COP0->Count->increment(cyclesCount);
+	EECore->COP0->Count->increment(EECoreInstructionInfo->mCycles);
 }
 
 void TimerHandler::checkTimerEvents() const

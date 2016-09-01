@@ -2,7 +2,7 @@
 
 #include "EECoreInstructionUtil.h"
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t & EECoreInstructionUtil::getInstructionInfo(const MIPSInstruction_t & instruction)
+const EECoreInstructionUtil::EECoreInstructionInfo_t * EECoreInstructionUtil::getInstructionInfo(const MIPSInstruction_t & instruction)
 {
 	// A dummy class to kickstart the search.
 	const EECoreInstructionInfo_t rootInfo = {"root", 0, EECoreInstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, EECORE_INSTRUCTION_OPCODE_LOOKUP };
@@ -13,7 +13,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t & EECoreInstructionUtil::ge
 		returnInfo = &returnInfo->mLookupFuncion(instruction);
 	}
 
-	return *returnInfo;
+	return returnInfo;
 }
 
 const EECoreInstructionUtil::EECoreInstructionInfo_t & EECoreInstructionUtil::EECORE_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)

@@ -85,7 +85,7 @@ void InterpreterEECore::executeInstruction()
 	getInstruction().setInstructionValue(instructionValue);
 
 	// Get the instruction details
-	mInstructionInfo = &EECoreInstructionUtil::getInstructionInfo(mInstruction);
+	mInstructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
 	// Debug print details.
@@ -99,7 +99,7 @@ void InterpreterEECore::executeInstruction()
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER == 8100)
+	if (DEBUG_LOOP_COUNTER >= 0x50fb && EECore->R5900->PC->getPCValue() == 0x9fc420f0)
 	{
 		logDebug("Breakpoint hit.");
 	}
@@ -109,10 +109,10 @@ void InterpreterEECore::executeInstruction()
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
-	getTimerHandler()->incrementCountTimer(mInstructionInfo->mCycles);
+	getTimerHandler()->incrementCountTimer(mInstructionInfo);
 
 	// Increment PC.
-	getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext();
+	EECore->R5900->PC->setPCValueNext();
 }
 
 // Begin EECore Instruction Implementation

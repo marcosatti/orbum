@@ -68,7 +68,7 @@ public:
 	/*
 	The main lookup function. Use this to return a information struct with the type of instruction given.
 	*/
-	static const EECoreInstructionInfo_t & getInstructionInfo(const MIPSInstruction_t & instruction);
+	static const EECoreInstructionInfo_t * getInstructionInfo(const MIPSInstruction_t & instruction);
 
 	/*
 	Sub lookup functions. Contain logic for accessing any child instruction table.

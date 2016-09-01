@@ -77,12 +77,14 @@ void InterpreterEECore::DIVU1()
 
 void InterpreterEECore::MULT()
 {
-	// (LO, HI) = SignExtend<s64>(Rs[SW] * Rt[SW])
+	// (Rd, LO, HI) = SignExtend<s64>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	s64 result = source1Reg->readWordS(0) * source2Reg->readWordS(0);
+	destReg->writeDwordS(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
 	getVM()->getResources()->EE->EECore->R5900->LO->writeDwordS(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
 	getVM()->getResources()->EE->EECore->R5900->HI->writeDwordS(0, static_cast<s64>(static_cast<s32>(result >> 32)));
 }
@@ -97,10 +99,12 @@ void InterpreterEECore::MULTU()
 {
 	// (LO, HI) = Rs[UW] * Rt[UW]
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
 
 	u64 result = source1Reg->readWordU(0) * source2Reg->readWordU(0);
+	destReg->writeDwordU(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
 	getVM()->getResources()->EE->EECore->R5900->LO->writeDwordU(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
 	getVM()->getResources()->EE->EECore->R5900->HI->writeDwordU(0, static_cast<u64>(static_cast<u32>(result >> 32)));
 }
