@@ -44,5 +44,5 @@ public:
 	/*
 	Absolutely unknown registers - really. No one knows what they do, except that the PS2 needs them. Usually these are dead storage objects - read 0 and discard writes.
 	*/
-	std::shared_ptr<PS2DeadStorageObject_t> EE_REGISTER_F410;
+	std::shared_ptr<PS2DeadStorageObject_t> EE_REGISTER_F410; // Register @ 0x1000F410.
 };

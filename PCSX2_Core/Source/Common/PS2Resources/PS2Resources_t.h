@@ -16,7 +16,8 @@ which is why it should be used on the heap. As such, you should create this obje
 Subobjects of this resources class should be extended from the PS2ResourcesSubobject interface if required - this is so they may inspect other resources
 on function calls. An example of this is for some R5900 registers (ie: LinkRegister), where they can set other registers automatically.
 
-Note: In order to reduce compile times, try to define the subobjects in cpp files, and use forward delarations where possible (this applies to every object defined in this hierarchy).
+Note: In order to reduce compile times, try to define the subobjects in the classes initalisation list, and use forward delarations where possible 
+ (this applies to every object defined in this hierarchy). Yes, it looks ugly. TODO: find a better solution? Don't think there is one besides sacraficing more compile time.
 */
 
 class EE_t;

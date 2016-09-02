@@ -19,13 +19,14 @@
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
 InterpreterEECore::InterpreterEECore(const VMMain* const vmMain) :
-	VMExecutionCoreComponent(vmMain), 
-	mInstructionInfo(nullptr),
+	VMExecutionCoreComponent(vmMain),
 	mExceptionHandler(std::make_unique<ExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<MMUHandler>(vmMain)),
-	mTimerHandler(std::make_unique<TimerHandler>(vmMain))
+	mTimerHandler(std::make_unique<TimerHandler>(vmMain)),
+	mInstructionInfo(nullptr)
 {
 }
+
 
 InterpreterEECore::~InterpreterEECore()
 {
@@ -109,7 +110,7 @@ void InterpreterEECore::executeInstruction()
 	logDebug(message);
 
 	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER >= 0x50fb && EECore->R5900->PC->getPCValue() == 0x9fc420f0)
+	if (DEBUG_LOOP_COUNTER >= 0x352bf && EECore->R5900->PC->getPCValue() == 0x9fc42564)
 	{
 		logDebug("Breakpoint hit.");
 	}
@@ -134,3 +135,5 @@ void InterpreterEECore::INSTRUCTION_UNKNOWN()
 	logDebug("Unknown R5900 opcode encountered!");
 #endif
 }
+
+

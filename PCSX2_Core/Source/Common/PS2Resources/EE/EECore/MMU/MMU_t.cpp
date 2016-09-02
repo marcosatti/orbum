@@ -6,10 +6,10 @@
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
 
-MMU_t::MMU_t(const PS2Resources_t* const PS2Resources) : PS2ResourcesSubobject(PS2Resources) 
+MMU_t::MMU_t(const PS2Resources_t* const PS2Resources) : 
+	PS2ResourcesSubobject(PS2Resources),
+	mTLBEntries{ 0 }
 {
-	// Initalise Class.
-	TLBEntryInfo mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES] = { 0 };
 }
 
 s32 MMU_t::findTLBIndex(u32 PS2VirtualAddress) const

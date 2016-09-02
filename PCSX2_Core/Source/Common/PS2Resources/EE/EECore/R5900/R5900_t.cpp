@@ -10,31 +10,22 @@
 #include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
 
-R5900_t::R5900_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobject(PS2Resources)
+R5900_t::R5900_t(const PS2Resources_t* const PS2Resources) : 
+	PS2ResourcesSubobject(PS2Resources),
+	ZeroRegister(std::make_shared<ZeroRegister128_t>()),
+	LinkRegister(std::make_shared<LinkRegister128_t>(getRootResources())),
+	GPR{ ZeroRegister, std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		 std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		 std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
+		 std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), LinkRegister },
+	HI(std::make_shared<Register128_t>()),
+	LO(std::make_shared<Register128_t>()),
+	SA(std::make_shared<Register32_t>()),
+	PC(std::make_shared<PCRegister32_t>()),
+	mIsInBranchDelay(false),
+	mBranchDelayCycles(0),
+	mBranchDelayPCTarget(0x0)
 {
-	// Initalise Class.
-
-	// GPR's.
-	ZeroRegister = std::make_shared<ZeroRegister128_t>();
-	LinkRegister = std::make_shared<LinkRegister128_t>(getRootResources());
-	std::shared_ptr<Register128_t> GPR[32] = {
-		ZeroRegister, std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
-		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
-		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
-		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), LinkRegister
-	};
-
-	// Other Registers.
-	HI = std::make_shared<Register128_t>();
-	LO = std::make_shared<Register128_t>();
-	SA = std::make_shared<Register32_t>();
-	PC = std::make_shared<PCRegister32_t>();
-
-	// Branch Delay logic.
-	// TODO: Logic subject to change. May not work once everything is in place.
-	mIsInBranchDelay = false;
-	mBranchDelayCycles = 0;
-	mBranchDelayPCTarget = 0x0;
 }
 
 void R5900_t::setBranchDelayPCTarget(u32 pcTarget, u8 cycles)

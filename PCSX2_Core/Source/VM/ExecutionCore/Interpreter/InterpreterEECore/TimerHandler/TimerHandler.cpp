@@ -14,8 +14,8 @@
 
 using ExType = EECoreException_t::ExType;
 
-TimerHandler::TimerHandler(const VMMain *const vmMain)
-	: VMExecutionCoreComponent(vmMain)
+TimerHandler::TimerHandler(const VMMain *const vmMain) : 
+	VMExecutionCoreComponent(vmMain)
 {
 }
 

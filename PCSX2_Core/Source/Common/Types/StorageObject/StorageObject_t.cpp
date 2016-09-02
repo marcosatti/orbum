@@ -25,7 +25,7 @@ StorageObject_t::~StorageObject_t()
 {
 }
 
-u8 StorageObject_t::readByteU(u32 storageIndex) const
+u8 StorageObject_t::readByteU(u32 storageIndex)
 {
 	// Get client storage address.
 	u8 * clientMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -43,7 +43,7 @@ void StorageObject_t::writeByteU(u32 storageIndex, u8 value)
 	*clientMemoryAddress = value;
 }
 
-s8 StorageObject_t::readByteS(u32 storageIndex) const
+s8 StorageObject_t::readByteS(u32 storageIndex)
 {
 	// Get client storage address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
@@ -61,7 +61,7 @@ void StorageObject_t::writeByteS(u32 storageIndex, s8 value)
 	*clientMemoryAddress = value;
 }
 
-u16 StorageObject_t::readHwordU(u32 storageIndex) const
+u16 StorageObject_t::readHwordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u16 * clientMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -79,7 +79,7 @@ void StorageObject_t::writeHwordU(u32 storageIndex, u16 value)
 	*clientMemoryAddress = value;
 }
 
-s16 StorageObject_t::readHwordS(u32 storageIndex) const
+s16 StorageObject_t::readHwordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
@@ -97,7 +97,7 @@ void StorageObject_t::writeHwordS(u32 storageIndex, s16 value)
 	*clientMemoryAddress = value;
 }
 
-u32 StorageObject_t::readWordU(u32 storageIndex) const
+u32 StorageObject_t::readWordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u32 * clientMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -115,7 +115,7 @@ void StorageObject_t::writeWordU(u32 storageIndex, u32 value)
 	*clientMemoryAddress = value;
 }
 
-s32 StorageObject_t::readWordS(u32 storageIndex) const
+s32 StorageObject_t::readWordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
@@ -133,7 +133,7 @@ void StorageObject_t::writeWordS(u32 storageIndex, s32 value)
 	*clientMemoryAddress = value;
 }
 
-u64 StorageObject_t::readDwordU(u32 storageIndex) const
+u64 StorageObject_t::readDwordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u64 * clientMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -151,7 +151,7 @@ void StorageObject_t::writeDwordU(u32 storageIndex, u64 value)
 	*clientMemoryAddress = value;
 }
 
-s64 StorageObject_t::readDwordS(u32 storageIndex) const
+s64 StorageObject_t::readDwordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);

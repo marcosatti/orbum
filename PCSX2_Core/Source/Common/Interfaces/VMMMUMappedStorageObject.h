@@ -18,21 +18,21 @@ public:
 	Read or write to an arbitrary storage object (memory, disk storage etc), as an array of bytes. Each access can be thought of as storage[storageIndex] (of type u8).
 	Unfortunately C++ does not allow templated virtual functions... So we have to implement each possible case.
 	*/
-	virtual u8 readByteU(u32 storageIndex) const = 0;
+	virtual u8 readByteU(u32 storageIndex) = 0;
 	virtual void writeByteU(u32 storageIndex, u8 value) = 0;
-	virtual s8 readByteS(u32 storageIndex) const = 0;
+	virtual s8 readByteS(u32 storageIndex) = 0;
 	virtual void writeByteS(u32 storageIndex, s8 value) = 0;
-	virtual u16 readHwordU(u32 storageIndex) const = 0;
+	virtual u16 readHwordU(u32 storageIndex) = 0;
 	virtual void writeHwordU(u32 storageIndex, u16 value) = 0;
-	virtual s16 readHwordS(u32 storageIndex) const = 0;
+	virtual s16 readHwordS(u32 storageIndex) = 0;
 	virtual void writeHwordS(u32 storageIndex, s16 value) = 0;
-	virtual u32 readWordU(u32 storageIndex) const = 0;
+	virtual u32 readWordU(u32 storageIndex) = 0;
 	virtual void writeWordU(u32 storageIndex, u32 value) = 0;
-	virtual s32 readWordS(u32 storageIndex) const = 0;
+	virtual s32 readWordS(u32 storageIndex) = 0;
 	virtual void writeWordS(u32 storageIndex, s32 value) = 0;
-	virtual u64 readDwordU(u32 storageIndex) const = 0;
+	virtual u64 readDwordU(u32 storageIndex) = 0;
 	virtual void writeDwordU(u32 storageIndex, u64 value) = 0;
-	virtual s64 readDwordS(u32 storageIndex) const = 0;
+	virtual s64 readDwordS(u32 storageIndex) = 0;
 	virtual void writeDwordS(u32 storageIndex, s64 value) = 0;
 
 	/*

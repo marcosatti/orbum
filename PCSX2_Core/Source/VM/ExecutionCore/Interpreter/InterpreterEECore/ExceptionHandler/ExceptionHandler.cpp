@@ -18,30 +18,6 @@ ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) :
 	VMExecutionCoreComponent(vmMain), 
 	mPS2Exception(nullptr)
 {
-	// Initialise Class.
-	ExceptionProperties_t ExceptionProperties[PS2Constants::EE::EECore::Exceptions::NUMBER_EXCEPTIONS] =
-	{
-		{ EECoreException_t::ExType::EX_RESET,                                2, -1,  0, &ExceptionHandler::EX_HANDLER_RESET },
-		{ EECoreException_t::ExType::EX_NMI,                                  2, -1,  1, &ExceptionHandler::EX_HANDLER_NMI },
-		{ EECoreException_t::ExType::EX_PERFORMANCE_COUNTER,                  2, -1,  2, &ExceptionHandler::EX_HANDLER_PERFORMANCE_COUNTER },
-		{ EECoreException_t::ExType::EX_DEBUG,                                2, -1,  4, &ExceptionHandler::EX_HANDLER_DEBUG },
-		{ EECoreException_t::ExType::EX_INTERRUPT,                            1,  0, -1, &ExceptionHandler::EX_HANDLER_INTERRUPT },
-		{ EECoreException_t::ExType::EX_TLB_MODIFIED,                         1,  1, -1, &ExceptionHandler::EX_HANDLER_TLB_MODIFIED },
-		{ EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD,    1,  2, -1, &ExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_TLB_REFILL_STORE,                     1,  3, -1, &ExceptionHandler::EX_HANDLER_TLB_REFILL_STORE },
-		{ EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD,   1,  2, -1, &ExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_TLB_INVALID_STORE,                    1,  3, -1, &ExceptionHandler::EX_HANDLER_TLB_INVALID_STORE },
-		{ EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD, 1,  4, -1, &ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE,                  1,  5, -1, &ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE },
-		{ EECoreException_t::ExType::EX_BUS_ERROR_INSTRUCTION_FETCH,          1,  6, -1, &ExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH },
-		{ EECoreException_t::ExType::EX_BUS_ERROR_LOAD_STORE,                 1,  7, -1, &ExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE },
-		{ EECoreException_t::ExType::EX_SYSTEMCALL,                           1,  8, -1, &ExceptionHandler::EX_HANDLER_SYSTEMCALL },
-		{ EECoreException_t::ExType::EX_BREAK,                                1,  9, -1, &ExceptionHandler::EX_HANDLER_BREAK },
-		{ EECoreException_t::ExType::EX_RESERVED_INSTRUCTION,                 1, 10, -1, &ExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION },
-		{ EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE,                 1, 11, -1, &ExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE },
-		{ EECoreException_t::ExType::EX_OVERFLOW,                             1, 12, -1, &ExceptionHandler::EX_HANDLER_OVERFLOW },
-		{ EECoreException_t::ExType::EX_TRAP,                                 1, 13, -1, &ExceptionHandler::EX_HANDLER_TRAP }
-	};
 }
 
 void ExceptionHandler::checkExceptionQueue()
