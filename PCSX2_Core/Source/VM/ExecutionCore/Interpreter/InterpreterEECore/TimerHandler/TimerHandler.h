@@ -20,7 +20,7 @@ The timers involved include:
 class TimerHandler : public VMExecutionCoreComponent
 {
 public:
-	TimerHandler(const VMMain *const vmMain);
+	explicit TimerHandler(const VMMain *const vmMain);
 
 	// COP0.Count register functionality.
 	void incrementCountTimer(const EECoreInstructionInfo_t *const EECoreInstructionInfo) const;

@@ -10,14 +10,9 @@ This object and any subobjects are to be idealised as an array of bytes, which c
 class VMMMUMappedStorageObject
 {
 public:
-	explicit VMMMUMappedStorageObject()
-		: mAbsMappedPageIndex(0)
-	{
-	}
+	explicit VMMMUMappedStorageObject();
 
-	virtual ~VMMMUMappedStorageObject()
-	{
-	}
+	virtual ~VMMMUMappedStorageObject();
 
 	/*
 	Read or write to an arbitrary storage object (memory, disk storage etc), as an array of bytes. Each access can be thought of as storage[storageIndex] (of type u8).
@@ -46,17 +41,10 @@ public:
 	virtual size_t getStorageSize() = 0;
 
 	/*
-	Get/set mAbsMappedPageIndex, which are used by the VM MMU (set) and the storage object (get).
+	Get/set mAbsMappedPageIndex, which are used by the VM MMU for calculating an offset.
 	*/
-	u32 getAbsMappedPageIndex() const
-	{
-		return mAbsMappedPageIndex;
-	}
-
-	void setAbsMappedPageIndex(u32 absPageIndex)
-	{
-		mAbsMappedPageIndex = absPageIndex;
-	}
+	u32 getAbsMappedPageIndex() const;
+	void setAbsMappedPageIndex(u32 absPageIndex);
 
 private:
 	/*

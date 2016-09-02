@@ -3,10 +3,9 @@
 #include <memory>
 #include <string>
 
-#include "Common/Global/Globals.h"
-#include "Common/PS2 Resources/PS2Resources_t.h"
-#include "Common/Interfaces/VMMMUComponent.h"
-#include "Common/Interfaces/VMExecutionCoreComponent.h"
+class VMExecutionCoreComponent;
+class VMMMUComponent;
+class PS2Resources_t;
 
 /*
 TODO: Fill in documentation.
@@ -79,7 +78,7 @@ private:
 	ExecutionCoreType mExecutionCoreType;
 	std::unique_ptr<PS2Resources_t> mPS2Resources;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
-	const std::unique_ptr<VMMMUComponent> mVMMMUComponent;
+	const std::unique_ptr<VMMMUComponent> mMMUComponent;
 	const std::string mBootROMPath;
 
 	// Initalisation (called through reset()).

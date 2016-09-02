@@ -3,16 +3,17 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+#include "Common/PS2Constants/PS2Constants.h"
 
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 
 class PS2Resources_t;
 class VMMain;
+class MMUHandler;
+class ExceptionHandler;
+class TimerHandler;
+
 class InterpreterEECore : public VMExecutionCoreComponent
 {
 public:
@@ -438,7 +439,8 @@ private:
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
 	See EECoreInstructionUtil and "EECore Instruction Implementation Register.xlsm" for more details.
 	*/
-	void(InterpreterEECore::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() = {
+	void(InterpreterEECore::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() = // Going to leave this here instead of the cpp file as its so big.
+	{ 
 		&InterpreterEECore::INSTRUCTION_UNKNOWN,
 		&InterpreterEECore::J,
 		&InterpreterEECore::JAL,

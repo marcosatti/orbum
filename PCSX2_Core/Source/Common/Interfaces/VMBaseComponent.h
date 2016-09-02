@@ -1,23 +1,15 @@
 #pragma once
 
-#include <Common/Global/Globals.h>
-
 class VMMain;
+
 class VMBaseComponent
 {
 public:
-	explicit VMBaseComponent(const VMMain *const vmMain) : mVMMain(vmMain)
-	{
-	}
+	explicit VMBaseComponent(const VMMain *const vmMain);
 
-	virtual ~VMBaseComponent()
-	{
-	}
+	virtual ~VMBaseComponent();
 
-	INLINE const VMMain *const &getVM() const
-	{
-		return mVMMain;
-	}
+	const VMMain *const & getVM() const;
 
 private:
 	/*

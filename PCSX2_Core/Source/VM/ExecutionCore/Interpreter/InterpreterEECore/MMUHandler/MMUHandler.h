@@ -3,8 +3,8 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
-#include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 /*
 MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the VM MMU (which is responsible for 
@@ -14,12 +14,14 @@ It handles any requests from reading or writing from a virtual address.
 Any request performed must be followed by a check for any errors (similar to how Linux ERRNO handling works). This is because the PS2's MMU may generate an exception,
  and the instruction must perform differently when an error is raised (it can not automatically enter the exception queue for this reason).
 */
+
 class VMMain;
 using TLBEntryInfo = MMU_t::TLBEntryInfo;
+
 class MMUHandler : public VMExecutionCoreComponent
 {
 public:
-	MMUHandler(const VMMain *const vmMain);
+	explicit MMUHandler(const VMMain *const vmMain);
 
 	/*
 	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.

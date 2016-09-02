@@ -5,9 +5,15 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/VMMain.h"
+#include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
-#include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2 Resources/EE/EECore/MMU/MMU_t.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/EECore/EECore_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/Util/EECoreMMUUtil/EECoreMMUUtil.h"
 
 using TLBEntryInfo = MMU_t::TLBEntryInfo;

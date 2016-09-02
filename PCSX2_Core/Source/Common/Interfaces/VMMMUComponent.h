@@ -13,20 +13,18 @@ class PS2StorageObject_t;
 /*
 The VM MMU component interface.
 When the PS2 reads or writes to a "PHYSICAL" address, this unit will be consulted for the correct memory read and write location.
-For when the PS2 reads or writes to a virtual address, there is another MMU unit within ExecutionCore component - see that for details.
+For when the PS2 reads or writes to a PS2 virtual address, there is another MMU unit within ExecutionCore component - see that for details.
 */
 class VMMMUComponent : public VMBaseComponent
 {
 public:
-	explicit VMMMUComponent(const VMMain *const vmMain) 
-		: VMBaseComponent(vmMain)
-	{
-	}
+	explicit VMMMUComponent(const VMMain*const vmMain);
 
 	virtual void mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress) = 0;
-	virtual void mapMemory(const std::shared_ptr<PS2StorageObject_t> & clientStorage); // Convenience function for above.
+	virtual void mapMemory(const std::shared_ptr<PS2StorageObject_t> & clientStorage); // Convenience function for above, see the source code.
 
 	/*
+	Read or Write to an PS2 physical address. The VM MMU is responsible for translating this to a client address/object.
 	Unfortunately C++ does not allow templated virtual functions... So we have to implement each possible case.
 	*/
 	virtual u8 readByteU(u32 PS2MemoryAddress) const = 0;

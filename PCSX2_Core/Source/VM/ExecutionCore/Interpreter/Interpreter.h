@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 
 
 /*
@@ -11,6 +10,7 @@ TODO: Fill in documentation.
 */
 
 class VMMain;
+class InterpreterEECore;
 
 class Interpreter : public VMExecutionCoreComponent
 {

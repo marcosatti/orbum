@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
 #include <cmath>
+#include <stdexcept>
 
 #include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
-#include "Common/PS2 Constants/PS2Constants.h"
+#include "Common/PS2Constants/PS2Constants.h"
 
 bool EECoreCOP1Util::isOverflowed(const f32& value)
 {

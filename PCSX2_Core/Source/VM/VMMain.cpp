@@ -6,12 +6,17 @@
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/Types/PS2DeadStorageObject/PS2DeadStorageObject_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/EECore/EECore_t.h"
+#include "Common/PS2Resources/EE/Types/EERegisters_t.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) 
 	: mStatus(VMMain::VMStatus::CREATED),
 	mExecutionCoreType(executionCoreType),
-	mVMMMUComponent(std::make_unique<VMMMUHandler>(this)),
+	mMMUComponent(std::make_unique<VMMMUHandler>(this)),
 	mBootROMPath(bootROMPath)
 {
 	// Initialise everything.
@@ -70,7 +75,7 @@ const std::unique_ptr<PS2Resources_t>& VMMain::getResources() const
 
 const std::unique_ptr<VMMMUComponent>& VMMain::getMMU() const
 {
-	return mVMMMUComponent;
+	return mMMUComponent;
 }
 
 void VMMain::initaliseResources()

@@ -13,30 +13,21 @@ class VMMain;
 class VMExecutionCoreComponent : public VMBaseComponent
 {
 public:
-	explicit VMExecutionCoreComponent(const VMMain *const vmMain) :
-		VMBaseComponent(vmMain)
-	{
-	}
+	explicit VMExecutionCoreComponent(const VMMain*const vmMain);
 
-	~VMExecutionCoreComponent()
-	{
-	}
+	virtual ~VMExecutionCoreComponent();
 
 	/*
 	For each execution core component, this is called as a way to update the state of individual components. 
 	This does not have to be implemented for all components (ie: for reactive components).
 	*/
-	virtual void executionStep()
-	{
-	}
+	virtual void executionStep();
 
 	/*
 	For each execution core component, this is called as a way to initalise/reset the state.
 	This does not have to be implemented for all components (ie: for reactive components).
 	*/
-	virtual void initalise()
-	{
-	}
+	virtual void initalise();
 private:
 };
 

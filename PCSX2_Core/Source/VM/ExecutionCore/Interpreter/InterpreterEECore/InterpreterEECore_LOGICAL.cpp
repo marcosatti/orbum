@@ -4,6 +4,11 @@
 
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/EECore/EECore_t.h"
+#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 /*

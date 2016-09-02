@@ -2,8 +2,18 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/VMMain.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/EECore/EECore_t.h"
+#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
+#include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;

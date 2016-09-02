@@ -4,8 +4,10 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 Interpreter::Interpreter(const VMMain* const vmMain) : VMExecutionCoreComponent(vmMain)
 {

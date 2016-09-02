@@ -4,7 +4,13 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
-#include "Common/PS2 Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/EECore/EECore_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
+#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 using ExType = EECoreException_t::ExType;
 
