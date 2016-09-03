@@ -20,7 +20,8 @@ void InterpreterEECore::SYNC_STYPE()
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
 #if defined(BUILD_DEBUG)
-	logDebug("SYNC_STYPE: Not implemented.");
+	// logDebug("SYNC_STYPE: Not implemented.");
+	DEBUG_INSTRUCTION_SYNC++;
 #else
 	throw std::runtime_error("SYNC_STYPE: Not implemented.");
 #endif

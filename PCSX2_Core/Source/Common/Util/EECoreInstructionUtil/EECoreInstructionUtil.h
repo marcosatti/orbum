@@ -138,6 +138,7 @@ public:
 		// COP0/1 instructions.
 		static constexpr u32 COP_DEFAULT    = 11;
 		static constexpr u32 COP_BRANCH     = 20; // TODO: This is a very rough guess. Needs testing.
+		static constexpr u32 COP0_MFC0      = 10000;
 		static constexpr u32 COP1_MULTIPLY  = 32;
 		static constexpr u32 COP1_DIVIDE    = 200; // TODO: This is a very rough guess. Needs testing.
 	};

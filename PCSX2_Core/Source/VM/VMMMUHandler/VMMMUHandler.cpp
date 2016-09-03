@@ -100,7 +100,7 @@ u32 VMMMUHandler::getAbsDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOff
 
 u32 VMMMUHandler::getAbsPageFromDirAndPageOffset(u32 absDirectoryIndex, u32 pageOffset) const
 {
-	return absDirectoryIndex* PAGE_ENTRIES + pageOffset;
+	return absDirectoryIndex * PAGE_ENTRIES + pageOffset;
 }
 
 void VMMMUHandler::allocDirectory(u32 directoryIndex) const

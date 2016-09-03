@@ -40,6 +40,8 @@ private:
 #if defined(BUILD_DEBUG)
 	// Debug loop counter 
 	u64 DEBUG_LOOP_COUNTER = 0;
+	// SYNC counter
+	u64 DEBUG_INSTRUCTION_SYNC = 0;
 #endif
 
 	/*

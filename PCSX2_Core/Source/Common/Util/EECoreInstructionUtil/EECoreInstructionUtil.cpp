@@ -413,7 +413,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 
 const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_COP0_TABLE[32] =
 {
-	{ "COP0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MFC0", 215, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "COP0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MFC0", 215, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP0_MFC0, nullptr },
 	{ "COP0", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "COP0", 2, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "COP0", 3, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },

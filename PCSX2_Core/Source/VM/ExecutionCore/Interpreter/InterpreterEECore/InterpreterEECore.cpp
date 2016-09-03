@@ -99,19 +99,22 @@ void InterpreterEECore::executeInstruction()
 	mInstructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	// Debug print details.
-	char message[1000];
-	sprintf_s(message, "EECore loop %llu: "
-		"CPU Cycles = %lu, "
-		"PC = 0x%08X, "
-		"BD = %d, "
-		"Instruction = %s",
-		DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(RegisterCount_t::Fields::Count), EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, (instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
-	logDebug(message);
-
-	// Breakpoint.
-	if (DEBUG_LOOP_COUNTER >= 0x352bf && EECore->R5900->PC->getPCValue() == 0x9fc42564)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x4a50;
+	static u32 DEBUG_PC_BREAKPOINT = 0x9fc41a70;
+	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
+		// Debug print details.
+		char message[1000];
+		sprintf_s(message, "EECore loop %llu: "
+			"CPU Cycles = %lu, "
+			"PC = 0x%08X, "
+			"BD = %d, "
+			"Instruction = %s",
+			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(RegisterCount_t::Fields::Count), EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, (instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+		logDebug(message);
+	
+	// Breakpoint.
+	if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
 		logDebug("Breakpoint hit.");
 	}
 #endif
