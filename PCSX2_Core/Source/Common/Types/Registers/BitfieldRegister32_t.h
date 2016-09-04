@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <memory>
 
 #include "Common/Types/Registers/Register32_t.h"
 
@@ -11,7 +10,9 @@ Bitfields are implemented as full u32 fields instead of manipulating one u32 val
 It is probably faster when compiled to use a u32 for each field and perfoming one move instruction than perfoming multiple bitshift instructions, although I have not tested this.
 
 In order to use this, first you must register a field with the registerField() function. 
-Once done, you may get and set the fields using the unique name you provided to registerField() function.
+Once done, you may get and set the fields using the UNIQUE CHAR POINTER (constant field string) you provided to registerField() function.
+The map WILL NOT return the same field if a different pointer is used (even with the same contents - it is not a std::string key'd map!).
+The key type const char* is used for performance reasons.
 
 Compatibility with a hardware bitfield register is provided though the get and setRegisterValue() functions.
 These functions manipulate the Register32_t.UW variable to produce the condensed u32 bitfield.
@@ -34,17 +35,17 @@ public:
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
 	Requires: a unique field name (fieldName), a bitfield starting position within the 32 bits (fieldStartPosition), how long the bitfield is (fieldLength), and an initial value (fieldInitialValue).
 	*/
-	void registerField(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue);
+	void registerField(const char * fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue);
 
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual u32 getFieldValue(const std::string &fieldName);
+	virtual u32 getFieldValue(const char * fieldName);
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual void setFieldValue(const std::string &fieldName, const u32 &value);
+	virtual void setFieldValue(const char * fieldName, const u32 & value);
 
 	/*
 	Gets the combined bitfield value from the individual fields. Also syncs Register32_t.UW to reflect the same value.
@@ -54,7 +55,7 @@ public:
 	/*
 	Sets the Register32_t.UW register value to reflect the parsed value, and updates all of the registered fields to reflect the bitfield values from Register32_t.UW.
 	*/
-	virtual void setRegisterValue(u32 value);
+	virtual void setRegisterValue(const u32 & value);
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
@@ -64,7 +65,7 @@ public:
 	/*
 	Initalise a specific field to its initial value defined in the BitfieldProperties_t.
 	*/
-	virtual void initaliseField(const std::string &fieldName);
+	virtual void initaliseField(const char * fieldName);
 
 private:
 	/*
@@ -73,18 +74,16 @@ private:
 	*/
 	struct BitfieldProperties_t
 	{
-		BitfieldProperties_t(const std::string &fieldName, const u8 &fieldStartPosition, const u8 &fieldLength, const u32 &fieldInitialValue) 
-			: mFieldName(fieldName), mFieldStartPosition(fieldStartPosition), mFieldLength(fieldLength), mInitialFieldValue(fieldInitialValue), mFieldValue(fieldInitialValue) {}
-		const std::string mFieldName;
-		const u8 mFieldStartPosition;
-		const u8 mFieldLength;
-		const u32 mInitialFieldValue;
+		const char * mFieldName;
+		u8 mFieldStartPosition;
+		u8 mFieldLength;
+		u32 mInitialFieldValue;
 		u32 mFieldValue; // Set to a specified initial value when created, but can be changed.
 	};
 
 	/*
 	Map which stores all of the registered fields, along with their associated properties.
 	*/
-	std::unordered_map<std::string, std::shared_ptr<BitfieldProperties_t>> mFieldMap;
+	std::unordered_map<const char *, BitfieldProperties_t> mFieldMap;
 };
 

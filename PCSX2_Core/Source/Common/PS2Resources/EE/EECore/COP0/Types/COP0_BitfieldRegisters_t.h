@@ -47,8 +47,8 @@ class RegisterIndex_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Index = "Index";
-		static constexpr auto P = "P";
+		static constexpr char * Index = "Index";
+		static constexpr char * P = "P";
 	};
 
 	explicit RegisterIndex_t();
@@ -67,7 +67,7 @@ class RegisterRandom_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Random = "Random";
+		static constexpr char * Random = "Random";
 	};
 
 	explicit RegisterRandom_t();
@@ -91,12 +91,12 @@ class RegisterEntryLo0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto G = "G";
-		static constexpr auto V = "V";
-		static constexpr auto D = "D";
-		static constexpr auto C = "C";
-		static constexpr auto PFN = "PFN";
-		static constexpr auto S = "S";
+		static constexpr char * G = "G";
+		static constexpr char * V = "V";
+		static constexpr char * D = "D";
+		static constexpr char * C = "C";
+		static constexpr char * PFN = "PFN";
+		static constexpr char * S = "S";
 	};
 
 	explicit RegisterEntryLo0_t();
@@ -119,11 +119,11 @@ class RegisterEntryLo1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto G = "G";
-		static constexpr auto V = "V";
-		static constexpr auto D = "D";
-		static constexpr auto C = "C";
-		static constexpr auto PFN = "PFN";
+		static constexpr char * G = "G";
+		static constexpr char * V = "V";
+		static constexpr char * D = "D";
+		static constexpr char * C = "C";
+		static constexpr char * PFN = "PFN";
 	};
 
 	explicit RegisterEntryLo1_t();
@@ -143,8 +143,8 @@ class RegisterContext_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto BadVPN2 = "BadVPN2";
-		static constexpr auto PTEBase = "PTEBase";
+		static constexpr char * BadVPN2 = "BadVPN2";
+		static constexpr char * PTEBase = "PTEBase";
 	};
 
 	explicit RegisterContext_t();
@@ -165,7 +165,7 @@ class RegisterPageMask_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto MASK = "MASK";
+		static constexpr char * MASK = "MASK";
 	};
 
 	explicit RegisterPageMask_t();
@@ -184,7 +184,7 @@ class RegisterWired_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Wired = "Wired";
+		static constexpr char * Wired = "Wired";
 	};
 
 	explicit RegisterWired_t();
@@ -202,7 +202,7 @@ class RegisterBadVAddr_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto BadVAddr = "BadVAddr";
+		static constexpr char * BadVAddr = "BadVAddr";
 	};
 
 	explicit RegisterBadVAddr_t();
@@ -220,7 +220,7 @@ class RegisterCount_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Count = "Count";
+		static constexpr char * Count = "Count";
 	};
 
 	explicit RegisterCount_t();
@@ -243,8 +243,8 @@ class RegisterEntryHi_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto ASID = "ASID";
-		static constexpr auto VPN2 = "VPN2";
+		static constexpr char * ASID = "ASID";
+		static constexpr char * VPN2 = "VPN2";
 	};
 
 	explicit RegisterEntryHi_t();
@@ -263,13 +263,13 @@ class RegisterCompare_t : public BitfieldRegister32_t, public PS2ResourcesSubobj
 public:
 	struct Fields
 	{
-		static constexpr auto Compare = "Compare";
+		static constexpr char * Compare = "Compare";
 	};
 
 	explicit RegisterCompare_t(const PS2Resources_t*const PS2Resources);
 
-	void setFieldValue(const std::string& fieldName, const u32& value) override;
-	void setRegisterValue(u32 value) override;
+	void setFieldValue(const char * fieldName, const u32& value) override;
+	void setRegisterValue(const u32 & value) override;
 };
 
 /*
@@ -300,19 +300,19 @@ class RegisterStatus_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto IE = "IE";
-		static constexpr auto EXL = "EXL";
-		static constexpr auto ERL = "ERL";
-		static constexpr auto KSU = "KSU";
-		static constexpr auto IM = "IM";
-		static constexpr auto BEM = "BEM";
-		static constexpr auto IM7 = "IM7";
-		static constexpr auto EIE = "EIE";
-		static constexpr auto EDI = "EDI";
-		static constexpr auto CH = "CH";
-		static constexpr auto BEV = "BEV";
-		static constexpr auto DEV = "DEV";
-		static constexpr auto CU = "CU";
+		static constexpr char * IE = "IE";
+		static constexpr char * EXL = "EXL";
+		static constexpr char * ERL = "ERL";
+		static constexpr char * KSU = "KSU";
+		static constexpr char * IM = "IM";
+		static constexpr char * BEM = "BEM";
+		static constexpr char * IM7 = "IM7";
+		static constexpr char * EIE = "EIE";
+		static constexpr char * EDI = "EDI";
+		static constexpr char * CH = "CH";
+		static constexpr char * BEV = "BEV";
+		static constexpr char * DEV = "DEV";
+		static constexpr char * CU = "CU";
 	};
 
 	explicit RegisterStatus_t();
@@ -341,14 +341,14 @@ class RegisterCause_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto ExcCode = "ExcCode";
-		static constexpr auto IP2 = "IP2";
-		static constexpr auto IP3 = "IP3";
-		static constexpr auto IP7 = "IP7";
-		static constexpr auto EXC2 = "EXC2";
-		static constexpr auto CE = "IM";
-		static constexpr auto BD2 = "BD2";
-		static constexpr auto BD = "BD";
+		static constexpr char * ExcCode = "ExcCode";
+		static constexpr char * IP2 = "IP2";
+		static constexpr char * IP3 = "IP3";
+		static constexpr char * IP7 = "IP7";
+		static constexpr char * EXC2 = "EXC2";
+		static constexpr char * CE = "IM";
+		static constexpr char * BD2 = "BD2";
+		static constexpr char * BD = "BD";
 	};
 
 	explicit RegisterCause_t();
@@ -366,7 +366,7 @@ class RegisterEPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto EPC = "EPC";
+		static constexpr char * EPC = "EPC";
 	};
 
 	explicit RegisterEPC_t();
@@ -386,8 +386,8 @@ class RegisterPRId_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Rev = "Rev";
-		static constexpr auto Imp = "Imp";
+		static constexpr char * Rev = "Rev";
+		static constexpr char * Imp = "Imp";
 	};
 
 	explicit RegisterPRId_t();
@@ -417,15 +417,15 @@ class RegisterConfig_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto K0 = "K0";
-		static constexpr auto DC = "DC";
-		static constexpr auto IC = "IC";
-		static constexpr auto BPE = "BPE";
-		static constexpr auto NBE = "NBE";
-		static constexpr auto DCE = "DCE";
-		static constexpr auto ICE = "ICE";
-		static constexpr auto DIE = "DIE";
-		static constexpr auto EC = "EC";
+		static constexpr char * K0 = "K0";
+		static constexpr char * DC = "DC";
+		static constexpr char * IC = "IC";
+		static constexpr char * BPE = "BPE";
+		static constexpr char * NBE = "NBE";
+		static constexpr char * DCE = "DCE";
+		static constexpr char * ICE = "ICE";
+		static constexpr char * DIE = "DIE";
+		static constexpr char * EC = "EC";
 	};
 
 	explicit RegisterConfig_t();
@@ -444,7 +444,7 @@ class RegisterBadPAddr_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto BadPAddr = "BadPAddr";
+		static constexpr char * BadPAddr = "BadPAddr";
 	};
 
 	explicit RegisterBadPAddr_t();
@@ -482,24 +482,24 @@ class RegisterBPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto IAB = "IAB";
-		static constexpr auto DRB = "DRB";
-		static constexpr auto DWB = "DWB";
-		static constexpr auto BED = "BED";
-		static constexpr auto DTE = "DTE";
-		static constexpr auto ITE = "ITE";
-		static constexpr auto DXE = "DXE";
-		static constexpr auto DKE = "DKE";
-		static constexpr auto DSE = "DSE";
-		static constexpr auto DUE = "DUE";
-		static constexpr auto IXE = "IXE";
-		static constexpr auto IKE = "IKE";
-		static constexpr auto ISE = "ISE";
-		static constexpr auto IUE = "IUE";
-		static constexpr auto DVE = "DVE";
-		static constexpr auto DWE = "DWE";
-		static constexpr auto DRE = "DRE";
-		static constexpr auto IAE = "IAE";
+		static constexpr char * IAB = "IAB";
+		static constexpr char * DRB = "DRB";
+		static constexpr char * DWB = "DWB";
+		static constexpr char * BED = "BED";
+		static constexpr char * DTE = "DTE";
+		static constexpr char * ITE = "ITE";
+		static constexpr char * DXE = "DXE";
+		static constexpr char * DKE = "DKE";
+		static constexpr char * DSE = "DSE";
+		static constexpr char * DUE = "DUE";
+		static constexpr char * IXE = "IXE";
+		static constexpr char * IKE = "IKE";
+		static constexpr char * ISE = "ISE";
+		static constexpr char * IUE = "IUE";
+		static constexpr char * DVE = "DVE";
+		static constexpr char * DWE = "DWE";
+		static constexpr char * DRE = "DRE";
+		static constexpr char * IAE = "IAE";
 	};
 
 	explicit RegisterBPC_t();
@@ -517,7 +517,7 @@ class RegisterIAB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto IAB = "IAB";
+		static constexpr char * IAB = "IAB";
 	};
 
 	explicit RegisterIAB_t();
@@ -535,7 +535,7 @@ class RegisterIABM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto IABM = "IABM";
+		static constexpr char * IABM = "IABM";
 	};
 
 	explicit RegisterIABM_t();
@@ -553,7 +553,7 @@ class RegisterDAB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto DAB = "DAB";
+		static constexpr char * DAB = "DAB";
 	};
 
 	explicit RegisterDAB_t();
@@ -571,7 +571,7 @@ class RegisterDABM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto DABM = "DABM";
+		static constexpr char * DABM = "DABM";
 	};
 
 	explicit RegisterDABM_t();
@@ -589,7 +589,7 @@ class RegisterDVB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto DVB = "DVB";
+		static constexpr char * DVB = "DVB";
 	};
 
 	explicit RegisterDVB_t();
@@ -607,7 +607,7 @@ class RegisterDVBM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto DVBM = "DVBM";
+		static constexpr char * DVBM = "DVBM";
 	};
 
 	explicit RegisterDVBM_t();
@@ -638,17 +638,17 @@ class RegisterPCCR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto EXL0 = "EXL0";
-		static constexpr auto K0 = "K0";
-		static constexpr auto S0 = "S0";
-		static constexpr auto U0 = "U0";
-		static constexpr auto EVENT0 = "EVENT0";
-		static constexpr auto EXL1 = "EXL1";
-		static constexpr auto K1 = "K1";
-		static constexpr auto S1 = "S1";
-		static constexpr auto U1 = "U1";
-		static constexpr auto EVENT1 = "EVENT1";
-		static constexpr auto CTE = "CTE";
+		static constexpr char * EXL0 = "EXL0";
+		static constexpr char * K0 = "K0";
+		static constexpr char * S0 = "S0";
+		static constexpr char * U0 = "U0";
+		static constexpr char * EVENT0 = "EVENT0";
+		static constexpr char * EXL1 = "EXL1";
+		static constexpr char * K1 = "K1";
+		static constexpr char * S1 = "S1";
+		static constexpr char * U1 = "U1";
+		static constexpr char * EVENT1 = "EVENT1";
+		static constexpr char * CTE = "CTE";
 	};
 
 	explicit RegisterPCCR_t();
@@ -667,8 +667,8 @@ class RegisterPCR0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto VALUE = "VALUE";
-		static constexpr auto OVFL = "OVFL";
+		static constexpr char * VALUE = "VALUE";
+		static constexpr char * OVFL = "OVFL";
 	};
 
 	explicit RegisterPCR0_t();
@@ -687,8 +687,8 @@ class RegisterPCR1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto VALUE = "VALUE";
-		static constexpr auto OVFL = "OVFL";
+		static constexpr char * VALUE = "VALUE";
+		static constexpr char * OVFL = "OVFL";
 	};
 
 	explicit RegisterPCR1_t();
@@ -714,11 +714,11 @@ class RegisterTagLo_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto L = "L";
-		static constexpr auto R = "R";
-		static constexpr auto V = "V";
-		static constexpr auto D = "D";
-		static constexpr auto PTagLo = "PTagLo";
+		static constexpr char * L = "L";
+		static constexpr char * R = "R";
+		static constexpr char * V = "V";
+		static constexpr char * D = "D";
+		static constexpr char * PTagLo = "PTagLo";
 	};
 
 	explicit RegisterTagLo_t();
@@ -744,11 +744,11 @@ class RegisterTagHi_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto L = "L";
-		static constexpr auto R = "R";
-		static constexpr auto V = "V";
-		static constexpr auto D = "D";
-		static constexpr auto PTagHi = "PTagHi";
+		static constexpr char * L = "L";
+		static constexpr char * R = "R";
+		static constexpr char * V = "V";
+		static constexpr char * D = "D";
+		static constexpr char * PTagHi = "PTagHi";
 	};
 
 	explicit RegisterTagHi_t();
@@ -766,7 +766,7 @@ class RegisterErrorEPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto ErrorEPC = "ErrorEPC";
+		static constexpr char * ErrorEPC = "ErrorEPC";
 	};
 
 	explicit RegisterErrorEPC_t();

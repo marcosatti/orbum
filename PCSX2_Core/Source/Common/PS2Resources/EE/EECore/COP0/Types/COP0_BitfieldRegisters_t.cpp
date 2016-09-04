@@ -86,13 +86,13 @@ RegisterCompare_t::RegisterCompare_t(const PS2Resources_t* const PS2Resources): 
 	registerField(Fields::Compare, 0, 32, 0);
 }
 
-void RegisterCompare_t::setFieldValue(const std::string& fieldName, const u32& value)
+void RegisterCompare_t::setFieldValue(const char* fieldName, const u32& value)
 {
 	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 0);
 	BitfieldRegister32_t::setFieldValue(fieldName, value);
 }
 
-void RegisterCompare_t::setRegisterValue(u32 value)
+void RegisterCompare_t::setRegisterValue(const u32 & value)
 {
 	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 0);
 	BitfieldRegister32_t::setRegisterValue(value);
