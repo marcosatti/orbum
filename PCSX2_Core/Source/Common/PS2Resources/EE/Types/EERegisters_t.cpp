@@ -15,28 +15,21 @@ void EERegisterSIO_t::writeByteU(u32 storageIndex, u8 value)
 	{
 	case OFFSET_SIO_TXFIFO: // "SIO_TXFIFO"
 	{
-		// Below logic is from the old PCSX2. I guess it writes a message transmitted through the SIO_TXFIFO register..
-		static bool iggy_newline = false;
-		static char sio_buffer[1024];
-		static int sio_count;
+		// Below logic adapted from the old PCSX2 code (see HwWrite.cpp).
+		if (value == '\r') 
+		{
+			// '\r' and sometimes after, '\n', are the last characters before the message is ready to be output.
+			// Do not bother outputting the '\r' or '\n' characters, as this is done by the logging functions of the emulator.
 
-		if (value == '\r')
-		{
-			iggy_newline = true;
-			sio_buffer[sio_count++] = '\n';
-		}
-		else if (!iggy_newline || (value != '\n'))
-		{
-			iggy_newline = false;
-			sio_buffer[sio_count++] = value;
-		}
+			// Output the message.
+			logDebug(sioBuffer.c_str());
 
-		if ((sio_count == sizeof(sio_buffer) / sizeof((sio_buffer)[0]) - 1) || (sio_count != 0 && sio_buffer[sio_count - 1] == '\n'))
-		{
-			sio_buffer[sio_count] = 0;
-			logDebug(sio_buffer);
-			sio_count = 0;
+			// Reset the string to the prefix value for the next message.
+			sioBuffer = SIO_BUFFER_PREFIX; 
 		}
+		else if (value != '\n')
+			sioBuffer.push_back(value);
+
 		break;
 	}
 	default:
@@ -75,11 +68,8 @@ void EERegisterSIO_t::writeWordU(u32 storageIndex, u32 value)
 	case OFFSET_SIO_TXFIFO:
 	{
 		// Below logic is from the old PCSX2. I guess it writes a message transmitted through the SIO_TXFIFO register..
-		u8* byteArray = reinterpret_cast<u8*>(&value);
 		for (auto i = 0; i < Constants::NUMBER_BYTES_IN_WORD; i++)
-		{
-			writeByteU(storageIndex, byteArray[i]);
-		}
+			writeByteU(storageIndex, reinterpret_cast<u8*>(&value)[i]);
 		break;
 	}
 	default:

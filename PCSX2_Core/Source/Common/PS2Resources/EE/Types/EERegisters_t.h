@@ -1,5 +1,7 @@
 #pragma once
 
+#include <sstream>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Constants/PS2Constants.h"
@@ -33,6 +35,11 @@ public:
 	void writeWordU(u32 storageIndex, u32 value) override;
 	s32 readWordS(u32 storageIndex) override;
 	void writeWordS(u32 storageIndex, s32 value) override;
+
+private:
+	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
+	static constexpr char * SIO_BUFFER_PREFIX = "SIO Message: ";
+	std::string sioBuffer = SIO_BUFFER_PREFIX;
 };
 
 /*
@@ -54,7 +61,7 @@ public:
 	void writeWordS(u32 storageIndex, s32 value) override;
 
 private:
-	// Variables below needed by logic. Not sure what they are for. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
+	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
 	int rdram_sdevid = 0;
 	const int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 };

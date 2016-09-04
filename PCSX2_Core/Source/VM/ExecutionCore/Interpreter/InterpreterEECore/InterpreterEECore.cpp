@@ -99,8 +99,8 @@ void InterpreterEECore::executeInstruction()
 	mInstructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x4a50;
-	static u32 DEBUG_PC_BREAKPOINT = 0x9fc41a70;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x610e;
+	static u32 DEBUG_PC_BREAKPOINT = 0x9fc43070;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
