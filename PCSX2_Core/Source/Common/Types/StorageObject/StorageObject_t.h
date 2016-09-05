@@ -12,7 +12,7 @@ A simple storage object which is constructed to the size specified, and optional
 class StorageObject_t : public VMMMUMappedStorageObject
 {
 public:
-	explicit StorageObject_t(const size_t & size, const std::string mnemonic);
+	explicit StorageObject_t(const size_t & size, const char *const mnemonic);
 	virtual ~StorageObject_t();
 
 	u8 readByteU(u32 storageIndex) override;
@@ -42,6 +42,11 @@ public:
 	 be used in favour of the above read/write functions unless you absolutely have to.
 	*/
 	void * getClientMemoryAddress() const;
+
+	/*
+	Get the storage mnemonic, used for debug.
+	*/
+	const char * getMnemonic() const override;
 
 private:
 	size_t mStorageSize;

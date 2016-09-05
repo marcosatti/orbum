@@ -170,7 +170,7 @@ void InterpreterEECore::BC0F()
 	// if (CPCOND0 == false)
 		// branch; 
 #if defined(BUILD_DEBUG)
-	logDebug("BC0F: Not implemented.");
+	logDebug("(%s, %d) BC0F: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0F: Not implemented.");
 #endif
@@ -193,7 +193,7 @@ void InterpreterEECore::BC0FL()
 	// if (CPCOND0 == false)
 		// branch likely; 
 #if defined(BUILD_DEBUG)
-	logDebug("BC0FL: Not implemented.");
+	logDebug("(%s, %d) BC0FL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0FL: Not implemented.");
 #endif
@@ -216,7 +216,7 @@ void InterpreterEECore::BC0T()
 	// if (CPCOND0 == true)
 	// branch; 
 #if defined(BUILD_DEBUG)
-	logDebug("BC0T: Not implemented.");
+	logDebug("(%s, %d) BC0T: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0T: Not implemented.");
 #endif
@@ -239,7 +239,7 @@ void InterpreterEECore::BC0TL()
 	// if (CPCOND0 == true)
 	// branch likely; 
 #if defined(BUILD_DEBUG)
-	logDebug("BC0TL: Not implemented.");
+	logDebug("(%s, %d) BC0TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0TL: Not implemented.");
 #endif
@@ -321,7 +321,7 @@ void InterpreterEECore::BC2F()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	logDebug("BC2F: Not implemented.");
+	logDebug("(%s, %d) BC2F: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2F: Not implemented.");
 #endif
@@ -331,7 +331,7 @@ void InterpreterEECore::BC2FL()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	logDebug("BC2FL: Not implemented.");
+	logDebug("(%s, %d) BC2FL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2FL: Not implemented.");
 #endif
@@ -341,7 +341,7 @@ void InterpreterEECore::BC2T()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	logDebug("BC2T: Not implemented.");
+	logDebug("(%s, %d) BC2T: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2T: Not implemented.");
 #endif
@@ -351,7 +351,7 @@ void InterpreterEECore::BC2TL()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	logDebug("BC2TL: Not implemented.");
+	logDebug("(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2TL: Not implemented.");
 #endif

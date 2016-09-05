@@ -44,9 +44,7 @@ void ExceptionHandler::handleException(const EECoreException_t& PS2Exception)
 
 #if defined(BUILD_DEBUG)
 	// Debug print exception type.
-	char message[1000];
-	sprintf_s(message, "ExceptionHandler called! Type = %s", exTypeStrings[static_cast<size_t>(PS2Exception.mExType)]);
-	logDebug(message);
+	logDebug("(%s, %d) ExceptionHandler called! Type = %s", __FILENAME__, __LINE__, exTypeStrings[static_cast<size_t>(PS2Exception.mExType)]);
 #endif
 
 	// Call the exception specific handler contained in the ExceptionProperties_t.

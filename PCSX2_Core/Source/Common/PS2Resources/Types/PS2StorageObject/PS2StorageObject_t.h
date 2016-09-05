@@ -11,7 +11,7 @@ Useful for static memory locations, such as the PS2's main memory, which starts 
 class PS2StorageObject_t : public StorageObject_t
 {
 public:
-	PS2StorageObject_t(const size_t& size, const std::string mnemonic, const u32 & PS2PhysicalAddress);
+	PS2StorageObject_t(const size_t& size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
 	virtual ~PS2StorageObject_t();
 
 	const u32 & getPS2PhysicalAddress() const;

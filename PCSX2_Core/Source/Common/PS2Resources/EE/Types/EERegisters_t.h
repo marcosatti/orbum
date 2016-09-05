@@ -38,22 +38,22 @@ public:
 
 private:
 	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
-	static constexpr char * SIO_BUFFER_PREFIX = "SIO Message: ";
-	std::string sioBuffer = SIO_BUFFER_PREFIX;
+	static constexpr char * SIO_BUFFER_PREFIX = "SIO Message";
+	std::string sioBuffer;
 };
 
 /*
 The MCH register class. No information available except for old PCSX2's code. Not sure what this does, but it is required by the bios from my own testing.
 It requires some special functionality (see below).
-Allocated at base PS2 physical memory address 0x1000F400.
+Allocated at base PS2 physical memory address 0x1000F430 (from MCH_RICM).
 */
 class EERegisterMCH_t : public PS2StorageObject_t
 {
 public:
 	EERegisterMCH_t();
 
-	static constexpr u32 OFFSET_MCH_RICM = 0x30;
-	static constexpr u32 OFFSET_MCH_DRD = 0x40;
+	static constexpr u32 OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
+	static constexpr u32 OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 
 	u32 readWordU(u32 storageIndex) override;
 	void writeWordU(u32 storageIndex, u32 value) override;
@@ -62,6 +62,6 @@ public:
 
 private:
 	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
-	int rdram_sdevid = 0;
-	const int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
+	s32 rdram_sdevid = 0;
+	const s32 rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 };

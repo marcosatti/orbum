@@ -31,7 +31,7 @@ void InterpreterEECore::PREF()
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
 #if defined(BUILD_DEBUG)
-	logDebug("PREF: Not implemented.");
+	logDebug("(%s, %d) PREF: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("PREF: Not implemented.");
 #endif
@@ -68,7 +68,7 @@ void InterpreterEECore::EI()
 void InterpreterEECore::CACHE()
 {
 #if defined(BUILD_DEBUG)
-	logDebug("CACHE: Not implemented.");
+	logDebug("(%s, %d) CACHE: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("CACHE: Not implemented.");
 #endif

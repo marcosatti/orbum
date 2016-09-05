@@ -104,18 +104,18 @@ void InterpreterEECore::executeInstruction()
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		char message[1000];
-		sprintf_s(message, "EECore loop %llu: "
+		logDebug("(%s, %d) EECore loop %llu: "
 			"CPU Cycles = %lu, "
 			"PC = 0x%08X, "
 			"BD = %d, "
-			"Instruction = %s",
-			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(RegisterCount_t::Fields::Count), EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, (instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
-		logDebug(message);
+			"Instruction = %s", __FILENAME__, __LINE__,
+			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(RegisterCount_t::Fields::Count), 
+			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
+			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
 	// Breakpoint.
 	if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
-		logDebug("Breakpoint hit.");
+		logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
 	}
 #endif
 
@@ -135,7 +135,7 @@ void InterpreterEECore::INSTRUCTION_UNKNOWN()
 {
 	// Unknown opcode, log if debug is enabled.
 #if defined(BUILD_DEBUG)
-	logDebug("Unknown R5900 opcode encountered!");
+	logDebug("(%s, %d) Unknown R5900 opcode encountered!", __FILENAME__, __LINE__);
 #endif
 }
 

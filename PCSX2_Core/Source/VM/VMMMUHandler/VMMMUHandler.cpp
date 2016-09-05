@@ -68,6 +68,14 @@ void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & c
 		// Make sure directory is allocated.
 		allocDirectory(absDirectoryIndex);
 
+		// Check that there is no existing map data - log a warning if there is.
+		if (mPageTable[absDirectoryIndex][absPageIndex] != nullptr)
+			logDebug("(%s, %d) Warning! VM MMU mapped storage object \"%s\" @ 0x%08X overwritten with object \"%s\". Please fix!",
+				__FILENAME__, __LINE__,
+				mPageTable[absDirectoryIndex][absPageIndex]->getMnemonic(),
+				PS2MemoryAddress,
+				clientStorage->getMnemonic());
+
 		// Map memory entry.
 		mPageTable[absDirectoryIndex][absPageIndex] = clientStorage;
 	}

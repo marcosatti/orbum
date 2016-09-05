@@ -22,10 +22,10 @@ void EERegisterSIO_t::writeByteU(u32 storageIndex, u8 value)
 			// Do not bother outputting the '\r' or '\n' characters, as this is done by the logging functions of the emulator.
 
 			// Output the message.
-			logDebug(sioBuffer.c_str());
+			logDebug("(%s, %d) %s: %s", __FILENAME__, __LINE__, SIO_BUFFER_PREFIX, sioBuffer.c_str());
 
-			// Reset the string to the prefix value for the next message.
-			sioBuffer = SIO_BUFFER_PREFIX; 
+			// Reset the buffer.
+			sioBuffer.clear();
 		}
 		else if (value != '\n')
 			sioBuffer.push_back(value);
@@ -149,6 +149,7 @@ void EERegisterMCH_t::writeWordU(u32 storageIndex, u32 value)
 
 		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((PS2StorageObject_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
 			rdram_sdevid = 0;	// If SIO repeater is cleared, reset sdevid
+
 		PS2StorageObject_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
 
 		break;

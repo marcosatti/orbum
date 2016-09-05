@@ -113,15 +113,8 @@ public:
 		struct EE_REGISTER_MCH
 		{
 			// MCH register. No documentation! From old PCSX2, also required by BIOS.
-			static constexpr u32 PADDRESS_EE_REGISTER_MCH = 0x1000F400;
-			static constexpr u32 SIZE_EE_REGISTER_MCH = 0x00000100;
-		};
-
-		struct EE_REGISTER_DMAC_EXT
-		{
-			// Extended DMAC control registers. See EE Users Manual page 24.
-			static constexpr u32 PADDRESS_EE_REGISTER_DMAC_EXT = 0x1000F500;
-			static constexpr u32 SIZE_EE_REGISTER_DMAC_EXT = 0x00000100;
+			static constexpr u32 PADDRESS_EE_REGISTER_MCH = 0x1000F430;
+			static constexpr u32 SIZE_EE_REGISTER_MCH = 0x00000020;
 		};
 	};
 

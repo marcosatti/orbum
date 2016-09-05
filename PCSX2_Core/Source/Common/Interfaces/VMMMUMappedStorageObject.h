@@ -46,6 +46,11 @@ public:
 	u32 getAbsMappedPageIndex() const;
 	void setAbsMappedPageIndex(u32 absPageIndex);
 
+	/*
+	Get the storage mnemonic, used for debug.
+	*/
+	virtual const char * getMnemonic() const = 0;
+
 private:
 	/*
 	mAbsMappedPageIndex is set by the VM MMU when mapped. This provides a way for the storage object / VM MMU to determine what byte it should start accessing the array from.

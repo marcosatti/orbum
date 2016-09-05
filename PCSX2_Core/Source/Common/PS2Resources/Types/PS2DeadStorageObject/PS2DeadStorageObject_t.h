@@ -9,7 +9,7 @@ Currently used for 'reserved' memory regions (ie: some EE registers) and debuggi
 class PS2DeadStorageObject_t : public PS2StorageObject_t
 {
 public:
-	PS2DeadStorageObject_t(const size_t & size, const std::string mnemonic, const u32 & PS2PhysicalAddress);
+	PS2DeadStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
 	~PS2DeadStorageObject_t();
 
 	u8 readByteU(u32 storageIndex) override;

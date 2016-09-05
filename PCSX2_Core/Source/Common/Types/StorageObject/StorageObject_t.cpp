@@ -5,7 +5,7 @@
 #include "Common/Types/StorageObject/StorageObject_t.h"
 
 
-StorageObject_t::StorageObject_t(const size_t & size, const std::string mnemonic) :
+StorageObject_t::StorageObject_t(const size_t & size, const char *const mnemonic) :
 	mStorageSize(size),
 	mStorage(new u8[mStorageSize]),
 	mMnemonic(mnemonic)
@@ -15,9 +15,7 @@ StorageObject_t::StorageObject_t(const size_t & size, const std::string mnemonic
 
 #if defined(BUILD_DEBUG)
 	// Log the storage details if enabled.
-	char message[1000];
-	sprintf_s(message, 1000, "%s allocated at 0x%p (size = 0x%08zX).", mMnemonic.c_str(), mStorage, mStorageSize);
-	logDebug(message);
+	logDebug("(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
 #endif
 }
 
@@ -177,4 +175,9 @@ size_t StorageObject_t::getStorageSize()
 void* StorageObject_t::getClientMemoryAddress() const
 {
 	return reinterpret_cast<void*>(mStorage);
+}
+
+const char * StorageObject_t::getMnemonic() const
+{
+	return mMnemonic.c_str();
 }

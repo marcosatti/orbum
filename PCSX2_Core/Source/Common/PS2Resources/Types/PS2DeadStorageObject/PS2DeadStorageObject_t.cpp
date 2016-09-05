@@ -2,7 +2,7 @@
 #include "Common/PS2Resources/Types/PS2DeadStorageObject/PS2DeadStorageObject_t.h"
 
 
-PS2DeadStorageObject_t::PS2DeadStorageObject_t(const size_t & size, const std::string mnemonic, const u32 & PS2PhysicalAddress)
+PS2DeadStorageObject_t::PS2DeadStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress)
 	: PS2StorageObject_t(size, mnemonic, PS2PhysicalAddress) 
 {
 }

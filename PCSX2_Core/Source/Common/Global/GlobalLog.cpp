@@ -1,17 +1,30 @@
 #include "stdafx.h"
 
-#include <iostream>
+#include <cstdarg>
+#include <cstdio>
 
 #include "GlobalMacros.h"
 
+// Thanks to http://stackoverflow.com/questions/17936786/prepend-or-append-to-every-printf-call for the method of customising printf calls.
+
 #if defined(BUILD_DEBUG)
-void logDebug(const char * const message)
+void logDebug(const char * format, ...)
 {
-	std::cout << "[DEBUG] " << message << std::endl;
+	printf("[DEBUG] ");
+	va_list args;
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf("\n");
 }
 #endif
 
-void logInfo(const char * const message)
+void logInfo(const char * format, ...)
 {
-	std::cout << "[INFO] " << message << std::endl;
+	printf("[INFO] ");
+	va_list args;
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf("\n");
 }

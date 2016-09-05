@@ -34,3 +34,14 @@ Inlineing of functions.
  #endif
  #define NO_INLINE __attribute__((noinline))
 #endif
+
+/*
+Get the filename only from __FILENAME__, thanks to http://stackoverflow.com/questions/8487986/file-macro-shows-full-path.
+*/
+#include <string.h>
+
+#if defined(ENV_WINDOWS)
+ #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#else
+ #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#endif
