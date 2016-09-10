@@ -32,6 +32,15 @@ InterpreterEECore::~InterpreterEECore()
 {
 }
 
+void InterpreterEECore::initalise()
+{
+	// A PS2 reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
+	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
+	// After this is done, call VMMMain::Run() to begin execution.
+
+	getExceptionHandler()->handleException(EECoreException_t(EECoreException_t::ExType::EX_RESET));
+}
+
 void InterpreterEECore::executionStep()
 {
 	// Check for any timer events.

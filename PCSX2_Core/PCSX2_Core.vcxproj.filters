@@ -245,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.h" />
     <ClInclude Include="Source\Common\Global\GlobalOptions.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -399,6 +402,9 @@
     <ClCompile Include="Source\Common\PS2Resources\GS\GS_t.cpp" />
     <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.cpp" />
     <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

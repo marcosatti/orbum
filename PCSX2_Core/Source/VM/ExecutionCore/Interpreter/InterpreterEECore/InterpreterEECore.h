@@ -17,8 +17,13 @@ class TimerHandler;
 class InterpreterEECore : public VMExecutionCoreComponent
 {
 public:
-	InterpreterEECore(const VMMain *const vmMain);
+	explicit InterpreterEECore(const VMMain *const vmMain);
 	~InterpreterEECore();
+
+	/*
+	Initalisation.
+	*/
+	void initalise() override;
 
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.

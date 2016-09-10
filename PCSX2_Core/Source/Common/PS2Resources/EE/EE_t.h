@@ -15,6 +15,7 @@ class EERegisterSIO_t;
 class EERegisterMCH_t;
 class StorageObject_t;
 class DeadStorageObject_t;
+class XORStorageObject_t;
 class BusErrorStorageObject_t;
 
 class EE_t : public PS2ResourcesSubobject
@@ -223,8 +224,8 @@ public:
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_DMAC_e070;
 
 	// 0x1000F000
-	std::shared_ptr<StorageObject_t>         EE_REGISTER_I_STAT;
-	std::shared_ptr<StorageObject_t>         EE_REGISTER_I_MASK;
+	std::shared_ptr<XORStorageObject_t>      EE_REGISTER_I_STAT;
+	std::shared_ptr<XORStorageObject_t>      EE_REGISTER_I_MASK;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_INTC_f020;
 
 	// 0x1000F100

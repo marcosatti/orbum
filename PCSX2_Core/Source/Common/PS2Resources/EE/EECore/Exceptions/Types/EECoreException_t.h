@@ -74,22 +74,22 @@ These fields are not used for all TLB exception types, but are related to the TL
 struct TLBExceptionInfo_t
 {
 	u32 mPS2VirtualAddress;		  // The full virtual address that caused the exception.
-	u32 mPageTableAddress;		  // The address of the OS's page table // TODO: Uhhhhh how do I know this???
+	u32 mPageTableAddress;		  // The address of the OS's page table, which is set by the OS into the PageEntry register (this means just copy the value).
 	u32 mPS2VirtualAddress_HI_19; // High order 19-bits of the VA that caused the exception.
 	u32 mASID;					  // ASID.
 	s32 mTLBIndex;				  // TLB index pointing to a new entry.
 };
 
 /*
-Parameters describe information needed for a interrupt exception to process.
-All three paramters describe the interrupt signal that was generated. If only one signal, eg: Int7 was raised, then only mInt7 needs to be 1.
+Parameters describe information needed for a interrupt exception to process. Set the corresponding interrupt signal to 1.
+All three paramters describe the interrupt signal that was generated. If only one signal, eg: Int1 was raised, then only mInt1 needs to be 1.
 Any other signals unused must be set to 0 upon creation, as the exception handler sets them all at once.
 */
 struct IntExceptionInfo_t
 {
-	u32 mInt1;
-	u32 mInt0;
-	u32 mTimerInt;
+	u32 mInt1;     // INT1 signal from the DMAC.
+	u32 mInt0;     // INT0 signal from the INTC.
+	u32 mTimerInt; // Timer signal from the EE Core Timer (COP0.Count/Compare registers).
 };
 
 /*
