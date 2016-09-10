@@ -15,7 +15,7 @@ For reference documentation, see:
 class R5900_t;
 class COP0_t;
 class COP1_t;
-class PS2StorageObject_t;
+class StorageObject_t;
 class Exceptions_t;
 class MMU_t;
 
@@ -42,7 +42,7 @@ public:
 	// VPU_t VPU0;
 
 	// Scratchpad memory
-	std::shared_ptr<PS2StorageObject_t> ScratchpadMemory;
+	std::shared_ptr<StorageObject_t> ScratchpadMemory;
 
 	// Exception/Interrupt State. The INTC etc will communicate through here.
 	std::shared_ptr<Exceptions_t> Exceptions;

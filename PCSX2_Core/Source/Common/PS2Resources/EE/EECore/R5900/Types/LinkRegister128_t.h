@@ -2,7 +2,7 @@
 
 #include  "Common/Global/Globals.h"
 
-#include "Common/Types/Registers/Register128_t.h"
+#include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 

@@ -19,6 +19,10 @@ TODO: Check byte order / endianess - it is assumed within the emulator that, for
  Register128_t.(S or U)W[1] = bits 32-63.              |
  Register128_t.(S or U)W[2] = bits 64-95.              ↓
  Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
+
+The primary difference between a Register type and StorageObject type is that registers are accessed by the size index, not by the byte index.
+For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 32-63.
+See the StorageObject type for the counter-example.
 */
 
 class Register32_t

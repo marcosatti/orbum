@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <Common/Global/Globals.h>
-#include <Common/Types/MIPSInstruction/MIPSInstruction_t.h>
+#include <Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h>
 #include <Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h>
 
 TEST(R5900Instruction_Test_Raw, RType)

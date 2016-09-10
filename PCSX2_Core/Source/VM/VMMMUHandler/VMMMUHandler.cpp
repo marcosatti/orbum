@@ -5,10 +5,10 @@
 
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
+#include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 VMMMUHandler::VMMMUHandler(const VMMain* const vmMain) :
-	VMMMUComponent(vmMain),
 	DIRECTORY_ENTRIES(TABLE_MAX_ADDRESSABLE_SIZE_BYTES / DIRECTORY_SIZE_BYTES),
 	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
 	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),
@@ -79,6 +79,11 @@ void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & c
 		// Map memory entry.
 		mPageTable[absDirectoryIndex][absPageIndex] = clientStorage;
 	}
+}
+
+void VMMMUHandler::mapMemory(const std::shared_ptr<StorageObject_t>& clientStorage)
+{
+	mapMemory(clientStorage, clientStorage->getPS2PhysicalAddress());
 }
 
 u32 VMMMUHandler::getVDN(u32 PS2PhysicalAddress) const

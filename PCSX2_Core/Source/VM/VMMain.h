@@ -4,7 +4,7 @@
 #include <string>
 
 class VMExecutionCoreComponent;
-class VMMMUComponent;
+class VMMMUHandler;
 class PS2Resources_t;
 
 /*
@@ -63,8 +63,8 @@ public:
 	VMMain state functions.
 	*/
 	const VMStatus& getStatus() const;
-	const std::unique_ptr<PS2Resources_t>& getResources() const;
-	const std::unique_ptr<VMMMUComponent>& getMMU() const;
+	const std::shared_ptr<PS2Resources_t>& getResources() const;
+	const std::shared_ptr<VMMMUHandler>& getMMU() const;
 	
 	/*
 	Misc helper functions.
@@ -76,9 +76,9 @@ private:
 	*/
 	VMStatus mStatus;
 	ExecutionCoreType mExecutionCoreType;
-	std::unique_ptr<PS2Resources_t> mPS2Resources;
+	std::shared_ptr<PS2Resources_t> mPS2Resources;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
-	const std::unique_ptr<VMMMUComponent> mMMUComponent;
+	const std::shared_ptr<VMMMUHandler> mMMUComponent;
 	const std::string mBootROMPath;
 
 	// Initalisation (called through reset()).

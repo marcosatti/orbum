@@ -4,18 +4,16 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/Interfaces/VMMMUComponent.h"
-
 class VMMain;
 class VMMMUMappedStorageObject;
-class PS2StorageObject;
+class StorageObject_t;
 
 /*
 The VM MMU component is responsible for converting the PS2's physical addresses into client storage objects (which is required to properly run a program on the client system).
 The remapping method is actually just a page table... but sort of in reverse (PS2 "physical" -> client)!
 This means that in the emulator, there are 2 page tables:
 - One will be a page table for mapping PS2 virtual addresses into PS2 physical addresses (implmented as MMU sub components in the Interpreter & Recompliler).
-- The other (this one) is a page table for mapping PS2 physical addresses into x86 virtual addresses.
+- The other (this one) is a page table for mapping PS2 physical addresses into x86 virtual addresses. It is labeled the VM MMU to avoid confusion with the PS2 MMU.
 
 The page table is implemented as a 2 level system with a primary "directory" size of 4,194,304B (4MB addressing chunks) and a secondary "page" size of 16B. 
  2 Levels are used to reduce memory usage by only allocating the page tables within a directory that are needed.
@@ -24,6 +22,7 @@ The reason that 16B is used on the second levels due to the physical memory map 
  Each register is (at minimum) aligned on a 16B boundary, and we need to reflect this. If a larger page size was used (say 4KB which is a normal value), then we would need
  to somehow make sure that each offset within a page which is a multiple of 16 pointed to a different client storage object - but this is a problem because the physical 
  frame number only points to 1 object. Therefore for now we need to make the page size 16B until a better solution comes along.
+This also means that a runtime error will happen if there is a read or write after the edge of the object.
 
 The old PCSX2 code seems to align all of the registers continuously, so that the client memory exactly reflects the PS2's physical memory map... This works but has the side effect
  of not being able to change the order of the registers memory, which is a dangerous thing as a compiler might break this, as well as making it harder to read.
@@ -62,7 +61,7 @@ It will throw different runtime errors when the following conditions occur:
 
 TODO: Reduce memory footprint from 256MB (see note above).
  */
-class VMMMUHandler : public VMMMUComponent
+class VMMMUHandler
 {
 public:
 	explicit VMMMUHandler(const VMMain *const vmMain);
@@ -78,7 +77,8 @@ public:
 	clientStorage = An object which implements the VMMMUMappedStorageObject interface.
 	PS2PhysicalAddress = The PS2 "physical" address which will be mapped.
 	*/
-	void mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress) override;
+	void mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress);
+	void mapMemory(const std::shared_ptr<StorageObject_t> & clientStorage);
 
 	/*
 	These functions, given a PS2 "physical" address, will read or write a value from/to the address.
@@ -86,26 +86,23 @@ public:
 	You cannot use these functions before mapMemory() has been called - it will return an runtime_error exception otherwise.
 	The functions have the syntax "{read or write}{type}{[U]nsigned or [S]igned}()".
 	Unfortunately C++ does not allow templating of virtual functions defined in the parent class, so a read/write for each type has to be made.
-
-	Currently results are not guaranteed to be correct for reads or writes across a page boundary; for continuous linear mappings however it *should* (untested) be correct, as there is an implicit overflow
-	 into the next page table entry.
 	*/
-	u8 readByteU(u32 PS2PhysicalAddress) const override;
-	void writeByteU(u32 PS2PhysicalAddress, u8 value) const override;
-	s8 readByteS(u32 PS2PhysicalAddress) const override;
-	void writeByteS(u32 PS2PhysicalAddress, s8 value) const override;
-	u16 readHwordU(u32 PS2PhysicalAddress) const override;
-	void writeHwordU(u32 PS2PhysicalAddress, u16 value) const override;
-	s16 readHwordS(u32 PS2PhysicalAddress) const override;
-	void writeHwordS(u32 PS2PhysicalAddress, s16 value) const override;
-	u32 readWordU(u32 PS2PhysicalAddress) const override;
-	void writeWordU(u32 PS2PhysicalAddress, u32 value) const override;
-	s32 readWordS(u32 PS2PhysicalAddress) const override;
-	void writeWordS(u32 PS2PhysicalAddress, s32 value) const override;
-	u64 readDwordU(u32 PS2PhysicalAddress) const override;
-	void writeDwordU(u32 PS2PhysicalAddress, u64 value) const override;
-	s64 readDwordS(u32 PS2PhysicalAddress) const override;
-	void writeDwordS(u32 PS2PhysicalAddress, s64 value) const override;
+	u8 readByteU(u32 PS2PhysicalAddress) const;
+	void writeByteU(u32 PS2PhysicalAddress, u8 value) const;
+	s8 readByteS(u32 PS2PhysicalAddress) const;
+	void writeByteS(u32 PS2PhysicalAddress, s8 value) const;
+	u16 readHwordU(u32 PS2PhysicalAddress) const;
+	void writeHwordU(u32 PS2PhysicalAddress, u16 value) const;
+	s16 readHwordS(u32 PS2PhysicalAddress) const;
+	void writeHwordS(u32 PS2PhysicalAddress, s16 value) const;
+	u32 readWordU(u32 PS2PhysicalAddress) const;
+	void writeWordU(u32 PS2PhysicalAddress, u32 value) const;
+	s32 readWordS(u32 PS2PhysicalAddress) const;
+	void writeWordS(u32 PS2PhysicalAddress, s32 value) const;
+	u64 readDwordU(u32 PS2PhysicalAddress) const;
+	void writeDwordU(u32 PS2PhysicalAddress, u64 value) const;
+	s64 readDwordS(u32 PS2PhysicalAddress) const;
+	void writeDwordS(u32 PS2PhysicalAddress, s64 value) const;
 
 private:
 	/*

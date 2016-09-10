@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
+#include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
 
 VMMMUMappedStorageObject::VMMMUMappedStorageObject(): mAbsMappedPageIndex(0)
 {

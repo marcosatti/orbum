@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 /*
 The BitfieldRegiser_t class extends the Register32_t class, providing methods for manipulating 32-bit bit fields.

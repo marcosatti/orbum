@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 
 /*
 COP1_BitfieldRegister_t.h implements all of the bitfields in each of the COP1 control registers. This is used primarily by COP1_t.h.

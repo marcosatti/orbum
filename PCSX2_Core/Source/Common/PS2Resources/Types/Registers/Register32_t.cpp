@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 Register32_t::Register32_t() : UW(0)
 {

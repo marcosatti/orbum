@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 /*

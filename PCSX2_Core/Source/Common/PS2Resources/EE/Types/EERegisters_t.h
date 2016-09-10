@@ -4,8 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Constants/PS2Constants.h"
-#include "Common/PS2Resources/Types/PS2StorageObject/PS2StorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 /*
 EERegisters_t defines SPECIAL EE registers specified in the EE Users Manual from page 21 to 25.
@@ -21,11 +20,14 @@ Some useful information can be found in the old PCSX2 under Hw.h (register names
 In a real PS2, you can communicate with the EE over this serial port.
 Allocated at base PS2 physical memory address 0x1000F100.
 */
-class EERegisterSIO_t : public PS2StorageObject_t
+
+class EERegisterSIO_t : public StorageObject_t
 {
 public:
 	EERegisterSIO_t();
 
+	static constexpr u32 PADDRESS_EE_REGISTER_SIO = 0x1000F100;
+	static constexpr u32 SIZE_EE_REGISTER_SIO = 0x00000100;
 	static constexpr u32 OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
 	static constexpr u32 OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
@@ -37,9 +39,11 @@ public:
 	void writeWordS(u32 storageIndex, s32 value) override;
 
 private:
+#if DEBUG_LOG_SIO_MESSAGES
 	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
 	static constexpr char * SIO_BUFFER_PREFIX = "SIO Message";
 	std::string sioBuffer;
+#endif
 };
 
 /*
@@ -47,11 +51,13 @@ The MCH register class. No information available except for old PCSX2's code. No
 It requires some special functionality (see below).
 Allocated at base PS2 physical memory address 0x1000F430 (from MCH_RICM).
 */
-class EERegisterMCH_t : public PS2StorageObject_t
+class EERegisterMCH_t : public StorageObject_t
 {
 public:
 	EERegisterMCH_t();
 
+	static constexpr u32 PADDRESS_EE_REGISTER_MCH = 0x1000F430;
+	static constexpr u32 SIZE_EE_REGISTER_MCH = 0x00000020;
 	static constexpr u32 OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
 	static constexpr u32 OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 

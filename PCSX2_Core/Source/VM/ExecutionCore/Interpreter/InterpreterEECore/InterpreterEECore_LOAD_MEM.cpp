@@ -5,7 +5,7 @@
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
-#include "Common/Types/Registers/Register128_t.h"
+#include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"

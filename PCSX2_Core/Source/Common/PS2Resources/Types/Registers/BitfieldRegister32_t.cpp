@@ -2,7 +2,7 @@
 
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 
 BitfieldRegister32_t::BitfieldRegister32_t()
 {

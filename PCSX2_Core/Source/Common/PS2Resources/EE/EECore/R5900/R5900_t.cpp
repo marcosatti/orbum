@@ -4,8 +4,8 @@
 
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/Register128_t.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
+#include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"

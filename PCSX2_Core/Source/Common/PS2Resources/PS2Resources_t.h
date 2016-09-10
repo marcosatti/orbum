@@ -21,7 +21,8 @@ Note: In order to reduce compile times, try to define the subobjects in the clas
 */
 
 class EE_t;
-class PS2StorageObject_t;
+class GS_t;
+class StorageObject_t;
 
 class PS2Resources_t
 {
@@ -31,11 +32,14 @@ public:
 	// The EE structure.
 	std::shared_ptr<EE_t> EE;
 
+	// The GS structure.
+	std::shared_ptr<GS_t> GS;
+
 	// Main Memory (32MB)
-	std::shared_ptr<PS2StorageObject_t> MainMemory;
+	std::shared_ptr<StorageObject_t> MainMemory;
 
 	// Boot ROM (4MB)
-	std::shared_ptr<PS2StorageObject_t> BootROM;
+	std::shared_ptr<StorageObject_t> BootROM;
 
 private:
 

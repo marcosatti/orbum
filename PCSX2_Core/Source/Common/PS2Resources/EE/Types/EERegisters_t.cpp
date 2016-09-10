@@ -3,9 +3,10 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/EE/Types/EERegisters_t.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 EERegisterSIO_t::EERegisterSIO_t() :
-	PS2StorageObject_t(PS2Constants::EE::EE_REGISTER_SIO::SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO", PS2Constants::EE::EE_REGISTER_SIO::PADDRESS_EE_REGISTER_SIO)
+	StorageObject_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO", PADDRESS_EE_REGISTER_SIO)
 {
 }
 
@@ -15,6 +16,7 @@ void EERegisterSIO_t::writeByteU(u32 storageIndex, u8 value)
 	{
 	case OFFSET_SIO_TXFIFO: // "SIO_TXFIFO"
 	{
+#if DEBUG_LOG_SIO_MESSAGES
 		// Below logic adapted from the old PCSX2 code (see HwWrite.cpp).
 		if (value == '\r') 
 		{
@@ -27,14 +29,14 @@ void EERegisterSIO_t::writeByteU(u32 storageIndex, u8 value)
 			// Reset the buffer.
 			sioBuffer.clear();
 		}
-		else if (value != '\n')
+		else if (value != '\n') // See above for why '\n' is not written to the buffer.
 			sioBuffer.push_back(value);
-
+#endif
 		break;
 	}
 	default:
 	{
-		PS2StorageObject_t::writeByteU(storageIndex, value);
+		StorageObject_t::writeByteU(storageIndex, value);
 		break;
 	}
 	}
@@ -56,7 +58,7 @@ u32 EERegisterSIO_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return PS2StorageObject_t::readWordU(storageIndex);
+		return StorageObject_t::readWordU(storageIndex);
 	}
 	}
 }
@@ -74,7 +76,7 @@ void EERegisterSIO_t::writeWordU(u32 storageIndex, u32 value)
 	}
 	default:
 	{
-		PS2StorageObject_t::writeWordU(storageIndex, value);
+		StorageObject_t::writeWordU(storageIndex, value);
 		break;
 	}
 	}
@@ -91,7 +93,7 @@ void EERegisterSIO_t::writeWordS(u32 storageIndex, s32 value)
 }
 
 EERegisterMCH_t::EERegisterMCH_t() :
-	PS2StorageObject_t(PS2Constants::EE::EE_REGISTER_MCH::SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH", PS2Constants::EE::EE_REGISTER_MCH::PADDRESS_EE_REGISTER_MCH)
+	StorageObject_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH", PADDRESS_EE_REGISTER_MCH)
 {
 }
 
@@ -102,9 +104,9 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 	case OFFSET_MCH_DRD:
 	{
 		// Below logic is from the old PCSX2.
-		if (!((PS2StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 6) & 0xF))
+		if (!((StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 6) & 0xF))
 		{
-			switch ((PS2StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 16) & 0xFFF)
+			switch ((StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 16) & 0xFFF)
 			{
 			// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 			case 0x21: //INIT
@@ -123,7 +125,7 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 				return 0x0090;	// SVER=0 | CORG=4(5x9x6) | SPT=1 | DEVTYP=0 | BYTE=0
 
 			case 0x40: // DEVID
-				return PS2StorageObject_t::readWordU(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
+				return StorageObject_t::readWordU(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
 			}
 		}
 	}
@@ -133,7 +135,7 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return PS2StorageObject_t::readWordU(storageIndex);
+		return StorageObject_t::readWordU(storageIndex);
 	}
 	}
 }
@@ -147,16 +149,16 @@ void EERegisterMCH_t::writeWordU(u32 storageIndex, u32 value)
 		// Below logic is from the old PCSX2.
 		// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 
-		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((PS2StorageObject_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
+		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((StorageObject_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
 			rdram_sdevid = 0;	// If SIO repeater is cleared, reset sdevid
 
-		PS2StorageObject_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
+		StorageObject_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
 
 		break;
 	}
 	default:
 	{
-		PS2StorageObject_t::writeWordU(storageIndex, value);
+		StorageObject_t::writeWordU(storageIndex, value);
 		break;
 	}
 	}

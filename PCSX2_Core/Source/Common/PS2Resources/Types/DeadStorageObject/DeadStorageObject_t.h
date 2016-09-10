@@ -1,19 +1,20 @@
 #pragma once
 
-#include <string>
-
 #include "Common/Global/Globals.h"
 
-#include "Common/Interfaces/VMMMUMappedStorageObject.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 /*
-A simple storage object which is constructed to the size specified, and optional name (mnemonic) which is used for debugging/logging.
+A 'dead' storage object, where reads return 0 and writes do nothing.
+Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
+The size parameter in the constructor is used only for VM MMU mapping purposes.
+The parsed size is not allocated (always set to 0 in the underlying StorageObject_t).
 */
-class StorageObject_t : public VMMMUMappedStorageObject
+class DeadStorageObject_t : public StorageObject_t
 {
 public:
-	explicit StorageObject_t(const size_t & size, const char *const mnemonic);
-	virtual ~StorageObject_t();
+	DeadStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
+	~DeadStorageObject_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -33,24 +34,12 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Gets the storage length, needed by the VM MMU handler in order to map it.
+	Needed by the VM MMU handler in order to map it. Instead of the normal StorageObject_t::getStorageSize(), return the size set
+	when the object is created.
 	*/
 	size_t getStorageSize() override;
 
-	/*
-	Gets the base client memory address, needed for special VM functions such as loading the BIOS (BootROM). Not normally used, and should never
-	 be used in favour of the above read/write functions unless you absolutely have to.
-	*/
-	void * getClientMemoryAddress() const;
-
-	/*
-	Get the storage mnemonic, used for debug.
-	*/
-	const char * getMnemonic() const override;
-
 private:
-	size_t mStorageSize;
-	u8 *const mStorage;
-	const std::string mMnemonic;
+	const size_t mSize; // Provided for debug only.
 };
 

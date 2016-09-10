@@ -104,8 +104,8 @@ void InterpreterEECore::executeInstruction()
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		logDebug("(%s, %d) EECore loop %llu: "
-			"CPU Cycles = %lu, "
+		logDebug("(%s, %d) EECore loop 0x%llX: "
+			"CPU Cycles = 0x%lX, "
 			"PC = 0x%08X, "
 			"BD = %d, "
 			"Instruction = %s", __FILENAME__, __LINE__,

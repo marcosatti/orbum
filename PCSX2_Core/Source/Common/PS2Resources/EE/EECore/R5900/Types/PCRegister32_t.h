@@ -2,7 +2,7 @@
 
 #include  "Common/Global/Globals.h"
 
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 class PCRegister32_t : public Register32_t
 {

@@ -41,15 +41,15 @@ public:
 	virtual size_t getStorageSize() = 0;
 
 	/*
+	Get the storage mnemonic, used for debug.
+	*/
+	virtual const char * getMnemonic() const = 0;
+
+	/*
 	Get/set mAbsMappedPageIndex, which are used by the VM MMU for calculating an offset.
 	*/
 	u32 getAbsMappedPageIndex() const;
 	void setAbsMappedPageIndex(u32 absPageIndex);
-
-	/*
-	Get the storage mnemonic, used for debug.
-	*/
-	virtual const char * getMnemonic() const = 0;
 
 private:
 	/*

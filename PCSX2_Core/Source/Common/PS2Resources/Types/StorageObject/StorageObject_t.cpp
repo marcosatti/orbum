@@ -2,20 +2,22 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 
-StorageObject_t::StorageObject_t(const size_t & size, const char *const mnemonic) :
+StorageObject_t::StorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress) :
 	mStorageSize(size),
 	mStorage(new u8[mStorageSize]),
-	mMnemonic(mnemonic)
+	mMnemonic(mnemonic),
+	mPS2PhysicalAddress(PS2PhysicalAddress)
 {
 	// Initalise storage to 0.
 	memset(mStorage, 0, mStorageSize);
 
-#if defined(BUILD_DEBUG)
-	// Log the storage details if enabled.
-	logDebug("(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
+#if DEBUG_LOG_ALLOCATIONS
+	// Log the storage details if enabled, and if the size is above 0.
+	if (mStorageSize > 0)
+		logDebug("(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
 #endif
 }
 
@@ -180,4 +182,9 @@ void* StorageObject_t::getClientMemoryAddress() const
 const char * StorageObject_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
+}
+
+const u32 & StorageObject_t::getPS2PhysicalAddress() const
+{
+	return mPS2PhysicalAddress;
 }
