@@ -87,9 +87,9 @@ Any other signals unused must be set to 0 upon creation, as the exception handle
 */
 struct IntExceptionInfo_t
 {
-	u32 mInt2;
-	u32 mInt3;
-	u32 mInt7;
+	u32 mInt1;
+	u32 mInt0;
+	u32 mTimerInt;
 };
 
 /*

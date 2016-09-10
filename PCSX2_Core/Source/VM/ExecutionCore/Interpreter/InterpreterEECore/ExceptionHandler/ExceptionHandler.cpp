@@ -246,9 +246,9 @@ void ExceptionHandler::EX_HANDLER_INTERRUPT()
 	// The EE Core Users Manual page 99 mentions that if an interrupt signal is asserted and deasserted in a very short time, the Cause.IP[i] may not
 	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
 	// TODO: check for timing issues.
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP2, mPS2Exception->mIntExceptionInfo->mInt2);
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP3, mPS2Exception->mIntExceptionInfo->mInt3);
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, mPS2Exception->mIntExceptionInfo->mInt7);
+	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP2, mPS2Exception->mIntExceptionInfo->mInt1);
+	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP3, mPS2Exception->mIntExceptionInfo->mInt0);
+	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, mPS2Exception->mIntExceptionInfo->mTimerInt);
 }
 
 void ExceptionHandler::EX_HANDLER_TLB_MODIFIED()
