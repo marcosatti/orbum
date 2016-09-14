@@ -12,7 +12,7 @@ class PS2Resources_t;
 class VMMain;
 class MMUHandler;
 class ExceptionHandler;
-class TimerHandler;
+class EECoreTimerHandler;
 
 class InterpreterEECore : public VMExecutionCoreComponent
 {
@@ -35,7 +35,7 @@ public:
 	// Component state functions
 	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
 	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
-	const std::unique_ptr<TimerHandler> & getTimerHandler() const;
+	const std::unique_ptr<EECoreTimerHandler> & getTimerHandler() const;
 	MIPSInstruction_t & getInstruction();
 
 private:
@@ -62,7 +62,7 @@ private:
 	/*
 	The timer handler, responsible for updating and raising interrupts of various PS2 registers (mostly to do with COP0).
 	*/
-	const std::unique_ptr<TimerHandler> mTimerHandler;
+	const std::unique_ptr<EECoreTimerHandler> mTimerHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.

@@ -6,7 +6,7 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/EECoreTimerHandler/EECoreTimerHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
@@ -22,7 +22,7 @@ InterpreterEECore::InterpreterEECore(const VMMain* const vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mExceptionHandler(std::make_unique<ExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<MMUHandler>(vmMain)),
-	mTimerHandler(std::make_unique<TimerHandler>(vmMain)),
+	mTimerHandler(std::make_unique<EECoreTimerHandler>(vmMain)),
 	mInstructionInfo(nullptr)
 {
 }
@@ -71,7 +71,7 @@ const std::unique_ptr<MMUHandler>& InterpreterEECore::getMMUHandler() const
 	return mMMUHandler;
 }
 
-const std::unique_ptr<TimerHandler>& InterpreterEECore::getTimerHandler() const
+const std::unique_ptr<EECoreTimerHandler>& InterpreterEECore::getTimerHandler() const
 {
 	return mTimerHandler;
 }

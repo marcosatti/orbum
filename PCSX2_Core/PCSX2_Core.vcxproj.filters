@@ -171,7 +171,6 @@
     <ClInclude Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.h">
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.h" />
     <ClInclude Include="Source\Common\PS2Constants\PS2Constants.h">
       <Filter>Source\Common\PS2 Constants</Filter>
     </ClInclude>
@@ -248,6 +247,7 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\EECoreTimerHandler\EECoreTimerHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -343,7 +343,6 @@
     <ClCompile Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.cpp">
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\TimerHandler\TimerHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP0\COP0_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
@@ -405,6 +404,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\EECoreTimerHandler\EECoreTimerHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

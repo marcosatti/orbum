@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/VMMain.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/TimerHandler/TimerHandler.h"
+#include "VM/ExecutionCore/Interpreter/InterpreterEECore/EECoreTimerHandler/EECoreTimerHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
@@ -14,18 +14,18 @@
 
 using ExType = EECoreException_t::ExType;
 
-TimerHandler::TimerHandler(const VMMain *const vmMain) : 
+EECoreTimerHandler::EECoreTimerHandler(const VMMain *const vmMain) : 
 	VMExecutionCoreComponent(vmMain)
 {
 }
 
-void TimerHandler::incrementCountTimer(const EECoreInstructionInfo_t *const EECoreInstructionInfo) const
+void EECoreTimerHandler::incrementCountTimer(const EECoreInstructionInfo_t *const EECoreInstructionInfo) const
 {
 	auto& EECore = getVM()->getResources()->EE->EECore;
 	EECore->COP0->Count->increment(EECoreInstructionInfo->mCycles);
 }
 
-void TimerHandler::checkTimerEvents() const
+void EECoreTimerHandler::checkTimerEvents() const
 {
 	auto& EECore = getVM()->getResources()->EE->EECore;
 	
