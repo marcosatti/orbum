@@ -7,7 +7,7 @@
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/Types/XORStorageObject/XORStorageObject_t.h"
+#include "Common/PS2Resources/Types/XORStorageObject32/XORStorageObject32_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 

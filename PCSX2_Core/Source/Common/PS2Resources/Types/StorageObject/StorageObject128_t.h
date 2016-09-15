@@ -1,21 +1,26 @@
 #pragma once
 
+#include <string>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
 /*
-A 'Bus error' storage object, which will generate an exception on access.
-The size parameter in the constructor is used only for VM MMU mapping purposes.
-The parsed size is not allocated (always set to 0 in the underlying StorageObject_t).
-TODO: Currently throws a runtime_error, need to implement the ps2 exception.
+A 128-bit storage object (StorageObject_t::mSize = 16), which may only be accessed by 2 function calls in succession to [read/write]Dword[U/S](), to read in a 128-bit value. The successive calls are not checked, however.
+This means that storageIndex may only be equal to 0 or 4, depending on which 64 bits are being accessed at the time.
+This is provided to mimic the PS2 alginment conditions, for example, with the EE registers defined in the EE Users Manual.
 */
-class BusErrorStorageObject_t : public StorageObject_t
+class StorageObject128_t : public StorageObject_t
 {
 public:
-	BusErrorStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
-	~BusErrorStorageObject_t();
+	explicit StorageObject128_t(const char *const mnemonic, const u32 & PS2PhysicalAddress);
+	virtual ~StorageObject128_t();
 
+	/*
+	Read or write a 32-bit value, where storageIndex must be 0 (only the functions [read/write]Word[U/S](0) are allowed to be called). 
+	All other combinations throw a runtime error.
+	*/
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
 	s8 readByteS(u32 storageIndex) override;
@@ -33,13 +38,6 @@ public:
 	s64 readDwordS(u32 storageIndex) override;
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
-	/*
-	Needed by the VM MMU handler in order to map it. Instead of the normal StorageObject_t::getStorageSize(), return the size set
-	 when the object is created.
-	*/
-	size_t getStorageSize() override;
-
 private:
-	size_t mSize; 
 };
 

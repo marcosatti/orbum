@@ -6,7 +6,8 @@
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/MMUHandler/MMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/InterpreterEECore/ExceptionHandler/ExceptionHandler.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/EECoreTimerHandler/EECoreTimerHandler.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
@@ -15,18 +16,18 @@
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+#include "Common/PS2Resources/EE/Timers/Timers_t.h"
 
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
+using ExType = EECoreException_t::ExType;
 
 InterpreterEECore::InterpreterEECore(const VMMain* const vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mExceptionHandler(std::make_unique<ExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<MMUHandler>(vmMain)),
-	mTimerHandler(std::make_unique<EECoreTimerHandler>(vmMain)),
 	mInstructionInfo(nullptr)
 {
 }
-
 
 InterpreterEECore::~InterpreterEECore()
 {
@@ -43,8 +44,8 @@ void InterpreterEECore::initalise()
 
 void InterpreterEECore::executionStep()
 {
-	// Check for any timer events.
-	getTimerHandler()->checkTimerEvents();
+	// Check for any COP0.Count events.
+	checkCountTimerEvent();
 
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
 	getExceptionHandler()->checkExceptionQueue();
@@ -71,11 +72,6 @@ const std::unique_ptr<MMUHandler>& InterpreterEECore::getMMUHandler() const
 	return mMMUHandler;
 }
 
-const std::unique_ptr<EECoreTimerHandler>& InterpreterEECore::getTimerHandler() const
-{
-	return mTimerHandler;
-}
-
 MIPSInstruction_t & InterpreterEECore::getInstruction()
 {
 	return mInstruction;
@@ -83,7 +79,6 @@ MIPSInstruction_t & InterpreterEECore::getInstruction()
 
 void InterpreterEECore::checkBranchDelaySlot() const
 {
-	// TODO: Logic subject to change. May not work once everything is in place. Also it may warrant its own sub-component, but it is quite small, so I have kept it wihtin the InterpreterEECore class for now.
 	auto& R5900 = getVM()->getResources()->EE->EECore->R5900;
 	if (R5900->mIsInBranchDelay)
 	{
@@ -94,6 +89,30 @@ void InterpreterEECore::checkBranchDelaySlot() const
 		}
 		else
 			R5900->mBranchDelayCycles--;
+	}
+}
+
+void InterpreterEECore::checkCountTimerEvent() const
+{
+	auto& EECore = getVM()->getResources()->EE->EECore;
+
+	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
+	// The docs specify that an interrupt is raised when the two values are equal, but this is impossible to get correct (due to how emulation works), 
+	//  so it is based on greater than or equal.
+	// TODO: check for errors.
+	if (EECore->COP0->Count->readWordU() >= EECore->COP0->Compare->readWordU())
+	{
+		// Set the IP7 field of the COP0.Cause register.
+		EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 1);
+
+		// Queue an interrupt exception if the Status.IM7 and IE bits are set (Cause.IP is set above). 
+		// See EE Core Users Manual page 72 and 74 for how the interrupt is raised.
+		if (EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::IE)
+			&& EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::IM7))
+		{
+			IntExceptionInfo_t intEx = { 0, 0, 1 };
+			EECore->Exceptions->ExceptionQueue->push(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
+		}
 	}
 }
 
@@ -132,7 +151,9 @@ void InterpreterEECore::executeInstruction()
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
-	getTimerHandler()->incrementCountTimer(mInstructionInfo);
+	// Also update the EE timers by raising an event.
+	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
+	getVM()->getResources()->EE->Timers->raiseTimerEventPS2CLK(mInstructionInfo->mCycles);
 
 	// Increment PC.
 	EECore->R5900->PC->setPCValueNext();

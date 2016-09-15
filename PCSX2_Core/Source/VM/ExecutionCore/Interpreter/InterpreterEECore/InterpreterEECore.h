@@ -12,7 +12,6 @@ class PS2Resources_t;
 class VMMain;
 class MMUHandler;
 class ExceptionHandler;
-class EECoreTimerHandler;
 
 class InterpreterEECore : public VMExecutionCoreComponent
 {
@@ -32,10 +31,15 @@ public:
 	void checkBranchDelaySlot() const;
 	void executeInstruction();
 
+	/*
+	checkCountTimerEvents() checks the COP0.Count register against the COP0.Compare register.
+	If the Count value >= Compare value, an exception is generated if the COP0.Status.IM7 mask is set etc.
+	*/
+	void checkCountTimerEvent() const;
+
 	// Component state functions
 	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
 	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
-	const std::unique_ptr<EECoreTimerHandler> & getTimerHandler() const;
 	MIPSInstruction_t & getInstruction();
 
 private:
@@ -58,11 +62,6 @@ private:
 	The PS2 MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
 	*/
 	const std::unique_ptr<MMUHandler> mMMUHandler;
-
-	/*
-	The timer handler, responsible for updating and raising interrupts of various PS2 registers (mostly to do with COP0).
-	*/
-	const std::unique_ptr<EECoreTimerHandler> mTimerHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.

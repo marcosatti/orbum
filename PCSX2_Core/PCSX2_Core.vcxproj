@@ -149,6 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.h" />
     <ClInclude Include="Source\Common\Global\GlobalOptions.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.h" />
@@ -199,11 +202,15 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\EECoreTimerHandler\EECoreTimerHandler.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\XORStorageObject32\XORStorageObject32_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\TimerHandler\TimerHandler.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Timers_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.cpp" />
     <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.cpp" />
@@ -271,9 +278,10 @@
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\EECoreTimerHandler\EECoreTimerHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\XORStorageObject\XORStorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\XORStorageObject32\XORStorageObject32_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\TimerHandler\TimerHandler.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Timers_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\FPU Notes.xlsx" />
