@@ -19,6 +19,9 @@ class StorageObject32_t;
 class DeadStorageObject_t;
 class XORStorageObject32_t;
 class BusErrorStorageObject_t;
+class EERegisterTimerMode_t;
+class EERegisterTimerCount_t;
+class EERegisterINTCIStat_t;
 
 class EE_t : public PS2ResourcesSubobject
 {
@@ -42,25 +45,33 @@ public:
 
 	Also see the intitaliser list of EE_t(.cpp), where you can see the object parameter definitions.
 	*/
-	// 0x10000000
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T0_COUNT;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T0_MODE;
+	// 0x10000000 (Timers)
+	std::shared_ptr<EERegisterTimerCount_t>  EE_REGISTER_T0_COUNT;
+	std::shared_ptr<EERegisterTimerMode_t>   EE_REGISTER_T0_MODE;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T0_COMP;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T0_HOLD;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_TIMER_0040;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T1_COUNT;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T1_MODE;
+	std::shared_ptr<EERegisterTimerCount_t>  EE_REGISTER_T1_COUNT;
+	std::shared_ptr<EERegisterTimerMode_t>   EE_REGISTER_T1_MODE;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T1_COMP;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T1_HOLD;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_TIMER_0840;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T2_COUNT;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T2_MODE;
+	std::shared_ptr<EERegisterTimerCount_t>  EE_REGISTER_T2_COUNT;
+	std::shared_ptr<EERegisterTimerMode_t>   EE_REGISTER_T2_MODE;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T2_COMP;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_TIMER_1030;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T3_COUNT;
-	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T3_MODE;
+	std::shared_ptr<EERegisterTimerCount_t>  EE_REGISTER_T3_COUNT;
+	std::shared_ptr<EERegisterTimerMode_t>   EE_REGISTER_T3_MODE;
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_T3_COMP;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_TIMER_1830;
+	// Array of timer objects, needed to perform iterations.
+	struct TimerRegisters_t
+	{
+		std::shared_ptr<EERegisterTimerCount_t> mCount;
+		std::shared_ptr<EERegisterTimerMode_t>  mMode;
+		std::shared_ptr<StorageObject32_t>      mCompare;
+		std::shared_ptr<StorageObject32_t>      mHold;
+	} TimerRegisters[4];
 
 	// 0x10002000
 	std::shared_ptr<StorageObject32_t>       EE_REGISTER_IPU_CMD;
@@ -231,7 +242,7 @@ public:
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_DMAC_e070;
 
 	// 0x1000F000
-	std::shared_ptr<XORStorageObject32_t>    EE_REGISTER_I_STAT;
+	std::shared_ptr<EERegisterINTCIStat_t>   EE_REGISTER_I_STAT;
 	std::shared_ptr<XORStorageObject32_t>    EE_REGISTER_I_MASK;
 	std::shared_ptr<DeadStorageObject_t>     EE_REGISTER_INTC_f020;
 

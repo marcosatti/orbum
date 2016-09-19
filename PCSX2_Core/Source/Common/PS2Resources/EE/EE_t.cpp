@@ -7,7 +7,7 @@
 #include "Common/PS2Resources/Types/DeadStorageObject/DeadStorageObject_t.h"
 #include "Common/PS2Resources/Types/BusErrorStorageObject/BusErrorStorageObject_t.h"
 #include "Common/PS2Resources/Types/XORStorageObject32/XORStorageObject32_t.h"
-#include "Common/PS2Resources/EE/Types/EERegisters_t.h"
+#include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/Timers/Timers_t.h"
 
@@ -17,24 +17,29 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	Timers(std::make_shared<Timers_t>()),
 
 	// Registers.
-	EE_REGISTER_T0_COUNT(std::make_shared<StorageObject32_t>("TIMER: T0_COUNT", 0x10000000)),
-	EE_REGISTER_T0_MODE(std::make_shared<StorageObject32_t>("TIMER: T0_MODE", 0x10000010)),
+	EE_REGISTER_T0_COUNT(std::make_shared<EERegisterTimerCount_t>("TIMER: T0_COUNT", 0x10000000)),
+	EE_REGISTER_T0_MODE(std::make_shared<EERegisterTimerMode_t>("TIMER: T0_MODE", 0x10000010, EE_REGISTER_T0_COUNT)),
 	EE_REGISTER_T0_COMP(std::make_shared<StorageObject32_t>("TIMER: T0_COMP", 0x10000020)),
 	EE_REGISTER_T0_HOLD(std::make_shared<StorageObject32_t>("TIMER: T0_HOLD", 0x10000030)),
 	EE_REGISTER_TIMER_0040(std::make_shared<DeadStorageObject_t>(0x7C0, "TIMER: TIMER_0040 (reserved)", 0x10000040)),
-	EE_REGISTER_T1_COUNT(std::make_shared<StorageObject32_t>("TIMER: T1_COUNT", 0x10000800)),
-	EE_REGISTER_T1_MODE(std::make_shared<StorageObject32_t>("TIMER: T1_MODE", 0x10000810)),
+	EE_REGISTER_T1_COUNT(std::make_shared<EERegisterTimerCount_t>("TIMER: T1_COUNT", 0x10000800)),
+	EE_REGISTER_T1_MODE(std::make_shared<EERegisterTimerMode_t>("TIMER: T1_MODE", 0x10000810, EE_REGISTER_T1_COUNT)),
 	EE_REGISTER_T1_COMP(std::make_shared<StorageObject32_t>("TIMER: T1_COMP", 0x10000820)),
 	EE_REGISTER_T1_HOLD(std::make_shared<StorageObject32_t>("TIMER: T1_HOLD", 0x10000830)),
 	EE_REGISTER_TIMER_0840(std::make_shared<DeadStorageObject_t>(0x7C0, "TIMER: TIMER_0840 (reserved)", 0x10000840)),
-	EE_REGISTER_T2_COUNT(std::make_shared<StorageObject32_t>("TIMER: T2_COUNT", 0x10001000)),
-	EE_REGISTER_T2_MODE(std::make_shared<StorageObject32_t>("TIMER: T2_MODE", 0x10001010)),
+	EE_REGISTER_T2_COUNT(std::make_shared<EERegisterTimerCount_t>("TIMER: T2_COUNT", 0x10001000)),
+	EE_REGISTER_T2_MODE(std::make_shared<EERegisterTimerMode_t>("TIMER: T2_MODE", 0x10001010, EE_REGISTER_T2_COUNT)),
 	EE_REGISTER_T2_COMP(std::make_shared<StorageObject32_t>("TIMER: T2_COMP", 0x10001020)),
 	EE_REGISTER_TIMER_1030(std::make_shared<DeadStorageObject_t>(0x7D0, "TIMER: TIMER_1030 (reserved)", 0x10001030)),
-	EE_REGISTER_T3_COUNT(std::make_shared<StorageObject32_t>("TIMER: T3_COUNT", 0x10001800)),
-	EE_REGISTER_T3_MODE(std::make_shared<StorageObject32_t>("TIMER: T3_MODE", 0x10001810)),
+	EE_REGISTER_T3_COUNT(std::make_shared<EERegisterTimerCount_t>("TIMER: T3_COUNT", 0x10001800)),
+	EE_REGISTER_T3_MODE(std::make_shared<EERegisterTimerMode_t>("TIMER: T3_MODE", 0x10001810, EE_REGISTER_T3_COUNT)),
 	EE_REGISTER_T3_COMP(std::make_shared<StorageObject32_t>("TIMER: T3_COMP", 0x10001820)),
 	EE_REGISTER_TIMER_1830(std::make_shared<DeadStorageObject_t>(0x7D0, "TIMER: TIMER_1830 (reserved)", 0x10001830)),
+	TimerRegisters{
+		{ EE_REGISTER_T0_COUNT, EE_REGISTER_T0_MODE, EE_REGISTER_T0_COMP, EE_REGISTER_T0_HOLD },
+		{ EE_REGISTER_T1_COUNT, EE_REGISTER_T1_MODE, EE_REGISTER_T1_COMP, EE_REGISTER_T1_HOLD },
+		{ EE_REGISTER_T2_COUNT, EE_REGISTER_T2_MODE, EE_REGISTER_T2_COMP, nullptr },
+		{ EE_REGISTER_T3_COUNT, EE_REGISTER_T3_MODE, EE_REGISTER_T3_COMP, nullptr } },
 	EE_REGISTER_IPU_CMD(std::make_shared<StorageObject32_t>("IPU: IPU_CMD", 0x10002000)),
 	EE_REGISTER_IPU_CTRL(std::make_shared<StorageObject32_t>("IPU: IPU_CTRL", 0x10002010)),
 	EE_REGISTER_IPU_BP(std::make_shared<StorageObject32_t>("IPU: IPU_BP", 0x10002020)),
@@ -171,7 +176,7 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	EE_REGISTER_D_RBOR(std::make_shared<StorageObject32_t>("DMAC: D_RBOR", 0x1000e050)),
 	EE_REGISTER_D_STADR(std::make_shared<StorageObject32_t>("DMAC: D_STADR", 0x1000e060)),
 	EE_REGISTER_DMAC_e070(std::make_shared<DeadStorageObject_t>(0xF90, "DMAC: DMAC_e070 (reserved)", 0x1000e070)),
-	EE_REGISTER_I_STAT(std::make_shared<XORStorageObject32_t>("INTC: I_STAT", 0x1000f000)),
+	EE_REGISTER_I_STAT(std::make_shared<EERegisterINTCIStat_t>("INTC: I_STAT", 0x1000f000)),
 	EE_REGISTER_I_MASK(std::make_shared<XORStorageObject32_t>("INTC: I_MASK", 0x1000f010)),
 	EE_REGISTER_INTC_f020(std::make_shared<DeadStorageObject_t>(0xE0, "INTC: INTC_f020 (reserved)", 0x1000f020)),
 	EE_REGISTER_SIO(std::make_shared<EERegisterSIO_t>()),

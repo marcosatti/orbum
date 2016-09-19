@@ -5,6 +5,11 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/StorageObject32_t.h"
+#include "Common/PS2Resources/Types/StorageObject/BitfieldStorageObject32_t.h"
+#include <memory>
+
+class EERegisterTimerCount_t;
 
 /*
 EERegisters_t defines SPECIAL EE registers specified in the EE Users Manual from page 21 to 25.
@@ -70,4 +75,82 @@ private:
 	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
 	s32 rdram_sdevid = 0;
 	const s32 rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
+};
+
+/*
+The Timer Mode register type. See EE Users Manual page 36.
+TODO: Fill in bitfield information like COP0_BitfieldRegisters_t.
+Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, behaves like a XOR write).
+
+Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
+*/
+class EERegisterTimerMode_t : public BitfieldStorageObject32_t
+{
+public:
+	struct Fields
+	{
+		static constexpr char * CLKS = "CLKS";
+		static constexpr char * GATE = "GATE";
+		static constexpr char * GATS = "GATS";
+		static constexpr char * GATM = "GATM";
+		static constexpr char * ZRET = "ZRET";
+		static constexpr char * CUE = "CUE";
+		static constexpr char * CMPE = "CMPE";
+		static constexpr char * OVFE = "OVFE";
+		static constexpr char * EQUF = "EQUF";
+		static constexpr char * OVFF = "OVFF";
+	};
+
+	EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const std::shared_ptr<EERegisterTimerCount_t> & count);
+
+	void writeWordU(u32 storageIndex, u32 value) override;
+	void writeWordS(u32 storageIndex, s32 value) override;
+
+private:
+	/*
+	The associated Count register that belongs to this timer.
+	*/
+	std::shared_ptr<EERegisterTimerCount_t> mCount;
+};
+
+/*
+The Timer Count register type. See EE Users Manual page 37.
+Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens.
+Can also reset the counter.
+*/
+class EERegisterTimerCount_t : public StorageObject32_t
+{
+public:
+	EERegisterTimerCount_t(const char * const mnemonic, const u32 & PS2PhysicalAddress);
+
+	void increment(u16 value);
+	void reset();
+};
+
+/*
+The INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
+*/
+class EERegisterINTCIStat_t : public BitfieldStorageObject32_t
+{
+public:
+	struct Fields
+	{
+		static constexpr char * GS = "GS";
+		static constexpr char * SBUS = "SBUS";
+		static constexpr char * VBON = "VBON";
+		static constexpr char * VBOF = "VBOF";
+		static constexpr char * VIF0 = "VIF0";
+		static constexpr char * VIF1 = "VIF1";
+		static constexpr char * VU0 = "VU0";
+		static constexpr char * VU1 = "VU1";
+		static constexpr char * IPU = "IPU";
+		static constexpr char * TIM0 = "TIM0";
+		static constexpr char * TIM1 = "TIM1";
+		static constexpr char * TIM2 = "TIM2";
+		static constexpr char * TIM3 = "TIM3";
+		static constexpr char * SFIFO = "SFIFO";
+		static constexpr char * VU0WD = "VU0WD";
+	};
+
+	EERegisterINTCIStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };

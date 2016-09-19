@@ -19,6 +19,20 @@ public:
 	explicit GS_t(const PS2Resources_t *const PS2Resources);
 
 	/*
+	The H-BLNK and V-BLNK signals. These are needed by the EE Timers as gate conditions.
+	Zero = low signal.
+	Non-zero (1) = high signal.
+
+	Use the set functions which will set the last state automatically (again needed by the EE Timers).
+	*/
+	u8 SIGNAL_HBLNK;
+	u8 SIGNAL_HBLNK_LAST;
+	u8 SIGNAL_VBLNK;
+	u8 SIGNAL_VBLNK_LAST;
+	void setSignalHBLNK(const u8 & hblnk);
+	void setSignalVBLNK(const u8 & vblnk);
+
+	/*
 	GS Privileged registers, defined on page 26 onwards of the EE Users Manual. All are prefixed with GS_P_REGISTER, and start from PS2 physical address 0x12000000 to 0x14000000.
 	If special functionality is needed, they are subclassed off StorageObject_t (or similar) and defined in Types/EERegisters_t.
 	They are ordered by ascending, meaning the lowest physical address, to the highest.

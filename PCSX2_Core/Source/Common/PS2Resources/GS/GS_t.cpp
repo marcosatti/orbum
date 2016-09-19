@@ -39,3 +39,15 @@ GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
 	GS_P_REGISTER_SPEBusErr(std::make_shared<BusErrorStorageObject_t>(0x1FF0000, "SPE: SPEBusErr", 0x12010000))
 {
 }
+
+void GS_t::setSignalHBLNK(const u8& hblnk)
+{
+	SIGNAL_HBLNK_LAST = SIGNAL_HBLNK;
+	SIGNAL_HBLNK = hblnk;
+}
+
+void GS_t::setSignalVBLNK(const u8& vblnk)
+{
+	SIGNAL_VBLNK_LAST = SIGNAL_VBLNK;
+	SIGNAL_VBLNK = vblnk;
+}

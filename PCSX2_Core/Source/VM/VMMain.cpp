@@ -9,7 +9,7 @@
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/Types/EERegisters_t.h"
+#include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/GS/GS_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"

@@ -2,8 +2,9 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Resources/EE/Types/EERegisters_t.h"
+#include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/BitfieldStorageObject32_t.h"
 
 EERegisterSIO_t::EERegisterSIO_t() :
 	StorageObject_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO", PADDRESS_EE_REGISTER_SIO)
@@ -172,4 +173,72 @@ s32 EERegisterMCH_t::readWordS(u32 storageIndex)
 void EERegisterMCH_t::writeWordS(u32 storageIndex, s32 value)
 {
 	writeWordU(storageIndex, static_cast<u32>(value));
+}
+
+EERegisterTimerMode_t::EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const std::shared_ptr<EERegisterTimerCount_t> & count) :
+	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress),
+	mCount(count)
+{
+	registerField(Fields::CLKS, 0, 2, 0);
+	registerField(Fields::GATE, 2, 1, 0);
+	registerField(Fields::GATS, 3, 1, 0);
+	registerField(Fields::GATM, 4, 2, 0);
+	registerField(Fields::ZRET, 6, 1, 0);
+	registerField(Fields::CUE, 7, 1, 0);
+	registerField(Fields::CMPE, 8, 1, 0);
+	registerField(Fields::OVFE, 9, 1, 0);
+	registerField(Fields::EQUF, 10, 1, 0);
+	registerField(Fields::OVFF, 11, 1, 0);
+}
+
+void EERegisterTimerMode_t::writeWordU(u32 storageIndex, u32 value)
+{
+	// XOR bits 10 and 11 (0xC00) with the original value, remaining bits OR'd with the new value.
+	u32 originalValue = StorageObject32_t::readWordU(storageIndex);
+	u32 newValue = (value & 0xC00) ^ (originalValue & 0xC00) | (value & ~0xC00);
+	BitfieldStorageObject32_t::writeWordU(storageIndex, newValue);
+
+	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
+	if (getFieldValue(Fields::CUE))
+		mCount->reset();
+}
+
+void EERegisterTimerMode_t::writeWordS(u32 storageIndex, s32 value)
+{
+	writeWordU(storageIndex, static_cast<u32>(value));
+}
+
+EERegisterTimerCount_t::EERegisterTimerCount_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	StorageObject32_t(mnemonic, PS2PhysicalAddress)
+{
+}
+
+void EERegisterTimerCount_t::increment(u16 value)
+{
+	writeWordU(0, readWordU(0) + value);
+}
+
+void EERegisterTimerCount_t::reset()
+{
+	writeWordU(0, 0);
+}
+
+EERegisterINTCIStat_t::EERegisterINTCIStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) : 
+	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+{
+	registerField(Fields::GS, 0, 1, 0);
+	registerField(Fields::SBUS, 1, 1, 0);
+	registerField(Fields::VBON, 2, 1, 0);
+	registerField(Fields::VBOF, 3, 1, 0);
+	registerField(Fields::VIF0, 4, 1, 0);
+	registerField(Fields::VIF1, 5, 1, 0);
+	registerField(Fields::VU0, 6, 1, 0);
+	registerField(Fields::VU1, 7, 1, 0);
+	registerField(Fields::IPU, 8, 1, 0);
+	registerField(Fields::TIM0, 9, 1, 0);
+	registerField(Fields::TIM1, 10, 1, 0);
+	registerField(Fields::TIM2, 11, 1, 0);
+	registerField(Fields::TIM3, 12, 1, 0);
+	registerField(Fields::SFIFO, 13, 1, 0);
+	registerField(Fields::VU0WD, 14, 1, 0);
 }

@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.h" />
@@ -157,7 +158,7 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.h" />
     <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\GS\GS_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\EE\Types\EERegisters_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BusErrorStorageObject\BusErrorStorageObject_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\DeadStorageObject\DeadStorageObject_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.h" />
@@ -209,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.cpp" />
@@ -223,7 +225,7 @@
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECore_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\Exceptions\Exceptions_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EE_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\EE\Types\EERegisters_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\PS2Resources_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\BusErrorStorageObject\BusErrorStorageObject_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\DeadStorageObject\DeadStorageObject_t.cpp" />

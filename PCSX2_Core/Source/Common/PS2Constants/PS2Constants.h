@@ -102,6 +102,8 @@ public:
 			static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
 		};
+
+		static constexpr u32 NUMBER_TIMERS = 4;
 	};
 
 	struct MainMemory

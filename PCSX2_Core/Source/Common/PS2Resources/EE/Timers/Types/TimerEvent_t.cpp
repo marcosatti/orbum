@@ -2,7 +2,7 @@
 
 #include "Common/PS2Resources/EE/Timers/Types/TimerEvent_t.h"
 
-TimerEvent_t::TimerEvent_t(ClockEvent_t ClockEventType) : 
-	mClockEventType(ClockEventType)
+TimerEvent_t::TimerEvent_t(ClockSource_t ClockEventType) : 
+	mClockSourceType(ClockEventType)
 {
 }

@@ -7,13 +7,17 @@ It holds information about what kind of timer clock event just happened, and how
 
 struct TimerEvent_t
 {
-	enum class ClockEvent_t
+	/*
+	The type of clock source. The order is synced with the order on page 36 of the EE Users Manual.
+	Do not change the order!
+	*/
+	enum class ClockSource_t
 	{
-		BUSCLK,
-		BUSCLK16,
-		BUSCLK256,
-		HBLNK
-	} const mClockEventType;
+		BUSCLK = 0,
+		BUSCLK16 = 1,
+		BUSCLK256 = 2,
+		HBLNK = 3
+	} const mClockSourceType;
 
-	explicit TimerEvent_t(ClockEvent_t ClockEventType);
+	explicit TimerEvent_t(ClockSource_t clockSourceType);
 };

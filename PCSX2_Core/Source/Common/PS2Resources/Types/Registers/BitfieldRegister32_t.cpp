@@ -10,7 +10,7 @@ BitfieldRegister32_t::BitfieldRegister32_t()
 
 void BitfieldRegister32_t::registerField(const char * fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue)
 {
-	mFieldMap.insert({ fieldName, { fieldName, fieldStartPosition, fieldLength, fieldInitialValue } });
+	mFieldMap.insert({ fieldName, { fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue } });
 }
 
 u32 BitfieldRegister32_t::getFieldValue(const char * fieldName)

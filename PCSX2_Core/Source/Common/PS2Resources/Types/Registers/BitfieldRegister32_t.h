@@ -71,6 +71,8 @@ private:
 	/*
 	Used internally for storing the information parsed though registerField().
 	This is used in the field map as well as the 'value' in the key-value pair.
+
+	Note: Due to how map works, we can't make the constant properties 'const'.
 	*/
 	struct BitfieldProperties_t
 	{
@@ -78,7 +80,7 @@ private:
 		u8 mFieldStartPosition;
 		u8 mFieldLength;
 		u32 mInitialFieldValue;
-		u32 mFieldValue; // Set to a specified initial value when created, but can be changed.
+		u32 mFieldValue; // Set to mInitialFieldValue when created, but can be changed.
 	};
 
 	/*

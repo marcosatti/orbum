@@ -151,7 +151,7 @@ void InterpreterEECore::executeInstruction()
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
-	// Also update the EE timers by raising an event.
+	// Also update the EE timers by raising a PS2CLK event.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
 	getVM()->getResources()->EE->Timers->raiseTimerEventPS2CLK(mInstructionInfo->mCycles);
 
