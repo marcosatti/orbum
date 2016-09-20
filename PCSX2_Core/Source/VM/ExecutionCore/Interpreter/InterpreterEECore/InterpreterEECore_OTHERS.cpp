@@ -42,12 +42,12 @@ void InterpreterEECore::DI()
 	// Disable Interrupts. No Exceptions.
 	auto& statusReg = getVM()->getResources()->EE->EECore->COP0->Status;
 
-	if ((statusReg->getFieldValue(RegisterStatus_t::Fields::EDI) == 1) ||
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::EXL) == 1) ||
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::ERL) == 1) || 
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::KSU) == 0))
+	if ((statusReg->getFieldValue(COP0RegisterStatus_t::Fields::EDI) == 1) ||
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::EXL) == 1) ||
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) || 
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::KSU) == 0))
 	{
-		statusReg->setFieldValue(RegisterStatus_t::Fields::EIE, 0);
+		statusReg->setFieldValue(COP0RegisterStatus_t::Fields::EIE, 0);
 	}
 }
 
@@ -56,12 +56,12 @@ void InterpreterEECore::EI()
 	// Enable Interrupts. No Exceptions.
 	auto& statusReg = getVM()->getResources()->EE->EECore->COP0->Status;
 
-	if ((statusReg->getFieldValue(RegisterStatus_t::Fields::EDI) == 1) ||
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::EXL) == 1) ||
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::ERL) == 1) ||
-		(statusReg->getFieldValue(RegisterStatus_t::Fields::KSU) == 0))
+	if ((statusReg->getFieldValue(COP0RegisterStatus_t::Fields::EDI) == 1) ||
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::EXL) == 1) ||
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) ||
+		(statusReg->getFieldValue(COP0RegisterStatus_t::Fields::KSU) == 0))
 	{
-		statusReg->setFieldValue(RegisterStatus_t::Fields::EIE, 1);
+		statusReg->setFieldValue(COP0RegisterStatus_t::Fields::EIE, 1);
 	}
 }
 
@@ -91,20 +91,20 @@ void InterpreterEECore::TLBP()
 	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
 
 	// Find by VPN2 first.
-	u32 searchVpn2 = EntryHi->getFieldValue(RegisterEntryHi_t::Fields::VPN2) << 13;
+	u32 searchVpn2 = EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::VPN2) << 13;
 	s32 tlbIndex = MMU->findTLBIndex(searchVpn2);
 
 	if (tlbIndex == -1)
-		Index->setFieldValue(RegisterIndex_t::Fields::Index, value);
+		Index->setFieldValue(COP0RegisterIndex_t::Fields::Index, value);
 	else
 	{
 		// A match was found, but need to check ASID or G bit.
-		if (MMU->getTLBEntry(tlbIndex).mASID == EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID) 
+		if (MMU->getTLBEntry(tlbIndex).mASID == EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID) 
 			|| MMU->getTLBEntry(tlbIndex).mG > 0)
 		{
 			// Entry was found.
 			value = static_cast<u32>(tlbIndex);
-			Index->setFieldValue(RegisterIndex_t::Fields::Index, value);
+			Index->setFieldValue(COP0RegisterIndex_t::Fields::Index, value);
 		}
 	}
 }
@@ -127,29 +127,29 @@ void InterpreterEECore::TLBR()
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
 	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
 
-	auto& tlbEntry = MMU->getTLBEntry(static_cast<s32>(Index->getFieldValue(RegisterIndex_t::Fields::Index)));
+	auto& tlbEntry = MMU->getTLBEntry(static_cast<s32>(Index->getFieldValue(COP0RegisterIndex_t::Fields::Index)));
 
 	// PageMask.
-	PageMask->setFieldValue(RegisterPageMask_t::Fields::MASK, tlbEntry.mMask);
+	PageMask->setFieldValue(COP0RegisterPageMask_t::Fields::MASK, tlbEntry.mMask);
 
 	// EntryHi.
-	EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, tlbEntry.mASID);
-	EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, tlbEntry.mVPN2);
+	EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, tlbEntry.mASID);
+	EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, tlbEntry.mVPN2);
 
 	// EntryLo0 (even).
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::S, tlbEntry.mS);
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::PFN, tlbEntry.mPFNEven);
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::C, tlbEntry.mCEven);
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::D, tlbEntry.mDEven);
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::V, tlbEntry.mVEven);
-	EntryLo0->setFieldValue(RegisterEntryLo0_t::Fields::G, tlbEntry.mG);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::S, tlbEntry.mS);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::PFN, tlbEntry.mPFNEven);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::C, tlbEntry.mCEven);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::D, tlbEntry.mDEven);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::V, tlbEntry.mVEven);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::G, tlbEntry.mG);
 
 	// EntryLo1 (odd).
-	EntryLo1->setFieldValue(RegisterEntryLo1_t::Fields::PFN, tlbEntry.mPFNOdd);
-	EntryLo1->setFieldValue(RegisterEntryLo1_t::Fields::C, tlbEntry.mCOdd);
-	EntryLo1->setFieldValue(RegisterEntryLo1_t::Fields::D, tlbEntry.mDOdd);
-	EntryLo1->setFieldValue(RegisterEntryLo1_t::Fields::V, tlbEntry.mVOdd);
-	EntryLo1->setFieldValue(RegisterEntryLo1_t::Fields::G, tlbEntry.mG);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::PFN, tlbEntry.mPFNOdd);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::C, tlbEntry.mCOdd);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::D, tlbEntry.mDOdd);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::V, tlbEntry.mVOdd);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::G, tlbEntry.mG);
 }
 
 void InterpreterEECore::TLBWI()
@@ -173,30 +173,30 @@ void InterpreterEECore::TLBWI()
 	TLBEntryInfo tlbEntry;
 
 	// PageMask.
-	tlbEntry.mMask = PageMask->getFieldValue(RegisterPageMask_t::Fields::MASK);
+	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);
 
 	// EntryHi.
-	tlbEntry.mASID = EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID);
-	tlbEntry.mVPN2 = EntryHi->getFieldValue(RegisterEntryHi_t::Fields::VPN2);
+	tlbEntry.mASID = EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID);
+	tlbEntry.mVPN2 = EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::VPN2);
 
 	// EntryLo0 (even).
-	tlbEntry.mS = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::S);
-	tlbEntry.mPFNEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::PFN);
-	tlbEntry.mCEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::C);
-	tlbEntry.mDEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::D);
-	tlbEntry.mVEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::V);
+	tlbEntry.mS = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::S);
+	tlbEntry.mPFNEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
+	tlbEntry.mCEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
+	tlbEntry.mDEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
+	tlbEntry.mVEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
 	
 	// EntryLo1 (odd).
-	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::PFN);
-	tlbEntry.mCOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::C);
-	tlbEntry.mDOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::D);
-	tlbEntry.mVOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::V);
+	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
+	tlbEntry.mCOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
+	tlbEntry.mDOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
+	tlbEntry.mVOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
 	
 	// G bit (and of Lo0 and Lo1)
-	tlbEntry.mG = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::G);
+	tlbEntry.mG = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::G);
 
 	// Write to TLB.
-	MMU->setTLBEntry(tlbEntry, Index->getFieldValue(RegisterIndex_t::Fields::Index));
+	MMU->setTLBEntry(tlbEntry, Index->getFieldValue(COP0RegisterIndex_t::Fields::Index));
 }
 
 void InterpreterEECore::TLBWR()
@@ -220,28 +220,28 @@ void InterpreterEECore::TLBWR()
 	TLBEntryInfo tlbEntry;
 
 	// PageMask.
-	tlbEntry.mMask = PageMask->getFieldValue(RegisterPageMask_t::Fields::MASK);
+	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);
 
 	// EntryHi.
-	tlbEntry.mASID = EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID);
-	tlbEntry.mVPN2 = EntryHi->getFieldValue(RegisterEntryHi_t::Fields::VPN2);
+	tlbEntry.mASID = EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID);
+	tlbEntry.mVPN2 = EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::VPN2);
 
 	// EntryLo0 (even).
-	tlbEntry.mS = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::S);
-	tlbEntry.mPFNEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::PFN);
-	tlbEntry.mCEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::C);
-	tlbEntry.mDEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::D);
-	tlbEntry.mVEven = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::V);
+	tlbEntry.mS = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::S);
+	tlbEntry.mPFNEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
+	tlbEntry.mCEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
+	tlbEntry.mDEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
+	tlbEntry.mVEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
 
 	// EntryLo1 (odd).
-	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::PFN);
-	tlbEntry.mCOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::C);
-	tlbEntry.mDOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::D);
-	tlbEntry.mVOdd = EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::V);
+	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
+	tlbEntry.mCOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
+	tlbEntry.mDOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
+	tlbEntry.mVOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
 
 	// G bit (and of Lo0 and Lo1)
-	tlbEntry.mG = EntryLo0->getFieldValue(RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(RegisterEntryLo1_t::Fields::G);
+	tlbEntry.mG = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::G);
 
 	// Write to TLB.
-	MMU->setTLBEntry(tlbEntry, Random->getFieldValue(RegisterRandom_t::Fields::Random));
+	MMU->setTLBEntry(tlbEntry, Random->getFieldValue(COP0RegisterRandom_t::Fields::Random));
 }

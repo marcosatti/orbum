@@ -4,6 +4,7 @@
 #include "VM/VMMain.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
@@ -28,7 +29,7 @@ void INTCHandler::checkInterrupt() const
 		if ((I_STAT & I_MASK) > 0)
 		{
 			// Generate an INT0 signal/interrupt exception, if the EE Core has the COP0.Status.IM[2] mask set.
-			if ((getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::IM) & 1) > 0)
+			if ((getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM) & 1) > 0)
 			{
 				auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
 				IntExceptionInfo_t intInfo = { 0, 1, 0 };

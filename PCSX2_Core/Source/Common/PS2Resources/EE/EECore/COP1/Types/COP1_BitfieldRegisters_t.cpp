@@ -2,13 +2,13 @@
 
 #include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
 
-RegisterIRR_t::RegisterIRR_t()
+COP1RegisterIRR_t::COP1RegisterIRR_t()
 {
 	registerField(Fields::Rev, 0, 8, 0);
 	registerField(Fields::Imp, 8, 8, 0x2E);
 }
 
-RegisterCSR_t::RegisterCSR_t()
+COP1RegisterCSR_t::COP1RegisterCSR_t()
 {
 	registerField(Fields::SU, 3, 1, 0);
 	registerField(Fields::SO, 4, 1, 0);

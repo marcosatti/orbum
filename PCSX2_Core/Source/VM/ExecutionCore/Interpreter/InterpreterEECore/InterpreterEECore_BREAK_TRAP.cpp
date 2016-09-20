@@ -165,16 +165,16 @@ void InterpreterEECore::ERET()
 {
 	// ERET is an outlier, where it does not cause a branch delay instruction to be executed. However, still use the R5900->setBranchDelay* functions with cycles = 0.
 	// ERET(). No exceptions.
-	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL) == 1)
+	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1)
 	{
-		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC);
+		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(COP0RegisterErrorEPC_t::Fields::ErrorEPC);
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 0);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::ERL, 0);
 	}
 	else
 	{
-		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->EPC->getFieldValue(RegisterEPC_t::Fields::EPC);
+		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->EPC->getFieldValue(COP0RegisterEPC_t::Fields::EPC);
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::EXL, 0);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::EXL, 0);
 	}
 }

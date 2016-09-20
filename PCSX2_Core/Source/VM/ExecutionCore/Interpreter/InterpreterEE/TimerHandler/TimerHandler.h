@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
@@ -49,5 +51,7 @@ private:
 	Checks the previous gate condition and resets if required.
 	*/
 	void checkTimerGateReset(const u32 & timerNumber) const;
+
+	
 };
 

@@ -42,14 +42,14 @@ void InterpreterEECore::ADD_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -76,14 +76,14 @@ void InterpreterEECore::ADDA_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -112,14 +112,14 @@ void InterpreterEECore::MADD_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -147,14 +147,14 @@ void InterpreterEECore::MADDA_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -181,14 +181,14 @@ void InterpreterEECore::MUL_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -215,14 +215,14 @@ void InterpreterEECore::MULA_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -248,14 +248,14 @@ void InterpreterEECore::DIV_S()
 	f32 result;
 	if (source1Reg->readFloat() != 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	else if (source1Reg->readFloat() == 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 
@@ -292,14 +292,14 @@ void InterpreterEECore::MSUB_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -327,14 +327,14 @@ void InterpreterEECore::MSUBA_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -361,14 +361,14 @@ void InterpreterEECore::SUB_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -395,14 +395,14 @@ void InterpreterEECore::SUBA_S()
 	if (EECoreCOP1Util::isOverflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SO, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
 	else if (EECoreCOP1Util::isUnderflowed(result))
 	{
 		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SU, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);

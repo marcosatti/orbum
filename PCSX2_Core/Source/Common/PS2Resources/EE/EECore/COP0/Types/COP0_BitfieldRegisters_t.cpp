@@ -10,22 +10,22 @@
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 
-RegisterReserved_t::RegisterReserved_t()
+COP0RegisterReserved_t::COP0RegisterReserved_t()
 {
 }
 
-RegisterIndex_t::RegisterIndex_t()
+COP0RegisterIndex_t::COP0RegisterIndex_t()
 {
 	registerField(Fields::Index, 0, 6, 0);
 	registerField(Fields::P, 31, 1, 0);
 }
 
-RegisterRandom_t::RegisterRandom_t()
+COP0RegisterRandom_t::COP0RegisterRandom_t()
 {
 	registerField(Fields::Random, 0, 6, 47);
 }
 
-RegisterEntryLo0_t::RegisterEntryLo0_t()
+COP0RegisterEntryLo0_t::COP0RegisterEntryLo0_t()
 {
 	registerField(Fields::G, 0, 1, 0);
 	registerField(Fields::V, 1, 1, 0);
@@ -35,7 +35,7 @@ RegisterEntryLo0_t::RegisterEntryLo0_t()
 	registerField(Fields::S, 31, 1, 0);
 }
 
-RegisterEntryLo1_t::RegisterEntryLo1_t()
+COP0RegisterEntryLo1_t::COP0RegisterEntryLo1_t()
 {
 	registerField(Fields::G, 0, 1, 0);
 	registerField(Fields::V, 1, 1, 0);
@@ -44,61 +44,61 @@ RegisterEntryLo1_t::RegisterEntryLo1_t()
 	registerField(Fields::PFN, 6, 20, 0);
 }
 
-RegisterContext_t::RegisterContext_t()
+COP0RegisterContext_t::COP0RegisterContext_t()
 {
 	registerField(Fields::BadVPN2, 4, 19, 0);
 	registerField(Fields::PTEBase, 23, 9, 0);
 }
 
-RegisterPageMask_t::RegisterPageMask_t()
+COP0RegisterPageMask_t::COP0RegisterPageMask_t()
 {
 	registerField(Fields::MASK, 13, 12, 0);
 }
 
-RegisterWired_t::RegisterWired_t()
+COP0RegisterWired_t::COP0RegisterWired_t()
 {
 	registerField(Fields::Wired, 0, 6, 0);
 }
 
-RegisterBadVAddr_t::RegisterBadVAddr_t()
+COP0RegisterBadVAddr_t::COP0RegisterBadVAddr_t()
 {
 	registerField(Fields::BadVAddr, 0, 32, 0);
 }
 
-RegisterCount_t::RegisterCount_t()
+COP0RegisterCount_t::COP0RegisterCount_t()
 {
 	registerField(Fields::Count, 0, 32, 0);
 }
 
-void RegisterCount_t::increment(u32 value)
+void COP0RegisterCount_t::increment(u32 value)
 {
-	setFieldValue(RegisterCount_t::Fields::Count, getFieldValue(RegisterCount_t::Fields::Count) + value);
+	setFieldValue(COP0RegisterCount_t::Fields::Count, getFieldValue(COP0RegisterCount_t::Fields::Count) + value);
 }
 
-RegisterEntryHi_t::RegisterEntryHi_t()
+COP0RegisterEntryHi_t::COP0RegisterEntryHi_t()
 {
 	registerField(Fields::ASID, 0, 8, 0);
 	registerField(Fields::VPN2, 13, 19, 0);
 }
 
-RegisterCompare_t::RegisterCompare_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobject(PS2Resources)
+COP0RegisterCompare_t::COP0RegisterCompare_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobject(PS2Resources)
 {
 	registerField(Fields::Compare, 0, 32, 0);
 }
 
-void RegisterCompare_t::setFieldValue(const char* fieldName, const u32& value)
+void COP0RegisterCompare_t::setFieldValue(const char* fieldName, const u32& value)
 {
-	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 0);
+	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, 0);
 	BitfieldRegister32_t::setFieldValue(fieldName, value);
 }
 
-void RegisterCompare_t::setRegisterValue(const u32 & value)
+void COP0RegisterCompare_t::setRegisterValue(const u32 & value)
 {
-	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 0);
+	getRootResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, 0);
 	BitfieldRegister32_t::setRegisterValue(value);
 }
 
-RegisterStatus_t::RegisterStatus_t()
+COP0RegisterStatus_t::COP0RegisterStatus_t()
 {
 	registerField(Fields::IE, 0, 1, 0);
 	registerField(Fields::EXL, 1, 1, 0);
@@ -115,7 +115,7 @@ RegisterStatus_t::RegisterStatus_t()
 	registerField(Fields::CU, 28, 4, 0);
 }
 
-RegisterCause_t::RegisterCause_t()
+COP0RegisterCause_t::COP0RegisterCause_t()
 {
 	registerField(Fields::ExcCode, 2, 5, 0);
 	registerField(Fields::IP2, 10, 1, 0);
@@ -127,18 +127,18 @@ RegisterCause_t::RegisterCause_t()
 	registerField(Fields::BD, 31, 1, 0);
 }
 
-RegisterEPC_t::RegisterEPC_t()
+COP0RegisterEPC_t::COP0RegisterEPC_t()
 {
 	registerField(Fields::EPC, 0, 32, 0);
 }
 
-RegisterPRId_t::RegisterPRId_t()
+COP0RegisterPRId_t::COP0RegisterPRId_t()
 {
 	registerField(Fields::Rev, 0, 8, 0x20); // Same as old PCSX2.
 	registerField(Fields::Imp, 8, 15, 0x2E);
 }
 
-RegisterConfig_t::RegisterConfig_t()
+COP0RegisterConfig_t::COP0RegisterConfig_t()
 {
 	registerField(Fields::K0, 0, 3, 0);
 	registerField(Fields::DC, 6, 3, 1);
@@ -151,12 +151,12 @@ RegisterConfig_t::RegisterConfig_t()
 	registerField(Fields::EC, 28, 3, 0);
 }
 
-RegisterBadPAddr_t::RegisterBadPAddr_t()
+COP0RegisterBadPAddr_t::COP0RegisterBadPAddr_t()
 {
 	registerField(Fields::BadPAddr, 4, 28, 0);
 }
 
-RegisterBPC_t::RegisterBPC_t()
+COP0RegisterBPC_t::COP0RegisterBPC_t()
 {
 	registerField(Fields::IAB, 0, 1, 0);
 	registerField(Fields::DRB, 1, 1, 0);
@@ -178,37 +178,37 @@ RegisterBPC_t::RegisterBPC_t()
 	registerField(Fields::IAE, 31, 1, 0);
 }
 
-RegisterIAB_t::RegisterIAB_t()
+COP0RegisterIAB_t::COP0RegisterIAB_t()
 {
 	registerField(Fields::IAB, 0, 32, 0);
 }
 
-RegisterIABM_t::RegisterIABM_t()
+COP0RegisterIABM_t::COP0RegisterIABM_t()
 {
 	registerField(Fields::IABM, 0, 32, 0);
 }
 
-RegisterDAB_t::RegisterDAB_t()
+COP0RegisterDAB_t::COP0RegisterDAB_t()
 {
 	registerField(Fields::DAB, 0, 32, 0);
 }
 
-RegisterDABM_t::RegisterDABM_t()
+COP0RegisterDABM_t::COP0RegisterDABM_t()
 {
 	registerField(Fields::DABM, 0, 32, 0);
 }
 
-RegisterDVB_t::RegisterDVB_t()
+COP0RegisterDVB_t::COP0RegisterDVB_t()
 {
 	registerField(Fields::DVB, 0, 32, 0);
 }
 
-RegisterDVBM_t::RegisterDVBM_t()
+COP0RegisterDVBM_t::COP0RegisterDVBM_t()
 {
 	registerField(Fields::DVBM, 0, 32, 0);
 }
 
-RegisterPCCR_t::RegisterPCCR_t()
+COP0RegisterPCCR_t::COP0RegisterPCCR_t()
 {
 	registerField(Fields::EXL0, 1, 1, 0);
 	registerField(Fields::K0, 2, 1, 0);
@@ -223,19 +223,19 @@ RegisterPCCR_t::RegisterPCCR_t()
 	registerField(Fields::CTE, 31, 1, 0);
 }
 
-RegisterPCR0_t::RegisterPCR0_t()
+COP0RegisterPCR0_t::COP0RegisterPCR0_t()
 {
 	registerField(Fields::VALUE, 0, 31, 0);
 	registerField(Fields::OVFL, 31, 1, 0);
 }
 
-RegisterPCR1_t::RegisterPCR1_t()
+COP0RegisterPCR1_t::COP0RegisterPCR1_t()
 {
 	registerField(Fields::VALUE, 0, 31, 0);
 	registerField(Fields::OVFL, 31, 1, 0);
 }
 
-RegisterTagLo_t::RegisterTagLo_t()
+COP0RegisterTagLo_t::COP0RegisterTagLo_t()
 {
 	registerField(Fields::L, 3, 1, 0);
 	registerField(Fields::R, 4, 1, 0);
@@ -244,7 +244,7 @@ RegisterTagLo_t::RegisterTagLo_t()
 	registerField(Fields::PTagLo, 12, 31, 0);
 }
 
-RegisterTagHi_t::RegisterTagHi_t()
+COP0RegisterTagHi_t::COP0RegisterTagHi_t()
 {
 	registerField(Fields::L, 3, 1, 0);
 	registerField(Fields::R, 4, 1, 0);
@@ -253,7 +253,7 @@ RegisterTagHi_t::RegisterTagHi_t()
 	registerField(Fields::PTagHi, 12, 31, 0);
 }
 
-RegisterErrorEPC_t::RegisterErrorEPC_t()
+COP0RegisterErrorEPC_t::COP0RegisterErrorEPC_t()
 {
 	registerField(Fields::ErrorEPC, 0, 32, 0);
 }

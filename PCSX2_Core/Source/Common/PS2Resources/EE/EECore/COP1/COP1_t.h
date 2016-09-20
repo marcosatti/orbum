@@ -5,8 +5,8 @@
 
 class FPRegister32_t;
 class BitfieldRegister32_t;
-class RegisterIRR_t;
-class RegisterCSR_t;
+class COP1RegisterIRR_t;
+class COP1RegisterCSR_t;
 
 class COP1_t : public PS2ResourcesSubobject
 {
@@ -38,8 +38,8 @@ public:
 	COP1 defines 2 control registers, which are implemented as Registers.
 	See EE Core Users Manual, page 158.
 	*/
-	std::shared_ptr<RegisterIRR_t> IRR;
-	std::shared_ptr<RegisterCSR_t> CSR;
+	std::shared_ptr<COP1RegisterIRR_t> IRR;
+	std::shared_ptr<COP1RegisterCSR_t> CSR;
 	
 	/*
 	Array of above registers (needed by some EECore instructions to access by index). Generally you will never access registers through this, only the PS2 OS will.

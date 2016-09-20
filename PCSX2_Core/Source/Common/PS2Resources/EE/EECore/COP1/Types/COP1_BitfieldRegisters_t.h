@@ -4,7 +4,7 @@
 
 /*
 COP1_BitfieldRegister_t.h implements all of the bitfields in each of the COP1 control registers. This is used primarily by COP1_t.h.
-Each register will have documentation attached to it.
+Each register will have documentation attached to it, and is prefixed by COP1Register.
 Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
 
 It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
@@ -26,7 +26,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterIRR_t : public BitfieldRegister32_t
+class COP1RegisterIRR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -35,7 +35,7 @@ public:
 		static constexpr auto Imp = "Imp";
 	};
 
-	explicit RegisterIRR_t();
+	explicit COP1RegisterIRR_t();
 };
 
 /*
@@ -60,7 +60,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24 (length 1): Constant 1.
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterCSR_t : public BitfieldRegister32_t
+class COP1RegisterCSR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -76,5 +76,5 @@ public:
 		static constexpr auto C = "C";
 	};
 
-	explicit RegisterCSR_t();
+	explicit COP1RegisterCSR_t();
 };

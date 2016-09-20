@@ -166,7 +166,7 @@ EECoreException_t MMUHandler::getExceptionInfo()
 	TLBExceptionInfo_t tlbInfo =
 	{
 		mPS2VirtualAddress,
-		getVM()->getResources()->EE->EECore->COP0->Context->getFieldValue(RegisterContext_t::Fields::PTEBase),
+		getVM()->getResources()->EE->EECore->COP0->Context->getFieldValue(COP0RegisterContext_t::Fields::PTEBase),
 		EECoreMMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
 		mTLBEntryInfo->mASID, 
 		getVM()->getResources()->EE->EECore->MMU->getNewTLBIndex()
@@ -266,7 +266,7 @@ void MMUHandler::getPS2PhysicalAddress_Stage1()
 		}
 		
 		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::ERL) == 1) {
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) {
 			if (mPS2VirtualAddress <= PS2Constants::EE::EECore::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
 			{
 				// We are in kuseg unmapped region, so just return the VA.
@@ -311,7 +311,7 @@ void MMUHandler::getPS2PhysicalAddress_Stage2()
 	if (mTLBEntryInfo->mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
+		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)

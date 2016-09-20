@@ -103,12 +103,12 @@ void InterpreterEECore::checkCountTimerEvent() const
 	if (EECore->COP0->Count->readWordU() >= EECore->COP0->Compare->readWordU())
 	{
 		// Set the IP7 field of the COP0.Cause register.
-		EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, 1);
+		EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, 1);
 
 		// Queue an interrupt exception if the Status.IM7 and IE bits are set (Cause.IP is set above). 
 		// See EE Core Users Manual page 72 and 74 for how the interrupt is raised.
-		if (EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::IE)
-			&& EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::IM7))
+		if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IE)
+			&& EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM7))
 		{
 			IntExceptionInfo_t intEx = { 0, 0, 1 };
 			EECore->Exceptions->ExceptionQueue->push(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
@@ -137,7 +137,7 @@ void InterpreterEECore::executeInstruction()
 			"PC = 0x%08X, "
 			"BD = %d, "
 			"Instruction = %s", __FILENAME__, __LINE__,
-			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(RegisterCount_t::Fields::Count), 
+			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(COP0RegisterCount_t::Fields::Count), 
 			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	

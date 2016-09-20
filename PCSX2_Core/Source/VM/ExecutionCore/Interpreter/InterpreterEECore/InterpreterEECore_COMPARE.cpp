@@ -200,9 +200,9 @@ void InterpreterEECore::C_EQ_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val == source2Val)
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
 }
 
 void InterpreterEECore::C_F_S()
@@ -220,7 +220,7 @@ void InterpreterEECore::C_F_S()
 
 	auto& CSR = getVM()->getResources()->EE->EECore->COP1->CSR; // FCR[31] aka control status register.
 
-	CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
+	CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
 }
 
 void InterpreterEECore::C_LE_S()
@@ -243,9 +243,9 @@ void InterpreterEECore::C_LE_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val <= source2Val)
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
 }
 
 void InterpreterEECore::C_LT_S()
@@ -268,9 +268,9 @@ void InterpreterEECore::C_LT_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val < source2Val)
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
 }
 
 

@@ -111,8 +111,8 @@ void InterpreterEECore::MAX_S()
 	f32 result = (source1Val >= source2Val) ? source1Val : source2Val;
 	destReg->writeFloat(result);
 
-	CSR->setFieldValue(RegisterCSR_t::Fields::O, 0); 
-	CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0); 
+	CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 
 void InterpreterEECore::MIN_S()
@@ -136,7 +136,7 @@ void InterpreterEECore::MIN_S()
 	f32 result = (source1Val <= source2Val) ? source1Val : source2Val;
 	destReg->writeFloat(result);
 
-	CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
-	CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
+	CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 

@@ -5,7 +5,7 @@
 
 /*
 COP0_BitfieldRegister_t.h implements all of the bitfields in each of the COP0 control registers. This is used primarily by COP0_t.h.
-Each register will have documentation attached to it.
+Each register will have documentation attached to it, and is prefixed with COP0Register.
 Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
 
 It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
@@ -21,16 +21,16 @@ The actual fields are defined at runtime within the COP0_BitfieldRegisters_t.cpp
 class PS2Resources;
 
 /*
-RegisterReserved_t represents an unknown (blank) register. It is up to the user at runtime to define fields.
+COP0RegisterReserved_t represents an unknown (blank) register. It is up to the user at runtime to define fields.
 */
-class RegisterReserved_t : public BitfieldRegister32_t
+class COP0RegisterReserved_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
 	};
 
-	explicit RegisterReserved_t();
+	explicit COP0RegisterReserved_t();
 };
 
 /*
@@ -42,7 +42,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-30 (length 25): Constant 0.
 - Bits 31 (length 1): "P".
 */
-class RegisterIndex_t : public BitfieldRegister32_t
+class COP0RegisterIndex_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -51,7 +51,7 @@ public:
 		static constexpr char * P = "P";
 	};
 
-	explicit RegisterIndex_t();
+	explicit COP0RegisterIndex_t();
 };
 
 /*
@@ -62,7 +62,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Random".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterRandom_t : public BitfieldRegister32_t
+class COP0RegisterRandom_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -70,7 +70,7 @@ public:
 		static constexpr char * Random = "Random";
 	};
 
-	explicit RegisterRandom_t();
+	explicit COP0RegisterRandom_t();
 };
 
 /*
@@ -86,7 +86,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 26-30 (length 5): Constant 0.
 - Bits 31 (length 1): "S"
 */
-class RegisterEntryLo0_t : public BitfieldRegister32_t
+class COP0RegisterEntryLo0_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -99,7 +99,7 @@ public:
 		static constexpr char * S = "S";
 	};
 
-	explicit RegisterEntryLo0_t();
+	explicit COP0RegisterEntryLo0_t();
 };
 
 /*
@@ -114,7 +114,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 6-25 (length 20): "PFN".
 - Bits 26-31 (length 6): Constant 0.
 */
-class RegisterEntryLo1_t : public BitfieldRegister32_t
+class COP0RegisterEntryLo1_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -126,7 +126,7 @@ public:
 		static constexpr char * PFN = "PFN";
 	};
 
-	explicit RegisterEntryLo1_t();
+	explicit COP0RegisterEntryLo1_t();
 };
 
 /*
@@ -138,7 +138,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 4-22 (length 19): "BadVPN2".
 - Bits 23-31 (length 9): "PTEBase".
 */
-class RegisterContext_t : public BitfieldRegister32_t
+class COP0RegisterContext_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -147,7 +147,7 @@ public:
 		static constexpr char * PTEBase = "PTEBase";
 	};
 
-	explicit RegisterContext_t();
+	explicit COP0RegisterContext_t();
 private:
 };
 
@@ -160,7 +160,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 13-24 (length 12): "MASK".
 - Bits 25-31 (length 7): Constant 0.
 */
-class RegisterPageMask_t : public BitfieldRegister32_t
+class COP0RegisterPageMask_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -168,7 +168,7 @@ public:
 		static constexpr char * MASK = "MASK";
 	};
 
-	explicit RegisterPageMask_t();
+	explicit COP0RegisterPageMask_t();
 };
 
 /*
@@ -179,7 +179,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-5 (length 6): "Wired".
 - Bits 6-31 (length 26): Constant 0.
 */
-class RegisterWired_t : public BitfieldRegister32_t
+class COP0RegisterWired_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -187,7 +187,7 @@ public:
 		static constexpr char * Wired = "Wired";
 	};
 
-	explicit RegisterWired_t();
+	explicit COP0RegisterWired_t();
 };
 
 /*
@@ -197,7 +197,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 69
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "BadVAddr".
 */
-class RegisterBadVAddr_t : public BitfieldRegister32_t
+class COP0RegisterBadVAddr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -205,7 +205,7 @@ public:
 		static constexpr char * BadVAddr = "BadVAddr";
 	};
 
-	explicit RegisterBadVAddr_t();
+	explicit COP0RegisterBadVAddr_t();
 };
 
 /*
@@ -215,7 +215,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 70
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Count".
 */
-class RegisterCount_t : public BitfieldRegister32_t
+class COP0RegisterCount_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -223,7 +223,7 @@ public:
 		static constexpr char * Count = "Count";
 	};
 
-	explicit RegisterCount_t();
+	explicit COP0RegisterCount_t();
 
 	// Convenience function that increments the count field value by the specified amount. 
 	void increment(u32 value);
@@ -238,7 +238,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-12 (length 5): Constant 0.
 - Bits 13-31 (length 19): "VPN2".
 */
-class RegisterEntryHi_t : public BitfieldRegister32_t
+class COP0RegisterEntryHi_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -247,7 +247,7 @@ public:
 		static constexpr char * VPN2 = "VPN2";
 	};
 
-	explicit RegisterEntryHi_t();
+	explicit COP0RegisterEntryHi_t();
 };
 
 /*
@@ -258,7 +258,7 @@ Note: Also clears the COP0.Cause.IP7 field when written to (see overridden funct
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "Compare".
 */
-class RegisterCompare_t : public BitfieldRegister32_t, public PS2ResourcesSubobject
+class COP0RegisterCompare_t : public BitfieldRegister32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -266,7 +266,7 @@ public:
 		static constexpr char * Compare = "Compare";
 	};
 
-	explicit RegisterCompare_t(const PS2Resources_t*const PS2Resources);
+	explicit COP0RegisterCompare_t(const PS2Resources_t*const PS2Resources);
 
 	void setFieldValue(const char * fieldName, const u32& value) override;
 	void setRegisterValue(const u32 & value) override;
@@ -295,7 +295,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24-27 (length 4): Constant 0.
 - Bits 28-31 (length 4): "CU".
 */
-class RegisterStatus_t : public BitfieldRegister32_t
+class COP0RegisterStatus_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -315,7 +315,7 @@ public:
 		static constexpr char * CU = "CU";
 	};
 
-	explicit RegisterStatus_t();
+	explicit COP0RegisterStatus_t();
 };
 
 /*
@@ -336,7 +336,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "BD2".
 - Bits 31 (length 1): "BD".
 */
-class RegisterCause_t : public BitfieldRegister32_t
+class COP0RegisterCause_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -351,7 +351,7 @@ public:
 		static constexpr char * BD = "BD";
 	};
 
-	explicit RegisterCause_t();
+	explicit COP0RegisterCause_t();
 };
 
 /*
@@ -361,7 +361,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 76
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "EPC".
 */
-class RegisterEPC_t : public BitfieldRegister32_t
+class COP0RegisterEPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -369,7 +369,7 @@ public:
 		static constexpr char * EPC = "EPC";
 	};
 
-	explicit RegisterEPC_t();
+	explicit COP0RegisterEPC_t();
 };
 
 /*
@@ -381,7 +381,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class RegisterPRId_t : public BitfieldRegister32_t
+class COP0RegisterPRId_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -390,7 +390,7 @@ public:
 		static constexpr char * Imp = "Imp";
 	};
 
-	explicit RegisterPRId_t();
+	explicit COP0RegisterPRId_t();
 };
 
 /*
@@ -412,7 +412,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 28-30 (length 3): "EC".
 - Bits 31 (length 1): Constant 0.
 */
-class RegisterConfig_t : public BitfieldRegister32_t
+class COP0RegisterConfig_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -428,7 +428,7 @@ public:
 		static constexpr char * EC = "EC";
 	};
 
-	explicit RegisterConfig_t();
+	explicit COP0RegisterConfig_t();
 };
 
 /*
@@ -439,7 +439,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-3 (length 4): Constant 0.
 - Bits 4-31 (length 28): "BadPAddr".
 */
-class RegisterBadPAddr_t : public BitfieldRegister32_t
+class COP0RegisterBadPAddr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -447,7 +447,7 @@ public:
 		static constexpr char * BadPAddr = "BadPAddr";
 	};
 
-	explicit RegisterBadPAddr_t();
+	explicit COP0RegisterBadPAddr_t();
 };
 
 /*
@@ -477,7 +477,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 30 (length 1): "DRE".
 - Bits 31 (length 1): "IAE".
 */
-class RegisterBPC_t : public BitfieldRegister32_t
+class COP0RegisterBPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -502,7 +502,7 @@ public:
 		static constexpr char * IAE = "IAE";
 	};
 
-	explicit RegisterBPC_t();
+	explicit COP0RegisterBPC_t();
 };
 
 /*
@@ -512,7 +512,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 81
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IAB".
 */
-class RegisterIAB_t : public BitfieldRegister32_t
+class COP0RegisterIAB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -520,7 +520,7 @@ public:
 		static constexpr char * IAB = "IAB";
 	};
 
-	explicit RegisterIAB_t();
+	explicit COP0RegisterIAB_t();
 };
 
 /*
@@ -530,7 +530,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 81
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "IABM".
 */
-class RegisterIABM_t : public BitfieldRegister32_t
+class COP0RegisterIABM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -538,7 +538,7 @@ public:
 		static constexpr char * IABM = "IABM";
 	};
 
-	explicit RegisterIABM_t();
+	explicit COP0RegisterIABM_t();
 };
 
 /*
@@ -548,7 +548,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 82
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DAB".
 */
-class RegisterDAB_t : public BitfieldRegister32_t
+class COP0RegisterDAB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -556,7 +556,7 @@ public:
 		static constexpr char * DAB = "DAB";
 	};
 
-	explicit RegisterDAB_t();
+	explicit COP0RegisterDAB_t();
 };
 
 /*
@@ -566,7 +566,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 82
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DABM".
 */
-class RegisterDABM_t : public BitfieldRegister32_t
+class COP0RegisterDABM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -574,7 +574,7 @@ public:
 		static constexpr char * DABM = "DABM";
 	};
 
-	explicit RegisterDABM_t();
+	explicit COP0RegisterDABM_t();
 };
 
 /*
@@ -584,7 +584,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 83
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVB".
 */
-class RegisterDVB_t : public BitfieldRegister32_t
+class COP0RegisterDVB_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -592,7 +592,7 @@ public:
 		static constexpr char * DVB = "DVB";
 	};
 
-	explicit RegisterDVB_t();
+	explicit COP0RegisterDVB_t();
 };
 
 /*
@@ -602,7 +602,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 83
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "DVBM".
 */
-class RegisterDVBM_t : public BitfieldRegister32_t
+class COP0RegisterDVBM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -610,7 +610,7 @@ public:
 		static constexpr char * DVBM = "DVBM";
 	};
 
-	explicit RegisterDVBM_t();
+	explicit COP0RegisterDVBM_t();
 };
 
 /*
@@ -633,7 +633,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 20-30 (length 11): Constant 0.
 - Bits 31 (length 1): "CTE".
 */
-class RegisterPCCR_t : public BitfieldRegister32_t
+class COP0RegisterPCCR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -651,7 +651,7 @@ public:
 		static constexpr char * CTE = "CTE";
 	};
 
-	explicit RegisterPCCR_t();
+	explicit COP0RegisterPCCR_t();
 };
 
 /*
@@ -662,7 +662,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR0_t : public BitfieldRegister32_t
+class COP0RegisterPCR0_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -671,7 +671,7 @@ public:
 		static constexpr char * OVFL = "OVFL";
 	};
 
-	explicit RegisterPCR0_t();
+	explicit COP0RegisterPCR0_t();
 };
 
 /*
@@ -682,7 +682,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 0-30 (length 31): "VALUE".
 - Bits 31 (length 1): "OVFL".
 */
-class RegisterPCR1_t : public BitfieldRegister32_t
+class COP0RegisterPCR1_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -691,7 +691,7 @@ public:
 		static constexpr char * OVFL = "OVFL";
 	};
 
-	explicit RegisterPCR1_t();
+	explicit COP0RegisterPCR1_t();
 };
 
 /*
@@ -709,7 +709,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagLo_t : public BitfieldRegister32_t
+class COP0RegisterTagLo_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -721,7 +721,7 @@ public:
 		static constexpr char * PTagLo = "PTagLo";
 	};
 
-	explicit RegisterTagLo_t();
+	explicit COP0RegisterTagLo_t();
 };
 
 /*
@@ -739,7 +739,7 @@ Bitfield map (defined as constants in the class below):
 
 TODO: Verify this is correct, the manual doesn't explain this well...
 */
-class RegisterTagHi_t : public BitfieldRegister32_t
+class COP0RegisterTagHi_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -751,7 +751,7 @@ public:
 		static constexpr char * PTagHi = "PTagHi";
 	};
 
-	explicit RegisterTagHi_t();
+	explicit COP0RegisterTagHi_t();
 };
 
 /*
@@ -761,7 +761,7 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 88
 Bitfield map (defined as constants in the class below):
 - Bits 0-31 (length 32): "ErrorEPC".
 */
-class RegisterErrorEPC_t : public BitfieldRegister32_t
+class COP0RegisterErrorEPC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -769,5 +769,5 @@ public:
 		static constexpr char * ErrorEPC = "ErrorEPC";
 	};
 
-	explicit RegisterErrorEPC_t();
+	explicit COP0RegisterErrorEPC_t();
 };

@@ -83,8 +83,8 @@ void InterpreterEECore::ABS_S()
 
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 
 void InterpreterEECore::NEG_S()
@@ -103,8 +103,8 @@ void InterpreterEECore::NEG_S()
 
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 
 void InterpreterEECore::RSQRT_S()
@@ -129,14 +129,14 @@ void InterpreterEECore::RSQRT_S()
 	// Set flags and special values, writes a result to the above variable.
 	if (source2Val == 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SD, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -175,8 +175,8 @@ void InterpreterEECore::SQRT_S()
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

@@ -12,6 +12,7 @@ Timers_t::Timers_t() :
 
 void Timers_t::raiseTimerEventPS2CLK(const u32 & cycles)
 {
+	// TODO: Fix, not going to work as cycles may != 1 each time this is called.
 	// Add the number of PS2CLK's that just occured.
 	mNumPS2CLKEvents += cycles;
 

@@ -72,10 +72,10 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::ExcCode, exceptionProperties.mExeCode);
+	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::ExcCode, exceptionProperties.mExeCode);
 
 	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
-	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::EXL) == 1)
+	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::EXL) == 1)
 	{
 		vectorOffset = PS2Constants::EE::EECore::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 	}
@@ -86,18 +86,18 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 		if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
 		{
 			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
-			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(RegisterEPC_t::Fields::EPC, pcValue);
-			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD, 1);
+			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::BD, 1);
 		}
 		else
 		{
 			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
-			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(RegisterEPC_t::Fields::EPC, pcValue);
-			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD, 0);
+			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::BD, 0);
 		}
 
 		// Set to kernel mode and disable interrupts.
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::EXL, 1);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::EXL, 1);
 
 		// Select the vector to use (set vectorOffset).
 		if (exceptionProperties.mExceptionInfo == EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
@@ -115,7 +115,7 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::BEV) == 1)
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::BEV) == 1)
 		{
 			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		} 
@@ -134,24 +134,24 @@ void ExceptionHandler::handleException_L2(const ExceptionProperties_t & exceptio
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.EXC2 value.
-	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::EXC2, exceptionProperties.mEXC2);
+	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::EXC2, exceptionProperties.mEXC2);
 
 	// Set EPC and Cause.BD fields.
 	if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
 	{
 		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
-		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
-		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD2, 1);
+		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(COP0RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::BD2, 1);
 	}
 	else
 	{
 		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
-		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
-		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(RegisterCause_t::Fields::BD2, 0);
+		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(COP0RegisterErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::BD2, 0);
 	}
 
 	// Set to kernel mode and disable interrupts.
-	getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 1);
+	getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::ERL, 1);
 
 	// Select vector to use and set PC to use it.
 	if (exceptionProperties.mExceptionInfo == EECoreException_t::ExType::EX_NMI 
@@ -176,7 +176,7 @@ void ExceptionHandler::handleException_L2(const ExceptionProperties_t & exceptio
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(RegisterStatus_t::Fields::DEV) == 1)
+		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::DEV) == 1)
 		{
 			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::EE::EECore::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		}
@@ -196,28 +196,28 @@ void ExceptionHandler::EX_HANDLER_RESET()
 		COP0->Registers[i]->initaliseAllFields();
 	
 	// Other funcionality in "operation", just in case the inital values are different.
-	COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 1);
-	COP0->Status->setFieldValue(RegisterStatus_t::Fields::BEV, 1);
-	COP0->Status->setFieldValue(RegisterStatus_t::Fields::BEM, 0);
+	COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::ERL, 1);
+	COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::BEV, 1);
+	COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::BEM, 0);
 
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::EXC2, 0);
+	COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::EXC2, 0);
 
-	COP0->Config->setFieldValue(RegisterConfig_t::Fields::DIE, 0);
-	COP0->Config->setFieldValue(RegisterConfig_t::Fields::ICE, 0);
-	COP0->Config->setFieldValue(RegisterConfig_t::Fields::DCE, 0);
-	COP0->Config->setFieldValue(RegisterConfig_t::Fields::NBE, 0);
-	COP0->Config->setFieldValue(RegisterConfig_t::Fields::BPE, 0);
+	COP0->Config->setFieldValue(COP0RegisterConfig_t::Fields::DIE, 0);
+	COP0->Config->setFieldValue(COP0RegisterConfig_t::Fields::ICE, 0);
+	COP0->Config->setFieldValue(COP0RegisterConfig_t::Fields::DCE, 0);
+	COP0->Config->setFieldValue(COP0RegisterConfig_t::Fields::NBE, 0);
+	COP0->Config->setFieldValue(COP0RegisterConfig_t::Fields::BPE, 0);
 
-	COP0->Random->setFieldValue(RegisterRandom_t::Fields::Random, 47);
+	COP0->Random->setFieldValue(COP0RegisterRandom_t::Fields::Random, 47);
 
-	COP0->Wired->setFieldValue(RegisterWired_t::Fields::Wired, 0);
+	COP0->Wired->setFieldValue(COP0RegisterWired_t::Fields::Wired, 0);
 
 	// I think this is a typo. In manual it says CCR.CTE where it should be PCCR.CTE.
-	COP0->PCCR->setFieldValue(RegisterPCCR_t::Fields::CTE, 0);
+	COP0->PCCR->setFieldValue(COP0RegisterPCCR_t::Fields::CTE, 0);
 
-	COP0->BPC->setFieldValue(RegisterBPC_t::Fields::IAE, 0);
-	COP0->BPC->setFieldValue(RegisterBPC_t::Fields::DRE, 0);
-	COP0->BPC->setFieldValue(RegisterBPC_t::Fields::DWE, 0);
+	COP0->BPC->setFieldValue(COP0RegisterBPC_t::Fields::IAE, 0);
+	COP0->BPC->setFieldValue(COP0RegisterBPC_t::Fields::DRE, 0);
+	COP0->BPC->setFieldValue(COP0RegisterBPC_t::Fields::DWE, 0);
 
 	// TODO: Set cache flags (data and instruction caches) as described.
 }
@@ -225,8 +225,8 @@ void ExceptionHandler::EX_HANDLER_RESET()
 void ExceptionHandler::EX_HANDLER_NMI()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
-	COP0->Status->setFieldValue(RegisterStatus_t::Fields::ERL, 1);
-	COP0->Status->setFieldValue(RegisterStatus_t::Fields::BEV, 1);
+	COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::ERL, 1);
+	COP0->Status->setFieldValue(COP0RegisterStatus_t::Fields::BEV, 1);
 }
 
 void ExceptionHandler::EX_HANDLER_PERFORMANCE_COUNTER()
@@ -246,20 +246,20 @@ void ExceptionHandler::EX_HANDLER_INTERRUPT()
 	// The EE Core Users Manual page 99 mentions that if an interrupt signal is asserted and deasserted in a very short time, the Cause.IP[i] may not
 	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
 	// TODO: check for timing issues.
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP2, mPS2Exception->mIntExceptionInfo->mInt1);
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP3, mPS2Exception->mIntExceptionInfo->mInt0);
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::IP7, mPS2Exception->mIntExceptionInfo->mTimerInt);
+	COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP2, mPS2Exception->mIntExceptionInfo->mInt1);
+	COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP3, mPS2Exception->mIntExceptionInfo->mInt0);
+	COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, mPS2Exception->mIntExceptionInfo->mTimerInt);
 }
 
 void ExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
 }
@@ -268,28 +268,28 @@ void ExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
-	COP0->Random->setFieldValue(RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
+	COP0->Random->setFieldValue(COP0RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
 }
 
 void ExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
-	COP0->Random->setFieldValue(RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
+	COP0->Random->setFieldValue(COP0RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
 }
 
 void ExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
@@ -297,37 +297,37 @@ void ExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
-	COP0->Random->setFieldValue(RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
+	COP0->Random->setFieldValue(COP0RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
 }
 
 void ExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
-	COP0->Context->setFieldValue(RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::PTEBase, mPS2Exception->mTLBExceptionInfo->mPageTableAddress);
+	COP0->Context->setFieldValue(COP0RegisterContext_t::Fields::BadVPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress_HI_19);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::ASID, mPS2Exception->mTLBExceptionInfo->mASID);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
-	COP0->Random->setFieldValue(RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
+	COP0->Random->setFieldValue(COP0RegisterRandom_t::Fields::Random, mPS2Exception->mTLBExceptionInfo->mTLBIndex);
 }
 
 void ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
 	COP0->Context->setRegisterValue(0);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, 0);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, 0);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
 }
@@ -336,9 +336,9 @@ void ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
+	COP0->BadVAddr->setFieldValue(COP0RegisterBadVAddr_t::Fields::BadVAddr, mPS2Exception->mTLBExceptionInfo->mPS2VirtualAddress);
 	COP0->Context->setRegisterValue(0);
-	COP0->EntryHi->setFieldValue(RegisterEntryHi_t::Fields::VPN2, 0);
+	COP0->EntryHi->setFieldValue(COP0RegisterEntryHi_t::Fields::VPN2, 0);
 	COP0->EntryLo0->setRegisterValue(0);
 	COP0->EntryLo1->setRegisterValue(0);
 }
@@ -372,7 +372,7 @@ void ExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
-	COP0->Cause->setFieldValue(RegisterCause_t::Fields::CE, mPS2Exception->mCOPExceptionInfo->mCOPUnusable);
+	COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::CE, mPS2Exception->mCOPExceptionInfo->mCOPUnusable);
 }
 
 void ExceptionHandler::EX_HANDLER_OVERFLOW()
