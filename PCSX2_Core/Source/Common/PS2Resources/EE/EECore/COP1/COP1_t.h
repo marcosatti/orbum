@@ -31,7 +31,7 @@ public:
 	COP1 defines an accumulator register, used for multiply-accumulate type instructions.
 	See EE Core Users Manual, page 157.
 	*/
-	std::shared_ptr<FPRegister32_t> ACC = std::make_shared<FPRegister32_t>();
+	std::shared_ptr<FPRegister32_t> ACC;
 
 	// Bitfield Register Implementations.
 	/*
