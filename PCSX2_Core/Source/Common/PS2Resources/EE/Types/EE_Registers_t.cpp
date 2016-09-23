@@ -242,3 +242,14 @@ EERegisterINTCIStat_t::EERegisterINTCIStat_t(const char* const mnemonic, const u
 	registerField(Fields::SFIFO, 13, 1, 0);
 	registerField(Fields::VU0WD, 14, 1, 0);
 }
+
+EERegisterDMACDCtrl_t::EERegisterDMACDCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+{
+	registerField(Fields::DMAE, 0, 1, 0);
+	registerField(Fields::RELE, 1, 1, 0);
+	registerField(Fields::MFD, 2, 2, 0);
+	registerField(Fields::STS, 4, 2, 0);
+	registerField(Fields::STD, 6, 2, 0);
+	registerField(Fields::RCYC, 8, 3, 0);
+}

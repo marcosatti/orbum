@@ -9,12 +9,12 @@
 #include "Common/PS2Resources/Types/XORStorageObject32/XORStorageObject32_t.h"
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/Timers/Timers_t.h"
+#include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 
 EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 	EECore(std::make_shared<EECore_t>(getRootResources())),
-	Timers(std::make_shared<Timers_t>()),
+	DMAC(std::make_shared<DMAC_t>()),
 
 	// Registers.
 	EE_REGISTER_T0_COUNT(std::make_shared<EERegisterTimerCount_t>("TIMER: T0_COUNT", 0x10000000)),

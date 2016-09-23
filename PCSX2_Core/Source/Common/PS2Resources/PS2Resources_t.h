@@ -23,6 +23,7 @@ Note: In order to reduce compile times, try to define the subobjects in the clas
 class EE_t;
 class GS_t;
 class StorageObject_t;
+class Clock_t;
 
 class PS2Resources_t
 {
@@ -40,6 +41,9 @@ public:
 
 	// Boot ROM (4MB)
 	std::shared_ptr<StorageObject_t> BootROM;
+
+	// The Clock class, used to control timing accross components.
+	std::shared_ptr<Clock_t> Clock;
 
 private:
 

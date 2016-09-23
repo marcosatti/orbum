@@ -13,6 +13,16 @@ class VMMain;
 class MMUHandler;
 class ExceptionHandler;
 
+
+/*
+The EE Core interpreter.
+
+This also acts as the control for synchronisation across components, as this is the fastest clocked device in the PS2 (294 MHz).
+Each time executionStep() is run, PS2Resources->Clock->raiseEventPS2CLK() is also run, which updates other clock sources such as the BUSCLK.
+
+TODO: Finish documentation.
+*/
+
 class InterpreterEECore : public VMExecutionCoreComponent
 {
 public:

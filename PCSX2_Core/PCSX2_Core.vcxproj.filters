@@ -243,16 +243,18 @@
     </ClInclude>
     <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.h" />
     <ClInclude Include="Source\Common\Global\GlobalOptions.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\XORStorageObject32\XORStorageObject32_t.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\TimerHandler\TimerHandler.h" />
-    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Timers_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Clock\Clock_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\TimerHandler\TimerHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\ClockSource_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -405,16 +407,17 @@
     <ClCompile Include="Source\Common\PS2Resources\GS\GS_t.cpp" />
     <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.cpp" />
     <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\InterpreterEE.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\XORStorageObject32\XORStorageObject32_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEE\TimerHandler\TimerHandler.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Timers_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Types\TimerEvent_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Clock\Clock_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\TimerHandler\TimerHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

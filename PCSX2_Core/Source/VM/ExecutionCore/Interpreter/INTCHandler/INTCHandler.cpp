@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterEE/INTCHandler/INTCHandler.h"
+#include "VM/ExecutionCore/Interpreter/INTCHandler/INTCHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
@@ -19,7 +19,7 @@ INTCHandler::INTCHandler(const VMMain* const vmMain) :
 {
 }
 
-void INTCHandler::checkInterrupt() const
+void INTCHandler::executionStep()
 {
 	// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
 	const u32 I_STAT = getVM()->getResources()->EE->EE_REGISTER_I_STAT->readWordU(0);

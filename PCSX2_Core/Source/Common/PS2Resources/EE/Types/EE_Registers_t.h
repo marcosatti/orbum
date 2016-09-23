@@ -83,6 +83,7 @@ TODO: Fill in bitfield information like COP0_BitfieldRegisters_t.
 Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, behaves like a XOR write).
 
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
+It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
 */
 class EERegisterTimerMode_t : public BitfieldStorageObject32_t
 {
@@ -117,6 +118,7 @@ private:
 The Timer Count register type. See EE Users Manual page 37.
 Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens.
 Can also reset the counter.
+It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
 */
 class EERegisterTimerCount_t : public StorageObject32_t
 {
@@ -153,4 +155,24 @@ public:
 	};
 
 	EERegisterINTCIStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+};
+
+/*
+The DMAC D_CTRL register, which contains various settings needed for the DMAC.
+TODO: Need to implement cycle stealing? Wouldnt think so as it doesnt make sense in an emulator...
+*/
+class EERegisterDMACDCtrl_t : public BitfieldStorageObject32_t
+{
+public:
+	struct Fields
+	{
+		static constexpr char * DMAE = "DMAE";
+		static constexpr char * RELE = "RELE";
+		static constexpr char * MFD = "MFD";
+		static constexpr char * STS = "STS";
+		static constexpr char * STD = "STD";
+		static constexpr char * RCYC = "RCYC";
+	};
+
+	EERegisterDMACDCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };

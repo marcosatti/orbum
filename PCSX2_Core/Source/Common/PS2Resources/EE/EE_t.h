@@ -11,7 +11,7 @@ It encompasses everything seen on the diagram on page 22 of the EE Overview Manu
 */
 
 class EECore_t;
-class Timers_t;
+class DMAC_t;
 class EERegisterSIO_t;
 class EERegisterMCH_t;
 class StorageObject_t;
@@ -34,9 +34,9 @@ public:
 	std::shared_ptr<EECore_t> EECore;
 
 	/*
-	The Timers resources (TIMER0, TIMER1, etc).
+	The DMAC resources.
 	*/
-	std::shared_ptr<Timers_t> Timers;
+	std::shared_ptr<DMAC_t> DMAC;
 
 	/*
 	EE registers, defined on page 21 onwards of the EE Users Manual. All are prefixed with EE_REGISTER, and start from PS2 physical address 0x10000000 to 0x11000000.

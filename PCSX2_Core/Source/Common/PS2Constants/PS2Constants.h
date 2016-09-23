@@ -104,6 +104,12 @@ public:
 		};
 
 		static constexpr u32 NUMBER_TIMERS = 4;
+
+		// Ratios of PS2CLK (EE Core speed) divided by other clock source within EE. The PS2CLK runs at ~294 MHz.
+		// BUSCLK runs at ~147 MHz.
+		static constexpr u32 RATIO_PS2CLK_BUSCLK = 2;
+		static constexpr u32 RATIO_PS2CLK_BUSCLK16 = 32;
+		static constexpr u32 RATIO_PS2CLK_BUSCLK256 = 512;
 	};
 
 	struct MainMemory
@@ -118,6 +124,11 @@ public:
 		// Boot Rom. See EE Users Manual page 20.
 		static constexpr u32 PADDRESS_BOOT_ROM = 0x1FC00000;
 		static constexpr u32 SIZE_BOOT_ROM = 0x00400000;
+	};
+
+	struct GS
+	{
+		// Note: Ratio of PS2CLK / HBLNK is defined at runtime (set by GS). See PS2Resources_t::Clock_t::RATIO_PS2CLK_HBLNK.
 	};
 };
 

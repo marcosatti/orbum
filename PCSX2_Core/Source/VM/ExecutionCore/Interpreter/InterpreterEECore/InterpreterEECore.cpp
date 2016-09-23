@@ -16,7 +16,7 @@
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
-#include "Common/PS2Resources/EE/Timers/Timers_t.h"
+#include "Common/PS2Resources/Clock/Clock_t.h"
 
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 using ExType = EECoreException_t::ExType;
@@ -153,7 +153,7 @@ void InterpreterEECore::executeInstruction()
 	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
 	// Also update the EE timers by raising a PS2CLK event.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
-	getVM()->getResources()->EE->Timers->raiseTimerEventPS2CLK(mInstructionInfo->mCycles);
+	getVM()->getResources()->Clock->updateClocks(mInstructionInfo->mCycles);
 
 	// Increment PC.
 	EECore->R5900->PC->setPCValueNext();

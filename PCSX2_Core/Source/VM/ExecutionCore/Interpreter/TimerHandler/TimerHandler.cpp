@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "VM/ExecutionCore/Interpreter/InterpreterEE/TimerHandler/TimerHandler.h"
+#include "VM/ExecutionCore/Interpreter/TimerHandler/TimerHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/GS/GS_t.h"
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
-#include "Common/PS2Resources/EE/Timers/Timers_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
 TimerHandler::TimerHandler(const VMMain* const vmMain) :
@@ -19,67 +18,81 @@ TimerHandler::~TimerHandler()
 {
 }
 
-void TimerHandler::updateTimers() const
+void TimerHandler::executionStep_BUSCLK() const
+{
+	updateTimers(ClockSource_t::BUSCLK);
+}
+
+void TimerHandler::executionStep_BUSCLK16() const
+{
+	updateTimers(ClockSource_t::BUSCLK16);
+}
+
+void TimerHandler::executionStep_BUSCLK256() const
+{
+	updateTimers(ClockSource_t::BUSCLK256);
+}
+
+void TimerHandler::executionStep_HBLNK() const
+{
+	updateTimers(ClockSource_t::HBLNK);
+}
+
+void TimerHandler::updateTimers(const ClockSource_t & clockSource) const
 {
 	auto& EE = getVM()->getResources()->EE;
 	auto& GS = getVM()->getResources()->GS;
 	const u8 * gateSources[] = { &GS->SIGNAL_HBLNK, &GS->SIGNAL_VBLNK };
 
-	while (!EE->Timers->TimerEventQueue->empty())
+	// Update the timers which are set to count based on the type of event recieved.
+	for (auto i = 0; i < PS2Constants::EE::NUMBER_TIMERS; i++)
 	{
-		// Get event from queue.
-		auto& timerEvent = EE->Timers->TimerEventQueue->front();
+		// Do not count if not enabled.
+		if (!EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::CUE))
+			continue;
 
-		// Update the timers which are set to count based on the type of event recieved.
-		for (auto i = 0; i < PS2Constants::EE::NUMBER_TIMERS; i++)
+		// Check if the timer mode is equal to the clock source.
+		if (isTimerCLKSEqual(i, clockSource))
 		{
-			// Do not count if not enabled.
-			if (!EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::CUE))
-				continue;
-
-			// Check if the timer mode is equal to the clock source.
-			if (isTimerCLKSEqual(i, timerEvent))
+			// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
+			//  in which case count normally.
+			if (EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATE) && !isTimerGateSpecialHBLNK(i))
 			{
-				// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, in which case count normally.
-				if (EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATE) && !isTimerGateSpecialHBLNK(i))
-				{
-					// Check if the timer needs to be reset.
-					checkTimerGateReset(i);
+				// Check if the timer needs to be reset.
+				checkTimerGateReset(i);
 
-					// If the timer is using GATM = 0, need to check if the signal is low first.
-					if (EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATM) == 0)
-					{
-						if (!gateSources[EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATS)])
-							EE->TimerRegisters[i].mCount->increment(1);
-					}
-					else
-					{
-						EE->TimerRegisters[i].mCount->increment(1);	
-					}
+				// If the timer is using GATM = 0, need to check if the signal is low first.
+				if (EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATM) == 0)
+				{
+					if (!gateSources[EE->TimerRegisters[i].mMode->getFieldValue(EERegisterTimerMode_t::Fields::GATS)])
+						EE->TimerRegisters[i].mCount->increment(1);
 				}
 				else
 				{
-					// Count normally without gate.
-					EE->TimerRegisters[i].mCount->increment(1);
+					EE->TimerRegisters[i].mCount->increment(1);	
 				}
-
-				// Check for interrupt conditions on the timer.
-				checkTimerInterrupt(i);
-
-				// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise interrupt may be missed).
-				checkTimerZRET(i);
 			}
-		}
+			else
+			{
+				// Count normally without gate.
+				EE->TimerRegisters[i].mCount->increment(1);
+			}
 
-		// Pop the event.
-		EE->Timers->TimerEventQueue->pop();
+			// Check for interrupt conditions on the timer.
+			checkTimerInterrupt(i);
+
+			// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise interrupt may be missed).
+			checkTimerZRET(i);
+		}
 	}
 }
 
-bool TimerHandler::isTimerCLKSEqual(const u32 & timerNumber, const TimerEvent_t & timerEvent) const
+bool TimerHandler::isTimerCLKSEqual(const u32 & timerNumber, const ClockSource_t & clockSource) const
 {
-	auto CLKS = static_cast<ClockSource_t>(getVM()->getResources()->EE->TimerRegisters[timerNumber].mMode->getFieldValue(EERegisterTimerMode_t::Fields::CLKS));
-	if (CLKS == timerEvent.mClockSourceType)
+	auto& timerRegister = getVM()->getResources()->EE->TimerRegisters[timerNumber];
+	auto CLKS = static_cast<ClockSource_t>(timerRegister.mMode->getFieldValue(EERegisterTimerMode_t::Fields::CLKS));
+
+	if (CLKS == clockSource)
 		return true;
 	else
 		return false;

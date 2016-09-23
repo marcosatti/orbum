@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <cmath>
 
+#include "Common/Global/Globals.h"
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
