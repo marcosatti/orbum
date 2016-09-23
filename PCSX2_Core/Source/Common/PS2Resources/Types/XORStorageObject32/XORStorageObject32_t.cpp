@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "XORStorageObject32_t.h"
 
 XORStorageObject32_t::XORStorageObject32_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :

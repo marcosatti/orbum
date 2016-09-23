@@ -8,7 +8,7 @@
 
 /*
 The exception handler provides 2 main points of functionality:
- 1. Handles the exception queue for the EE Core, in which any events are queued into, such as interrupts or TLB exceptions.
+ 1. Handles the exception state for the EE Core.
  2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
 */
 
@@ -19,18 +19,17 @@ class ExceptionHandler : public VMExecutionCoreComponent
 public:
 	explicit ExceptionHandler(const VMMain *const vmMain);
 
-	// TODO: Check again for any missed settings that the individual exceptions require to be set. IE: Coprocessor unusable requires Cause.CE set to the coprocessor that caused it.
-	
 	/*
-	Check the exception queue, and executes the exception handler if there are items to be processed.	
-	// TODO: Not sure if we need to handle them all in one go, or only 1 per step cycle, or on jump-type instructions ala PCSX2. Currently 1 per cycle.
+	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set.
 	*/
-	void checkExceptionQueue();
+	void checkExceptionState();
 
 	/*
 	Handles a given exception by:
-	 1. Running the specific exception operation ("EX_HANDLER_*" defined below). This is done before 2. below.
-	 2. Running the general exception handler (level 1 or 2) based on the exception properties defined.
+	1. Running the specific exception operation ("EX_HANDLER_*" defined below). This is done before 2. below.
+	2. Running the general exception handler (level 1 or 2) based on the exception properties defined.
+
+	This is made public as a direct way to reset the PS2 state from the VM.
 	*/
 	void handleException(const EECoreException_t& PS2Exception);
 

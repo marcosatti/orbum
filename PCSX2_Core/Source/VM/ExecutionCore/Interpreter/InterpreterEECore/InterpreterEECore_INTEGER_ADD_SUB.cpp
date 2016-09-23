@@ -31,8 +31,8 @@ void InterpreterEECore::ADD()
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 	
@@ -53,8 +53,8 @@ void InterpreterEECore::ADDI()
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 
@@ -93,8 +93,8 @@ void InterpreterEECore::DADD()
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
 	if (((~(source1Reg->readDwordS(0)^source2Reg->readDwordS(0)))&(source1Reg->readDwordS(0)^result)) < 0)
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 		
@@ -115,8 +115,8 @@ void InterpreterEECore::DADDI()
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
 	if (((~(sourceReg->readDwordS(0) ^ imm))&(sourceReg->readDwordS(0) ^ result)) < 0)
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 
@@ -155,8 +155,8 @@ void InterpreterEECore::DSUB()
 	// Let's all give gigahertz a big round of applause for finding this gem, which apparently works, and generates compact/fast asm code too.
 	if (((~(source1Reg->readDwordS(0) ^ -source2Reg->readDwordS(0)))&(source1Reg->readDwordS(0) ^ result)) < 0) 
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 
@@ -187,8 +187,8 @@ void InterpreterEECore::SUB()
 	// If bit 32 != bit 31 then we have an overflow.
 	if (((result >> 31) & 1) != ((result >> 32) & 1)) 
 	{
-		auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
-		ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return;
 	}
 

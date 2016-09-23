@@ -31,9 +31,9 @@ void INTCHandler::executionStep()
 			// Generate an INT0 signal/interrupt exception, if the EE Core has the COP0.Status.IM[2] mask set.
 			if ((getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM) & 1) > 0)
 			{
-				auto& ExceptionQueue = getVM()->getResources()->EE->EECore->Exceptions->ExceptionQueue;
+				auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 				IntExceptionInfo_t intInfo = { 0, 1, 0 };
-				ExceptionQueue->push(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
+				Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
 			}
 		}
 	}

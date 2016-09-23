@@ -158,12 +158,12 @@ bool MMUHandler::hasExceptionOccurred() const
 	return mHasExceptionOccurred;
 }
 
-EECoreException_t MMUHandler::getExceptionInfo()
+const EECoreException_t & MMUHandler::getExceptionInfo()
 {
 	mHasExceptionOccurred = false;
 
 	// Create TLB exception info.
-	TLBExceptionInfo_t tlbInfo =
+	mExceptionInfo.mTLBExceptionInfo =
 	{
 		mPS2VirtualAddress,
 		getVM()->getResources()->EE->EECore->COP0->Context->getFieldValue(COP0RegisterContext_t::Fields::PTEBase),
@@ -173,7 +173,7 @@ EECoreException_t MMUHandler::getExceptionInfo()
 	};
 
 	// Return the exception.
-	return EECoreException_t(mExType, &tlbInfo, nullptr, nullptr);
+	return mExceptionInfo;
 }
 
 u32 MMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
@@ -206,9 +206,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-				mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
 			else 
 				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = address error).");
 
@@ -228,9 +228,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-				mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
 			else 
 				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = address error).");
 
@@ -294,9 +294,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage2()
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
 		if (mAccessType == READ)
-			mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 		else if (mAccessType == WRITE)
-			mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
+			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
 		else
 			throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb refill).");
 		
@@ -315,9 +315,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage2()
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)
-				mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
 			else
 				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb refill).");
 
@@ -360,9 +360,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 		{
 			// Raise TLB invalid exception
 			if (mAccessType == READ)
-				mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
 			else
 				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
 
@@ -377,7 +377,7 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 			// Raise TLB modified exception if writing occurs.
 			if (mAccessType == WRITE)
 			{
-				mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
 				// Update state and return.
 				mHasExceptionOccurred = true;
 				return;
@@ -395,9 +395,9 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 		{
 			// Raise TLB invalid exception
 			if (mAccessType == READ)
-				mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
 			else
 				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
 
@@ -412,7 +412,7 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 			// Raise TLB modified exception if writing occurs.
 			if (mAccessType == WRITE)
 			{
-				mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
+				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
 				// Update state and return.
 				mHasExceptionOccurred = true;
 				return;

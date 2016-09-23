@@ -5,29 +5,26 @@
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 
-EECoreException_t::EECoreException_t(ExType type) 
-	: mExType(type)
+EECoreException_t::EECoreException_t() :
+	mExType(ExType::EX_RESET)
 {
-	mTLBExceptionInfo = nullptr;
-	mIntExceptionInfo = nullptr;
-	mCOPExceptionInfo = nullptr;
 }
 
-EECoreException_t::EECoreException_t(ExType type, TLBExceptionInfo_t* TLBExceptionInfo, IntExceptionInfo_t* IntExceptionInfo, COPExceptionInfo_t* COPExceptionInfo)
-	: mExType(type)
+EECoreException_t::EECoreException_t(const ExType & type) : 
+	mExType(type),
+	mTLBExceptionInfo(),
+	mIntExceptionInfo(),
+	mCOPExceptionInfo()
+{
+}
+
+EECoreException_t::EECoreException_t(const ExType & type, const TLBExceptionInfo_t * TLBExceptionInfo, const IntExceptionInfo_t * IntExceptionInfo, const COPExceptionInfo_t * COPExceptionInfo) :
+	mExType(type)
 {
 	if (TLBExceptionInfo != nullptr)
-		mTLBExceptionInfo = std::make_shared<TLBExceptionInfo_t>(*TLBExceptionInfo);
-	else
-		mTLBExceptionInfo = nullptr;
-
+		mTLBExceptionInfo = *TLBExceptionInfo;
 	if (IntExceptionInfo != nullptr)
-		mIntExceptionInfo = std::make_shared<IntExceptionInfo_t>(*IntExceptionInfo);
-	else
-		mIntExceptionInfo = nullptr;
-
+		mIntExceptionInfo = *IntExceptionInfo;
 	if (COPExceptionInfo != nullptr)
-		mCOPExceptionInfo = std::make_shared<COPExceptionInfo_t>(*COPExceptionInfo);
-	else
-		mCOPExceptionInfo = nullptr;
+		mCOPExceptionInfo = *COPExceptionInfo;
 }

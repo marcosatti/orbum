@@ -30,7 +30,7 @@ void InterpreterEECore::LB()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -51,7 +51,7 @@ void InterpreterEECore::LBU()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -72,7 +72,7 @@ void InterpreterEECore::LD()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -100,7 +100,7 @@ void InterpreterEECore::LDL()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 
@@ -134,7 +134,7 @@ void InterpreterEECore::LDR()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 
@@ -160,7 +160,7 @@ void InterpreterEECore::LH()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -181,7 +181,7 @@ void InterpreterEECore::LHU()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -211,7 +211,7 @@ void InterpreterEECore::LW()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -239,7 +239,7 @@ void InterpreterEECore::LWL()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 
@@ -272,7 +272,7 @@ void InterpreterEECore::LWR()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 
@@ -298,7 +298,7 @@ void InterpreterEECore::LWU()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -321,7 +321,7 @@ void InterpreterEECore::LQ()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return; // Return early, dont bother trying to load the second dword.
 	}
 	else 
@@ -332,7 +332,7 @@ void InterpreterEECore::LQ()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else
@@ -346,7 +346,7 @@ void InterpreterEECore::LWC1()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
 	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getIRt()]; // Ft
@@ -360,7 +360,7 @@ void InterpreterEECore::LWC1()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 	else

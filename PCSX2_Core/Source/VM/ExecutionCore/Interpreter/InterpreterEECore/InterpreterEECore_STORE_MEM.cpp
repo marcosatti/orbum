@@ -31,7 +31,7 @@ void InterpreterEECore::SB()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -50,7 +50,7 @@ void InterpreterEECore::SD()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -83,7 +83,7 @@ void InterpreterEECore::SDL()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -116,7 +116,7 @@ void InterpreterEECore::SDR()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -135,7 +135,7 @@ void InterpreterEECore::SH()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -154,7 +154,7 @@ void InterpreterEECore::SW()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -187,7 +187,7 @@ void InterpreterEECore::SWL()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -220,7 +220,7 @@ void InterpreterEECore::SWR()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -239,7 +239,7 @@ void InterpreterEECore::SQ()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return; // Return early, dont bother trying to write the second dword.
 	}
 
@@ -248,7 +248,7 @@ void InterpreterEECore::SQ()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }
@@ -260,7 +260,7 @@ void InterpreterEECore::SWC1()
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->ExceptionQueue->push(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
 	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getIRt()]; // Ft
@@ -274,7 +274,7 @@ void InterpreterEECore::SWC1()
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		Exceptions->ExceptionQueue->push(getMMUHandler()->getExceptionInfo());
+		Exceptions->setException(getMMUHandler()->getExceptionInfo());
 		return;
 	}
 }

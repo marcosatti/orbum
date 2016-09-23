@@ -54,11 +54,11 @@ public:
 	A call should be made to hasExceptionOccurred() whenever the MMU is accessed. If that returns true, get the resulting EECoreException_t through getExceptionInfo(),
 	 from which you can queue it from. When the call to getExceptionInfo() is made, it will reset the exception state.
 	NOTE 1: getExceptionInfo() may contain data left over from a previous translation, but the exception generated will always have valid data attached to it.
-	NOTE 2: On error, no writes or reads will occur - see the description in the functions above on what happens in this case.
+	NOTE 2: On error, no writes or reads will occur - see the description in the read/write functions above on what happens in this case.
 	TODO: Check for race condition between using the MMU and checking for error (could produce different error by the time it is called). Need a mutex?
 	*/
 	bool hasExceptionOccurred() const;
-	EECoreException_t getExceptionInfo();
+	const EECoreException_t & getExceptionInfo();
 
 private:
 	/*
@@ -66,7 +66,7 @@ private:
 	mHasExceptionOccured is set whenever an exception in the MMU occurs, with exception type of mExType.
 	*/
 	bool mHasExceptionOccurred;
-	EECoreException_t::ExType mExType;
+	EECoreException_t mExceptionInfo;
 
 	/*
 	Physical Address lookup state variables - used by the 4 stage functions below to perform a lookup.

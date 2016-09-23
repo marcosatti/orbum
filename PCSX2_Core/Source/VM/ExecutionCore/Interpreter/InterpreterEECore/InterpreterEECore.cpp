@@ -39,7 +39,7 @@ void InterpreterEECore::initalise()
 	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
 	// After this is done, call VMMMain::Run() to begin execution.
 
-	getExceptionHandler()->handleException(EECoreException_t(EECoreException_t::ExType::EX_RESET));
+	getExceptionHandler()->handleException(EECoreException_t(ExType::EX_RESET));
 }
 
 void InterpreterEECore::executionStep()
@@ -48,7 +48,7 @@ void InterpreterEECore::executionStep()
 	checkCountTimerEvent();
 
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	getExceptionHandler()->checkExceptionQueue();
+	getExceptionHandler()->checkExceptionState();
 		
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	checkBranchDelaySlot();
@@ -111,7 +111,7 @@ void InterpreterEECore::checkCountTimerEvent() const
 			&& EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM7))
 		{
 			IntExceptionInfo_t intEx = { 0, 0, 1 };
-			EECore->Exceptions->ExceptionQueue->push(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
+			EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
 		}
 	}
 }
@@ -151,7 +151,7 @@ void InterpreterEECore::executeInstruction()
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
-	// Also update the EE timers by raising a PS2CLK event.
+	// Also update the timing of components by raising a PS2CLK event.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
 	getVM()->getResources()->Clock->updateClocks(mInstructionInfo->mCycles);
 

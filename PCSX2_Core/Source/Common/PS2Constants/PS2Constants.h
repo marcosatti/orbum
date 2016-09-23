@@ -34,6 +34,10 @@ public:
 				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_DEBUG = 0x00000100;
 				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
 				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
+
+				// Exception prorities - see EE Core Users Manual page 93.
+				// 0 = Highest priority, ordered ascending.
+				// TODO: add in.
 			};
 
 			struct ScratchpadMemory
