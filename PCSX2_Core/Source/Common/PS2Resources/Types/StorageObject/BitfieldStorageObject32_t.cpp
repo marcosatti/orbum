@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "boost/container/flat_map.hpp"
+
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/Types/StorageObject/BitfieldStorageObject32_t.h"
@@ -17,7 +19,7 @@ BitfieldStorageObject32_t::~BitfieldStorageObject32_t()
 void BitfieldStorageObject32_t::registerField(const char* fieldName, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
 {
 	setBitRange32(fieldStartPosition, fieldLength, fieldInitialValue);
-	mFieldMap.insert({ fieldName,{ fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue } });
+	mFieldMap[fieldName] = { fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue };
 }
 
 u32 BitfieldStorageObject32_t::getFieldValue(const char* fieldName)

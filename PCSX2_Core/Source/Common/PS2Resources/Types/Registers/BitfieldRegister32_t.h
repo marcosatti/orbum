@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include "boost/container/flat_map.hpp"
 
 #include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
@@ -86,6 +86,6 @@ private:
 	/*
 	Map which stores all of the registered fields, along with their associated properties.
 	*/
-	std::unordered_map<const char *, BitfieldProperties_t> mFieldMap;
+	boost::container::flat_map<const char *, BitfieldProperties_t> mFieldMap;
 };
 
