@@ -14,7 +14,7 @@
 
 using ExType = EECoreException_t::ExType;
 
-INTCHandler::INTCHandler(const VMMain* const vmMain) : 
+INTCHandler::INTCHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain)
 {
 }

@@ -114,7 +114,7 @@ u32 StorageObject32_t::getBitRange32(u8 startPosition, u8 bitLength)
 	else maskTemp2 = (maskTemp2 << endPos);
 
 	u32 mask = (maskTemp1 ^ maskTemp2);
-	u32 value = (readWordU(0) & mask) >> startPosition;
+	u32 value = (StorageObject_t::readWordU(0) & mask) >> startPosition;
 	return value;
 }
 
@@ -131,7 +131,7 @@ void StorageObject32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
 
 	u32 mask = (maskTemp1 ^ maskTemp2);
 	u32 maskNot = (~mask);
-	writeWordU(0, (readWordU(0) & maskNot));
+	StorageObject_t::writeWordU(0, (StorageObject_t::readWordU(0) & maskNot));
 	value = ((value << startPosition) & mask);
-	writeWordU(0, (value | readWordU(0)));
+	StorageObject_t::writeWordU(0, (value | StorageObject_t::readWordU(0)));
 }

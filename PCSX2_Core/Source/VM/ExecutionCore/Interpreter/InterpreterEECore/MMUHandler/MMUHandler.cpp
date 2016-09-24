@@ -18,7 +18,7 @@
 
 using TLBEntryInfo = MMU_t::TLBEntryInfo;
 
-MMUHandler::MMUHandler(const VMMain *const vmMain) : 
+MMUHandler::MMUHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain),
 	mHasExceptionOccurred(false), 
 	mTLBEntryInfo(&MMU_t::EMPTY_TLB_ENTRY)

@@ -12,7 +12,7 @@
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/Clock/Clock_t.h"
 
-Interpreter::Interpreter(const VMMain* const vmMain) :
+Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mInterpreterEECore(std::make_unique<InterpreterEECore>(vmMain)),
 	mDMACHandler(std::make_unique<InterpreterDMAC>(vmMain)),

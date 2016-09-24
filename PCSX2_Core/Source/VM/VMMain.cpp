@@ -22,7 +22,7 @@
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) : 
 	mStatus(VMMain::VMStatus::CREATED),
 	mExecutionCoreType(executionCoreType),
-	mMMUComponent(std::make_shared<VMMMUHandler>(this)),
+	mMMUComponent(std::make_shared<VMMMUHandler>()),
 	mBootROMPath(bootROMPath)
 {
 	// Initialise everything.
@@ -72,6 +72,11 @@ VMMain::~VMMain()
 const VMMain::VMStatus& VMMain::getStatus() const
 {
 	return mStatus;
+}
+
+void VMMain::setStatus(const VMStatus& status)
+{
+	mStatus = status;
 }
 
 const std::shared_ptr<PS2Resources_t>& VMMain::getResources() const

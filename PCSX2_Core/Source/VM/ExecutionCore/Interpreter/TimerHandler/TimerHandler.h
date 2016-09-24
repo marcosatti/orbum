@@ -17,7 +17,7 @@ Therefore instead of providing one executionStep() function, 4 are supplied for 
 class TimerHandler : VMExecutionCoreComponent
 {
 public:
-	explicit TimerHandler(const VMMain* const vmMain);
+	explicit TimerHandler(VMMain * vmMain);
 	~TimerHandler();
 	
 	/*

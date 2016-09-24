@@ -14,7 +14,7 @@
 #include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
-ExceptionHandler::ExceptionHandler(const VMMain *const vmMain) : 
+ExceptionHandler::ExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
 	mPS2Exception(nullptr)
 {
@@ -100,7 +100,7 @@ void ExceptionHandler::handleException_L1(const ExceptionProperties_t & exceptio
 
 		// Select the vector to use (set vectorOffset).
 		if (exceptionProperties.mExceptionInfo == EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
-			|| exceptionProperties.mExceptionInfo == EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD)
+			|| exceptionProperties.mExceptionInfo == EECoreException_t::ExType::EX_TLB_REFILL_STORE)
 		{
 			vectorOffset = PS2Constants::EE::EECore::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 		}

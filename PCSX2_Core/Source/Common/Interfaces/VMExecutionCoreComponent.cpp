@@ -2,7 +2,7 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 
-VMExecutionCoreComponent::VMExecutionCoreComponent(const VMMain* const vmMain):
+VMExecutionCoreComponent::VMExecutionCoreComponent(VMMain * vmMain):
 	VMBaseComponent(vmMain)
 {
 }

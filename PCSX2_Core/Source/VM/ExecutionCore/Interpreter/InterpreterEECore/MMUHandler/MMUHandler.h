@@ -21,7 +21,7 @@ using TLBEntryInfo = MMU_t::TLBEntryInfo;
 class MMUHandler : public VMExecutionCoreComponent
 {
 public:
-	explicit MMUHandler(const VMMain *const vmMain);
+	explicit MMUHandler(VMMain * vmMain);
 
 	/*
 	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.

@@ -29,7 +29,7 @@ class TimerHandler;
 class Interpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit Interpreter(const VMMain *const vmMain);
+	explicit Interpreter(VMMain * vmMain);
 
 	void executionStep() override;
 

@@ -17,7 +17,7 @@ class VMMain;
 class ExceptionHandler : public VMExecutionCoreComponent
 {
 public:
-	explicit ExceptionHandler(const VMMain *const vmMain);
+	explicit ExceptionHandler(VMMain * vmMain);
 
 	/*
 	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set.

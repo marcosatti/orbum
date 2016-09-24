@@ -21,7 +21,7 @@
 using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
 using ExType = EECoreException_t::ExType;
 
-InterpreterEECore::InterpreterEECore(const VMMain* const vmMain) :
+InterpreterEECore::InterpreterEECore(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mExceptionHandler(std::make_unique<ExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<MMUHandler>(vmMain)),
@@ -143,7 +143,10 @@ void InterpreterEECore::executeInstruction()
 	
 	// Breakpoint.
 	if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
+	{
 		logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
+		getVM()->setStatus(VMMain::VMStatus::STOPPED);
+	}
 	}
 #endif
 

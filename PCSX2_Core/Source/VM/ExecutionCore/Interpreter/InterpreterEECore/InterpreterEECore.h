@@ -26,7 +26,7 @@ TODO: Finish documentation.
 class InterpreterEECore : public VMExecutionCoreComponent
 {
 public:
-	explicit InterpreterEECore(const VMMain *const vmMain);
+	explicit InterpreterEECore(VMMain * vmMain);
 	~InterpreterEECore();
 
 	/*

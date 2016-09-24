@@ -63,6 +63,7 @@ public:
 	VMMain state functions.
 	*/
 	const VMStatus& getStatus() const;
+	void setStatus(const VMStatus & status);
 	const std::shared_ptr<PS2Resources_t>& getResources() const;
 	const std::shared_ptr<VMMMUHandler>& getMMU() const;
 	

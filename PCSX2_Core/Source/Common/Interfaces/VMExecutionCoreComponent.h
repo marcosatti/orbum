@@ -13,7 +13,7 @@ class VMMain;
 class VMExecutionCoreComponent : public VMBaseComponent
 {
 public:
-	explicit VMExecutionCoreComponent(const VMMain*const vmMain);
+	explicit VMExecutionCoreComponent(VMMain * vmMain);
 
 	virtual ~VMExecutionCoreComponent();
 

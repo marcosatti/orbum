@@ -16,19 +16,18 @@ BitfieldStorageObject32_t::~BitfieldStorageObject32_t()
 
 void BitfieldStorageObject32_t::registerField(const char* fieldName, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
 {
+	setBitRange32(fieldStartPosition, fieldLength, fieldInitialValue);
 	mFieldMap.insert({ fieldName,{ fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue } });
-	BitfieldProperties_t & props = mFieldMap[fieldName];
-	setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
 }
 
 u32 BitfieldStorageObject32_t::getFieldValue(const char* fieldName)
 {
-	return mFieldMap[fieldName].mFieldValue;
+	return mFieldMap.at(fieldName).mFieldValue;
 }
 
 void BitfieldStorageObject32_t::setFieldValue(const char* fieldName, const u32& value)
 {
-	BitfieldProperties_t & props = mFieldMap[fieldName];
+	BitfieldProperties_t & props = mFieldMap.at(fieldName);
 	props.mFieldValue = value;
 	setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
 }

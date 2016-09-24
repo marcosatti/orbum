@@ -8,7 +8,7 @@
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
-TimerHandler::TimerHandler(const VMMain* const vmMain) :
+TimerHandler::TimerHandler(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain)
 {
 }

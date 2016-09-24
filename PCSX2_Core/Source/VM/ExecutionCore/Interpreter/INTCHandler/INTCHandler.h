@@ -5,7 +5,7 @@
 class INTCHandler : public VMExecutionCoreComponent
 {
 public:
-	explicit INTCHandler(const VMMain* const vmMain);
+	explicit INTCHandler(VMMain * vmMain);
 
 	/*
 	Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any

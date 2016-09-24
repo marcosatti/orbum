@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <ctime>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"

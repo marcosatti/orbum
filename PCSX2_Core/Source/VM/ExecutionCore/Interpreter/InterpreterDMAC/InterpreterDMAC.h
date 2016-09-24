@@ -14,7 +14,7 @@ The DMAC is synced to the BUSCLK clock source, and at most transfers 8 Qwords ev
 class InterpreterDMAC : VMExecutionCoreComponent
 {
 public:
-	explicit InterpreterDMAC(const VMMain* const vmMain);
+	explicit InterpreterDMAC(VMMain * vmMain);
 	~InterpreterDMAC();
 
 	void executionStep() override;

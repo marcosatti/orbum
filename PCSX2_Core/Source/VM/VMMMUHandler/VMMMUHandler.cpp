@@ -9,7 +9,7 @@
 #include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
 
-VMMMUHandler::VMMMUHandler(const VMMain* const vmMain) :
+VMMMUHandler::VMMMUHandler() :
 	DIRECTORY_ENTRIES(TABLE_MAX_ADDRESSABLE_SIZE_BYTES / DIRECTORY_SIZE_BYTES),
 	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
 	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),

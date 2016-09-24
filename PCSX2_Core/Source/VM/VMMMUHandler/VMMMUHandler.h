@@ -64,7 +64,7 @@ TODO: Reduce memory footprint from 256MB (see note above).
 class VMMMUHandler
 {
 public:
-	explicit VMMMUHandler(const VMMain *const vmMain);
+	explicit VMMMUHandler();
 	~VMMMUHandler();
 
 	/*
