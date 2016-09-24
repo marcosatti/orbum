@@ -4,3 +4,4 @@
 [submodule "modular-boost"]
 	path = modular-boost
 	url = git@github.com:boostorg/boost.git
+	ignore = dirty

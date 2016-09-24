@@ -54,7 +54,9 @@ The project uses the following libraries as git submodules:
 
 You will need to generate the symlinks used by PCSX2_Rewrite.
 After cloning the submodule, cd into modular-boost and run:
-1. `.\bootstrap'
-2. `.\b2 headers'
+~~~~
+1. .\bootstrap
+2. .\b2 headers
+~~~~
 
 Alternatively see https://svn.boost.org/trac/boost/wiki/TryModBoost#InstallingModularBoost for more instructions.
