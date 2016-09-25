@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Resources/Types/BusErrorStorageObject/BusErrorStorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/BusErrorStorageObject_t.h"
 
 BusErrorStorageObject_t::BusErrorStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress) :
 	StorageObject_t(0, mnemonic, PS2PhysicalAddress),

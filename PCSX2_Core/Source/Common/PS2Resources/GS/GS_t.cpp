@@ -4,8 +4,8 @@
 
 #include "Common/PS2Resources/GS/GS_t.h"
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
-#include "Common/PS2Resources/Types/DeadStorageObject/DeadStorageObject_t.h"
-#include "Common/PS2Resources/Types/BusErrorStorageObject/BusErrorStorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/DeadStorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/BusErrorStorageObject_t.h"
 
 GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),

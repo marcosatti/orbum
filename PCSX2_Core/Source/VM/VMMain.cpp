@@ -13,9 +13,8 @@
 #include "Common/PS2Resources/GS/GS_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 #include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
-#include "Common/PS2Resources/Types/DeadStorageObject/DeadStorageObject_t.h"
-#include "Common/PS2Resources/Types/BusErrorStorageObject/BusErrorStorageObject_t.h"
-#include "Common/PS2Resources/Types/XORStorageObject32/XORStorageObject32_t.h"
+#include "Common/PS2Resources/Types/StorageObject/DeadStorageObject_t.h"
+#include "Common/PS2Resources/Types/StorageObject/BusErrorStorageObject_t.h"
 #include "VM/VMMMUHandler/Types/ImageStorageObject_t.h"
 
 

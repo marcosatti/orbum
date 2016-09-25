@@ -20,7 +20,8 @@ public:
 	explicit ExceptionHandler(VMMain * vmMain);
 
 	/*
-	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set.
+	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set (and not masked).
+	TODO: add in exception masked checking.
 	*/
 	void checkExceptionState();
 

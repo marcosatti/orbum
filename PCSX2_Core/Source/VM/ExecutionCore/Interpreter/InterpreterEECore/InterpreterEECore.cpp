@@ -141,12 +141,12 @@ void InterpreterEECore::executeInstruction()
 			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
-	// Breakpoint.
-	if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
-	{
-		logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
-		getVM()->setStatus(VMMain::VMStatus::STOPPED);
-	}
+		// Breakpoint.
+		if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
+		{
+			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
+			getVM()->setStatus(VMMain::VMStatus::STOPPED);
+		}
 	}
 #endif
 

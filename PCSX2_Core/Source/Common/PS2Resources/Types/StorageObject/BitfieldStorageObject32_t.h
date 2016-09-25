@@ -45,7 +45,8 @@ public:
 	virtual void initaliseField(const char * fieldName);
 
 	/*
-	Override writeWord[U/S] to sync with the bitfield map.
+	Override writeWord[U/S] to sync with the bitfield map. WriteWordS calls the unsigned version.
+	WriteWordU() can be overriden by sub classes to provide pre processing on the value.
 	*/
 	void writeWordU(u32 storageIndex, u32 value) override;
 	void writeWordS(u32 storageIndex, s32 value) override;

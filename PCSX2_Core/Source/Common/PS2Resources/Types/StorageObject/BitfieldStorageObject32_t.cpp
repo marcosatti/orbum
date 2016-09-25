@@ -62,9 +62,5 @@ void BitfieldStorageObject32_t::writeWordU(u32 storageIndex, u32 value)
 
 void BitfieldStorageObject32_t::writeWordS(u32 storageIndex, s32 value)
 {
-	for (auto &field : mFieldMap)
-	{
-		BitfieldProperties_t & props = field.second;
-		props.mFieldValue = getBitRange32(props.mFieldStartPosition, props.mFieldLength);
-	}
+	writeWordU(storageIndex, static_cast<u32>(value));
 }
