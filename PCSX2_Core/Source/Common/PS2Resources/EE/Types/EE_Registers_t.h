@@ -48,7 +48,6 @@ public:
 	EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const std::shared_ptr<EERegisterTimerCount_t> & count);
 
 	void writeWordU(u32 storageIndex, u32 value) override;
-	void writeWordS(u32 storageIndex, s32 value) override;
 
 private:
 	/*
@@ -59,7 +58,7 @@ private:
 
 /*
 The Timer Count register type. See EE Users Manual page 37.
-Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens.
+Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens (an internal flag is set).
 Can also reset the counter.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
 */
@@ -69,7 +68,14 @@ public:
 	EERegisterTimerCount_t(const char * const mnemonic, const u32 & PS2PhysicalAddress);
 
 	void increment(u16 value);
+	bool isOverflowed();
 	void reset();
+	
+private:
+	/*
+	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
+	*/
+	bool mIsOverflowed;
 };
 
 /*
@@ -132,6 +138,7 @@ public:
 
 /*
 The DMAC D_CHCR register, aka channel control register.
+Needs a pointer to the associated EE->DMAC->PacketCountState[channelID], which is set to 0 upon the STR bitfield set to 1 (restart transfer).
 */
 class EERegisterDMACDChcr_t : public BitfieldStorageObject32_t
 {
@@ -147,7 +154,15 @@ public:
 		static constexpr char * TAG = "TAG";
 	};
 
-	EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, u32 * channelPacketCountState);
+
+	void writeWordU(u32 storageIndex, u32 value) override;
+
+private:
+	/*
+	A reference to the packet count state for the channel. Whenever the STR bit is set to 1, it will reset this counter.
+	*/
+	u32 * mChannelPacketCountState;
 };
 
 /*

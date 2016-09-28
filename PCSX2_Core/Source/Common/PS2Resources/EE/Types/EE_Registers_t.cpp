@@ -38,11 +38,6 @@ void EERegisterTimerMode_t::writeWordU(u32 storageIndex, u32 value)
 		mCount->reset();
 }
 
-void EERegisterTimerMode_t::writeWordS(u32 storageIndex, s32 value)
-{
-	writeWordU(storageIndex, static_cast<u32>(value));
-}
-
 EERegisterTimerCount_t::EERegisterTimerCount_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
 	StorageObject32_t(mnemonic, PS2PhysicalAddress)
 {
@@ -50,7 +45,23 @@ EERegisterTimerCount_t::EERegisterTimerCount_t(const char* const mnemonic, const
 
 void EERegisterTimerCount_t::increment(u16 value)
 {
-	writeWordU(0, readWordU(0) + value);
+	u32 temp = readWordU(0) + value;
+
+	if (temp > Constants::VALUE_U16_MAX)
+	{
+		// Set flag and wrap value around.
+		mIsOverflowed = true;
+		temp = temp % (Constants::VALUE_U16_MAX + 1);
+	}
+
+	writeWordU(0, temp);
+}
+
+bool EERegisterTimerCount_t::isOverflowed()
+{
+	bool temp = mIsOverflowed;
+	mIsOverflowed = false;
+	return temp;
 }
 
 void EERegisterTimerCount_t::reset()
@@ -98,7 +109,7 @@ EERegisterINTCIMask_t::EERegisterINTCIMask_t(const char* const mnemonic, const u
 	registerField(Fields::VU0WD, 14, 1, 0);
 }
 
-EERegisterDMACDChcr_t::EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+EERegisterDMACDChcr_t::EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, u32 * channelPacketCountState) :
 	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::DIR, 0, 1, 0);
@@ -108,6 +119,15 @@ EERegisterDMACDChcr_t::EERegisterDMACDChcr_t(const char* const mnemonic, const u
 	registerField(Fields::TIE, 7, 1, 0);
 	registerField(Fields::STR, 8, 1, 0);
 	registerField(Fields::TAG, 16, 16, 0);
+}
+
+void EERegisterDMACDChcr_t::writeWordU(u32 storageIndex, u32 value)
+{
+	// Check if the STR bit is 1. If so, reset the packet count.
+	if (value & 0x100 > 0)
+		(*mChannelPacketCountState) = 0;
+
+	BitfieldStorageObject32_t::writeWordU(storageIndex, value);
 }
 
 EERegisterDMACDMadr_t::EERegisterDMACDMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :

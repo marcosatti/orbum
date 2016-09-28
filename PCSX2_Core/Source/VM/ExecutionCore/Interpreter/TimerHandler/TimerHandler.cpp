@@ -117,7 +117,7 @@ void TimerHandler::checkTimerInterrupt(const u32& timerNumber) const
 	// Check for Overflow-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timerRegister.Mode->getFieldValue(EERegisterTimerMode_t::Fields::OVFE))
 	{
-		if (timerRegister.Count->readWordU(0) > Constants::VALUE_U16_MAX)
+		if (timerRegister.Count->isOverflowed())
 		{
 			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
 		}

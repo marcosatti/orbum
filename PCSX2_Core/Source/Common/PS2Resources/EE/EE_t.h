@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2Constants/PS2Constants.h"
 
 /*
 TODO: finish writing documentation.
@@ -91,7 +92,7 @@ public:
 		std::shared_ptr<EERegisterTimerMode_t>  Mode;
 		std::shared_ptr<StorageObject32_t>      Compare;
 		std::shared_ptr<StorageObject32_t>      Hold;
-	} TimerRegisters[4];
+	} TimerRegisters[PS2Constants::EE::NUMBER_TIMERS];
 
 	// 0x10002000
 	std::shared_ptr<StorageObject32_t>        EE_REGISTER_IPU_CMD;
@@ -251,7 +252,7 @@ public:
 	std::shared_ptr<EERegisterDMACDSadr_t>    EE_REGISTER_D9_SADR;
 	std::shared_ptr<DeadStorageObject_t>      EE_REGISTER_DMAC_d490;
 
-	// Array of DMAC channel objects, needed to perform iterations.
+	// Array of DMA channel objects, needed to perform iterations.
 	struct DMACChannelRegisters_t
 	{
 		std::shared_ptr<EERegisterDMACDChcr_t> CHCR;
@@ -261,7 +262,7 @@ public:
 		std::shared_ptr<EERegisterDMACDAsr_t>  ASR0;
 		std::shared_ptr<EERegisterDMACDAsr_t>  ASR1;
 		std::shared_ptr<EERegisterDMACDSadr_t> SADR;
-	} DMACChannelRegisters[10];
+	} DMAChannelRegisters[PS2Constants::EE::NUMBER_DMA_CHANNELS];
 
 	// 0x1000E000
 	std::shared_ptr<EERegisterDMACDCtrl_t>    EE_REGISTER_D_CTRL;

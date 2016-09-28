@@ -107,7 +107,15 @@ public:
 			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
 		};
 
-		static constexpr u32 NUMBER_TIMERS = 4;
+		struct Timers
+		{
+			static constexpr u32 NUMBER_TIMERS = 4;
+		};
+
+		struct DMAC
+		{
+			static constexpr u32 NUMBER_DMA_CHANNELS = 10;
+		};
 
 		// Ratios of PS2CLK (EE Core speed) divided by other clock source within EE. The PS2CLK runs at ~294 MHz.
 		// BUSCLK runs at ~147 MHz.

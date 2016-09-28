@@ -256,6 +256,7 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\RevBitfieldStorageObject32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\DeadStorageObject_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BusErrorStorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAPacket_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">

@@ -167,7 +167,7 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	EE_REGISTER_DMAC_d440(std::make_shared<DeadStorageObject_t>(0x40, "DMAC: DMAC_d440 (reserved)", 0x1000d440)),
 	EE_REGISTER_D9_SADR(std::make_shared<EERegisterDMACDSadr_t>("DMAC: D9_SADR", 0x1000d480)),
 	EE_REGISTER_DMAC_d490(std::make_shared<DeadStorageObject_t>(0xB70, "DMAC: DMAC_d490 (reserved)", 0x1000d490)),
-	DMACChannelRegisters{
+	DMAChannelRegisters{
 		{ EE_REGISTER_D0_CHCR, EE_REGISTER_D0_MADR, EE_REGISTER_D0_QWC, EE_REGISTER_D0_TADR, EE_REGISTER_D0_ASR0, EE_REGISTER_D0_ASR1, nullptr             },
 		{ EE_REGISTER_D1_CHCR, EE_REGISTER_D1_MADR, EE_REGISTER_D1_QWC, EE_REGISTER_D1_TADR, EE_REGISTER_D1_ASR0, EE_REGISTER_D1_ASR1, nullptr             },
 		{ EE_REGISTER_D2_CHCR, EE_REGISTER_D2_MADR, EE_REGISTER_D2_QWC, EE_REGISTER_D2_TADR, EE_REGISTER_D2_ASR0, EE_REGISTER_D2_ASR1, nullptr             },
