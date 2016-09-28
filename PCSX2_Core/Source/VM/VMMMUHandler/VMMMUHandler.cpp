@@ -6,8 +6,8 @@
 #include "Common/Global/Globals.h"
 #include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
-#include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "VM/VMMMUHandler/Types/VMMMUMappedMemory.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
 VMMMUHandler::VMMMUHandler() :
 	DIRECTORY_ENTRIES(TABLE_MAX_ADDRESSABLE_SIZE_BYTES / DIRECTORY_SIZE_BYTES),
@@ -20,7 +20,7 @@ VMMMUHandler::VMMMUHandler() :
 	PAGE_MASK(PAGE_ENTRIES - 1)
 {
 	// Allocate the page table (directories).
-	mPageTable = new std::shared_ptr<VMMMUMappedStorageObject>*[DIRECTORY_ENTRIES];
+	mPageTable = new std::shared_ptr<VMMMUMappedMemory>*[DIRECTORY_ENTRIES];
 
 	// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
 	// Sets all of the directory to nullptr's.
@@ -38,7 +38,7 @@ VMMMUHandler::~VMMMUHandler()
 	delete[] mPageTable;
 }
 
-void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress)
+void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedMemory> & clientStorage, const u32 & PS2MemoryAddress)
 {
 	// Do not do anything for getStorageSize equal to 0.
 	if (clientStorage->getStorageSize() == 0) return;
@@ -82,7 +82,7 @@ void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & c
 	}
 }
 
-void VMMMUHandler::mapMemory(const std::shared_ptr<StorageObject_t>& clientStorage)
+void VMMMUHandler::mapMemory(const std::shared_ptr<MappedMemory_t>& clientStorage)
 {
 	mapMemory(clientStorage, clientStorage->getPS2PhysicalAddress());
 }
@@ -121,25 +121,25 @@ void VMMMUHandler::allocDirectory(u32 directoryIndex) const
 {
 	// Allocate VDN only if empty and set to null initially.
 	if (mPageTable[directoryIndex] == nullptr) {
-		mPageTable[directoryIndex] = new std::shared_ptr<VMMMUMappedStorageObject>[PAGE_ENTRIES];
+		mPageTable[directoryIndex] = new std::shared_ptr<VMMMUMappedMemory>[PAGE_ENTRIES];
 		// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
 		memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
 	}
 }
 
-std::shared_ptr<VMMMUMappedStorageObject> & VMMMUHandler::getClientStorageObject(u32 baseVDN, u32 baseVPN) const
+std::shared_ptr<VMMMUMappedMemory> & VMMMUHandler::getClientMappedMemory(u32 baseVDN, u32 baseVPN) const
 {
 	// Lookup the page in the page table to get the client storage object (aka page frame number (PFN)).
 	// If the directory or client storage object comes back as nullptr (= 0), throw a runtime exception.
-	std::shared_ptr<VMMMUMappedStorageObject>* tableDirectory = mPageTable[baseVDN];
+	std::shared_ptr<VMMMUMappedMemory>* tableDirectory = mPageTable[baseVDN];
 	if (tableDirectory == nullptr)
 	{
 		char message[1000];
 		sprintf_s(message, "Not found: Given baseVDN returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", baseVDN, baseVPN);
 		throw std::runtime_error(message);
 	}
-	std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = tableDirectory[baseVPN];
-	if (clientStorageObject == nullptr)
+	std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = tableDirectory[baseVPN];
+	if (clientMappedMemory == nullptr)
 	{
 		char message[1000];
 		sprintf_s(message, "Not found: Given baseVPN returned a null PFN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", baseVDN, baseVPN);
@@ -147,7 +147,7 @@ std::shared_ptr<VMMMUMappedStorageObject> & VMMMUHandler::getClientStorageObject
 	}
 
 	// Return storage object.
-	return clientStorageObject;
+	return clientMappedMemory;
 }
 
 u8 VMMMUHandler::readByteU(u32 PS2PhysicalAddress) const
@@ -159,11 +159,11 @@ u8 VMMMUHandler::readByteU(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readByteU(storageIndex);
+	return clientMappedMemory->readByteU(storageIndex);
 }
 
 void VMMMUHandler::writeByteU(u32 PS2PhysicalAddress, u8 value) const
@@ -175,11 +175,11 @@ void VMMMUHandler::writeByteU(u32 PS2PhysicalAddress, u8 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeByteU(storageIndex, value);
+	clientMappedMemory->writeByteU(storageIndex, value);
 }
 
 s8 VMMMUHandler::readByteS(u32 PS2PhysicalAddress) const
@@ -191,11 +191,11 @@ s8 VMMMUHandler::readByteS(u32 PS2PhysicalAddress) const
 	u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object.
-	std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readByteS(storageIndex);
+	return clientMappedMemory->readByteS(storageIndex);
 }
 
 void VMMMUHandler::writeByteS(u32 PS2PhysicalAddress, s8 value) const
@@ -207,11 +207,11 @@ void VMMMUHandler::writeByteS(u32 PS2PhysicalAddress, s8 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeByteS(storageIndex, value);
+	clientMappedMemory->writeByteS(storageIndex, value);
 }
 
 u16 VMMMUHandler::readHwordU(u32 PS2PhysicalAddress) const
@@ -223,11 +223,11 @@ u16 VMMMUHandler::readHwordU(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readHwordU(storageIndex);
+	return clientMappedMemory->readHwordU(storageIndex);
 }
 
 void VMMMUHandler::writeHwordU(u32 PS2PhysicalAddress, u16 value) const
@@ -239,11 +239,11 @@ void VMMMUHandler::writeHwordU(u32 PS2PhysicalAddress, u16 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeHwordU(storageIndex, value);
+	clientMappedMemory->writeHwordU(storageIndex, value);
 }
 
 s16 VMMMUHandler::readHwordS(u32 PS2PhysicalAddress) const
@@ -255,11 +255,11 @@ s16 VMMMUHandler::readHwordS(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readHwordS(storageIndex);
+	return clientMappedMemory->readHwordS(storageIndex);
 }
 
 void VMMMUHandler::writeHwordS(u32 PS2PhysicalAddress, s16 value) const
@@ -271,11 +271,11 @@ void VMMMUHandler::writeHwordS(u32 PS2PhysicalAddress, s16 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeHwordS(storageIndex, value);
+	clientMappedMemory->writeHwordS(storageIndex, value);
 }
 
 u32 VMMMUHandler::readWordU(u32 PS2PhysicalAddress) const
@@ -287,11 +287,11 @@ u32 VMMMUHandler::readWordU(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readWordU(storageIndex);
+	return clientMappedMemory->readWordU(storageIndex);
 }
 
 void VMMMUHandler::writeWordU(u32 PS2PhysicalAddress, u32 value) const
@@ -303,11 +303,11 @@ void VMMMUHandler::writeWordU(u32 PS2PhysicalAddress, u32 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeWordU(storageIndex, value);
+	clientMappedMemory->writeWordU(storageIndex, value);
 }
 
 s32 VMMMUHandler::readWordS(u32 PS2PhysicalAddress) const
@@ -319,11 +319,11 @@ s32 VMMMUHandler::readWordS(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readWordS(storageIndex);
+	return clientMappedMemory->readWordS(storageIndex);
 }
 
 void VMMMUHandler::writeWordS(u32 PS2PhysicalAddress, s32 value) const
@@ -335,11 +335,11 @@ void VMMMUHandler::writeWordS(u32 PS2PhysicalAddress, s32 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeWordS(storageIndex, value);
+	clientMappedMemory->writeWordS(storageIndex, value);
 }
 
 u64 VMMMUHandler::readDwordU(u32 PS2PhysicalAddress) const
@@ -351,11 +351,11 @@ u64 VMMMUHandler::readDwordU(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readDwordU(storageIndex);
+	return clientMappedMemory->readDwordU(storageIndex);
 }
 
 void VMMMUHandler::writeDwordU(u32 PS2PhysicalAddress, u64 value) const
@@ -367,11 +367,11 @@ void VMMMUHandler::writeDwordU(u32 PS2PhysicalAddress, u64 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeDwordU(storageIndex, value);
+	clientMappedMemory->writeDwordU(storageIndex, value);
 }
 
 s64 VMMMUHandler::readDwordS(u32 PS2PhysicalAddress) const
@@ -383,11 +383,11 @@ s64 VMMMUHandler::readDwordS(u32 PS2PhysicalAddress) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
-	return clientStorageObject->readDwordS(storageIndex);
+	return clientMappedMemory->readDwordS(storageIndex);
 }
 
 void VMMMUHandler::writeDwordS(u32 PS2PhysicalAddress, s64 value) const
@@ -399,9 +399,9 @@ void VMMMUHandler::writeDwordS(u32 PS2PhysicalAddress, s64 value) const
 	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get client storage object and calculate the storage index to access.
-	const std::shared_ptr<VMMMUMappedStorageObject> & clientStorageObject = getClientStorageObject(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - clientStorageObject->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<VMMMUMappedMemory> & clientMappedMemory = getClientMappedMemory(baseVDN, baseVPN);
+	const u32 storageIndex = (absPageIndex - clientMappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
-	clientStorageObject->writeDwordS(storageIndex, value);
+	clientMappedMemory->writeDwordS(storageIndex, value);
 }

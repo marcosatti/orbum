@@ -44,7 +44,7 @@ void TimerHandler::updateTimers(const ClockSource_t & clockSource) const
 	const u8 * gateSources[] = { &GS->SIGNAL_HBLNK, &GS->SIGNAL_VBLNK };
 
 	// Update the timers which are set to count based on the type of event recieved.
-	for (auto i = 0; i < PS2Constants::EE::NUMBER_TIMERS; i++)
+	for (auto i = 0; i < PS2Constants::EE::Timers::NUMBER_TIMERS; i++)
 	{
 		// Do not count if not enabled.
 		if (!EE->TimerRegisters[i].Mode->getFieldValue(EERegisterTimerMode_t::Fields::CUE))
@@ -103,7 +103,7 @@ void TimerHandler::checkTimerInterrupt(const u32& timerNumber) const
 	auto& timerRegister = getVM()->getResources()->EE->TimerRegisters[timerNumber];
 
 	// Create a temp array of field keys needed for accessing the I_STAT register.
-	char * timerKeys[] = { EERegisterINTCIStat_t::Fields::TIM0, EERegisterINTCIStat_t::Fields::TIM1, EERegisterINTCIStat_t::Fields::TIM2, EERegisterINTCIStat_t::Fields::TIM3 };
+	char * timerKeys[] = { EERegisterIntcStat_t::Fields::TIM0, EERegisterIntcStat_t::Fields::TIM1, EERegisterIntcStat_t::Fields::TIM2, EERegisterIntcStat_t::Fields::TIM3 };
 
 	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timerRegister.Mode->getFieldValue(EERegisterTimerMode_t::Fields::CMPE))

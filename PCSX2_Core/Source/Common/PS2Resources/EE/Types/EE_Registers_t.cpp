@@ -5,14 +5,19 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
-#include "Common/PS2Resources/Types/StorageObject/BitfieldStorageObject32_t.h"
-#include "Common/PS2Resources/Types/StorageObject/ClrBitfieldStorageObject32_t.h"
-#include "Common/PS2Resources/Types/StorageObject/RevBitfieldStorageObject32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/ClrBitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/RevBitfieldMMemory32_t.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
+#include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 
-EERegisterTimerMode_t::EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const std::shared_ptr<EERegisterTimerCount_t> & count) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress),
-	mCount(count)
+EERegisterTimerMode_t::EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & timerID) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress),
+	PS2ResourcesSubobject(PS2Resources),
+	mTimerID(timerID)
 {
 	registerField(Fields::CLKS, 0, 2, 0);
 	registerField(Fields::GATE, 2, 1, 0);
@@ -28,18 +33,19 @@ EERegisterTimerMode_t::EERegisterTimerMode_t(const char *const mnemonic, const u
 
 void EERegisterTimerMode_t::writeWordU(u32 storageIndex, u32 value)
 {
-	// XOR bits 10 and 11 (0xC00) with the original value, remaining bits OR'd with the new value.
-	u32 originalValue = StorageObject32_t::readWordU(storageIndex);
-	u32 newValue = (value & 0xC00) ^ (originalValue & 0xC00) | (value & ~0xC00);
-	BitfieldStorageObject32_t::writeWordU(storageIndex, newValue);
+	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
+	u32 originalValue = MappedMemory32_t::readWordU(storageIndex);
+	u32 newValue = ((value & 0xC00) ^ (originalValue & 0xC00)) | (value & ~0xC00);
+	BitfieldMMemory32_t::writeWordU(storageIndex, newValue);
 
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (getFieldValue(Fields::CUE))
-		mCount->reset();
+	if (value & 0x80)
+		getRootResources()->EE->TimerRegisters[mTimerID].Count->reset();
 }
 
 EERegisterTimerCount_t::EERegisterTimerCount_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	StorageObject32_t(mnemonic, PS2PhysicalAddress)
+	MappedMemory32_t(mnemonic, PS2PhysicalAddress), 
+	mIsOverflowed(false)
 {
 }
 
@@ -49,9 +55,9 @@ void EERegisterTimerCount_t::increment(u16 value)
 
 	if (temp > Constants::VALUE_U16_MAX)
 	{
-		// Set flag and wrap value around.
+		// Set overflow flag and wrap value around.
 		mIsOverflowed = true;
-		temp = temp % (Constants::VALUE_U16_MAX + 1);
+		temp = temp % Constants::VALUE_U16_MAX;
 	}
 
 	writeWordU(0, temp);
@@ -69,8 +75,8 @@ void EERegisterTimerCount_t::reset()
 	writeWordU(0, 0);
 }
 
-EERegisterINTCIStat_t::EERegisterINTCIStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) : 
-	ClrBitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterIntcStat_t::EERegisterIntcStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) : 
+	ClrBitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::GS, 0, 1, 0);
 	registerField(Fields::SBUS, 1, 1, 0);
@@ -89,8 +95,8 @@ EERegisterINTCIStat_t::EERegisterINTCIStat_t(const char* const mnemonic, const u
 	registerField(Fields::VU0WD, 14, 1, 0);
 }
 
-EERegisterINTCIMask_t::EERegisterINTCIMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	RevBitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterIntcMask_t::EERegisterIntcMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	RevBitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::GS, 0, 1, 0);
 	registerField(Fields::SBUS, 1, 1, 0);
@@ -109,8 +115,10 @@ EERegisterINTCIMask_t::EERegisterINTCIMask_t(const char* const mnemonic, const u
 	registerField(Fields::VU0WD, 14, 1, 0);
 }
 
-EERegisterDMACDChcr_t::EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, u32 * channelPacketCountState) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacChcr_t::EERegisterDmacChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & channelID) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress),
+	PS2ResourcesSubobject(PS2Resources),
+	mChannelID(channelID)
 {
 	registerField(Fields::DIR, 0, 1, 0);
 	registerField(Fields::MOD, 2, 2, 0);
@@ -121,50 +129,50 @@ EERegisterDMACDChcr_t::EERegisterDMACDChcr_t(const char* const mnemonic, const u
 	registerField(Fields::TAG, 16, 16, 0);
 }
 
-void EERegisterDMACDChcr_t::writeWordU(u32 storageIndex, u32 value)
+void EERegisterDmacChcr_t::writeWordU(u32 storageIndex, u32 value)
 {
 	// Check if the STR bit is 1. If so, reset the packet count.
-	if (value & 0x100 > 0)
-		(*mChannelPacketCountState) = 0;
+	if (value & 0x100)
+		getRootResources()->EE->DMAC->PacketCountState[mChannelID] = 0;
 
-	BitfieldStorageObject32_t::writeWordU(storageIndex, value);
+	BitfieldMMemory32_t::writeWordU(storageIndex, value);
 }
 
-EERegisterDMACDMadr_t::EERegisterDMACDMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacMadr_t::EERegisterDmacMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 31, 0);
 	registerField(Fields::SPR, 31, 1, 0);
 }
 
-EERegisterDMACDTadr_t::EERegisterDMACDTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacTadr_t::EERegisterDmacTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 31, 0);
 	registerField(Fields::SPR, 31, 1, 0);
 }
 
-EERegisterDMACDAsr_t::EERegisterDMACDAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacAsr_t::EERegisterDmacAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 31, 0);
 	registerField(Fields::SPR, 31, 1, 0);
 }
 
-EERegisterDMACDSadr_t::EERegisterDMACDSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacSadr_t::EERegisterDmacSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 14, 0);
 }
 
-EERegisterDMACDQwc_t::EERegisterDMACDQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacQwc_t::EERegisterDmacQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::QWC, 0, 16, 0);
 }
 
-EERegisterDMACDCtrl_t::EERegisterDMACDCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacCtrl_t::EERegisterDmacCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::DMAE, 0, 1, 0);
 	registerField(Fields::RELE, 1, 1, 0);
@@ -174,8 +182,8 @@ EERegisterDMACDCtrl_t::EERegisterDMACDCtrl_t(const char* const mnemonic, const u
 	registerField(Fields::RCYC, 8, 3, 0);
 }
 
-EERegisterDMACDStat_t::EERegisterDMACDStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacStat_t::EERegisterDmacStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::CIS0, 0, 1, 0);
 	registerField(Fields::CIS1, 1, 1, 0);
@@ -204,7 +212,7 @@ EERegisterDMACDStat_t::EERegisterDMACDStat_t(const char* const mnemonic, const u
 	registerField(Fields::MEIM, 30, 1, 0);
 }
 
-void EERegisterDMACDStat_t::writeWordU(u32 storageIndex, u32 value)
+void EERegisterDmacStat_t::writeWordU(u32 storageIndex, u32 value)
 {
 	// For bits 0-15, they are cleared when 1 is written. For bits 16-31, they are reversed when 1 is written.
 	u32 clrBits = readWordU(storageIndex) & 0xFFFF;
@@ -212,12 +220,12 @@ void EERegisterDMACDStat_t::writeWordU(u32 storageIndex, u32 value)
 	u32 revBits = readWordU(storageIndex) & 0xFFFF0000;
 	u32 revBitsValue = value & 0xFFFF0000;
 
-	BitfieldStorageObject32_t::writeWordU(storageIndex, clrBits & (~clrBitsValue));
-	BitfieldStorageObject32_t::writeWordU(storageIndex, revBits ^ revBitsValue);
+	BitfieldMMemory32_t::writeWordU(storageIndex, clrBits & (~clrBitsValue));
+	BitfieldMMemory32_t::writeWordU(storageIndex, revBits ^ revBitsValue);
 }
 
-EERegisterDMACDPcr_t::EERegisterDMACDPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacPcr_t::EERegisterDmacPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::CPC0, 0, 1, 0);
 	registerField(Fields::CPC1, 1, 1, 0);
@@ -242,45 +250,45 @@ EERegisterDMACDPcr_t::EERegisterDMACDPcr_t(const char* const mnemonic, const u32
 	registerField(Fields::PCE, 31, 1, 0);
 }
 
-EERegisterDMACDSqwc_t::EERegisterDMACDSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacSqwc_t::EERegisterDmacSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::SQWC, 0, 8, 0);
 	registerField(Fields::TQWC, 16, 8, 0);
 }
 
-EERegisterDMACDRbor_t::EERegisterDMACDRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacRbor_t::EERegisterDmacRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 31, 0);
 }
 
-EERegisterDMACDRbsr_t::EERegisterDMACDRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacRbsr_t::EERegisterDmacRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::RMSK, 4, 27, 0);
 }
 
-EERegisterDMACDStadr_t::EERegisterDMACDStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacStadr_t::EERegisterDmacStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::ADDR, 0, 31, 0);
 }
 
-EERegisterDMACDEnablew_t::EERegisterDMACDEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacEnablew_t::EERegisterDmacEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::CPND, 16, 1, 0);
 }
 
-EERegisterDMACDEnabler_t::EERegisterDMACDEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldStorageObject32_t(mnemonic, PS2PhysicalAddress)
+EERegisterDmacEnabler_t::EERegisterDmacEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
+	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::CPND, 16, 1, 0);
 }
 
 EERegisterSIO_t::EERegisterSIO_t() :
-	StorageObject_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO", PADDRESS_EE_REGISTER_SIO)
+	MappedMemory_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO", PADDRESS_EE_REGISTER_SIO)
 {
 }
 
@@ -310,7 +318,7 @@ void EERegisterSIO_t::writeByteU(u32 storageIndex, u8 value)
 	}
 	default:
 	{
-		StorageObject_t::writeByteU(storageIndex, value);
+		MappedMemory_t::writeByteU(storageIndex, value);
 		break;
 	}
 	}
@@ -332,7 +340,7 @@ u32 EERegisterSIO_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return StorageObject_t::readWordU(storageIndex);
+		return MappedMemory_t::readWordU(storageIndex);
 	}
 	}
 }
@@ -350,7 +358,7 @@ void EERegisterSIO_t::writeWordU(u32 storageIndex, u32 value)
 	}
 	default:
 	{
-		StorageObject_t::writeWordU(storageIndex, value);
+		MappedMemory_t::writeWordU(storageIndex, value);
 		break;
 	}
 	}
@@ -367,7 +375,7 @@ void EERegisterSIO_t::writeWordS(u32 storageIndex, s32 value)
 }
 
 EERegisterMCH_t::EERegisterMCH_t() :
-	StorageObject_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH", PADDRESS_EE_REGISTER_MCH)
+	MappedMemory_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH", PADDRESS_EE_REGISTER_MCH)
 {
 }
 
@@ -378,9 +386,9 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 	case OFFSET_MCH_DRD:
 	{
 		// Below logic is from the old PCSX2.
-		if (!((StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 6) & 0xF))
+		if (!((MappedMemory_t::readWordU(OFFSET_MCH_RICM) >> 6) & 0xF))
 		{
-			switch ((StorageObject_t::readWordU(OFFSET_MCH_RICM) >> 16) & 0xFFF)
+			switch ((MappedMemory_t::readWordU(OFFSET_MCH_RICM) >> 16) & 0xFFF)
 			{
 				// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 			case 0x21: //INIT
@@ -399,7 +407,7 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 				return 0x0090;	// SVER=0 | CORG=4(5x9x6) | SPT=1 | DEVTYP=0 | BYTE=0
 
 			case 0x40: // DEVID
-				return StorageObject_t::readWordU(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
+				return MappedMemory_t::readWordU(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
 			}
 		}
 	}
@@ -409,7 +417,7 @@ u32 EERegisterMCH_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return StorageObject_t::readWordU(storageIndex);
+		return MappedMemory_t::readWordU(storageIndex);
 	}
 	}
 }
@@ -423,16 +431,16 @@ void EERegisterMCH_t::writeWordU(u32 storageIndex, u32 value)
 		// Below logic is from the old PCSX2.
 		// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 
-		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((StorageObject_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
+		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((MappedMemory_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
 			rdram_sdevid = 0;	// If SIO repeater is cleared, reset sdevid
 
-		StorageObject_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
+		MappedMemory_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
 
 		break;
 	}
 	default:
 	{
-		StorageObject_t::writeWordU(storageIndex, value);
+		MappedMemory_t::writeWordU(storageIndex, value);
 		break;
 	}
 	}

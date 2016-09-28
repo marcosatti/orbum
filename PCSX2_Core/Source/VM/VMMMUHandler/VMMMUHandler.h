@@ -5,8 +5,8 @@
 #include "Common/Global/Globals.h"
 
 class VMMain;
-class VMMMUMappedStorageObject;
-class StorageObject_t;
+class VMMMUMappedMemory;
+class MappedMemory_t;
 
 /*
 The VM MMU component is responsible for converting the PS2's physical addresses into client storage objects (which is required to properly run a program on the client system).
@@ -74,11 +74,11 @@ public:
 
 	Note that this function simply remaps the memory in a linear fashion, meaning that for example, a PS2 physical address of 0x00000400 - 0x00000600 will map directly to (example mapping) 0x1234A000 - 0x1234A200
 
-	clientStorage = An object which implements the VMMMUMappedStorageObject interface.
+	clientStorage = An object which implements the VMMMUMappedMappedMemory interface.
 	PS2PhysicalAddress = The PS2 "physical" address which will be mapped.
 	*/
-	void mapMemory(const std::shared_ptr<VMMMUMappedStorageObject> & clientStorage, const u32 & PS2MemoryAddress);
-	void mapMemory(const std::shared_ptr<StorageObject_t> & clientStorage);
+	void mapMemory(const std::shared_ptr<VMMMUMappedMemory> & clientStorage, const u32 & PS2MemoryAddress);
+	void mapMemory(const std::shared_ptr<MappedMemory_t> & clientStorage);
 
 	/*
 	These functions, given a PS2 "physical" address, will read or write a value from/to the address.
@@ -131,12 +131,12 @@ private:
 	The individual pages are only allocated on access, thereby saving memory.
 	(A pointer to an array of directories, each directory pointing to an array of pages, each page pointing to some memory.)
 	*/
-	std::shared_ptr<VMMMUMappedStorageObject>** mPageTable;
+	std::shared_ptr<VMMMUMappedMemory>** mPageTable;
 
 	/*
 	Translates the given PS2 physical address to the stored client object by using the page table. The returned object can then be used to read or write to an address.
 	*/
-	std::shared_ptr<VMMMUMappedStorageObject> & getClientStorageObject(u32 baseVDN, u32 baseVPN) const;
+	std::shared_ptr<VMMMUMappedMemory> & getClientMappedMemory(u32 baseVDN, u32 baseVPN) const;
 
 	/*
 	Helper functions for mapMemory & others to 

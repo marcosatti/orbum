@@ -12,10 +12,10 @@
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/GS/GS_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
-#include "Common/PS2Resources/Types/StorageObject/DeadStorageObject_t.h"
-#include "Common/PS2Resources/Types/StorageObject/BusErrorStorageObject_t.h"
-#include "VM/VMMMUHandler/Types/ImageStorageObject_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/DeadMMemory_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/BusErrorMMemory_t.h"
+#include "VM/VMMMUHandler/Types/ImageMappedMemory_t.h"
 
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) : 
@@ -198,20 +198,20 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_FIFO);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x10004000", 0x10004010, 0x10, 0xFF0, 0x10004000, getMMU()) // Image of 0x10004000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x10004000", 0x10004010, 0x10, 0xFF0, 0x10004000, getMMU()) // Image of 0x10004000.
 		);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_FIFO);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x10005000", 0x10005010, 0x10, 0xFF0, 0x10005000, getMMU()) // Image of 0x10005000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x10005000", 0x10005010, 0x10, 0xFF0, 0x10005000, getMMU()) // Image of 0x10005000.
 		);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_FIFO);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x10006000", 0x10006010, 0x10, 0xFF0, 0x10006000, getMMU()) // Image of 0x10006000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x10006000", 0x10006010, 0x10, 0xFF0, 0x10006000, getMMU()) // Image of 0x10006000.
 		);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_out_FIFO);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_in_FIFO);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x10007000", 0x10007020, 0x20, 0xFE0, 0x10007000, getMMU()) // Image of 0x10007000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x10007000", 0x10007020, 0x20, 0xFE0, 0x10007000, getMMU()) // Image of 0x10007000.
 		);
 
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_CHCR);
@@ -311,11 +311,11 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 
 		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU0Micro0);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x11000000", 0x11001000, 0x1000, 0x3000, 0x11000000, getMMU()) // Image of 0x11000000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x11000000", 0x11001000, 0x1000, 0x3000, 0x11000000, getMMU()) // Image of 0x11000000.
 		);
 		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU0Mem0);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x11004000", 0x11005000, 0x1000, 0x3000, 0x11004000, getMMU()) // Image of 0x11004000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x11004000", 0x11005000, 0x1000, 0x3000, 0x11004000, getMMU()) // Image of 0x11004000.
 		);
 		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU1Micro1);
 		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU1Mem1);
@@ -341,10 +341,10 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_BGCOLOR);
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPE_00f0);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x12000000", 0x12000400, 0x400, 0x400, 0x12000000, getMMU()) // Image of 0x12000000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x12000000", 0x12000400, 0x400, 0x400, 0x12000000, getMMU()) // Image of 0x12000000.
 		);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x12000000", 0x12000800, 0x800, 0x800, 0x12000000, getMMU()) // Image of 0x12000000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x12000000", 0x12000800, 0x800, 0x800, 0x12000000, getMMU()) // Image of 0x12000000.
 		);
 
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_CSR);
@@ -356,10 +356,10 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPE_1090);
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPE_1100);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x12001000", 0x12001400, 0x400, 0x400, 0x12001000, getMMU()) // Image of 0x12001000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x12001000", 0x12001400, 0x400, 0x400, 0x12001000, getMMU()) // Image of 0x12001000.
 		);
 		getMMU()->mapMemory(
-			std::make_shared<ImageStorageObject_t>("Image: 0x12001000", 0x12001800, 0x800, 0x800, 0x12001000, getMMU()) // Image of 0x12001000.
+			std::make_shared<ImageMappedMemory_t>("Image: 0x12001000", 0x12001800, 0x800, 0x800, 0x12001000, getMMU()) // Image of 0x12001000.
 		);
 
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPE_2000);

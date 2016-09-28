@@ -4,11 +4,12 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
-#include "Common/PS2Resources/Types/StorageObject/StorageObject32_t.h"
-#include "Common/PS2Resources/Types/StorageObject/BitfieldStorageObject32_t.h"
-#include "Common/PS2Resources/Types/StorageObject/ClrBitfieldStorageObject32_t.h"
-#include "Common/PS2Resources/Types/StorageObject/RevBitfieldStorageObject32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/ClrBitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/RevBitfieldMMemory32_t.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 class EERegisterTimerCount_t;
 
@@ -28,7 +29,7 @@ Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, beha
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
 */
-class EERegisterTimerMode_t : public BitfieldStorageObject32_t
+class EERegisterTimerMode_t : public BitfieldMMemory32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -45,15 +46,15 @@ public:
 		static constexpr char * OVFF = "OVFF";
 	};
 
-	EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const std::shared_ptr<EERegisterTimerCount_t> & count);
+	EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & timerID);
 
 	void writeWordU(u32 storageIndex, u32 value) override;
 
 private:
 	/*
-	The associated Count register that belongs to this timer.
+	The timer ID that this object belongs to.
 	*/
-	std::shared_ptr<EERegisterTimerCount_t> mCount;
+	const u32 mTimerID;
 };
 
 /*
@@ -62,7 +63,7 @@ Provides the increment function, which also wraps the u32 value around once over
 Can also reset the counter.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
 */
-class EERegisterTimerCount_t : public StorageObject32_t
+class EERegisterTimerCount_t : public MappedMemory32_t
 {
 public:
 	EERegisterTimerCount_t(const char * const mnemonic, const u32 & PS2PhysicalAddress);
@@ -82,7 +83,7 @@ private:
 The INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 Bits are cleared by writing 1.
 */
-class EERegisterINTCIStat_t : public ClrBitfieldStorageObject32_t
+class EERegisterIntcStat_t : public ClrBitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -104,14 +105,14 @@ public:
 		static constexpr char * VU0WD = "VU0WD";
 	};
 
-	EERegisterINTCIStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterIntcStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
 Bits are reversed by writing 1.
 */
-class EERegisterINTCIMask_t : public RevBitfieldStorageObject32_t
+class EERegisterIntcMask_t : public RevBitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -133,14 +134,14 @@ public:
 		static constexpr char * VU0WD = "VU0WD";
 	};
 
-	EERegisterINTCIMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterIntcMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_CHCR register, aka channel control register.
-Needs a pointer to the associated EE->DMAC->PacketCountState[channelID], which is set to 0 upon the STR bitfield set to 1 (restart transfer).
+Needs an channel index, which is used to reset the packed transferred count state when a 1 is written to the STR bit.
 */
-class EERegisterDMACDChcr_t : public BitfieldStorageObject32_t
+class EERegisterDmacChcr_t : public BitfieldMMemory32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -154,21 +155,21 @@ public:
 		static constexpr char * TAG = "TAG";
 	};
 
-	EERegisterDMACDChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, u32 * channelPacketCountState);
+	EERegisterDmacChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & channelID);
 
 	void writeWordU(u32 storageIndex, u32 value) override;
 
 private:
 	/*
-	A reference to the packet count state for the channel. Whenever the STR bit is set to 1, it will reset this counter.
+	The DMAC channel ID this object belongs to.
 	*/
-	u32 * mChannelPacketCountState;
+	const u32 mChannelID;
 };
 
 /*
 The DMAC D_MADR register, aka transfer address register.
 */
-class EERegisterDMACDMadr_t : public BitfieldStorageObject32_t
+class EERegisterDmacMadr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -177,13 +178,13 @@ public:
 		static constexpr char * SPR = "SPR";
 	};
 
-	EERegisterDMACDMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_TADR register, aka tag address register.
 */
-class EERegisterDMACDTadr_t : public BitfieldStorageObject32_t
+class EERegisterDmacTadr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -192,13 +193,13 @@ public:
 		static constexpr char * SPR = "SPR";
 	};
 
-	EERegisterDMACDTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_ASR0/1 register, aka tag address save register.
 */
-class EERegisterDMACDAsr_t : public BitfieldStorageObject32_t
+class EERegisterDmacAsr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -207,13 +208,13 @@ public:
 		static constexpr char * SPR = "SPR";
 	};
 
-	EERegisterDMACDAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_SADR register, aka SPR (scratchpad ram) transfer address register.
 */
-class EERegisterDMACDSadr_t : public BitfieldStorageObject32_t
+class EERegisterDmacSadr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -221,13 +222,13 @@ public:
 		static constexpr char * ADDR = "ADDR";
 	};
 
-	EERegisterDMACDSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_QWC register, aka SPR (scratchpad ram) transfer address register.
 */
-class EERegisterDMACDQwc_t : public BitfieldStorageObject32_t
+class EERegisterDmacQwc_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -235,14 +236,14 @@ public:
 		static constexpr char * QWC = "QWC";
 	};
 
-	EERegisterDMACDQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_CTRL register, which contains various settings needed for the DMAC.
 TODO: Need to implement cycle stealing? Wouldnt think so as it doesnt make sense in an emulator...
 */
-class EERegisterDMACDCtrl_t : public BitfieldStorageObject32_t
+class EERegisterDmacCtrl_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -255,7 +256,7 @@ public:
 		static constexpr char * RCYC = "RCYC";
 	};
 
-	EERegisterDMACDCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
@@ -265,7 +266,7 @@ The writeWordU() function is overriden:
 When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
 When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
 */
-class EERegisterDMACDStat_t : public BitfieldStorageObject32_t
+class EERegisterDmacStat_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -297,7 +298,7 @@ public:
 		static constexpr char * MEIM = "MEIM";
 	};
 
-	EERegisterDMACDStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 
 	void writeWordU(u32 storageIndex, u32 value) override;
 };
@@ -305,7 +306,7 @@ public:
 /*
 The DMAC D_PCR register, aka priority control register.
 */
-class EERegisterDMACDPcr_t : public BitfieldStorageObject32_t
+class EERegisterDmacPcr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -333,13 +334,13 @@ public:
 		static constexpr char * PCE = "PCE";
 	};
 
-	EERegisterDMACDPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_SQWC register, aka interleave size register.
 */
-class EERegisterDMACDSqwc_t : public BitfieldStorageObject32_t
+class EERegisterDmacSqwc_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -348,13 +349,13 @@ public:
 		static constexpr char * TQWC = "TQWC";
 	};
 
-	EERegisterDMACDSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_RBOR register, aka ring buffer address register.
 */
-class EERegisterDMACDRbor_t : public BitfieldStorageObject32_t
+class EERegisterDmacRbor_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -362,13 +363,13 @@ public:
 		static constexpr char * ADDR = "ADDR";
 	};
 
-	EERegisterDMACDRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_RBSR register, aka ring buffer address register.
 */
-class EERegisterDMACDRbsr_t : public BitfieldStorageObject32_t
+class EERegisterDmacRbsr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -376,13 +377,13 @@ public:
 		static constexpr char * RMSK = "RMSK";
 	};
 
-	EERegisterDMACDRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_STADR register, aka ring buffer address register.
 */
-class EERegisterDMACDStadr_t : public BitfieldStorageObject32_t
+class EERegisterDmacStadr_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -390,13 +391,13 @@ public:
 		static constexpr char * ADDR = "ADDR";
 	};
 
-	EERegisterDMACDStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_ENABLEW register, aka DMA hold control register.
 */
-class EERegisterDMACDEnablew_t : public BitfieldStorageObject32_t
+class EERegisterDmacEnablew_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -404,13 +405,13 @@ public:
 		static constexpr char * CPND = "CPND";
 	};
 
-	EERegisterDMACDEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
 The DMAC D_ENABLEW register, aka DMA hold control register.
 */
-class EERegisterDMACDEnabler_t : public BitfieldStorageObject32_t
+class EERegisterDmacEnabler_t : public BitfieldMMemory32_t
 {
 public:
 	struct Fields
@@ -418,7 +419,7 @@ public:
 		static constexpr char * CPND = "CPND";
 	};
 
-	EERegisterDMACDEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	EERegisterDmacEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
 };
 
 /*
@@ -427,7 +428,7 @@ Some useful information can be found in the old PCSX2 under Hw.h (register names
 In a real PS2, you can communicate with the EE over this serial port.
 Allocated at base PS2 physical memory address 0x1000F100.
 */
-class EERegisterSIO_t : public StorageObject_t
+class EERegisterSIO_t : public MappedMemory_t
 {
 public:
 	EERegisterSIO_t();
@@ -457,7 +458,7 @@ The MCH register class. No information available except for old PCSX2's code. No
 It requires some special functionality (see below).
 Allocated at base PS2 physical memory address 0x1000F430 (from MCH_RICM).
 */
-class EERegisterMCH_t : public StorageObject_t
+class EERegisterMCH_t : public MappedMemory_t
 {
 public:
 	EERegisterMCH_t();

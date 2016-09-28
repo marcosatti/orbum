@@ -2,12 +2,12 @@
 #include <gtest/gtest.h>
 
 #include <VM/VMMMUHandler/VMMMUHandler.h>
-#include <Common/PS2Resources/Types/StorageObject/StorageObject_t.h>
+#include <Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h>
 
 TEST(MMUHandler_Test, ReadAndWrite) {
 	VMMMUHandler a;
 	u32 PS2MemoryAddress = 0x00017FC4;
-	std::shared_ptr<StorageObject_t> mem = std::make_shared<StorageObject_t>(128, "", 0x0);
+	std::shared_ptr<MappedMemory_t> mem = std::make_shared<MappedMemory_t>(128, "", 0x0);
 	a.mapMemory(mem, PS2MemoryAddress);
 
 	// 8-bit test.

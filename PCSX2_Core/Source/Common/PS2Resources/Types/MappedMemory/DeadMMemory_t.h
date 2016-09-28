@@ -2,19 +2,19 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
 /*
 A 'dead' storage object, where reads return 0 and writes do nothing.
 Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
 The size parameter in the constructor is used only for VM MMU mapping purposes.
-The parsed size is not allocated (always set to 0 in the underlying StorageObject_t).
+The parsed size is not allocated (always set to 0 in the underlying MappedMemory_t).
 */
-class DeadStorageObject_t : public StorageObject_t
+class DeadMMemory_t : public MappedMemory_t
 {
 public:
-	DeadStorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
-	~DeadStorageObject_t();
+	DeadMMemory_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
+	~DeadMMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -34,7 +34,7 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Needed by the VM MMU handler in order to map it. Instead of the normal StorageObject_t::getStorageSize(), return the size set
+	Needed by the VM MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the size set
 	when the object is created.
 	*/
 	size_t getStorageSize() override;

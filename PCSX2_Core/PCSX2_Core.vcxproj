@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Optimised_More|Win32">
+      <Configuration>Debug_Optimised_More</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Optimised_More|x64">
+      <Configuration>Debug_Optimised_More</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_Optimised|Win32">
       <Configuration>Debug_Optimised</Configuration>
       <Platform>Win32</Platform>
@@ -47,6 +55,13 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -61,6 +76,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
@@ -85,6 +107,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,6 +117,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -106,11 +134,19 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\Source;$(SolutionDir)\modular-boost;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\Source;$(SolutionDir)\modular-boost;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\Source;$(SolutionDir)\modular-boost;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\Source;$(SolutionDir)\modular-boost;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\Source;$(SolutionDir)\modular-boost;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
@@ -158,6 +194,29 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -180,6 +239,29 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -189,6 +271,11 @@
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <MinimalRebuild>false</MinimalRebuild>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -220,7 +307,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -230,26 +323,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAPacket_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Clock\Clock_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\RevBitfieldStorageObject32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\ClrBitfieldStorageObject32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\ClockSource_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.h" />
     <ClInclude Include="Source\Common\Global\GlobalOptions.h" />
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.h" />
+    <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\GS\GS_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BusErrorStorageObject_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\DeadStorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.h" />
     <ClInclude Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.h" />
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.h" />
+    <ClInclude Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\Exceptions\Exceptions_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\MMU\MMU_t.h" />
     <ClInclude Include="Source\Common\Interfaces\PS2ResourcesSubobject.h" />
@@ -290,34 +384,35 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\R5900\Types\ZeroRegister128_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\TimerHandler\TimerHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\RevBitfieldStorageObject32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\ClrBitfieldStorageObject32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.cpp" />
+    <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\GS\GS_t.cpp" />
     <ClCompile Include="Source\Common\Interfaces\PS2ResourcesSubobject.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMBaseComponent.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCoreComponent.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.cpp" />
+    <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECore_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\Exceptions\Exceptions_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EE_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\PS2Resources_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BusErrorStorageObject_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\DeadStorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\Exceptions\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\EECoreMMUUtil\EECoreMMUUtil.cpp" />
@@ -364,14 +459,16 @@
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler\MMUHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\R5900\Types\ZeroRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\TimerHandler\TimerHandler.cpp" />
   </ItemGroup>
   <ItemGroup>

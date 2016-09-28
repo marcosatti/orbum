@@ -5,14 +5,16 @@
 /*
 Interface class used for exposing storage, so it can be used in mapping (through the VM MMU).
 This object and any subobjects are to be idealised as an array of bytes, which can be accessed by array[getStorageIndex()].
+
+As it is specific to the VM MMU, it is placed under the Types folder here, instead of being a global interface (in the Interfaces folder).
 */
 
-class VMMMUMappedStorageObject
+class VMMMUMappedMemory
 {
 public:
-	explicit VMMMUMappedStorageObject();
+	explicit VMMMUMappedMemory();
 
-	virtual ~VMMMUMappedStorageObject();
+	virtual ~VMMMUMappedMemory();
 
 	/*
 	Read or write to an arbitrary storage object (memory, disk storage etc), as an array of bytes. Each access can be thought of as storage[storageIndex] (of type u8).

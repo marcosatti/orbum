@@ -2,27 +2,27 @@
 
 #include <memory>
 
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
 class VMMMUHandler;
 
 /*
-ImageStorageObject_t is used to mirror/image other regions of the PS2 physical memory space. 
+ImageMappedMemory_t is used to mirror/image other regions of the PS2 physical memory space. 
 It should only be used internally by the VM, as it does not represent any PS2 physical memory, but rather only redirects
  by another call to the VM MMU - ie: use this in the function body where memory mappings are done 
  (in this case,  VMMain::initalisePS2PhysicalMemoryMap() ).
 
-imageSize parsed in the constructor represents the mirror region size - it is not allocated in memory (underlying StorageObject_t 
+imageSize parsed in the constructor represents the mirror region size - it is not allocated in memory (underlying MappedMemory_t 
  gets 0 as the size parameter).
 totalSize parsed in the constructor represents the whole memory region size - any attempt the area after the imageSize (and < totalSize),
  will behave as a dead storage.
 imagePS2PhysicalAddress is the base physical address that the region provides an image from.
 */
-class ImageStorageObject_t : public StorageObject_t
+class ImageMappedMemory_t : public MappedMemory_t
 {
 public:
-	ImageStorageObject_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const size_t & imageSize, const size_t & totalSize, const u32 & imagePS2PhysicalAddress, std::shared_ptr<VMMMUHandler> VMMMUHandler);
-	~ImageStorageObject_t();
+	ImageMappedMemory_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const size_t & imageSize, const size_t & totalSize, const u32 & imagePS2PhysicalAddress, std::shared_ptr<VMMMUHandler> VMMMUHandler);
+	~ImageMappedMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -42,7 +42,7 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Needed by the VM MMU handler in order to map it. Instead of the normal StorageObject_t::getStorageSize(), return the total size set 
+	Needed by the VM MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the total size set 
 	 when the object is created.
 	*/
 	size_t getStorageSize() override;

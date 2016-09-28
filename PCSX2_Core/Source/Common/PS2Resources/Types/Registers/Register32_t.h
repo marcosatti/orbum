@@ -20,9 +20,9 @@ TODO: Check byte order / endianess - it is assumed within the emulator that, for
  Register128_t.(S or U)W[2] = bits 64-95.              ↓
  Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 
-The primary difference between a Register type and StorageObject type is that registers are accessed by the size index, not by the byte index.
+The primary difference between a Register type and MappedMemory type is that registers are accessed by the size index, not by the byte index.
 For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 32-63.
-See the StorageObject type for the counter-example.
+See the MappedMemory type for the counter-example.
 */
 
 class Register32_t
@@ -58,23 +58,4 @@ public:
 	virtual void writeWordU(u32 value);
 	virtual s32 readWordS();
 	virtual void writeWordS(s32 value);
-
-	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
-	// Index must be between 0 -> 31.
-	u8 getBit32(u8 index) const;
-
-	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
-	// Index must be between 0 -> 31.
-	void setBit32(u8 index, u32 bitValue);
-
-	// Convenience function to get a value (bit array) with a specified length at startPos in the register.
-	// This function is primarily used for getting a bitmask field in a register.
-	u32 getBitRange32(u8 startPosition, u8 bitLength) const;
-
-	// Convenience function to insert a value (bit array) with a specified length at startPos in the register.
-	// This will overwrite the bits currently set at the startPos to (startPos + length).
-	// This function is primarily used for setting bit masks in a register.
-	// Note: If there are more bits set in value than bitLength allows for, the extra bits will not be written.
-	void setBitRange32(u8 startPosition, u8 bitLength, u32 value);
-
 };

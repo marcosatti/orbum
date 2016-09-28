@@ -234,16 +234,8 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\MIPSInstruction\MIPSInstruction_t.h">
       <Filter>Source\Common\Types\MIPSInstruction</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\GS\GS_t.h" />
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.h">
-      <Filter>Source\Common\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.h" />
     <ClInclude Include="Source\Common\Global\GlobalOptions.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
@@ -252,11 +244,20 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\ClockSource_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\ClrBitfieldStorageObject32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\RevBitfieldStorageObject32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\DeadStorageObject_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\StorageObject\BusErrorStorageObject_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAPacket_t.h" />
+    <ClInclude Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.h">
+      <Filter>Source\Common\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
+    <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -403,13 +404,7 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSInstruction\MIPSInstruction_t.cpp">
       <Filter>Source\Common\Types\MIPSInstruction</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\GS\GS_t.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedStorageObject.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageStorageObject_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\StorageObject128_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BitfieldStorageObject32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\Types\EE_Registers_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
@@ -417,10 +412,17 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\TimerHandler\TimerHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\InterpreterDMAC\InterpreterDMAC.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\ClrBitfieldStorageObject32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\RevBitfieldStorageObject32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\DeadStorageObject_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\StorageObject\BusErrorStorageObject_t.cpp" />
+    <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.cpp" />
+    <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

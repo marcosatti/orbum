@@ -23,16 +23,16 @@ void InterpreterDMAC::executionStep()
 	auto& DMAChannelRegisters = EE->DMAChannelRegisters;
 
 	// Check if DMA transfers are enabled.
-	if (!EE->EE_REGISTER_D_CTRL->getFieldValue(EERegisterDMACDCtrl_t::Fields::DMAE))
+	if (!EE->EE_REGISTER_D_CTRL->getFieldValue(EERegisterDmacCtrl_t::Fields::DMAE))
 		return;
 
 	// Check for any pending/started DMA transfers, by checking the Dn_CHCR.STR register of each channel.
 	for (auto i = 0; i < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; i++)
 	{
-		if (DMAChannelRegisters[i].CHCR->getFieldValue(EERegisterDMACDChcr_t::Fields::STR))
+		if (DMAChannelRegisters[i].CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::STR))
 		{
 		 	// Branch to the appropriate DMA transfer mode (Normal, Src/Dest Chain or Interleaved)
-			switch (DMAChannelRegisters[i].CHCR->getFieldValue(EERegisterDMACDChcr_t::Fields::MOD))
+			switch (DMAChannelRegisters[i].CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::MOD))
 			{
 			case 0x0:
 			{
@@ -70,7 +70,7 @@ void InterpreterDMAC::executionStep_Normal(u32 channelID)
 	auto& channelProperties = ChannelProperties[channelID];
 
 	// Check the QWC register, make sure that size > 0.
-	const u32 QWC = channelRegisters.QWC->getFieldValue(EERegisterDMACDQwc_t::Fields::QWC);
+	const u32 QWC = channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC);
 	if (QWC == 0)
 	{
 		// TODO: implement failed transfer properly? (See page 79 of EE Users Manual).
@@ -96,12 +96,12 @@ void InterpreterDMAC::executionStep_Normal(u32 channelID)
 		{
 			// We have reached a slice limit, suspend transfer, update MADR (next packet access address) and QWC (remaining packets) registers.
 			// TODO: how do we suspend transfer? Set CHCR.STR = 0 and/or sent interrupt?
-			const u32 MADR = channelRegisters.MADR->getFieldValue(EERegisterDMACDMadr_t::Fields::ADDR);
+			const u32 MADR = channelRegisters.MADR->getFieldValue(EERegisterDmacMadr_t::Fields::ADDR);
 			const u32 addressOffset = EE->DMAC->PacketCountState[channelID] * Constants::NUMBER_BYTES_IN_QWORD;
 
-			channelRegisters.MADR->setFieldValue(EERegisterDMACDMadr_t::Fields::ADDR, MADR + addressOffset);
-			channelRegisters.QWC->setFieldValue(EERegisterDMACDQwc_t::Fields::QWC, QWC - 8);
-			channelRegisters.CHCR->setFieldValue(EERegisterDMACDChcr_t::Fields::STR, 0);
+			channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, MADR + addressOffset);
+			channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, QWC - 8);
+			channelRegisters.CHCR->setFieldValue(EERegisterDmacChcr_t::Fields::STR, 0);
 		}
 	}
 
@@ -119,19 +119,19 @@ void InterpreterDMAC::transferPacket(u32 channelID)
 	//  get the runtime direction by checking the CHCR.DIR field.
 	Direction_t direction = channelProperties.Direction;
 	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(EERegisterDMACDChcr_t::Fields::DIR));
+		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::DIR));
 
 	// If we are continuing a transfer, we need to calculate an address offset that is applied to the addresses below.
 	const u32 addressOffset = EE->DMAC->PacketCountState[channelID] * Constants::NUMBER_BYTES_IN_QWORD;
 
 	// Get the main memory or SPR address we are reading or writing from (see SPR flag below). 
-	const u32 MemPhysicalAddressOffset = channelRegisters.MADR->getFieldValue(EERegisterDMACDMadr_t::Fields::ADDR) + addressOffset;
+	const u32 MemPhysicalAddressOffset = channelRegisters.MADR->getFieldValue(EERegisterDmacMadr_t::Fields::ADDR) + addressOffset;
 
 	// If we are using the from/toSPR channels, then we need to get the SPR address, and take a different code path. 
 	//  Within the these channels MADR.SPR is always 0 on these channels (but have/use the SADR register).
 	if (channelProperties.ChannelID == ChannelID_t::toSPR || channelProperties.ChannelID == ChannelID_t::fromSPR)
 	{
-		const u32 SPRPhysicalAddressOffset = channelRegisters.SADR->getFieldValue(EERegisterDMACDSadr_t::Fields::ADDR) + addressOffset;
+		const u32 SPRPhysicalAddressOffset = channelRegisters.SADR->getFieldValue(EERegisterDmacSadr_t::Fields::ADDR) + addressOffset;
 
 		if (direction == Direction_t::FROM)
 		{
@@ -148,7 +148,7 @@ void InterpreterDMAC::transferPacket(u32 channelID)
 	}
 	// Else transfer data normally. Also check if we are accessing the SPR instead of main memory.
 	else {
-		const u32 SPRFlag = channelRegisters.MADR->getFieldValue(EERegisterDMACDMadr_t::Fields::SPR);
+		const bool SPRFlag = (channelRegisters.MADR->getFieldValue(EERegisterDmacMadr_t::Fields::SPR) != 0);
 		if (direction == Direction_t::FROM)
 		{
 			// Read from the channel to memory.

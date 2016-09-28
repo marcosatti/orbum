@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Frontend", "PCSX2_Fro
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Optimised_More|x64 = Debug_Optimised_More|x64
+		Debug_Optimised_More|x86 = Debug_Optimised_More|x86
 		Debug_Optimised|x64 = Debug_Optimised|x64
 		Debug_Optimised|x86 = Debug_Optimised|x86
 		Debug|x64 = Debug|x64
@@ -29,6 +31,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised_More|x64.ActiveCfg = Debug_Optimised_More|x64
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised_More|x64.Build.0 = Debug_Optimised_More|x64
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised_More|x86.ActiveCfg = Debug_Optimised_More|Win32
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised_More|x86.Build.0 = Debug_Optimised_More|Win32
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised|x64.ActiveCfg = Debug_Optimised|x64
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised|x64.Build.0 = Debug_Optimised|x64
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Debug_Optimised|x86.ActiveCfg = Debug_Optimised|Win32
@@ -41,6 +47,10 @@ Global
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x64.Build.0 = Release|x64
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x86.ActiveCfg = Release|Win32
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}.Release|x86.Build.0 = Release|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised_More|x64.ActiveCfg = Debug_Optimised_More|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised_More|x64.Build.0 = Debug_Optimised_More|x64
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised_More|x86.ActiveCfg = Debug_Optimised_More|Win32
+		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised_More|x86.Build.0 = Debug_Optimised_More|Win32
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised|x64.ActiveCfg = Debug_Optimised|x64
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised|x64.Build.0 = Debug_Optimised|x64
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Debug_Optimised|x86.ActiveCfg = Debug_Optimised|Win32
@@ -53,6 +63,10 @@ Global
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x64.Build.0 = Release|x64
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x86.ActiveCfg = Release|Win32
 		{7421784C-922A-47F7-8ED7-86AE3A0F8E64}.Release|x86.Build.0 = Release|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised_More|x64.ActiveCfg = Debug_Optimised_More|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised_More|x64.Build.0 = Debug_Optimised_More|x64
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised_More|x86.ActiveCfg = Debug_Optimised_More|Win32
+		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised_More|x86.Build.0 = Debug_Optimised_More|Win32
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised|x64.ActiveCfg = Debug_Optimised|x64
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised|x64.Build.0 = Debug_Optimised|x64
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Debug_Optimised|x86.ActiveCfg = Debug_Optimised|Win32
@@ -65,6 +79,10 @@ Global
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x64.Build.0 = Release|x64
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x86.ActiveCfg = Release|Win32
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}.Release|x86.Build.0 = Release|Win32
+		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised_More|x64.ActiveCfg = Debug_Optimised_More|x64
+		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised_More|x64.Build.0 = Debug_Optimised_More|x64
+		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised_More|x86.ActiveCfg = Debug_Optimised_More|Win32
+		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised_More|x86.Build.0 = Debug_Optimised_More|Win32
 		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised|x64.ActiveCfg = Debug_Optimised|x64
 		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised|x64.Build.0 = Debug_Optimised|x64
 		{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}.Debug_Optimised|x86.ActiveCfg = Debug_Optimised|Win32

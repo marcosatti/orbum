@@ -4,13 +4,6 @@
 #include "Common/Util/MathUtil/MathUtil.h"
 #include <climits>
 
-#if defined(ENV_WINDOWS)
- #include <intrin.h>
-#elif defined(ENV_UNIX)
- #include <intrin_x86.h>
-#else
-#endif
-
 u32 MathUtil::countLeadingBits(s32 value)
 {
 	// If the sign bit is 1, we invert the bits to 0 for count-leading-zero.
@@ -26,6 +19,24 @@ u32 MathUtil::countLeadingBits(s32 value)
 	}
 
 	return num_leading_bits;
+}
+
+u32 MathUtil::constructMask32(u8 startPos, u8 length)
+{
+	return ((1 << length) - 1) << startPos;
+}
+
+u32 MathUtil::extractMaskedValue32(u32 value, u8 maskStartPos, u8 maskLength)
+{
+	const u32 mask = constructMask32(maskStartPos, maskLength);
+	return ((value & mask) >> maskStartPos);
+}
+
+u32 MathUtil::insertMaskedValue32(u32 value, u32 insertValue, u8 maskStartPos, u8 maskLength)
+{
+	const u32 mask = constructMask32(maskStartPos, maskLength);
+	const u32 insertValueShifted = (insertValue << maskStartPos) & mask;
+	return ((value & ~mask) | insertValueShifted);
 }
 
 s16 MathUtil::saturateWordToHword(s32 value)

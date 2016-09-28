@@ -4,21 +4,21 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMMUHandler/Types/VMMMUMappedStorageObject.h"
+#include "VM/VMMMUHandler/Types/VMMMUMappedMemory.h"
 
 /*
 A simple storage object which is constructed to the size specified, and optional name (mnemonic) which is used for debugging/logging.
 Also defines a PS2 Physical address that it starts from - used by the VM MMU to map for address translation.
 
-The primary difference between a StorageObject type and a Register type is that storage objects are accessed by the byte index, not by the size index.
+The primary difference between a MappedMemory type and a Register type is that storage objects are accessed by the byte index, not by the size index.
 For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 8-39 (ie: it will overwrite).
 See the Register type for the counter-example.
 */
-class StorageObject_t : public VMMMUMappedStorageObject
+class MappedMemory_t : public VMMMUMappedMemory
 {
 public:
-	explicit StorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
-	virtual ~StorageObject_t();
+	explicit MappedMemory_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
+	virtual ~MappedMemory_t();
 
 	/*
 	Read or write a value of a given type, to the specified byte index (storageIndex).

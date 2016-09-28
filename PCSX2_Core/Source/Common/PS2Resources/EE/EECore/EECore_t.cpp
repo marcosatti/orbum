@@ -6,7 +6,7 @@
 #include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
 EECore_t::EECore_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobject(PS2Resources)
 {
@@ -14,7 +14,7 @@ EECore_t::EECore_t(const PS2Resources_t* const PS2Resources): PS2ResourcesSubobj
 	R5900 = std::make_shared<R5900_t>(getRootResources());
 	COP0 = std::make_shared<COP0_t>(getRootResources());
 	COP1 = std::make_shared<COP1_t>(getRootResources());
-	ScratchpadMemory = std::make_shared<StorageObject_t>(PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "Scratchpad Memory", PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY);
+	ScratchpadMemory = std::make_shared<MappedMemory_t>(PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "Scratchpad Memory", PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY);
 	Exceptions = std::make_shared<Exceptions_t>(getRootResources());
 	MMU = std::make_shared<MMU_t>(getRootResources());
 }

@@ -2,10 +2,10 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/PS2Resources/Types/StorageObject/StorageObject_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
 
-StorageObject_t::StorageObject_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress) :
+MappedMemory_t::MappedMemory_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress) :
 	mStorageSize(size),
 	mStorage(new u8[mStorageSize]),
 	mMnemonic(mnemonic),
@@ -21,11 +21,11 @@ StorageObject_t::StorageObject_t(const size_t & size, const char *const mnemonic
 #endif
 }
 
-StorageObject_t::~StorageObject_t()
+MappedMemory_t::~MappedMemory_t()
 {
 }
 
-u8 StorageObject_t::readByteU(u32 storageIndex)
+u8 MappedMemory_t::readByteU(u32 storageIndex)
 {
 	// Get client storage address.
 	u8 * clientMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -34,7 +34,7 @@ u8 StorageObject_t::readByteU(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeByteU(u32 storageIndex, u8 value)
+void MappedMemory_t::writeByteU(u32 storageIndex, u8 value)
 {
 	// Get client storage address.
 	u8 * clientMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -43,7 +43,7 @@ void StorageObject_t::writeByteU(u32 storageIndex, u8 value)
 	*clientMemoryAddress = value;
 }
 
-s8 StorageObject_t::readByteS(u32 storageIndex)
+s8 MappedMemory_t::readByteS(u32 storageIndex)
 {
 	// Get client storage address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
@@ -52,7 +52,7 @@ s8 StorageObject_t::readByteS(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeByteS(u32 storageIndex, s8 value)
+void MappedMemory_t::writeByteS(u32 storageIndex, s8 value)
 {
 	// Get client storage address.
 	s8 * clientMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
@@ -61,7 +61,7 @@ void StorageObject_t::writeByteS(u32 storageIndex, s8 value)
 	*clientMemoryAddress = value;
 }
 
-u16 StorageObject_t::readHwordU(u32 storageIndex)
+u16 MappedMemory_t::readHwordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u16 * clientMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -70,7 +70,7 @@ u16 StorageObject_t::readHwordU(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeHwordU(u32 storageIndex, u16 value)
+void MappedMemory_t::writeHwordU(u32 storageIndex, u16 value)
 {
 	// Get client storage address.
 	u16 * clientMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -79,7 +79,7 @@ void StorageObject_t::writeHwordU(u32 storageIndex, u16 value)
 	*clientMemoryAddress = value;
 }
 
-s16 StorageObject_t::readHwordS(u32 storageIndex)
+s16 MappedMemory_t::readHwordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
@@ -88,7 +88,7 @@ s16 StorageObject_t::readHwordS(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeHwordS(u32 storageIndex, s16 value)
+void MappedMemory_t::writeHwordS(u32 storageIndex, s16 value)
 {
 	// Get client storage address.
 	s16 * clientMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
@@ -97,7 +97,7 @@ void StorageObject_t::writeHwordS(u32 storageIndex, s16 value)
 	*clientMemoryAddress = value;
 }
 
-u32 StorageObject_t::readWordU(u32 storageIndex)
+u32 MappedMemory_t::readWordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u32 * clientMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -106,7 +106,7 @@ u32 StorageObject_t::readWordU(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeWordU(u32 storageIndex, u32 value)
+void MappedMemory_t::writeWordU(u32 storageIndex, u32 value)
 {
 	// Get client storage address.
 	u32 * clientMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -115,7 +115,7 @@ void StorageObject_t::writeWordU(u32 storageIndex, u32 value)
 	*clientMemoryAddress = value;
 }
 
-s32 StorageObject_t::readWordS(u32 storageIndex)
+s32 MappedMemory_t::readWordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
@@ -124,7 +124,7 @@ s32 StorageObject_t::readWordS(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeWordS(u32 storageIndex, s32 value)
+void MappedMemory_t::writeWordS(u32 storageIndex, s32 value)
 {
 	// Get client storage address.
 	s32 * clientMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
@@ -133,7 +133,7 @@ void StorageObject_t::writeWordS(u32 storageIndex, s32 value)
 	*clientMemoryAddress = value;
 }
 
-u64 StorageObject_t::readDwordU(u32 storageIndex)
+u64 MappedMemory_t::readDwordU(u32 storageIndex)
 {
 	// Get client storage address.
 	u64 * clientMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -142,7 +142,7 @@ u64 StorageObject_t::readDwordU(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeDwordU(u32 storageIndex, u64 value)
+void MappedMemory_t::writeDwordU(u32 storageIndex, u64 value)
 {
 	// Get client storage address.
 	u64 * clientMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -151,7 +151,7 @@ void StorageObject_t::writeDwordU(u32 storageIndex, u64 value)
 	*clientMemoryAddress = value;
 }
 
-s64 StorageObject_t::readDwordS(u32 storageIndex)
+s64 MappedMemory_t::readDwordS(u32 storageIndex)
 {
 	// Get client storage address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
@@ -160,7 +160,7 @@ s64 StorageObject_t::readDwordS(u32 storageIndex)
 	return *clientMemoryAddress;
 }
 
-void StorageObject_t::writeDwordS(u32 storageIndex, s64 value)
+void MappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
 {
 	// Get client storage address.
 	s64 * clientMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
@@ -169,22 +169,22 @@ void StorageObject_t::writeDwordS(u32 storageIndex, s64 value)
 	*clientMemoryAddress = value;
 }
 
-size_t StorageObject_t::getStorageSize()
+size_t MappedMemory_t::getStorageSize()
 {
 	return mStorageSize;
 }
 
-void* StorageObject_t::getClientMemoryAddress() const
+void* MappedMemory_t::getClientMemoryAddress() const
 {
 	return reinterpret_cast<void*>(mStorage);
 }
 
-const char * StorageObject_t::getMnemonic() const
+const char * MappedMemory_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
 
-const u32 & StorageObject_t::getPS2PhysicalAddress() const
+const u32 & MappedMemory_t::getPS2PhysicalAddress() const
 {
 	return mPS2PhysicalAddress;
 }
