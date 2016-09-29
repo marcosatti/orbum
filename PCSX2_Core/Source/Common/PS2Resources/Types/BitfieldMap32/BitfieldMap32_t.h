@@ -9,9 +9,7 @@
 BitfieldMap32_t provides a bitfield implementation, which can be used as an abstraction over some memory (which is 32-bits long).
 
 In order to use this, first you must register a field with the registerField() function.
-Once done, you may get and set the fields using the UNIQUE CHAR POINTER (constant field string) you provided to registerField() function.
-The map WILL NOT return the same field if a different pointer is used (even with the same contents - it is not a std::string key'd map!).
-The key type const char* is used for performance reasons.
+Once done, you may get and set the fields using the UNIQUE u8 index value you provided to registerField() function.
 
 It is the users responsibility to make sure the values set are appropriate. For example if you:
 1) Have declared a field to be 3 bits long.
@@ -19,10 +17,9 @@ It is the users responsibility to make sure the values set are appropriate. For 
 3) Sync the map to the underlying 32-bit value.
 You will only get 3 bits worth back, even though the field value may still reflect decimal 10.
 
-It will automatically sync with the underlying memory when ever a field value is changed, if set at runtime (mAutoSync). Otherwise call syncMemoryfromMap().
-For registerField(), it is always sync'd and cannot be changed.
-However, the implementing class must make sure to sync with the bitfield everytime the 32 bit value is changed (if desired). 
-This is done by calling syncMapFromMemory();
+Syncing between the fields and the u32 value:
+ - autoSync specifies whether to sync with the underlying u32 value when a field is changed (ie: through setFieldValue and others). It can always be called manually through syncMemoryFromMap().
+ - It is up to an implementing class if it should sync with the fields whenever the u32 value is changed. The function to do this is syncMapFromMemory().
 
 A class that extends this class must implement get/setBitRange32() in order to sync between the map <==> u32 value.
 */

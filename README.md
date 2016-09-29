@@ -48,15 +48,3 @@ The project uses the following libraries as git submodules:
 (you will need to 'git submodule init' etc, see https://chrisjean.com/git-submodules-adding-using-removing-and-updating/ for basic instructions).
 
 - Google test library (only for PCSX2_Core_UnitTest)
-- Boost library (headers only).
-
-### Boost library instructions.
-
-You will need to generate the symlinks used by PCSX2_Rewrite.
-After cloning the submodule, cd into modular-boost and run:
-~~~~
-1. .\bootstrap
-2. .\b2 headers
-~~~~
-
-Alternatively see https://svn.boost.org/trac/boost/wiki/TryModBoost#InstallingModularBoost for more instructions.
