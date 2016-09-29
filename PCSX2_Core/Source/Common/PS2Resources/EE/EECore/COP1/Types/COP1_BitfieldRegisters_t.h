@@ -31,8 +31,8 @@ class COP1RegisterIRR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto Rev = "Rev";
-		static constexpr auto Imp = "Imp";
+		static constexpr u8 Rev = 0;
+		static constexpr u8 Imp = 1;
 	};
 
 	explicit COP1RegisterIRR_t();
@@ -65,15 +65,15 @@ class COP1RegisterCSR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr auto SU = "SU";
-		static constexpr auto SO = "SO";
-		static constexpr auto SD = "SD";
-		static constexpr auto SI = "SI";
-		static constexpr auto U = "U";
-		static constexpr auto O = "O";
-		static constexpr auto D = "D";
-		static constexpr auto I = "I";
-		static constexpr auto C = "C";
+		static constexpr u8 SU = 0;
+		static constexpr u8 SO = 1;
+		static constexpr u8 SD = 2;
+		static constexpr u8 SI = 3;
+		static constexpr u8 U = 4;
+		static constexpr u8 O = 5;
+		static constexpr u8 D = 6;
+		static constexpr u8 I = 7;
+		static constexpr u8 C = 8;
 	};
 
 	explicit COP1RegisterCSR_t();

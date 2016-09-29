@@ -103,7 +103,7 @@ void TimerHandler::checkTimerInterrupt(const u32& timerNumber) const
 	auto& timerRegister = getVM()->getResources()->EE->TimerRegisters[timerNumber];
 
 	// Create a temp array of field keys needed for accessing the I_STAT register.
-	char * timerKeys[] = { EERegisterIntcStat_t::Fields::TIM0, EERegisterIntcStat_t::Fields::TIM1, EERegisterIntcStat_t::Fields::TIM2, EERegisterIntcStat_t::Fields::TIM3 };
+	u8 timerKeys[] = { EERegisterIntcStat_t::Fields::TIM0, EERegisterIntcStat_t::Fields::TIM1, EERegisterIntcStat_t::Fields::TIM2, EERegisterIntcStat_t::Fields::TIM3 };
 
 	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timerRegister.Mode->getFieldValue(EERegisterTimerMode_t::Fields::CMPE))

@@ -19,11 +19,11 @@ Special registers here mean anything that does not act as an ordinary storage su
  or PS2DeadStorage_t (used in most reserved register regions).
 
 For example, additional processing may be needed on writes, or a read may return a bit shifted value from what was written.
+TODO: Fill in bitfield information like COP0_BitfieldRegisters_t.
 */
 
 /*
 The Timer Mode register type. See EE Users Manual page 36.
-TODO: Fill in bitfield information like COP0_BitfieldRegisters_t.
 Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, behaves like a XOR write).
 
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
@@ -34,16 +34,16 @@ class EERegisterTimerMode_t : public BitfieldMMemory32_t, public PS2ResourcesSub
 public:
 	struct Fields
 	{
-		static constexpr char * CLKS = "CLKS";
-		static constexpr char * GATE = "GATE";
-		static constexpr char * GATS = "GATS";
-		static constexpr char * GATM = "GATM";
-		static constexpr char * ZRET = "ZRET";
-		static constexpr char * CUE = "CUE";
-		static constexpr char * CMPE = "CMPE";
-		static constexpr char * OVFE = "OVFE";
-		static constexpr char * EQUF = "EQUF";
-		static constexpr char * OVFF = "OVFF";
+		static constexpr u8 CLKS = 0;
+		static constexpr u8 GATE = 1;
+		static constexpr u8 GATS = 2;
+		static constexpr u8 GATM = 3;
+		static constexpr u8 ZRET = 4;
+		static constexpr u8 CUE = 5;
+		static constexpr u8 CMPE = 6;
+		static constexpr u8 OVFE = 7;
+		static constexpr u8 EQUF = 8;
+		static constexpr u8 OVFF = 9;
 	};
 
 	EERegisterTimerMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & timerID);
@@ -88,21 +88,21 @@ class EERegisterIntcStat_t : public ClrBitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * GS = "GS";
-		static constexpr char * SBUS = "SBUS";
-		static constexpr char * VBON = "VBON";
-		static constexpr char * VBOF = "VBOF";
-		static constexpr char * VIF0 = "VIF0";
-		static constexpr char * VIF1 = "VIF1";
-		static constexpr char * VU0 = "VU0";
-		static constexpr char * VU1 = "VU1";
-		static constexpr char * IPU = "IPU";
-		static constexpr char * TIM0 = "TIM0";
-		static constexpr char * TIM1 = "TIM1";
-		static constexpr char * TIM2 = "TIM2";
-		static constexpr char * TIM3 = "TIM3";
-		static constexpr char * SFIFO = "SFIFO";
-		static constexpr char * VU0WD = "VU0WD";
+		static constexpr u8 GS = 0;
+		static constexpr u8 SBUS = 1;
+		static constexpr u8 VBON = 2;
+		static constexpr u8 VBOF = 3;
+		static constexpr u8 VIF0 = 4;
+		static constexpr u8 VIF1 = 5;
+		static constexpr u8 VU0 = 6;
+		static constexpr u8 VU1 = 7;
+		static constexpr u8 IPU = 8;
+		static constexpr u8 TIM0 = 9;
+		static constexpr u8 TIM1 = 10;
+		static constexpr u8 TIM2 = 11;
+		static constexpr u8 TIM3 = 12;
+		static constexpr u8 SFIFO = 13;
+		static constexpr u8 VU0WD = 14;
 	};
 
 	EERegisterIntcStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -117,21 +117,21 @@ class EERegisterIntcMask_t : public RevBitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * GS = "GS";
-		static constexpr char * SBUS = "SBUS";
-		static constexpr char * VBON = "VBON";
-		static constexpr char * VBOF = "VBOF";
-		static constexpr char * VIF0 = "VIF0";
-		static constexpr char * VIF1 = "VIF1";
-		static constexpr char * VU0 = "VU0";
-		static constexpr char * VU1 = "VU1";
-		static constexpr char * IPU = "IPU";
-		static constexpr char * TIM0 = "TIM0";
-		static constexpr char * TIM1 = "TIM1";
-		static constexpr char * TIM2 = "TIM2";
-		static constexpr char * TIM3 = "TIM3";
-		static constexpr char * SFIFO = "SFIFO";
-		static constexpr char * VU0WD = "VU0WD";
+		static constexpr u8 GS = 0;
+		static constexpr u8 SBUS = 1;
+		static constexpr u8 VBON = 2;
+		static constexpr u8 VBOF = 3;
+		static constexpr u8 VIF0 = 4;
+		static constexpr u8 VIF1 = 5;
+		static constexpr u8 VU0 = 6;
+		static constexpr u8 VU1 = 7;
+		static constexpr u8 IPU = 8;
+		static constexpr u8 TIM0 = 9;
+		static constexpr u8 TIM1 = 10;
+		static constexpr u8 TIM2 = 11;
+		static constexpr u8 TIM3 = 12;
+		static constexpr u8 SFIFO = 13;
+		static constexpr u8 VU0WD = 14;
 	};
 
 	EERegisterIntcMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -146,13 +146,13 @@ class EERegisterDmacChcr_t : public BitfieldMMemory32_t, public PS2ResourcesSubo
 public:
 	struct Fields
 	{
-		static constexpr char * DIR = "DIR";
-		static constexpr char * MOD = "MOD";
-		static constexpr char * ASP = "ASP";
-		static constexpr char * TTE = "TTE";
-		static constexpr char * TIE = "TIE";
-		static constexpr char * STR = "STR";
-		static constexpr char * TAG = "TAG";
+		static constexpr u8 DIR = 0;
+		static constexpr u8 MOD = 1;
+		static constexpr u8 ASP = 2;
+		static constexpr u8 TTE = 3;
+		static constexpr u8 TIE = 4;
+		static constexpr u8 STR = 5;
+		static constexpr u8 TAG = 6;
 	};
 
 	EERegisterDmacChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & channelID);
@@ -174,8 +174,8 @@ class EERegisterDmacMadr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
-		static constexpr char * SPR = "SPR";
+		static constexpr u8 ADDR = 0;
+		static constexpr u8 SPR = 1;
 	};
 
 	EERegisterDmacMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -189,8 +189,8 @@ class EERegisterDmacTadr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
-		static constexpr char * SPR = "SPR";
+		static constexpr u8 ADDR = 0;
+		static constexpr u8 SPR = 1;
 	};
 
 	EERegisterDmacTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -204,8 +204,8 @@ class EERegisterDmacAsr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
-		static constexpr char * SPR = "SPR";
+		static constexpr u8 ADDR = 0;
+		static constexpr u8 SPR = 1;
 	};
 
 	EERegisterDmacAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -219,7 +219,7 @@ class EERegisterDmacSadr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
+		static constexpr u8 ADDR = 0;
 	};
 
 	EERegisterDmacSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -233,7 +233,7 @@ class EERegisterDmacQwc_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * QWC = "QWC";
+		static constexpr u8 QWC = 0;
 	};
 
 	EERegisterDmacQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -248,12 +248,12 @@ class EERegisterDmacCtrl_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * DMAE = "DMAE";
-		static constexpr char * RELE = "RELE";
-		static constexpr char * MFD = "MFD";
-		static constexpr char * STS = "STS";
-		static constexpr char * STD = "STD";
-		static constexpr char * RCYC = "RCYC";
+		static constexpr u8 DMAE = 0;
+		static constexpr u8 RELE = 1;
+		static constexpr u8 MFD = 2;
+		static constexpr u8 STS = 3;
+		static constexpr u8 STD = 4;
+		static constexpr u8 RCYC = 5;
 	};
 
 	EERegisterDmacCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -271,31 +271,31 @@ class EERegisterDmacStat_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * CIS0 = "CIS0";
-		static constexpr char * CIS1 = "CIS1";
-		static constexpr char * CIS2 = "CIS2";
-		static constexpr char * CIS3 = "CIS3";
-		static constexpr char * CIS4 = "CIS4";
-		static constexpr char * CIS5 = "CIS5";
-		static constexpr char * CIS6 = "CIS6";
-		static constexpr char * CIS7 = "CIS7";
-		static constexpr char * CIS8 = "CIS8";
-		static constexpr char * CIS9 = "CIS9";
-		static constexpr char * SIS = "SIS";
-		static constexpr char * MEIS = "MEIS";
-		static constexpr char * BEIS = "BEIS";
-		static constexpr char * CIM0 = "CIM0";
-		static constexpr char * CIM1 = "CIM1";
-		static constexpr char * CIM2 = "CIM2";
-		static constexpr char * CIM3 = "CIM3";
-		static constexpr char * CIM4 = "CIM4";
-		static constexpr char * CIM5 = "CIM5";
-		static constexpr char * CIM6 = "CIM6";
-		static constexpr char * CIM7 = "CIM7";
-		static constexpr char * CIM8 = "CIM8";
-		static constexpr char * CIM9 = "CIM9";
-		static constexpr char * SIM = "SIM";
-		static constexpr char * MEIM = "MEIM";
+		static constexpr u8 CIS0 = 0;
+		static constexpr u8 CIS1 = 1;
+		static constexpr u8 CIS2 = 2;
+		static constexpr u8 CIS3 = 3;
+		static constexpr u8 CIS4 = 4;
+		static constexpr u8 CIS5 = 5;
+		static constexpr u8 CIS6 = 6;
+		static constexpr u8 CIS7 = 7;
+		static constexpr u8 CIS8 = 8;
+		static constexpr u8 CIS9 = 9;
+		static constexpr u8 SIS = 10;
+		static constexpr u8 MEIS = 11;
+		static constexpr u8 BEIS = 12;
+		static constexpr u8 CIM0 = 13;
+		static constexpr u8 CIM1 = 14;
+		static constexpr u8 CIM2 = 15;
+		static constexpr u8 CIM3 = 16;
+		static constexpr u8 CIM4 = 17;
+		static constexpr u8 CIM5 = 18;
+		static constexpr u8 CIM6 = 19;
+		static constexpr u8 CIM7 = 20;
+		static constexpr u8 CIM8 = 21;
+		static constexpr u8 CIM9 = 22;
+		static constexpr u8 SIM = 23;
+		static constexpr u8 MEIM = 24;
 	};
 
 	EERegisterDmacStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -311,27 +311,27 @@ class EERegisterDmacPcr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * CPC0 = "CPC0";
-		static constexpr char * CPC1 = "CPC1";
-		static constexpr char * CPC2 = "CPC2";
-		static constexpr char * CPC3 = "CPC3";
-		static constexpr char * CPC4 = "CPC4";
-		static constexpr char * CPC5 = "CPC5";
-		static constexpr char * CPC6 = "CPC6";
-		static constexpr char * CPC7 = "CPC7";
-		static constexpr char * CPC8 = "CPC8";
-		static constexpr char * CPC9 = "CPC9";
-		static constexpr char * CDE0 = "CDE0";
-		static constexpr char * CDE1 = "CDE1";
-		static constexpr char * CDE2 = "CDE2";
-		static constexpr char * CDE3 = "CDE3";
-		static constexpr char * CDE4 = "CDE4";
-		static constexpr char * CDE5 = "CDE5";
-		static constexpr char * CDE6 = "CDE6";
-		static constexpr char * CDE7 = "CDE7";
-		static constexpr char * CDE8 = "CDE8";
-		static constexpr char * CDE9 = "CDE9";
-		static constexpr char * PCE = "PCE";
+		static constexpr u8 CPC0 = 0;
+		static constexpr u8 CPC1 = 1;
+		static constexpr u8 CPC2 = 2;
+		static constexpr u8 CPC3 = 3;
+		static constexpr u8 CPC4 = 4;
+		static constexpr u8 CPC5 = 5;
+		static constexpr u8 CPC6 = 6;
+		static constexpr u8 CPC7 = 7;
+		static constexpr u8 CPC8 = 8;
+		static constexpr u8 CPC9 = 9;
+		static constexpr u8 CDE0 = 10;
+		static constexpr u8 CDE1 = 11;
+		static constexpr u8 CDE2 = 12;
+		static constexpr u8 CDE3 = 13;
+		static constexpr u8 CDE4 = 14;
+		static constexpr u8 CDE5 = 15;
+		static constexpr u8 CDE6 = 16;
+		static constexpr u8 CDE7 = 17;
+		static constexpr u8 CDE8 = 18;
+		static constexpr u8 CDE9 = 19;
+		static constexpr u8 PCE = 20;
 	};
 
 	EERegisterDmacPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -345,8 +345,8 @@ class EERegisterDmacSqwc_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * SQWC = "SQWC";
-		static constexpr char * TQWC = "TQWC";
+		static constexpr u8 SQWC = 0;
+		static constexpr u8 TQWC = 1;
 	};
 
 	EERegisterDmacSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -360,7 +360,7 @@ class EERegisterDmacRbor_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
+		static constexpr u8 ADDR = 0;
 	};
 
 	EERegisterDmacRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -374,7 +374,7 @@ class EERegisterDmacRbsr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * RMSK = "RMSK";
+		static constexpr u8 RMSK = 0;
 	};
 
 	EERegisterDmacRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -388,7 +388,7 @@ class EERegisterDmacStadr_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ADDR = "ADDR";
+		static constexpr u8 ADDR = 0;
 	};
 
 	EERegisterDmacStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -402,7 +402,7 @@ class EERegisterDmacEnablew_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * CPND = "CPND";
+		static constexpr u8 CPND = 0;
 	};
 
 	EERegisterDmacEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
@@ -416,7 +416,7 @@ class EERegisterDmacEnabler_t : public BitfieldMMemory32_t
 public:
 	struct Fields
 	{
-		static constexpr char * CPND = "CPND";
+		static constexpr u8 CPND = 0;
 	};
 
 	EERegisterDmacEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress);

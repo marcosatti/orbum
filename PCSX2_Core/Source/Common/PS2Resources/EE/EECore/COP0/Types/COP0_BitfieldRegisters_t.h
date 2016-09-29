@@ -47,8 +47,8 @@ class COP0RegisterIndex_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * Index = "Index";
-		static constexpr char * P = "P";
+		static constexpr u8 Index = 0;
+		static constexpr u8 P = 1;
 	};
 
 	explicit COP0RegisterIndex_t();
@@ -67,7 +67,7 @@ class COP0RegisterRandom_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * Random = "Random";
+		static constexpr u8 Random = 0;
 	};
 
 	explicit COP0RegisterRandom_t();
@@ -91,12 +91,12 @@ class COP0RegisterEntryLo0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * G = "G";
-		static constexpr char * V = "V";
-		static constexpr char * D = "D";
-		static constexpr char * C = "C";
-		static constexpr char * PFN = "PFN";
-		static constexpr char * S = "S";
+		static constexpr u8 G = 0;
+		static constexpr u8 V = 1;
+		static constexpr u8 D = 2;
+		static constexpr u8 C = 3;
+		static constexpr u8 PFN = 4;
+		static constexpr u8 S = 5;
 	};
 
 	explicit COP0RegisterEntryLo0_t();
@@ -119,11 +119,11 @@ class COP0RegisterEntryLo1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * G = "G";
-		static constexpr char * V = "V";
-		static constexpr char * D = "D";
-		static constexpr char * C = "C";
-		static constexpr char * PFN = "PFN";
+		static constexpr u8 G = 0;
+		static constexpr u8 V = 1;
+		static constexpr u8 D = 2;
+		static constexpr u8 C = 3;
+		static constexpr u8 PFN = 4;
 	};
 
 	explicit COP0RegisterEntryLo1_t();
@@ -143,8 +143,8 @@ class COP0RegisterContext_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * BadVPN2 = "BadVPN2";
-		static constexpr char * PTEBase = "PTEBase";
+		static constexpr u8 BadVPN2 = 0;
+		static constexpr u8 PTEBase = 1;
 	};
 
 	explicit COP0RegisterContext_t();
@@ -165,7 +165,7 @@ class COP0RegisterPageMask_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * MASK = "MASK";
+		static constexpr u8 MASK = 0;
 	};
 
 	explicit COP0RegisterPageMask_t();
@@ -184,7 +184,7 @@ class COP0RegisterWired_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * Wired = "Wired";
+		static constexpr u8 Wired = 0;
 	};
 
 	explicit COP0RegisterWired_t();
@@ -202,7 +202,7 @@ class COP0RegisterBadVAddr_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * BadVAddr = "BadVAddr";
+		static constexpr u8 BadVAddr = 0;
 	};
 
 	explicit COP0RegisterBadVAddr_t();
@@ -220,7 +220,7 @@ class COP0RegisterCount_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * Count = "Count";
+		static constexpr u8 Count = 0;
 	};
 
 	explicit COP0RegisterCount_t();
@@ -243,8 +243,8 @@ class COP0RegisterEntryHi_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ASID = "ASID";
-		static constexpr char * VPN2 = "VPN2";
+		static constexpr u8 ASID = 0;
+		static constexpr u8 VPN2 = 1;
 	};
 
 	explicit COP0RegisterEntryHi_t();
@@ -263,12 +263,12 @@ class COP0RegisterCompare_t : public BitfieldRegister32_t, public PS2ResourcesSu
 public:
 	struct Fields
 	{
-		static constexpr char * Compare = "Compare";
+		static constexpr u8 Compare = 0;
 	};
 
 	explicit COP0RegisterCompare_t(const PS2Resources_t*const PS2Resources);
 
-	void setFieldValue(const char * fieldName, const u32& value) override;
+	void setFieldValue(const u8 & fieldIndex, const u32& value) override;
 	void setRegisterValue(const u32 & value) override;
 };
 
@@ -300,19 +300,19 @@ class COP0RegisterStatus_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * IE = "IE";
-		static constexpr char * EXL = "EXL";
-		static constexpr char * ERL = "ERL";
-		static constexpr char * KSU = "KSU";
-		static constexpr char * IM = "IM";
-		static constexpr char * BEM = "BEM";
-		static constexpr char * IM7 = "IM7";
-		static constexpr char * EIE = "EIE";
-		static constexpr char * EDI = "EDI";
-		static constexpr char * CH = "CH";
-		static constexpr char * BEV = "BEV";
-		static constexpr char * DEV = "DEV";
-		static constexpr char * CU = "CU";
+		static constexpr u8 IE = 0;
+		static constexpr u8 EXL = 1;
+		static constexpr u8 ERL = 2;
+		static constexpr u8 KSU = 3;
+		static constexpr u8 IM = 4;
+		static constexpr u8 BEM = 5;
+		static constexpr u8 IM7 = 6;
+		static constexpr u8 EIE = 7;
+		static constexpr u8 EDI = 8;
+		static constexpr u8 CH = 9;
+		static constexpr u8 BEV = 10;
+		static constexpr u8 DEV = 11;
+		static constexpr u8 CU = 12;
 	};
 
 	explicit COP0RegisterStatus_t();
@@ -341,14 +341,14 @@ class COP0RegisterCause_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ExcCode = "ExcCode";
-		static constexpr char * IP2 = "IP2";
-		static constexpr char * IP3 = "IP3";
-		static constexpr char * IP7 = "IP7";
-		static constexpr char * EXC2 = "EXC2";
-		static constexpr char * CE = "IM";
-		static constexpr char * BD2 = "BD2";
-		static constexpr char * BD = "BD";
+		static constexpr u8 ExcCode = 0;
+		static constexpr u8 IP2 = 1;
+		static constexpr u8 IP3 = 2;
+		static constexpr u8 IP7 = 3;
+		static constexpr u8 EXC2 = 4;
+		static constexpr u8 CE = 5;
+		static constexpr u8 BD2 = 6;
+		static constexpr u8 BD = 7;
 	};
 
 	explicit COP0RegisterCause_t();
@@ -366,7 +366,7 @@ class COP0RegisterEPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * EPC = "EPC";
+		static constexpr u8 EPC = 0;
 	};
 
 	explicit COP0RegisterEPC_t();
@@ -386,8 +386,8 @@ class COP0RegisterPRId_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * Rev = "Rev";
-		static constexpr char * Imp = "Imp";
+		static constexpr u8 Rev = 0;
+		static constexpr u8 Imp = 1;
 	};
 
 	explicit COP0RegisterPRId_t();
@@ -417,15 +417,15 @@ class COP0RegisterConfig_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * K0 = "K0";
-		static constexpr char * DC = "DC";
-		static constexpr char * IC = "IC";
-		static constexpr char * BPE = "BPE";
-		static constexpr char * NBE = "NBE";
-		static constexpr char * DCE = "DCE";
-		static constexpr char * ICE = "ICE";
-		static constexpr char * DIE = "DIE";
-		static constexpr char * EC = "EC";
+		static constexpr u8 K0 = 0;
+		static constexpr u8 DC = 1;
+		static constexpr u8 IC = 2;
+		static constexpr u8 BPE = 3;
+		static constexpr u8 NBE = 4;
+		static constexpr u8 DCE = 5;
+		static constexpr u8 ICE = 6;
+		static constexpr u8 DIE = 7;
+		static constexpr u8 EC = 8;
 	};
 
 	explicit COP0RegisterConfig_t();
@@ -444,7 +444,7 @@ class COP0RegisterBadPAddr_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * BadPAddr = "BadPAddr";
+		static constexpr u8 BadPAddr = 0;
 	};
 
 	explicit COP0RegisterBadPAddr_t();
@@ -482,24 +482,24 @@ class COP0RegisterBPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * IAB = "IAB";
-		static constexpr char * DRB = "DRB";
-		static constexpr char * DWB = "DWB";
-		static constexpr char * BED = "BED";
-		static constexpr char * DTE = "DTE";
-		static constexpr char * ITE = "ITE";
-		static constexpr char * DXE = "DXE";
-		static constexpr char * DKE = "DKE";
-		static constexpr char * DSE = "DSE";
-		static constexpr char * DUE = "DUE";
-		static constexpr char * IXE = "IXE";
-		static constexpr char * IKE = "IKE";
-		static constexpr char * ISE = "ISE";
-		static constexpr char * IUE = "IUE";
-		static constexpr char * DVE = "DVE";
-		static constexpr char * DWE = "DWE";
-		static constexpr char * DRE = "DRE";
-		static constexpr char * IAE = "IAE";
+		static constexpr u8 IAB = 0;
+		static constexpr u8 DRB = 1;
+		static constexpr u8 DWB = 2;
+		static constexpr u8 BED = 3;
+		static constexpr u8 DTE = 4;
+		static constexpr u8 ITE = 5;
+		static constexpr u8 DXE = 6;
+		static constexpr u8 DKE = 7;
+		static constexpr u8 DSE = 8;
+		static constexpr u8 DUE = 9;
+		static constexpr u8 IXE = 10;
+		static constexpr u8 IKE = 11;
+		static constexpr u8 ISE = 12;
+		static constexpr u8 IUE = 13;
+		static constexpr u8 DVE = 14;
+		static constexpr u8 DWE = 15;
+		static constexpr u8 DRE = 16;
+		static constexpr u8 IAE = 17;
 	};
 
 	explicit COP0RegisterBPC_t();
@@ -517,7 +517,7 @@ class COP0RegisterIAB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * IAB = "IAB";
+		static constexpr u8 IAB = 0;
 	};
 
 	explicit COP0RegisterIAB_t();
@@ -535,7 +535,7 @@ class COP0RegisterIABM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * IABM = "IABM";
+		static constexpr u8 IABM = 0;
 	};
 
 	explicit COP0RegisterIABM_t();
@@ -553,7 +553,7 @@ class COP0RegisterDAB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * DAB = "DAB";
+		static constexpr u8 DAB = 0;
 	};
 
 	explicit COP0RegisterDAB_t();
@@ -571,7 +571,7 @@ class COP0RegisterDABM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * DABM = "DABM";
+		static constexpr u8 DABM = 0;
 	};
 
 	explicit COP0RegisterDABM_t();
@@ -589,7 +589,7 @@ class COP0RegisterDVB_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * DVB = "DVB";
+		static constexpr u8 DVB = 0;
 	};
 
 	explicit COP0RegisterDVB_t();
@@ -607,7 +607,7 @@ class COP0RegisterDVBM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * DVBM = "DVBM";
+		static constexpr u8 DVBM = 0;
 	};
 
 	explicit COP0RegisterDVBM_t();
@@ -638,17 +638,17 @@ class COP0RegisterPCCR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * EXL0 = "EXL0";
-		static constexpr char * K0 = "K0";
-		static constexpr char * S0 = "S0";
-		static constexpr char * U0 = "U0";
-		static constexpr char * EVENT0 = "EVENT0";
-		static constexpr char * EXL1 = "EXL1";
-		static constexpr char * K1 = "K1";
-		static constexpr char * S1 = "S1";
-		static constexpr char * U1 = "U1";
-		static constexpr char * EVENT1 = "EVENT1";
-		static constexpr char * CTE = "CTE";
+		static constexpr u8 EXL0 = 0;
+		static constexpr u8 K0 = 1;
+		static constexpr u8 S0 = 2;
+		static constexpr u8 U0 = 3;
+		static constexpr u8 EVENT0 = 4;
+		static constexpr u8 EXL1 = 5;
+		static constexpr u8 K1 = 6;
+		static constexpr u8 S1 = 7;
+		static constexpr u8 U1 = 8;
+		static constexpr u8 EVENT1 = 9;
+		static constexpr u8 CTE = 10;
 	};
 
 	explicit COP0RegisterPCCR_t();
@@ -667,8 +667,8 @@ class COP0RegisterPCR0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * VALUE = "VALUE";
-		static constexpr char * OVFL = "OVFL";
+		static constexpr u8 VALUE = 0;
+		static constexpr u8 OVFL = 1;
 	};
 
 	explicit COP0RegisterPCR0_t();
@@ -687,8 +687,8 @@ class COP0RegisterPCR1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * VALUE = "VALUE";
-		static constexpr char * OVFL = "OVFL";
+		static constexpr u8 VALUE = 0;
+		static constexpr u8 OVFL = 1;
 	};
 
 	explicit COP0RegisterPCR1_t();
@@ -714,11 +714,11 @@ class COP0RegisterTagLo_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * L = "L";
-		static constexpr char * R = "R";
-		static constexpr char * V = "V";
-		static constexpr char * D = "D";
-		static constexpr char * PTagLo = "PTagLo";
+		static constexpr u8 L = 0;
+		static constexpr u8 R = 1;
+		static constexpr u8 V = 2;
+		static constexpr u8 D = 3;
+		static constexpr u8 PTagLo = 4;
 	};
 
 	explicit COP0RegisterTagLo_t();
@@ -744,11 +744,11 @@ class COP0RegisterTagHi_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * L = "L";
-		static constexpr char * R = "R";
-		static constexpr char * V = "V";
-		static constexpr char * D = "D";
-		static constexpr char * PTagHi = "PTagHi";
+		static constexpr u8 L = 0;
+		static constexpr u8 R = 1;
+		static constexpr u8 V = 2;
+		static constexpr u8 D = 3;
+		static constexpr u8 PTagHi = 4;
 	};
 
 	explicit COP0RegisterTagHi_t();
@@ -766,7 +766,7 @@ class COP0RegisterErrorEPC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr char * ErrorEPC = "ErrorEPC";
+		static constexpr u8 ErrorEPC = 0;
 	};
 
 	explicit COP0RegisterErrorEPC_t();

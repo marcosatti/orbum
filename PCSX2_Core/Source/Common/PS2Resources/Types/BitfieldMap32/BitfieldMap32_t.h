@@ -1,6 +1,7 @@
 #pragma once
 
-#include <boost/container/flat_map.hpp>
+#include <string>
+#include <vector>
 
 #include "Common/Global/Globals.h"
 
@@ -41,17 +42,17 @@ public:
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
 	Requires: a unique field name (fieldName), a bitfield starting position within the 32 bits (fieldStartPosition), how long the bitfield is (fieldLength), and an initial value (fieldInitialValue).
 	*/
-	virtual void registerField(const char * fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue);
+	virtual void registerField(const u8 & fieldIndex, const std::string & fieldName, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue);
 
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual u32 getFieldValue(const char * fieldName);
+	virtual const u32 & getFieldValue(const u8 & fieldIndex);
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual void setFieldValue(const char * fieldName, const u32 & value);
+	virtual void setFieldValue(const u8 & fieldIndex, const u32 & value);
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
@@ -61,7 +62,7 @@ public:
 	/*
 	Initalise a specific field to its initial value defined in the BitfieldProperties_t.
 	*/
-	virtual void initaliseField(const char * fieldName);
+	virtual void initaliseField(const u8 & fieldIndex);
 
 	/*
 	If the underlying 32-bit value is changed directly, call this function to update and sync the bitfield map to reflect the same values.
@@ -82,7 +83,7 @@ private:
 	*/
 	struct BitfieldProperties_t
 	{
-		const char * mFieldName;
+		std::string mFieldName;
 		u8 mFieldStartPosition;
 		u8 mFieldLength;
 		u32 mInitialFieldValue;
@@ -92,7 +93,8 @@ private:
 	/*
 	Map which stores all of the registered fields, along with their associated properties.
 	*/
-	boost::container::flat_map<const char *, BitfieldProperties_t> mFieldMap;
+	static constexpr u8 FIELD_MAP_SIZE = 32;
+	BitfieldProperties_t mFieldMap[32];
 
 	/*
 	Set at initalisation - does this class sync with the underlying memory everytime setFieldValue() (or anything that writes) is called?

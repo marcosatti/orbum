@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+#include <string>
+#include <vector>
+
 #include "Common/PS2Resources/Types/BitfieldMap32/BitfieldMap32_t.h"
 
 
@@ -12,21 +16,31 @@ BitfieldMap32_t::~BitfieldMap32_t()
 {
 }
 
-void BitfieldMap32_t::registerField(const char* fieldName, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
+void BitfieldMap32_t::registerField(const u8& fieldIndex, const std::string & fieldName, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
 {
+	if (!(fieldIndex < FIELD_MAP_SIZE))
+		throw std::runtime_error("Invalid map index.");
+
 	setBitRange32(fieldStartPosition, fieldLength, fieldInitialValue);
-	mFieldMap[fieldName] = { fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue };
+	mFieldMap[fieldIndex] = { fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue };
 }
 
-u32 BitfieldMap32_t::getFieldValue(const char* fieldName)
+const u32 & BitfieldMap32_t::getFieldValue(const u8& fieldIndex)
 {
-	return mFieldMap.at(fieldName).mFieldValue;
+	if (!(fieldIndex < FIELD_MAP_SIZE))
+		throw std::runtime_error("Invalid map index.");
+
+	return mFieldMap[fieldIndex].mFieldValue;
 }
 
-void BitfieldMap32_t::setFieldValue(const char* fieldName, const u32& value)
+void BitfieldMap32_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
-	BitfieldProperties_t & props = mFieldMap.at(fieldName);
+	if (!(fieldIndex < FIELD_MAP_SIZE))
+		throw std::runtime_error("Invalid map index.");
+
+	BitfieldProperties_t & props = mFieldMap[fieldIndex];
 	props.mFieldValue = value;
+
 	if (mAutoSync)
 		setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
 }
@@ -35,35 +49,29 @@ void BitfieldMap32_t::initaliseAllFields()
 {
 	for (auto &field : mFieldMap)
 	{
-		BitfieldProperties_t & props = field.second;
-		props.mFieldValue = props.mInitialFieldValue;
+		field.mFieldValue = field.mInitialFieldValue;
 		if (mAutoSync)
-			setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
+			setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 	}
 }
 
-void BitfieldMap32_t::initaliseField(const char* fieldName)
+void BitfieldMap32_t::initaliseField(const u8& fieldIndex)
 {
-	BitfieldProperties_t & props = mFieldMap[fieldName];
-	props.mFieldValue = props.mInitialFieldValue;
+	auto& field = mFieldMap[fieldIndex];
+	field.mFieldValue = field.mInitialFieldValue;
+
 	if (mAutoSync)
-		setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
+		setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 }
 
 void BitfieldMap32_t::syncMapFromMemory()
 {
 	for (auto& field : mFieldMap)
-	{
-		BitfieldProperties_t & props = field.second;
-		props.mFieldValue = getBitRange32(props.mFieldStartPosition, props.mFieldLength);
-	}
+		field.mFieldValue = getBitRange32(field.mFieldStartPosition, field.mFieldLength);
 }
 
 void BitfieldMap32_t::syncMemoryFromMap()
 {
 	for (auto &field : mFieldMap)
-	{
-		const BitfieldProperties_t & props = field.second;
-		setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
-	}
+		setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 }
