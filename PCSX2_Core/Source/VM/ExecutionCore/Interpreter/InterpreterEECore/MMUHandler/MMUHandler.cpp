@@ -399,6 +399,6 @@ void MMUHandler::getPS2PhysicalAddress_Stage4()
 
 	// Else we are accessing main memory.
 	// Combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
-	u32 PFNBitPos = MathUtil::log2N(mTLBEntryInfo->mMask + 1);
-	mPS2PhysicalAddress = ((mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mPFN << PFNBitPos) | (mPS2VirtualAddress & mTLBEntryInfo->mMask));
+	u32 mask = (mTLBEntryInfo->mMask << 12) | 0xFFF;
+	mPS2PhysicalAddress = ((mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mPFN << 12) | (mPS2VirtualAddress & mask));
 }

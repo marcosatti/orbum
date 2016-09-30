@@ -153,7 +153,7 @@ void InterpreterEECore::TLBR()
 
 void InterpreterEECore::TLBWI()
 {
-	// TLB[index] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
+	// TLB[Index] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
 	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
