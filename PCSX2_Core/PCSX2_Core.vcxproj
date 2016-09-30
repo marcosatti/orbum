@@ -328,6 +328,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2Resources\EE\EECore\MMU\Types\TLBEntryInfo_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAPacket_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Clock\Clock_t.h" />

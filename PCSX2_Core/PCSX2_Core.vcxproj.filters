@@ -258,6 +258,7 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
     <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\EECore\MMU\Types\TLBEntryInfo_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">

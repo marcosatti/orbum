@@ -3,7 +3,6 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 
 /*
@@ -16,7 +15,7 @@ Any request performed must be followed by a check for any errors (similar to how
 */
 
 class VMMain;
-using TLBEntryInfo = MMU_t::TLBEntryInfo;
+struct TLBEntryInfo_t;
 
 class MMUHandler : public VMExecutionCoreComponent
 {
@@ -72,9 +71,10 @@ private:
 	Physical Address lookup state variables - used by the 4 stage functions below to perform a lookup.
 	*/
 	enum AccessType { READ, WRITE } mAccessType;
-	const TLBEntryInfo *mTLBEntryInfo;
+	const TLBEntryInfo_t *mTLBEntryInfo;
 	u32	mPS2VirtualAddress;
 	u32	mPS2PhysicalAddress;
+	u8 mIndexEvenOdd;
 
 	/*
 	Stage 1 of a physical address lookup. See diagram on EE Core Users Manual page 122.
@@ -96,15 +96,15 @@ private:
 
 	/*
 	Stage 3 of a physical address lookup. See diagram on EE Core Users Manual page 122.
-	Tests the valid and dirty flags. Also determines if the VPN in PS2VirtualAddress is for the Odd or Even PFN (by testing the LSB). Calls either the Stage4 Odd or Even functions based on this.
+	Tests the valid and dirty flags. Also determines if the VPN in PS2VirtualAddress is for the Odd or Even PFN (by testing the MSB of the VPN). 
 	*/
 	void getPS2PhysicalAddress_Stage3();
 
 	/*
 	Stage 4 of a physical address lookup. See diagram on EE Core Users Manual page 122.
-	Split up into Odd or Even functions, based on the LSB of the VPN from PS2VirtualAddress.
 	Returns the PS2 Physical Address, based on which memory is accessed (scratchpad, cache or main memory).
 	*/
+	void getPS2PhysicalAddress_Stage4();
 	void getPS2PhysicalAddress_Stage4Odd();
 	void getPS2PhysicalAddress_Stage4Even();
 };

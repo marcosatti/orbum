@@ -61,3 +61,15 @@ s32 MathUtil::saturateDwordToWord(s64 value)
 	else
 		return static_cast<s32>(value);
 }
+
+u32 MathUtil::log2N(u32 value)
+{
+	static const u32 b[] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
+
+	register u32 r = (value & b[0]) != 0;
+
+	for (u32 i = 4; i > 0; i--) // unroll for speed...
+		r |= ((value & b[i]) != 0) << i;
+
+	return r;
+}

@@ -13,8 +13,7 @@
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
-
-using TLBEntryInfo = MMU_t::TLBEntryInfo;
+#include "Common/PS2Resources/EE/EECore/MMU/Types/TLBEntryInfo_t.h"
 
 void InterpreterEECore::SYNC_STYPE()
 {
@@ -138,17 +137,17 @@ void InterpreterEECore::TLBR()
 
 	// EntryLo0 (even).
 	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::S, tlbEntry.mS);
-	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::PFN, tlbEntry.mPFNEven);
-	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::C, tlbEntry.mCEven);
-	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::D, tlbEntry.mDEven);
-	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::V, tlbEntry.mVEven);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::PFN, tlbEntry.PhysicalInfo[0].mPFN);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::C, tlbEntry.PhysicalInfo[0].mC);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::D, tlbEntry.PhysicalInfo[0].mD);
+	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::V, tlbEntry.PhysicalInfo[0].mV);
 	EntryLo0->setFieldValue(COP0RegisterEntryLo0_t::Fields::G, tlbEntry.mG);
 
 	// EntryLo1 (odd).
-	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::PFN, tlbEntry.mPFNOdd);
-	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::C, tlbEntry.mCOdd);
-	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::D, tlbEntry.mDOdd);
-	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::V, tlbEntry.mVOdd);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::PFN, tlbEntry.PhysicalInfo[1].mPFN);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::C, tlbEntry.PhysicalInfo[1].mC);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::D, tlbEntry.PhysicalInfo[1].mD);
+	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::V, tlbEntry.PhysicalInfo[1].mV);
 	EntryLo1->setFieldValue(COP0RegisterEntryLo1_t::Fields::G, tlbEntry.mG);
 }
 
@@ -170,7 +169,7 @@ void InterpreterEECore::TLBWI()
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
 	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
 
-	TLBEntryInfo tlbEntry;
+	TLBEntryInfo_t tlbEntry;
 
 	// PageMask.
 	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);
@@ -181,16 +180,16 @@ void InterpreterEECore::TLBWI()
 
 	// EntryLo0 (even).
 	tlbEntry.mS = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::S);
-	tlbEntry.mPFNEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
-	tlbEntry.mCEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
-	tlbEntry.mDEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
-	tlbEntry.mVEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
+	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
+	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
+	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
 	
 	// EntryLo1 (odd).
-	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
-	tlbEntry.mCOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
-	tlbEntry.mDOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
-	tlbEntry.mVOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
+	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
+	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
+	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
 	
 	// G bit (and of Lo0 and Lo1)
 	tlbEntry.mG = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::G);
@@ -217,7 +216,7 @@ void InterpreterEECore::TLBWR()
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
 	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
 
-	TLBEntryInfo tlbEntry;
+	TLBEntryInfo_t tlbEntry;
 
 	// PageMask.
 	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);
@@ -228,16 +227,16 @@ void InterpreterEECore::TLBWR()
 
 	// EntryLo0 (even).
 	tlbEntry.mS = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::S);
-	tlbEntry.mPFNEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
-	tlbEntry.mCEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
-	tlbEntry.mDEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
-	tlbEntry.mVEven = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
+	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::C);
+	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::D);
+	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::V);
 
 	// EntryLo1 (odd).
-	tlbEntry.mPFNOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
-	tlbEntry.mCOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
-	tlbEntry.mDOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
-	tlbEntry.mVOdd = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
+	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::C);
+	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::D);
+	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::V);
 
 	// G bit (and of Lo0 and Lo1)
 	tlbEntry.mG = EntryLo0->getFieldValue(COP0RegisterEntryLo0_t::Fields::G) & EntryLo1->getFieldValue(COP0RegisterEntryLo1_t::Fields::G);

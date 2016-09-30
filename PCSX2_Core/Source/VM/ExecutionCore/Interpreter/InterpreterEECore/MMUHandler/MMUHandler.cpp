@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <cmath>
-
 #include "Common/Global/Globals.h"
 
 #include "VM/VMMain.h"
@@ -15,8 +13,8 @@
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
 #include "Common/Util/EECoreMMUUtil/EECoreMMUUtil.h"
-
-using TLBEntryInfo = MMU_t::TLBEntryInfo;
+#include "Common/Util/MathUtil/MathUtil.h"
+#include "Common/PS2Resources/EE/EECore/MMU/Types/TLBEntryInfo_t.h"
 
 MMUHandler::MMUHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain),
@@ -350,110 +348,57 @@ void MMUHandler::getPS2PhysicalAddress_Stage3()
 		return;
 	}
 
-	// Need to check now before continuing if the VPN is for a even or odd page. This is done by checking the LSB of the VPN from the original address accessed.
+	// Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
+	// This is done by checking the LSB of the VPN from the original address accessed.
 	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN.
-	if (mPS2VirtualAddress & (mTLBEntryInfo->mMask + 1))
+	mIndexEvenOdd = mPS2VirtualAddress & (mTLBEntryInfo->mMask + 1);
+
+	// Check if the entry is valid (V bit)
+	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mV)
 	{
-		// Odd
-		// Check if the entry is valid (V bit)
-		if (!mTLBEntryInfo->mVOdd)
-		{
-			// Raise TLB invalid exception
-			if (mAccessType == READ)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
-			else if (mAccessType == WRITE)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
-			else
-				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
+		// Raise TLB invalid exception
+		if (mAccessType == READ)
+			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
+		else if (mAccessType == WRITE)
+			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
+		else
+			throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
 
-			// Update state and return.
-			mHasExceptionOccurred = true;
-			return;
-		}	
-		
-		// Check if entry is allowed writes (dirty flag)
-		if (!mTLBEntryInfo->mDOdd)
-		{
-			// Raise TLB modified exception if writing occurs.
-			if (mAccessType == WRITE)
-			{
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
-				// Update state and return.
-				mHasExceptionOccurred = true;
-				return;
-			}
-		}
-
-		// Move on to stage 4 (odd)
-		return getPS2PhysicalAddress_Stage4Odd();
+		// Update state and return.
+		mHasExceptionOccurred = true;
+		return;
 	}
-	else
-	{
-		// Even
-		// Check if the entry is valid (V bit)
-		if (!mTLBEntryInfo->mVEven)
-		{
-			// Raise TLB invalid exception
-			if (mAccessType == READ)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
-			else if (mAccessType == WRITE)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
-			else
-				throw std::runtime_error("MMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
 
+	// Check if entry is allowed writes (dirty flag)
+	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mD)
+	{
+		// Raise TLB modified exception if writing occurs.
+		if (mAccessType == WRITE)
+		{
+			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
 			// Update state and return.
 			mHasExceptionOccurred = true;
 			return;
 		}
-
-		// Check if entry is allowed writes (dirty flag)
-		if (!mTLBEntryInfo->mDEven)
-		{
-			// Raise TLB modified exception if writing occurs.
-			if (mAccessType == WRITE)
-			{
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
-				// Update state and return.
-				mHasExceptionOccurred = true;
-				return;
-			}
-		}
-
-		// Move on to stage 4 (odd)
-		return getPS2PhysicalAddress_Stage4Even();
 	}
+
+	// Move on to stage 4.
+	getPS2PhysicalAddress_Stage4();
 }
 
-void MMUHandler::getPS2PhysicalAddress_Stage4Odd()
+void MMUHandler::getPS2PhysicalAddress_Stage4()
 {
 	// Cache access?
 	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
 	// See EE Core Users Manual page 126.
 	/*
-	if (tlbEntry.mCOdd > 0)
+	if (tlbEntry.PhysicalInfo[mIndexEvenOdd].mC > 0)
 	{
 	}
 	*/
 
 	// Else we are accessing main memory.
 	// Combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
-	u32 PFNBitPos = static_cast<u32>(log2(mTLBEntryInfo->mMask + 1));
-	mPS2PhysicalAddress = ((mTLBEntryInfo->mPFNOdd << PFNBitPos) | (mPS2VirtualAddress & mTLBEntryInfo->mMask));
-}
-
-void MMUHandler::getPS2PhysicalAddress_Stage4Even()
-{
-	// Cache access?
-	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
-	// See EE Core Users Manual page 126.
-	/*
-	if (tlbEntry.mCEven > 0)
-	{
-	}
-	*/
-
-	// Else we are accessing main memory.
-	// Combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
-	u32 PFNBitPos = static_cast<u32>(log2(mTLBEntryInfo->mMask + 1));
-	mPS2PhysicalAddress = ((mTLBEntryInfo->mPFNEven << PFNBitPos) | (mPS2VirtualAddress & mTLBEntryInfo->mMask));
+	u32 PFNBitPos = MathUtil::log2N(mTLBEntryInfo->mMask + 1);
+	mPS2PhysicalAddress = ((mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mPFN << PFNBitPos) | (mPS2VirtualAddress & mTLBEntryInfo->mMask));
 }

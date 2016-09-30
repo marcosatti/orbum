@@ -34,4 +34,11 @@ public:
 	*/
 	static s16 saturateWordToHword(s32 value);
 	static s32 saturateDwordToWord(s64 value);
+
+	/*
+	Finds N by log2(value), when value is known to be 2^N (only works on this condition). Used as a fast lookup instead of normal log2().
+	Thanks to: http://graphics.stanford.edu/~seander/bithacks.html
+	*/
+	static u32 log2N(u32 value);
+
 };
