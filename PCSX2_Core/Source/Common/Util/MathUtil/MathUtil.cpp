@@ -23,7 +23,10 @@ u32 MathUtil::countLeadingBits(s32 value)
 
 u32 MathUtil::constructMask32(u8 startPos, u8 length)
 {
-	return ((1 << length) - 1) << startPos;
+	// Due to how x86 (and possibly other arch's) shift, we need a solution for the case when length == 32, as it generates a bad mask.
+	// Old method: mask = (1 << param) - 1;
+	// Algorithm from here (thanks to Siu Ching Pong): http://stackoverflow.com/questions/1392059/algorithm-to-generate-bit-mask
+	return (static_cast<u32>(-(length != 0)) & (static_cast<u32>(-1) >> (32 - length))) << startPos;
 }
 
 u32 MathUtil::extractMaskedValue32(u32 value, u8 maskStartPos, u8 maskLength)
