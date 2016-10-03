@@ -5,7 +5,7 @@
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/InterpreterDMAC.h"
+#include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/TimerHandler/TimerHandler.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
@@ -15,7 +15,7 @@
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mEECoreInterpreter(std::make_unique<EECoreInterpreter>(vmMain)),
-	mDMACInterpreter(std::make_unique<InterpreterDMAC>(vmMain)),
+	mDMACInterpreter(std::make_unique<DMACInterpreter>(vmMain)),
 	mINTCHandler(std::make_unique<INTCHandler>(vmMain)),
 	mTimerHandler(std::make_unique<TimerHandler>(vmMain))
 {

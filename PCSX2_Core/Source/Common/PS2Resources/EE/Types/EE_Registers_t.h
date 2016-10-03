@@ -179,6 +179,11 @@ public:
 	};
 
 	EERegisterDmacMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+
+	/*
+	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
+	*/
+	void increment();
 };
 
 /*
@@ -223,6 +228,11 @@ public:
 	};
 
 	EERegisterDmacSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+
+	/*
+	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
+	*/
+	void increment();
 };
 
 /*
@@ -237,6 +247,11 @@ public:
 	};
 
 	EERegisterDmacQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+
+	/*
+	Decrements the QWC counter by 1. Should be called when a data unit has been transferred.
+	*/
+	void decrement();
 };
 
 /*

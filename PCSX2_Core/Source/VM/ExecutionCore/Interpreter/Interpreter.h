@@ -20,7 +20,7 @@ The timing is all implemented in the PS2Resources_t::Clock_t class, which is use
 
 class VMMain;
 class EECoreInterpreter;
-class InterpreterDMAC;
+class DMACInterpreter;
 class INTCHandler;
 class TimerHandler;
 //class InterpreterVU;
@@ -37,7 +37,7 @@ public:
 
 private:
 	const std::unique_ptr<EECoreInterpreter> mEECoreInterpreter;
-	const std::unique_ptr<InterpreterDMAC> mDMACInterpreter;
+	const std::unique_ptr<DMACInterpreter> mDMACInterpreter;
 	const std::unique_ptr<INTCHandler> mINTCHandler;
 	const std::unique_ptr<TimerHandler> mTimerHandler;
 	//const std::unique_ptr<InterpreterVU> mInterpreterVU; // TODO: look at putting VU0 and VU1 on a separate thread - looks like a good candidate.

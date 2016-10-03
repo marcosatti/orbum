@@ -336,7 +336,7 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\InterpreterDMAC.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\ClockSource_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.h" />
@@ -394,13 +394,14 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\TimerHandler\TimerHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\InterpreterDMAC.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.cpp" />

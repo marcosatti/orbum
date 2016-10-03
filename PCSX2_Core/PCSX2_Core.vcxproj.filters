@@ -249,7 +249,6 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\TimerHandler\TimerHandler.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\InterpreterDMAC.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\ExceptionHandler\ExceptionHandler.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler</Filter>
     </ClInclude>
@@ -259,6 +258,7 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClInclude>
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -357,69 +357,11 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\TimerHandler\TimerHandler.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\InterpreterDMAC.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\ExceptionHandler\ExceptionHandler.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler</Filter>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\MMUHandler\MMUHandler.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_ALU_OTHERS.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_BREAK_TRAP.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_CALL.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_COMPARE.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_COND_BRANCH_JUMP.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_DFC.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_FLOAT.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_INTEGER_ADD_SUB.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_INTEGER_MULT_ADD.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_INTEGER_MULT_DIV.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_LOAD_MEM.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_LOGICAL.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_MIN_MAX.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_OTHERS.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_REG_TRANSFER.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_REORDERING.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_SHIFT.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_SPECIAL_TRANSFER.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\InterpreterEECore_STORE_MEM.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
@@ -443,6 +385,8 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter_SHIFT.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter_STORE_MEM.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

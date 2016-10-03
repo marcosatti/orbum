@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/PS2Resources/EE/DMAC/Types/DMADataUnit_t.h"
 
 /*
 A struct containing info as required by a DMAtag, as explained on page 58 of the EE Users Manual.
-A constructor is supplied which can take in a u64 value, and produce a compatible DMAtag.
 
-Although a DMAtag is 128-bit long, only the lower 64-bits are used.
+Although a DMAtag is 128-bit long, only the lower 64-bits are used (for the tag). It is compatible with DMADataUnit_t.
+It takes in two u64 values as the upper 64-bits may be used in a tag transfer.
 
 Bitfield map (relevant only):
 - Bits 0-15 (length 16): "QWC" (Quadword count).
@@ -19,14 +20,18 @@ Bitfield map (relevant only):
 
 struct DMAtag_t
 {
-	explicit DMAtag_t(u64 value);
+	explicit DMAtag_t(u64 lower, u64 upper);
+	explicit DMAtag_t(const DMADataUnit_t & dataUnit);
 
-	u16 QWC;
-	u8 PCE;
-	u8 ID;
-	u8 IRQ;
-	u32 ADDR;
-	u8 SPR;
+	const u16 QWC;
+	const u8 PCE;
+	const u8 ID;
+	const u8 IRQ;
+	const u32 ADDR;
+	const u8 SPR;
+
+	const DMADataUnit_t mDataUnit;
+	DMADataUnit_t getDMADataUnit() const;
 };
 
 

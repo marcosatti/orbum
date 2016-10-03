@@ -143,6 +143,11 @@ EERegisterDmacMadr_t::EERegisterDmacMadr_t(const char* const mnemonic, const u32
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
+void EERegisterDmacMadr_t::increment()
+{
+	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
+}
+
 EERegisterDmacTadr_t::EERegisterDmacTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
 	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
@@ -163,10 +168,20 @@ EERegisterDmacSadr_t::EERegisterDmacSadr_t(const char* const mnemonic, const u32
 	registerField(Fields::ADDR, "ADDR", 0, 14, 0);
 }
 
+void EERegisterDmacSadr_t::increment()
+{
+	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
+}
+
 EERegisterDmacQwc_t::EERegisterDmacQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
 	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
 {
 	registerField(Fields::QWC, "QWC", 0, 16, 0);
+}
+
+void EERegisterDmacQwc_t::decrement()
+{
+	BitfieldMap32_t::setFieldValue(Fields::QWC, BitfieldMap32_t::getFieldValue(Fields::QWC) - 1);
 }
 
 EERegisterDmacCtrl_t::EERegisterDmacCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :

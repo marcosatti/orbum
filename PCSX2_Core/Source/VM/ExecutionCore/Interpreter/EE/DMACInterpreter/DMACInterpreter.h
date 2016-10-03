@@ -4,6 +4,7 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMADataUnit_t.h"
+#include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
 /*
@@ -29,15 +30,15 @@ TODO: Speedups can be done here:
  - Dont need to turn on cycle stealing if requested? Kind of redundant in an emulator.
 */
 
-class InterpreterDMAC : VMExecutionCoreComponent
+class DMACInterpreter : VMExecutionCoreComponent
 {
 public:
-	explicit InterpreterDMAC(VMMain * vmMain);
-	~InterpreterDMAC();
+	explicit DMACInterpreter(VMMain * vmMain);
+	~DMACInterpreter();
 
 	/*
 	Check through the channels and initate data transfers. 
-	Slice channels transfer 8 qwords (128 bytes) each step, where as burst channels transfer all data in one step.
+	Slice channels transfer 8 qwords (128 bytes) before suspending transfer, where as burst channels transfer all data without suspending.
 	TODO: Currently it is assumed that the software uses the DMAC correctly (such as using correct chain mode for a channel). Need to add in checks?
 	*/
 	void executionStep() override;
@@ -116,17 +117,26 @@ private:
 
 	/*
 	Transfer one data unit using the DMA channel register settings. This is common to both Slice and Burst channels (done on every BUSCLK tick).
-	Updates the PS2Resources->EE->DMAC->DataCountState[channelID] by 1 whenever called.
 	*/
 	void transferDataUnit(u32 channelID);
 
 	/*
-	Read and write a qword from the specified peripheral FIFO queue, or from physical memory (either main memory or SPR (scratchpad ram)).
+	Reads in a DMAtag given the channel ID (from the TADR register).
+	*/
+	DMAtag_t readDMAtag(u32 channelID) const;
+
+	/*
+	Transfer a DMAtag. It is only defined one way, from memory to peripheral (as it is only effective in source chain mode).
+	*/
+	void transferDMAtag(u32 channelID, const DMAtag_t & tag);
+
+	/*
+	Read and write a qword from the specified peripheral, or from physical memory (either main memory or SPR (scratchpad ram)).
 	*/
 	DMADataUnit_t readDataChannel(ChannelID_t channel);
 	void writeDataChannel(ChannelID_t channel, DMADataUnit_t data);
-	DMADataUnit_t readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess);
-	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, DMADataUnit_t data);
+	DMADataUnit_t readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
+	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, DMADataUnit_t data) const;
 
 };
 
