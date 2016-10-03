@@ -4,18 +4,18 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterEECore/InterpreterEECore.h"
-#include "VM/ExecutionCore/Interpreter/InterpreterDMAC/InterpreterDMAC.h"
-#include "VM/ExecutionCore/Interpreter/INTCHandler/INTCHandler.h"
-#include "VM/ExecutionCore/Interpreter/TimerHandler/TimerHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/InterpreterDMAC.h"
+#include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/TimerHandler/TimerHandler.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/Clock/Clock_t.h"
 
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
-	mInterpreterEECore(std::make_unique<InterpreterEECore>(vmMain)),
-	mDMACHandler(std::make_unique<InterpreterDMAC>(vmMain)),
+	mEECoreInterpreter(std::make_unique<EECoreInterpreter>(vmMain)),
+	mDMACInterpreter(std::make_unique<InterpreterDMAC>(vmMain)),
 	mINTCHandler(std::make_unique<INTCHandler>(vmMain)),
 	mTimerHandler(std::make_unique<TimerHandler>(vmMain))
 {
@@ -26,7 +26,7 @@ void Interpreter::executionStep()
 	auto& Clock = getVM()->getResources()->Clock;
 
 	// Process base EE Core event (which controls the timing for components below, by updating the Clock class).
-	mInterpreterEECore->executionStep();
+	mEECoreInterpreter->executionStep();
 	
 	// Process any PS2CLK components.
 	// TODO: No components so far. Put VU's here?
@@ -36,7 +36,7 @@ void Interpreter::executionStep()
 	{
 		mINTCHandler->executionStep();
 		mTimerHandler->executionStep_BUSCLK();
-		mDMACHandler->executionStep();
+		mDMACInterpreter->executionStep();
 	}
 
 	// Process any BUSCLK16 components.
@@ -61,5 +61,5 @@ void Interpreter::executionStep()
 
 void Interpreter::initalise()
 {
-	mInterpreterEECore->initalise();
+	mEECoreInterpreter->initalise();
 }

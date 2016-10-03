@@ -8,7 +8,7 @@ Clock_t provides synchronisation across components, by recording the relative ti
 By using the provided functions in an execution core, it will be able to run the different components at approximately the right speed.
 
 PS2CLK is always used as the base clock at which the others are relatives of. For example, for every 2 PS2CLK's that happen, 1 BUSCLK will occur.
-In terms of the part of the emulator that controls this, it is the EE Core component. See the InterpreterEECore as an example.
+In terms of the part of the emulator that controls this, it is the EE Core component. See the EECoreInterpreter as an example.
 
 TODO: Add in a PS2CLK event, if required. So far nothing requires this, except for the EE Core but that is already used as the base reference (which includes the COP0.Count updates).
 */
@@ -37,7 +37,7 @@ public:
 
 	/*
 	Updates the PS2CLK clock source based upon the number of PS2CLKs that just occured. This should only be run from an PS2CLK 'loop'.
-	As an example, in the interpreter, it is run every time InterpreterEECore runs (see InterpreterEECore::executeInstruction()).
+	As an example, in the interpreter, it is run every time EECoreInterpreter runs (see EECoreInterpreter::executeInstruction()).
 	 
 	Call the isTicked*() functions after to check if another clock source has 'ticked' and components should be run.
 	*/

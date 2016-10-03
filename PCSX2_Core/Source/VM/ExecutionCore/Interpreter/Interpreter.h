@@ -10,7 +10,7 @@ TODO: Fill in documentation, and add threading for sub components. Sub component
 The PCSX2 interpreter. Provides an implementation of a running PS2 system.
 Idealy, any sub components in here can run independently of eachother (or spinlock/wait until data is ready).
 
-For timing, InterpreterEECore provides the relative synchronisation, as it is the fastest clocked device in the PS2 (294 MHz).
+For timing, EECoreInterpreter provides the relative synchronisation, as it is the fastest clocked device in the PS2 (294 MHz).
 The EE Core clock is also refered to as the PS2CLK.
 All other components can be expressed as ratios of this clock speed.
 For example, the BUSCLK is half that of the PS2CLK. Therefore for every 2 executionStep() of the EE Core, 
@@ -19,7 +19,7 @@ The timing is all implemented in the PS2Resources_t::Clock_t class, which is use
 */
 
 class VMMain;
-class InterpreterEECore;
+class EECoreInterpreter;
 class InterpreterDMAC;
 class INTCHandler;
 class TimerHandler;
@@ -36,8 +36,8 @@ public:
 	void initalise() override;
 
 private:
-	const std::unique_ptr<InterpreterEECore> mInterpreterEECore;
-	const std::unique_ptr<InterpreterDMAC> mDMACHandler;
+	const std::unique_ptr<EECoreInterpreter> mEECoreInterpreter;
+	const std::unique_ptr<InterpreterDMAC> mDMACInterpreter;
 	const std::unique_ptr<INTCHandler> mINTCHandler;
 	const std::unique_ptr<TimerHandler> mTimerHandler;
 	//const std::unique_ptr<InterpreterVU> mInterpreterVU; // TODO: look at putting VU0 and VU1 on a separate thread - looks like a good candidate.

@@ -28,7 +28,7 @@ public:
 	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles).
 	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
 	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
-	See the InterpreterEECore::checkBranchDelaySlot() for the logic that controls this.
+	See the EECoreInterpreter::checkBranchDelaySlot() for the logic that controls this.
 	*/
 	bool mIsInBranchDelay;
 	u8 mBranchDelayCycles;

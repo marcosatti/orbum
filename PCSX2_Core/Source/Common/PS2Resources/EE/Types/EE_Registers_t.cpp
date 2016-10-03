@@ -131,7 +131,7 @@ void EERegisterDmacChcr_t::writeWordU(u32 storageIndex, u32 value)
 {
 	// Check if the STR bit is 1. If so, reset the packet count.
 	if (value & 0x100)
-		getRootResources()->EE->DMAC->PacketCountState[mChannelID] = 0;
+		getRootResources()->EE->DMAC->DataCountState[mChannelID] = 0;
 
 	BitfieldMMemory32_t::writeWordU(storageIndex, value);
 }

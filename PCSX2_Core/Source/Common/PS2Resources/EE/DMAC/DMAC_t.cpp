@@ -3,6 +3,6 @@
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 
 DMAC_t::DMAC_t() :
-	PacketCountState{0}
+	DataCountState{0}
 {
 }
