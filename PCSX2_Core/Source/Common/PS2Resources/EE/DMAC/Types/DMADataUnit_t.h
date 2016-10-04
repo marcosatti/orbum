@@ -8,7 +8,7 @@ See EE Users manual page 41.
 */
 struct DMADataUnit_t
 {
-	const u64 mDataUnit[Constants::NUMBER_DWORDS_IN_QWORD];
+	u64 mDataUnit[Constants::NUMBER_DWORDS_IN_QWORD];
 
 	DMADataUnit_t(u64 lower, u64 upper);
 };

@@ -115,6 +115,8 @@ public:
 		struct DMAC
 		{
 			static constexpr u32 NUMBER_DMA_CHANNELS = 10;
+			static constexpr u32 NUMBER_SRC_CHAIN_INSTRUCTIONS = 8;
+			static constexpr u32 NUMBER_DST_CHAIN_INSTRUCTIONS = 3;
 		};
 
 		// Ratios of PS2CLK (EE Core speed) divided by other clock source within EE. The PS2CLK runs at ~294 MHz.

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-
+#include "Common/PS2Constants/PS2Constants.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory32_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
@@ -139,7 +139,7 @@ public:
 
 /*
 The DMAC D_CHCR register, aka channel control register.
-Needs an channel index, which is used to reset the packed transferred count state when a 1 is written to the STR bit.
+Needs an channel index, which is used to reset the EE->DMAC state variables when a 1 is written to the STR bit.
 */
 class EERegisterDmacChcr_t : public BitfieldMMemory32_t, public PS2ResourcesSubobject
 {
@@ -311,6 +311,10 @@ public:
 		static constexpr u8 CIM9 = 22;
 		static constexpr u8 SIM = 23;
 		static constexpr u8 MEIM = 24;
+
+		// Array of CIS and CIM keys needed for iterations.
+		static constexpr u8 CIS_KEYS[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS] { CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
+		static constexpr u8 CIM_KEYS[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS] { CIM0, CIM1, CIM2, CIM3, CIM4, CIM5, CIM6, CIM7, CIM8, CIM9 };
 	};
 
 	EERegisterDmacStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);

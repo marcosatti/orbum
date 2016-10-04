@@ -23,7 +23,7 @@ See EE Users Manual page 41 onwards.
 Some notes:
  - From what I gather, when the manual talks about a peripheral processors, ie: "transfering data to or from", there is a FIFO queue 128 bytes long
     which stores the DMA channel data? Since you can't specify the dest/src address, except for when accessing SPR or main mem...
- - EERegisterDMACDChcr_t sets PS2Resources->EE->DMAC->DataCountState[channelID] to 0 everytime CHCR.STR has 1 written to it (at the start of a new transfer).
+ - EERegisterDMACDChcr_t sets PS2Resources->EE->DMAC->{state variables} to 0 or false everytime CHCR.STR has 1 written to it (at the start of a new/resumed transfer).
 
 TODO: Speedups can be done here:
  - Dont need to transfer 1-qword at a time.
@@ -101,42 +101,110 @@ private:
 	};
 
 	/*
-	Do a Normal logical mode transfer through the specified DMA channel.
+	Context variables. Used by the functions below.
 	*/
-	void executionStep_Normal(u32 channelID);
+	u32 mChannelID;
+	DMAtag_t mDMAtag;
 
 	/*
-	Do a Normal logical mode transfer through the specified DMA channel.
+	Do a normal logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Chain(u32 channelID);
+	void executionStep_Normal() const;
 
 	/*
-	Do a Normal logical mode transfer through the specified DMA channel.
+	Do a chain logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Interleaved(u32 channelID);
+	void executionStep_Chain();
 
 	/*
-	Transfer one data unit using the DMA channel register settings. This is common to both Slice and Burst channels (done on every BUSCLK tick).
+	Do a interleaved logical mode transfer through the specified DMA channel.
 	*/
-	void transferDataUnit(u32 channelID);
+	void executionStep_Interleaved();
+
+	/*
+	Transfer one data unit using the DMA channel register settings. This is common to both Slice and Burst channels.
+	*/
+	void transferDataUnit() const;
 
 	/*
 	Reads in a DMAtag given the channel ID (from the TADR register).
 	*/
-	DMAtag_t readDMAtag(u32 channelID) const;
+	DMAtag_t readDMAtag() const;
 
 	/*
 	Transfer a DMAtag. It is only defined one way, from memory to peripheral (as it is only effective in source chain mode).
+	Therefore do not need to update MADR and QWC.
 	*/
-	void transferDMAtag(u32 channelID, const DMAtag_t & tag);
+	void transferDMAtag() const;
+
+	/*
+	Checks the slice channel quota limit, and suspends transfer if it has been reached.
+	*/
+	void checkSliceQuota() const;
+
+	/*
+	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (QWC == 0 and TAG.IRQ/CHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
+	*/
+	void checkDMAtagPacketInterrupt() const;
+
+	/*
+	Suspends the current DMA transfer by:
+	 - Setting the appropriate interrupt (CIS) bit of the D_STAT register.
+	 - Setting CHCH.STR to 0.
+	*/
+	void suspendTransfer() const;
+
+	/*
+	Checks for D_STAT CIS & CIM conditions, and sends interrupt if the AND of both is 1.
+	*/
+	void checkInterruptStatus() const;
+
+	/*
+	Checks if we are in a tag instruction that ends the transfer after the packet has completed. If so, changes the channel to a suspended state.
+	*/
+	void checkChainExit() const;
 
 	/*
 	Read and write a qword from the specified peripheral, or from physical memory (either main memory or SPR (scratchpad ram)).
 	*/
-	DMADataUnit_t readDataChannel(ChannelID_t channel);
-	void writeDataChannel(ChannelID_t channel, DMADataUnit_t data);
+	DMADataUnit_t readDataChannel() const;
+	void writeDataChannel(DMADataUnit_t data) const;
 	DMADataUnit_t readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
 	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, DMADataUnit_t data) const;
 
+	/*
+	Chain DMAtag handler functions. Consult page 59 and 60 of EE Users Manual.
+	*/
+	void REFE();
+	void CNT();
+	void NEXT();
+	void REF();
+	void REFS();
+	void CALL();
+	void RET();
+	void END();
+	void CNTS();
+
+	/*
+	Static arrays needed to call the appropriate DMAtag handler function.
+	There is one for source and destination chain modes. See page 60 and 61 of EE Users Manual for the list of applicable DMAtag instructions.
+	*/
+	void(DMACInterpreter::*const SRC_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_SRC_CHAIN_INSTRUCTIONS])() =
+	{
+		&DMACInterpreter::REFE,
+		&DMACInterpreter::CNT,
+		&DMACInterpreter::NEXT,
+		&DMACInterpreter::REF,
+		&DMACInterpreter::REFS,
+		&DMACInterpreter::CALL,
+		&DMACInterpreter::RET,
+		&DMACInterpreter::END
+	};
+	void(DMACInterpreter::*const DST_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_DST_CHAIN_INSTRUCTIONS])() =
+	{
+		&DMACInterpreter::CNT,
+		&DMACInterpreter::CNTS,
+		&DMACInterpreter::END,
+	};
 };
 

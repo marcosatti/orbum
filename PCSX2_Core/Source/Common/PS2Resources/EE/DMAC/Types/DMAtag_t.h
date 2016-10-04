@@ -23,15 +23,15 @@ struct DMAtag_t
 	explicit DMAtag_t(u64 lower, u64 upper);
 	explicit DMAtag_t(const DMADataUnit_t & dataUnit);
 
-	const u16 QWC;
-	const u8 PCE;
-	const u8 ID;
-	const u8 IRQ;
-	const u32 ADDR;
-	const u8 SPR;
+	u16 QWC;
+	u8 PCE;
+	u8 ID;
+	u8 IRQ;
+	u32 ADDR;
+	u8 SPR;
 
-	const DMADataUnit_t mDataUnit;
-	DMADataUnit_t getDMADataUnit() const;
+	DMADataUnit_t mDataUnit;
+	const DMADataUnit_t & getDMADataUnit() const;
 };
 
 

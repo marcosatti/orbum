@@ -454,7 +454,7 @@ private:
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
 	See EECoreInstructionUtil and "EECore Instruction Implementation Register.xlsm" for more details.
 	*/
-	// TODO: surely there is an easier way.. reasearch how to initalise non-static arrays outside of the header file. I'm sure I'm missing something completely obvious here..
+	// TODO: surely there is an easier way.. reasearch how to initalise static arrays outside of the header file. I'm sure I'm missing something completely obvious here..
 	void(EECoreInterpreter::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() =
 	{
 		&EECoreInterpreter::INSTRUCTION_UNKNOWN,

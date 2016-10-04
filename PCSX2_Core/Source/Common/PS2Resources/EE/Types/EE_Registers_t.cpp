@@ -129,9 +129,12 @@ EERegisterDmacChcr_t::EERegisterDmacChcr_t(const char* const mnemonic, const u32
 
 void EERegisterDmacChcr_t::writeWordU(u32 storageIndex, u32 value)
 {
-	// Check if the STR bit is 1. If so, reset the packet count.
+	// Check if the STR bit is 1. If so, reset the DMA channel state variables.
 	if (value & 0x100)
-		getRootResources()->EE->DMAC->DataCountState[mChannelID] = 0;
+	{
+		getRootResources()->EE->DMAC->SliceCountState[mChannelID] = 0;
+		getRootResources()->EE->DMAC->ChainExitState[mChannelID] = false;
+	}
 
 	BitfieldMMemory32_t::writeWordU(storageIndex, value);
 }

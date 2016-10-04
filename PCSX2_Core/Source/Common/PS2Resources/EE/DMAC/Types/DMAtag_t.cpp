@@ -24,7 +24,7 @@ DMAtag_t::DMAtag_t(const DMADataUnit_t & dataUnit) :
 {
 }
 
-DMADataUnit_t DMAtag_t::getDMADataUnit() const
+const DMADataUnit_t & DMAtag_t::getDMADataUnit() const
 {
 	return mDataUnit;
 }
