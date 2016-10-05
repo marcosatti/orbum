@@ -133,7 +133,6 @@ void EERegisterDmacChcr_t::writeWordU(u32 storageIndex, u32 value)
 	if (value & 0x100)
 	{
 		getRootResources()->EE->DMAC->SliceCountState[mChannelID] = 0;
-		getRootResources()->EE->DMAC->ChainExitState[mChannelID] = false;
 	}
 
 	BitfieldMMemory32_t::writeWordU(storageIndex, value);

@@ -262,6 +262,7 @@ public:
 		std::shared_ptr<EERegisterDmacAsr_t>  ASR0;
 		std::shared_ptr<EERegisterDmacAsr_t>  ASR1;
 		std::shared_ptr<EERegisterDmacSadr_t> SADR;
+		std::shared_ptr<EERegisterDmacAsr_t>  ASR[2];
 	} DMAChannelRegisters[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS];
 
 	// 0x1000E000

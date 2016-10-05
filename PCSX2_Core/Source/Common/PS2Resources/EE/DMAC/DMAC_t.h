@@ -21,5 +21,11 @@ public:
 	Not all of the array will be used (only for channels that support chain mode).
 	*/
 	bool ChainExitState[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS];
+
+	/*
+	A stack level count, for chain mode (CALL / RET instructions). Used to check if the DMA transfer should end.
+	Not all of the array will be used (only for channels that support chain mode).
+	*/
+	u8 ChainStackLevelState[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS];
 };
 
