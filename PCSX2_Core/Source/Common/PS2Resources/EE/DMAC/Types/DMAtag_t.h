@@ -21,7 +21,7 @@ Bitfield map (relevant only):
 struct DMAtag_t
 {
 	explicit DMAtag_t(u64 lower, u64 upper);
-	explicit DMAtag_t(const DMADataUnit_t & dataUnit);
+	DMAtag_t(const DMADataUnit_t & dataUnit);
 
 	u16 QWC;
 	u8 PCE;

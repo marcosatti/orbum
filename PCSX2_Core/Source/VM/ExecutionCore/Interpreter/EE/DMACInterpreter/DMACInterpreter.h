@@ -171,9 +171,10 @@ private:
 	// Chain mode functions.
 
 	/*
-	Reads in a DMAtag given the channel ID (from the TADR register).
+	Sets mDMAtag to the tag read from memory/SPR (from the TADR register).
+	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
 	*/
-	DMAtag_t readDMAtag() const;
+	void readDMAtag();
 
 	/*
 	Transfer a DMAtag. It is only defined one way, from memory to peripheral (as it is only effective in source chain mode).

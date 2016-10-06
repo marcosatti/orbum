@@ -95,10 +95,10 @@ void DMACInterpreter::executionStep_Chain()
 		// Transfer a single data unit of 128 bits (same for slice and burst). This function also updates the number of units transferred.
 		transferDataUnit();
 
-		// If QWC is now 0, we need to check for tag interrupts or end the DMA transfer (if the tag ID was "end" etc.).
+		// If QWC is now 0, check for suspend conditions.
 		if (channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC) == 0)
 		{
-			// Check if we need to emit a tag interrupt.
+			// Check if we need to emit a tag interrupt (done after packet transfer has completed).
 			checkDMAtagPacketInterrupt();
 
 			// Check if we need to exit based on tag instruction ("end", "ret", etc).
@@ -107,9 +107,8 @@ void DMACInterpreter::executionStep_Chain()
 	}
 	else
 	{
-		// Read in a tag and set CHCH.TAG field (to bits 16-31 of the DMAtag read).
-		mDMAtag = readDMAtag();
-		channelRegisters.CHCR->setFieldValue(EERegisterDmacChcr_t::Fields::TAG, (mDMAtag.getDMADataUnit().mDataUnit[0] >> 16) & 0xFFFF);
+		// Read in a tag.
+		readDMAtag();
 
 		// Check if we need to transfer the tag.
 		if (channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::TTE))
@@ -291,7 +290,7 @@ void DMACInterpreter::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess,
 	}
 }
 
-DMAtag_t DMACInterpreter::readDMAtag() const
+void DMACInterpreter::readDMAtag()
 {
 	auto& channelRegisters = getVM()->getResources()->EE->DMAChannelRegisters[mChannelID];
 
@@ -299,8 +298,11 @@ DMAtag_t DMACInterpreter::readDMAtag() const
 	const u32 TADR = channelRegisters.TADR->getFieldValue(EERegisterDmacMadr_t::Fields::ADDR);
 	const bool SPRFlag = (channelRegisters.TADR->getFieldValue(EERegisterDmacMadr_t::Fields::SPR) != 0);
 
-	// Return a DMAtag_t based upon a DMADataUnit_t read from memory.
-	return DMAtag_t(readDataMemory(TADR, SPRFlag));
+	// Set mDMAtag based upon the DMADataUnit_t read from memory.
+	mDMAtag = readDataMemory(TADR, SPRFlag);
+
+	// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
+	channelRegisters.CHCR->setFieldValue(EERegisterDmacChcr_t::Fields::TAG, (mDMAtag.getDMADataUnit().mDataUnit[0] >> 16) & 0xFFFF);
 }
 
 void DMACInterpreter::transferDMAtag() const
