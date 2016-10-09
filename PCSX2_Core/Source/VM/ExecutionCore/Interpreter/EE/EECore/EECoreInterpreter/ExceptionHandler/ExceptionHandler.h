@@ -4,13 +4,15 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Constants/PS2Constants.h"
+#include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
 
 /*
 The exception handler provides 2 main points of functionality:
  1. Handles the exception state for the EE Core.
  2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
 */
+
+using ExceptionProperties_t = EECoreExceptionsTable::ExceptionProperties_t;
 
 class VMMain;
 
@@ -21,7 +23,6 @@ public:
 
 	/*
 	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set (and not masked).
-	TODO: add in exception masked checking.
 	*/
 	void checkExceptionState();
 
@@ -35,22 +36,28 @@ public:
 	void handleException(const EECoreException_t& PS2Exception);
 
 private:
+	// Debug for counting the number of exceptions raised/handled and string representations.
+#if defined(BUILD_DEBUG)
+	u64 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
+#endif
+
 	/*
-	Temp variable for holding the raw PS2Exception. Needed by some of the exception function handlers listed below.
+	State variables, needed by functions below.
 	*/
-	const EECoreException_t * mPS2Exception;
+	const EECoreException_t * mEECoreException;
+	const ExceptionProperties_t * mExceptionProperties;
 
 	/*
 	The level 1 or level 2 exception handler, which is called by the base handleException() function.
 	They have been adapted from the code in the EE Core Users Manual page 91 & 92.
 	*/
-	struct ExceptionProperties_t; // Forward declaration - see below for definition.
-	void handleException_L1(const ExceptionProperties_t & exceptionProperties) const;
-	void handleException_L2(const ExceptionProperties_t & exceptionProperties) const;
+	
+	void handleException_L1() const;
+	void handleException_L2() const;
 
 	/*
 	As a part of the exception handling, there is additional actions that each type of exception requires.
-	See EE Core Users manual page 95 onwards. They are prefixed with EX_HANDLER, and are pointed to by the ExceptionProperties[].
+	See EE Core Users manual page 95 onwards. They are prefixed with EX_HANDLER.
 	NOTE: You do not need to put in anything that is done automatically by the general exception handler algorithms (level 1 or 2).
 	*/
 	void EX_HANDLER_RESET();
@@ -75,69 +82,30 @@ private:
 	void EX_HANDLER_TRAP();
 
 	/*
-	ExceptionProperties_t and ExceptionProperties[] describes the exception context parameters to be set when an exception of that type is handled.
-	These properties are common to all exceptions. See page 94 of the EE Core Users Manual.
-	There is an additional field to run the exception specific handler, which are defined in the "Operation" section in each exception of the manual.
-	NOTE: Do NOT change the order - they are sync'd with the EECoreException_t enum order. If you change one you must reflect the changes in the other.
+	Static arrays needed to call the appropriate exception handler function. Based upon EECoreExceptionsTable::ExceptionProperties_t::mImplementationIndex.
 	*/
-	struct ExceptionProperties_t
+	void(ExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::EE::EECore::Exceptions::NUMBER_EXCEPTIONS])() =
 	{
-		EECoreException_t::ExType mExceptionInfo;
-		u8					      mLevel;
-		s8			              mExeCode;
-		s8			              mEXC2;
-		void		              (ExceptionHandler::*ExceptionHandlerFunction)();
+		&ExceptionHandler::EX_HANDLER_RESET,
+		&ExceptionHandler::EX_HANDLER_NMI,
+		&ExceptionHandler::EX_HANDLER_PERFORMANCE_COUNTER,
+		&ExceptionHandler::EX_HANDLER_DEBUG,
+		&ExceptionHandler::EX_HANDLER_INTERRUPT,
+		&ExceptionHandler::EX_HANDLER_TLB_MODIFIED,
+		&ExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD,
+		&ExceptionHandler::EX_HANDLER_TLB_REFILL_STORE,
+		&ExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD,
+		&ExceptionHandler::EX_HANDLER_TLB_INVALID_STORE,
+		&ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD,
+		&ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE,
+		&ExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH,
+		&ExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE,
+		&ExceptionHandler::EX_HANDLER_SYSTEMCALL,
+		&ExceptionHandler::EX_HANDLER_BREAK,
+		&ExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION,
+		&ExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE,
+		&ExceptionHandler::EX_HANDLER_OVERFLOW,
+		&ExceptionHandler::EX_HANDLER_TRAP
 	};
-	ExceptionProperties_t ExceptionProperties[PS2Constants::EE::EECore::Exceptions::NUMBER_EXCEPTIONS] =
-	{
-		{ EECoreException_t::ExType::EX_RESET,                                2, -1,  0, &ExceptionHandler::EX_HANDLER_RESET },
-		{ EECoreException_t::ExType::EX_NMI,                                  2, -1,  1, &ExceptionHandler::EX_HANDLER_NMI },
-		{ EECoreException_t::ExType::EX_PERFORMANCE_COUNTER,                  2, -1,  2, &ExceptionHandler::EX_HANDLER_PERFORMANCE_COUNTER },
-		{ EECoreException_t::ExType::EX_DEBUG,                                2, -1,  4, &ExceptionHandler::EX_HANDLER_DEBUG },
-		{ EECoreException_t::ExType::EX_INTERRUPT,                            1,  0, -1, &ExceptionHandler::EX_HANDLER_INTERRUPT },
-		{ EECoreException_t::ExType::EX_TLB_MODIFIED,                         1,  1, -1, &ExceptionHandler::EX_HANDLER_TLB_MODIFIED },
-		{ EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD,    1,  2, -1, &ExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_TLB_REFILL_STORE,                     1,  3, -1, &ExceptionHandler::EX_HANDLER_TLB_REFILL_STORE },
-		{ EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD,   1,  2, -1, &ExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_TLB_INVALID_STORE,                    1,  3, -1, &ExceptionHandler::EX_HANDLER_TLB_INVALID_STORE },
-		{ EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD, 1,  4, -1, &ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD },
-		{ EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE,                  1,  5, -1, &ExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE },
-		{ EECoreException_t::ExType::EX_BUS_ERROR_INSTRUCTION_FETCH,          1,  6, -1, &ExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH },
-		{ EECoreException_t::ExType::EX_BUS_ERROR_LOAD_STORE,                 1,  7, -1, &ExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE },
-		{ EECoreException_t::ExType::EX_SYSTEMCALL,                           1,  8, -1, &ExceptionHandler::EX_HANDLER_SYSTEMCALL },
-		{ EECoreException_t::ExType::EX_BREAK,                                1,  9, -1, &ExceptionHandler::EX_HANDLER_BREAK },
-		{ EECoreException_t::ExType::EX_RESERVED_INSTRUCTION,                 1, 10, -1, &ExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION },
-		{ EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE,                 1, 11, -1, &ExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE },
-		{ EECoreException_t::ExType::EX_OVERFLOW,                             1, 12, -1, &ExceptionHandler::EX_HANDLER_OVERFLOW },
-		{ EECoreException_t::ExType::EX_TRAP,                                 1, 13, -1, &ExceptionHandler::EX_HANDLER_TRAP }
-	};
-
-	// Debug for counting the number of exceptions raised/handled and string representations.
-#if defined(BUILD_DEBUG)
-	u32 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
-	static constexpr char *const exTypeStrings[] = 
-	{
-		"EX_RESET",
-		"EX_NMI",
-		"EX_PERFORMANCE_COUNTER",
-		"EX_DEBUG",
-		"EX_INTERRUPT",
-		"EX_TLB_MODIFIED",
-		"EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD",
-		"EX_TLB_REFILL_STORE",
-		"EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD",
-		"EX_TLB_INVALID_STORE",
-		"EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD",
-		"EX_ADDRESS_ERROR_STORE",
-		"EX_BUS_ERROR_INSTRUCTION_FETCH",
-		"EX_BUS_ERROR_LOAD_STORE",
-		"EX_SYSTEMCALL",
-		"EX_BREAK",
-		"EX_RESERVED_INSTRUCTION",
-		"EX_COPROCESSOR_UNUSABLE",
-		"EX_OVERFLOW",
-		"EX_TRAP"
-	};
-#endif
 };
 

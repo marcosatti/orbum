@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
@@ -13,8 +13,7 @@
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/FPRegister32_t.h"
-#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+#include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
 
 /*
 Compare instruction family.

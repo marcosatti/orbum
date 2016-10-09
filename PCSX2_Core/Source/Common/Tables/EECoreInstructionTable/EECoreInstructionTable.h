@@ -5,7 +5,7 @@
 #include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
 
 /*
-Static class used as the EECore instruction lookup.
+Static class used as the EECore instruction information lookup.
 This uses the Instruction/Class hierarchy structure as defined in the EE Core Instruction Manual Appendix section.
 The instruction tables are defined in EECore Instruction Implementation Register.xlsx. You can copy and paste any changes made to that file in here, but make sure the spreadsheet is the master copy.
  It is a lot easier to read the spreadsheet than looking at the source code.
@@ -13,13 +13,13 @@ The instruction tables are defined in EECore Instruction Implementation Register
 The purpose of this class is to decode the given instruction, so that an execution core knows which instruction implementation to use.
 For example (pseduo-code): 
  MIPSInstruction = 0xABCD1234
- Info = EECoreInstructionUtil::getInstructionInfo(MIPSInstruction)
+ Info = EECoreInstructionTable::getInstructionInfo(MIPSInstruction)
  ExecutionCore.ExecuteInstruction(Info.mImplementationIndex)
 
 The mImplementationIndex is a linear UNIQUE index of all of the instructions for the EECore - there should be no two instructions with the same index.
 Therefore in an execution core, a simple function pointer array of size = MAX(Implementation Indexes) will be enough, which is simply used as in the example above.
 */
-class EECoreInstructionUtil
+class EECoreInstructionTable
 {
 public:
 	/*
@@ -43,17 +43,7 @@ public:
 		};
 
 		// Constructor.
-		EECoreInstructionInfo_t(const char *const baseClass, const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t&(*const lookupFunction)(const MIPSInstruction_t& instruction))
-			: mBaseClass(baseClass),
-			mClassIndex(classIndex),
-			mInstructionType(instructionType),
-			mMnemonic(mnemonic),
-			mImplementationIndex(implementationIndex),
-			mBranchDelayType(branchDelayType),
-			mCycles(cycles),
-			mLookupFuncion(lookupFunction)
-		{
-		}
+		EECoreInstructionInfo_t(const char*const baseClass, const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t&(*const lookupFunction)(const MIPSInstruction_t& instruction));
 
 		const char *const               mBaseClass;                                                     // Name of the base class the instruction is within.
 		const u8                        mClassIndex;                                                    // Index of the instruction/subclass within the class. For example in the OPCODE table, the COP0 subclass has class index = 16.

@@ -5,6 +5,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include <Common/PS2Constants/PS2Constants.h>
 
 class Register128_t;
 class Register32_t;
@@ -55,7 +56,7 @@ public:
 	*/
 	std::shared_ptr<ZeroRegister128_t> ZeroRegister;
 	std::shared_ptr<LinkRegister128_t> LinkRegister;
-	std::shared_ptr<Register128_t> GPR[32];
+	std::shared_ptr<Register128_t> GPR[PS2Constants::EE::EECore::R5900::NUMBER_REGISTERS];
 
 	/*
 	The HI and LO registers. See EE Core Users manual, pg 60.

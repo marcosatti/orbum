@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-class VMMain;
+class VmMain1;
 class VMMMUMappedMemory;
 class MappedMemory_t;
 

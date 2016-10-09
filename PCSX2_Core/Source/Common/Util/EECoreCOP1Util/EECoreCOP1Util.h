@@ -1,7 +1,6 @@
 #pragma once
-#include "Common/Global/Globals.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
 
+#include "Common/Global/Globals.h"
 
 class EECoreCOP1Util
 {

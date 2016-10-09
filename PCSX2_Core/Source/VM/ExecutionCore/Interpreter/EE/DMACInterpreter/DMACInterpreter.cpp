@@ -2,7 +2,7 @@
 
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "Common/PS2Constants/PS2Constants.h"
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
@@ -10,14 +10,21 @@
 #include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
-#include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
+#include "Common/PS2Resources/EE/DMAC/Types/DMAC_Registers_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "Common/Tables/EEDmacTable/EEDmacTable.h"
 
 using ExType = EECoreException_t::ExType;
+using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
+using ChannelID_t = EEDmacTable::ChannelID_t;
+using Direction_t = EEDmacTable::Direction_t;
+using PhysicalMode_t = EEDmacTable::PhysicalMode_t;
+using ChainMode_t = EEDmacTable::ChainMode_t;
 
 DMACInterpreter::DMACInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain), 
-	mChannelID(0), 
+	mChannelIndex(0), 
+	mChannelProperties(nullptr),
 	mDMAtag(0, 0)
 {
 }
@@ -28,19 +35,20 @@ DMACInterpreter::~DMACInterpreter()
 
 void DMACInterpreter::executionStep()
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& DMAChannelRegisters = EE->DMAChannelRegisters;
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAChannelRegisters = DMAC->DMAChannelRegisters;
 
 	// Check if DMA transfers are enabled.
-	if (!EE->EE_REGISTER_D_CTRL->getFieldValue(EERegisterDmacCtrl_t::Fields::DMAE))
+	if (!DMAC->DMAC_REGISTER_D_CTRL->getFieldValue(DmacRegisterCtrl_t::Fields::DMAE))
 		return;
 
 	// Check for any pending/started DMA transfers, by checking the Dn_CHCR.STR register of each channel. Perform transfer if enabled.
-	for (mChannelID = 0; mChannelID < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; mChannelID++)
+	for (mChannelIndex = 0; mChannelIndex < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; mChannelIndex++)
 	{
-		if (DMAChannelRegisters[mChannelID].CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::STR))
+		if (DMAChannelRegisters[mChannelIndex].CHCR->getFieldValue(DmacRegisterChcr_t::Fields::STR))
 		{
-			switch (DMAChannelRegisters[mChannelID].CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::MOD))
+			mChannelProperties = EEDmacTable::getChannelInfo(mChannelIndex);
+			switch (DMAChannelRegisters[mChannelIndex].CHCR->getFieldValue(DmacRegisterChcr_t::Fields::MOD))
 			{
 			case 0x0:
 				executionStep_Normal();      break;
@@ -60,12 +68,11 @@ void DMACInterpreter::executionStep()
 
 void DMACInterpreter::executionStep_Normal() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
-	auto& channelProperties = ChannelProperties[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC) == 0)
+	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
 	{
 		// TODO: implement failed transfer properly? (See page 79 of EE Users Manual).
 		throw std::runtime_error("QWC == 0 at start in normal mode, but not implemented.");
@@ -75,28 +82,26 @@ void DMACInterpreter::executionStep_Normal() const
 	transferDataUnit();
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC) == 0)
+	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
 		suspendTransfer();
 
 	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
-	if ((channelProperties.PhysicalMode == PhysicalMode_t::SLICE) && (EE->DMAC->SliceCountState[mChannelID] % 8 == 0))
-		suspendTransfer();
+	checkSliceQuota();
 }
 
 void DMACInterpreter::executionStep_Chain()
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
-	auto& channelProperties = ChannelProperties[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
-	if (channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC) > 0)
+	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) > 0)
 	{
 		// Transfer a single data unit of 128 bits (same for slice and burst). This function also updates the number of units transferred.
 		transferDataUnit();
 
 		// If QWC is now 0, check for suspend conditions.
-		if (channelRegisters.QWC->getFieldValue(EERegisterDmacQwc_t::Fields::QWC) == 0)
+		if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
 		{
 			// Check if we need to emit a tag interrupt (done after packet transfer has completed).
 			checkDMAtagPacketInterrupt();
@@ -111,11 +116,11 @@ void DMACInterpreter::executionStep_Chain()
 		readDMAtag();
 
 		// Check if we need to transfer the tag.
-		if (channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::TTE))
+		if (channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::TTE))
 			transferDMAtag();
 
 		// Check if we are in source or dest chain mode. Perform action based on tag id (which will set MADR, QWC, etc).
-		switch (channelProperties.ChainMode)
+		switch (mChannelProperties->ChainMode)
 		{
 		case ChainMode_t::SOURCE:
 			(this->*SRC_CHAIN_INSTRUCTION_TABLE[mDMAtag.ID])(); break;
@@ -130,20 +135,51 @@ void DMACInterpreter::executionStep_Chain()
 	checkSliceQuota();
 }
 
-void DMACInterpreter::executionStep_Interleaved()
+void DMACInterpreter::executionStep_Interleaved() const
 {
-	// TODO: implement.
-	throw std::runtime_error("DMA interleaved mode not implemented.");
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
+
+	// Check the QWC register, make sure that size > 0 in order to start transfer.
+	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
+	{
+		// TODO: implement failed transfer properly? (See page 79 of EE Users Manual).
+		throw std::runtime_error("QWC == 0 at start in interleaved mode, but not implemented.");
+	}
+	
+	// Data of size D_SQWC.TQWC is transferred first, then data of size D_SQWC.SQWC is skipped, until Dn_QWC is reached.
+	if (!DMAC->InterleavedSkipState[mChannelIndex])
+	{
+		// Transfer data.
+		transferDataUnit();
+	}
+	else
+	{
+		// Skip data by incrementing the channel MADR.
+		channelRegisters.MADR->increment();
+	}
+
+	// Increment the InterleavedCountState.
+	DMAC->InterleavedCountState[mChannelIndex] += 1;
+
+	// Check the interleaved mode (transferring/skipping), and change InterleavedSkipState if required, based on InterleavedCountState.
+	checkInterleaveCount();
+
+	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
+	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
+		suspendTransfer();
+
+	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
+	checkSliceQuota();
 }
 
 void DMACInterpreter::checkSliceQuota() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelProperties = ChannelProperties[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
 
 	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
-	if ((channelProperties.PhysicalMode == PhysicalMode_t::SLICE)
-		&& (EE->DMAC->SliceCountState[mChannelID] % 8 == 0))
+	if ((mChannelProperties->PhysicalMode == PhysicalMode_t::SLICE)
+		&& (DMAC->SliceCountState[mChannelIndex] % 8 == 0))
 	{
 		suspendTransfer();
 	}
@@ -151,27 +187,27 @@ void DMACInterpreter::checkSliceQuota() const
 
 void DMACInterpreter::suspendTransfer() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& D_STAT = getVM()->getResources()->EE->EE_REGISTER_D_STAT;
-	auto& channelRegisters = getVM()->getResources()->EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& D_STAT = getVM()->getResources()->EE->DMAC->DMAC_REGISTER_D_STAT;
+	auto& channelRegisters = getVM()->getResources()->EE->DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Emit the interrupt status bit.
-	auto& key = EERegisterDmacStat_t::Fields::CIS_KEYS[mChannelID];
+	auto& key = DmacRegisterStat_t::Fields::CIS_KEYS[mChannelIndex];
 	D_STAT->setFieldValue(key, 1);
 
 	// Change CHCR.STR to 0.
-	channelRegisters.CHCR->setFieldValue(EERegisterDmacChcr_t::Fields::STR, 0);
+	channelRegisters.CHCR->setFieldValue(DmacRegisterChcr_t::Fields::STR, 0);
 }
 
 void DMACInterpreter::checkInterruptStatus() const
 {
-	auto& D_STAT = getVM()->getResources()->EE->EE_REGISTER_D_STAT;
+	auto& D_STAT = getVM()->getResources()->EE->DMAC->DMAC_REGISTER_D_STAT;
 	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 
 	for (auto i = 0; i < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; i++)
 	{
-		auto& cis_key = EERegisterDmacStat_t::Fields::CIS_KEYS[i];
-		auto& cim_key = EERegisterDmacStat_t::Fields::CIM_KEYS[i];
+		auto& cis_key = DmacRegisterStat_t::Fields::CIS_KEYS[i];
+		auto& cim_key = DmacRegisterStat_t::Fields::CIM_KEYS[i];
 
 		auto& cisValue = D_STAT->getFieldValue(cis_key);
 		auto& cimValue = D_STAT->getFieldValue(cim_key);
@@ -187,25 +223,24 @@ void DMACInterpreter::checkInterruptStatus() const
 
 void DMACInterpreter::transferDataUnit() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
-	auto& channelProperties = ChannelProperties[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
-	Direction_t direction = channelProperties.Direction;
+	Direction_t direction = mChannelProperties->Direction;
 	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::DIR));
+		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::DIR));
 
 	// Get the main memory or SPR address we are reading or writing from. 
-	const u32 PhysicalAddressOffset = channelRegisters.MADR->getFieldValue(EERegisterDmacMadr_t::Fields::ADDR);
-	const bool SPRFlag = (channelRegisters.MADR->getFieldValue(EERegisterDmacMadr_t::Fields::SPR) != 0);
+	const u32 PhysicalAddressOffset = channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::ADDR);
+	const bool SPRFlag = (channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::SPR) != 0);
 
 	// If we are using the from/toSPR channels, then we need to get the SPR address, and take a different code path. 
 	// Within the these channels MADR.SPR is always 0 on these channels (but also have to use the SADR register).
 	// Else transfer data normally. Also check if we are accessing the SPR instead of main memory.
-	if (channelProperties.ChannelID == ChannelID_t::toSPR || channelProperties.ChannelID == ChannelID_t::fromSPR)
+	if (mChannelProperties->ChannelID == ChannelID_t::toSPR || mChannelProperties->ChannelID == ChannelID_t::fromSPR)
 	{
-		const u32 SPRPhysicalAddressOffset = channelRegisters.SADR->getFieldValue(EERegisterDmacSadr_t::Fields::ADDR);
+		const u32 SPRPhysicalAddressOffset = channelRegisters.SADR->getFieldValue(DmacRegisterSadr_t::Fields::ADDR);
 
 		if (direction == Direction_t::FROM)
 		{
@@ -235,7 +270,7 @@ void DMACInterpreter::transferDataUnit() const
 	}
 
 	// Update DataCountState by 1, the MADR register by 0x10 (increment), and decrement the QWC register by 1.
-	EE->DMAC->SliceCountState[mChannelID] += 1;
+	DMAC->SliceCountState[mChannelIndex] += 1;
 	channelRegisters.MADR->increment();
 	channelRegisters.QWC->decrement();
 }
@@ -292,38 +327,38 @@ void DMACInterpreter::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess,
 
 void DMACInterpreter::readDMAtag()
 {
-	auto& channelRegisters = getVM()->getResources()->EE->DMAChannelRegisters[mChannelID];
+	auto& channelRegisters = getVM()->getResources()->EE->DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Get the main memory or SPR address we are reading or writing from.
-	const u32 TADR = channelRegisters.TADR->getFieldValue(EERegisterDmacMadr_t::Fields::ADDR);
-	const bool SPRFlag = (channelRegisters.TADR->getFieldValue(EERegisterDmacMadr_t::Fields::SPR) != 0);
+	const u32 TADR = channelRegisters.TADR->getFieldValue(DmacRegisterMadr_t::Fields::ADDR);
+	const bool SPRFlag = (channelRegisters.TADR->getFieldValue(DmacRegisterMadr_t::Fields::SPR) != 0);
 
 	// Set mDMAtag based upon the DMADataUnit_t read from memory.
 	mDMAtag = readDataMemory(TADR, SPRFlag);
 
 	// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
-	channelRegisters.CHCR->setFieldValue(EERegisterDmacChcr_t::Fields::TAG, (mDMAtag.getDMADataUnit().mDataUnit[0] >> 16) & 0xFFFF);
+	channelRegisters.CHCR->setFieldValue(DmacRegisterChcr_t::Fields::TAG, (mDMAtag.getDMADataUnit().mDataUnit[0] >> 16) & 0xFFFF);
 }
 
 void DMACInterpreter::transferDMAtag() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Write the tag to the channel.
 	writeDataChannel(mDMAtag.getDMADataUnit());
 
 	// Update DataCountState by 1 (counts towards slice channel quota).
-	EE->DMAC->SliceCountState[mChannelID] += 1;
+	DMAC->SliceCountState[mChannelIndex] += 1;
 }
 
 void DMACInterpreter::checkDMAtagPacketInterrupt() const
 {
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	if (channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::TIE) != 0 
-		&& (channelRegisters.CHCR->getFieldValue(EERegisterDmacChcr_t::Fields::TAG) & 0x8000) != 0)
+	if (channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::TIE) != 0 
+		&& (channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::TAG) & 0x8000) != 0)
 	{
 		suspendTransfer();
 	}
@@ -331,13 +366,13 @@ void DMACInterpreter::checkDMAtagPacketInterrupt() const
 
 void DMACInterpreter::checkChainExit() const
 {
-	auto& EE = getVM()->getResources()->EE;
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
 
-	if (EE->DMAC->ChainExitState[mChannelID])
+	if (DMAC->ChainExitState[mChannelIndex])
 	{
 		// Reset chain state variables.
-		EE->DMAC->ChainExitState[mChannelID] = false;
-		EE->DMAC->ChainStackLevelState[mChannelID] = 0;
+		DMAC->ChainExitState[mChannelIndex] = false;
+		DMAC->ChainStackLevelState[mChannelIndex] = 0;
 
 		suspendTransfer();
 	}
@@ -351,63 +386,63 @@ void DMACInterpreter::INSTRUCTION_UNSUPPORTED()
 void DMACInterpreter::REFE()
 {
 	// Transfers QWC qwords from ADDR, and suspends after packet transfer.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, mDMAtag.ADDR);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, mDMAtag.SPR);
-	EE->DMAC->ChainExitState[mChannelID] = true;
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, mDMAtag.ADDR);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, mDMAtag.SPR);
+	DMAC->ChainExitState[mChannelIndex] = true;
 }
 
 void DMACInterpreter::CNT()
 {
 	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
 
 	// Copy TADR + 0x10 into MADR.
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
 
 	// Calculate where the next tag will be.
-	u32 nextTagAddr = channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + (mDMAtag.QWC + 1) * 0x10;
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
+	u32 nextTagAddr = channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + (mDMAtag.QWC + 1) * 0x10;
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
 }
 
 void DMACInterpreter::NEXT()
 {
 	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
 
 	// Copy TADR + 0x10 into MADR.
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
 
 	// Set next tag.
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, mDMAtag.ADDR);
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, mDMAtag.SPR); 
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, mDMAtag.ADDR);
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, mDMAtag.SPR); 
 }
 
 void DMACInterpreter::REF()
 {
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
 
 	// Set MADR = tag.ADDR.
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, mDMAtag.ADDR);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, mDMAtag.SPR);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, mDMAtag.ADDR);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, mDMAtag.SPR);
 
 	// Set next qword as tag.
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
 }
 
 void DMACInterpreter::REFS()
@@ -415,88 +450,115 @@ void DMACInterpreter::REFS()
 	// TODO: add in stall control.
 
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
 
 	// Set MADR = tag.ADDR.
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, mDMAtag.ADDR);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, mDMAtag.SPR);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, mDMAtag.ADDR);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, mDMAtag.SPR);
 
 	// Set next qword as tag.
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
 }
 
 void DMACInterpreter::CALL()
 {
 	// Transfers QWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, mDMAtag.ADDR);
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::SPR, mDMAtag.SPR);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, mDMAtag.ADDR);
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::SPR, mDMAtag.SPR);
 
 	// Set stack to after tag.
-	u8 & stackIdx = EE->DMAC->ChainStackLevelState[mChannelID];
-	channelRegisters.ASR[stackIdx]->setFieldValue(EERegisterDmacAsr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.ASR[stackIdx]->setFieldValue(EERegisterDmacAsr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
+	u8 & stackIdx = DMAC->ChainStackLevelState[mChannelIndex];
+	channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
 	stackIdx += 1;
 }
 
 void DMACInterpreter::RET()
 {
 	// Transfers QWC qwords after tag, pops next tag from stack. If stack level = 0, transfers QWC qwords after tag and suspends transfer.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	u8 & stackIdx = EE->DMAC->ChainStackLevelState[mChannelID];
+	u8 & stackIdx = DMAC->ChainStackLevelState[mChannelIndex];
 	if (stackIdx > 0)
 	{
-		channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(EERegisterDmacAsr_t::Fields::ADDR));
-		channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(EERegisterDmacAsr_t::Fields::SPR));
+		channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(DmacRegisterAsr_t::Fields::ADDR));
+		channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(DmacRegisterAsr_t::Fields::SPR));
 		stackIdx -= 1;
 	}
 	else
 	{
-		EE->DMAC->ChainExitState[mChannelID] = true;
+		DMAC->ChainExitState[mChannelIndex] = true;
 	}
 
 	// In both cases, QWC following the tag is always performed.
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
 }
 
 void DMACInterpreter::END()
 {
 	// Transfers QWC qwords after tag, and suspends after packet transfer.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
-	EE->DMAC->ChainExitState[mChannelID] = true;
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
+	DMAC->ChainExitState[mChannelIndex] = true;
 }
 
 void DMACInterpreter::CNTS()
 {
 	// TODO: need to copy MADR to STADR during the transfer.
 	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
-	auto& EE = getVM()->getResources()->EE;
-	auto& channelRegisters = EE->DMAChannelRegisters[mChannelID];
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	channelRegisters.QWC->setFieldValue(EERegisterDmacQwc_t::Fields::QWC, mDMAtag.QWC);
+	channelRegisters.QWC->setFieldValue(DmacRegisterQwc_t::Fields::QWC, mDMAtag.QWC);
 
 	// Copy TADR + 0x10 into MADR.
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.MADR->setFieldValue(EERegisterDmacMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::SPR));
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+	channelRegisters.MADR->setFieldValue(DmacRegisterMadr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
 
 	// Calculate where the next tag will be.
-	u32 nextTagAddr = channelRegisters.TADR->getFieldValue(EERegisterDmacTadr_t::Fields::ADDR) + (mDMAtag.QWC + 1) * 0x10;
-	channelRegisters.TADR->setFieldValue(EERegisterDmacTadr_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
+	u32 nextTagAddr = channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + (mDMAtag.QWC + 1) * 0x10;
+	channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
+}
+
+void DMACInterpreter::checkInterleaveCount() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+
+	// Are we in a transfer or skip block?
+	if (!DMAC->InterleavedSkipState[mChannelIndex])
+	{
+		// Have we reached the TWQC limit?
+		if (DMAC->InterleavedCountState[mChannelIndex] >= DMAC->DMAC_REGISTER_D_SQWC->getFieldValue(DmacRegisterSqwc_t::Fields::TQWC))
+		{
+			// Change to skip mode and reset the count.
+			DMAC->InterleavedSkipState[mChannelIndex] = !DMAC->InterleavedSkipState[mChannelIndex];
+			DMAC->InterleavedCountState[mChannelIndex] = 0;
+		}
+	}
+	else
+	{
+		// Have we reached the SQWC limit?
+		if (DMAC->InterleavedCountState[mChannelIndex] >= DMAC->DMAC_REGISTER_D_SQWC->getFieldValue(DmacRegisterSqwc_t::Fields::SQWC))
+		{
+			// Change to skip mode and reset the count.
+			DMAC->InterleavedSkipState[mChannelIndex] = !DMAC->InterleavedSkipState[mChannelIndex];
+			DMAC->InterleavedCountState[mChannelIndex] = 0;
+		}
+	}
 }

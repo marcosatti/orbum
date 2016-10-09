@@ -1,8 +1,20 @@
 #include "stdafx.h"
 
-#include "EECoreInstructionUtil.h"
+#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t * EECoreInstructionUtil::getInstructionInfo(const MIPSInstruction_t & instruction)
+EECoreInstructionTable::EECoreInstructionInfo_t::EECoreInstructionInfo_t(const char* const baseClass, const u8 classIndex, const InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t&(* const lookupFunction)(const MIPSInstruction_t& instruction)) : 
+	mBaseClass(baseClass),                                                                                                                                                                                                                                                                                                                                                      
+	mClassIndex(classIndex),                                                                                                                                                                                                                                                                                                                                                 
+	mInstructionType(instructionType),                                                                                                                                                                                                                                                                                                                                                
+	mMnemonic(mnemonic),                                                                                                                                                                                                                                                                                                                                                   
+	mImplementationIndex(implementationIndex),                                                                                                                                                                                                                                                                                                                         
+	mBranchDelayType(branchDelayType),                                                                                                                                                                                                                                                                                                                                                                
+	mCycles(cycles),                                                                                                                                                                                                                                                                                                                                                                               
+	mLookupFuncion(lookupFunction)
+{
+}
+
+const EECoreInstructionTable::EECoreInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
 {
 	// A dummy class to kickstart the search.
 	const EECoreInstructionInfo_t rootInfo = {"root", 0, EECoreInstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, EECORE_INSTRUCTION_OPCODE_LOOKUP };
@@ -16,90 +28,90 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t * EECoreInstructionUtil::ge
 	return returnInfo;
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t & EECoreInstructionUtil::EECORE_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t & EECoreInstructionTable::EECORE_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
 {
 	return EECORE_OPCODE_TABLE[instruction.getOpcode()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_SPECIAL_TABLE[instruction.getRFunct()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_REGIMM_TABLE[instruction.getRRt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_MMI_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_MMI_TABLE[instruction.getRFunct()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_MMI0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_MMI0_TABLE[instruction.getRShamt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_MMI1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_MMI1_TABLE[instruction.getRShamt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_MMI2_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_MMI2_TABLE[instruction.getRShamt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_MMI3_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI3_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_MMI3_TABLE[instruction.getRShamt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_COP0_TABLE[instruction.getRRs()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_BC0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_BC0_TABLE[instruction.getRRt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_C0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_C0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_C0_TABLE[instruction.getRFunct()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_COP1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_COP1_TABLE[instruction.getRRs()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_BC1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC1_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_BC1_TABLE[instruction.getRRt()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_S_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_S_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_S_TABLE[instruction.getRFunct()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_W_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_W_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return EECORE_W_TABLE[instruction.getRFunct()];
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t& EECoreInstructionUtil::EECORE_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	// TODO: Implement.
 	return EECORE_INSTRUCTION_UNDEFINED;
 }
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_INSTRUCTION_UNDEFINED = {"undefined", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_INSTRUCTION_UNDEFINED = {"undefined", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_W_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64] =
 {
 	{ "W", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "W", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -167,7 +179,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "W", 63, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_S_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_S_TABLE[64] =
 {
 	{ "S", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "ADD", 236, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "S", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "SUB", 237, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -235,7 +247,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "S", 63, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_BC1_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC1_TABLE[32] =
 {
 	{ "BC1", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BC1F", 232, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
 	{ "BC1", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BC1T", 233, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
@@ -271,7 +283,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "BC1", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_COP1_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP1_TABLE[32] =
 {
 	{ "COP1", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MFC1", 228, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "COP1", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -307,7 +319,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "COP1", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_C0_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_C0_TABLE[64] =
 {
 	{ "C0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "C0", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "TLBR", 221, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -375,7 +387,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "C0", 63, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_BC0_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC0_TABLE[32] =
 {
 	{ "BC0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BC0F", 217, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
 	{ "BC0", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BC0T", 218, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
@@ -411,7 +423,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "BC0", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_COP0_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP0_TABLE[32] =
 {
 	{ "COP0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MFC0", 215, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP0_MFC0, nullptr },
 	{ "COP0", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -447,7 +459,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "COP0", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_MMI3_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI3_TABLE[32] =
 {
 	{ "MMI3", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PMADDUW", 202, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI3", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -483,7 +495,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "MMI3", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_MMI2_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI2_TABLE[32] =
 {
 	{ "MMI2", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PMADDW", 180, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI2", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -519,7 +531,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "MMI2", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PROT3W", 201, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_MMI1_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI1_TABLE[32] =
 {
 	{ "MMI1", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI1", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PABSW", 162, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -555,7 +567,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "MMI1", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_MMI0_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI0_TABLE[32] =
 {
 	{ "MMI0", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PADDW", 137, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI0", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PSUBW", 138, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -591,7 +603,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "MMI0", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PPAC5", 161, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_MMI_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI_TABLE[64] =
 {
 	{ "MMI", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MADD", 116, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_MULTIPLY, nullptr },
 	{ "MMI", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "MADDU", 117, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_MULTIPLY, nullptr },
@@ -659,7 +671,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "MMI", 63, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "PSRAW", 136, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_REGIMM_TABLE[32] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_REGIMM_TABLE[32] =
 {
 	{ "REGIMM", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BLTZ", 100, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R5900_BRANCH, nullptr },
 	{ "REGIMM", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "BGEZ", 101, EECoreInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R5900_BRANCH, nullptr },
@@ -695,7 +707,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "REGIMM", 31, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_SPECIAL_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_SPECIAL_TABLE[64] =
 { 
 	{ "SPECIAL", 0, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "SLL", 48, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr },
 	{ "SPECIAL", 1, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr },
@@ -763,7 +775,7 @@ const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECO
 	{ "SPECIAL", 63, EECoreInstructionInfo_t::InstructionType::INSTRUCTION, "DSRA32", 99, EECoreInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr }
 };
 
-const EECoreInstructionUtil::EECoreInstructionInfo_t EECoreInstructionUtil::EECORE_OPCODE_TABLE[64] =
+const EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_OPCODE_TABLE[64] =
 {
 	{ "OPCODE", 0, EECoreInstructionInfo_t::InstructionType::CLASS, "SPECIAL", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_SPECIAL_LOOKUP },
 	{ "OPCODE", 1, EECoreInstructionInfo_t::InstructionType::CLASS, "REGIMM", 0, EECoreInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_REGIMM_LOOKUP },

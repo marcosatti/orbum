@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/MMUHandler/MMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/ExceptionHandler/ExceptionHandler.h"
@@ -15,10 +15,10 @@
 #include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
-#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/PS2Resources/Clock/Clock_t.h"
 
-using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
+using EECoreInstructionInfo_t = EECoreInstructionTable::EECoreInstructionInfo_t;
 using ExType = EECoreException_t::ExType;
 
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain) :
@@ -124,7 +124,7 @@ void EECoreInterpreter::executeInstruction()
 	getInstruction().setInstructionValue(instructionValue);
 
 	// Get the instruction details
-	mInstructionInfo = EECoreInstructionUtil::getInstructionInfo(mInstruction);
+	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x838dc;

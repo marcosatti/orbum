@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
@@ -13,7 +13,6 @@
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 void EECoreInterpreter::BREAK()
 {

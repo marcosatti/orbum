@@ -3,11 +3,22 @@
 #include <memory>
 #include <fstream>
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/EE/Timers/Timers_t.h"
+#include "Common/PS2Resources/EE/Timers/Types/Timers_Registers_t.h"
+#include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
+#include "Common/PS2Resources/EE/DMAC/Types/DMAC_Registers_t.h"
+#include "Common/PS2Resources/EE/INTC/INTC_t.h"
+#include "Common/PS2Resources/EE/INTC/Types/INTC_Registers_t.h"
+#include "Common/PS2Resources/EE/IPU/IPU_t.h"
+#include "Common/PS2Resources/EE/GIF/GIF_t.h"
+#include "Common/PS2Resources/EE/VPU/VPU_t.h"
+#include "Common/PS2Resources/EE/VPU/VU/VU_t.h"
+#include "Common/PS2Resources/EE/VPU/VIF/VIF_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/GS/GS_t.h"
@@ -16,7 +27,6 @@
 #include "Common/PS2Resources/Types/MappedMemory/DeadMMemory_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/BusErrorMMemory_t.h"
 #include "VM/VMMMUHandler/Types/ImageMappedMemory_t.h"
-
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) : 
 	mStatus(VMMain::VMStatus::CREATED),
@@ -106,96 +116,102 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 
 	// EE Registers.
 	{
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T0_COUNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T0_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T0_COMP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T0_HOLD);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_TIMER_0040);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T1_COUNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T1_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T1_COMP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T1_HOLD);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_TIMER_0840);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T2_COUNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T2_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T2_COMP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_TIMER_1030);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T3_COUNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T3_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_T3_COMP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_TIMER_1830);
+		// Timers Registers.
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T0_COUNT);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T0_MODE);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T0_COMP);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T0_HOLD);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_TIMER_0040);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T1_COUNT);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T1_MODE);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T1_COMP);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T1_HOLD);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_TIMER_0840);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T2_COUNT);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T2_MODE);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T2_COMP);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_TIMER_1030);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T3_COUNT);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T3_MODE);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_T3_COMP);
+		getMMU()->mapMemory(getResources()->EE->Timers->TIMERS_REGISTER_TIMER_1830);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_CMD);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_CTRL);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_BP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_TOP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_IPU_2040);
+		// IPU Registers.
+		getMMU()->mapMemory(getResources()->EE->IPU->IPU_REGISTER_CMD);
+		getMMU()->mapMemory(getResources()->EE->IPU->IPU_REGISTER_CTRL);
+		getMMU()->mapMemory(getResources()->EE->IPU->IPU_REGISTER_BP);
+		getMMU()->mapMemory(getResources()->EE->IPU->IPU_REGISTER_TOP);
+		getMMU()->mapMemory(getResources()->EE->IPU->IPU_REGISTER_2040);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_CTRL);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_STAT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_3030);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_TAG0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_TAG1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_TAG2);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_TAG3);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_CNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_P3CNT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_P3TAG);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_GIF_30b0);
+		// GIF Registers.
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_CTRL);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_MODE);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_STAT);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_3030);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_TAG0);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_TAG1);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_TAG2);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_TAG3);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_CNT);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_P3CNT);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_P3TAG);
+		getMMU()->mapMemory(getResources()->EE->GIF->GIF_REGISTER_30b0);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_STAT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_FBRST);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_ERR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_MARK);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_CYCLE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_NUM);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_MASK);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_CODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_ITOPS);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_38a0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_38b0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_38c0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_ITOP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_38e0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_38f0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_R0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_R1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_R2);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_R3);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_C0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_C1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_C2);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_C3);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_3980);
+		// VIF0 Registers.
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_STAT);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_FBRST);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_ERR);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_MARK);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_CYCLE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_MODE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_NUM);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_MASK);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_CODE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_ITOPS);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_38a0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_38b0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_38c0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_ITOP);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_38e0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_38f0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_R0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_R1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_R2);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_R3);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_C0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_C1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_C2);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_C3);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF0_REGISTER_3980);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_STAT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_FBRST);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_ERR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_MARK);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_CYCLE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_MODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_NUM);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_MASK);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_CODE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_ITOPS);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_BASE);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_OFST);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_TOPS);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_ITOP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_TOP);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_3cf0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_R0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_R1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_R2);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_R3);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_C0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_C1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_C2);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_C3);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF1_3d80);
+		// VIF1 Registers.
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_STAT);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_FBRST);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_ERR);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_MARK);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_CYCLE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_MODE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_NUM);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_MASK);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_CODE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_ITOPS);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_BASE);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_OFST);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_TOPS);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_ITOP);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_TOP);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_3cf0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_R0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_R1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_R2);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_R3);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_C0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_C1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_C2);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_C3);
+		getMMU()->mapMemory(getResources()->EE->VPU->VIF->VIF1_REGISTER_3d80);
 
+		// FIFO Registers.
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_VIF0_FIFO);
 		getMMU()->mapMemory(
 			std::make_shared<ImageMappedMemory_t>("Image: 0x10004000", 0x10004010, 0x10, 0xFF0, 0x10004000, getMMU()) // Image of 0x10004000.
@@ -214,112 +230,107 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 			std::make_shared<ImageMappedMemory_t>("Image: 0x10007000", 0x10007020, 0x20, 0xFE0, 0x10007000, getMMU()) // Image of 0x10007000.
 		);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_ASR0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D0_ASR1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_8060);
+		// DMAC registers.
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_ASR0);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D0_ASR1);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_8060);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_ASR0);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D1_ASR1);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_9060);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_ASR0);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D2_ASR1);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_a060);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D3_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D3_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D3_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_b030);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D4_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D4_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D4_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D4_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_b440);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D5_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D5_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D5_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_c030);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D6_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D6_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D6_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D6_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_c440);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D7_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D7_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D7_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_c830);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D8_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D8_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D8_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_d030);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D8_SADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_d090);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D9_CHCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D9_MADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D9_QWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D9_TADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_d440);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D9_SADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_d490);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_CTRL);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_STAT);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_PCR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_SQWC);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_RBSR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_RBOR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_STADR);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_e070);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_ASR0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D1_ASR1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_9060);
+		// INTC registers.
+		getMMU()->mapMemory(getResources()->EE->INTC->INTC_REGISTER_I_STAT);
+		getMMU()->mapMemory(getResources()->EE->INTC->INTC_REGISTER_I_MASK);
+		getMMU()->mapMemory(getResources()->EE->INTC->INTC_REGISTER_f020);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_ASR0);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D2_ASR1);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_a060);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D3_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D3_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D3_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_b030);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D4_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D4_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D4_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D4_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_b440);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D5_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D5_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D5_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_c030);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D6_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D6_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D6_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D6_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_c440);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D7_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D7_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D7_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_c830);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D8_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D8_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D8_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_d030);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D8_SADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_d090);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D9_CHCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D9_MADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D9_QWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D9_TADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_d440);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D9_SADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_d490);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_CTRL);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_STAT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_PCR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_SQWC);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_RBSR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_RBOR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_STADR);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_DMAC_e070);
-
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_I_STAT);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_I_MASK);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_INTC_f020);
-
+		// MISC registers.
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_SIO);
-
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_SB_SMFLG);
-
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F400);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F410);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F420);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_MCH);
 		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F450);
 
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F500);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_ENABLER);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F530);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_D_ENABLEW);
-		getMMU()->mapMemory(getResources()->EE->EE_REGISTER_F5A0);
+		// DMAC registers (extended).
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_F500);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_ENABLER);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_F530);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_D_ENABLEW);
+		getMMU()->mapMemory(getResources()->EE->DMAC->DMAC_REGISTER_F5A0);
+	}
 
-		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU0Micro0);
+	// VU0/1 Memory
+	{
+		getMMU()->mapMemory(getResources()->EE->VPU->VU->VU0_MEM_Micro0);
 		getMMU()->mapMemory(
 			std::make_shared<ImageMappedMemory_t>("Image: 0x11000000", 0x11001000, 0x1000, 0x3000, 0x11000000, getMMU()) // Image of 0x11000000.
 		);
-		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU0Mem0);
+		getMMU()->mapMemory(getResources()->EE->VPU->VU->VU0_MEM_Mem0);
 		getMMU()->mapMemory(
 			std::make_shared<ImageMappedMemory_t>("Image: 0x11004000", 0x11005000, 0x1000, 0x3000, 0x11004000, getMMU()) // Image of 0x11004000.
 		);
-		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU1Micro1);
-		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU1Mem1);
-		getMMU()->mapMemory(getResources()->EE->VU_MEM_VU1BusErr);
+		getMMU()->mapMemory(getResources()->EE->VPU->VU->VU1_MEM_Micro1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VU->VU1_MEM_Mem1);
+		getMMU()->mapMemory(getResources()->EE->VPU->VU->VU1_MEM_BusErr);
 	}
 
 	// GS Privileged Registers.

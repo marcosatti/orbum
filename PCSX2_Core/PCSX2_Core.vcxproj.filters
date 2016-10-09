@@ -129,17 +129,11 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\Interpreter.h">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\VMMain.h">
-      <Filter>Source\VM</Filter>
-    </ClInclude>
     <ClInclude Include="Source\targetver.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\stdafx.h">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.h">
-      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.h">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
@@ -172,9 +166,6 @@
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\COP1\Types\COP1_BitfieldRegisters_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\PS2Resources\EE\EECore\COP1\Types\FPRegister32_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\COP1\COP1_t.h">
@@ -259,6 +250,28 @@
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.h" />
+    <ClInclude Include="Source\VM\VMMain.h">
+      <Filter>Source\VM</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.h">
+      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Tables\EEDmacTable\EeDmacTable.h" />
+    <ClInclude Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAC_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\INTC\Types\INTC_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\INTC\INTC_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Types\Timers_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Timers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\GIF\GIF_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VIF\VIF_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VPU_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VU\VU_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\IPU\IPU_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\SIF\SIF_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\Registers\FPRegister32_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -267,14 +280,8 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\Interpreter.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VM\VMMain.cpp">
-      <Filter>Source\VM</Filter>
-    </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Util\EECoreInstructionUtil\EECoreInstructionUtil.cpp">
-      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Util\EECoreCOP1Util\EECoreCOP1Util.cpp">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
@@ -291,9 +298,6 @@
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP0\Types\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP0\COP0_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP1\Types\FPRegister32_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\COP1\COP1_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1</Filter>
@@ -387,6 +391,28 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter_STORE_MEM.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\DMACInterpreter\DMACInterpreter.cpp" />
+    <ClCompile Include="Source\VM\VMMain.cpp">
+      <Filter>Source\VM</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.cpp">
+      <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Tables\EEDmacTable\EeDmacTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAC_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\INTC\Types\INTC_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\INTC\INTC_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Types\Timers_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\Timers\Timers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\GIF\GIF_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VIF\VIF_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VPU_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VU\VU_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\IPU\IPU_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\SIF\SIF_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\Registers\FPRegister32_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

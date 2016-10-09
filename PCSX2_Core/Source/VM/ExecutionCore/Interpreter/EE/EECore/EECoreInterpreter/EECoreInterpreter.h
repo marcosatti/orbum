@@ -3,10 +3,10 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
+#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
-using EECoreInstructionInfo_t = EECoreInstructionUtil::EECoreInstructionInfo_t;
+using EECoreInstructionInfo_t = EECoreInstructionTable::EECoreInstructionInfo_t;
 
 class PS2Resources_t;
 class VMMain;
@@ -452,7 +452,7 @@ private:
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
-	See EECoreInstructionUtil and "EECore Instruction Implementation Register.xlsm" for more details.
+	See EECoreInstructionTable and "EECore Instruction Implementation Register.xlsm" for more details.
 	*/
 	// TODO: surely there is an easier way.. reasearch how to initalise static arrays outside of the header file. I'm sure I'm missing something completely obvious here..
 	void(EECoreInterpreter::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() =

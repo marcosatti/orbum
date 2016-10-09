@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/MMUHandler/MMUHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"

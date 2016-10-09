@@ -3,13 +3,12 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h"
 
 /*
 Integer Multiply/Divide instruction family.

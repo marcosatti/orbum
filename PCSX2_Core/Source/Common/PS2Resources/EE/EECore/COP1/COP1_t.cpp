@@ -8,7 +8,7 @@
 #include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
 #include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/FPRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
 
 
 COP1_t::COP1_t(const PS2Resources_t* const PS2Resources) : 

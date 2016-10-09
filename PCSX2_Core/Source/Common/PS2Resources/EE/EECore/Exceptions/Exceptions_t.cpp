@@ -6,20 +6,16 @@
 
 Exceptions_t::Exceptions_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources), 
-	ExceptionOccured(false),
+	ExceptionOccurred(false),
 	Exception()
 {
 }
 
-bool Exceptions_t::hasExceptionOccured()
+bool Exceptions_t::hasExceptionOccurred()
 {
-	if (ExceptionOccured)
-	{
-		ExceptionOccured = false;
-		return true;
-	}
-
-	return false;
+	bool temp = ExceptionOccurred;
+	ExceptionOccurred = false;
+	return temp;
 }
 
 const EECoreException_t& Exceptions_t::getException() const
@@ -30,5 +26,5 @@ const EECoreException_t& Exceptions_t::getException() const
 void Exceptions_t::setException(const EECoreException_t& eeCoreException)
 {
 	Exception = eeCoreException;
-	ExceptionOccured = true;
+	ExceptionOccurred = true;
 }

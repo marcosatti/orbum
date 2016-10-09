@@ -82,7 +82,7 @@ public:
 			
 			struct R5900
 			{
-				
+				static constexpr u32 NUMBER_REGISTERS = 32;
 			};
 
 			struct COP0
@@ -103,7 +103,6 @@ public:
 				static constexpr u32 ZERO_NEG = 0x80000000; // Sign bit = 1 -> negative.
 			};
 
-			static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
 		};
 

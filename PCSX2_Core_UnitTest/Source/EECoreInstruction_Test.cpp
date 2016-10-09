@@ -3,7 +3,7 @@
 
 #include <Common/Global/Globals.h>
 #include <Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h>
-#include <Common/Util/EECoreInstructionUtil/EECoreInstructionUtil.h>
+#include <Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h>
 
 TEST(R5900Instruction_Test_Raw, RType)
 {
@@ -54,7 +54,7 @@ TEST(R5900Instruction_Test_Info, RType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info->mMnemonic, "RESERVED");
@@ -68,7 +68,7 @@ TEST(R5900Instruction_Test_Info, IType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info->mMnemonic, "RESERVED");
@@ -82,7 +82,7 @@ TEST(R5900Instruction_Test_Info, JType)
 
 	MIPSInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
-	auto info = EECoreInstructionUtil::getInstructionInfo(instruction);
+	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 
 	EXPECT_STRNE(info->mMnemonic, "UNSUPPORTED");
 	EXPECT_STRNE(info->mMnemonic, "RESERVED");

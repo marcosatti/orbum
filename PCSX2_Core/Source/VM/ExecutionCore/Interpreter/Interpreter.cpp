@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"

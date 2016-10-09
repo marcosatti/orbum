@@ -19,5 +19,5 @@ void PCRegister32_t::setPCValueAbsolute(const u32& absoluteLocation)
 
 void PCRegister32_t::setPCValueNext()
 {
-	setPCValueRelative(PS2Constants::EE::EECore::SIZE_MIPS_INSTRUCTION);
+	setPCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
 }

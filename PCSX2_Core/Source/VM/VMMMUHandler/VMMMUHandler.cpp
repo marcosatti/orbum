@@ -4,7 +4,7 @@
 #include <cmath>
 
 #include "Common/Global/Globals.h"
-#include "VM/VMMain.h"
+#include "VM/VmMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/VMMMUHandler/Types/VMMMUMappedMemory.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"

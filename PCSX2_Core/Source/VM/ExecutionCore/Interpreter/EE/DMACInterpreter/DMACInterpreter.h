@@ -6,12 +6,15 @@
 #include "Common/PS2Resources/EE/DMAC/Types/DMADataUnit_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
+#include "Common/Tables/EEDmacTable/EEDmacTable.h"
+
+using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
 
 /*
 The InterpreterDMAC class controls the execution of the DMAC and transfers through DMA.
 
 It is called InterpreterDMAC as it is actually a micro controller (duh) with its own language (DMAtag)!
-Therefore we are still required to interpret these instructions.
+Therefore we are still required to interpret these instructions, although it probably doesn't warrent a recompiler.
 
 The DMAC is synced to the BUSCLK clock source, and at most transfers a qword (a 4 x 32-bit data unit) every tick (128 bits) on slice and burst channels 
  (since the bus is 128-bit long).
@@ -45,68 +48,10 @@ public:
 
 private:
 	/*
-	Define the DMA channel properties, as listed on EE Users Manual page 42.
+	Temporary context variables set by executionStep() in each cycle. Used by most of the functions below (ie: in Normal, Chain or Interleaved mode).
 	*/
-	enum class ChannelID_t
-	{
-		VIF0    = 0,
-		VIF1    = 1,
-		GIF     = 2,
-		fromIPU = 3,
-		toIPU   = 4,
-		SIF0    = 5,
-		SIF1    = 6,
-		SIF2    = 7,
-		fromSPR = 8, // From scratchpad ram.
-		toSPR   = 9  // To scratchpad ram.
-	};
-	enum class Direction_t
-	{
-		// Do not change order! Sync'd to Dn_CHCR.DIR order (needed in order to static_cast<Direction_t>), 
-		//  except for BOTH in which case the direction is determined at runtime.
-		FROM = 0,
-		TO   = 1,
-		BOTH = 2
-	};
-	enum class PhysicalMode_t
-	{
-		SLICE = 0,
-		BURST = 1
-	};
-	enum class ChainMode_t
-	{
-		SOURCE = 0,
-		DEST   = 1, // Destination.
-		NONE   = 2
-	};
-	struct ChannelProperties_t
-	{
-		ChannelID_t    ChannelID;
-		Direction_t    Direction;
-		PhysicalMode_t PhysicalMode;
-		ChainMode_t    ChainMode;
-	};
-	static constexpr ChannelProperties_t ChannelProperties[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS]
-	{
-		{ ChannelID_t::VIF0,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ ChannelID_t::VIF1,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ ChannelID_t::GIF,     Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ ChannelID_t::fromIPU, Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::NONE   },
-		{ ChannelID_t::toIPU,   Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ ChannelID_t::SIF0,    Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::DEST   },
-		{ ChannelID_t::SIF1,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ ChannelID_t::SIF2,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::NONE   },
-		{ ChannelID_t::fromSPR, Direction_t::FROM, PhysicalMode_t::BURST, ChainMode_t::DEST   },
-		{ ChannelID_t::toSPR,   Direction_t::TO,   PhysicalMode_t::BURST, ChainMode_t::SOURCE }
-	};
-
-
-
-	/*
-	Context variables. Used by most of the functions below.
-	*/
-	u32 mChannelID;
-	DMAtag_t mDMAtag;
+	u32 mChannelIndex;
+	const ChannelProperties_t * mChannelProperties;
 
 
 
@@ -125,7 +70,7 @@ private:
 	/*
 	Do a interleaved logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Interleaved();
+	void executionStep_Interleaved() const;
 
 
 
@@ -169,6 +114,11 @@ private:
 
 
 	// Chain mode functions.
+
+	/*
+	Temporary context variables, set by the chain mode functions.
+	*/
+	DMAtag_t mDMAtag;
 
 	/*
 	Sets mDMAtag to the tag read from memory/SPR (from the TADR register).
@@ -232,5 +182,14 @@ private:
 		&DMACInterpreter::INSTRUCTION_UNSUPPORTED,
 		&DMACInterpreter::END,
 	};
+
+
+
+	// Interleaved Mode Functions.
+
+	/*
+	Checks if the InterleavedCountState has reached the approriate state (limit of transferred data or skip data), and toggles the state.
+	*/
+	void checkInterleaveCount() const;
 };
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/FPRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
 
 FPRegister32_t::FPRegister32_t() : 
 	F(0)
