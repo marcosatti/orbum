@@ -337,7 +337,7 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VIF\VIF_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VPU_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\VPU\VU\VU_t.h" />
-    <ClInclude Include="Source\Common\Tables\EEDmacTable\EeDmacTable.h" />
+    <ClInclude Include="Source\Common\Tables\EEDmacTable\EEDmacTable.h" />
     <ClInclude Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\MMU\Types\TLBEntryInfo_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
@@ -416,7 +416,7 @@
     <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VIF\VIF_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VPU_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\VPU\VU\VU_t.cpp" />
-    <ClCompile Include="Source\Common\Tables\EEDmacTable\EeDmacTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\EEDmacTable\EEDmacTable.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />

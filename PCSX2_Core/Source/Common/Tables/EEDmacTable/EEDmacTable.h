@@ -67,5 +67,15 @@ public:
 	Returns the channel properties given the index.
 	*/
 	static const ChannelProperties_t * getChannelInfo(u32 index);
+
+	/*
+	Converts the D_CTRL.STS and STD fields to the proper channel id's.
+	A return value of 0 means "Non-specified" for STS, "No stall control" for STD. 
+	See EE Users Manual page 64.
+	*/
+	static constexpr u8 STS_MAP[4] = { 0, 5, 8, 3 };
+	static constexpr u8 STD_MAP[4] = { 0, 1, 2, 6 };
+	static const u8 & getSTSChannelIndex(const u8 & STS);
+	static const u8 & getSTDChannelIndex(const u8 & STD);
 };
 

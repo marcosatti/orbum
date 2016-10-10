@@ -22,8 +22,8 @@ using PhysicalMode_t = EEDmacTable::PhysicalMode_t;
 using ChainMode_t = EEDmacTable::ChainMode_t;
 
 DMACInterpreter::DMACInterpreter(VMMain * vmMain) :
-	VMExecutionCoreComponent(vmMain), 
-	mChannelIndex(0), 
+	VMExecutionCoreComponent(vmMain),
+	mChannelIndex(0),
 	mChannelProperties(nullptr),
 	mDMAtag(0, 0)
 {
@@ -77,9 +77,17 @@ void DMACInterpreter::executionStep_Normal() const
 		// TODO: implement failed transfer properly? (See page 79 of EE Users Manual).
 		throw std::runtime_error("QWC == 0 at start in normal mode, but not implemented.");
 	}
+
+	// Check for drain stall control conditions, and skip cycle if the data is not ready (when the next slice is not ready).
+	if (isDrainStallControlOn() && isDrainStallControlWaiting())
+		return;
 	
 	// Transfer a single data unit of 128 bits (same for slice and burst). This function also updates the number of units transferred.
 	transferDataUnit();
+
+	// Check for source stall control conditions, and update D_STADR if required.
+	if (isSourceStallControlOn())
+		updateSourceStallControlAddress();
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
 	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
@@ -97,9 +105,23 @@ void DMACInterpreter::executionStep_Chain()
 	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
 	if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) > 0)
 	{
+		// Check for drain stall control conditions (if we are in "refs" tag), and skip cycle if the data is not ready (when the next slice is not ready).
+		if (((channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::TAG) >> 12) & 0x7) == 0x4)
+		{
+			if (isDrainStallControlOn() && isDrainStallControlWaiting())
+				return;
+		}
+
 		// Transfer a single data unit of 128 bits (same for slice and burst). This function also updates the number of units transferred.
 		transferDataUnit();
 
+		// Check for source stall control conditions (if we are in "cnts" tag), and update D_STADR if required.
+		if (((channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::TAG) >> 12) & 0x7) == 0x0)
+		{
+			if (isSourceStallControlOn())
+				updateSourceStallControlAddress();
+		}
+		
 		// If QWC is now 0, check for suspend conditions.
 		if (channelRegisters.QWC->getFieldValue(DmacRegisterQwc_t::Fields::QWC) == 0)
 		{
@@ -112,7 +134,7 @@ void DMACInterpreter::executionStep_Chain()
 	}
 	else
 	{
-		// Read in a tag.
+		// Read in a tag and set CHCR.TAG to bits 16-31.
 		readDMAtag();
 
 		// Check if we need to transfer the tag.
@@ -187,7 +209,6 @@ void DMACInterpreter::checkSliceQuota() const
 
 void DMACInterpreter::suspendTransfer() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
 	auto& D_STAT = getVM()->getResources()->EE->DMAC->DMAC_REGISTER_D_STAT;
 	auto& channelRegisters = getVM()->getResources()->EE->DMAC->DMAChannelRegisters[mChannelIndex];
 
@@ -204,6 +225,7 @@ void DMACInterpreter::checkInterruptStatus() const
 	auto& D_STAT = getVM()->getResources()->EE->DMAC->DMAC_REGISTER_D_STAT;
 	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 
+	// Check channel interrupt status.
 	for (auto i = 0; i < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; i++)
 	{
 		auto& cis_key = DmacRegisterStat_t::Fields::CIS_KEYS[i];
@@ -219,6 +241,97 @@ void DMACInterpreter::checkInterruptStatus() const
 			Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
 		}
 	}
+
+	// Check stall control interrupt status.
+	if (D_STAT->getFieldValue(DmacRegisterStat_t::Fields::SIS) & D_STAT->getFieldValue(DmacRegisterStat_t::Fields::SIS))
+	{
+		IntExceptionInfo_t intex = { 1, 0, 0 };
+		Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
+	}
+
+	// Check MFIFO interrupt status.
+	if (D_STAT->getFieldValue(DmacRegisterStat_t::Fields::MEIS) & D_STAT->getFieldValue(DmacRegisterStat_t::Fields::MEIM))
+	{
+		IntExceptionInfo_t intex = { 1, 0, 0 };
+		Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
+	}
+
+	// Check for BUSERR interrupt status.
+	if (D_STAT->getFieldValue(DmacRegisterStat_t::Fields::BEIS))
+	{
+		IntExceptionInfo_t intex = { 1, 0, 0 };
+		Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
+	}
+}
+
+Direction_t DMACInterpreter::getRuntimeDirection() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
+
+	Direction_t direction = mChannelProperties->Direction;
+	if (direction == Direction_t::BOTH)
+		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::DIR));
+
+	return direction;
+}
+
+bool DMACInterpreter::isSourceStallControlOn() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+
+	if (getRuntimeDirection() == Direction_t::FROM)
+	{
+		const u32 STS = DMAC->DMAC_REGISTER_D_CTRL->getFieldValue(DmacRegisterCtrl_t::Fields::STS);
+		if (mChannelIndex == EEDmacTable::getSTSChannelIndex(STS))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool DMACInterpreter::isDrainStallControlOn() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+
+	if (getRuntimeDirection() == Direction_t::TO)
+	{
+		const u32 STD = DMAC->DMAC_REGISTER_D_CTRL->getFieldValue(DmacRegisterCtrl_t::Fields::STD);
+		if (mChannelIndex == EEDmacTable::getSTDChannelIndex(STD))
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+void DMACInterpreter::updateSourceStallControlAddress() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
+
+	const u32 MADR = channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::ADDR);
+	DMAC->DMAC_REGISTER_D_STADR->setFieldValue(DmacRegisterStadr_t::Fields::ADDR, MADR);
+}
+
+bool DMACInterpreter::isDrainStallControlWaiting() const
+{
+	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
+
+	const u32 MADR = channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::ADDR);
+	const u32 STADR = DMAC->DMAC_REGISTER_D_STADR->getFieldValue(DmacRegisterStadr_t::Fields::ADDR);
+
+	if ((MADR + 8) > STADR)
+	{
+		DMAC->DMAC_REGISTER_D_STAT->setFieldValue(DmacRegisterStat_t::Fields::SIS, 1);
+		return true;
+	}
+
+	return false;
 }
 
 void DMACInterpreter::transferDataUnit() const
@@ -227,19 +340,17 @@ void DMACInterpreter::transferDataUnit() const
 	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
-	Direction_t direction = mChannelProperties->Direction;
-	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(channelRegisters.CHCR->getFieldValue(DmacRegisterChcr_t::Fields::DIR));
+	Direction_t direction = getRuntimeDirection();
 
 	// Get the main memory or SPR address we are reading or writing from. 
 	const u32 PhysicalAddressOffset = channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::ADDR);
 	const bool SPRFlag = (channelRegisters.MADR->getFieldValue(DmacRegisterMadr_t::Fields::SPR) != 0);
 
 	// If we are using the from/toSPR channels, then we need to get the SPR address, and take a different code path. 
-	// Within the these channels MADR.SPR is always 0 on these channels (but also have to use the SADR register).
-	// Else transfer data normally. Also check if we are accessing the SPR instead of main memory.
+	// Within the these channels MADR.SPR is always 0 on these channels (have to use the SADR register as the SPR address).
 	if (mChannelProperties->ChannelID == ChannelID_t::toSPR || mChannelProperties->ChannelID == ChannelID_t::fromSPR)
 	{
+		// We are doing a mem->SPR or SPR->mem, use both MADR and SADR registers.
 		const u32 SPRPhysicalAddressOffset = channelRegisters.SADR->getFieldValue(DmacRegisterSadr_t::Fields::ADDR);
 
 		if (direction == Direction_t::FROM)
@@ -257,6 +368,7 @@ void DMACInterpreter::transferDataUnit() const
 		channelRegisters.SADR->increment();
 	}
 	else {
+		// Else transfer data normally.
 		if (direction == Direction_t::FROM)
 		{
 			DMADataUnit_t packet = readDataChannel();
@@ -477,9 +589,19 @@ void DMACInterpreter::CALL()
 
 	// Set stack to after tag.
 	u8 & stackIdx = DMAC->ChainStackLevelState[mChannelIndex];
-	channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
-	channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
-	stackIdx += 1;
+
+	if (stackIdx >= 2)
+	{
+		// Check for stack overflow.
+		DMAC->ChainExitState[mChannelIndex] = true;
+	}
+	else 
+	{
+		// Push onto the stack.
+		channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::ADDR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::ADDR) + 0x10);
+		channelRegisters.ASR[stackIdx]->setFieldValue(DmacRegisterAsr_t::Fields::SPR, channelRegisters.TADR->getFieldValue(DmacRegisterTadr_t::Fields::SPR));
+		stackIdx += 1;
+	}
 }
 
 void DMACInterpreter::RET()
@@ -488,15 +610,17 @@ void DMACInterpreter::RET()
 	auto& DMAC = getVM()->getResources()->EE->DMAC;
 	auto& channelRegisters = DMAC->DMAChannelRegisters[mChannelIndex];
 
-	u8 & stackIdx = DMAC->ChainStackLevelState[mChannelIndex];
+	u8 & stackIdx = DMAC->ChainStackLevelState[mChannelIndex];	
 	if (stackIdx > 0)
 	{
+		// Pop the stack.
 		channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(DmacRegisterAsr_t::Fields::ADDR));
 		channelRegisters.TADR->setFieldValue(DmacRegisterTadr_t::Fields::ADDR, channelRegisters.ASR[stackIdx]->getFieldValue(DmacRegisterAsr_t::Fields::SPR));
 		stackIdx -= 1;
 	}
 	else
 	{
+		// Check for stack underflow.
 		DMAC->ChainExitState[mChannelIndex] = true;
 	}
 

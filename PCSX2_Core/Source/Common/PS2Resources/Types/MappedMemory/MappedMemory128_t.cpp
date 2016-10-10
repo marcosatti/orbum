@@ -76,28 +76,28 @@ void MappedMemory128_t::writeWordS(u32 storageIndex, s32 value)
 
 u64 MappedMemory128_t::readDwordU(u32 storageIndex)
 {
-	if (storageIndex != 0 || storageIndex != 8)
+	if (storageIndex != 0 && storageIndex != 8)
 		throw std::runtime_error("Tried to access MappedMemory128_t unaligned (storageIndex != [0 or 8]). Not allowed.");
 	return MappedMemory_t::readDwordU(storageIndex);
 }
 
 void MappedMemory128_t::writeDwordU(u32 storageIndex, u64 value)
 {
-	if (storageIndex != 0 || storageIndex != 8)
+	if (storageIndex != 0 && storageIndex != 8)
 		throw std::runtime_error("Tried to access MappedMemory128_t unaligned (storageIndex != [0 or 8]). Not allowed.");
 	MappedMemory_t::writeDwordU(storageIndex, value);
 }
 
 s64 MappedMemory128_t::readDwordS(u32 storageIndex)
 {
-	if (storageIndex != 0 || storageIndex != 8)
+	if (storageIndex != 0 && storageIndex != 8)
 		throw std::runtime_error("Tried to access MappedMemory128_t unaligned (storageIndex != [0 or 8]). Not allowed.");
 	return MappedMemory_t::readDwordS(storageIndex);
 }
 
 void MappedMemory128_t::writeDwordS(u32 storageIndex, s64 value)
 {
-	if (storageIndex != 0 || storageIndex != 8)
+	if (storageIndex != 0 && storageIndex != 8)
 		throw std::runtime_error("Tried to access MappedMemory128_t unaligned (storageIndex != [0 or 8]). Not allowed.");
 	MappedMemory_t::writeDwordS(storageIndex, value);
 }

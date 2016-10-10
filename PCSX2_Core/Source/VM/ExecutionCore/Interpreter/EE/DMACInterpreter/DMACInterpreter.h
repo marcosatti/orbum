@@ -9,12 +9,13 @@
 #include "Common/Tables/EEDmacTable/EEDmacTable.h"
 
 using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
+using Direction_t = EEDmacTable::Direction_t;
 
 /*
 The InterpreterDMAC class controls the execution of the DMAC and transfers through DMA.
 
 It is called InterpreterDMAC as it is actually a micro controller (duh) with its own language (DMAtag)!
-Therefore we are still required to interpret these instructions, although it probably doesn't warrent a recompiler.
+Therefore we are still required to interpret these instructions, although it probably doesn't warrant a recompiler.
 
 The DMAC is synced to the BUSCLK clock source, and at most transfers a qword (a 4 x 32-bit data unit) every tick (128 bits) on slice and burst channels 
  (since the bus is 128-bit long).
@@ -27,6 +28,11 @@ Some notes:
  - From what I gather, when the manual talks about a peripheral processors, ie: "transfering data to or from", there is a FIFO queue 128 bytes long
     which stores the DMA channel data? Since you can't specify the dest/src address, except for when accessing SPR or main mem...
  - EERegisterDMACDChcr_t sets PS2Resources->EE->DMAC->SliceCountState[Channel ID] to 0 everytime CHCR.STR has 1 written to it (at the start of a new/resumed transfer).
+
+TODO: Not implemented:
+ - MFIFO handling.
+ - D_ENABLER/W handling.
+ - Cycle stealing.
 
 TODO: Speedups can be done here:
  - Dont need to transfer 1-qword at a time.
@@ -48,7 +54,7 @@ public:
 
 private:
 	/*
-	Temporary context variables set by executionStep() in each cycle. Used by most of the functions below (ie: in Normal, Chain or Interleaved mode).
+	Temporary context variables set by executionStep() in each cycle. Used by all of the functions below (ie: in Normal, Chain or Interleaved mode).
 	*/
 	u32 mChannelIndex;
 	const ChannelProperties_t * mChannelProperties;
@@ -92,6 +98,33 @@ private:
 	Checks for D_STAT CIS & CIM conditions, and sends interrupt if the AND of both is 1.
 	*/
 	void checkInterruptStatus() const;
+
+	/*
+	Gets the runtime direction. Useful for channels where it can be either way.
+	*/
+	Direction_t getRuntimeDirection() const;
+
+	/*
+	Returns if source stall control checks should occur, by checking the channel direction and D_CTRL.STS.
+	*/
+	bool isSourceStallControlOn() const;
+
+	/*
+	Returns if drain stall control checks should occur, by checking the channel direction and D_CTRL.STD.
+	*/
+	bool isDrainStallControlOn() const;
+
+	/*
+	Updates STADR from the MADR register (from source channels). Use with isSourceStallControlOn().
+	*/
+	void updateSourceStallControlAddress() const;
+
+	/*
+	Returns true if MADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
+	Also controls the D_STAT.SISn bit - sets to 1 if a stall occurred.
+	TODO: According to the docs, "SIS bit doesn't change even if the transfer restarts"! PS2 OS sets it back to 0?
+	*/
+	bool isDrainStallControlWaiting() const;
 
 
 
