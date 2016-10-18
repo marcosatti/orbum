@@ -2,19 +2,19 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
 
 void EECoreInterpreter::BEQ()
 {
@@ -156,7 +156,7 @@ void EECoreInterpreter::BC0F()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -179,7 +179,7 @@ void EECoreInterpreter::BC0FL()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -202,7 +202,7 @@ void EECoreInterpreter::BC0T()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -225,7 +225,7 @@ void EECoreInterpreter::BC0TL()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -247,7 +247,7 @@ void EECoreInterpreter::BC0TL()
 void EECoreInterpreter::BC1F()
 {
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -257,14 +257,14 @@ void EECoreInterpreter::BC1F()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void EECoreInterpreter::BC1FL()
 {
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -274,7 +274,7 @@ void EECoreInterpreter::BC1FL()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
@@ -283,7 +283,7 @@ void EECoreInterpreter::BC1FL()
 void EECoreInterpreter::BC1T()
 {
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -293,14 +293,14 @@ void EECoreInterpreter::BC1T()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
 void EECoreInterpreter::BC1TL()
 {
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -310,7 +310,7 @@ void EECoreInterpreter::BC1TL()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->COP1->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).

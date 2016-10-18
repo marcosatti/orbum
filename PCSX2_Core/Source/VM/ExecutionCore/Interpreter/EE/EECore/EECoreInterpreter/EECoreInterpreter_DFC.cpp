@@ -3,17 +3,17 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
 #include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
-#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
 
 /*
 Data Format Conversion (DFC) instruction family.
@@ -59,8 +59,8 @@ void EECoreInterpreter::PPAC5()
 
 void EECoreInterpreter::CVT_S_W()
 {
-	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on COP1 unusable).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on FPU unusable).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -68,16 +68,16 @@ void EECoreInterpreter::CVT_S_W()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
 }
 
 void EECoreInterpreter::CVT_W_S()
 {
-	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on COP1 unusable). Clamping occurs if exponent is > 0x9D.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on FPU unusable). Clamping occurs if exponent is > 0x9D.
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -85,14 +85,14 @@ void EECoreInterpreter::CVT_W_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat();
 
-	if (EECoreCOP1Util::getExponent(source1Val) <= 0x9D)
+	if (FPUUtil::getExponent(source1Val) <= 0x9D)
 		destReg->writeWordS(static_cast<s32>(source1Val));
-	else if (EECoreCOP1Util::getSign(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
+	else if (FPUUtil::getSign(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
 		destReg->writeWordS(Constants::VALUE_S32_MIN);
 	else
 		destReg->writeWordS(Constants::VALUE_S32_MAX);

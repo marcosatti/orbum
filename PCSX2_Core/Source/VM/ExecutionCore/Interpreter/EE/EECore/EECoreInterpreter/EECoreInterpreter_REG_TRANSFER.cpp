@@ -3,17 +3,17 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
 #include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
-#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 void EECoreInterpreter::MFHI()
@@ -296,8 +296,8 @@ void EECoreInterpreter::PMTLO()
 
 void EECoreInterpreter::MFC1()
 {
-	// Rt = COP1_FPR[Fs]. Exception on COP1 unusable.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Rt = COP1_FPR[Fs]. Exception on FPU unusable.
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -306,12 +306,12 @@ void EECoreInterpreter::MFC1()
 	}
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
 
 	destReg->writeWordU(0, source1Reg->readWordU());
 
 	// Sign extend
-	if (EECoreCOP1Util::getSign(source1Reg->readFloat()))
+	if (FPUUtil::getSign(source1Reg->readFloat()))
 	{
 		destReg->writeWordU(1, Constants::VALUE_U32_MAX);
 		destReg->writeWordU(2, Constants::VALUE_U32_MAX);
@@ -327,8 +327,8 @@ void EECoreInterpreter::MFC1()
 
 void EECoreInterpreter::MOV_S()
 {
-	// Fd = Fs. Exception on COP1 unusable.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = Fs. Exception on FPU unusable.
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -336,16 +336,16 @@ void EECoreInterpreter::MOV_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	destReg->writeFloat(source1Reg->readFloat());
 }
 
 void EECoreInterpreter::MTC1()
 {
-	// COP1_FPR[Fs] = Rt. Exception on COP1 unusable.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// COP1_FPR[Fs] = Rt. Exception on FPU unusable.
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -354,7 +354,7 @@ void EECoreInterpreter::MTC1()
 	}
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
 
 	destReg->writeWordU(source1Reg->readWordU(0));
 }

@@ -2,64 +2,62 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
-#include "VM/ExecutionCore/Interpreter/EE/TimerHandler/TimerHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/TimersHandler/TimersHandler.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPInterpreter.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/Clock/Clock_t.h"
 
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
-	mEECoreInterpreter(std::make_unique<EECoreInterpreter>(vmMain)),
-	mDMACInterpreter(std::make_unique<DMACInterpreter>(vmMain)),
-	mINTCHandler(std::make_unique<INTCHandler>(vmMain)),
-	mTimerHandler(std::make_unique<TimerHandler>(vmMain))
+	mClockSources{ ClockSource_t::VM },
+	mEECoreInterpreter(std::make_shared<EECoreInterpreter>(vmMain)),
+	mDMACInterpreter(std::make_shared<DMACInterpreter>(vmMain)),
+	mINTCHandler(std::make_shared<INTCHandler>(vmMain)),
+	mTimerHandler(std::make_shared<TimersHandler>(vmMain)),
+	mIOPInterpreter(std::make_shared<IOPInterpreter>(vmMain)),
+	mComponents { mDMACInterpreter, mINTCHandler, mTimerHandler, mIOPInterpreter }
 {
 }
 
-void Interpreter::executionStep()
+const std::vector<ClockSource_t>& Interpreter::getClockSources()
 {
-	auto& Clock = getVM()->getResources()->Clock;
+	return mClockSources;
+}
 
-	// Process base EE Core event (which controls the timing for components below, by updating the Clock class).
-	mEECoreInterpreter->executionStep();
-	
-	// Process any PS2CLK components.
-	// TODO: No components so far. Put VU's here?
+s64 Interpreter::executionStep(const ClockSource_t & clockSource)
+{
+	// Process base EE Core event (in which every other component timing is based off).
+	s64 PS2CLKTicks = mEECoreInterpreter->executionStep(ClockSource_t::PS2CLK);
 
-	// Process any BUSCLK components.
-	while (Clock->isTickedBUSCLK())
+	// Process the other components.
+	for (auto& component : mComponents)
 	{
-		mINTCHandler->executionStep();
-		mTimerHandler->executionStep_BUSCLK();
-		mDMACInterpreter->executionStep();
+		component->produceTicks(PS2CLKTicks);
+
+		for (auto& componentClockSource : component->getClockSources())
+		{
+			while (component->isTicked(componentClockSource))
+			{
+				s64 componentClockSourceTicks = component->executionStep(componentClockSource);
+				component->consumeTicks(componentClockSource, componentClockSourceTicks);
+			}
+		}
 	}
 
-	// Process any BUSCLK16 components.
-	while (Clock->isTickedBUSCLK16())
-	{
-		mTimerHandler->executionStep_BUSCLK16();
-	}
-
-	// Process any BUSCLK256 components.
-	while (Clock->isTickedBUSCLK16())
-	{
-		mTimerHandler->executionStep_BUSCLK16();
-	}
-
-	// Process any HBLNK components.
-	while (Clock->isTickedHBLNK())
-	{
-		// TODO: Put GS here? Shouldn't run for now as the GS hasn't been implemented (which sets Clock_t::RATIO_PS2CLK_HBLNK).
-		mTimerHandler->executionStep_HBLNK();
-	}
+	// Returns 1 "VM" cycle, although this is not actually used.
+	return 1;
 }
 
 void Interpreter::initalise()
 {
+	// Always done as its not apart of the mComponents array.
 	mEECoreInterpreter->initalise();
+
+	// Iterate through the other components.
+	for (auto& component : mComponents)
+		component->initalise();
 }

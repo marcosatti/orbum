@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
 #include <memory>
-#include <fstream>
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
@@ -21,7 +20,9 @@
 #include "Common/PS2Resources/EE/VPU/VIF/VIF_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
+#include "Common/PS2Resources/EE/Types/BootROM_t.h"
 #include "Common/PS2Resources/GS/GS_t.h"
+#include "Common/PS2Resources/IOP/IOP_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/DeadMMemory_t.h"
@@ -65,7 +66,7 @@ void VMMain::Run()
 	// Run the VM.
 	while (mStatus == VMStatus::RUNNING)
 	{
-		mExecutionCoreComponent->executionStep();
+		mExecutionCoreComponent->executionStep(ClockSource_t::VM);
 	}
 }
 
@@ -105,14 +106,17 @@ void VMMain::initaliseResources()
 
 void VMMain::initalisePS2PhysicalMemoryMap() const
 {
-	// Main memory 32MB
-	getMMU()->mapMemory(getResources()->MainMemory);
+	// EE Memory.
+	{
+		// Main memory 32MB
+		getMMU()->mapMemory(getResources()->EE->MainMemory);
 
-	// Scratchpad memory 16KB
-	getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory);
+		// Scratchpad memory 16KB
+		getMMU()->mapMemory(getResources()->EE->EECore->ScratchpadMemory);
 
-	// Boot ROM 4MB
-	getMMU()->mapMemory(getResources()->BootROM);
+		// Boot ROM 4MB
+		getMMU()->mapMemory(getResources()->EE->BootROM);
+	}
 
 	// EE Registers.
 	{
@@ -376,6 +380,12 @@ void VMMain::initalisePS2PhysicalMemoryMap() const
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPE_2000);
 		getMMU()->mapMemory(getResources()->GS->GS_P_REGISTER_SPEBusErr);
 	}
+
+	// IOP
+	{
+		// IOP Memory.
+		getMMU()->mapMemory(getResources()->IOP->IOPMemory);
+	}
 }
 
 void VMMain::initaliseExecutionCore()
@@ -397,10 +407,5 @@ void VMMain::initaliseExecutionCore()
 
 void VMMain::initaliseBootROM() const
 {
-	char * memoryBase = reinterpret_cast<char*>(getResources()->BootROM->getClientMemoryAddress());
-	std::ifstream file(mBootROMPath, std::ifstream::binary);
-	if (file.fail()) 
-		throw std::runtime_error("initaliseBootROM(): tried to open BIOS file, but it failed! Check file exists and has read permissions.");
-	file.seekg(std::ifstream::beg);
-	file.read(memoryBase, PS2Constants::BootROM::SIZE_BOOT_ROM);
+	getResources()->EE->BootROM->loadBIOS(mBootROMPath);
 }

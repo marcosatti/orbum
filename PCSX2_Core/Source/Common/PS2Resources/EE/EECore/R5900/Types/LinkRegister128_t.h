@@ -9,10 +9,7 @@
 class LinkRegister128_t : public Register128_t, public PS2ResourcesSubobject
 {
 public:
-	explicit LinkRegister128_t(const PS2Resources_t* const PS2Resources)
-		: PS2ResourcesSubobject(PS2Resources)
-	{
-	}
+	explicit LinkRegister128_t(const PS2Resources_t* const PS2Resources);
 
 	/*
 	Sets the return (link) address, which is equal to the current PC + 8.

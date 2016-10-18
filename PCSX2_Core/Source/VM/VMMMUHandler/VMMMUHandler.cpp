@@ -4,7 +4,6 @@
 #include <cmath>
 
 #include "Common/Global/Globals.h"
-#include "VM/VmMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "VM/VMMMUHandler/Types/VMMMUMappedMemory.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
@@ -31,9 +30,8 @@ VMMMUHandler::~VMMMUHandler()
 {
 	// Destroy any allocated pages.
 	for (u32 i = 0; i < DIRECTORY_ENTRIES; i++)
-	{
 		if (mPageTable[i] != nullptr) delete[] mPageTable[i];
-	}
+	
 	// Destroy the page table (directories).
 	delete[] mPageTable;
 }
@@ -41,7 +39,8 @@ VMMMUHandler::~VMMMUHandler()
 void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedMemory> & clientStorage, const u32 & PS2MemoryAddress)
 {
 	// Do not do anything for getStorageSize equal to 0.
-	if (clientStorage->getStorageSize() == 0) return;
+	if (clientStorage->getStorageSize() == 0) 
+		return;
 
 	// Get the base virtual directory number (VDN) and virtual page number (VPN).
 	u32 baseVDN = getVDN(PS2MemoryAddress);
@@ -82,7 +81,7 @@ void VMMMUHandler::mapMemory(const std::shared_ptr<VMMMUMappedMemory> & clientSt
 	}
 }
 
-void VMMMUHandler::mapMemory(const std::shared_ptr<MappedMemory_t>& clientStorage)
+void VMMMUHandler::mapMemory(const std::shared_ptr<MappedMemory_t> & clientStorage)
 {
 	mapMemory(clientStorage, clientStorage->getPS2PhysicalAddress());
 }

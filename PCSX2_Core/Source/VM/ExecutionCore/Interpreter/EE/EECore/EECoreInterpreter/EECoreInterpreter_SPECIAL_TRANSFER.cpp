@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/Types/Registers/Register32_t.h"
@@ -10,12 +10,12 @@
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
 
 void EECoreInterpreter::MFSA()
 {
@@ -53,7 +53,7 @@ void EECoreInterpreter::MTSAH()
 
 void EECoreInterpreter::MFBPC()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -69,7 +69,7 @@ void EECoreInterpreter::MFBPC()
 
 void EECoreInterpreter::MFC0()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -85,7 +85,7 @@ void EECoreInterpreter::MFC0()
 
 void EECoreInterpreter::MFDAB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -101,7 +101,7 @@ void EECoreInterpreter::MFDAB()
 
 void EECoreInterpreter::MFDABM()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -117,7 +117,7 @@ void EECoreInterpreter::MFDABM()
 
 void EECoreInterpreter::MFDVB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -133,7 +133,7 @@ void EECoreInterpreter::MFDVB()
 
 void EECoreInterpreter::MFDVBM()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -149,7 +149,7 @@ void EECoreInterpreter::MFDVBM()
 
 void EECoreInterpreter::MFIAB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -165,7 +165,7 @@ void EECoreInterpreter::MFIAB()
 
 void EECoreInterpreter::MFIABM()
 {
-	if(!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if(!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -180,7 +180,7 @@ void EECoreInterpreter::MFIABM()
 
 void EECoreInterpreter::MFPC()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -197,7 +197,7 @@ void EECoreInterpreter::MFPC()
 
 void EECoreInterpreter::MFPS()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -213,7 +213,7 @@ void EECoreInterpreter::MFPS()
 
 void EECoreInterpreter::MTBPC()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -229,7 +229,7 @@ void EECoreInterpreter::MTBPC()
 
 void EECoreInterpreter::MTC0()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -245,7 +245,7 @@ void EECoreInterpreter::MTC0()
 
 void EECoreInterpreter::MTDAB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -261,7 +261,7 @@ void EECoreInterpreter::MTDAB()
 
 void EECoreInterpreter::MTDABM()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -277,7 +277,7 @@ void EECoreInterpreter::MTDABM()
 
 void EECoreInterpreter::MTDVB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -293,7 +293,7 @@ void EECoreInterpreter::MTDVB()
 
 void EECoreInterpreter::MTDVBM()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -309,7 +309,7 @@ void EECoreInterpreter::MTDVBM()
 
 void EECoreInterpreter::MTIAB()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -325,7 +325,7 @@ void EECoreInterpreter::MTIAB()
 
 void EECoreInterpreter::MTIABM()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -341,7 +341,7 @@ void EECoreInterpreter::MTIABM()
 
 void EECoreInterpreter::MTPC()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -358,7 +358,7 @@ void EECoreInterpreter::MTPC()
 
 void EECoreInterpreter::MTPS()
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -374,7 +374,7 @@ void EECoreInterpreter::MTPS()
 
 void EECoreInterpreter::CFC1()
 {
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -383,14 +383,14 @@ void EECoreInterpreter::CFC1()
 	}
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->COP1->BitfieldRegisters[getInstruction().getRRd()]; // Fs, can only be 0 or 31.
+	auto& sourceReg = getVM()->getResources()->EE->EECore->FPU->BitfieldRegisters[getInstruction().getRRd()]; // Fs, can only be 0 or 31.
 
 	destReg->writeDwordU(0, static_cast<u64>(sourceReg->getRegisterValue()));
 }
 
 void EECoreInterpreter::CTC1()
 {
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -399,7 +399,7 @@ void EECoreInterpreter::CTC1()
 	}
 
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->BitfieldRegisters[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->BitfieldRegisters[getInstruction().getRRd()];
 
 	destReg->setRegisterValue(sourceReg->readWordU(0));
 }

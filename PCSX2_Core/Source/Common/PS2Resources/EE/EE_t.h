@@ -17,6 +17,7 @@ class Timers_t;
 class IPU_t;
 class GIF_t;
 class VPU_t;
+class BootROM_t;
 
 class MappedMemory_t;
 class MappedMemory32_t;
@@ -64,6 +65,16 @@ public:
 	VPU 0/1 resources.
 	*/
 	std::shared_ptr<VPU_t> VPU;
+
+	/*
+	Main Memory (32MB)
+	*/
+	std::shared_ptr<MappedMemory_t> MainMemory;
+
+	/* 
+	Boot ROM (4MB)
+	*/
+	std::shared_ptr<BootROM_t> BootROM;
 
 	/*
 	EE registers, defined on page 21 onwards of the EE Users Manual. 

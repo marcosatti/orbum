@@ -2,7 +2,7 @@
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 
 /*
-ZeroRegister128_t is used as a register with a constant 0 value. Any writes are discarded, and any reads are always 0. Used for the EECore GPR register r0.
+ZeroRegister128_t is used as a register with a constant 0 value. Any writes are discarded, and any reads are always 0.
 */
 
 class ZeroRegister128_t : public Register128_t

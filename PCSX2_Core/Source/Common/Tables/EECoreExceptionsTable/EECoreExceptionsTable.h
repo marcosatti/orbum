@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
 using ExType = EECoreException_t::ExType;

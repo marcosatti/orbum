@@ -2,13 +2,13 @@
 
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "Common/PS2Constants/PS2Constants.h"
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/VMMMUHandler/VMMMUHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAC_Registers_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
@@ -23,6 +23,7 @@ using ChainMode_t = EEDmacTable::ChainMode_t;
 
 DMACInterpreter::DMACInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
+	mClockSources{ ClockSource_t::BUSCLK },
 	mChannelIndex(0),
 	mChannelProperties(nullptr),
 	mDMAtag(0, 0)
@@ -33,14 +34,19 @@ DMACInterpreter::~DMACInterpreter()
 {
 }
 
-void DMACInterpreter::executionStep()
+const std::vector<ClockSource_t>& DMACInterpreter::getClockSources()
+{
+	return mClockSources;
+}
+
+s64 DMACInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	auto& DMAC = getVM()->getResources()->EE->DMAC;
 	auto& DMAChannelRegisters = DMAC->DMAChannelRegisters;
 
 	// Check if DMA transfers are enabled.
 	if (!DMAC->DMAC_REGISTER_D_CTRL->getFieldValue(DmacRegisterCtrl_t::Fields::DMAE))
-		return;
+		return 1;
 
 	// Check for any pending/started DMA transfers, by checking the Dn_CHCR.STR register of each channel. Perform transfer if enabled.
 	for (mChannelIndex = 0; mChannelIndex < PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS; mChannelIndex++)
@@ -64,6 +70,9 @@ void DMACInterpreter::executionStep()
 
 	// Check for D_STAT interrupt bit status, send interrupt to EE Core (INT1 line) if not masked.
 	checkInterruptStatus();
+
+	// DMAC has completed 1 cycle.
+	return 1;
 }
 
 void DMACInterpreter::executionStep_Normal() const

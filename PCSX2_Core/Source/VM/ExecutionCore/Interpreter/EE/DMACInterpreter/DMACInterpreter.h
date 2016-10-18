@@ -39,18 +39,24 @@ TODO: Speedups can be done here:
  - Dont need to turn on cycle stealing if requested? Kind of redundant in an emulator.
 */
 
-class DMACInterpreter : VMExecutionCoreComponent
+class DMACInterpreter : public VMExecutionCoreComponent
 {
 public:
 	explicit DMACInterpreter(VMMain * vmMain);
 	~DMACInterpreter();
 
 	/*
+	See VMExecutionCoreComponent for documentation.
+	*/
+	std::vector<ClockSource_t> mClockSources;
+	const std::vector<ClockSource_t> & getClockSources() override;
+
+	/*
 	Check through the channels and initate data transfers. 
 	Slice channels transfer 8 qwords (128 bytes) before suspending transfer, where as burst channels transfer all data without suspending.
 	TODO: Currently it is assumed that the software uses the DMAC correctly (such as using correct chain mode for a channel). Need to add in checks?
 	*/
-	void executionStep() override;
+	s64 executionStep(const ClockSource_t & clockSource) override;
 
 private:
 	/*
@@ -137,7 +143,7 @@ private:
 
 	/*
 	Read and write a qword from the specified peripheral, or from physical memory (either main memory or SPR (scratchpad ram)).
-	Note: the DMAC operates on physical addresses only - the TLB/PS2 MMU is not involved.
+	Note: the DMAC operates on physical addresses only - the TLB/PS2 EECoreMMU is not involved.
 	*/
 	DMADataUnit_t readDataChannel() const;
 	void writeDataChannel(DMADataUnit_t data) const;

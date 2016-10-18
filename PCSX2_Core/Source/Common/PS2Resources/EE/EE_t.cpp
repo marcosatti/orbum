@@ -7,6 +7,7 @@
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory32_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/DeadMMemory_t.h"
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
+#include "Common/PS2Resources/EE/Types/BootROM_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 #include "Common/PS2Resources/EE/INTC/INTC_t.h"
@@ -24,6 +25,8 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	IPU(std::make_shared<IPU_t>(getRootResources())),
 	GIF(std::make_shared<GIF_t>(getRootResources())),
 	VPU(std::make_shared<VPU_t>(getRootResources())),
+	MainMemory(std::make_shared<MappedMemory_t>(PS2Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory", PS2Constants::EE::MainMemory::PADDRESS_MAIN_MEMORY)),
+	BootROM(std::make_shared<BootROM_t>()),
 
 	// Registers.
 	EE_REGISTER_VIF0_FIFO(std::make_shared<MappedMemory_t>(0x10, "FIFO: VIF0_FIFO", 0x10004000)),

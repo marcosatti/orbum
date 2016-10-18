@@ -7,6 +7,7 @@
 
 
 BitfieldMap32_t::BitfieldMap32_t(const bool & autoSync) :
+	mFieldMap{0},
 	mAutoSync(autoSync)
 {
 }

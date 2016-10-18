@@ -4,19 +4,19 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 void EECoreInterpreter::PABSH()
@@ -67,8 +67,8 @@ void EECoreInterpreter::PLZCW()
 
 void EECoreInterpreter::ABS_S()
 {
-	// Fd = ABS(Fs) (Exception on COP1 unusable only).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = ABS(Fs) (Exception on FPU unusable only).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -76,19 +76,19 @@ void EECoreInterpreter::ABS_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::NEG_S()
 {
-	// Fd = NEG(Fs) (Exception on COP1 unusable only).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = NEG(Fs) (Exception on FPU unusable only).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -96,19 +96,19 @@ void EECoreInterpreter::NEG_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::RSQRT_S()
 {
-	// Fd = RSQRT(Fs, Ft) (Exception on COP1 unusable only).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = RSQRT(Fs, Ft) (Exception on FPU unusable only).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -116,9 +116,9 @@ void EECoreInterpreter::RSQRT_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
@@ -127,14 +127,14 @@ void EECoreInterpreter::RSQRT_S()
 	// Set flags and special values, writes a result to the above variable.
 	if (source2Val == 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
+		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -143,16 +143,16 @@ void EECoreInterpreter::RSQRT_S()
 	}
 
 	// Check for overflow or underflow (no flags set?).
-	if (EECoreCOP1Util::isOverflowed(result) || EECoreCOP1Util::isUnderflowed(result))
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
+	if (FPUUtil::isOverflowed(result) || FPUUtil::isUnderflowed(result))
+		result = FPUUtil::formatIEEEToPS2Float(result);
 		
 	destReg->writeFloat(result);
 }
 
 void EECoreInterpreter::SQRT_S()
 {
-	// Fd = SQRT(Ft) (Exception on COP1 unusable only).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = SQRT(Ft) (Exception on FPU unusable only).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -160,21 +160,21 @@ void EECoreInterpreter::SQRT_S()
 		return;
 	}
 
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 source2Val = source2Reg->readFloat();
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
-	if (source2Val == 0.0F && EECoreCOP1Util::getSign(source2Val))
+	if (source2Val == 0.0F && FPUUtil::getSign(source2Val))
 	{
 		result = -0.0F;
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

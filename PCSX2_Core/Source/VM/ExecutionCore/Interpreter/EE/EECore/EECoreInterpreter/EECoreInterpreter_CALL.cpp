@@ -2,14 +2,14 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
 
 void EECoreInterpreter::BGEZAL()

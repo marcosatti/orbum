@@ -3,16 +3,16 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
-#include "Common/Util/EECoreCOP1Util/EECoreCOP1Util.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
 
 /*
 Floating-Point instruction family.
@@ -21,9 +21,9 @@ TODO: Check if a convert IEEE to PS2 float function call is needed on the values
 
 void EECoreInterpreter::ADD_S()
 {
-	// Fd = Fs + Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = Fs + Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -31,23 +31,23 @@ void EECoreInterpreter::ADD_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 	
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -55,9 +55,9 @@ void EECoreInterpreter::ADD_S()
 
 void EECoreInterpreter::ADDA_S()
 {
-	// ACC = Fs + Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// ACC = Fs + Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -65,23 +65,23 @@ void EECoreInterpreter::ADDA_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -89,9 +89,9 @@ void EECoreInterpreter::ADDA_S()
 
 void EECoreInterpreter::MADD_S()
 {
-	// Fd = ACC + (Fs * Ft) (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = ACC + (Fs * Ft) (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -100,24 +100,24 @@ void EECoreInterpreter::MADD_S()
 	}
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& source3Reg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 result = source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -125,9 +125,9 @@ void EECoreInterpreter::MADD_S()
 
 void EECoreInterpreter::MADDA_S()
 {
-	// ACC = ACC + (Fs * Ft) (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// ACC = ACC + (Fs * Ft) (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -136,23 +136,23 @@ void EECoreInterpreter::MADDA_S()
 	}
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -160,9 +160,9 @@ void EECoreInterpreter::MADDA_S()
 
 void EECoreInterpreter::MUL_S()
 {
-	// Fd = Fs * Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = Fs * Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -170,23 +170,23 @@ void EECoreInterpreter::MUL_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -194,9 +194,9 @@ void EECoreInterpreter::MUL_S()
 
 void EECoreInterpreter::MULA_S()
 {
-	// ACC = Fs * Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// ACC = Fs * Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -204,23 +204,23 @@ void EECoreInterpreter::MULA_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -228,9 +228,9 @@ void EECoreInterpreter::MULA_S()
 
 void EECoreInterpreter::DIV_S()
 {
-	// Fd = Fs / Ft (Exception on COP1 unusable).
+	// Fd = Fs / Ft (Exception on FPU unusable).
 	// TODO: Check if status bits need to be set.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -238,41 +238,41 @@ void EECoreInterpreter::DIV_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	// Set flags when special conditions occur.
 	f32 result;
 	if (source1Reg->readFloat() != 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
+		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source1Reg->readFloat() == 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
-		result = static_cast<f32>(PS2Constants::EE::EECore::COP1::FMAX_POS);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
+		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 
 	result = source1Reg->readFloat() / source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-	else if (EECoreCOP1Util::isUnderflowed(result))
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
+	if (FPUUtil::isOverflowed(result))
+		result = FPUUtil::formatIEEEToPS2Float(result);
+	else if (FPUUtil::isUnderflowed(result))
+		result = FPUUtil::formatIEEEToPS2Float(result);
 
 	destReg->writeFloat(result);
 }
 
 void EECoreInterpreter::MSUB_S()
 {
-	// Fd = ACC - (Fs * Ft) (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
+	// Fd = ACC - (Fs * Ft) (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -280,24 +280,24 @@ void EECoreInterpreter::MSUB_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& source3Reg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 result = source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -305,10 +305,10 @@ void EECoreInterpreter::MSUB_S()
 
 void EECoreInterpreter::MSUBA_S()
 {
-	// ACC = ACC - (Fs * Ft) (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
+	// ACC = ACC - (Fs * Ft) (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -316,23 +316,23 @@ void EECoreInterpreter::MSUBA_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -340,9 +340,9 @@ void EECoreInterpreter::MSUBA_S()
 
 void EECoreInterpreter::SUB_S()
 {
-	// Fd = Fs - Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// Fd = Fs - Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -350,23 +350,23 @@ void EECoreInterpreter::SUB_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);
@@ -374,9 +374,9 @@ void EECoreInterpreter::SUB_S()
 
 void EECoreInterpreter::SUBA_S()
 {
-	// ACC = Fs - Ft (Exception on COP1 unusable).
-	// COP1 status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	// ACC = Fs - Ft (Exception on FPU unusable).
+	// FPU status bits set on exponent overflow/underflow (no exception generated).
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
@@ -384,23 +384,23 @@ void EECoreInterpreter::SUBA_S()
 		return;
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->COP1->ACC; // ACC
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
-	if (EECoreCOP1Util::isOverflowed(result))
+	if (FPUUtil::isOverflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SO, 1);
 	}
-	else if (EECoreCOP1Util::isUnderflowed(result))
+	else if (FPUUtil::isUnderflowed(result))
 	{
-		result = EECoreCOP1Util::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->COP1->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
+		result = FPUUtil::formatIEEEToPS2Float(result);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SU, 1);
 	}
 
 	destReg->writeFloat(result);

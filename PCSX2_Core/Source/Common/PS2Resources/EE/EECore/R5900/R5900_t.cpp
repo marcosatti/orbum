@@ -7,7 +7,7 @@
 #include "Common/PS2Resources/Types/Registers/Register32_t.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/ZeroRegister128_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/Types/LinkRegister128_t.h"
 
 R5900_t::R5900_t(const PS2Resources_t* const PS2Resources) : 

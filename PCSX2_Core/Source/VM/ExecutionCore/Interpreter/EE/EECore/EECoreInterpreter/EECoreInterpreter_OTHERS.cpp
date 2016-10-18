@@ -2,18 +2,18 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/Types/COP1_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/MMU/MMU_t.h"
-#include "Common/PS2Resources/EE/EECore/MMU/Types/TLBEntryInfo_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreTLB/EECoreTLB_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreTLB/Types/EECoreTLBEntryInfo_t.h"
 
 void EECoreInterpreter::SYNC_STYPE()
 {
@@ -76,7 +76,7 @@ void EECoreInterpreter::CACHE()
 void EECoreInterpreter::TLBP()
 {
 	// PROBE_TLB(index). Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -86,7 +86,7 @@ void EECoreInterpreter::TLBP()
 
 	u32 value = 0x80000000; // Only set index if an entry is found, otherwise return with the sign bit = 1, indicating not found..
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->MMU;
+	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
 	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
 
 	// Find by VPN2 first.
@@ -111,7 +111,7 @@ void EECoreInterpreter::TLBP()
 void EECoreInterpreter::TLBR()
 {
 	// COP0{PageMask, EntryHi/Lo} = GET_TLB(index). Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -120,7 +120,7 @@ void EECoreInterpreter::TLBR()
 	}
 
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->MMU;
+	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
 	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
 	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
@@ -154,7 +154,7 @@ void EECoreInterpreter::TLBR()
 void EECoreInterpreter::TLBWI()
 {
 	// TLB[Index] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
  		COPExceptionInfo_t copExInfo = { 0 };
@@ -163,13 +163,13 @@ void EECoreInterpreter::TLBWI()
 	}
 
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->MMU;
+	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
 	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
 	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
 	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
 
-	TLBEntryInfo_t tlbEntry;
+	EECoreTLBEntryInfo_t tlbEntry;
 
 	// PageMask.
 	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);
@@ -201,7 +201,7 @@ void EECoreInterpreter::TLBWI()
 void EECoreInterpreter::TLBWR()
 {
 	// TLB[random] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCOP0Usable())
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
@@ -210,13 +210,13 @@ void EECoreInterpreter::TLBWR()
 	}
 
 	auto& Random = getVM()->getResources()->EE->EECore->COP0->Random;
-	auto& MMU = getVM()->getResources()->EE->EECore->MMU;
+	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
 	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
 	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
 	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
 	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
 
-	TLBEntryInfo_t tlbEntry;
+	EECoreTLBEntryInfo_t tlbEntry;
 
 	// PageMask.
 	tlbEntry.mMask = PageMask->getFieldValue(COP0RegisterPageMask_t::Fields::MASK);

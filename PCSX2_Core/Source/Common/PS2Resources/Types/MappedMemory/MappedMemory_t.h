@@ -49,7 +49,7 @@ public:
 	Gets the base client memory address, needed for special VM functions such as loading the BIOS (BootROM). Not normally used, and should never
 	 be used in favour of the above read/write functions unless you absolutely have to.
 	*/
-	void * getClientMemoryAddress() const;
+	virtual void * getClientMemoryAddress() const;
 
 	/*
 	Get the storage mnemonic, used for debug.
@@ -59,7 +59,7 @@ public:
 	/*
 	Gets the PS2 physical address this storage object was assigned at creation.
 	*/
-	const u32 & getPS2PhysicalAddress() const;
+	virtual const u32 & getPS2PhysicalAddress() const;
 
 private:
 	size_t mStorageSize;

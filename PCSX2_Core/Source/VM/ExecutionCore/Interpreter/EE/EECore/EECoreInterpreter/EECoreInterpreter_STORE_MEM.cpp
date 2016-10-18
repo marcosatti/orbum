@@ -2,17 +2,17 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/MMUHandler/MMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
 #include "Common/PS2Resources/Types/Registers/Register128_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/COP1/COP1_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
 #include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
 
 void EECoreInterpreter::SB()
@@ -172,7 +172,7 @@ void EECoreInterpreter::SWL()
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = source2Reg->readWordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = source2Reg->readWordU(0); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	u8 MSBShift = ((4 - (offset + 1)) * 8); // A shift value used thoughout.
 	u32 MSBMask = Constants::VALUE_U32_MAX << MSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
@@ -205,7 +205,7 @@ void EECoreInterpreter::SWR()
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = source2Reg->readWordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = source2Reg->readWordU(0); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	u8 LSBShift = (offset * 8); // A shift value used thoughout.
 	u32 LSBMask = Constants::VALUE_U32_MAX >> LSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
@@ -254,14 +254,14 @@ void EECoreInterpreter::SQ()
 void EECoreInterpreter::SWC1()
 {
 	// MEM[UW] = Ft. Address error or TLB error generated.
-	if (!getVM()->getResources()->EE->EECore->COP1->isCOP1Usable())
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
-	auto& source2Reg = getVM()->getResources()->EE->EECore->COP1->FPR[getInstruction().getIRt()]; // Ft
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getIRt()]; // Ft
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()]; // "Base"
 	const s16 imm = getInstruction().getIImmS();
 

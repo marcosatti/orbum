@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include <Common/PS2Constants/PS2Constants.h>
+#include "Common/PS2Constants/PS2Constants.h"
 
 class Register128_t;
 class Register32_t;
@@ -13,16 +13,15 @@ class ZeroRegister128_t;
 class LinkRegister128_t;
 class PCRegister32_t;
 
+/*
+The R5900 is the EE Core's CPU. It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
+It uses a little-endian configuration (bit 0 is always the LSB).
+*/
 class R5900_t : public PS2ResourcesSubobject
 {
 public:
 	explicit R5900_t(const PS2Resources_t* const PS2Resources);
 
-	/*
-	The R5900 is the EE Core's CPU. It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
-	It uses a little-endian configuration (bit 0 is always the LSB).
-	*/
-	
 	// CPU state implementations.
 
 	/*
@@ -56,7 +55,7 @@ public:
 	*/
 	std::shared_ptr<ZeroRegister128_t> ZeroRegister;
 	std::shared_ptr<LinkRegister128_t> LinkRegister;
-	std::shared_ptr<Register128_t> GPR[PS2Constants::EE::EECore::R5900::NUMBER_REGISTERS];
+	std::shared_ptr<Register128_t> GPR[PS2Constants::EE::EECore::R5900::NUMBER_GP_REGISTERS];
 
 	/*
 	The HI and LO registers. See EE Core Users manual, pg 60.

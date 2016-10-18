@@ -22,7 +22,8 @@ class VMMain;
 class EECoreInterpreter;
 class DMACInterpreter;
 class INTCHandler;
-class TimerHandler;
+class TimersHandler;
+class IOPInterpreter;
 //class InterpreterVU;
 //class InterpreterGS;
 
@@ -31,16 +32,36 @@ class Interpreter : public VMExecutionCoreComponent
 public:
 	explicit Interpreter(VMMain * vmMain);
 
-	void executionStep() override;
+	/*
+	See VMExecutionCoreComponent for documentation.
+	*/
+	std::vector<ClockSource_t> mClockSources;
+	const std::vector<ClockSource_t> & getClockSources() override;
 
+	/*
+	Always runs the EE Core.
+	For the other components, first checks if they should be run and then controls their timing.
+	*/
+	s64 executionStep(const ClockSource_t & clockSource) override;
+
+	/*
+	Delegates to all components by calling mComponents::intialise().
+	*/
 	void initalise() override;
 
 private:
-	const std::unique_ptr<EECoreInterpreter> mEECoreInterpreter;
-	const std::unique_ptr<DMACInterpreter> mDMACInterpreter;
-	const std::unique_ptr<INTCHandler> mINTCHandler;
-	const std::unique_ptr<TimerHandler> mTimerHandler;
-	//const std::unique_ptr<InterpreterVU> mInterpreterVU; // TODO: look at putting VU0 and VU1 on a separate thread - looks like a good candidate.
-	//const std::unique_ptr<InterpreterGS> mInterpreterGS;
+
+	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
+	std::shared_ptr<DMACInterpreter> mDMACInterpreter;
+	std::shared_ptr<INTCHandler> mINTCHandler;
+	std::shared_ptr<TimersHandler> mTimerHandler;
+	//std::unique_ptr<InterpreterVU> mInterpreterVU; 
+	//std::unique_ptr<InterpreterGS> mInterpreterGS;
+	std::shared_ptr<IOPInterpreter> mIOPInterpreter;
+
+	/*
+	Used to iterate through all components except the EE Core interpreter.
+	*/
+	std::vector<std::shared_ptr<VMExecutionCoreComponent>> mComponents;
 };
 

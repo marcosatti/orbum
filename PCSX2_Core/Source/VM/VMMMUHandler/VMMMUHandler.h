@@ -4,7 +4,6 @@
 
 #include "Common/Global/Globals.h"
 
-class VmMain1;
 class VMMMUMappedMemory;
 class MappedMemory_t;
 
@@ -13,7 +12,7 @@ The VM MMU component is responsible for converting the PS2's physical addresses 
 The remapping method is actually just a page table... but sort of in reverse (PS2 "physical" -> client)!
 This means that in the emulator, there are 2 page tables:
 - One will be a page table for mapping PS2 virtual addresses into PS2 physical addresses (implmented as MMU sub components in the Interpreter & Recompliler).
-- The other (this one) is a page table for mapping PS2 physical addresses into x86 virtual addresses. It is labeled the VM MMU to avoid confusion with the PS2 MMU.
+- The other (this one) is a page table for mapping PS2 physical addresses into x86 virtual addresses. It is labeled the VM MMU to avoid confusion with the PS2 TLB.
 
 The page table is implemented as a 2 level system with a primary "directory" size of 4,194,304B (4MB addressing chunks) and a secondary "page" size of 16B. 
  2 Levels are used to reduce memory usage by only allocating the page tables within a directory that are needed.
@@ -129,7 +128,7 @@ private:
 	The page table which holds all of the page table entries, mapping the addresses.
 	The directories are kept in this, which point to individual pages.
 	The individual pages are only allocated on access, thereby saving memory.
-	(A pointer to an array of directories, each directory pointing to an array of pages, each page pointing to some memory.)
+	(A pointer to an array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
 	*/
 	std::shared_ptr<VMMMUMappedMemory>** mPageTable;
 

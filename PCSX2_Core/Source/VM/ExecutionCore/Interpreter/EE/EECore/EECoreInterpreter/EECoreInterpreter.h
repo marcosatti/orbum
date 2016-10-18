@@ -3,21 +3,21 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
-using EECoreInstructionInfo_t = EECoreInstructionTable::EECoreInstructionInfo_t;
-
 class PS2Resources_t;
 class VMMain;
-class MMUHandler;
-class ExceptionHandler;
+class EECoreMMUHandler;
+class EECoreExceptionHandler;
+struct MIPSInstructionInfo_t;
 
 /*
 The EE Core interpreter.
 
 This also acts as the control for synchronisation across components, as this is the fastest clocked device in the PS2 (294 MHz).
-Each time executionStep() is run, PS2Resources->Clock->raiseEventPS2CLK() is also run, which updates other clock sources such as the BUSCLK.
+Each time executionStep() is run, PS2Resources->Clock->updateClocks() is also run, which updates other clock sources such as the BUSCLK.
 
 TODO: Finish documentation.
 */
@@ -29,6 +29,12 @@ public:
 	~EECoreInterpreter();
 
 	/*
+	See VMExecutionCoreComponent for documentation.
+	*/
+	std::vector<ClockSource_t> mClockSources;
+	const std::vector<ClockSource_t> & getClockSources() override;
+
+	/*
 	Initalisation.
 	*/
 	void initalise() override;
@@ -36,19 +42,19 @@ public:
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
-	void executionStep() override;
+	s64 executionStep(const ClockSource_t & clockSource) override;
 	void checkBranchDelaySlot() const;
-	void executeInstruction();
+	u32 executeInstruction();
 
 	/*
-	checkCountTimerEvents() checks the COP0.Count register against the COP0.Compare register.
-	If the Count value >= Compare value, an exception is generated if the COP0.Status.IM7 mask is set etc.
+	Checks the COP0.Count register against the COP0.Compare register.
+	If the Count value >= Compare value, an exception is generated.
 	*/
 	void checkCountTimerEvent() const;
 
 	// Component state functions
-	const std::unique_ptr<ExceptionHandler> & getExceptionHandler() const;
-	const std::unique_ptr<MMUHandler> & getMMUHandler() const;
+	const std::unique_ptr<EECoreExceptionHandler> & getExceptionHandler() const;
+	const std::unique_ptr<EECoreMMUHandler> & getMMUHandler() const;
 	MIPSInstruction_t & getInstruction();
 
 private:
@@ -63,21 +69,21 @@ private:
 #endif
 
 	/*
-	The PS2 exception handler.
+	The EECore exception handler.
 	*/
-	const std::unique_ptr<ExceptionHandler> mExceptionHandler;
+	const std::unique_ptr<EECoreExceptionHandler> mExceptionHandler;
 
 	/*
-	The PS2 MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
+	The EECore MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
 	*/
-	const std::unique_ptr<MMUHandler> mMMUHandler;
+	const std::unique_ptr<EECoreMMUHandler> mMMUHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
 	It is also used while an instruction is being performed.
 	*/
 	MIPSInstruction_t mInstruction;
-	const EECoreInstructionInfo_t * mInstructionInfo;
+	const MIPSInstructionInfo_t * mInstructionInfo;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
@@ -85,13 +91,12 @@ private:
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
-	If the PCSX2_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
-	Will increase PC by 4 regardless.
+	If the BUILD_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
 	*/
 	void INSTRUCTION_UNKNOWN();
 
 	/*
-	Integer Add/Sub Instructions. See InterpreterEECore_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
+	Integer Add/Sub Instructions. See EECoreInterpreter_INTEGER_ADD_SUB.cpp for implementations (31 instructions total).
 	*/
 	void ADD();
 	void ADDI();
@@ -126,7 +131,7 @@ private:
 	void PSUBW();
 
 	/*
-	Integer Mult/Div Instructions. See InterpreterEECore_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
+	Integer Mult/Div Instructions. See EECoreInterpreter_INTEGER_MULT_DIV.cpp for implementations (14 instructions total).
 	*/
 	void DIV();
 	void DIV1();
@@ -144,7 +149,7 @@ private:
 	void PMULTW();
 
 	/*
-	Integer Mult-Add Instructions. See InterpreterEECore_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
+	Integer Mult-Add Instructions. See EECoreInterpreter_INTEGER_MULT_ADD.cpp for implementations (11 instructions total).
 	*/
 	void MADD();
 	void MADD1();
@@ -159,7 +164,7 @@ private:
 	void PMSUBW();
 
 	/*
-	Floating-Point Instructions. See InterpreterEECore_FLOAT.cpp for implementations (10 instructions total).
+	Floating-Point Instructions. See EECoreInterpreter_FLOAT.cpp for implementations (10 instructions total).
 	*/
 	void ADD_S();
 	void ADDA_S();
@@ -174,7 +179,7 @@ private:
 	void SUBA_S();
 
 	/*
-	Shift Instructions. See InterpreterEECore_SHIFT.cpp for implementations (25 instructions total).
+	Shift Instructions. See EECoreInterpreter_SHIFT.cpp for implementations (25 instructions total).
 	*/
 	void DSRA();
 	void DSLL();
@@ -203,7 +208,7 @@ private:
 	void QFSRV();
 
 	/*
-	Logical Instructions. See InterpreterEECore_LOGICAL.cpp for implementations (11 instructions total).
+	Logical Instructions. See EECoreInterpreter_LOGICAL.cpp for implementations (11 instructions total).
 	*/
 	void AND();
 	void ANDI();
@@ -218,7 +223,7 @@ private:
 	void PXOR();
 
 	/*
-	Compare Instructions. See InterpreterEECore_COMPARE.cpp for implementations (14 instructions total).
+	Compare Instructions. See EECoreInterpreter_COMPARE.cpp for implementations (14 instructions total).
 	*/
 	void SLT(); // For some reason this is missing in the EE Overview Manual (v6)?? I guess it should be here however.
 	void SLTI();
@@ -236,7 +241,7 @@ private:
 	void C_LT_S();
 
 	/*
-	Min/Max Instructions. See InterpreterEECore_MIN_MAX.cpp for implementations (6 instructions total).
+	Min/Max Instructions. See EECoreInterpreter_MIN_MAX.cpp for implementations (6 instructions total).
 	*/
 	void PMAXH();
 	void PMAXW();
@@ -246,7 +251,7 @@ private:
 	void MIN_S();
 
 	/*
-	Data Format Conversion (DFC) Instructions. See InterpreterEECore_DFC.cpp for implementations (4 instructions total).
+	Data Format Conversion (DFC) Instructions. See EECoreInterpreter_DFC.cpp for implementations (4 instructions total).
 	*/
 	void PEXT5();
 	void PPAC5();
@@ -254,7 +259,7 @@ private:
 	void CVT_W_S();
 
 	/*
-	Reordering Instructions. See InterpreterEECore_REORDERING.cpp for implementations (20 instructions total).
+	Reordering Instructions. See EECoreInterpreter_REORDERING.cpp for implementations (20 instructions total).
 	*/
 	void PCPYH();
 	void PCPYLD();
@@ -278,7 +283,7 @@ private:
 	void PROT3W();
 
 	/*
-	Others (ALU) Instructions. See InterpreterEECore_ALU_OTHERS.cpp for implementations (7 instructions total).
+	Others (ALU) Instructions. See EECoreInterpreter_ALU_OTHERS.cpp for implementations (7 instructions total).
 	*/
 	void PABSH();
 	void PABSW();
@@ -289,7 +294,7 @@ private:
 	void SQRT_S();
 
 	/*
-	Register-Register Transfer Instructions. See InterpreterEECore_REG_TRANSFER.cpp for implementations (23 instructions total).
+	Register-Register Transfer Instructions. See EECoreInterpreter_REG_TRANSFER.cpp for implementations (23 instructions total).
 	*/
 	void MFHI();
 	void MFLO();
@@ -317,7 +322,7 @@ private:
 	void MTC1();
 
 	/*
-	Load from Memory Instructions. See InterpreterEECore_LOAD_MEM.cpp for implementations (14 instructions total).
+	Load from Memory Instructions. See EECoreInterpreter_LOAD_MEM.cpp for implementations (14 instructions total).
 	*/
 	void LB();
 	void LBU();
@@ -335,7 +340,7 @@ private:
 	void LWC1();
 
 	/*
-	Store to Memory Instructions. See InterpreterEECore_STORE_MEM.cpp for implementations (10 instructions total).
+	Store to Memory Instructions. See EECoreInterpreter_STORE_MEM.cpp for implementations (10 instructions total).
 	*/
 	void SB();
 	void SD();
@@ -349,7 +354,7 @@ private:
 	void SWC1();
 
 	/*
-	Special Data Transfer Instructions. See InterpreterEECore_SPECIAL_TRANSFER.cpp for implementations (26 instructions total).
+	Special Data Transfer Instructions. See EECoreInterpreter_SPECIAL_TRANSFER.cpp for implementations (26 instructions total).
 	*/
 	void MFSA();
 	void MTSA();
@@ -379,7 +384,7 @@ private:
 	void CTC1();
 
 	/*
-	Conditional Branch and Jump Instructions. See InterpreterEECore_COND_BRANCH_JUMP.cpp for implementations (26 instructions total).
+	Conditional Branch and Jump Instructions. See EECoreInterpreter_COND_BRANCH_JUMP.cpp for implementations (26 instructions total).
 	*/
 	void BEQ();
 	void BEQL();
@@ -409,7 +414,7 @@ private:
 	void JR();
 
 	/*
-	Subroutine Call Instructions. See InterpreterEECore_CALL.cpp for implementations (6 instructions total).
+	Subroutine Call Instructions. See EECoreInterpreter_CALL.cpp for implementations (6 instructions total).
 	*/
 	void BGEZAL();
 	void BGEZALL();
@@ -419,7 +424,7 @@ private:
 	void JALR();
 
 	/*
-	Break and Trap Instructions. See InterpreterEECore_BREAK_TRAP.cpp for implementations (15 instructions total).
+	Break and Trap Instructions. See EECoreInterpreter_BREAK_TRAP.cpp for implementations (15 instructions total).
 	*/
 	void BREAK();
 	void SYSCALL();
@@ -438,7 +443,7 @@ private:
 	void ERET();
 
 	/*
-	Others Instructions. See InterpreterEECore_OTHERS.cpp for implementations (9 instructions total). Includes the TLB instructions as they are missing in the overview manual...
+	Others Instructions. See EECoreInterpreter_OTHERS.cpp for implementations (9 instructions total). Includes the TLB instructions as they are missing in the overview manual...
 	*/
 	void SYNC_STYPE();
 	void PREF();
@@ -453,6 +458,9 @@ private:
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
 	See EECoreInstructionTable and "EECore Instruction Implementation Register.xlsm" for more details.
+
+	Sometimes there are differences in the instruction mnemonics within the manual. 
+	Alternative names have been provided as comments against the array function used.
 	*/
 	// TODO: surely there is an easier way.. reasearch how to initalise static arrays outside of the header file. I'm sure I'm missing something completely obvious here..
 	void(EECoreInterpreter::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() =

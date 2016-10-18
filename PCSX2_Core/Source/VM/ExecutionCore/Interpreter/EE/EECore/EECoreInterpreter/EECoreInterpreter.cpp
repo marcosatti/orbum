@@ -2,35 +2,42 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/MMUHandler/MMUHandler.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/ExceptionHandler/ExceptionHandler.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Exceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/Exceptions/Types/EECoreException_t.h"
+#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
+#include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/Types/PCRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/COP0_t.h"
-#include "Common/PS2Resources/EE/EECore/COP0/Types/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/PS2Resources/Clock/Clock_t.h"
 
-using EECoreInstructionInfo_t = EECoreInstructionTable::EECoreInstructionInfo_t;
 using ExType = EECoreException_t::ExType;
 
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
-	mExceptionHandler(std::make_unique<ExceptionHandler>(vmMain)),
-	mMMUHandler(std::make_unique<MMUHandler>(vmMain)),
+	mClockSources{},
+	mExceptionHandler(std::make_unique<EECoreExceptionHandler>(vmMain)),
+	mMMUHandler(std::make_unique<EECoreMMUHandler>(vmMain)),
 	mInstructionInfo(nullptr)
 {
 }
 
 EECoreInterpreter::~EECoreInterpreter()
 {
+}
+
+const std::vector<ClockSource_t>& EECoreInterpreter::getClockSources()
+{
+	return mClockSources;
 }
 
 void EECoreInterpreter::initalise()
@@ -42,7 +49,7 @@ void EECoreInterpreter::initalise()
 	getExceptionHandler()->handleException(EECoreException_t(ExType::EX_RESET));
 }
 
-void EECoreInterpreter::executionStep()
+s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	// Check for any COP0.Count events.
 	checkCountTimerEvent();
@@ -54,20 +61,22 @@ void EECoreInterpreter::executionStep()
 	checkBranchDelaySlot();
 
 	// Perform instruction related activities (such as execute instruction, increment PC and update timers).
-	executeInstruction();
+	u32 cycles = executeInstruction();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
 	DEBUG_LOOP_COUNTER++;
 #endif
+
+	return cycles;
 }
 
-const std::unique_ptr<ExceptionHandler> & EECoreInterpreter::getExceptionHandler() const
+const std::unique_ptr<EECoreExceptionHandler> & EECoreInterpreter::getExceptionHandler() const
 {
 	return mExceptionHandler;
 }
 
-const std::unique_ptr<MMUHandler>& EECoreInterpreter::getMMUHandler() const
+const std::unique_ptr<EECoreMMUHandler>& EECoreInterpreter::getMMUHandler() const
 {
 	return mMMUHandler;
 }
@@ -105,22 +114,18 @@ void EECoreInterpreter::checkCountTimerEvent() const
 		// Set the IP7 field of the COP0.Cause register.
 		EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, 1);
 
-		// Queue an interrupt exception if the Status.IM7 and IE bits are set (Cause.IP is set above). 
-		// See EE Core Users Manual page 72 and 74 for how the interrupt is raised.
-		if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IE)
-			&& EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM7))
-		{
-			IntExceptionInfo_t intEx = { 0, 0, 1 };
-			EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
-		}
+		// Set exception state.
+		IntExceptionInfo_t intEx = { 0, 0, 1 };
+		EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
 	}
 }
 
-void EECoreInterpreter::executeInstruction()
+u32 EECoreInterpreter::executeInstruction()
 {
-	// Set the instruction holder to the instruction at the current PC.
 	auto& EECore = getVM()->getResources()->EE->EECore;
-	const u32 & instructionValue = getMMUHandler()->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking.
+
+	// Set the instruction holder to the instruction at the current PC.
+	const u32 & instructionValue = getMMUHandler()->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking for address bus error.
 	getInstruction().setInstructionValue(instructionValue);
 
 	// Get the instruction details
@@ -159,8 +164,8 @@ void EECoreInterpreter::executeInstruction()
 	// Increment PC.
 	EECore->R5900->PC->setPCValueNext();
 
-	// Update the Clock class, controlling the timing of other components.
-	getVM()->getResources()->Clock->updateClocks(mInstructionInfo->mCycles);
+	// Return the number of cycles completed.
+	return mInstructionInfo->mCycles;
 }
 
 // Begin EECore Instruction Implementation

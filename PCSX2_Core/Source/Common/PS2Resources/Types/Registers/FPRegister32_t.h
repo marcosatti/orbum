@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 /*
-FPRegister32_t is an additional register type defined within the PS2's floating point unit (COP1) system, which are used for operating on floating point numbers.
+FPRegister32_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
 All FPR's are 32-bit according to the documentation, and the floating point value is accessed by the 'F' union field defined below.
 
 See EE Core Users Manual, chapter 8, especially page 157 which define the aritmetic registers.
@@ -11,8 +11,8 @@ See EE Core Users Manual, chapter 8, especially page 157 which define the aritme
 Code is based of the Register32_t implementation.
 Some additional functions are exposed for manipulating the floating point fields (sign, exponent and fraction), which is done by manipulating the u32 UW in the union defined.
 
-The COP1 and the floating point values in general are NOT FULLY IEEE-754 compliant (mostly, but not fully).
-In particular, the COP1 does not support (in comparison to IEEE-754):
+The FPU and the floating point values in general are NOT FULLY IEEE-754 compliant (mostly, but not fully).
+In particular, the FPU does not support (in comparison to IEEE-754):
  - Denormalised numbers.
  - Plus and minus infinity.
  - 'NaN' (not a number) representation.
@@ -36,7 +36,7 @@ public:
 
 	/*
 	Functions to access the register value - you should use these functions instead of accessing them directly.
-	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the EECoreCOP1Util static class functions to help with conversion.
+	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
 	*/
 	virtual u32 readWordU();
 	virtual void writeWordU(u32 value);	

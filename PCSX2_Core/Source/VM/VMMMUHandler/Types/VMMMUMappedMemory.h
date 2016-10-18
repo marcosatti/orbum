@@ -4,7 +4,7 @@
 
 /*
 Interface class used for exposing storage, so it can be used in mapping (through the VM MMU).
-This object and any subobjects are to be idealised as an array of bytes, which can be accessed by array[getStorageIndex()].
+This object and any subobjects are to be idealised as an array of bytes, which can be accessed by mComponents[getStorageIndex()].
 
 As it is specific to the VM MMU, it is placed under the Types folder here, instead of being a global interface (in the Interfaces folder).
 */
@@ -55,7 +55,7 @@ public:
 
 private:
 	/*
-	mAbsMappedPageIndex is set by the VM MMU when mapped. This provides a way for the storage object / VM MMU to determine what byte it should start accessing the array from.
+	mAbsMappedPageIndex is set by the VM MMU when mapped. This provides a way for the storage object / VM TLB to determine what byte it should start accessing the array from.
 	See the VM MMU -> read/write functions to see how this is calculated. In essence, it is the base page number that it was assigned, which can be used to calulate a storage array index.
 	*/
 	u32 mAbsMappedPageIndex;
