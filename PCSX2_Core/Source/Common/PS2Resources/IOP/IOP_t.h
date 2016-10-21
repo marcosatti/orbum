@@ -34,11 +34,16 @@ public:
 	IOP Memory (2MB).
 	*/
 	std::shared_ptr<MappedMemory_t> IOPMemory;
+	
+	/*
+	HW mapped registers (64KB)
+	DEBUG
+	*/
+	std::shared_ptr<MappedMemory_t> IOP_HW_Registers;
 
 	/*
 	The IOP physical memory space.
 	*/
 	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
-
 };
 

@@ -30,25 +30,28 @@ class PS2Resources_t
 public:
 	explicit PS2Resources_t();
 
-	/* 
-	The EE structure.
+	// TODO: Fix race condition. Currently within the EE and IOP, they are required to memory map storage outside their own class (ie: EE has to map the GS registers, IOP maps the EE bios). Changing initialisation order currently breaks the emulator.
+
+	/*
+	The Clock class, used to control timing accross components.
 	*/
-	std::shared_ptr<EE_t> EE;
+	std::shared_ptr<Clock_t> Clock;
 
 	/*
 	The GS structure.
 	*/
 	std::shared_ptr<GS_t> GS;
 
+	/* 
+	The EE structure.
+	*/
+	std::shared_ptr<EE_t> EE;
+
 	/*
 	The IOP structure.
 	*/
 	std::shared_ptr<IOP_t> IOP;
 
-	/*
-	The Clock class, used to control timing accross components.
-	*/
-	std::shared_ptr<Clock_t> Clock;
 
 private:
 

@@ -12,6 +12,7 @@ See EE Core Users Manual page 62 onwards.
 */
 
 class COP0RegisterPRId_IOP_t;
+class COP0RegisterReserved_t;
 
 class IOPCOP0_t : public MIPSCoprocessor0_t, public PS2ResourcesSubobject
 {
@@ -33,6 +34,7 @@ public:
 	IOP COP0 register implementations. 
 	*/
 	std::shared_ptr<COP0RegisterPRId_IOP_t> PRId;
+	std::shared_ptr<COP0RegisterReserved_t> Reserved7; // IOP COP0 #7 register is undefined, but is accessed by BIOS (treat as unknown).
 
 	// Array of above registers (needed by some IOP instructions to access by index). 
 	// Generally you will never access registers directly through this, only the PS2 OS will.

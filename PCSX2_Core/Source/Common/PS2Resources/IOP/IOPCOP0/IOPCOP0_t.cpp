@@ -9,7 +9,8 @@
 IOPCOP0_t::IOPCOP0_t(const PS2Resources_t* const PS2Resources) : 
 	PS2ResourcesSubobject(PS2Resources),
 	PRId(std::make_shared<COP0RegisterPRId_IOP_t>()),
-	Registers{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, nullptr, 
+	Reserved7(std::make_shared<COP0RegisterReserved_t>()),
+	Registers{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, Reserved7, 
 	           BadVAddr, Count, EntryHi, Compare, Status, Cause, EPC, PRId, 
 	           Config, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
 			   nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }

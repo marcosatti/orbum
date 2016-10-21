@@ -150,7 +150,6 @@ u32 EECoreInterpreter::executeInstruction()
 		if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
 		{
 			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
-			getVM()->setStatus(VMMain::VMStatus::STOPPED);
 		}
 	}
 #endif

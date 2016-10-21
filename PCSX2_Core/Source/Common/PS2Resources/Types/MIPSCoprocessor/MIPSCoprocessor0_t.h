@@ -12,7 +12,6 @@ This class defines some common COP0 registers, but it is up to the user to defin
 */
 
 class BitfieldRegister32_t;
-class COP0RegisterReserved_t;
 class COP0RegisterIndex_t;
 class COP0RegisterRandom_t;
 class COP0RegisterEntryLo0_t;
@@ -27,7 +26,6 @@ class COP0RegisterCompare_t;
 class COP0RegisterStatus_t;
 class COP0RegisterCause_t;
 class COP0RegisterEPC_t;
-class COP0RegisterPRId_EECore_t;
 class COP0RegisterConfig_t;
 class COP0RegisterTagLo_t;
 class COP0RegisterTagHi_t;

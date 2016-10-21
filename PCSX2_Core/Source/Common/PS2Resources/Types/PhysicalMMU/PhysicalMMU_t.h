@@ -61,7 +61,7 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB address r
 class PhysicalMMU_t
 {
 public:
-	explicit PhysicalMMU_t(const size_t & MaxAddressableSizeBytes, const size_t & DirectorySizeBytes, const size_t & PageSizeBytes);
+	explicit PhysicalMMU_t(const size_t & MaxAddressableSizeBytes, const u32 & DirectorySizeBytes, const u32 & PageSizeBytes);
 	~PhysicalMMU_t();
 
 	/*
@@ -103,17 +103,17 @@ private:
 	/*
 	Internal parameters calculated in the constructor.
 	*/
-	const size_t MAX_ADDRESSABLE_SIZE_BYTES;
-	const size_t DIRECTORY_SIZE_BYTES;
-	const size_t PAGE_SIZE_BYTES;
-	const size_t DIRECTORY_ENTRIES;
-	const size_t PAGE_ENTRIES;
-	const size_t OFFSET_BITS;
-	const size_t OFFSET_MASK;
-	const size_t DIRECTORY_BITS;
-	const size_t DIRECTORY_MASK;
-	const size_t PAGE_BITS;
-	const size_t PAGE_MASK;
+	const size_t MAX_ADDRESSABLE_SIZE_BYTES; // Needs to be of type size_t as 4GB does not fit into u32.
+	const u32 DIRECTORY_SIZE_BYTES;
+	const u32 PAGE_SIZE_BYTES;
+	const u32 DIRECTORY_ENTRIES;
+	const u32 PAGE_ENTRIES;
+	const u32 OFFSET_BITS;
+	const u32 OFFSET_MASK;
+	const u32 DIRECTORY_BITS;
+	const u32 DIRECTORY_MASK;
+	const u32 PAGE_BITS;
+	const u32 PAGE_MASK;
 
 	/*
 	The page table which holds all of the page table entries, mapping the addresses.

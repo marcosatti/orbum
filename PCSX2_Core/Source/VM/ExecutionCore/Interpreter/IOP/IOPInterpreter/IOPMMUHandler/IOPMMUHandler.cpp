@@ -146,6 +146,8 @@ const IOPException_t & IOPMMUHandler::getExceptionInfo()
 
 u32 IOPMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
 {
+	logDebug("(%s, %d) IOP MMU Called. VA = 0x%08X.", __FILENAME__, __LINE__, PS2VirtualAddress);
+
 	// Set the virtual address context.
 	mPS2VirtualAddress = PS2VirtualAddress;
 
@@ -245,6 +247,22 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 				mPS2PhysicalAddress = mPS2VirtualAddress;
 				return;
 			}
+		}
+		
+		// Undocumented: the IOP seems to access the addresses 0xFFC00000 - 0xFFFFFFFF as if it was trying to access the BIOS (0x1FC00000).
+		// The IOP's PhysicalMMU has an image mapping to handle this address.
+		if (mPS2VirtualAddress >= 0xFFC00000)
+		{
+			mPS2PhysicalAddress = mPS2VirtualAddress;
+			return;
+		}
+
+		// Undocumented: the IOP accesses addresses 0x00000000 - 0x001FFFFF as if it was trying to access the main memory (2MB).
+		// This is not TLB mapped.
+		if (mPS2VirtualAddress <= 0x001FFFFF)
+		{
+			mPS2PhysicalAddress = mPS2VirtualAddress;
+			return;
 		}
 
 		// Else in a mapped region - do normal translation.

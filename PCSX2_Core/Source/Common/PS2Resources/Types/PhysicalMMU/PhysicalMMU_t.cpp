@@ -7,11 +7,11 @@
 #include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
-PhysicalMMU_t::PhysicalMMU_t(const size_t & MaxAddressableSizeBytes, const size_t & DirectorySizeBytes, const size_t & PageSizeBytes) :
+PhysicalMMU_t::PhysicalMMU_t(const size_t & MaxAddressableSizeBytes, const u32 & DirectorySizeBytes, const u32 & PageSizeBytes) :
 	MAX_ADDRESSABLE_SIZE_BYTES(MaxAddressableSizeBytes),
 	DIRECTORY_SIZE_BYTES(DirectorySizeBytes),
 	PAGE_SIZE_BYTES(PageSizeBytes),
-	DIRECTORY_ENTRIES(MAX_ADDRESSABLE_SIZE_BYTES / DIRECTORY_SIZE_BYTES),
+	DIRECTORY_ENTRIES(static_cast<u32>(MAX_ADDRESSABLE_SIZE_BYTES / DIRECTORY_SIZE_BYTES)),
 	PAGE_ENTRIES(DIRECTORY_SIZE_BYTES / PAGE_SIZE_BYTES),
 	OFFSET_BITS(static_cast<u32>(log2(PAGE_SIZE_BYTES))),
 	OFFSET_MASK(PAGE_SIZE_BYTES - 1),
