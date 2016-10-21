@@ -34,7 +34,7 @@ public:
 			{
 				// Scratchpad memory - see 'Memory Mappings.xlsx' for information as this is PCSX2 specific.
 				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x14000000;
-				static constexpr u32 SIZE_SCRATCHPAD_MEMORY = 0x00004000; // 16KB
+				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = 0x00004000; // 16KB
 			};
 			
 			struct R5900
@@ -92,14 +92,14 @@ public:
 		{
 			// Main memory. See EE Users Manual page 20 onwards.
 			static constexpr u32 PADDRESS_MAIN_MEMORY = 0x00000000;
-			static constexpr u32 SIZE_MAIN_MEMORY = 0x02000000; // 32MB.. which isn't actually documented anywhere in the offical docs?
+			static constexpr size_t SIZE_MAIN_MEMORY = 0x02000000; // 32MB.. which isn't actually documented anywhere in the offical docs?
 		};
 
 		struct BootROM
 		{
 			// Boot Rom. See EE Users Manual page 20.
 			static constexpr u32 PADDRESS_BOOT_ROM = 0x1FC00000;
-			static constexpr u32 SIZE_BOOT_ROM = 0x00400000;
+			static constexpr size_t SIZE_BOOT_ROM = 0x00400000;
 		};
 
 		// Ratios of PS2CLK (EE Core speed) divided by other clock source within EE. The PS2CLK runs at ~294 MHz.
@@ -113,8 +113,8 @@ public:
 		struct IOPMemory
 		{
 			// IOP Memory. No official documentation - from PCSX2. 
-			static constexpr u32 PADDRESS_IOP_MEMORY = 0x1F000000;
-			static constexpr u32 SIZE_IOP_MEMORY = 0x00200000;
+			static constexpr u32 PADDRESS_IOP_MEMORY = 0x00000000;
+			static constexpr size_t SIZE_IOP_MEMORY = 0x00200000;
 		};
 
 		struct R3000A

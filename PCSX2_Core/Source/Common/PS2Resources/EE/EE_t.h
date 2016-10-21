@@ -18,6 +18,7 @@ class IPU_t;
 class GIF_t;
 class VPU_t;
 class BootROM_t;
+class PhysicalMMU_t;
 
 class MappedMemory_t;
 class MappedMemory32_t;
@@ -75,6 +76,11 @@ public:
 	Boot ROM (4MB)
 	*/
 	std::shared_ptr<BootROM_t> BootROM;
+
+	/*
+	The EE physical memory space.
+	*/
+	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
 
 	/*
 	EE registers, defined on page 21 onwards of the EE Users Manual. 

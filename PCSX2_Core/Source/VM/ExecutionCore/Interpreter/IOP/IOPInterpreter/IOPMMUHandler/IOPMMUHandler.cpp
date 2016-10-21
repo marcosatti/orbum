@@ -4,7 +4,7 @@
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPMMUHandler/IOPMMUHandler.h"
 #include "VM/VMMain.h"
-#include "VM/VMMMUHandler/VMMMUHandler.h"
+#include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
 #include "Common/PS2Resources/IOP/IOPCOP0/IOPCOP0_t.h"
@@ -29,7 +29,7 @@ u8 IOPMMUHandler::readByteU(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readByteU(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readByteU(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -38,14 +38,14 @@ void IOPMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeByteU(PS2PhysicalAddress, value);	
+		 getVM()->getResources()->IOP->PhysicalMMU->writeByteU(PS2PhysicalAddress, value);	
 }
 
 s8 IOPMMUHandler::readByteS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readByteS(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readByteS(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -54,14 +54,14 @@ void IOPMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeByteS(PS2PhysicalAddress, value);
+		 getVM()->getResources()->IOP->PhysicalMMU->writeByteS(PS2PhysicalAddress, value);
 }
 
 u16 IOPMMUHandler::readHwordU(u32 PS2MemoryAddress) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readHwordU(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readHwordU(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -70,14 +70,14 @@ void IOPMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeHwordU(PS2PhysicalAddress, value);
+		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordU(PS2PhysicalAddress, value);
 }
 
 s16 IOPMMUHandler::readHwordS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readHwordS(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readHwordS(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -86,14 +86,14 @@ void IOPMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeHwordS(PS2PhysicalAddress, value);
+		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordS(PS2PhysicalAddress, value);
 }
 
 u32 IOPMMUHandler::readWordU(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readWordU(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readWordU(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -102,14 +102,14 @@ void IOPMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeWordU(PS2PhysicalAddress, value);
+		 getVM()->getResources()->IOP->PhysicalMMU->writeWordU(PS2PhysicalAddress, value);
 }
 
 s32 IOPMMUHandler::readWordS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		return getVM()->getMMU()->readWordS(PS2PhysicalAddress);
+		return  getVM()->getResources()->IOP->PhysicalMMU->readWordS(PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -118,7 +118,7 @@ void IOPMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
-		getVM()->getMMU()->writeWordS(PS2PhysicalAddress, value);
+		 getVM()->getResources()->IOP->PhysicalMMU->writeWordS(PS2PhysicalAddress, value);
 }
 
 bool IOPMMUHandler::hasExceptionOccurred() const

@@ -3,15 +3,15 @@
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "Common/PS2Constants/PS2Constants.h"
 #include "VM/VMMain.h"
-#include "VM/VMMMUHandler/VMMMUHandler.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
+#include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAC_Registers_t.h"
 #include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Tables/EEDmacTable/EEDmacTable.h"
 
 using ExType = EECoreException_t::ExType;
@@ -410,39 +410,39 @@ void DMACInterpreter::writeDataChannel(DMADataUnit_t data) const
 
 DMADataUnit_t DMACInterpreter::readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const
 {
-	auto& VMMMU = getVM()->getMMU();
+	auto& EEMMU = getVM()->getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
 		// Read spr[tadr] (lower 64 bits) and spr[tadr + 8] (upper 64 bits).
-		u64 lower = VMMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset);
-		u64 upper = VMMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8);
+		u64 lower = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset);
+		u64 upper = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8);
 		return DMADataUnit_t(lower, upper);
 	}
 	else
 	{
 		// Read mem[tadr] (lower 64 bits) and mem[tadr + 8] (upper 64 bits).
-		u64 lower = VMMMU->readDwordU(PhysicalAddressOffset);
-		u64 upper = VMMMU->readDwordU(PhysicalAddressOffset + 8);
+		u64 lower = EEMMU->readDwordU(PhysicalAddressOffset);
+		u64 upper = EEMMU->readDwordU(PhysicalAddressOffset + 8);
 		return DMADataUnit_t(lower, upper);
 	}
 }
 
 void DMACInterpreter::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, DMADataUnit_t data) const
 {
-	auto& VMMMU = getVM()->getMMU();
+	auto& EEMMU = getVM()->getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
 		// Write spr[address] (lower 64 bits) and spr[address + 8] (upper 64 bits).
-		VMMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset, data.mDataUnit[0]);
-		VMMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8, data.mDataUnit[1]);
+		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset, data.mDataUnit[0]);
+		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8, data.mDataUnit[1]);
 	}
 	else
 	{
 		// Write mem[address] (lower 64 bits) and mem[address + 8] (upper 64 bits).
-		VMMMU->writeDwordU(PhysicalAddressOffset, data.mDataUnit[0]);
-		VMMMU->writeDwordU(PhysicalAddressOffset + 8, data.mDataUnit[1]);
+		EEMMU->writeDwordU(PhysicalAddressOffset, data.mDataUnit[0]);
+		EEMMU->writeDwordU(PhysicalAddressOffset + 8, data.mDataUnit[1]);
 	}
 }
 

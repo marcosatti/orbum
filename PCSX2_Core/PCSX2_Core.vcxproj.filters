@@ -138,9 +138,6 @@
     <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h">
       <Filter>Source\Common\Util\MathUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\VMMMUHandler\VMMMUHandler.h">
-      <Filter>Source\VM\VMMMUHandler</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Interfaces\VMBaseComponent.h">
       <Filter>Source\Common\Interfaces</Filter>
     </ClInclude>
@@ -192,9 +189,6 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Clock\Clock_t.h" />
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.h">
-      <Filter>Source\Common\Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.h" />
@@ -203,7 +197,6 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
-    <ClInclude Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.h" />
@@ -288,6 +281,10 @@
     <ClInclude Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPExceptionHandler\IOPExceptionHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\TimersHandler\TimersHandler.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ImageMappedMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\PhysicalMMU\PhysicalMMU_t.h">
+      <Filter>Source\VM\VMMMUHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -301,9 +298,6 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp">
       <Filter>Source\Common\Util\MathUtil</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\VMMMUHandler\VMMMUHandler.cpp">
-      <Filter>Source\VM\VMMMUHandler</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\R5900\Types\LinkRegister128_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
@@ -340,7 +334,6 @@
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Clock\Clock_t.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\VMMMUMappedMemory.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.cpp" />
@@ -349,7 +342,6 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.cpp" />
-    <ClCompile Include="Source\VM\VMMMUHandler\Types\ImageMappedMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter.cpp">
@@ -450,6 +442,10 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_LOAD_STORE_MEM.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\TimersHandler\TimersHandler.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ImageMappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\PhysicalMMU\PhysicalMMU_t.cpp">
+      <Filter>Source\VM\VMMMUHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

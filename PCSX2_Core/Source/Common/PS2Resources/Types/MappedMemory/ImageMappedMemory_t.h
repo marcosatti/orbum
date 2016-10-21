@@ -4,12 +4,12 @@
 
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
 
-class VMMMUHandler;
+class PhysicalMMU_t;
 
 /*
 ImageMappedMemory_t is used to mirror/image other regions of the PS2 physical memory space. 
 It should only be used internally by the VM, as it does not represent any PS2 physical memory, but rather only redirects
- by another call to the VM MMU - ie: use this in the function body where memory mappings are done 
+ by another call to the Physical MMU - ie: use this in the function body where memory mappings are done 
  (in this case,  VMMain::initalisePS2PhysicalMemoryMap() ).
 
 imageSize parsed in the constructor represents the mirror region size - it is not allocated in memory (underlying MappedMemory_t 
@@ -21,7 +21,7 @@ imagePS2PhysicalAddress is the base physical address that the region provides an
 class ImageMappedMemory_t : public MappedMemory_t
 {
 public:
-	ImageMappedMemory_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const size_t & imageSize, const size_t & totalSize, const u32 & imagePS2PhysicalAddress, std::shared_ptr<VMMMUHandler> VMMMUHandler);
+	ImageMappedMemory_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const size_t & imageSize, const size_t & totalSize, const u32 & imagePS2PhysicalAddress, std::shared_ptr<PhysicalMMU_t> physicalMMU);
 	~ImageMappedMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;
@@ -42,7 +42,7 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Needed by the VM MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the total size set 
+	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the total size set 
 	 when the object is created.
 	*/
 	size_t getStorageSize() override;
@@ -51,6 +51,6 @@ private:
 	const size_t mImageSize;
 	const size_t mTotalSize;
 	const u32 mImagePS2PhysicalAddress;
-	const std::shared_ptr<VMMMUHandler> mVMMMUHandler;
+	const std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
 };
 

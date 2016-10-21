@@ -6,7 +6,7 @@
 #include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 
 /*
-MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the VM MMU (which is responsible for 
+MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
  converting a PS2 physical address -> client memory address).
 It handles any requests from reading or writing from a virtual address.
 

@@ -188,3 +188,13 @@ const u32 & MappedMemory_t::getPS2PhysicalAddress() const
 {
 	return mPS2PhysicalAddress;
 }
+
+u32 MappedMemory_t::getAbsMappedPageIndex() const
+{
+	return mAbsMappedPageIndex;
+}
+
+void MappedMemory_t::setAbsMappedPageIndex(u32 absPageIndex)
+{
+	mAbsMappedPageIndex = absPageIndex;
+}

@@ -8,7 +8,7 @@
 /*
 TODO: I dont know if virtual address translations occur. Not implemented for now (assumed that all VA's fall within the kseg0 etc zones).
 
-IOPMMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the VM MMU (which is responsible for 
+IOPMMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
  converting a PS2 physical address -> client memory address).
 It handles any requests from reading or writing from a virtual address.
 

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 
 class R3000_t;
 class IOPCOP0_t;
@@ -33,6 +34,11 @@ public:
 	IOP Memory (2MB).
 	*/
 	std::shared_ptr<MappedMemory_t> IOPMemory;
+
+	/*
+	The IOP physical memory space.
+	*/
+	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
 
 };
 

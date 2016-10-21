@@ -4,7 +4,7 @@
 #include <string>
 
 class VMExecutionCoreComponent;
-class VMMMUHandler;
+class PhysicalMMU_t;
 class PS2Resources_t;
 
 /*
@@ -65,7 +65,6 @@ public:
 	const VMStatus& getStatus() const;
 	void setStatus(const VMStatus & status);
 	const std::shared_ptr<PS2Resources_t>& getResources() const;
-	const std::shared_ptr<VMMMUHandler>& getMMU() const;
 	
 	/*
 	Misc helper functions.
@@ -79,7 +78,6 @@ private:
 	ExecutionCoreType mExecutionCoreType;
 	std::shared_ptr<PS2Resources_t> mPS2Resources;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
-	const std::shared_ptr<VMMMUHandler> mMMUComponent;
 	const std::string mBootROMPath;
 
 	// Initalisation (called through reset()).
@@ -87,13 +85,6 @@ private:
 	Initalisation for the PS2 resources.
 	*/
 	void initaliseResources();
-
-	/*
-	Initalise the PS2 Physical memory by mapping it to the memory regions allocated by mPS2Resources.
-	See the function definition for the memory allocation details.
-	Also see 'Memory Mappings.xlsx' for information as some parts are PCSX2 specific.
-	*/
-	void initalisePS2PhysicalMemoryMap() const;
 
 	/*
 	Initalise the execution core (interpreter or recompiler).

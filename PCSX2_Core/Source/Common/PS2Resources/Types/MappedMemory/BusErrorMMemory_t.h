@@ -6,7 +6,7 @@
 
 /*
 A 'Bus error' storage object, which will generate an exception on access.
-The size parameter in the constructor is used only for VM MMU mapping purposes.
+The size parameter in the constructor is used only for Physical MMU mapping purposes.
 The parsed size is not allocated (always set to 0 in the underlying MappedMemory_t).
 TODO: Currently throws a runtime_error, need to implement the ps2 exception.
 */
@@ -34,7 +34,7 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Needed by the VM MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the size set
+	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the size set
 	 when the object is created.
 	*/
 	size_t getStorageSize() override;

@@ -12,9 +12,10 @@ VALUE = Constant value.
 */
 struct Constants
 {
-	static constexpr u32 SIZE_512MB = 512 * 1024 * 1024;
-	static constexpr u32 SIZE_4MB = 4 * 1024 * 1024;
-	static constexpr u32 SIZE_16B = 16;
+	static constexpr size_t SIZE_4GB   = 0x100000000;
+	static constexpr size_t SIZE_512MB = 0x20000000;
+	static constexpr size_t SIZE_4MB   = 0x400000;
+	static constexpr size_t SIZE_16B   = 0x10;
 
 	static constexpr u32 MASK_16KB = 0x00003FFF;
 

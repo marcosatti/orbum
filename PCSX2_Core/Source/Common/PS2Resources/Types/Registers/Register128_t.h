@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Common/Global/Globals.h"
-#include "VM/VMMMUHandler/Types/VMMMUMappedMemory.h"
 
 /*
 Register type and size definitions.
