@@ -2,17 +2,18 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPMMUHandler/IOPMMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPCOP0/IOPCOP0_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 #include "Common/Util/MMUUtil/MMUUtil.h"
 
-IOPMMUHandler::IOPMMUHandler(VMMain * vmMain) : 
+IOPCoreMMUHandler::IOPCoreMMUHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{},
 	mHasExceptionOccurred(false)
@@ -20,12 +21,12 @@ IOPMMUHandler::IOPMMUHandler(VMMain * vmMain) :
 {
 }
 
-const std::vector<ClockSource_t>& IOPMMUHandler::getClockSources()
+const std::vector<ClockSource_t>& IOPCoreMMUHandler::getClockSources()
 {
 	return mClockSources;
 }
 
-u8 IOPMMUHandler::readByteU(u32 PS2MemoryAddress)
+u8 IOPCoreMMUHandler::readByteU(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -34,14 +35,14 @@ u8 IOPMMUHandler::readByteU(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) 
+void IOPCoreMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeByteU(PS2PhysicalAddress, value);	
 }
 
-s8 IOPMMUHandler::readByteS(u32 PS2MemoryAddress)
+s8 IOPCoreMMUHandler::readByteS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -50,14 +51,14 @@ s8 IOPMMUHandler::readByteS(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
+void IOPCoreMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeByteS(PS2PhysicalAddress, value);
 }
 
-u16 IOPMMUHandler::readHwordU(u32 PS2MemoryAddress) 
+u16 IOPCoreMMUHandler::readHwordU(u32 PS2MemoryAddress) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -66,14 +67,14 @@ u16 IOPMMUHandler::readHwordU(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
+void IOPCoreMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordU(PS2PhysicalAddress, value);
 }
 
-s16 IOPMMUHandler::readHwordS(u32 PS2MemoryAddress)
+s16 IOPCoreMMUHandler::readHwordS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -82,14 +83,14 @@ s16 IOPMMUHandler::readHwordS(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) 
+void IOPCoreMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordS(PS2PhysicalAddress, value);
 }
 
-u32 IOPMMUHandler::readWordU(u32 PS2MemoryAddress)
+u32 IOPCoreMMUHandler::readWordU(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -98,14 +99,14 @@ u32 IOPMMUHandler::readWordU(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
+void IOPCoreMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeWordU(PS2PhysicalAddress, value);
 }
 
-s32 IOPMMUHandler::readWordS(u32 PS2MemoryAddress)
+s32 IOPCoreMMUHandler::readWordS(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
@@ -114,19 +115,19 @@ s32 IOPMMUHandler::readWordS(u32 PS2MemoryAddress)
 		return 0;
 }
 
-void IOPMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
+void IOPCoreMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeWordS(PS2PhysicalAddress, value);
 }
 
-bool IOPMMUHandler::hasExceptionOccurred() const
+bool IOPCoreMMUHandler::hasExceptionOccurred() const
 {
 	return mHasExceptionOccurred;
 }
 
-const IOPException_t & IOPMMUHandler::getExceptionInfo()
+const IOPCoreException_t & IOPCoreMMUHandler::getExceptionInfo()
 {
 	mHasExceptionOccurred = false;
 
@@ -134,7 +135,7 @@ const IOPException_t & IOPMMUHandler::getExceptionInfo()
 	mExceptionInfo.mTLBExceptionInfo =
 	{
 		mPS2VirtualAddress,
-		getVM()->getResources()->IOP->COP0->Context->getFieldValue(COP0RegisterContext_t::Fields::PTEBase),
+		getVM()->getResources()->IOP->IOPCore->COP0->Context->getFieldValue(COP0RegisterContext_t::Fields::PTEBase),
 		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
 		0, // mTLBEntryInfo->mASID, 
 		0  // getVM()->getResources()->IOP->TLB->getNewTLBIndex()
@@ -144,10 +145,8 @@ const IOPException_t & IOPMMUHandler::getExceptionInfo()
 	return mExceptionInfo;
 }
 
-u32 IOPMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
+u32 IOPCoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
 {
-	logDebug("(%s, %d) IOP MMU Called. VA = 0x%08X.", __FILENAME__, __LINE__, PS2VirtualAddress);
-
 	// Set the virtual address context.
 	mPS2VirtualAddress = PS2VirtualAddress;
 
@@ -157,7 +156,7 @@ u32 IOPMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
 	return mPS2PhysicalAddress;
 }
 
-void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
+void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 {
 	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
@@ -168,7 +167,7 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 
 	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
-	if (getVM()->getResources()->IOP->COP0->isOperatingUserMode())
+	if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingUserMode())
 	{
 		// Operating in user mode.
 		// First we check if the VA is within the context bounds.
@@ -180,18 +179,18 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_ADDRESS_ERROR_STORE;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
 			else
-			throw std::runtime_error("IOPMMUHandler: could not throw internal IOPException_t error (type = address error).");
+			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = address error).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;
 			return;
 		}
 	}
-	else if (getVM()->getResources()->IOP->COP0->isOperatingSupervisorMode())
+	else if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingSupervisorMode())
 	{
 		// Operating in supervisor mode.
 		// First we check if the VA is within the context bounds.
@@ -204,18 +203,18 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_ADDRESS_ERROR_STORE;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
 			else
-			throw std::runtime_error("IOPMMUHandler: could not throw internal IOPException_t error (type = address error).");
+			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = address error).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;
 			return;
 		}
 	} 
-	else if (getVM()->getResources()->IOP->COP0->isOperatingKernelMode())
+	else if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingKernelMode())
 	{
 		// Operating in kernel mode.
 		// We do not need to check if the VA is valid - it is always valid over the full 4GB (U32) address space. However, kseg0 and kseg1 are not mapped, 
@@ -240,7 +239,7 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 		}
 		
 		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (getVM()->getResources()->IOP->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) {
+		if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) {
 			if (mPS2VirtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
 			{
 				// We are in kuseg unmapped region, so just return the VA.
@@ -271,17 +270,17 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage1()
 	else
 	{
 		// Throw runtime error as this should never happen.
-		throw std::runtime_error("IOPMMUHandler: could not determine context. Needs debugging!");
+		throw std::runtime_error("IOPCoreMMUHandler: could not determine context. Needs debugging!");
 	}
 }
 
-void IOPMMUHandler::getPS2PhysicalAddress_Stage2()
+void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage2()
 {
 	throw std::runtime_error("Stage 2 called but IOP VA translation not implemented. Address was not in kernel segments!");
 }
 
 /*
-void IOPMMUHandler::getPS2PhysicalAddress_Stage2()
+void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage2()
 {
 	// Stage 2 is to search through the TLB to see if there is a VPN match. 
 	// Check if its in the TLB and get the information.
@@ -290,11 +289,11 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage2()
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
 		if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 		else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_REFILL_STORE;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_REFILL_STORE;
 		else
-			throw std::runtime_error("IOPMMUHandler: could not throw internal IOPException_t error (type = tlb refill).");
+			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = tlb refill).");
 		
 		// Update state and return.
 		mHasExceptionOccurred = true;
@@ -307,15 +306,15 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage2()
 	if (mTLBEntryInfo->mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (getVM()->getResources()->IOP->COP0->EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
+		if (getVM()->getResources()->IOP->IOPCore->COP0->EntryHi->getFieldValue(COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)
-				mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+				mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_REFILL_STORE;
+				mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_REFILL_STORE;
 			else
-				throw std::runtime_error("IOPMMUHandler: could not throw internal IOPException_t error (type = tlb refill).");
+				throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = tlb refill).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;
@@ -327,7 +326,7 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage2()
 	getPS2PhysicalAddress_Stage3();
 }
 
-void IOPMMUHandler::getPS2PhysicalAddress_Stage3()
+void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage3()
 {
 	// Stage 3: Assess if the page is valid and it is marked dirty. Also check for the scratchpad ram access (deviates from the documentation a little).
 
@@ -356,11 +355,11 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage3()
 	{
 		// Raise TLB invalid exception
 		if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
 		else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_INVALID_STORE;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_INVALID_STORE;
 		else
-			throw std::runtime_error("IOPMMUHandler: could not throw internal IOPException_t error (type = tlb invalid).");
+			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = tlb invalid).");
 
 		// Update state and return.
 		mHasExceptionOccurred = true;
@@ -373,7 +372,7 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage3()
 		// Raise TLB modified exception if writing occurs.
 		if (mAccessType == WRITE)
 		{
-			mExceptionInfo.mExType = IOPException_t::ExType::EX_TLB_MODIFIED;
+			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_TLB_MODIFIED;
 			// Update state and return.
 			mHasExceptionOccurred = true;
 			return;
@@ -384,7 +383,7 @@ void IOPMMUHandler::getPS2PhysicalAddress_Stage3()
 	getPS2PhysicalAddress_Stage4();
 }
 
-void IOPMMUHandler::getPS2PhysicalAddress_Stage4()
+void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage4()
 {
 	// Cache access?
 	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.

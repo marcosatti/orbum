@@ -4,7 +4,7 @@
 
 /*
 Parameters describe information needed for a TLB * exception to process.
-These fields are not used for all TLB exception types, but are related to the TLB. Consult the IOPExceptionHandler for which TLB exceptions access what fields.
+These fields are not used for all TLB exception types, but are related to the TLB. Consult the IOPCoreExceptionHandler for which TLB exceptions access what fields.
 */
 struct TLBExceptionInfo_t
 {
@@ -38,16 +38,16 @@ struct COPExceptionInfo_t
 Lists all of the 20 exceptions that can be encountered when running the IOP. For reference, see MIPS R3000 docs.
 Due to macro issues caused by <math>, all of the exceptions have EX_ as a prefix.
 
-See the IOPExceptionHandler class for how they are handled, and the EE Core Users Manual.
+See the IOPCoreExceptionHandler class for how they are handled, and the EE Core Users Manual.
 
 NOTE: Do NOT change the order - they are sync'd with the IOPExceptionsTable::ExceptionProperties[] array. If you change one you must reflect the changes in the other.
 */
-struct IOPException_t
+struct IOPCoreException_t
 {
 	/*
-	Construct a blank exception - needed by the IOPExceptions_t class as a holder.
+	Construct a blank exception - needed by the IOPCoreExceptions_t class as a holder.
 	*/
-	explicit IOPException_t();
+	explicit IOPCoreException_t();
 
 	/*
 	Describes what type of exception was generated. For the TLB (& address error), COP unavailable, and interrupt, extra details are required,
@@ -80,13 +80,13 @@ struct IOPException_t
 	/*
 	The simplified constructor, which sets the extra parameters above to empty.
 	*/
-	explicit IOPException_t(const ExType & type);
+	explicit IOPCoreException_t(const ExType & type);
 
 	/*
 	The additional constructor, which sets the extra paramters above to a COPY of what was provided.
 	A copy is needed as the exception is a stateful object (depends on paramters at time of creation, not when handled).
 	Not all parameters need to have a valid pointer - if nullptr is parsed, then it will create a blank exception parameter.
 	*/
-	explicit IOPException_t(const ExType & type, const TLBExceptionInfo_t * TLBExceptionInfo, const IntExceptionInfo_t * IntExceptionInfo, const COPExceptionInfo_t * COPExceptionInfo);
+	explicit IOPCoreException_t(const ExType & type, const TLBExceptionInfo_t * TLBExceptionInfo, const IntExceptionInfo_t * IntExceptionInfo, const COPExceptionInfo_t * COPExceptionInfo);
 };
 

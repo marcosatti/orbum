@@ -1,18 +1,18 @@
 #pragma once
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 
-using ExType = IOPException_t::ExType;
+using ExType = IOPCoreException_t::ExType;
 class PS2Resources_t;
 
 /*
 IOP exception state functionality.
 */
-class IOPExceptions_t : public PS2ResourcesSubobject
+class IOPCoreExceptions_t : public PS2ResourcesSubobject
 {
 public:
-	explicit IOPExceptions_t(const PS2Resources_t* const PS2Resources);
+	explicit IOPCoreExceptions_t(const PS2Resources_t* const PS2Resources);
 
 	/*
 	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.
@@ -23,13 +23,13 @@ public:
 	A call to hasExceptionOccurred() will reset the exception state (ie: returns false on next call, if no other exception occurred during the calls).
 	*/
 	bool hasExceptionOccurred();
-	const IOPException_t & getException() const;
-	void setException(const IOPException_t & exception);
+	const IOPCoreException_t & getException() const;
+	void setException(const IOPCoreException_t & exception);
 
 private:
 	/*
 	EE Core Exception state, see above.
 	*/
 	bool ExceptionOccurred;
-	IOPException_t Exception;
+	IOPCoreException_t Exception;
 };

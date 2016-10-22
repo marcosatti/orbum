@@ -2,251 +2,252 @@
 
 #include <stdexcept>
 
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPMMUHandler/IOPMMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/IOPExceptions_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/IOPCoreExceptions_t.h"
 
-void IOPInterpreter::BREAK()
+void IOPCoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
-	auto& Exceptions = getVM()->getResources()->IOP->Exceptions;
-	Exceptions->setException(IOPException_t(IOPException_t::ExType::EX_BREAK));
+	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+	Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_BREAK));
 }
 
-void IOPInterpreter::SYSCALL()
+void IOPCoreInterpreter::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
-	auto& Exceptions = getVM()->getResources()->IOP->Exceptions;
-	Exceptions->setException(IOPException_t(IOPException_t::ExType::EX_SYSTEMCALL));
+	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+	Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_SYSTEMCALL));
 }
 
-void IOPInterpreter::TLBP()
+void IOPCoreInterpreter::TLBP()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPInterpreter::TLBR()
+void IOPCoreInterpreter::TLBR()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPInterpreter::TLBWI()
+void IOPCoreInterpreter::TLBWI()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPInterpreter::TLBWR()
+void IOPCoreInterpreter::TLBWR()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPInterpreter::LWC2()
+void IOPCoreInterpreter::LWC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::SWC2()
+void IOPCoreInterpreter::SWC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CFC0()
+void IOPCoreInterpreter::CFC0()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CTC0()
+void IOPCoreInterpreter::CTC0()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::RFE()
+void IOPCoreInterpreter::RFE()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::RTPS()
+void IOPCoreInterpreter::RTPS()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCLIP()
+void IOPCoreInterpreter::NCLIP()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::OP()
+void IOPCoreInterpreter::OP()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::DPCS()
+void IOPCoreInterpreter::DPCS()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::INTPL()
+void IOPCoreInterpreter::INTPL()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::MVMVA()
+void IOPCoreInterpreter::MVMVA()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCDS()
+void IOPCoreInterpreter::NCDS()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CDP()
+void IOPCoreInterpreter::CDP()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCDT()
+void IOPCoreInterpreter::NCDT()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCCS()
+void IOPCoreInterpreter::NCCS()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CC()
+void IOPCoreInterpreter::CC()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCS()
+void IOPCoreInterpreter::NCS()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::NCT()
+void IOPCoreInterpreter::NCT()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::SQR()
+void IOPCoreInterpreter::SQR()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::DCPL()
+void IOPCoreInterpreter::DCPL()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::DPCT()
+void IOPCoreInterpreter::DPCT()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::AVSZ3()
+void IOPCoreInterpreter::AVSZ3()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::AVSZ4()
+void IOPCoreInterpreter::AVSZ4()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::RTPT()
+void IOPCoreInterpreter::RTPT()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::GPF()
+void IOPCoreInterpreter::GPF()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::GPL()
+void IOPCoreInterpreter::GPL()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::MFC2()
+void IOPCoreInterpreter::MFC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CFC2()
+void IOPCoreInterpreter::CFC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::MTC2()
+void IOPCoreInterpreter::MTC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPInterpreter::CTC2()
+void IOPCoreInterpreter::CTC2()
 {
 #if defined(BUILD_DEBUG)
 	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);

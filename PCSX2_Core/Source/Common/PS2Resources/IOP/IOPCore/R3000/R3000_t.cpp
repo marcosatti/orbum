@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "Common/PS2Resources/IOP/R3000/R3000_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
 #include "Common/PS2Resources/Types/Registers/Register32_t.h"
 #include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
-#include "Common/PS2Resources/IOP/R3000/Types/ZeroRegister32_t.h"
-#include "Common/PS2Resources/IOP/R3000/Types/LinkRegister32_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/Types/ZeroRegister32_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/Types/LinkRegister32_t.h"
 
 R3000_t::R3000_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),

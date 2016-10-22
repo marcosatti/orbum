@@ -8,8 +8,8 @@
 
 class PS2Resources_t;
 class VMMain;
-class IOPMMUHandler;
-class IOPExceptionHandler;
+class IOPCoreMMUHandler;
+class IOPCoreExceptionHandler;
 struct MIPSInstructionInfo_t;
 
 /*
@@ -18,10 +18,10 @@ The clock speed of the IOP is roughly 1/8th that of the EE Core (~36 MHz, increa
 
 No official documentation, but there is resources available on the internet documenting the R3000 and other parts.
 */
-class IOPInterpreter : public VMExecutionCoreComponent
+class IOPCoreInterpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit IOPInterpreter(VMMain* const vmMain);
+	explicit IOPCoreInterpreter(VMMain* const vmMain);
 
 	/*
 	See VMExecutionCoreComponent for documentation.
@@ -42,8 +42,8 @@ public:
 	s64 executeInstruction();
 
 	// Component state functions
-	const std::unique_ptr<IOPExceptionHandler> & getExceptionHandler() const;
-	const std::unique_ptr<IOPMMUHandler> & getMMUHandler() const;
+	const std::unique_ptr<IOPCoreExceptionHandler> & getExceptionHandler() const;
+	const std::unique_ptr<IOPCoreMMUHandler> & getMMUHandler() const;
 	MIPSInstruction_t & getInstruction();
 
 private:
@@ -55,12 +55,12 @@ private:
 	/*
 	The IOP exception handler.
 	*/
-	const std::unique_ptr<IOPExceptionHandler> mExceptionHandler;
+	const std::unique_ptr<IOPCoreExceptionHandler> mExceptionHandler;
 
 	/*
 	The IOP MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
 	*/
-	const std::unique_ptr<IOPMMUHandler> mMMUHandler;
+	const std::unique_ptr<IOPCoreMMUHandler> mMMUHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
@@ -200,99 +200,99 @@ private:
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index.
 	See IOPInstructionTable and "IOP Instruction Implementation Register.xlsm" for more details.
 	*/
-	void(IOPInterpreter::*const IOP_INSTRUCTION_TABLE[PS2Constants::IOP::NUMBER_IOP_INSTRUCTIONS])() =
+	void(IOPCoreInterpreter::*const IOP_INSTRUCTION_TABLE[PS2Constants::IOP::NUMBER_IOP_INSTRUCTIONS])() =
 	{
-		&IOPInterpreter::INSTRUCTION_UNKNOWN,
-		&IOPInterpreter::J,
-		&IOPInterpreter::JAL,
-		&IOPInterpreter::BEQ,
-		&IOPInterpreter::BNE,
-		&IOPInterpreter::BLEZ,
-		&IOPInterpreter::BGTZ,
-		&IOPInterpreter::ADDI,
-		&IOPInterpreter::ADDIU,
-		&IOPInterpreter::SLTI,
-		&IOPInterpreter::SLTIU,
-		&IOPInterpreter::ANDI,
-		&IOPInterpreter::ORI,
-		&IOPInterpreter::XORI,
-		&IOPInterpreter::LUI,
-		&IOPInterpreter::LB,
-		&IOPInterpreter::LH,
-		&IOPInterpreter::LWL,
-		&IOPInterpreter::LW,
-		&IOPInterpreter::LBU,
-		&IOPInterpreter::LHU,
-		&IOPInterpreter::LWR,
-		&IOPInterpreter::SB,
-		&IOPInterpreter::SH,
-		&IOPInterpreter::SWL,
-		&IOPInterpreter::SW,
-		&IOPInterpreter::SWR,
-		&IOPInterpreter::LWC2,
-		&IOPInterpreter::SWC2,
-		&IOPInterpreter::SLL,
-		&IOPInterpreter::SRL,
-		&IOPInterpreter::SRA,
-		&IOPInterpreter::SLLV,
-		&IOPInterpreter::SRLV,
-		&IOPInterpreter::SRAV,
-		&IOPInterpreter::JR,
-		&IOPInterpreter::JALR,
-		&IOPInterpreter::SYSCALL,
-		&IOPInterpreter::BREAK,
-		&IOPInterpreter::MFHI,
-		&IOPInterpreter::MTHI,
-		&IOPInterpreter::MFLO,
-		&IOPInterpreter::MTLO,
-		&IOPInterpreter::MULT,
-		&IOPInterpreter::MULTU,
-		&IOPInterpreter::DIV,
-		&IOPInterpreter::DIVU,
-		&IOPInterpreter::ADD,
-		&IOPInterpreter::ADDU,
-		&IOPInterpreter::SUB,
-		&IOPInterpreter::SUBU,
-		&IOPInterpreter::AND,
-		&IOPInterpreter::OR,
-		&IOPInterpreter::XOR,
-		&IOPInterpreter::NOR,
-		&IOPInterpreter::SLT,
-		&IOPInterpreter::SLTU,
-		&IOPInterpreter::BLTZ,
-		&IOPInterpreter::BGEZ,
-		&IOPInterpreter::BLTZAL,
-		&IOPInterpreter::BGEZAL,
-		&IOPInterpreter::MFC0,
-		&IOPInterpreter::CFC0,
-		&IOPInterpreter::MTC0,
-		&IOPInterpreter::CTC0,
-		&IOPInterpreter::RFE,
-		&IOPInterpreter::RTPS,
-		&IOPInterpreter::NCLIP,
-		&IOPInterpreter::OP,
-		&IOPInterpreter::DPCS,
-		&IOPInterpreter::INTPL,
-		&IOPInterpreter::MVMVA,
-		&IOPInterpreter::NCDS,
-		&IOPInterpreter::CDP,
-		&IOPInterpreter::NCDT,
-		&IOPInterpreter::NCCS,
-		&IOPInterpreter::CC,
-		&IOPInterpreter::NCS,
-		&IOPInterpreter::NCT,
-		&IOPInterpreter::SQR,
-		&IOPInterpreter::DCPL,
-		&IOPInterpreter::DPCT,
-		&IOPInterpreter::AVSZ3,
-		&IOPInterpreter::AVSZ4,
-		&IOPInterpreter::RTPT,
-		&IOPInterpreter::GPF,
-		&IOPInterpreter::GPL,
-		&IOPInterpreter::MFC2,
-		&IOPInterpreter::CFC2,
-		&IOPInterpreter::MTC2,
-		&IOPInterpreter::CTC2,
+		&IOPCoreInterpreter::INSTRUCTION_UNKNOWN,
+		&IOPCoreInterpreter::J,
+		&IOPCoreInterpreter::JAL,
+		&IOPCoreInterpreter::BEQ,
+		&IOPCoreInterpreter::BNE,
+		&IOPCoreInterpreter::BLEZ,
+		&IOPCoreInterpreter::BGTZ,
+		&IOPCoreInterpreter::ADDI,
+		&IOPCoreInterpreter::ADDIU,
+		&IOPCoreInterpreter::SLTI,
+		&IOPCoreInterpreter::SLTIU,
+		&IOPCoreInterpreter::ANDI,
+		&IOPCoreInterpreter::ORI,
+		&IOPCoreInterpreter::XORI,
+		&IOPCoreInterpreter::LUI,
+		&IOPCoreInterpreter::LB,
+		&IOPCoreInterpreter::LH,
+		&IOPCoreInterpreter::LWL,
+		&IOPCoreInterpreter::LW,
+		&IOPCoreInterpreter::LBU,
+		&IOPCoreInterpreter::LHU,
+		&IOPCoreInterpreter::LWR,
+		&IOPCoreInterpreter::SB,
+		&IOPCoreInterpreter::SH,
+		&IOPCoreInterpreter::SWL,
+		&IOPCoreInterpreter::SW,
+		&IOPCoreInterpreter::SWR,
+		&IOPCoreInterpreter::LWC2,
+		&IOPCoreInterpreter::SWC2,
+		&IOPCoreInterpreter::SLL,
+		&IOPCoreInterpreter::SRL,
+		&IOPCoreInterpreter::SRA,
+		&IOPCoreInterpreter::SLLV,
+		&IOPCoreInterpreter::SRLV,
+		&IOPCoreInterpreter::SRAV,
+		&IOPCoreInterpreter::JR,
+		&IOPCoreInterpreter::JALR,
+		&IOPCoreInterpreter::SYSCALL,
+		&IOPCoreInterpreter::BREAK,
+		&IOPCoreInterpreter::MFHI,
+		&IOPCoreInterpreter::MTHI,
+		&IOPCoreInterpreter::MFLO,
+		&IOPCoreInterpreter::MTLO,
+		&IOPCoreInterpreter::MULT,
+		&IOPCoreInterpreter::MULTU,
+		&IOPCoreInterpreter::DIV,
+		&IOPCoreInterpreter::DIVU,
+		&IOPCoreInterpreter::ADD,
+		&IOPCoreInterpreter::ADDU,
+		&IOPCoreInterpreter::SUB,
+		&IOPCoreInterpreter::SUBU,
+		&IOPCoreInterpreter::AND,
+		&IOPCoreInterpreter::OR,
+		&IOPCoreInterpreter::XOR,
+		&IOPCoreInterpreter::NOR,
+		&IOPCoreInterpreter::SLT,
+		&IOPCoreInterpreter::SLTU,
+		&IOPCoreInterpreter::BLTZ,
+		&IOPCoreInterpreter::BGEZ,
+		&IOPCoreInterpreter::BLTZAL,
+		&IOPCoreInterpreter::BGEZAL,
+		&IOPCoreInterpreter::MFC0,
+		&IOPCoreInterpreter::CFC0,
+		&IOPCoreInterpreter::MTC0,
+		&IOPCoreInterpreter::CTC0,
+		&IOPCoreInterpreter::RFE,
+		&IOPCoreInterpreter::RTPS,
+		&IOPCoreInterpreter::NCLIP,
+		&IOPCoreInterpreter::OP,
+		&IOPCoreInterpreter::DPCS,
+		&IOPCoreInterpreter::INTPL,
+		&IOPCoreInterpreter::MVMVA,
+		&IOPCoreInterpreter::NCDS,
+		&IOPCoreInterpreter::CDP,
+		&IOPCoreInterpreter::NCDT,
+		&IOPCoreInterpreter::NCCS,
+		&IOPCoreInterpreter::CC,
+		&IOPCoreInterpreter::NCS,
+		&IOPCoreInterpreter::NCT,
+		&IOPCoreInterpreter::SQR,
+		&IOPCoreInterpreter::DCPL,
+		&IOPCoreInterpreter::DPCT,
+		&IOPCoreInterpreter::AVSZ3,
+		&IOPCoreInterpreter::AVSZ4,
+		&IOPCoreInterpreter::RTPT,
+		&IOPCoreInterpreter::GPF,
+		&IOPCoreInterpreter::GPL,
+		&IOPCoreInterpreter::MFC2,
+		&IOPCoreInterpreter::CFC2,
+		&IOPCoreInterpreter::MTC2,
+		&IOPCoreInterpreter::CTC2,
 	};
 };
 

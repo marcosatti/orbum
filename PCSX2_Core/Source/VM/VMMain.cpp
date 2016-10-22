@@ -6,13 +6,7 @@
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
-
 #include "Common/PS2Resources/EE/Types/BootROM_t.h"
-
-#include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Constants/PS2Constants.h"
-#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/DeadMMemory_t.h"
 
 VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) : 
 	mStatus(VMMain::VMStatus::CREATED),

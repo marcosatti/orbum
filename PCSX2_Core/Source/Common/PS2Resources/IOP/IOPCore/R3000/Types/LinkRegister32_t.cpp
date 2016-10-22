@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
-#include "Common/PS2Resources/IOP/R3000/Types/LinkRegister32_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/Types/LinkRegister32_t.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/R3000/R3000_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
 #include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 
 LinkRegister32_t::LinkRegister32_t(const PS2Resources_t* const PS2Resources) : 
@@ -13,5 +14,5 @@ LinkRegister32_t::LinkRegister32_t(const PS2Resources_t* const PS2Resources) :
 
 void LinkRegister32_t::setLinkAddress()
 {
-	writeWordU(getRootResources()->IOP->R3000->PC->getPCValue() + 8);
+	writeWordU(getRootResources()->IOP->IOPCore->R3000->PC->getPCValue() + 8);
 }

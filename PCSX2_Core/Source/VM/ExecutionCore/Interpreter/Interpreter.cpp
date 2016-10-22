@@ -8,7 +8,7 @@
 #include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/TimersHandler/TimersHandler.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPInterpreter.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 
 Interpreter::Interpreter(VMMain * vmMain) :
@@ -18,7 +18,7 @@ Interpreter::Interpreter(VMMain * vmMain) :
 	mDMACInterpreter(std::make_shared<DMACInterpreter>(vmMain)),
 	mINTCHandler(std::make_shared<INTCHandler>(vmMain)),
 	mTimerHandler(std::make_shared<TimersHandler>(vmMain)),
-	mIOPInterpreter(std::make_shared<IOPInterpreter>(vmMain)),
+	mIOPInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
 	mComponents { mDMACInterpreter, mINTCHandler, mTimerHandler, mIOPInterpreter }
 {
 }

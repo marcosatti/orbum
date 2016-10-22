@@ -226,19 +226,13 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\Registers\FPRegister32_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2Resources\IOP\IOP_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\Types\BootROM_t.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\Registers\PCRegister32_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2Resources\IOP\R3000\Types\LinkRegister32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\IOP\R3000\Types\ZeroRegister32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\IOP\R3000\R3000_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.h" />
     <ClInclude Include="Source\Common\Tables\IOPInstructionTable\IOPInstructionTable.h" />
     <ClInclude Include="Source\Common\PS2Resources\Clock\Types\ClockSource_t.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPMMUHandler\IOPMMUHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
     </ClInclude>
@@ -275,16 +269,23 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\EECoreExceptions\EECoreExceptions_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCOP0\IOPCOP0_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPExceptions\IOPExceptions_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPExceptions\Types\IOPException_t.h" />
     <ClInclude Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPExceptionHandler\IOPExceptionHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\TimersHandler\TimersHandler.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ImageMappedMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\PhysicalMMU\PhysicalMMU_t.h">
       <Filter>Source\VM\VMMMUHandler</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\LinkRegister32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\ZeroRegister32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\R3000_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCore_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOP_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\IOPCoreCOP0_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\IOPCoreExceptions_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\Types\IOPCoreException_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -390,18 +391,12 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\Registers\FPRegister32_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2Resources\IOP\IOP_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\Types\BootROM_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\Registers\PCRegister32_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\PS2Resources\IOP\R3000\Types\LinkRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\IOP\R3000\Types\ZeroRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\IOP\R3000\R3000_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPInstructionTable\IOPInstructionTable.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPMMUHandler\IOPMMUHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
     </ClCompile>
@@ -431,21 +426,28 @@
       <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions\Types</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECoreExceptions\EECoreExceptions_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCOP0\IOPCOP0_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPExceptions\IOPExceptions_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPExceptions\Types\IOPException_t.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPExceptionHandler\IOPExceptionHandler.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_ALU.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_BRANCH_JUMP.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_OTHERS.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_LOAD_STORE_MEM.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPInterpreter\IOPInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\TimersHandler\TimersHandler.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ImageMappedMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\PhysicalMMU\PhysicalMMU_t.cpp">
       <Filter>Source\VM\VMMMUHandler</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\LinkRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\ZeroRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\R3000_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCore_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOP_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\IOPCoreCOP0_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\IOPCoreExceptions_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\Types\IOPCoreException_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_ALU.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_BRANCH_JUMP.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_LOAD_STORE_MEM.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_OTHERS.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_SPECIAL_TRANSFER.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

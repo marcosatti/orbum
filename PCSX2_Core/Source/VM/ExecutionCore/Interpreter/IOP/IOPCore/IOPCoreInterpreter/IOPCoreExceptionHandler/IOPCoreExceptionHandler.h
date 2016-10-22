@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 #include "Common/Tables/IOPExceptionsTable/IOPExceptionsTable.h"
 
 /*
@@ -16,10 +16,10 @@ The exception handler provides 2 main points of functionality:
 using ExceptionProperties_t = IOPExceptionsTable::ExceptionProperties_t;
 class VMMain;
 
-class IOPExceptionHandler : public VMExecutionCoreComponent
+class IOPCoreExceptionHandler : public VMExecutionCoreComponent
 {
 public:
-	explicit IOPExceptionHandler(VMMain * vmMain);
+	explicit IOPCoreExceptionHandler(VMMain * vmMain);
 
 	/*
 	See VMExecutionCoreComponent for documentation.
@@ -39,7 +39,7 @@ public:
 
 	This is made public as a direct way to reset the IOP state from the VM.
 	*/
-	void handleException(const IOPException_t& PS2Exception);
+	void handleException(const IOPCoreException_t& PS2Exception);
 
 private:
 	// Debug for counting the number of exceptions raised/handled and string representations.
@@ -50,7 +50,7 @@ private:
 	/*
 	State variables, needed by functions below.
 	*/
-	const IOPException_t * mIOPException;
+	const IOPCoreException_t * mIOPException;
 	const ExceptionProperties_t * mExceptionProperties;
 
 	/*
@@ -76,23 +76,23 @@ private:
 	/*
 	Static arrays needed to call the appropriate exception handler function. Based upon IOPExceptionsTable::ExceptionProperties_t::mImplementationIndex.
 	*/
-	void(IOPExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::IOP::Exceptions::NUMBER_EXCEPTIONS])() =
+	void(IOPCoreExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::IOP::Exceptions::NUMBER_EXCEPTIONS])() =
 	{
 		
-		&IOPExceptionHandler::EX_HANDLER_INTERRUPT,
-		&IOPExceptionHandler::EX_HANDLER_TLB_MODIFIED,
-		&IOPExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD,
-		&IOPExceptionHandler::EX_HANDLER_TLB_REFILL_STORE,
-		&IOPExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD,
-		&IOPExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE,
-		&IOPExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH,
-		&IOPExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE,
-		&IOPExceptionHandler::EX_HANDLER_SYSTEMCALL,
-		&IOPExceptionHandler::EX_HANDLER_BREAK,
-		&IOPExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION,
-		&IOPExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE,
-		&IOPExceptionHandler::EX_HANDLER_OVERFLOW,
-		&IOPExceptionHandler::EX_HANDLER_RESET, // Not documented as an exception but used for resetting the R3000 state within the emulator.
+		&IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT,
+		&IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED,
+		&IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD,
+		&IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE,
+		&IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD,
+		&IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE,
+		&IOPCoreExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH,
+		&IOPCoreExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE,
+		&IOPCoreExceptionHandler::EX_HANDLER_SYSTEMCALL,
+		&IOPCoreExceptionHandler::EX_HANDLER_BREAK,
+		&IOPCoreExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION,
+		&IOPCoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE,
+		&IOPCoreExceptionHandler::EX_HANDLER_OVERFLOW,
+		&IOPCoreExceptionHandler::EX_HANDLER_RESET, // Not documented as an exception but used for resetting the R3000 state within the emulator.
 	};
 };
 

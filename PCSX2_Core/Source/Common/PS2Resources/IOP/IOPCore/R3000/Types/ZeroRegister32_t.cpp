@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/IOP/R3000/Types/ZeroRegister32_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/Types/ZeroRegister32_t.h"
 
 void ZeroRegister32_t::writeByteU(u32 arrayIndex, u8 value)
 {

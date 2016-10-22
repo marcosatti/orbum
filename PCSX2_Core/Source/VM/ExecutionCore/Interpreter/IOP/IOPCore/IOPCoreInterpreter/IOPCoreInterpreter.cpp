@@ -1,39 +1,40 @@
 #include "stdafx.h"
 
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPInterpreter.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/VMMain.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPMMUHandler/IOPMMUHandler.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPInterpreter/IOPExceptionHandler/IOPExceptionHandler.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreExceptionHandler/IOPCoreExceptionHandler.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/R3000/R3000_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
 #include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 #include "Common/Tables/IOPInstructionTable/IOPInstructionTable.h"
 #include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 
-IOPInterpreter::IOPInterpreter(VMMain * vmMain) :
+IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{ ClockSource_t::IOP },
-	mExceptionHandler(std::make_unique<IOPExceptionHandler>(vmMain)),
-	mMMUHandler(std::make_unique<IOPMMUHandler>(vmMain)),
+	mExceptionHandler(std::make_unique<IOPCoreExceptionHandler>(vmMain)),
+	mMMUHandler(std::make_unique<IOPCoreMMUHandler>(vmMain)),
 	mInstructionInfo(nullptr)
 {
 }
 
-const std::vector<ClockSource_t>& IOPInterpreter::getClockSources()
+const std::vector<ClockSource_t>& IOPCoreInterpreter::getClockSources()
 {
 	return mClockSources;
 }
 
-void IOPInterpreter::initalise()
+void IOPCoreInterpreter::initalise()
 {
 	// A Reset is done by raising a Reset exception.
-	getExceptionHandler()->handleException(IOPException_t(IOPException_t::ExType::EX_RESET));
+	getExceptionHandler()->handleException(IOPCoreException_t(IOPCoreException_t::ExType::EX_RESET));
 }
 
-s64 IOPInterpreter::executionStep(const ClockSource_t & clockSource)
+s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
 	getExceptionHandler()->checkExceptionState();
@@ -53,9 +54,9 @@ s64 IOPInterpreter::executionStep(const ClockSource_t & clockSource)
 	return cycles;
 }
 
-void IOPInterpreter::checkBranchDelaySlot() const
+void IOPCoreInterpreter::checkBranchDelaySlot() const
 {
-	auto& R3000 = getVM()->getResources()->IOP->R3000;
+	auto& R3000 = getVM()->getResources()->IOP->IOPCore->R3000;
 	if (R3000->mIsInBranchDelay)
 	{
 		if (R3000->mBranchDelayCycles == 0)
@@ -68,12 +69,12 @@ void IOPInterpreter::checkBranchDelaySlot() const
 	}
 }
 
-s64 IOPInterpreter::executeInstruction()
+s64 IOPCoreInterpreter::executeInstruction()
 {
-	auto& IOP = getVM()->getResources()->IOP;
+	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 & instructionValue = getMMUHandler()->readWordU(IOP->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
+	const u32 & instructionValue = getMMUHandler()->readWordU(IOPCore->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
 	getInstruction().setInstructionValue(instructionValue);
 
 	// Get the instruction details
@@ -83,29 +84,29 @@ s64 IOPInterpreter::executeInstruction()
 	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Increment PC.
-	IOP->R3000->PC->setPCValueNext();
+	IOPCore->R3000->PC->setPCValueNext();
 
 	// Return the number of cycles the instruction took to complete.
 	return mInstructionInfo->mCycles;
 }
 
-const std::unique_ptr<IOPExceptionHandler>& IOPInterpreter::getExceptionHandler() const
+const std::unique_ptr<IOPCoreExceptionHandler>& IOPCoreInterpreter::getExceptionHandler() const
 {
 	return mExceptionHandler;
 }
 
 
-const std::unique_ptr<IOPMMUHandler>& IOPInterpreter::getMMUHandler() const
+const std::unique_ptr<IOPCoreMMUHandler>& IOPCoreInterpreter::getMMUHandler() const
 {
 	return mMMUHandler;
 }
 
-MIPSInstruction_t& IOPInterpreter::getInstruction()
+MIPSInstruction_t& IOPCoreInterpreter::getInstruction()
 {
 	return mInstruction;
 }
 
-void IOPInterpreter::INSTRUCTION_UNKNOWN()
+void IOPCoreInterpreter::INSTRUCTION_UNKNOWN()
 {
 	// Unknown opcode, log if debug is enabled.
 #if defined(BUILD_DEBUG)

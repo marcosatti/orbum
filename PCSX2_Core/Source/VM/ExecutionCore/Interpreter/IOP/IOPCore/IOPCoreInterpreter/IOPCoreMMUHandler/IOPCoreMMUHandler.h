@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 
 /*
 TODO: I dont know if virtual address translations occur. Not implemented for now (assumed that all VA's fall within the kseg0 etc zones).
 
-IOPMMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
+IOPCoreMMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
  converting a PS2 physical address -> client memory address).
 It handles any requests from reading or writing from a virtual address.
 
@@ -18,10 +18,10 @@ Any request performed must be followed by a check for any errors (similar to how
 
 class VMMain;
 
-class IOPMMUHandler : public VMExecutionCoreComponent
+class IOPCoreMMUHandler : public VMExecutionCoreComponent
 {
 public:
-	explicit IOPMMUHandler(VMMain * vmMain);
+	explicit IOPCoreMMUHandler(VMMain * vmMain);
 
 	/*
 	See VMExecutionCoreComponent for documentation.
@@ -53,14 +53,14 @@ public:
 	Exception handling functionality. Because this is used within the EE Core instruction implementations, there needs to be a way for the exception to
 	 be thrown (queued) within the instruction body.
 	An exception could be generated when reading or writing from/to a PS2 memory location.
-	A call should be made to hasExceptionOccurred() whenever the MMU is accessed. If that returns true, get the resulting IOPException_t through getExceptionInfo(),
+	A call should be made to hasExceptionOccurred() whenever the MMU is accessed. If that returns true, get the resulting IOPCoreException_t through getExceptionInfo(),
 	 from which you can queue it from. When the call to getExceptionInfo() is made, it will reset the exception state.
 	NOTE 1: getExceptionInfo() may contain data left over from a previous translation, but the exception generated will always have valid data attached to it.
 	NOTE 2: On error, no writes or reads will occur - see the description in the read/write functions above on what happens in this case.
 	TODO: Check for race condition between using the MMU and checking for error (could produce different error by the time it is called). Need a mutex?
 	*/
 	bool hasExceptionOccurred() const;
-	const IOPException_t & getExceptionInfo();
+	const IOPCoreException_t & getExceptionInfo();
 
 private:
 	/*
@@ -68,7 +68,7 @@ private:
 	mHasExceptionOccured is set whenever an exception in the MMU occurs, with exception type of mExType.
 	*/
 	bool mHasExceptionOccurred;
-	IOPException_t mExceptionInfo;
+	IOPCoreException_t mExceptionInfo;
 	
 
 	/*

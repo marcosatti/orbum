@@ -23,7 +23,7 @@ class EECoreInterpreter;
 class DMACInterpreter;
 class INTCHandler;
 class TimersHandler;
-class IOPInterpreter;
+class IOPCoreInterpreter;
 //class InterpreterVU;
 //class InterpreterGS;
 
@@ -57,7 +57,7 @@ private:
 	std::shared_ptr<TimersHandler> mTimerHandler;
 	//std::unique_ptr<InterpreterVU> mInterpreterVU; 
 	//std::unique_ptr<InterpreterGS> mInterpreterGS;
-	std::shared_ptr<IOPInterpreter> mIOPInterpreter;
+	std::shared_ptr<IOPCoreInterpreter> mIOPInterpreter;
 
 	/*
 	Used to iterate through all components except the EE Core interpreter.

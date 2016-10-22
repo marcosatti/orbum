@@ -30,7 +30,7 @@ public:
 	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles).
 	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
 	Most of the time cycles will be equal to one.
-	See the IOPInterpreter::checkBranchDelaySlot() for the logic that controls this.
+	See the IOPCoreInterpreter::checkBranchDelaySlot() for the logic that controls this.
 	*/
 	bool mIsInBranchDelay;
 	u8 mBranchDelayCycles;
@@ -65,7 +65,7 @@ public:
 	1) During normal program execution, it will point to the current instruction and then get incremented by 4 when finished to move on to the next instruction.
 	2) When a jump or branch instruction is encountered, it will point to the target address.
 	3) When an exception occurs, the PC is changed to point to the exception vector address.
-	It is a 32-bit register, pointing to a virtual address (NOT a PHYSICAL address! This means you need to use the IOPMMUHandler component to get the proper PS2 physical address.)
+	It is a 32-bit register, pointing to a virtual address (NOT a PHYSICAL address! This means you need to use the IOPCoreMMUHandler component to get the proper PS2 physical address.)
 	Some convience functions are provided for manipulating this value.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;

@@ -14,14 +14,14 @@ See EE Core Users Manual page 62 onwards.
 class COP0RegisterPRId_IOP_t;
 class COP0RegisterReserved_t;
 
-class IOPCOP0_t : public MIPSCoprocessor0_t, public PS2ResourcesSubobject
+class IOPCoreCOP0_t : public MIPSCoprocessor0_t, public PS2ResourcesSubobject
 {
 public:
-	explicit IOPCOP0_t(const PS2Resources_t* const PS2Resources);
+	explicit IOPCoreCOP0_t(const PS2Resources_t* const PS2Resources);
 
 	/*
 	Checks if the IOP COP0 coprocessor is usable. 
-	Can be used by the component calling this to raise a IOPException_t(coprocessor unusable) if not available.
+	Can be used by the component calling this to raise a IOPCoreException_t(coprocessor unusable) if not available.
 	*/
 	bool isCoprocessorUsable() const override;
 

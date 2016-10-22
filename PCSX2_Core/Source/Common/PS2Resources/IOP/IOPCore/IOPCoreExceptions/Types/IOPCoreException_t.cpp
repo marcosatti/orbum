@@ -2,15 +2,15 @@
 
 #include <memory>
 
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 
 
-IOPException_t::IOPException_t() :
+IOPCoreException_t::IOPCoreException_t() :
 	mExType(ExType::EX_RESET)
 {
 }
 
-IOPException_t::IOPException_t(const ExType & type) : 
+IOPCoreException_t::IOPCoreException_t(const ExType & type) : 
 	mExType(type),
 	mTLBExceptionInfo(),
 	mIntExceptionInfo(),
@@ -18,7 +18,7 @@ IOPException_t::IOPException_t(const ExType & type) :
 {
 }
 
-IOPException_t::IOPException_t(const ExType & type, const TLBExceptionInfo_t * TLBExceptionInfo, const IntExceptionInfo_t * IntExceptionInfo, const COPExceptionInfo_t * COPExceptionInfo) :
+IOPCoreException_t::IOPCoreException_t(const ExType & type, const TLBExceptionInfo_t * TLBExceptionInfo, const IntExceptionInfo_t * IntExceptionInfo, const COPExceptionInfo_t * COPExceptionInfo) :
 	mExType(type)
 {
 	if (TLBExceptionInfo != nullptr)

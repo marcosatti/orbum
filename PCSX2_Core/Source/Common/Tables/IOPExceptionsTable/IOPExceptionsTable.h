@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/IOP/IOPExceptions/Types/IOPException_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 #include "Common/PS2Constants/PS2Constants.h"
 
-using ExType = IOPException_t::ExType;
+using ExType = IOPCoreException_t::ExType;
 
 class IOPExceptionsTable
 {
@@ -14,7 +14,7 @@ public:
 	These properties are common to all exceptions. See R3000 documentation on the internet.
 	For example: http://mescal.imag.fr/membres/vania.marangozova-martin/TEACHING/NACHOS/NACHOS_DOC/mips.html#exception
 	There is an additional field (function index) to run the exception specific handler.
-	NOTE: Do NOT change the order - they are sync'd with the IOPException_t::ExType enum order. If you change one you must reflect the changes in the other.
+	NOTE: Do NOT change the order - they are sync'd with the IOPCoreException_t::ExType enum order. If you change one you must reflect the changes in the other.
 	*/
 	struct ExceptionProperties_t
 	{
