@@ -138,11 +138,9 @@ u32 EECoreInterpreter::executeInstruction()
 	{
 		// Debug print details.
 		logDebug("(%s, %d) EECore loop 0x%llX: "
-			"CPU Cycles = 0x%lX, "
-			"PC = 0x%08X, "
-			"BD = %d, "
-			"Instruction = %s", __FILENAME__, __LINE__,
-			DEBUG_LOOP_COUNTER, EECore->COP0->Count->getFieldValue(COP0RegisterCount_t::Fields::Count), 
+			"PC = 0x%08X, BD = %d, "
+			"Instruction = %s",
+			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
 			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	

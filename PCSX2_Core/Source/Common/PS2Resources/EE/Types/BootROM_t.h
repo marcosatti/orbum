@@ -2,13 +2,13 @@
 
 #include <string>
 
-#include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
+#include "Common/PS2Resources/Types/MappedMemory/ROMappedMemory_t.h"
 
 /*
 A memory object that exposes the loadBIOS() function to load in the BIOS image.
 It should be loaded before emulation starts.
 */
-class BootROM_t : public MappedMemory_t
+class BootROM_t : public ROMappedMemory_t
 {
 public:
 	BootROM_t();

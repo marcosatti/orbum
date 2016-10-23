@@ -286,6 +286,7 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -448,6 +449,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_LOAD_STORE_MEM.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_OTHERS.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_SPECIAL_TRANSFER.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

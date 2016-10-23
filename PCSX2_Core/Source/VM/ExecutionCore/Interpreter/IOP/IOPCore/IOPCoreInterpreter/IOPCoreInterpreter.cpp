@@ -13,6 +13,7 @@
 #include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -80,8 +81,29 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPInstructionTable::getInstructionInfo(mInstruction);
 
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0xb3a0;
+	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4af38;
+
+	if (DEBUG_LOOP_COUNTER > DEBUG_LOOP_BREAKPOINT)
+	{
+		// Debug print details.
+		logDebug("(%s, %d) IOPCore loop 0x%llX: "
+			"PC = 0x%08X, BD = %d, "
+			"Instruction = %s",
+			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
+			IOPCore->R3000->PC->getPCValue(), IOPCore->R3000->mIsInBranchDelay,
+			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+
+		if (IOPCore->R3000->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
+		{
+			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
+		}
+	}
+#endif
+
 	// Run the instruction, which is based on the implementation index.
-	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
+ 	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
 	// Increment PC.
 	IOPCore->R3000->PC->setPCValueNext();

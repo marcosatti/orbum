@@ -7,7 +7,7 @@
 #include "Common/PS2Constants/PS2Constants.h"
 
 BootROM_t::BootROM_t() :
-	MappedMemory_t(PS2Constants::EE::BootROM::SIZE_BOOT_ROM, "Boot ROM", PS2Constants::EE::BootROM::PADDRESS_BOOT_ROM)
+	ROMappedMemory_t(PS2Constants::EE::BootROM::SIZE_BOOT_ROM, "Boot ROM", PS2Constants::EE::BootROM::PADDRESS_BOOT_ROM)
 {
 }
 

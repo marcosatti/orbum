@@ -335,6 +335,7 @@
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\LinkRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\ZeroRegister32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOP_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor0_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.h" />
@@ -430,6 +431,7 @@
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\LinkRegister32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\R3000\Types\ZeroRegister32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOP_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor0_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.cpp" />
