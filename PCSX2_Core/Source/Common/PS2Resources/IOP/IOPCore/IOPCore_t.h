@@ -7,6 +7,7 @@
 class R3000_t;
 class IOPCoreCOP0_t;
 class IOPCoreExceptions_t;
+class DebugMMemory_t;
 
 class IOPCore_t : public PS2ResourcesSubobject
 {
@@ -27,6 +28,11 @@ public:
 	Exception/Interrupt State.
 	*/
 	std::shared_ptr<IOPCoreExceptions_t> Exceptions;
+
+	/*
+	Scratchpad memory (1KB). Allocated at 0x1F000000.
+	*/
+	std::shared_ptr<DebugMMemory_t> ScratchpadMemory;
 
 };
 

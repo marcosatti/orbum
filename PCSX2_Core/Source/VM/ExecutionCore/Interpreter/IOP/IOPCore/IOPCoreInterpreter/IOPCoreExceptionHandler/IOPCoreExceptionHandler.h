@@ -76,7 +76,7 @@ private:
 	/*
 	Static arrays needed to call the appropriate exception handler function. Based upon IOPExceptionsTable::ExceptionProperties_t::mImplementationIndex.
 	*/
-	void(IOPCoreExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::IOP::Exceptions::NUMBER_EXCEPTIONS])() =
+	void(IOPCoreExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS])() =
 	{
 		
 		&IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT,

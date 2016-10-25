@@ -328,6 +328,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.h" />
+    <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\IOPCoreExceptions_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\Types\IOPCoreException_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\IOPCoreCOP0_t.h" />
@@ -424,6 +428,8 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\Timers\Timers_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreExceptions\Types\IOPCoreException_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\IOPCoreCOP0_t.cpp" />
@@ -435,6 +441,7 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor0_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSCoprocessor\MIPSCoprocessor_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPInstructionTable\IOPInstructionTable.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.cpp" />

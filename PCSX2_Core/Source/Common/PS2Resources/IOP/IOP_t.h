@@ -6,6 +6,7 @@
 
 class IOPCore_t;
 class MappedMemory_t;
+class DebugMMemory_t;
 class PhysicalMMU_t;
 
 class IOP_t : public PS2ResourcesSubobject
@@ -19,15 +20,15 @@ public:
 	std::shared_ptr<IOPCore_t> IOPCore;
 
 	/*
-	IOP Memory (2MB).
+	IOP Memory (2MB). Allocated at 0x00000000.
 	*/
 	std::shared_ptr<MappedMemory_t> IOPMemory;
 
 	/*
-	HW mapped registers (64KB)
+	HW mapped registers (64KB or 8KB?). Allocated at 0x1F801000.
 	DEBUG
 	*/
-	std::shared_ptr<MappedMemory_t> IOP_HW_Registers;
+	std::shared_ptr<DebugMMemory_t> IOP_HW_Registers;
 
 	/*
 	The IOP physical memory space.

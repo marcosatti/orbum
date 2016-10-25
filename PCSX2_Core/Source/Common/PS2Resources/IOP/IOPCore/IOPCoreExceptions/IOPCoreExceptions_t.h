@@ -7,7 +7,8 @@ using ExType = IOPCoreException_t::ExType;
 class PS2Resources_t;
 
 /*
-IOP exception state functionality.
+IOP Core exception state functionality.
+TODO: Finish implementing. Currently doesnt check the Status.IM bits etc.
 */
 class IOPCoreExceptions_t : public PS2ResourcesSubobject
 {
@@ -16,10 +17,10 @@ public:
 
 	/*
 	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.
-	The EE Core exception functionality.
+	The IOP Core exception functionality.
 	Use setException() to indicate that an exception occurred.
 
-	Within the EE Core, a call should be made to hasExceptionOccurred(), and if true, details can be retrieved by getException().
+	Within the IOP Core, a call should be made to hasExceptionOccurred(), and if true, details can be retrieved by getException().
 	A call to hasExceptionOccurred() will reset the exception state (ie: returns false on next call, if no other exception occurred during the calls).
 	*/
 	bool hasExceptionOccurred();
@@ -28,7 +29,7 @@ public:
 
 private:
 	/*
-	EE Core Exception state, see above.
+	IOP Core Exception state, see above.
 	*/
 	bool ExceptionOccurred;
 	IOPCoreException_t Exception;

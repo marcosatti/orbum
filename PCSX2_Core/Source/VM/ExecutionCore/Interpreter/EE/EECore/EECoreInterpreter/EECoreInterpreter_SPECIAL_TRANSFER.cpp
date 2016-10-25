@@ -13,6 +13,7 @@
 #include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"

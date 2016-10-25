@@ -3,13 +3,10 @@
 #include <memory>
 #include <string>
 
-class VMExecutionCoreComponent;
-class PhysicalMMU_t;
-class PS2Resources_t;
+#include "Types/VMOptions_t.h"
 
-/*
-TODO: Fill in documentation.
-*/
+class VMExecutionCoreComponent;
+class PS2Resources_t;
 
 /*
 Entry point into all PCSX2 core emulation.
@@ -18,11 +15,7 @@ This virtual machine (VM) acts as a hypervisor (manager) for the PS2's execution
 class VMMain
 {
 public:
-	/*
-	Types
-	*/
-
-	// Lifecycle status
+	// Lifecycle status type
 	enum VMStatus
 	{
 		CREATED,
@@ -33,27 +26,19 @@ public:
 		DESTROYED
 	};
 
-	// Execution Core Type
-	enum ExecutionCoreType
-	{
-		INTERPRETER,
-		RECOMPILER
-	};
-
 	/*
 	Lifecycle functions
 	*/
 	// Create
-	explicit VMMain(const ExecutionCoreType executionCoreType, const std::string & bootROMPath);
+	explicit VMMain(const VMOptions_t & vmOptions);
 	
 	// Initialise
-	void LoadExecutable(std::string&& excutablePath) const;
 	void Reset();
 
 	// Run
 	void Run();
 
-	// Run
+	// Stop
 	void Stop();
 
 	// Destroy
@@ -74,11 +59,10 @@ private:
 	/*
 	VM State variables.
 	*/
+	VMOptions_t mVMOptions;
 	VMStatus mStatus;
-	ExecutionCoreType mExecutionCoreType;
 	std::shared_ptr<PS2Resources_t> mPS2Resources;
 	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
-	const std::string mBootROMPath;
 
 	// Initalisation (called through reset()).
 	/*

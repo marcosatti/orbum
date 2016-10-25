@@ -110,29 +110,39 @@ public:
 
 	struct IOP
 	{
+		struct IOPCore
+		{
+			struct R3000A
+			{
+				static constexpr u32 NUMBER_GP_REGISTERS = 32;
+			};
+
+			struct COP0
+			{
+				static constexpr u32 NUMBER_REGISTERS = 32;
+			};
+
+			struct Exceptions
+			{
+				static constexpr u32 NUMBER_EXCEPTIONS = 14;
+			};
+
+			struct ScratchpadMemory
+			{
+				// Scratchpad memory - see http://www.psxdev.net/forum/viewtopic.php?f=49&t=147
+				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x1F800000;
+				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = 0x00000400; // 1KB
+			};
+
+			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
+		};
+
 		struct IOPMemory
 		{
 			// IOP Memory. No official documentation - from PCSX2. 
 			static constexpr u32 PADDRESS_IOP_MEMORY = 0x00000000;
 			static constexpr size_t SIZE_IOP_MEMORY = 0x00200000;
 		};
-
-		struct R3000A
-		{
-			static constexpr u32 NUMBER_GP_REGISTERS = 32;
-		};
-
-		struct COP0
-		{
-			static constexpr u32 NUMBER_REGISTERS = 32;
-		};
-
-		struct Exceptions
-		{
-			static constexpr u32 NUMBER_EXCEPTIONS = 14;
-		};
-
-		static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
 
 		static constexpr u32 RATIO_PS2CLK_IOP = 8; // IOP (R3000) runs at ~36 MHz.
 	};

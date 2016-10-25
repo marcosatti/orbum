@@ -287,6 +287,10 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.h" />
+    <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -450,6 +454,9 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_OTHERS.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCore\IOPCoreInterpreter\IOPCoreInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ROMappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

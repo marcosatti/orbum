@@ -5,6 +5,7 @@
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
@@ -28,7 +29,7 @@ EECoreFPU_t::EECoreFPU_t(const PS2Resources_t* const PS2Resources) :
 bool EECoreFPU_t::isCoprocessorUsable() const
 {
 	// Check that CU[bit 1] == 1 (ie: >0) in the status register.
-	if ((getRootResources()->EE->EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::CU) & 0x2) > 0)
+	if ((getRootResources()->EE->EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::CU) & 0x2) > 0)
 		return true;
 	else
 		return false;

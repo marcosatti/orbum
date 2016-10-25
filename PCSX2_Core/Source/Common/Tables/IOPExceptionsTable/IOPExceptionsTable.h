@@ -22,7 +22,7 @@ public:
 		s8	         mExeCode;
 		u8	         mImplementationIndex;
 	};
-	static constexpr ExceptionProperties_t ExceptionProperties[PS2Constants::IOP::Exceptions::NUMBER_EXCEPTIONS] =
+	static constexpr ExceptionProperties_t ExceptionProperties[PS2Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS] =
 	{
 		{ "EX_INTERRUPT",                            0, 0 },
 		{ "EX_TLB_MODIFIED",                         1, 1 },

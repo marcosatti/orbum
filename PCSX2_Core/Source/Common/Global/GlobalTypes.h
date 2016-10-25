@@ -29,7 +29,7 @@ Do not change the ordering of the unions inside the s/u128 types as they have be
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
-typedef int64_t s64; // Not actually used.
+typedef int64_t s64;
 
 // Unsigned types
 typedef uint8_t u8;

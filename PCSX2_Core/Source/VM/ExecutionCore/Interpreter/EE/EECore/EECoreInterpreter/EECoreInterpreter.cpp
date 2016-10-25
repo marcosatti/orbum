@@ -16,6 +16,7 @@
 #include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
 #include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/PS2Resources/Clock/Clock_t.h"
@@ -112,7 +113,7 @@ void EECoreInterpreter::checkCountTimerEvent() const
 	if (EECore->COP0->Count->readWordU() >= EECore->COP0->Compare->readWordU())
 	{
 		// Set the IP7 field of the COP0.Cause register.
-		EECore->COP0->Cause->setFieldValue(COP0RegisterCause_t::Fields::IP7, 1);
+		EECore->COP0->Cause->setFieldValue(EECore_COP0RegisterCause_t::Fields::IP7, 1);
 
 		// Set exception state.
 		IntExceptionInfo_t intEx = { 0, 0, 1 };
@@ -131,7 +132,7 @@ u32 EECoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if defined(BUILD_DEBUG)
+#if (0) // defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x838dc;
 	static u32 DEBUG_PC_BREAKPOINT = 0x9fc43070;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)

@@ -82,10 +82,10 @@ s64 IOPCoreInterpreter::executeInstruction()
 	mInstructionInfo = IOPInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0xb3a0;
-	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4af38;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0xb500;
+	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4a39c;
 
-	if (DEBUG_LOOP_COUNTER > DEBUG_LOOP_BREAKPOINT)
+	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
 		logDebug("(%s, %d) IOPCore loop 0x%llX: "
@@ -101,6 +101,11 @@ s64 IOPCoreInterpreter::executeInstruction()
 		}
 	}
 #endif
+
+	if (IOPCore->R3000->PC->getPCValue() == 0x00000890)
+	{
+		logDebug("(%s, %d) Stop condition hit.", __FILENAME__, __LINE__);
+	}
 
 	// Run the instruction, which is based on the implementation index.
  	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();

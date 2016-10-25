@@ -68,12 +68,13 @@ public:
 	std::shared_ptr<VPU_t> VPU;
 
 	/*
-	Main Memory (32MB)
+	Main Memory (32MB). Allocated at 0x00000000.
 	*/
 	std::shared_ptr<MappedMemory_t> MainMemory;
 
 	/* 
-	Boot ROM (4MB)
+	Boot ROM (4MB). Allocated at 0x1FC00000.
+	Also mapped in the IOP physical memory space at 0x1FC00000.
 	*/
 	std::shared_ptr<BootROM_t> BootROM;
 

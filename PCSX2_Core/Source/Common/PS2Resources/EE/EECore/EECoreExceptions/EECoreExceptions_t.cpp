@@ -8,6 +8,7 @@
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/EECore/EECore_t.h"
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
+#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
 
 EECoreExceptions_t::EECoreExceptions_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources), 
@@ -37,15 +38,15 @@ void EECoreExceptions_t::setException(const EECoreException_t& eeCoreException)
 	if (eeCoreException.mExType == EECoreException_t::ExType::EX_INTERRUPT)
 	{
 		// Check if the Status.IE and Status.EIE bit is set. Status.EXL and Status.ERL must also be 0.
-		if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IE)
-			&& EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::EIE)
-			&& !EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::EXL)
-			&& !EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL))
+		if (EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::IE)
+			&& EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::EIE)
+			&& !EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::EXL)
+			&& !EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL))
 		{
 			// Now check if the Status.IM corresponding bit is set.
 			if (eeCoreException.mIntExceptionInfo.mInt0)
 			{
-				if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM) & 0x1)
+				if (EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::IM) & 0x1)
 				{
 					Exception = eeCoreException;
 					ExceptionOccurred = true;
@@ -53,7 +54,7 @@ void EECoreExceptions_t::setException(const EECoreException_t& eeCoreException)
 			}
 			else if (eeCoreException.mIntExceptionInfo.mInt1)
 			{
-				if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM) & 0x2)
+				if (EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::IM) & 0x2)
 				{
 					Exception = eeCoreException;
 					ExceptionOccurred = true;
@@ -61,7 +62,7 @@ void EECoreExceptions_t::setException(const EECoreException_t& eeCoreException)
 			}
 			else if (eeCoreException.mIntExceptionInfo.mTimerInt)
 			{
-				if (EECore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::IM7))
+				if (EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::IM7))
 				{
 					Exception = eeCoreException;
 					ExceptionOccurred = true;

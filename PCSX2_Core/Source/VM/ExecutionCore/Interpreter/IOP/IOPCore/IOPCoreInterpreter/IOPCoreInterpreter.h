@@ -200,7 +200,7 @@ private:
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index.
 	See IOPInstructionTable and "IOP Instruction Implementation Register.xlsm" for more details.
 	*/
-	void(IOPCoreInterpreter::*const IOP_INSTRUCTION_TABLE[PS2Constants::IOP::NUMBER_IOP_INSTRUCTIONS])() =
+	void(IOPCoreInterpreter::*const IOP_INSTRUCTION_TABLE[PS2Constants::IOP::IOPCore::NUMBER_IOP_INSTRUCTIONS])() =
 	{
 		&IOPCoreInterpreter::INSTRUCTION_UNKNOWN,
 		&IOPCoreInterpreter::J,

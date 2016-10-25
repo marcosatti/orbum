@@ -9,6 +9,7 @@
 #include "Common/PS2Resources/IOP/IOP_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/Types/IOPCore_COP0_Registers_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 #include "Common/Util/MMUUtil/MMUUtil.h"
@@ -37,6 +38,13 @@ u8 IOPCoreMMUHandler::readByteU(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) 
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeByteU(PS2PhysicalAddress, value);	
@@ -53,6 +61,13 @@ s8 IOPCoreMMUHandler::readByteS(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeByteS(PS2PhysicalAddress, value);
@@ -69,6 +84,13 @@ u16 IOPCoreMMUHandler::readHwordU(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordU(PS2PhysicalAddress, value);
@@ -85,6 +107,13 @@ s16 IOPCoreMMUHandler::readHwordS(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) 
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeHwordS(PS2PhysicalAddress, value);
@@ -101,6 +130,13 @@ u32 IOPCoreMMUHandler::readWordU(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeWordU(PS2PhysicalAddress, value);
@@ -117,6 +153,13 @@ s32 IOPCoreMMUHandler::readWordS(u32 PS2MemoryAddress)
 
 void IOPCoreMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
 {
+	// Check if isolate cache is turned on, don't write when it is.
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+	{
+		logDebug("IOP attempted write with IsC set - discarding!");
+		return;
+	}
+
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
 	if (!mHasExceptionOccurred)
 		 getVM()->getResources()->IOP->PhysicalMMU->writeWordS(PS2PhysicalAddress, value);
@@ -135,7 +178,7 @@ const IOPCoreException_t & IOPCoreMMUHandler::getExceptionInfo()
 	mExceptionInfo.mTLBExceptionInfo =
 	{
 		mPS2VirtualAddress,
-		getVM()->getResources()->IOP->IOPCore->COP0->Context->getFieldValue(COP0RegisterContext_t::Fields::PTEBase),
+		getVM()->getResources()->IOP->IOPCore->COP0->Context->getFieldValue(IOPCore_COP0RegisterContext_t::Fields::PTEBase),
 		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
 		0, // mTLBEntryInfo->mASID, 
 		0  // getVM()->getResources()->IOP->TLB->getNewTLBIndex()
@@ -158,15 +201,10 @@ u32 IOPCoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
 
 void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 {
-	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
-	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
-	//  but I'm confident this is what it meant (I also dont see another way to do it).
-	// Note: In the kernel context mode, for an VA in kseg0 and kseg1 a physical address is immediately returned, as they are both unmapped - no translation occurs.
+	// TODO: Check correctness.
 
-	// BIG NOTE: where the lower bound of memory segments is 0x00000000, it has been omitted from the test statement (as it is implied through the use of u32).
-
-	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
-	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
+	// Step 1 is to determine which CPU context we are in (user or kernel).
+	// User mode when KUc = 1, kernel when KUc = 0.
 	if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingUserMode())
 	{
 		// Operating in user mode.
@@ -190,36 +228,11 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 			return;
 		}
 	}
-	else if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingSupervisorMode())
-	{
-		// Operating in supervisor mode.
-		// First we check if the VA is within the context bounds.
-		if ((mPS2VirtualAddress >= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_LOWER_BOUND_2 && mPS2VirtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_1)
-			|| (mPS2VirtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_2))
-		{
-			getPS2PhysicalAddress_Stage2();
-		}
-		else
-		{
-			// Throw address error if not within bounds.
-			if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
-			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
-			else
-			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = address error).");
-
-			// Update state and return.
-			mHasExceptionOccurred = true;
-			return;
-		}
-	} 
 	else if (getVM()->getResources()->IOP->IOPCore->COP0->isOperatingKernelMode())
 	{
 		// Operating in kernel mode.
 		// We do not need to check if the VA is valid - it is always valid over the full 4GB (U32) address space. However, kseg0 and kseg1 are not mapped, 
-		//  and instead directly translate to physical addresses from 0x00000000 -> 0x1FFFFFFF (we need to emulate this). We also need to test for if
-		//  Status.ERL == 1, in which case kuseg is unmapped. See EE Core Users Manual page 113 (especially notes).
+		//  and instead directly translate to physical addresses from 0x00000000 -> 0x1FFFFFFF (we need to emulate this).
 
 		// Test for kseg0
 		if (mPS2VirtualAddress >= PS2Constants::MIPS::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && mPS2VirtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
@@ -236,16 +249,6 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 			// We are in kseg1, so to get the physical address we just minus the kseg1 base address of 0xA0000000.
 			mPS2PhysicalAddress = (mPS2VirtualAddress - PS2Constants::MIPS::MMU::VADDRESS_KERNEL_LOWER_BOUND_3);
 			return;
-		}
-		
-		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(COP0RegisterStatus_t::Fields::ERL) == 1) {
-			if (mPS2VirtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
-			{
-				// We are in kuseg unmapped region, so just return the VA.
-				mPS2PhysicalAddress = mPS2VirtualAddress;
-				return;
-			}
 		}
 		
 		// Undocumented: the IOP seems to access the addresses 0xFFC00000 - 0xFFFFFFFF as if it was trying to access the BIOS (0x1FC00000).

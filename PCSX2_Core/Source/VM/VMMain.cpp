@@ -2,28 +2,26 @@
 
 #include <memory>
 
+#include "Common/Global/Globals.h"
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/Types/BootROM_t.h"
 
-VMMain::VMMain(ExecutionCoreType executionCoreType, const std::string & bootROMPath) : 
+VMMain::VMMain(const VMOptions_t & vmOptions) : 
 	mStatus(VMMain::VMStatus::CREATED),
-	mExecutionCoreType(executionCoreType),
-	mBootROMPath(bootROMPath)
+	mVMOptions(vmOptions)
 {
 	// Initialise everything.
 	Reset();
 }
 
-void VMMain::LoadExecutable(std::string&& excutablePath) const
-{
-	// TODO: Implement.
-}
-
 void VMMain::Reset()
 {
+	// Set the log delegate function.
+	logDelegate = mVMOptions.LOG_DELEGATE_FUNCPTR;
+
 	// Initalise VM.
 	initaliseResources();
 	initaliseExecutionCore();
@@ -78,14 +76,14 @@ void VMMain::initaliseResources()
 
 void VMMain::initaliseExecutionCore()
 {
-	switch (mExecutionCoreType)
+	switch (mVMOptions.OPTION_EXECUTION_CORE)
 	{
-	case ExecutionCoreType::INTERPRETER:
+	case ExecutionCore_t::Interpreter:
 	{
 		mExecutionCoreComponent = std::make_unique<Interpreter>(this);
 		break;
 	}
-	case ExecutionCoreType::RECOMPILER:
+	case ExecutionCore_t::Recompiler:
 	{
 		// TODO: Implement.
 		break;
@@ -95,5 +93,5 @@ void VMMain::initaliseExecutionCore()
 
 void VMMain::initaliseBootROM() const
 {
-	getResources()->EE->BootROM->loadBIOS(mBootROMPath);
+	getResources()->EE->BootROM->loadBIOS(mVMOptions.BOOT_ROM_PATH);
 }

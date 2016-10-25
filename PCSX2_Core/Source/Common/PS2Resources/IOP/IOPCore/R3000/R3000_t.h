@@ -49,7 +49,7 @@ public:
 	*/
 	std::shared_ptr<ZeroRegister32_t> ZeroRegister;
 	std::shared_ptr<LinkRegister32_t> LinkRegister;
-	std::shared_ptr<Register32_t> GPR[PS2Constants::IOP::R3000A::NUMBER_GP_REGISTERS];
+	std::shared_ptr<Register32_t> GPR[PS2Constants::IOP::IOPCore::R3000A::NUMBER_GP_REGISTERS];
 
 	/*
 	The HI and LO registers.
