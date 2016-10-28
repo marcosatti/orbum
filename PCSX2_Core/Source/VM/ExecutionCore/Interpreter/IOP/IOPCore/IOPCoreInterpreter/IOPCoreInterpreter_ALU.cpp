@@ -26,9 +26,7 @@ void IOPCoreInterpreter::ADD()
 		return;
 	}
 
-	const s32 result = static_cast<s32>(source1Reg->readWordS() + source2Reg->readWordS());
-
-	destReg->writeWordS(result);
+	destReg->writeWordS(source1Reg->readWordS() + source2Reg->readWordS());
 }
 
 void IOPCoreInterpreter::ADDI()
@@ -47,9 +45,7 @@ void IOPCoreInterpreter::ADDI()
 		return;
 	}
 
-	const s32 result = static_cast<s32>(sourceReg->readWordS() + imm);
-
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(sourceReg->readWordS() + imm));
 }
 
 void IOPCoreInterpreter::ADDIU()
@@ -58,7 +54,7 @@ void IOPCoreInterpreter::ADDIU()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getIRt()];
 	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getIRs()];
 
-	destReg->writeWordS(static_cast<s32>(sourceReg->readWordS() + getInstruction().getIImmS()));
+	destReg->writeWordS(sourceReg->readWordS() + getInstruction().getIImmS());
 }
 
 void IOPCoreInterpreter::ADDU()
@@ -68,7 +64,7 @@ void IOPCoreInterpreter::ADDU()
 	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 
-	destReg->writeWordS(static_cast<s32>(source1Reg->readWordS() + source2Reg->readWordS()));
+	destReg->writeWordS(source1Reg->readWordS() + source2Reg->readWordS());
 }
 
 void IOPCoreInterpreter::SUB()
@@ -87,9 +83,7 @@ void IOPCoreInterpreter::SUB()
 		return;
 	}
 
-	const s32 result = static_cast<s32>(source1Reg->readWordS() - source2Reg->readWordS());
-
-	destReg->writeWordS(result);
+	destReg->writeWordS(source1Reg->readWordS() - source2Reg->readWordS());
 }
 
 void IOPCoreInterpreter::SUBU()
@@ -99,7 +93,7 @@ void IOPCoreInterpreter::SUBU()
 	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRs()];
 	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 
-	destReg->writeWordU(static_cast<s32>(source1Reg->readWordU() - source2Reg->readWordU()));
+	destReg->writeWordU(source1Reg->readWordU() - source2Reg->readWordU());
 }
 
 void IOPCoreInterpreter::DIV()
@@ -113,7 +107,7 @@ void IOPCoreInterpreter::DIV()
 	if (source1Reg->readWordS() == Constants::VALUE_S32_MIN &&
 		source2Reg->readWordS() == -1)
 	{
-		getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordS(static_cast<s32>(Constants::VALUE_S32_MIN));
+		getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordS(Constants::VALUE_S32_MIN);
 		getVM()->getResources()->IOP->IOPCore->R3000->HI->writeWordS(static_cast<s32>(0));
 	}
 	// Check for divide by 0, in which case result is undefined (do nothing).
@@ -164,9 +158,9 @@ void IOPCoreInterpreter::MULT()
 	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 
 	s64 result = source1Reg->readWordS() * source2Reg->readWordS();
-	destReg->writeWordS(static_cast<s32>(static_cast<s32>(result & 0xFFFFFFFF)));
-	getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordS(static_cast<s32>(static_cast<s32>(result & 0xFFFFFFFF)));
-	getVM()->getResources()->IOP->IOPCore->R3000->HI->writeWordS(static_cast<s32>(static_cast<s32>(result >> 32)));
+	destReg->writeWordS(static_cast<s32>(result & 0xFFFFFFFF));
+	getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordS(static_cast<s32>(result & 0xFFFFFFFF));
+	getVM()->getResources()->IOP->IOPCore->R3000->HI->writeWordS(static_cast<s32>(result >> 32));
 }
 
 void IOPCoreInterpreter::MULTU()
@@ -178,9 +172,9 @@ void IOPCoreInterpreter::MULTU()
 	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 
 	u64 result = source1Reg->readWordU() * source2Reg->readWordU();
-	destReg->writeWordU(static_cast<u32>(static_cast<u32>(result & 0xFFFFFFFF)));
-	getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordU(static_cast<u32>(static_cast<u32>(result & 0xFFFFFFFF)));
-	getVM()->getResources()->IOP->IOPCore->R3000->HI->writeWordU(static_cast<u32>(static_cast<u32>(result >> 32)));
+	destReg->writeWordU(static_cast<u32>(result & 0xFFFFFFFF));
+	getVM()->getResources()->IOP->IOPCore->R3000->LO->writeWordU(static_cast<u32>(result & 0xFFFFFFFF));
+	getVM()->getResources()->IOP->IOPCore->R3000->HI->writeWordU(static_cast<u32>(result >> 32));
 }
 
 void IOPCoreInterpreter::SLL()
@@ -191,8 +185,7 @@ void IOPCoreInterpreter::SLL()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
 	u8 shamt = getInstruction().getRShamt();
 
-	s32 result = static_cast<s32>(source1Reg->readWordU() << shamt);
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(source1Reg->readWordU() << shamt));
 }
 
 void IOPCoreInterpreter::SLLV()
@@ -204,8 +197,7 @@ void IOPCoreInterpreter::SLLV()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
-	s32 result = static_cast<s32>(source1Reg->readWordU() << shamt);
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(source1Reg->readWordU() << shamt));
 }
 
 void IOPCoreInterpreter::SRA()
@@ -216,8 +208,7 @@ void IOPCoreInterpreter::SRA()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
 	u8 shamt = getInstruction().getRShamt();
 
-	s32 result = static_cast<s32>(source1Reg->readWordS() >> shamt);
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(source1Reg->readWordS() >> shamt));
 }
 
 void IOPCoreInterpreter::SRAV()
@@ -229,8 +220,7 @@ void IOPCoreInterpreter::SRAV()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
-	s32 result = static_cast<s32>(source1Reg->readWordS() >> shamt);
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(source1Reg->readWordS() >> shamt));
 }
 
 void IOPCoreInterpreter::SRL()
@@ -241,8 +231,7 @@ void IOPCoreInterpreter::SRL()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
 	u8 shamt = getInstruction().getRShamt();
 
-	s32 result = static_cast<s32>(source1Reg->readWordU() >> shamt);
-	destReg->writeWordS(result);
+	destReg->writeWordS(static_cast<s32>(source1Reg->readWordU() >> shamt));
 }
 
 void IOPCoreInterpreter::SRLV()

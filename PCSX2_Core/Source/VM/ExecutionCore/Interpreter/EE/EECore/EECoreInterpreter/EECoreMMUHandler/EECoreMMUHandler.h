@@ -7,7 +7,7 @@
 
 /*
 MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
- converting a PS2 physical address -> client memory address).
+ converting a PS2 physical address -> host memory address).
 It handles any requests from reading or writing from a virtual address.
 
 Any request performed must be followed by a check for any errors (similar to how Linux ERRNO handling works). This is because the PS2's MMU may generate an exception,
@@ -29,7 +29,7 @@ public:
 	const std::vector<ClockSource_t> & getClockSources() override;
 
 	/*
-	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.
+	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the host memory address, and then operates on the value.
 	This is the main access point that any PS2 reads or writes will come through. On error, read functions will return 0, and write functions will not perform the operation.
 	To see what error it is, use getErrorInfo() defined below.
 	TODO: Add in address error exceptions. These will occur when an unaligned access is tried. See for example the instruction LDL on page 72 of the EE Core Instruction manual.

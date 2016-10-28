@@ -27,146 +27,146 @@ MappedMemory_t::~MappedMemory_t()
 
 u8 MappedMemory_t::readByteU(u32 storageIndex)
 {
-	// Get client storage address.
-	u8 * clientMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeByteU(u32 storageIndex, u8 value)
 {
-	// Get client storage address.
-	u8 * clientMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 s8 MappedMemory_t::readByteS(u32 storageIndex)
 {
-	// Get client storage address.
-	s8 * clientMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s8 * hostMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeByteS(u32 storageIndex, s8 value)
 {
-	// Get client storage address.
-	s8 * clientMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s8 * hostMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 u16 MappedMemory_t::readHwordU(u32 storageIndex)
 {
-	// Get client storage address.
-	u16 * clientMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeHwordU(u32 storageIndex, u16 value)
 {
-	// Get client storage address.
-	u16 * clientMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 s16 MappedMemory_t::readHwordS(u32 storageIndex)
 {
-	// Get client storage address.
-	s16 * clientMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s16 * hostMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeHwordS(u32 storageIndex, s16 value)
 {
-	// Get client storage address.
-	s16 * clientMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s16 * hostMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 u32 MappedMemory_t::readWordU(u32 storageIndex)
 {
-	// Get client storage address.
-	u32 * clientMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeWordU(u32 storageIndex, u32 value)
 {
-	// Get client storage address.
-	u32 * clientMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 s32 MappedMemory_t::readWordS(u32 storageIndex)
 {
-	// Get client storage address.
-	s32 * clientMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s32 * hostMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeWordS(u32 storageIndex, s32 value)
 {
-	// Get client storage address.
-	s32 * clientMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s32 * hostMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 u64 MappedMemory_t::readDwordU(u32 storageIndex)
 {
-	// Get client storage address.
-	u64 * clientMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeDwordU(u32 storageIndex, u64 value)
 {
-	// Get client storage address.
-	u64 * clientMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 s64 MappedMemory_t::readDwordS(u32 storageIndex)
 {
-	// Get client storage address.
-	s64 * clientMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s64 * hostMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
 
 	// Read the value.
-	return *clientMemoryAddress;
+	return *hostMemoryAddress;
 }
 
 void MappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
 {
-	// Get client storage address.
-	s64 * clientMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
+	// Get host storage address.
+	s64 * hostMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
 
 	// Write the value.
-	*clientMemoryAddress = value;
+	*hostMemoryAddress = value;
 }
 
 size_t MappedMemory_t::getStorageSize()
@@ -174,7 +174,7 @@ size_t MappedMemory_t::getStorageSize()
 	return mStorageSize;
 }
 
-void* MappedMemory_t::getClientMemoryAddress() const
+void* MappedMemory_t::getHostMemoryAddress() const
 {
 	return reinterpret_cast<void*>(mStorage);
 }

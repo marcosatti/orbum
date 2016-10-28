@@ -20,6 +20,11 @@ public:
 	std::shared_ptr<IOPCore_t> IOPCore;
 
 	/*
+	The IOP physical memory space.
+	*/
+	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
+
+	/*
 	IOP Main Memory (2MB). Allocated at 0x00000000.
 	*/
 	std::shared_ptr<MappedMemory_t> MainMemory;
@@ -35,9 +40,5 @@ public:
 	*/
 	std::shared_ptr<MappedMemory_t> IOP_HW_REGISTERS;
 
-	/*
-	The IOP physical memory space.
-	*/
-	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
 
 };

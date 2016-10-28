@@ -20,9 +20,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Frontend", "PCSX2_Frontend\PCSX2_Frontend.vcxproj", "{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Optimised_More|x64 = Debug_Optimised_More|x64
 		Debug_Optimised_More|x86 = Debug_Optimised_More|x86

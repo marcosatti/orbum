@@ -30,10 +30,10 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	IPU(std::make_shared<IPU_t>(getRootResources())),
 	GIF(std::make_shared<GIF_t>(getRootResources())),
 	VPU(std::make_shared<VPU_t>(getRootResources())),
+	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_512MB, Constants::SIZE_4MB, Constants::SIZE_16B)),
 	MainMemory(std::make_shared<MappedMemory_t>(PS2Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory", PS2Constants::EE::MainMemory::PADDRESS_MAIN_MEMORY)),
 	BootROM(std::make_shared<BootROM_t>()),
-	UNKNOWN_1A00(std::make_shared<DeadMMemory_t>(0x10000, "Unknown: 1A00", 0x1A000000)),
-	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_512MB, Constants::SIZE_4MB, Constants::SIZE_16B)),
+	UNKNOWN_1A000000(std::make_shared<DeadMMemory_t>(0x10000, "Unknown: 1A00", 0x1A000000)),
 
 	// Registers.
 	EE_REGISTER_VIF0_FIFO(std::make_shared<MappedMemory_t>(0x10, "FIFO: VIF0_FIFO", 0x10004000)),

@@ -3,7 +3,8 @@
 #include "Common/Global/GlobalMacros.h"
 
 /*
-Define if the emulator should log client memory allocations or not. Only enabled when a debug build is selected.
+Define if the emulator should log host memory allocations or not. 
+Only enabled when a debug build is selected.
 */
 #if defined(BUILD_DEBUG)
  #define DEBUG_LOG_ALLOCATIONS 0
@@ -24,6 +25,8 @@ Only enabled when a debug build is selected.
 
 /*
 Define if the emulator should print a warning when a read only mapped memory object is written to.
+This does not always indicate abnormal behaviour!
+Only enabled when a debug build is selected.
 */
 #if defined(BUILD_DEBUG)
 #define DEBUG_LOG_RO_MM_WRITES 0

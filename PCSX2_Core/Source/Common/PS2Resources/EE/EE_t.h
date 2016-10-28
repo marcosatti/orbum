@@ -68,6 +68,11 @@ public:
 	std::shared_ptr<VPU_t> VPU;
 
 	/*
+	The EE physical memory space.
+	*/
+	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
+
+	/*
 	Main Memory (32MB). Allocated at 0x00000000.
 	*/
 	std::shared_ptr<MappedMemory_t> MainMemory;
@@ -81,12 +86,7 @@ public:
 	/*
 	Other memory.
 	*/
-	std::shared_ptr<DeadMMemory_t> UNKNOWN_1A00;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
-
-	/*
-	The EE physical memory space.
-	*/
-	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
+	std::shared_ptr<DeadMMemory_t> UNKNOWN_1A000000;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
 
 	/*
 	EE registers, defined on page 21 onwards of the EE Users Manual. 

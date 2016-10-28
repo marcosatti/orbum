@@ -44,10 +44,10 @@ public:
 	virtual size_t getStorageSize();
 
 	/*
-	Gets the base client memory address, needed for special VM functions such as loading the BIOS (BootROM). Not normally used, and should never
+	Gets the base host memory address, needed for special VM functions such as loading the BIOS (BootROM). Not normally used, and should never
 	 be used in favour of the above read/write functions unless you absolutely have to.
 	*/
-	virtual void * getClientMemoryAddress() const;
+	virtual void * getHostMemoryAddress() const;
 
 	/*
 	Get the storage mnemonic, used for debug.

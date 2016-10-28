@@ -57,7 +57,7 @@ void PS2Resources_t::mapPhysicalMemory_EE() const
 		EE->PhysicalMMU->mapMemory(EE->BootROM);
 
 		// Unknown memory.
-		EE->PhysicalMMU->mapMemory(EE->UNKNOWN_1A00);
+		EE->PhysicalMMU->mapMemory(EE->UNKNOWN_1A000000);
 	}
 
 	// EE Registers.

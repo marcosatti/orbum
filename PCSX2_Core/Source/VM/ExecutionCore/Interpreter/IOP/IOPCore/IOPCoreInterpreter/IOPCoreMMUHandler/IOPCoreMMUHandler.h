@@ -36,7 +36,7 @@ public:
 	const std::vector<ClockSource_t> & getClockSources() override;
 
 	/*
-	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the client memory address, and then operates on the value.
+	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the host memory address, and then operates on the value.
 	This is the main access point that any PS2 reads or writes will come through. On error, read functions will return 0, and write functions will not perform the operation.
 	To see what error it is, use getErrorInfo() defined below.
 	*/

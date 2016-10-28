@@ -13,7 +13,7 @@ class IOPCoreExceptionHandler;
 struct MIPSInstructionInfo_t;
 
 /*
-The IOP Interpreter. This is identical to a PS1 system.
+The IOP Interpreter. This is similar to a PS1 system - as such you can find resources on the internet for the PS1.
 The clock speed of the IOP is roughly 1/8th that of the EE Core (~36 MHz, increased from the original PSX clock speed of ~33.8 MHz).
 
 No official documentation, but there is resources available on the internet documenting the R3000 and other parts.

@@ -13,7 +13,7 @@ BootROM_t::BootROM_t() :
 
 void BootROM_t::loadBIOS(const std::string& biosPath) const
 {
-	char * memoryBase = reinterpret_cast<char*>(getClientMemoryAddress());
+	char * memoryBase = reinterpret_cast<char*>(getHostMemoryAddress());
 	std::ifstream file(biosPath, std::ifstream::binary);
 	if (file.fail())
 		throw std::runtime_error("initaliseBootROM(): tried to open BIOS file, but it failed! Check file exists and has read permissions.");
