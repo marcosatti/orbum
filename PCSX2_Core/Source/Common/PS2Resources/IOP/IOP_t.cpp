@@ -17,27 +17,9 @@
 IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 	IOPCore(std::make_shared<IOPCore_t>(getRootResources())),
-	IOPMemory(std::make_shared<MappedMemory_t>(PS2Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory", PS2Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY)),
-	IOP_HW_Registers(std::make_shared<DebugMMemory_t>(0x2000, "IOP HW Memory", 0x1F801000)),
+	MainMemory(std::make_shared<MappedMemory_t>(PS2Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory", PS2Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY)),
+	ParallelPort(std::make_shared<DebugMMemory_t>(PS2Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port", PS2Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT)),
+	IOP_HW_REGISTERS(std::make_shared<DebugMMemory_t>(0x2000, "IOP HW Memory", 0x1F801000)),
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_16B))
 {
-	// Map the IOP physical space.
-
-	// IOP Memory.
-	{
-		// Main Memory
-		PhysicalMMU->mapMemory(IOPMemory);
-
-		// Boot ROM
-		PhysicalMMU->mapMemory(getRootResources()->EE->BootROM);
-
-		// Scratchpad Memory
-		PhysicalMMU->mapMemory(IOPCore->ScratchpadMemory);
-
-		PhysicalMMU->mapMemory(IOP_HW_Registers);
-
-		PhysicalMMU->mapMemory(
-			std::make_shared<ImageMappedMemory_t>("Image: 0x1FC00000", 0xFFC00000, 0x400000, 0x400000, 0x1FC00000, PhysicalMMU) // Image of 0x1FC00000.
-		);
-	}
 }

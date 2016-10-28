@@ -3,10 +3,10 @@
 #include "Common/PS2Resources/Types/MappedMemory/ImageMappedMemory_t.h"
 #include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
 
-ImageMappedMemory_t::ImageMappedMemory_t(const char* const mnemonic, const u32 & PS2PhysicalAddress, const size_t& imageSize, const size_t & size, const u32 & imagePS2PhysicalAddress, std::shared_ptr<PhysicalMMU_t> physicalMMU) :
+ImageMappedMemory_t::ImageMappedMemory_t(const char* const mnemonic, const u32 & PS2PhysicalAddress, const size_t& imageSize, const size_t & totalSize, const u32 & imagePS2PhysicalAddress, std::shared_ptr<PhysicalMMU_t> physicalMMU) :
 	MappedMemory_t(0, mnemonic, PS2PhysicalAddress),
 	mImageSize(imageSize),
-	mTotalSize(size),
+	mTotalSize(totalSize),
 	mImagePS2PhysicalAddress(imagePS2PhysicalAddress),
 	mPhysicalMMU(physicalMMU)
 {

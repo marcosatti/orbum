@@ -29,16 +29,27 @@ Marco.
 
 ## Current status
 
-As of 24/09/16:
+As of 28/10/16:
 - Main loop & VM (including timing of components and the host MMU) implemented.
-- EE Core mostly implemented (including the PS2 MMU). No handling of the cache modes supported.
-- EE Timers and INTC implemented, DMAC to follow and anything else.
+- EE Core mostly implemented. No handling of the cache modes supported.
+- EE Timers, INTC, DMAC implemented.
+- IOP Core mostly implemented.
 - GS not implemented.
 - VU's not implemented.
 
-Interpreter currently runs correct (using scph10000.bin as bios) up until DEBUG_PC_BREAKPOINT = 0x9fc43070 (EE Core PC), where DEBUG_LOOP_BREAKPOINT = 0xE79894 (number of EE Core emulation loops, see source code).
-This is done by checking against PCSX2's EE Core registers.
-
+Starting to see some promising debug messages :)
+```
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize memory (rev:3.17, ctm:393Mhz, cpuclk:295Mhz )
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Total accessable memory size: 32 MB (B:2:8:0)
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # TLB spad=0 kernel=1:12 default=13:30 extended=31:38
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize Start.
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize GS ...
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize INTC ...
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize TIMER ...
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize DMAC ...
+[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize VU1 ...
+(Crash)
+```
 ## Build Instructions
 
 Currently, only compiling on Visual Studio 2015 (community edition, update 2 +) is supported. Both x86-32 and x86-64 supported currently.
@@ -47,4 +58,4 @@ See the solution file PCSX2_Rewrite.sln.
 The project uses the following libraries as git submodules:
 (you will need to 'git submodule init' etc, see https://chrisjean.com/git-submodules-adding-using-removing-and-updating/ for basic instructions).
 
-- Google test library (only for PCSX2_Core_UnitTest)
+- Google test library (only for PCSX2_Core_UnitTest, you can build the Core and Frontend projects without)

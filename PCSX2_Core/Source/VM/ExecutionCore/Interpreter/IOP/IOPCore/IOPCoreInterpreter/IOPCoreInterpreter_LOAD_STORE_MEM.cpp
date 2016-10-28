@@ -8,7 +8,6 @@
 #include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/IOPCoreExceptions_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
 #include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 
@@ -176,7 +175,7 @@ void IOPCoreInterpreter::LWR()
 
 	u32 alignedValue = getMMUHandler()->readWordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
-																// Check for MMU error and do not continue if true.
+	// Check for MMU error and do not continue if true.
 	if (getMMUHandler()->hasExceptionOccurred())
 	{
 		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;

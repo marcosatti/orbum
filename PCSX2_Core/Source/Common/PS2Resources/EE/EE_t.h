@@ -79,6 +79,11 @@ public:
 	std::shared_ptr<BootROM_t> BootROM;
 
 	/*
+	Other memory.
+	*/
+	std::shared_ptr<DeadMMemory_t> UNKNOWN_1A00;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
+
+	/*
 	The EE physical memory space.
 	*/
 	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
@@ -106,4 +111,5 @@ public:
 	std::shared_ptr<MappedMemory32_t> EE_REGISTER_F420;         // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F430.
 	std::shared_ptr<EERegisterMCH_t>  EE_REGISTER_MCH;		    // Register "MCH"                @ 0x1000F430 -> 0x1000F450. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
 	std::shared_ptr<MappedMemory_t>   EE_REGISTER_F450;         // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F500.  
+
 };

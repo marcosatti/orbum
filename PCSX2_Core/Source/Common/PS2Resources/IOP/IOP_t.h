@@ -20,15 +20,20 @@ public:
 	std::shared_ptr<IOPCore_t> IOPCore;
 
 	/*
-	IOP Memory (2MB). Allocated at 0x00000000.
+	IOP Main Memory (2MB). Allocated at 0x00000000.
 	*/
-	std::shared_ptr<MappedMemory_t> IOPMemory;
+	std::shared_ptr<MappedMemory_t> MainMemory;
+
+	/*
+	IOP Parallel Port IO (?, 64KB). Allocated at 0x1F000000.
+	*/
+	std::shared_ptr<MappedMemory_t> ParallelPort;
 
 	/*
 	HW mapped registers (64KB or 8KB?). Allocated at 0x1F801000.
 	DEBUG
 	*/
-	std::shared_ptr<DebugMMemory_t> IOP_HW_Registers;
+	std::shared_ptr<MappedMemory_t> IOP_HW_REGISTERS;
 
 	/*
 	The IOP physical memory space.

@@ -134,6 +134,15 @@ public:
 				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = 0x00000400; // 1KB
 			};
 
+			struct MMU
+			{
+				static constexpr u32 VADDRESS_SPECIAL_1_LOWER_BOUND = 0x00000000;
+				static constexpr u32 VADDRESS_SPECIAL_1_UPPER_BOUND = 0x001FFFFF;
+
+				static constexpr u32 VADDRESS_SPECIAL_2_LOWER_BOUND = 0xFFC00000;
+				static constexpr u32 VADDRESS_SPECIAL_2_UPPER_BOUND = 0xFFFFFFFF;
+			};
+
 			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
 		};
 
@@ -142,6 +151,13 @@ public:
 			// IOP Memory. No official documentation - from PCSX2. 
 			static constexpr u32 PADDRESS_IOP_MEMORY = 0x00000000;
 			static constexpr size_t SIZE_IOP_MEMORY = 0x00200000;
+		};
+
+		struct ParallelPort
+		{
+			// IOP Parallel Port. No official documentation - from online PSX docs.
+			static constexpr u32 PADDRESS_PARALLEL_PORT = 0x00000000;
+			static constexpr size_t SIZE_PARALLEL_PORT = 0x00010000;
 		};
 
 		static constexpr u32 RATIO_PS2CLK_IOP = 8; // IOP (R3000) runs at ~36 MHz.

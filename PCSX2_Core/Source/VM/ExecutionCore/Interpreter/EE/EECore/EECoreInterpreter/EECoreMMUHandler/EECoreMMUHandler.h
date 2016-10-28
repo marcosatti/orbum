@@ -67,7 +67,7 @@ public:
 
 private:
 	/*
-	Exception handling state variables - see above.
+	Exception handling state variables - see hasExceptionOccurred() above.
 	mHasExceptionOccured is set whenever an exception in the MMU occurs, with exception type of mExType.
 	*/
 	bool mHasExceptionOccurred;
@@ -83,13 +83,16 @@ private:
 	u8 mIndexEvenOdd;
 
 	/*
-	Stage 1 of a physical address lookup. See diagram on EE Core Users Manual page 122.
-	Stage 1 tests the PS2VirtualAddress against the context of the CPU, to see if the address if valid. If running in kernel mode, and a kseg0 or kseg1 address is supplied,
-	 the function returns the physical address immediately.
+	Returns the physical address from the given virtual address, by using the 4 stage lookup functions below.
 	Access type information is needed in order to throw the correct exception if an error occurs (eventually it is handled by one of the PS2 bios exception handler vectors).
-	The 
 	*/
-	u32 getPS2PhysicalAddress(u32 PS2VirtualAddress); // Convenience function for Stage 1.
+	u32 getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType accessType);
+
+	/*
+	Stage 1 of a physical address lookup. See diagram on EE Core Users Manual page 122.
+	Stage 1 tests the PS2VirtualAddress against the context of the CPU, to see if the address if valid. 
+	If running in kernel mode, and a kseg0 or kseg1 address is supplied, the function returns the physical address immediately.
+	*/
 	void getPS2PhysicalAddress_Stage1();
 
 	/*

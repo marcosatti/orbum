@@ -20,7 +20,11 @@ EECoreMMUHandler::EECoreMMUHandler(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{},
 	mHasExceptionOccurred(false), 
-	mTLBEntryInfo(&EECoreTLB_t::EMPTY_TLB_ENTRY)
+	mAccessType(READ),
+	mTLBEntryInfo(&EECoreTLB_t::EMPTY_TLB_ENTRY), 
+	mPS2VirtualAddress(0), 
+	mPS2PhysicalAddress(0),
+	mIndexEvenOdd(0)
 {
 }
 
@@ -31,7 +35,7 @@ const std::vector<ClockSource_t>& EECoreMMUHandler::getClockSources()
 
 u8 EECoreMMUHandler::readByteU(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readByteU(PS2PhysicalAddress);
 	else
@@ -40,14 +44,14 @@ u8 EECoreMMUHandler::readByteU(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) 
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeByteU(PS2PhysicalAddress, value);	
 }
 
 s8 EECoreMMUHandler::readByteS(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readByteS(PS2PhysicalAddress);
 	else
@@ -56,14 +60,14 @@ s8 EECoreMMUHandler::readByteS(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeByteS(PS2PhysicalAddress, value);
 }
 
 u16 EECoreMMUHandler::readHwordU(u32 PS2MemoryAddress) 
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readHwordU(PS2PhysicalAddress);
 	else
@@ -72,14 +76,14 @@ u16 EECoreMMUHandler::readHwordU(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeHwordU(PS2PhysicalAddress, value);
 }
 
 s16 EECoreMMUHandler::readHwordS(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readHwordS(PS2PhysicalAddress);
 	else
@@ -88,14 +92,14 @@ s16 EECoreMMUHandler::readHwordS(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) 
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeHwordS(PS2PhysicalAddress, value);
 }
 
 u32 EECoreMMUHandler::readWordU(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readWordU(PS2PhysicalAddress);
 	else
@@ -104,14 +108,14 @@ u32 EECoreMMUHandler::readWordU(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeWordU(PS2PhysicalAddress, value);
 }
 
 s32 EECoreMMUHandler::readWordS(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readWordS(PS2PhysicalAddress);
 	else
@@ -120,14 +124,14 @@ s32 EECoreMMUHandler::readWordS(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeWordS(PS2PhysicalAddress, value);
 }
 
 u64 EECoreMMUHandler::readDwordU(u32 PS2MemoryAddress) 
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readDwordU(PS2PhysicalAddress);
 	else
@@ -136,14 +140,14 @@ u64 EECoreMMUHandler::readDwordU(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeDwordU(u32 PS2MemoryAddress, u64 value)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeDwordU(PS2PhysicalAddress, value);
 }
 
 s64 EECoreMMUHandler::readDwordS(u32 PS2MemoryAddress)
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
 		return getVM()->getResources()->EE->PhysicalMMU->readDwordS(PS2PhysicalAddress);
 	else
@@ -152,7 +156,7 @@ s64 EECoreMMUHandler::readDwordS(u32 PS2MemoryAddress)
 
 void EECoreMMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value) 
 {
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress);
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
 		getVM()->getResources()->EE->PhysicalMMU->writeDwordS(PS2PhysicalAddress, value);
 }
@@ -180,10 +184,11 @@ const EECoreException_t & EECoreMMUHandler::getExceptionInfo()
 	return mExceptionInfo;
 }
 
-u32 EECoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress)
+u32 EECoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType accessType)
 {
-	// Set the virtual address context.
+	// Set the virtual address and access type context.
 	mPS2VirtualAddress = PS2VirtualAddress;
+	mAccessType = accessType;
 
 	// Perform the lookup.
 	getPS2PhysicalAddress_Stage1();
@@ -197,8 +202,6 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
 	//  but I'm confident this is what it meant (I also dont see another way to do it).
 	// Note: In the kernel context mode, for an VA in kseg0 and kseg1 a physical address is immediately returned, as they are both unmapped - no translation occurs.
-
-	// BIG NOTE: where the lower bound of memory segments is 0x00000000, it has been omitted from the test statement (as it is implied through the use of u32).
 
 	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.

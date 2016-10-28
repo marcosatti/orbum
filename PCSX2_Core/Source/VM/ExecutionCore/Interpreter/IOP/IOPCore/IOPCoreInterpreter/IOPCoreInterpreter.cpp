@@ -7,13 +7,13 @@
 #include "Common/PS2Resources/PS2Resources_t.h"
 #include "Common/PS2Resources/IOP/IOP_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
+#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/Types/IOPCore_COP0_Registers_t.h"
 #include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
 #include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
 #include "Common/Tables/IOPInstructionTable/IOPInstructionTable.h"
 #include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -81,8 +81,8 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPInstructionTable::getInstructionInfo(mInstruction);
 
-#if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0xb500;
+#if (0) // defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x36a8c; //0x2aa05;
 	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4a39c;
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -92,7 +92,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
-			IOPCore->R3000->PC->getPCValue(), IOPCore->R3000->mIsInBranchDelay,
+			IOPCore->R3000->PC->getPCValue(), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
 		if (IOPCore->R3000->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
@@ -100,12 +100,13 @@ s64 IOPCoreInterpreter::executeInstruction()
 			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
 		}
 	}
-#endif
 
 	if (IOPCore->R3000->PC->getPCValue() == 0x00000890)
 	{
 		logDebug("(%s, %d) Stop condition hit.", __FILENAME__, __LINE__);
+		//getVM()->setStatus(VMMain::VMStatus::STOPPED);
 	}
+#endif
 
 	// Run the instruction, which is based on the implementation index.
  	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();

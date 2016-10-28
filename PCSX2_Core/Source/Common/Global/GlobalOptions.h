@@ -26,7 +26,7 @@ Only enabled when a debug build is selected.
 Define if the emulator should print a warning when a read only mapped memory object is written to.
 */
 #if defined(BUILD_DEBUG)
-#define DEBUG_LOG_RO_MM_WRITES 1
+#define DEBUG_LOG_RO_MM_WRITES 0
 #else
 #define DEBUG_LOG_RO_MM_WRITES 0
 #endif

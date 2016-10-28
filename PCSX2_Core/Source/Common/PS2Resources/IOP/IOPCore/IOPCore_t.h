@@ -7,7 +7,7 @@
 class R3000_t;
 class IOPCoreCOP0_t;
 class IOPCoreExceptions_t;
-class DebugMMemory_t;
+class MappedMemory_t;
 
 class IOPCore_t : public PS2ResourcesSubobject
 {
@@ -30,9 +30,9 @@ public:
 	std::shared_ptr<IOPCoreExceptions_t> Exceptions;
 
 	/*
-	Scratchpad memory (1KB). Allocated at 0x1F000000.
+	Scratchpad memory (1KB). Allocated at 0x1F800000.
 	*/
-	std::shared_ptr<DebugMMemory_t> ScratchpadMemory;
+	std::shared_ptr<MappedMemory_t> ScratchpadMemory;
 
 };
 

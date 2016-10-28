@@ -30,8 +30,6 @@ class PS2Resources_t
 public:
 	explicit PS2Resources_t();
 
-	// TODO: Fix race condition. Currently within the EE and IOP, they are required to memory map storage outside their own class (ie: EE has to map the GS registers, IOP maps the EE bios). Changing initialisation order currently breaks the emulator.
-
 	/*
 	The Clock class, used to control timing accross components.
 	*/
@@ -54,5 +52,10 @@ public:
 
 
 private:
-
+	/*
+	Initalise the EE and IOP physical memory space. 
+	Has to be done after the sub classes above have been initalised otherwise null pointer errors can occur.
+	*/
+	void mapPhysicalMemory_EE() const;
+	void mapPhysicalMemory_IOP() const;
 };
