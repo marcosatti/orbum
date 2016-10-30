@@ -19,7 +19,6 @@
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
 #include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
-#include "Common/PS2Resources/Clock/Clock_t.h"
 
 using ExType = EECoreException_t::ExType;
 
