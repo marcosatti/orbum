@@ -16,12 +16,12 @@ public:
 	VU memory, defined on page 25 of the EE Users Manual. 
 	*/
 	// 0x110000000
-	std::shared_ptr<MappedMemory_t>    VU0_MEM_Micro0;
-	std::shared_ptr<MappedMemory_t>    VU0_MEM_Mem0;
+	std::shared_ptr<MappedMemory_t>    VU0_MEMORY_Micro0;
+	std::shared_ptr<MappedMemory_t>    VU0_MEMORY_Mem0;
 
 	// 0x11008000
-	std::shared_ptr<MappedMemory_t>    VU1_MEM_Micro1;
-	std::shared_ptr<MappedMemory_t>    VU1_MEM_Mem1;
-	std::shared_ptr<BusErrorMMemory_t> VU1_MEM_BusErr;
+	std::shared_ptr<MappedMemory_t>    VU1_MEMORY_Micro1;
+	std::shared_ptr<MappedMemory_t>    VU1_MEMORY_Mem1;
+	std::shared_ptr<BusErrorMMemory_t> VU1_MEMORY_BusErr;
 };
 

@@ -2,8 +2,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/MappedMemory32_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 /*
 EERegisters_t defines SPECIAL EE registers specified in the EE Users Manual from page 21 to 25.

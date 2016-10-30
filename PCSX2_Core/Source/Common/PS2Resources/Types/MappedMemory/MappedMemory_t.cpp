@@ -169,7 +169,7 @@ void MappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
 	*hostMemoryAddress = value;
 }
 
-size_t MappedMemory_t::getStorageSize()
+size_t MappedMemory_t::getMappedSize()
 {
 	return mStorageSize;
 }
@@ -184,17 +184,7 @@ const char * MappedMemory_t::getMnemonic() const
 	return mMnemonic.c_str();
 }
 
-const u32 & MappedMemory_t::getPS2PhysicalAddress() const
+const u32 & MappedMemory_t::getMappedPhysicalAddress() const
 {
 	return mPS2PhysicalAddress;
-}
-
-u32 MappedMemory_t::getAbsMappedPageIndex() const
-{
-	return mAbsMappedPageIndex;
-}
-
-void MappedMemory_t::setAbsMappedPageIndex(u32 absPageIndex)
-{
-	mAbsMappedPageIndex = absPageIndex;
 }

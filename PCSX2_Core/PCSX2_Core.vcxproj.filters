@@ -189,14 +189,9 @@
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Clock\Clock_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.h" />
-    <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\DMAC\Types\DMADataUnit_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.h" />
@@ -291,6 +286,10 @@
     <ClInclude Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.h" />
     <ClInclude Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.h" />
+    <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\PhysicalMMU\MappedRegister32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\Registers\ClrBitfieldRegister32_t.h" />
+    <ClInclude Include="Source\Common\PS2Resources\Types\Registers\RevBitfieldRegister32_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -340,14 +339,9 @@
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\DMAC_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Clock\Clock_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\BusErrorMMemory_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\ClrBitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DeadMMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory32_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\MappedMemory128_t.cpp" />
-    <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\RevBitfieldMMemory32_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\INTCHandler\INTCHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECore\EECoreInterpreter\EECoreInterpreter.cpp">
@@ -457,6 +451,10 @@
     <ClCompile Include="Source\Common\PS2Resources\Types\MappedMemory\DebugMMemory_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\EE\EECore\EECoreCOP0\Types\EECore_COP0_Registers_t.cpp" />
     <ClCompile Include="Source\Common\PS2Resources\IOP\IOPCore\IOPCoreCOP0\Types\IOPCore_COP0_Registers_t.cpp" />
+    <ClCompile Include="Source\Common\Interfaces\PhysicalMapped.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\PhysicalMMU\MappedRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\Registers\ClrBitfieldRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\PS2Resources\Types\Registers\RevBitfieldRegister32_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

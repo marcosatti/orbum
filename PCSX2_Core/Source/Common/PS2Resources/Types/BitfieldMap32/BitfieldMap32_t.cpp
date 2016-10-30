@@ -6,9 +6,8 @@
 #include "Common/PS2Resources/Types/BitfieldMap32/BitfieldMap32_t.h"
 
 
-BitfieldMap32_t::BitfieldMap32_t(const bool & autoSync) :
-	mFieldMap{},
-	mAutoSync(autoSync)
+BitfieldMap32_t::BitfieldMap32_t() :
+	mFieldMap{}
 {
 }
 
@@ -42,8 +41,7 @@ void BitfieldMap32_t::setFieldValue(const u8& fieldIndex, const u32& value)
 	BitfieldProperties_t & props = mFieldMap[fieldIndex];
 	props.mFieldValue = value;
 
-	if (mAutoSync)
-		setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
+	setBitRange32(props.mFieldStartPosition, props.mFieldLength, props.mFieldValue);
 }
 
 void BitfieldMap32_t::initaliseAllFields()
@@ -51,8 +49,7 @@ void BitfieldMap32_t::initaliseAllFields()
 	for (auto &field : mFieldMap)
 	{
 		field.mFieldValue = field.mInitialFieldValue;
-		if (mAutoSync)
-			setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
+		setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 	}
 }
 
@@ -61,8 +58,7 @@ void BitfieldMap32_t::initaliseField(const u8& fieldIndex)
 	auto& field = mFieldMap[fieldIndex];
 	field.mFieldValue = field.mInitialFieldValue;
 
-	if (mAutoSync)
-		setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
+	setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 }
 
 void BitfieldMap32_t::syncMapFromMemory()

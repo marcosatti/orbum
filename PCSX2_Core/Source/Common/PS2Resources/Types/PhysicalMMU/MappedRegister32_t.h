@@ -1,26 +1,23 @@
 #pragma once
 
-#include <string>
-
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/PhysicalMapped.h"
+#include "Common/PS2Resources/Types/Registers/Register32_t.h"
 
 /*
-A simple storage object which is constructed to the size specified, and optional name (mnemonic) which is used for debugging/logging.
-This is directly compatible with the PhysicalMMU_t read/write functions.
-
-The primary difference between a MappedMemory type and a Register type is that storage objects are accessed by the byte index, not by the size index.
-For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 8-39 (ie: it will overwrite).
-See the Register type for the counter-example.
+A transition layer, allowing a register to be mapped into the PS2 physical memory space.
+Ie: translates from byte index accesses into size index accesses.
 */
-class MappedMemory_t : public PhysicalMapped
+
+class MappedRegister32_t : public PhysicalMapped
 {
 public:
-	explicit MappedMemory_t(const size_t & size, const char *const mnemonic, const u32 & PS2PhysicalAddress);
-	virtual ~MappedMemory_t();
+	explicit MappedRegister32_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const std::shared_ptr<Register32_t> & register32);
+	virtual ~MappedRegister32_t();
 
 	/*
-	Read or write a value of a given type, to the specified byte index (storageIndex).
+	For 32-bit registers, only read/writeWord is allowed. All others throw a runtime exception.
+	This is provided to mimic the PS2 alginment conditions, for example, with the EE registers defined in the EE Users Manual ("...only word accessible...").
 	*/
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -54,16 +51,12 @@ public:
 	*/
 	const char * getMnemonic() const override;
 
-	/*
-	Gets the base host memory address, needed for special VM functions such as loading the BIOS (BootROM). Not normally used, and should never
-	 be used in favour of the above read/write functions unless you absolutely have to.
-	*/
-	virtual void * getHostMemoryAddress() const;
-
 private:
 	const u32 mPS2PhysicalAddress;
-	size_t mStorageSize;
-	u8 *const mStorage;
 	const std::string mMnemonic;
-};
 
+	/*
+	The underlying register this class maps to.
+	*/
+	const std::shared_ptr<Register32_t> mRegister32;
+};

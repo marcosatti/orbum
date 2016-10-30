@@ -19,6 +19,6 @@ public:
 	// 0x1000F000
 	std::shared_ptr<IntcRegisterStat_t> INTC_REGISTER_I_STAT;
 	std::shared_ptr<IntcRegisterMask_t> INTC_REGISTER_I_MASK;
-	std::shared_ptr<DeadMMemory_t>      INTC_REGISTER_f020;
+	std::shared_ptr<DeadMMemory_t>      INTC_MEMORY_f020;
 };
 

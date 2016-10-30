@@ -203,9 +203,11 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 	//  but I'm confident this is what it meant (I also dont see another way to do it).
 	// Note: In the kernel context mode, for an VA in kseg0 and kseg1 a physical address is immediately returned, as they are both unmapped - no translation occurs.
 
-	// Step 1 is to determine which CPU context we are in (user, supervisor or kernel).
+	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+
+	// Stage 1 is to determine which CPU context we are in (user, supervisor or kernel).
 	// User mode when KSU = 2, ERL = 0, EXL = 0 in the status register.
-	if (getVM()->getResources()->EE->EECore->COP0->isOperatingUserMode())
+	if (COP0->isOperatingUserMode())
 	{
 		// Operating in user mode.
 		// First we check if the VA is within the context bounds.
@@ -228,7 +230,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 			return;
 		}
 	}
-	else if (getVM()->getResources()->EE->EECore->COP0->isOperatingSupervisorMode())
+	else if (COP0->isOperatingSupervisorMode())
 	{
 		// Operating in supervisor mode.
 		// First we check if the VA is within the context bounds.
@@ -252,7 +254,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 			return;
 		}
 	}
-	else if (getVM()->getResources()->EE->EECore->COP0->isOperatingKernelMode())
+	else if (COP0->isOperatingKernelMode())
 	{
 		// Operating in kernel mode.
 		// We do not need to check if the VA is valid - it is always valid over the full 4GB (U32) address space. However, kseg0 and kseg1 are not mapped, 
@@ -277,7 +279,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		}
 		
 		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL) == 1) {
+		if (COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL) == 1) {
 			if (mPS2VirtualAddress <= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
 			{
 				// We are in kuseg unmapped region, so just return the VA.
@@ -298,9 +300,13 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 
 void EECoreMMUHandler::getPS2PhysicalAddress_Stage2()
 {
+	auto& EECore = getVM()->getResources()->EE->EECore;
+	auto& COP0 = EECore->COP0;
+	auto& TLB = EECore->TLB;
+
 	// Stage 2 is to search through the TLB to see if there is a VPN match. 
 	// Check if its in the TLB and get the information.
-	s32 index = getVM()->getResources()->EE->EECore->TLB->findTLBIndex(mPS2VirtualAddress);
+	s32 index = TLB->findTLBIndex(mPS2VirtualAddress);
 	if (index == -1)
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
@@ -315,14 +321,14 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage2()
 		mHasExceptionOccurred = true;
 		return;
 	}
-	mTLBEntryInfo = &getVM()->getResources()->EE->EECore->TLB->getTLBEntry(index);
+	mTLBEntryInfo = &TLB->getTLBEntry(index);
 
 	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
 	// TODO: Check if ASID checking is correct.
 	if (mTLBEntryInfo->mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (getVM()->getResources()->EE->EECore->COP0->EntryHi->getFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
+		if (COP0->EntryHi->getFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)
@@ -351,11 +357,6 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage3()
 	{
 		// As mentioned in the TLB implementation (see the class EECoreTLB_t), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
 		// This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
-
-		// In order to access the SPR within the emulator, we are utilising the 'reserved' region of the PS2's physical memory map. Since there is nothing allocated
-		//  in this region for the PS2, we are free to use it for our own purposes. See Docs/Memory Mappings.xlsx for all of PCSX2's PS2 physical memory maps, 
-		//  including non-standard maps.
-		// The scratchpad ram (in PCSX2) corresponds to PS2 physical address 0x14000000.
 		u32 offset16KB = mPS2VirtualAddress & Constants::MASK_16KB;
 		mPS2PhysicalAddress = PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + offset16KB;
 		return;
@@ -382,17 +383,13 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage3()
 		return;
 	}
 
-	// Check if entry is allowed writes (dirty flag)
-	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mD)
+	// Check if entry is allowed writes (dirty flag) and raise TLB modified exception if writing occurs.
+	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mD && mAccessType == WRITE)
 	{
-		// Raise TLB modified exception if writing occurs.
-		if (mAccessType == WRITE)
-		{
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
-			// Update state and return.
-			mHasExceptionOccurred = true;
-			return;
-		}
+		mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
+		// Update state and return.
+		mHasExceptionOccurred = true;
+		return;
 	}
 
 	// Move on to stage 4.

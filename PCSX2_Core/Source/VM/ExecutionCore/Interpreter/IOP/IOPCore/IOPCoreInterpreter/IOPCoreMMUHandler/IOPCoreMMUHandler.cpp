@@ -162,11 +162,11 @@ u32 IOPCoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType a
 
 void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 {
-	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
+	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
 
 	// Step 1 is to determine which CPU context we are in (user or kernel).
 	// User mode when KUc = 1, kernel when KUc = 0.
-	if (IOPCore->COP0->isOperatingUserMode())
+	if (COP0->isOperatingUserMode())
 	{
 		// Operating in user mode.
 		// First we check if the VA is within the context bounds.
@@ -189,7 +189,7 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 			return;
 		}
 	}
-	else if (IOPCore->COP0->isOperatingKernelMode())
+	else if (COP0->isOperatingKernelMode())
 	{
 		// Operating in kernel mode.
 		// We do not need to check if the VA is valid - it is always valid over the full 4GB (U32) address space. However, kseg0 and kseg1 are not mapped, 
@@ -224,8 +224,8 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		// This is not TLB mapped. From PCSX2 code.
 		if (mPS2VirtualAddress <= PS2Constants::IOP::IOPCore::MMU::VADDRESS_SPECIAL_1_UPPER_BOUND)
 		{
-			// Check if isolate cache is turned on, set flag if it is.
-			if (IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+			// Check if isolate cache is turned on, set failed write flag if it is.
+			if (COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
 				mHasISCFailed = true;
 
 			mPS2PhysicalAddress = mPS2VirtualAddress;

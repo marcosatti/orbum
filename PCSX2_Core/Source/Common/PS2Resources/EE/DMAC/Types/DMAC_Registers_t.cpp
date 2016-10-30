@@ -5,8 +5,7 @@
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/DMAC/DMAC_t.h"
 
-DmacRegisterChcr_t::DmacRegisterChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & channelID) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress),
+DmacRegisterChcr_t::DmacRegisterChcr_t(const PS2Resources_t *const PS2Resources, const u32 & channelID) :
 	PS2ResourcesSubobject(PS2Resources),
 	mChannelID(channelID)
 {
@@ -19,7 +18,7 @@ DmacRegisterChcr_t::DmacRegisterChcr_t(const char* const mnemonic, const u32& PS
 	registerField(Fields::TAG, "TAG", 16, 16, 0);
 }
 
-void DmacRegisterChcr_t::writeWordU(u32 storageIndex, u32 value)
+void DmacRegisterChcr_t::writeWordU(u32 value)
 {
 	// Check if the STR bit is 1. If so, reset the DMA channel state variables.
 	if (value & 0x100)
@@ -27,11 +26,10 @@ void DmacRegisterChcr_t::writeWordU(u32 storageIndex, u32 value)
 		getRootResources()->EE->DMAC->SliceCountState[mChannelID] = 0;
 	}
 
-	BitfieldMMemory32_t::writeWordU(storageIndex, value);
+	BitfieldRegister32_t::writeWordU(value);
 }
 
-DmacRegisterMadr_t::DmacRegisterMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterMadr_t::DmacRegisterMadr_t() 
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
@@ -42,22 +40,19 @@ void DmacRegisterMadr_t::increment()
 	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
 }
 
-DmacRegisterTadr_t::DmacRegisterTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterTadr_t::DmacRegisterTadr_t() 
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
-DmacRegisterAsr_t::DmacRegisterAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterAsr_t::DmacRegisterAsr_t()
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
-DmacRegisterSadr_t::DmacRegisterSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterSadr_t::DmacRegisterSadr_t()
 {
 	registerField(Fields::ADDR, "ADDR", 0, 14, 0);
 }
@@ -67,8 +62,7 @@ void DmacRegisterSadr_t::increment()
 	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
 }
 
-DmacRegisterQwc_t::DmacRegisterQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterQwc_t::DmacRegisterQwc_t() 
 {
 	registerField(Fields::QWC, "QWC", 0, 16, 0);
 }
@@ -78,8 +72,7 @@ void DmacRegisterQwc_t::decrement()
 	BitfieldMap32_t::setFieldValue(Fields::QWC, BitfieldMap32_t::getFieldValue(Fields::QWC) - 1);
 }
 
-DmacRegisterCtrl_t::DmacRegisterCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterCtrl_t::DmacRegisterCtrl_t()
 {
 	registerField(Fields::DMAE, "DMAE", 0, 1, 0);
 	registerField(Fields::RELE, "RELE", 1, 1, 0);
@@ -89,8 +82,7 @@ DmacRegisterCtrl_t::DmacRegisterCtrl_t(const char* const mnemonic, const u32& PS
 	registerField(Fields::RCYC, "RCYC", 8, 3, 0);
 }
 
-DmacRegisterStat_t::DmacRegisterStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterStat_t::DmacRegisterStat_t() 
 {
 	registerField(Fields::CIS0, "CIS0""CIS0", 0, 1, 0);
 	registerField(Fields::CIS1, "CIS1", 1, 1, 0);
@@ -119,20 +111,19 @@ DmacRegisterStat_t::DmacRegisterStat_t(const char* const mnemonic, const u32& PS
 	registerField(Fields::MEIM, "MEIM", 30, 1, 0);
 }
 
-void DmacRegisterStat_t::writeWordU(u32 storageIndex, u32 value)
+void DmacRegisterStat_t::writeWordU(u32 value)
 {
 	// For bits 0-15, they are cleared when 1 is written. For bits 16-31, they are reversed when 1 is written.
-	u32 clrBits = readWordU(storageIndex) & 0xFFFF;
+	u32 clrBits = readWordU() & 0xFFFF;
 	u32 clrBitsValue = value & 0xFFFF;
-	u32 revBits = readWordU(storageIndex) & 0xFFFF0000;
+	u32 revBits = readWordU() & 0xFFFF0000;
 	u32 revBitsValue = value & 0xFFFF0000;
 
-	BitfieldMMemory32_t::writeWordU(storageIndex, clrBits & (~clrBitsValue));
-	BitfieldMMemory32_t::writeWordU(storageIndex, revBits ^ revBitsValue);
+	BitfieldRegister32_t::writeWordU(clrBits & (~clrBitsValue));
+	BitfieldRegister32_t::writeWordU(revBits ^ revBitsValue);
 }
 
-DmacRegisterPcr_t::DmacRegisterPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterPcr_t::DmacRegisterPcr_t()
 {
 	registerField(Fields::CPC0, "CPC0", 0, 1, 0);
 	registerField(Fields::CPC1, "CPC1", 1, 1, 0);
@@ -157,39 +148,33 @@ DmacRegisterPcr_t::DmacRegisterPcr_t(const char* const mnemonic, const u32& PS2P
 	registerField(Fields::PCE, "PCE", 31, 1, 0);
 }
 
-DmacRegisterSqwc_t::DmacRegisterSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterSqwc_t::DmacRegisterSqwc_t() 
 {
 	registerField(Fields::SQWC, "SQWC", 0, 8, 0);
 	registerField(Fields::TQWC, "TQWC", 16, 8, 0);
 }
 
-DmacRegisterRbor_t::DmacRegisterRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterRbor_t::DmacRegisterRbor_t() 
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 }
 
-DmacRegisterRbsr_t::DmacRegisterRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterRbsr_t::DmacRegisterRbsr_t() 
 {
 	registerField(Fields::RMSK, "RMSK", 4, 27, 0);
 }
 
-DmacRegisterStadr_t::DmacRegisterStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterStadr_t::DmacRegisterStadr_t() 
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 }
 
-DmacRegisterEnablew_t::DmacRegisterEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterEnablew_t::DmacRegisterEnablew_t() 
 {
 	registerField(Fields::CPND, "CPND", 16, 1, 0);
 }
 
-DmacRegisterEnabler_t::DmacRegisterEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+DmacRegisterEnabler_t::DmacRegisterEnabler_t() 
 {
 	registerField(Fields::CPND, "CPND", 16, 1, 0);
 }

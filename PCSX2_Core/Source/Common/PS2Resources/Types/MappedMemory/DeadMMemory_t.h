@@ -34,10 +34,10 @@ public:
 	void writeDwordS(u32 storageIndex, s64 value) override;
 
 	/*
-	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getStorageSize(), return the size set
+	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getMappedSize(), return the size set
 	when the object is created.
 	*/
-	size_t getStorageSize() override;
+	size_t getMappedSize() override;
 
 private:
 	const size_t mSize; // Provided for debug only.

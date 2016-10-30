@@ -103,7 +103,7 @@ void TimersHandler::checkTimerInterrupt(const u32& timerNumber) const
 	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timerRegister.Mode->getFieldValue(TimersRegisterMode_t::Fields::CMPE))
 	{
-		if (timerRegister.Count->readWordU(0) >= timerRegister.Compare->readWordU(0))
+		if (timerRegister.Count->readWordU() >= timerRegister.Compare->readWordU())
 		{
 			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
 		}
@@ -127,7 +127,7 @@ void TimersHandler::checkTimerZRET(const u32& timerNumber) const
 	if (timerRegister.Mode->getFieldValue(TimersRegisterMode_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (timerRegister.Count->readWordU(0) >= timerRegister.Compare->readWordU(0))
+		if (timerRegister.Count->readWordU() >= timerRegister.Compare->readWordU())
 		{
 			// Set Count to 0.
 			timerRegister.Count->reset();

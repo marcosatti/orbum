@@ -4,8 +4,6 @@
 
 #include "Common/Global/Globals.h"
 
-class MappedMemory_t;
-
 /*
 PhysicalMMU_t is responsible for converting the PS2's physical memory into host memory.
 The mapping method is actually just a 2 level (directory and pages) page table! 
@@ -37,7 +35,7 @@ However, this works well with the EE physical map, where registers are often clu
 The advantage of keeping a page size of 16B is we have more fine grained control of memory, rather than having to allocate a big block of memory.
 
 * Example of how constructor parameters effects addresses.
-By using a directory size of 4MB and a page size of 16B, with a 512 MB address range:
+By using a directory size of 4MB and a page size of 16B, with a 512 MB max address range:
  - Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
  - Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
  - The offset (within 16B) requires 4 bits.
@@ -47,10 +45,13 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB address r
  | (throws error if any bit set) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
  =============================================================================================
  */
+
+class PhysicalMapped;
+
 class PhysicalMMU_t
 {
 public:
-	explicit PhysicalMMU_t(const size_t & MaxAddressableSizeBytes, const u32 & DirectorySizeBytes, const u32 & PageSizeBytes);
+	explicit PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 & directorySizeBytes, const u32 & pageSizeBytes);
 	~PhysicalMMU_t();
 
 	/*
@@ -60,7 +61,7 @@ public:
 
 	Note that this function simply remaps the memory in a linear fashion, meaning that for example, a PS2 physical address of 0x00000400 - 0x00000600 will map directly to (example mapping) 0x1234A000 - 0x1234A200
 	*/
-	void mapMemory(const std::shared_ptr<MappedMemory_t> & mappedMemory);
+	void mapMemory(const std::shared_ptr<PhysicalMapped> & mappedMemory);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
@@ -108,12 +109,12 @@ private:
 	The individual pages are only allocated on access, thereby saving memory.
 	(An array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
 	*/
-	std::shared_ptr<MappedMemory_t>** mPageTable;
+	std::shared_ptr<PhysicalMapped>** mPageTable;
 
 	/*
 	Translates the given PS2 physical address to the stored memory object by using the page table. The returned object can then be used to read or write to an address.
 	*/
-	std::shared_ptr<MappedMemory_t> & getMappedMemory(u32 baseVDN, u32 baseVPN) const;
+	std::shared_ptr<PhysicalMapped> & getMappedMemory(u32 baseVDN, u32 baseVPN) const;
 
 	/*
 	Helper functions for mapMemory & others to 

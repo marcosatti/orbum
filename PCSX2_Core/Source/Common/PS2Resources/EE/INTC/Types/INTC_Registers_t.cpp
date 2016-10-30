@@ -2,8 +2,7 @@
 
 #include "Common/PS2Resources/EE/INTC/Types/INTC_Registers_t.h"
 
-IntcRegisterStat_t::IntcRegisterStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	ClrBitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+IntcRegisterStat_t::IntcRegisterStat_t()
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
 	registerField(Fields::SBUS, "SBUS", 1, 1, 0);
@@ -22,8 +21,7 @@ IntcRegisterStat_t::IntcRegisterStat_t(const char* const mnemonic, const u32& PS
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
-IntcRegisterMask_t::IntcRegisterMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	RevBitfieldMMemory32_t(mnemonic, PS2PhysicalAddress)
+IntcRegisterMask_t::IntcRegisterMask_t() 
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
 	registerField(Fields::SBUS, "SBUS", 1, 1, 0);

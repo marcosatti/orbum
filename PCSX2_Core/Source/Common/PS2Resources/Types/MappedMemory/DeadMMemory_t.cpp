@@ -87,7 +87,7 @@ void DeadMMemory_t::writeDwordS(u32 storageIndex, s64 value)
 {
 }
 
-size_t DeadMMemory_t::getStorageSize()
+size_t DeadMMemory_t::getMappedSize()
 {
 	return mSize;
 }

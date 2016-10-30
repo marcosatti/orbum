@@ -5,8 +5,7 @@
 #include "Common/PS2Resources/EE/EE_t.h"
 #include "Common/PS2Resources/EE/Timers/Timers_t.h"
 
-TimersRegisterMode_t::TimersRegisterMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & timerID) :
-	BitfieldMMemory32_t(mnemonic, PS2PhysicalAddress),
+TimersRegisterMode_t::TimersRegisterMode_t(const PS2Resources_t *const PS2Resources, const u32 & timerID) :
 	PS2ResourcesSubobject(PS2Resources),
 	mTimerID(timerID)
 {
@@ -22,27 +21,26 @@ TimersRegisterMode_t::TimersRegisterMode_t(const char *const mnemonic, const u32
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void TimersRegisterMode_t::writeWordU(u32 storageIndex, u32 value)
+void TimersRegisterMode_t::writeWordU(u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
-	u32 originalValue = MappedMemory32_t::readWordU(storageIndex);
+	u32 originalValue = Register32_t::readWordU();
 	u32 newValue = ((value & 0xC00) ^ (originalValue & 0xC00)) | (value & ~0xC00);
-	BitfieldMMemory32_t::writeWordU(storageIndex, newValue);
+	Register32_t::writeWordU(newValue);
 
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
 	if (value & 0x80)
 		getRootResources()->EE->Timers->TimerRegisters[mTimerID].Count->reset();
 }
 
-TimersRegisterCount_t::TimersRegisterCount_t(const char* const mnemonic, const u32& PS2PhysicalAddress) :
-	MappedMemory32_t(mnemonic, PS2PhysicalAddress),
+TimersRegisterCount_t::TimersRegisterCount_t() :
 	mIsOverflowed(false)
 {
 }
 
 void TimersRegisterCount_t::increment(u16 value)
 {
-	u32 temp = readWordU(0) + value;
+	u32 temp = readWordU() + value;
 
 	if (temp > Constants::VALUE_U16_MAX)
 	{
@@ -51,7 +49,7 @@ void TimersRegisterCount_t::increment(u16 value)
 		temp = temp % Constants::VALUE_U16_MAX;
 	}
 
-	writeWordU(0, temp);
+	writeWordU(temp);
 }
 
 bool TimersRegisterCount_t::isOverflowed()
@@ -63,5 +61,5 @@ bool TimersRegisterCount_t::isOverflowed()
 
 void TimersRegisterCount_t::reset()
 {
-	writeWordU(0, 0);
+	writeWordU(0);
 }

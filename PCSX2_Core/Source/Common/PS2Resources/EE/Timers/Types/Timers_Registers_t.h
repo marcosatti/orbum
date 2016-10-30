@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 
 /*
 The Timer Mode register type. See EE Users Manual page 36.
@@ -11,7 +11,7 @@ Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, beha
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
 */
-class TimersRegisterMode_t : public BitfieldMMemory32_t, public PS2ResourcesSubobject
+class TimersRegisterMode_t : public BitfieldRegister32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -28,9 +28,9 @@ public:
 		static constexpr u8 OVFF = 9;
 	};
 
-	TimersRegisterMode_t(const char *const mnemonic, const u32 & PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & timerID);
+	TimersRegisterMode_t(const PS2Resources_t *const PS2Resources, const u32 & timerID);
 
-	void writeWordU(u32 storageIndex, u32 value) override;
+	void writeWordU(u32 value) override;
 
 private:
 	/*
@@ -45,10 +45,10 @@ Provides the increment function, which also wraps the u32 value around once over
 Can also reset the counter.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
 */
-class TimersRegisterCount_t : public MappedMemory32_t
+class TimersRegisterCount_t : public Register32_t
 {
 public:
-	TimersRegisterCount_t(const char * const mnemonic, const u32 & PS2PhysicalAddress);
+	TimersRegisterCount_t();
 
 	void increment(u16 value);
 	bool isOverflowed();

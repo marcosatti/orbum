@@ -128,7 +128,7 @@ void ImageMappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
 		mPhysicalMMU->writeDwordS(mImagePS2PhysicalAddress + storageIndex, value);
 }
 
-size_t ImageMappedMemory_t::getStorageSize()
+size_t ImageMappedMemory_t::getMappedSize()
 {
 	return mTotalSize;
 }

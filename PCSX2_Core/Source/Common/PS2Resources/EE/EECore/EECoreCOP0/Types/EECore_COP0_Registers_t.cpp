@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 
 EECore_COP0RegisterIndex_t::EECore_COP0RegisterIndex_t()
 {
@@ -82,10 +82,10 @@ void EECore_COP0RegisterCompare_t::setFieldValue(const u8& fieldIndex, const u32
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 }
 
-void EECore_COP0RegisterCompare_t::setRegisterValue(const u32 & value)
+void EECore_COP0RegisterCompare_t::writeWordU(u32 value)
 {
 	mCause->setFieldValue(EECore_COP0RegisterCause_t::Fields::IP7, 0);
-	BitfieldRegister32_t::setRegisterValue(value);
+	BitfieldRegister32_t::writeWordU(value);
 }
 
 EECore_COP0RegisterStatus_t::EECore_COP0RegisterStatus_t()

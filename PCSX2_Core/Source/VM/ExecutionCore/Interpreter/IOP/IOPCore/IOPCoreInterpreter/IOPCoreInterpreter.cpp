@@ -81,7 +81,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPInstructionTable::getInstructionInfo(mInstruction);
 
-#if (0) // defined(BUILD_DEBUG)
+#if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x36a8c; //0x2aa05;
 	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4a39c;
 
@@ -99,12 +99,13 @@ s64 IOPCoreInterpreter::executeInstruction()
 		{
 			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
 		}
+
+		getVM()->setStatus(VMMain::VMStatus::STOPPED);
 	}
 
 	if (IOPCore->R3000->PC->getPCValue() == 0x00000890)
 	{
 		logDebug("(%s, %d) Stop condition hit.", __FILENAME__, __LINE__);
-		//getVM()->setStatus(VMMain::VMStatus::STOPPED);
 	}
 #endif
 

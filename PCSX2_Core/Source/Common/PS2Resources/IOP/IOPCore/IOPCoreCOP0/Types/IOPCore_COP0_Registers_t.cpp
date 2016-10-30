@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/Types/IOPCore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 
 IOPCore_COP0RegisterContext_t::IOPCore_COP0RegisterContext_t()
 {

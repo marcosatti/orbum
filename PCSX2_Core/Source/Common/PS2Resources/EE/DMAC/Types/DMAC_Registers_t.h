@@ -2,14 +2,14 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/PS2Constants/PS2Constants.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 /*
 The DMAC D_CHCR register, aka channel control register.
 Needs an channel index, which is used to reset the EE->DMAC state variables when a 1 is written to the STR bit.
 */
-class DmacRegisterChcr_t : public BitfieldMMemory32_t, public PS2ResourcesSubobject
+class DmacRegisterChcr_t : public BitfieldRegister32_t, public PS2ResourcesSubobject
 {
 public:
 	struct Fields
@@ -23,9 +23,9 @@ public:
 		static constexpr u8 TAG = 6;
 	};
 
-	DmacRegisterChcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress, const PS2Resources_t *const PS2Resources, const u32 & channelID);
+	DmacRegisterChcr_t(const PS2Resources_t *const PS2Resources, const u32 & channelID);
 
-	void writeWordU(u32 storageIndex, u32 value) override;
+	void writeWordU(u32 value) override;
 
 private:
 	/*
@@ -37,7 +37,7 @@ private:
 /*
 The DMAC D_MADR register, aka transfer address register.
 */
-class DmacRegisterMadr_t : public BitfieldMMemory32_t
+class DmacRegisterMadr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -46,7 +46,7 @@ public:
 		static constexpr u8 SPR = 1;
 	};
 
-	DmacRegisterMadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterMadr_t();
 
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
@@ -57,7 +57,7 @@ public:
 /*
 The DMAC D_TADR register, aka tag address register.
 */
-class DmacRegisterTadr_t : public BitfieldMMemory32_t
+class DmacRegisterTadr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -66,13 +66,13 @@ public:
 		static constexpr u8 SPR = 1;
 	};
 
-	DmacRegisterTadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterTadr_t();
 };
 
 /*
 The DMAC D_ASR0/1 register, aka tag address save register.
 */
-class DmacRegisterAsr_t : public BitfieldMMemory32_t
+class DmacRegisterAsr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -81,13 +81,13 @@ public:
 		static constexpr u8 SPR = 1;
 	};
 
-	DmacRegisterAsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterAsr_t();
 };
 
 /*
 The DMAC D_SADR register, aka SPR (scratchpad ram) transfer address register.
 */
-class DmacRegisterSadr_t : public BitfieldMMemory32_t
+class DmacRegisterSadr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -95,7 +95,7 @@ public:
 		static constexpr u8 ADDR = 0;
 	};
 
-	DmacRegisterSadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterSadr_t();
 
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
@@ -106,7 +106,7 @@ public:
 /*
 The DMAC D_QWC register, aka SPR (scratchpad ram) transfer address register.
 */
-class DmacRegisterQwc_t : public BitfieldMMemory32_t
+class DmacRegisterQwc_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -114,7 +114,7 @@ public:
 		static constexpr u8 QWC = 0;
 	};
 
-	DmacRegisterQwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterQwc_t();
 
 	/*
 	Decrements the QWC counter by 1. Should be called when a data unit has been transferred.
@@ -126,7 +126,7 @@ public:
 The DMAC D_CTRL register, which contains various settings needed for the DMAC.
 TODO: Need to implement cycle stealing? Wouldnt think so as it doesnt make sense in an emulator...
 */
-class DmacRegisterCtrl_t : public BitfieldMMemory32_t
+class DmacRegisterCtrl_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -139,7 +139,7 @@ public:
 		static constexpr u8 RCYC = 5;
 	};
 
-	DmacRegisterCtrl_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterCtrl_t();
 };
 
 /*
@@ -149,7 +149,7 @@ The writeWordU() function is overriden:
 When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
 When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
 */
-class DmacRegisterStat_t : public BitfieldMMemory32_t
+class DmacRegisterStat_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -185,15 +185,15 @@ public:
 		static constexpr u8 CIM_KEYS[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS]{ CIM0, CIM1, CIM2, CIM3, CIM4, CIM5, CIM6, CIM7, CIM8, CIM9 };
 	};
 
-	DmacRegisterStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterStat_t();
 
-	void writeWordU(u32 storageIndex, u32 value) override;
+	void writeWordU(u32 value) override;
 };
 
 /*
 The DMAC D_PCR register, aka priority control register.
 */
-class DmacRegisterPcr_t : public BitfieldMMemory32_t
+class DmacRegisterPcr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -221,13 +221,13 @@ public:
 		static constexpr u8 PCE = 20;
 	};
 
-	DmacRegisterPcr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterPcr_t();
 };
 
 /*
 The DMAC D_SQWC register, aka interleave size register.
 */
-class DmacRegisterSqwc_t : public BitfieldMMemory32_t
+class DmacRegisterSqwc_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -236,13 +236,13 @@ public:
 		static constexpr u8 TQWC = 1;
 	};
 
-	DmacRegisterSqwc_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterSqwc_t();
 };
 
 /*
 The DMAC D_RBOR register, aka ring buffer address register.
 */
-class DmacRegisterRbor_t : public BitfieldMMemory32_t
+class DmacRegisterRbor_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -250,13 +250,13 @@ public:
 		static constexpr u8 ADDR = 0;
 	};
 
-	DmacRegisterRbor_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterRbor_t();
 };
 
 /*
 The DMAC D_RBSR register, aka ring buffer address register.
 */
-class DmacRegisterRbsr_t : public BitfieldMMemory32_t
+class DmacRegisterRbsr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -264,13 +264,13 @@ public:
 		static constexpr u8 RMSK = 0;
 	};
 
-	DmacRegisterRbsr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterRbsr_t();
 };
 
 /*
 The DMAC D_STADR register, aka ring buffer address register.
 */
-class DmacRegisterStadr_t : public BitfieldMMemory32_t
+class DmacRegisterStadr_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -278,13 +278,13 @@ public:
 		static constexpr u8 ADDR = 0;
 	};
 
-	DmacRegisterStadr_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterStadr_t();
 };
 
 /*
 The DMAC D_ENABLEW register, aka DMA hold control register.
 */
-class DmacRegisterEnablew_t : public BitfieldMMemory32_t
+class DmacRegisterEnablew_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -292,13 +292,13 @@ public:
 		static constexpr u8 CPND = 0;
 	};
 
-	DmacRegisterEnablew_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterEnablew_t();
 };
 
 /*
 The DMAC D_ENABLEW register, aka DMA hold control register.
 */
-class DmacRegisterEnabler_t : public BitfieldMMemory32_t
+class DmacRegisterEnabler_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -306,5 +306,5 @@ public:
 		static constexpr u8 CPND = 0;
 	};
 
-	DmacRegisterEnabler_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	DmacRegisterEnabler_t();
 };

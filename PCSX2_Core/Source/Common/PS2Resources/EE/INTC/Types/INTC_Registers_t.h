@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/Types/MappedMemory/ClrBitfieldMMemory32_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/RevBitfieldMMemory32_t.h"
+#include "Common/PS2Resources/Types/Registers/ClrBitfieldRegister32_t.h"
+#include "Common/PS2Resources/Types/Registers/RevBitfieldRegister32_t.h"
 
 /*
 The INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 Bits are cleared by writing 1.
 */
-class IntcRegisterStat_t : public ClrBitfieldMMemory32_t
+class IntcRegisterStat_t : public ClrBitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -30,14 +30,14 @@ public:
 		static constexpr u8 VU0WD = 14;
 	};
 
-	IntcRegisterStat_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	IntcRegisterStat_t();
 };
 
 /*
 The INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
 Bits are reversed by writing 1.
 */
-class IntcRegisterMask_t : public RevBitfieldMMemory32_t
+class IntcRegisterMask_t : public RevBitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -59,7 +59,7 @@ public:
 		static constexpr u8 VU0WD = 14;
 	};
 
-	IntcRegisterMask_t(const char* const mnemonic, const u32& PS2PhysicalAddress);
+	IntcRegisterMask_t();
 };
 
 

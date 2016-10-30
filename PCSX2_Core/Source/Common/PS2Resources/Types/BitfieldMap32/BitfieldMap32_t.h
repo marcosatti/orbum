@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include "Common/Global/Globals.h"
 
@@ -18,7 +17,7 @@ It is the users responsibility to make sure the values set are appropriate. For 
 You will only get 3 bits worth back, even though the field value may still reflect decimal 10.
 
 Syncing between the fields and the u32 value:
- - autoSync specifies whether to sync with the underlying u32 value when a field is changed (ie: through setFieldValue and others). It can always be called manually through syncMemoryFromMap().
+ - The underlying u32 value when a field is changed automatically (ie: through setFieldValue and others). It can always be called manually through syncMemoryFromMap().
  - It is up to an implementing class if it should sync with the fields whenever the u32 value is changed. The function to do this is syncMapFromMemory().
 
 A class that extends this class must implement get/setBitRange32() in order to sync between the map <==> u32 value.
@@ -26,7 +25,7 @@ A class that extends this class must implement get/setBitRange32() in order to s
 class BitfieldMap32_t
 {
 public:
-	BitfieldMap32_t(const bool & autoSync);
+	BitfieldMap32_t();
 	virtual ~BitfieldMap32_t();
 
 	/*
@@ -92,10 +91,5 @@ private:
 	*/
 	static constexpr u8 FIELD_MAP_SIZE = 32;
 	BitfieldProperties_t mFieldMap[32];
-
-	/*
-	Set at initalisation - does this class sync with the underlying memory everytime setFieldValue() (or anything that writes) is called?
-	*/
-	bool mAutoSync;
 };
 

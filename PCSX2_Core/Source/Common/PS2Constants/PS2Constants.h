@@ -32,8 +32,8 @@ public:
 
 			struct ScratchpadMemory
 			{
-				// Scratchpad memory - see 'Memory Mappings.xlsx' for information as this is PCSX2 specific.
-				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x14000000;
+				// Scratchpad memory.
+				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x70000000;
 				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = 0x00004000; // 16KB
 			};
 			

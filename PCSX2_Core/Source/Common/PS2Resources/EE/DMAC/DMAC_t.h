@@ -65,7 +65,7 @@ public:
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D0_TADR;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D0_ASR0;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D0_ASR1;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_8060;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_8060;
 
 	// 0x10009000
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D1_CHCR;
@@ -74,7 +74,7 @@ public:
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D1_TADR;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D1_ASR0;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D1_ASR1;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_9060;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_9060;
 
 	// 0x1000A000
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D2_CHCR;
@@ -83,56 +83,56 @@ public:
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D2_TADR;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D2_ASR0;
 	std::shared_ptr<DmacRegisterAsr_t>     DMAC_REGISTER_D2_ASR1;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_a060;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_a060;
 
 	// 0x1000B000 
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D3_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D3_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D3_QWC;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_b030;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_b030;
 
 	// 0x1000B400
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D4_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D4_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D4_QWC;
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D4_TADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_b440;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_b440;
 
 	// 0x1000C000
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D5_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D5_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D5_QWC;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_c030;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_c030;
 
 	// 0x1000C400
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D6_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D6_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D6_QWC;
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D6_TADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_c440;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_c440;
 
 	// 0x1000C800
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D7_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D7_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D7_QWC;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_c830;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_c830;
 
 	// 0x1000D000
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D8_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D8_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D8_QWC;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_d030;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_d030;
 	std::shared_ptr<DmacRegisterSadr_t>    DMAC_REGISTER_D8_SADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_d090;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_d090;
 
 	// 0x1000D400
 	std::shared_ptr<DmacRegisterChcr_t>    DMAC_REGISTER_D9_CHCR;
 	std::shared_ptr<DmacRegisterMadr_t>    DMAC_REGISTER_D9_MADR;
 	std::shared_ptr<DmacRegisterQwc_t>     DMAC_REGISTER_D9_QWC;
 	std::shared_ptr<DmacRegisterTadr_t>    DMAC_REGISTER_D9_TADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_d440;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_d440;
 	std::shared_ptr<DmacRegisterSadr_t>    DMAC_REGISTER_D9_SADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_d490;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_d490;
 
 	// Array of DMA channel objects, needed to perform iterations.
 	struct DMACChannelRegisters_t
@@ -155,13 +155,13 @@ public:
 	std::shared_ptr<DmacRegisterRbsr_t>    DMAC_REGISTER_D_RBSR;
 	std::shared_ptr<DmacRegisterRbor_t>    DMAC_REGISTER_D_RBOR;
 	std::shared_ptr<DmacRegisterStadr_t>   DMAC_REGISTER_D_STADR;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_e070;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_e070;
 
 	// 0x1000F500
-	std::shared_ptr<MappedMemory_t>        DMAC_REGISTER_F500;      // Register "Undocumented: F500" @ 0x1000F500 -> 0x1000F520.
+	std::shared_ptr<MappedMemory_t>        DMAC_MEMORY_F500;      // Register "Undocumented: F500" @ 0x1000F500 -> 0x1000F520.
 	std::shared_ptr<DmacRegisterEnabler_t> DMAC_REGISTER_D_ENABLER;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_F530;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_F530;
 	std::shared_ptr<DmacRegisterEnablew_t> DMAC_REGISTER_D_ENABLEW;
-	std::shared_ptr<DeadMMemory_t>         DMAC_REGISTER_F5A0;
+	std::shared_ptr<DeadMMemory_t>         DMAC_MEMORY_F5A0;
 };
 

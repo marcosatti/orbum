@@ -13,16 +13,7 @@ class BitfieldRegister32_t : public Register32_t, public BitfieldMap32_t
 {
 public:
 	explicit BitfieldRegister32_t();
-
-	/*
-	Gets the combined bitfield value from the individual fields. Also syncs Register32_t.UW to reflect the same value.
-	*/
-	virtual u32 getRegisterValue();
-
-	/*
-	Sets the Register32_t.UW register value to reflect the parsed value, and updates all of the registered fields to reflect the bitfield values from Register32_t.UW.
-	*/
-	virtual void setRegisterValue(const u32 & value);
+	virtual ~BitfieldRegister32_t();
 
 	/*
 	Function to get a value (bit array) with a specified length at startPos in the word storage object.
@@ -37,5 +28,12 @@ public:
 	Note: If there are more bits set in value than bitLength allows for, the extra bits will not be written.
 	*/
 	void setBitRange32(u8 startPosition, u8 bitLength, u32 value) override;
+
+	/*
+	Override writeWord[U/S] to sync with the bitfield map. WriteWordS calls the unsigned version.
+	WriteWordU() can be overriden by sub classes to provide pre processing on the value.
+	*/
+	void writeWordU(u32 value) override;
+	void writeWordS(s32 value) override;
 };
 

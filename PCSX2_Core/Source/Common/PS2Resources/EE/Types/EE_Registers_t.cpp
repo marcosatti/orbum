@@ -4,7 +4,6 @@
 
 #include "Common/PS2Resources/EE/Types/EE_Registers_t.h"
 #include "Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h"
-#include "Common/PS2Resources/Types/MappedMemory/BitfieldMMemory32_t.h"
 #include "Common/PS2Resources/EE/EE_t.h"
 
 EERegisterSIO_t::EERegisterSIO_t() :

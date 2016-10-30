@@ -21,7 +21,7 @@ class BootROM_t;
 class PhysicalMMU_t;
 
 class MappedMemory_t;
-class MappedMemory32_t;
+class Register32_t;
 class DeadMMemory_t;
 class BusErrorMMemory_t;
 class EERegisterSIO_t;
@@ -93,23 +93,23 @@ public:
 	The registers listed here are for any miscellaneous systems that are too small to have its own category.
 	*/
 	// 0x10004000
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_VIF0_FIFO;
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_VIF1_FIFO;
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_GIF_FIFO;
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_IPU_out_FIFO;
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_IPU_in_FIFO;
+	std::shared_ptr<MappedMemory_t>  EE_FIFO_VIF0;
+	std::shared_ptr<MappedMemory_t>  EE_FIFO_VIF1;
+	std::shared_ptr<MappedMemory_t>  EE_FIFO_GIF;
+	std::shared_ptr<MappedMemory_t>  EE_FIFO_IPU_out;
+	std::shared_ptr<MappedMemory_t>  EE_FIFO_IPU_in;
 
 	// 0x1000F100
-	std::shared_ptr<EERegisterSIO_t>  EE_REGISTER_SIO;          // Register "SIO"                @ 0x1000F100 -> 0x1000F200. Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
+	std::shared_ptr<EERegisterSIO_t> EE_MEMORY_SIO;         // Register "SIO"                @ 0x1000F100 -> 0x1000F200. Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
 	
 	// 0x1000F200
-	std::shared_ptr<MappedMemory32_t> EE_REGISTER_SB_SMFLG;
+	std::shared_ptr<Register32_t>    EE_REGISTER_SB_SMFLG;
 
 	// 0x1000F400
-	std::shared_ptr<MappedMemory32_t> EE_REGISTER_F400;         // Register "Undocumented: F400" @ 0x1000F400 -> 0x1000F410.
-	std::shared_ptr<DeadMMemory_t>    EE_REGISTER_F410;         // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F420. Needs to be a dead storage (by BIOS).
-	std::shared_ptr<MappedMemory32_t> EE_REGISTER_F420;         // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F430.
-	std::shared_ptr<EERegisterMCH_t>  EE_REGISTER_MCH;		    // Register "MCH"                @ 0x1000F430 -> 0x1000F450. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
-	std::shared_ptr<MappedMemory_t>   EE_REGISTER_F450;         // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F500.  
+	std::shared_ptr<Register32_t>    EE_REGISTER_F400;      // Register "Undocumented: F400" @ 0x1000F400 -> 0x1000F410.
+	std::shared_ptr<DeadMMemory_t>   EE_MEMORY_F410;        // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F420. Needs to be a dead storage (by BIOS).
+	std::shared_ptr<Register32_t>    EE_REGISTER_F420;      // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F430.
+	std::shared_ptr<EERegisterMCH_t> EE_MEMORY_MCH;		    // Register "MCH"                @ 0x1000F430 -> 0x1000F450. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
+	std::shared_ptr<MappedMemory_t>  EE_MEMORY_F450;        // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F500.  
 
 };

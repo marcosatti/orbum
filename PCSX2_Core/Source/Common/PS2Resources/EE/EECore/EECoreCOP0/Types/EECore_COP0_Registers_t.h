@@ -291,7 +291,7 @@ public:
 	explicit EECore_COP0RegisterCompare_t(std::shared_ptr<EECore_COP0RegisterCause_t> Cause);
 
 	void setFieldValue(const u8 & fieldIndex, const u32& value) override;
-	void setRegisterValue(const u32 & value) override;
+	void writeWordU(u32 value) override;
 
 private:
 	std::shared_ptr<EECore_COP0RegisterCause_t> mCause;

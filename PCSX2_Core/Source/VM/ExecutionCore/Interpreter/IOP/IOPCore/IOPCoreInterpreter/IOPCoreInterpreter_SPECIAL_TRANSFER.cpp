@@ -26,7 +26,7 @@ void IOPCoreInterpreter::MFC0()
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[getInstruction().getRRd()];
 
-	destReg->writeWordU(static_cast<u32>(sourceReg->getRegisterValue()));
+	destReg->writeWordU(static_cast<u32>(sourceReg->readWordU()));
 }
 
 void IOPCoreInterpreter::MTC0()
@@ -42,7 +42,7 @@ void IOPCoreInterpreter::MTC0()
 	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[getInstruction().getRRd()];
 
-	destReg->setRegisterValue(sourceReg->readWordU());
+	destReg->writeWordU(sourceReg->readWordU());
 }
 
 void IOPCoreInterpreter::MFHI()

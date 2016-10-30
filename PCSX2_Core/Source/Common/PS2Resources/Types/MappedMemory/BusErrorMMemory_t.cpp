@@ -96,7 +96,7 @@ void BusErrorMMemory_t::writeDwordS(u32 storageIndex, s64 value)
 	throw std::runtime_error("Bus Error occured, but not implemented as an exception.");
 }
 
-size_t BusErrorMMemory_t::getStorageSize()
+size_t BusErrorMMemory_t::getMappedSize()
 {
 	return mSize;
 }

@@ -265,8 +265,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 	COP0->Context->setFieldValue(EECore_COP0RegisterContext_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
@@ -278,8 +278,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 	COP0->Context->setFieldValue(EECore_COP0RegisterContext_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 	COP0->Random->setFieldValue(EECore_COP0RegisterRandom_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
 }
 
@@ -292,8 +292,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 	COP0->Context->setFieldValue(EECore_COP0RegisterContext_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 	COP0->Random->setFieldValue(EECore_COP0RegisterRandom_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
 }
 
@@ -307,8 +307,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 	COP0->Context->setFieldValue(EECore_COP0RegisterContext_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 	COP0->Random->setFieldValue(EECore_COP0RegisterRandom_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
 }
 
@@ -321,8 +321,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 	COP0->Context->setFieldValue(EECore_COP0RegisterContext_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 	COP0->Random->setFieldValue(EECore_COP0RegisterRandom_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
 }
 
@@ -331,10 +331,10 @@ void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECore_COP0RegisterBadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setRegisterValue(0);
+	COP0->Context->writeWordU(0);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, 0);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 }
 
 void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
@@ -342,10 +342,10 @@ void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECore_COP0RegisterBadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setRegisterValue(0);
+	COP0->Context->writeWordU(0);
 	COP0->EntryHi->setFieldValue(EECore_COP0RegisterEntryHi_t::Fields::VPN2, 0);
-	COP0->EntryLo0->setRegisterValue(0);
-	COP0->EntryLo1->setRegisterValue(0);
+	COP0->EntryLo0->writeWordU(0);
+	COP0->EntryLo1->writeWordU(0);
 }
 
 void EECoreExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH()
