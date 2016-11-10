@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 /*
 MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 

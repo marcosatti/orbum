@@ -2,8 +2,8 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/Clock/Clock_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/Clock/Clock_t.h"
 
 VMExecutionCoreComponent::VMExecutionCoreComponent(VMMain * vmMain):
 	VMBaseComponent(vmMain),

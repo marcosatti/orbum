@@ -4,16 +4,16 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "Common/PS2Resources/Types/Registers/Register128_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 void EECoreInterpreter::BREAK()
 {
@@ -165,16 +165,16 @@ void EECoreInterpreter::ERET()
 {
 	// ERET is an outlier, where it does not cause a branch delay instruction to be executed. However, still use the R5900->setBranchDelay* functions with cycles = 0.
 	// ERET(). No exceptions.
-	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL) == 1)
+	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1)
 	{
-		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(EECore_COP0RegisterErrorEPC_t::Fields::ErrorEPC);
+		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC);
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL, 0);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 0);
 	}
 	else
 	{
 		const u32 & pcValue = getVM()->getResources()->EE->EECore->COP0->EPC->getFieldValue(COP0RegisterEPC_t::Fields::EPC);
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECore_COP0RegisterStatus_t::Fields::EXL, 0);
+		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 0);
 	}
 }

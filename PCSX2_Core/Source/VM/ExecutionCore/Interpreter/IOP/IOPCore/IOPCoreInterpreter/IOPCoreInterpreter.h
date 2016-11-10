@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/PS2Constants/PS2Constants.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "PS2Constants/PS2Constants.h"
 
 class PS2Resources_t;
 class VMMain;

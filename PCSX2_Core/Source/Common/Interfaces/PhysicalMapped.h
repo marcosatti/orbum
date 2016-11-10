@@ -5,14 +5,17 @@
 #include "Common/Global/Globals.h"
 
 /*
-Interface for PhysicalMMU_t.
+Abstract base class for mapped storage in PhysicalMMU_t.
 At the minimum, an implementing class needs to provide a way for read and write functions, the size, and a PS2 physical address for where it should be mapped from.
+See MappedRegister32_t and MappedMemory_t for examples of implementing classes.
+
+The read write functions expect the index to be a byte index (offset), not a size-specific index.
 */
 
 class PhysicalMapped
 {
 public:
-	explicit PhysicalMapped();
+	explicit PhysicalMapped(const u32 & physicalAddress);
 	virtual ~PhysicalMapped();
 
 	/*
@@ -38,12 +41,12 @@ public:
 	/*
 	Gets the base PS2 physical address the mapping starts from.
 	*/
-	virtual const u32 & getMappedPhysicalAddress() const = 0;
+	const u32 & getMappedPhysicalAddress() const;
 
 	/*
 	Gets the length of the mapping.
 	*/
-	virtual size_t getMappedSize() = 0;
+	virtual size_t getSize() = 0;
 
 	/*
 	Get the map mnemonic, used for debug.
@@ -57,6 +60,11 @@ public:
 	void setAbsMappedPageIndex(u32 absPageIndex);
 
 private:
+	/*
+	The physical address this mapping starts from.
+	*/
+	u32 mPhysicalAddress;
+
 	/*
 	mAbsMappedPageIndex is set by the Physical MMU when mapped. This provides a way for the storage object / VM TLB to determine what byte it should start accessing the array from.
 	See the Physical MMU -> read/write functions to see how this is calculated. In essence, it is the base page number that it was assigned, which can be used to calulate a storage array index.

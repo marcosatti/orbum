@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMBaseComponent.h"
-#include "Common/PS2Resources/Clock/Types/ClockSource_t.h"
+#include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
 TODO: Fill in documentation.

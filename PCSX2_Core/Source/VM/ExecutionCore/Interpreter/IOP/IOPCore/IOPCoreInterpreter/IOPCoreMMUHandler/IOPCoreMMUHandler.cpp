@@ -4,14 +4,14 @@
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/Types/IOPCore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "Common/Util/MMUUtil/MMUUtil.h"
 
 IOPCoreMMUHandler::IOPCoreMMUHandler(VMMain * vmMain) : 
@@ -135,7 +135,7 @@ const IOPCoreException_t & IOPCoreMMUHandler::getExceptionInfo()
 	mExceptionInfo.mTLBExceptionInfo =
 	{
 		mPS2VirtualAddress,
-		getVM()->getResources()->IOP->IOPCore->COP0->Context->getFieldValue(IOPCore_COP0RegisterContext_t::Fields::PTEBase),
+		getVM()->getResources()->IOP->IOPCore->COP0->Context->getFieldValue(IOPCoreCOP0Register_Context_t::Fields::PTEBase),
 		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
 		0, // mTLBEntryInfo->mASID, 
 		0  // getVM()->getResources()->IOP->TLB->getNewTLBIndex()
@@ -225,7 +225,7 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		if (mPS2VirtualAddress <= PS2Constants::IOP::IOPCore::MMU::VADDRESS_SPECIAL_1_UPPER_BOUND)
 		{
 			// Check if isolate cache is turned on, set failed write flag if it is.
-			if (COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IsC))
+			if (COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::IsC))
 				mHasISCFailed = true;
 
 			mPS2PhysicalAddress = mPS2VirtualAddress;

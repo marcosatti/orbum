@@ -2,13 +2,13 @@
 
 #include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/INTC/INTC_t.h"
-#include "Common/PS2Resources/EE/INTC/Types/INTC_Registers_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/INTC/INTC_t.h"
+#include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 using ExType = EECoreException_t::ExType;
 

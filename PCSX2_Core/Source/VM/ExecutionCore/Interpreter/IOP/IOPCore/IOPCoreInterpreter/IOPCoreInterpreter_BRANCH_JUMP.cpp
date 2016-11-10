@@ -3,13 +3,13 @@
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/R3000/Types/LinkRegister32_t.h"
-#include "Common/PS2Resources/Types/Registers/Register32_t.h"
-#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
+#include "Common/Types/Registers/LinkRegister32_t.h"
+#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
 
 void IOPCoreInterpreter::BEQ()
 {

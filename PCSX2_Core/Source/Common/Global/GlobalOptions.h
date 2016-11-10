@@ -13,7 +13,7 @@ Only enabled when a debug build is selected.
 #endif
 
 /*
-Define if the emulator should log SIO messages (serial I/O port). See Common/PS2Resources/EE/Types/EERegsiters_t -> EERegisterSIO_t 
+Define if the emulator should log SIO messages (serial I/O port). See Common/PS2Resources/EE/Types/EERegsiters_t -> EERegister_SIO_t 
  for where the SIO is implemented.
 Only enabled when a debug build is selected.
 */

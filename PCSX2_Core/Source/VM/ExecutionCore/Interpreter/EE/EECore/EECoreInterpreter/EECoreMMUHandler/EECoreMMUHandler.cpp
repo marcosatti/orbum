@@ -3,18 +3,18 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreTLB/EECoreTLB_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "Common/Util/MMUUtil/MMUUtil.h"
-#include "Common/PS2Resources/EE/EECore/EECoreTLB/Types/EECoreTLBEntryInfo_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 
 EECoreMMUHandler::EECoreMMUHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain),
@@ -174,7 +174,7 @@ const EECoreException_t & EECoreMMUHandler::getExceptionInfo()
 	mExceptionInfo.mTLBExceptionInfo =
 	{
 		mPS2VirtualAddress,
-		getVM()->getResources()->EE->EECore->COP0->Context->getFieldValue(EECore_COP0RegisterContext_t::Fields::PTEBase),
+		getVM()->getResources()->EE->EECore->COP0->Context->getFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase),
 		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
 		mTLBEntryInfo->mASID, 
 		getVM()->getResources()->EE->EECore->TLB->getNewTLBIndex()
@@ -279,7 +279,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		}
 		
 		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (COP0->Status->getFieldValue(EECore_COP0RegisterStatus_t::Fields::ERL) == 1) {
+		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1) {
 			if (mPS2VirtualAddress <= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
 			{
 				// We are in kuseg unmapped region, so just return the VA.
@@ -328,7 +328,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage2()
 	if (mTLBEntryInfo->mG == 0)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
-		if (COP0->EntryHi->getFieldValue(EECore_COP0RegisterEntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
+		if (COP0->EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID) != mTLBEntryInfo->mASID)
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)

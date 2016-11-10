@@ -6,7 +6,7 @@ class MathUtil
 public:
 	/*
 	Counts leading bits (1's) from a 32-bit value.
-	Example: in 0b0001101..., the answer is 3.
+	Example: in 0b1110001..., the answer is 3.
 	*/
 	static u32 countLeadingBits(s32 value); // Adapted from the old PCSX2 code and Stackoverflow (see inside body). Thanks everyone!
 

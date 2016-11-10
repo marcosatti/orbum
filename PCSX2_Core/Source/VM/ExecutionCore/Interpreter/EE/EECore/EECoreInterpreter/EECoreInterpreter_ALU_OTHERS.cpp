@@ -6,16 +6,16 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "Common/PS2Resources/Types/Registers/Register128_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
+#include "Common/Types/Registers/FPRegister32_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -81,8 +81,8 @@ void EECoreInterpreter::ABS_S()
 
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::NEG_S()
@@ -101,8 +101,8 @@ void EECoreInterpreter::NEG_S()
 
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::U, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0);
+	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::RSQRT_S()
@@ -127,14 +127,14 @@ void EECoreInterpreter::RSQRT_S()
 	// Set flags and special values, writes a result to the above variable.
 	if (source2Val == 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SD, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -173,8 +173,8 @@ void EECoreInterpreter::SQRT_S()
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(COP1RegisterCSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

@@ -37,14 +37,19 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-// Single precision (32-bit) IEEE754 float (needs to be exactly this for emulation to work, see Types_Test.cpp in the project PCSX2_Core_UnitTest).
-// If the test fails, you may need to add in a platform specific definition based on an #if directive, or use a software emulation library.
+/*
+Single precision (32-bit) IEEE754 float (needs to be exactly this for emulation to work, see Types_Test.cpp in the project PCSX2_Core_UnitTest).
+If the test fails, you may need to add in a platform specific definition based on an #if directive, or use a software emulation library.
+*/
 typedef float f32;
 
-// 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
-// Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2.
-// Mnemonic: v64 stands for value (64-bit), v32 stands for value (32-bit), etc.
-// TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, and for the arrays, it is layed out [3]->[2]->[1]->[0].
+/*
+128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
+Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2.
+Mnemonic: v64 stands for value (64-bit), v32 stands for value (32-bit), etc.
+TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, 
+       and for the arrays, it is layed out (MSB to LSB) [3]->[2]->[1]->[0].
+*/
 struct u128
 {
 	union
@@ -61,22 +66,13 @@ struct u128
 	};
 
 	// Zero value on construction.
-	u128() : hi(0), lo(0) {}
+	u128();
+	u128(const u64 & upper, const u64 & lower);
 
 	// Below functions are convenience functions for:
-	// - Returning the lower 32/16/8 bits of the 128-bit value.
 	// - Comparing the 128-bit value to another.
-	operator u32() const { return v32[0]; }
-	operator u16() const { return v16[0]; }
-	operator u8() const { return v8[0]; }
-
-	bool operator==(const u128& right) const
-	{
-		return (lo == right.lo) && (hi == right.hi);
-	}
-
-	bool operator!=(const u128& right) const
-	{
-		return (lo != right.lo) || (hi != right.hi);
-	}
+	// - Assigning rhs to this value.
+	void operator=(const u128& right);
+	bool operator==(const u128& right) const;
+	bool operator!=(const u128& right) const;
 };

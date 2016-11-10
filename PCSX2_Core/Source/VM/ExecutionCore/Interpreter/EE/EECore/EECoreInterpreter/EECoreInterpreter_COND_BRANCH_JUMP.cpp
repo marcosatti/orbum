@@ -4,17 +4,17 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "Common/PS2Resources/Types/Registers/Register128_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
 void EECoreInterpreter::BEQ()
 {
@@ -257,7 +257,7 @@ void EECoreInterpreter::BC1F()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
@@ -274,7 +274,7 @@ void EECoreInterpreter::BC1FL()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
@@ -293,7 +293,7 @@ void EECoreInterpreter::BC1T()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
@@ -310,7 +310,7 @@ void EECoreInterpreter::BC1TL()
 
 	const s16 offset = getInstruction().getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(COP1RegisterCSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).

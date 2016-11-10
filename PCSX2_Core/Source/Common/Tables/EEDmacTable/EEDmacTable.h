@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/PS2Constants/PS2Constants.h"
+#include "PS2Constants/PS2Constants.h"
 
 class EEDmacTable
 {
@@ -49,7 +49,7 @@ public:
 		PhysicalMode_t PhysicalMode;
 		ChainMode_t    ChainMode;
 	};
-	static constexpr ChannelProperties_t ChannelProperties[PS2Constants::EE::DMAC::NUMBER_DMA_CHANNELS] =
+	static constexpr ChannelProperties_t ChannelProperties[PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
 	{
 		{ "VIF0",    ChannelID_t::VIF0,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
 		{ "VIF1",    ChannelID_t::VIF1,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::SOURCE },

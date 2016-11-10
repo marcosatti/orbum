@@ -6,18 +6,18 @@
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
-#include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/EECoreCOP0_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreCOP0/Types/EECore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 
 using ExType = EECoreException_t::ExType;
@@ -112,7 +112,7 @@ void EECoreInterpreter::checkCountTimerEvent() const
 	if (EECore->COP0->Count->readWordU() >= EECore->COP0->Compare->readWordU())
 	{
 		// Set the IP7 field of the COP0.Cause register.
-		EECore->COP0->Cause->setFieldValue(EECore_COP0RegisterCause_t::Fields::IP7, 1);
+		EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 1);
 
 		// Set exception state.
 		IntExceptionInfo_t intEx = { 0, 0, 1 };

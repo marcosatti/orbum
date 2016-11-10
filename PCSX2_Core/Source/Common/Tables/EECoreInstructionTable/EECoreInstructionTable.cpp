@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
-#include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 
 const MIPSInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
 {

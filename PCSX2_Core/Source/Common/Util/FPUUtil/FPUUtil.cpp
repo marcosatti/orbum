@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "Common/Util/FPUUtil/FPUUtil.h"
-#include "Common/PS2Constants/PS2Constants.h"
+#include "PS2Constants/PS2Constants.h"
 
 bool FPUUtil::isOverflowed(const f32& value)
 {

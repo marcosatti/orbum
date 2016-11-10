@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
 
 /*

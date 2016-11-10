@@ -4,16 +4,16 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreExceptionHandler/IOPCoreExceptionHandler.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/R3000/R3000_t.h"
-#include "Common/PS2Resources/Types/Registers/PCRegister32_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/IOPCoreCOP0_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreCOP0/Types/IOPCore_COP0_Registers_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/IOPCoreExceptions_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "Common/Tables/IOPExceptionsTable/IOPExceptionsTable.h"
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
@@ -70,20 +70,20 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCore_COP0RegisterCause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
+	getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
 
 	// Set EPC and Cause.BD fields.
 	if (getVM()->getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot()) // Check if in the branch delay slot.
 	{
 		u32 pcValue = getVM()->getResources()->IOP->IOPCore->R3000->PC->getPCValue() - 4;
 		getVM()->getResources()->IOP->IOPCore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCore_COP0RegisterCause_t::Fields::BD, 1);
+		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
 	}
 	else
 	{
 		u32 pcValue = getVM()->getResources()->IOP->IOPCore->R3000->PC->getPCValue();
 		getVM()->getResources()->IOP->IOPCore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCore_COP0RegisterCause_t::Fields::BD, 0);
+		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}
 
 	// Select the vector to use (set vectorOffset).
@@ -102,7 +102,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	}
 
 	// Select vector base to use and set PC to use the specified vector.
-	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCore_COP0RegisterStatus_t::Fields::BEV) == 1)
+	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV) == 1)
 	{
 		getVM()->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 	}
@@ -121,7 +121,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT()
 	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
 	// TODO: check for timing issues.
 	
-	// COP0->Cause->setFieldValue(IOPCore_COP0RegisterCause_t::Fields::IP2, mIOPException->mIntExceptionInfo.mInt1);
+	// COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::IP2, mIOPException->mIntExceptionInfo.mInt1);
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
@@ -188,7 +188,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
 	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
 
-	COP0->Cause->setFieldValue(IOPCore_COP0RegisterCause_t::Fields::CE, mIOPException->mCOPExceptionInfo.mCOPUnusable);
+	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, mIOPException->mCOPExceptionInfo.mCOPUnusable);
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_OVERFLOW()
@@ -203,8 +203,8 @@ void IOPCoreExceptionHandler::EX_HANDLER_RESET()
 	// Initalise all of the COP0 registers.
 	COP0->initalise();
 
-	COP0->Status->setFieldValue(IOPCore_COP0RegisterStatus_t::Fields::SwC, 0);
-	COP0->Status->setFieldValue(IOPCore_COP0RegisterStatus_t::Fields::KUc, 0);
-	COP0->Status->setFieldValue(IOPCore_COP0RegisterStatus_t::Fields::IEc, 0);
-	COP0->Status->setFieldValue(IOPCore_COP0RegisterStatus_t::Fields::BEV, 1);
+	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::SwC, 0);
+	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc, 0);
+	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::IEc, 0);
+	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV, 1);
 }

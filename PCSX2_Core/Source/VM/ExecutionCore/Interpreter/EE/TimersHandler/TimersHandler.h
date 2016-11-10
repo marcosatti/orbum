@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/Clock/Types/ClockSource_t.h"
+#include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
 TimersHandler updates TIMER0, TIMER1, TIMER2, TIMER3 as defined in the EE Users Manual, starting on page 33.

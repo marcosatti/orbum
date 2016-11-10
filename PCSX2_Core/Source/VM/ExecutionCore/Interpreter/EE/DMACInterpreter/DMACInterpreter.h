@@ -3,9 +3,8 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/EE/DMAC/Types/DMADataUnit_t.h"
-#include "Common/PS2Resources/EE/DMAC/Types/DMAtag_t.h"
-#include "Common/PS2Constants/PS2Constants.h"
+#include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "PS2Constants/PS2Constants.h"
 #include "Common/Tables/EEDmacTable/EEDmacTable.h"
 
 using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
@@ -27,7 +26,7 @@ See EE Users Manual page 41 onwards.
 Some notes:
  - From what I gather, when the manual talks about a peripheral processors, ie: "transfering data to or from", there is a FIFO queue 128 bytes long
     which stores the DMA channel data? Since you can't specify the dest/src address, except for when accessing SPR or main mem...
- - EERegisterDMACDChcr_t sets PS2Resources->EE->DMAC->SliceCountState[Channel ID] to 0 everytime CHCR.STR has 1 written to it (at the start of a new/resumed transfer).
+ - EERegisterDMACDChcr_t sets PS2Resources->EE->DMAC->mSliceCountState[Channel ID] to 0 everytime mCHCR.STR has 1 written to it (at the start of a new/resumed transfer).
 
 TODO: Not implemented:
  - MFIFO handling.
@@ -121,12 +120,12 @@ private:
 	bool isDrainStallControlOn() const;
 
 	/*
-	Updates STADR from the MADR register (from source channels). Use with isSourceStallControlOn().
+	Updates STADR from the mMADR register (from source channels). Use with isSourceStallControlOn().
 	*/
 	void updateSourceStallControlAddress() const;
 
 	/*
-	Returns true if MADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
+	Returns true if mMADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
 	Also controls the D_STAT.SISn bit - sets to 1 if a stall occurred.
 	TODO: According to the docs, "SIS bit doesn't change even if the transfer restarts"! PS2 OS sets it back to 0?
 	*/
@@ -145,10 +144,10 @@ private:
 	Read and write a qword from the specified peripheral, or from physical memory (either main memory or SPR (scratchpad ram)).
 	Note: the DMAC operates on physical addresses only - the TLB/PS2 EECoreMMU is not involved.
 	*/
-	DMADataUnit_t readDataChannel() const;
-	void writeDataChannel(DMADataUnit_t data) const;
-	DMADataUnit_t readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
-	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, DMADataUnit_t data) const;
+	u128 readDataChannel() const;
+	void writeDataChannel(u128 data) const;
+	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
+	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const;
 
 
 
@@ -160,19 +159,19 @@ private:
 	DMAtag_t mDMAtag;
 
 	/*
-	Sets mDMAtag to the tag read from memory/SPR (from the TADR register).
+	Sets mDMAtag to the tag read from memory/SPR (from the mTADR register).
 	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
 	*/
 	void readDMAtag();
 
 	/*
 	Transfer a DMAtag. It is only defined one way, from memory to peripheral (as it is only effective in source chain mode).
-	Therefore do not need to update MADR and QWC.
+	Therefore do not need to update mMADR and mQWC.
 	*/
 	void transferDMAtag() const;
 
 	/*
-	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (QWC == 0 and TAG.IRQ/CHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
+	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (mQWC == 0 and TAG.IRQ/mCHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
 	*/
 	void checkDMAtagPacketInterrupt() const;
 
@@ -227,7 +226,7 @@ private:
 	// Interleaved Mode Functions.
 
 	/*
-	Checks if the InterleavedCountState has reached the approriate state (limit of transferred data or skip data), and toggles the state.
+	Checks if the mInterleavedCountState has reached the approriate state (limit of transferred data or skip data), and toggles the state.
 	*/
 	void checkInterleaveCount() const;
 };

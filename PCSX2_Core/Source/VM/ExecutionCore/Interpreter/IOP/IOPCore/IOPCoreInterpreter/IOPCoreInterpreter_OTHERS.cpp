@@ -5,10 +5,10 @@
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/IOP/IOP_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/IOPCoreExceptions_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 
 void IOPCoreInterpreter::BREAK()
 {

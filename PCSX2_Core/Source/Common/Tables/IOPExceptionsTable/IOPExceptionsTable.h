@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
-#include "Common/PS2Constants/PS2Constants.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
+#include "PS2Constants/PS2Constants.h"
 
 using ExType = IOPCoreException_t::ExType;
 

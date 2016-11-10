@@ -4,16 +4,16 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "Common/PS2Resources/Types/Registers/Register128_t.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/EECore/EECore_t.h"
-#include "Common/PS2Resources/EE/EECore/R5900/R5900_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/EECoreExceptions_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreExceptions/Types/EECoreException_t.h"
-#include "Common/PS2Resources/EE/EECore/EECoreFPU/EECoreFPU_t.h"
-#include "Common/PS2Resources/Types/MIPSCoprocessor/COP1_BitfieldRegisters_t.h"
-#include "Common/PS2Resources/Types/Registers/FPRegister32_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
+#include "Common/Types/Registers/FPRegister32_t.h"
 
 /*
 Compare instruction family.
@@ -199,9 +199,9 @@ void EECoreInterpreter::C_EQ_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val == source2Val)
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 0);
 }
 
 void EECoreInterpreter::C_F_S()
@@ -219,7 +219,7 @@ void EECoreInterpreter::C_F_S()
 
 	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
-	CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
+	CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 0);
 }
 
 void EECoreInterpreter::C_LE_S()
@@ -242,9 +242,9 @@ void EECoreInterpreter::C_LE_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val <= source2Val)
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 0);
 }
 
 void EECoreInterpreter::C_LT_S()
@@ -267,9 +267,9 @@ void EECoreInterpreter::C_LT_S()
 	f32 source2Val = source2Reg->readFloat();
 
 	if (source1Val < source2Val)
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 1);
 	else
-		CSR->setFieldValue(COP1RegisterCSR_t::Fields::C, 0);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::C, 0);
 }
 
 

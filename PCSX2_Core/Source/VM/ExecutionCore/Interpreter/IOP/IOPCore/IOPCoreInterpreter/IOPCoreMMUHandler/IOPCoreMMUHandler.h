@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
 /*
 TODO: May require hardware testing - all code implemented is based of PCSX2's code, which looked like it was the minimum to get it working. Lots of things are left unimplemented and will throw exception, such as a TLB lookup.

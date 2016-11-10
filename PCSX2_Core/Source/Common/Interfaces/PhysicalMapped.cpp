@@ -2,13 +2,19 @@
 
 #include "Common/Interfaces/PhysicalMapped.h"
 
-PhysicalMapped::PhysicalMapped() : 
+PhysicalMapped::PhysicalMapped(const u32 & physicalAddress) : 
+	mPhysicalAddress(physicalAddress),
 	mAbsMappedPageIndex(0) 
 {
 }
 
 PhysicalMapped::~PhysicalMapped()
 {
+}
+
+const u32& PhysicalMapped::getMappedPhysicalAddress() const
+{
+	return mPhysicalAddress;
 }
 
 u32 PhysicalMapped::getAbsMappedPageIndex() const

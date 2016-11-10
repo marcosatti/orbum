@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include <gtest/gtest.h>
 
-#include <Common/PS2Resources/Types/PhysicalMMU/PhysicalMMU_t.h>
-#include <Common/PS2Resources/Types/MappedMemory/MappedMemory_t.h>
+#include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
+#include <Common/Types/Memory/Memory_t.h>
 
 TEST(MMUHandler_Test, EECore_ReadAndWrite) {
 	PhysicalMMU_t a(Constants::SIZE_512MB, Constants::SIZE_4MB, Constants::SIZE_16B);
 	u32 PS2MemoryAddress = 0x00017FC4;
-	std::shared_ptr<MappedMemory_t> mem = std::make_shared<MappedMemory_t>(128, "", PS2MemoryAddress);
-	a.mapMemory(mem);
+	std::shared_ptr<Memory_t> mem = std::make_shared<Memory_t>(128, "");
+	a.mapMemory(PS2MemoryAddress, mem);
 
 	// 8-bit test.
 	u8 valueU8 = 123;

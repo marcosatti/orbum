@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/PS2Resources/IOP/IOPCore/IOPCoreExceptions/Types/IOPCoreException_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "Common/Tables/IOPExceptionsTable/IOPExceptionsTable.h"
 
 /*

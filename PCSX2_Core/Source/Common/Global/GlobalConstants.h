@@ -15,6 +15,9 @@ struct Constants
 	static constexpr size_t SIZE_4GB   = 0x100000000;
 	static constexpr u32    SIZE_512MB = 0x20000000;
 	static constexpr u32    SIZE_4MB   = 0x400000;
+	static constexpr u32    SIZE_32KB  = 0x8000;
+	static constexpr u32    SIZE_16KB  = 0x4000;
+	static constexpr u32    SIZE_4KB   = 0x1000;
 	static constexpr u32    SIZE_16B   = 0x10;
 
 	static constexpr u32 MASK_16KB = 0x00003FFF;
@@ -30,6 +33,8 @@ struct Constants
 
 	static constexpr u32 NUMBER_BYTES_IN_WORD = 4;
 	static constexpr u32 NUMBER_HWORDS_IN_WORD = 2;
+
+	static constexpr u32 NUMBER_BYTES_IN_HWORD = 2;
 
 	// Thanks Microsoft! https://msdn.microsoft.com/en-AU/library/296az74e.aspx
 	static constexpr u8  VALUE_U8_MAX = 255;

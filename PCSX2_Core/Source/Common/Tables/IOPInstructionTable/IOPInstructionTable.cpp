@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Tables/IOPInstructionTable/IOPInstructionTable.h"
-#include "Common/PS2Resources/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/PS2Resources/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 
 const MIPSInstructionInfo_t * IOPInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
 {

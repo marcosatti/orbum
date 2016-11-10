@@ -5,9 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
-#include "Common/PS2Resources/PS2Resources_t.h"
-#include "Common/PS2Resources/EE/EE_t.h"
-#include "Common/PS2Resources/EE/Types/BootROM_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/Types/BootROM_t.h"
 
 VMMain::VMMain(const VMOptions_t & vmOptions) : 
 	mStatus(VMMain::VMStatus::CREATED),
