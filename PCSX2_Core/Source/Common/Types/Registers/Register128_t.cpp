@@ -4,7 +4,18 @@
 #include "Common/Types/Registers/Register128_t.h"
 
 Register128_t::Register128_t() : 
-	UD{ 0 }
+	UD{ 0 },
+	mMnemonic("")
+{
+}
+
+Register128_t::Register128_t(const char* mnemonic) :
+	UD{ 0 },
+	mMnemonic(mnemonic)
+{
+}
+
+Register128_t::~Register128_t()
 {
 }
 
@@ -86,4 +97,9 @@ s64 Register128_t::readDwordS(u32 arrayIndex)
 void Register128_t::writeDwordS(u32 arrayIndex, s64 value)
 {
 	SD[arrayIndex] = value;
+}
+
+const char* Register128_t::getMnemonic() const
+{
+	return mMnemonic.c_str();
 }

@@ -48,7 +48,10 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB max addre
 
 class PhysicalMapped;
 class Memory_t;
+class Register16_t;
 class Register32_t;
+class Register128_t;
+class FPRegister128_t;
 
 class PhysicalMMU_t
 {
@@ -67,7 +70,10 @@ public:
 	*/
 	void mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMapped);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
+	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
+	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
+	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.

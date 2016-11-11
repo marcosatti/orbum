@@ -9,7 +9,10 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Interfaces/PhysicalMapped.h"
 #include "Common/Types/PhysicalMMU/MappedMemory_t.h"
+#include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister32_t.h"
+#include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
+#include "Common/Types/PhysicalMMU/MappedFPRegister128_t.h"
 
 PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 & directorySizeBytes, const u32 & pageSizeBytes) :
 	MAX_ADDRESSABLE_SIZE_BYTES(maxAddressableSizeBytes),
@@ -94,9 +97,24 @@ void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr
 	mapMemory(std::make_shared<MappedMemory_t>(physicalAddress, memory));
 }
 
+void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register16_t>& register16)
+{
+	mapMemory(std::make_shared<MappedRegister16_t>(physicalAddress, register16));
+}
+
 void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t>& register32)
 {
 	mapMemory(std::make_shared<MappedRegister32_t>(physicalAddress, register32));
+}
+
+void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register128_t>& register128)
+{
+	mapMemory(std::make_shared<MappedRegister128_t>(physicalAddress, register128));
+}
+
+void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t>& fpRegister128)
+{
+	mapMemory(std::make_shared<MappedFPRegister128_t>(physicalAddress, fpRegister128));
 }
 
 u32 PhysicalMMU_t::getVDN(u32 PS2PhysicalAddress) const

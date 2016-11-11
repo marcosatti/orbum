@@ -1,0 +1,10 @@
+The common folder contains system logic for most of the PS2 components, except for systems which warrent a separate recompiler/interpreter/etc combo.
+These systems will be fairly simple in logic and are designed to be used in any type of ExecutionCore system.
+
+The systems implemented in here are:
+- EE
+  -- DMAC
+  -- INTC
+  -- TIMERS
+- IOP
+  -- Nothing yet

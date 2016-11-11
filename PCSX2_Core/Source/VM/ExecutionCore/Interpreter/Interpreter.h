@@ -20,9 +20,9 @@ The timing is all implemented in the PS2Resources_t::Clock_t class, which is use
 
 class VMMain;
 class EECoreInterpreter;
-class DMACInterpreter;
-class INTCHandler;
-class TimersHandler;
+class EEDmac;
+class EEIntc;
+class EETimers;
 class IOPCoreInterpreter;
 //class InterpreterVU;
 //class InterpreterGS;
@@ -45,19 +45,18 @@ public:
 	s64 executionStep(const ClockSource_t & clockSource) override;
 
 	/*
-	Delegates to all components by calling mComponents::intialise().
+	Delegates to all components by calling mComponents[i]->intialise().
 	*/
 	void initalise() override;
 
 private:
-
 	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
-	std::shared_ptr<DMACInterpreter> mDMACInterpreter;
-	std::shared_ptr<INTCHandler> mINTCHandler;
-	std::shared_ptr<TimersHandler> mTimerHandler;
+	std::shared_ptr<EEDmac> mEEDmac;
+	std::shared_ptr<EEIntc> mEEIntc;
+	std::shared_ptr<EETimers> mEETimers;
 	//std::unique_ptr<InterpreterVU> mInterpreterVU; 
 	//std::unique_ptr<InterpreterGS> mInterpreterGS;
-	std::shared_ptr<IOPCoreInterpreter> mIOPInterpreter;
+	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
 
 	/*
 	Used to iterate through all components except the EE Core interpreter.

@@ -4,7 +4,14 @@
 #include "Common/Types/Registers/Register16_t.h"
 
 Register16_t::Register16_t() : 
-	UH(0)
+	UH(0),
+	mMnemonic("")
+{
+}
+
+Register16_t::Register16_t(const char* mnemonic) :
+	UH(0),
+	mMnemonic(mnemonic)
 {
 }
 
@@ -46,4 +53,9 @@ s16 Register16_t::readHwordS()
 void Register16_t::writeHwordS(s16 value)
 {
 	SH = value;
+}
+
+const char* Register16_t::getMnemonic() const
+{
+	return mMnemonic.c_str();
 }

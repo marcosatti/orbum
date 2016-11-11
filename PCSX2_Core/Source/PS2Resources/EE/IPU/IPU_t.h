@@ -16,10 +16,10 @@ public:
 	IPU memory mapped registers. See page 21 of EE Users Manual.
 	*/
 	// 0x10002000
-	std::shared_ptr<Register32_t>  IPU_REGISTER_CMD;
-	std::shared_ptr<Register32_t>  IPU_REGISTER_CTRL;
-	std::shared_ptr<Register32_t>  IPU_REGISTER_BP;
-	std::shared_ptr<Register32_t>  IPU_REGISTER_TOP;
-	std::shared_ptr<DeadMemory_t> IPU_MEMORY_2040;
+	std::shared_ptr<Register32_t> REGISTER_CMD;
+	std::shared_ptr<Register32_t> REGISTER_CTRL;
+	std::shared_ptr<Register32_t> REGISTER_BP;
+	std::shared_ptr<Register32_t> REGISTER_TOP;
+	std::shared_ptr<DeadMemory_t> MEMORY_2040;
 };
 

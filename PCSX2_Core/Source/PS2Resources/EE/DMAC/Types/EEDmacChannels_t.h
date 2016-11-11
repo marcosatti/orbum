@@ -4,6 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacTable/EEDmacTable.h"
+#include <Common/Types/Memory/DeadMemory_t.h>
 
 /*
 EEDmacChannels_t defines all of the channels available in the EE DMAC.
@@ -112,6 +113,13 @@ public:
 	explicit EEDmacChannel_VIF0_t();
 
 	static constexpr u32 CHANNEL_ID = 0;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -125,6 +133,13 @@ public:
 	explicit EEDmacChannel_VIF1_t();
 
 	static constexpr u32 CHANNEL_ID = 1;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -138,6 +153,13 @@ public:
 	explicit EEDmacChannel_GIF_t();
 
 	static constexpr u32 CHANNEL_ID = 2;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -151,6 +173,13 @@ public:
 	explicit EEDmacChannel_fromIPU_t();
 
 	static constexpr u32 CHANNEL_ID = 3;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -164,6 +193,13 @@ public:
 	explicit EEDmacChannel_toIPU_t();
 
 	static constexpr u32 CHANNEL_ID = 4;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -177,6 +213,13 @@ public:
 	explicit EEDmacChannel_SIF0_t();
 
 	static constexpr u32 CHANNEL_ID = 5;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -190,6 +233,13 @@ public:
 	explicit EEDmacChannel_SIF1_t();
 
 	static constexpr u32 CHANNEL_ID = 6;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -203,6 +253,13 @@ public:
 	explicit EEDmacChannel_SIF2_t();
 
 	static constexpr u32 CHANNEL_ID = 7;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED;
 };
 
 /*
@@ -216,8 +273,15 @@ public:
 	explicit EEDmacChannel_fromSPR_t();
 
 	static constexpr u32 CHANNEL_ID = 8;
-};
 
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED0;
+	std::shared_ptr<DeadMemory_t> mRESERVED1;
+};
 
 /*
 Represents EE DMAC channel 8 - the fromSPR channel.
@@ -230,4 +294,12 @@ public:
 	explicit EEDmacChannel_toSPR_t();
 
 	static constexpr u32 CHANNEL_ID = 9;
+
+	/*
+	Mapped memory that is present at the end of this channel.
+	See page 23 onwards of the EE Users Manual.
+	This needs to be initalised into the EE memory map.
+	*/
+	std::shared_ptr<DeadMemory_t> mRESERVED0;
+	std::shared_ptr<DeadMemory_t> mRESERVED1;
 };

@@ -19,6 +19,9 @@ public:
 
 	/*
 	For 32-bit registers, only read/writeWord is allowed. All others throw a runtime exception.
+	Access must conform to alignment conditions. ie: for word access, storage index must be (storageIndex % 4 == 0),
+	 however it is up to the user to correctly align the mapping to the physical memory space.
+	A runtime exception is thrown on unaligned conditions.
 	This is provided to mimic the PS2 alginment conditions, for example, with the EE registers defined in the EE Users Manual ("...only word accessible...").
 	*/
 	u8 readByteU(u32 storageIndex) override;

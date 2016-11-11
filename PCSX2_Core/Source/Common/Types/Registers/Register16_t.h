@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "Common/Global/Globals.h"
 
 /*
@@ -30,6 +32,7 @@ class Register16_t
 public:
 	// Initialise union with 0 value.
 	explicit Register16_t();
+	explicit Register16_t(const char * mnemonic);
 
 	virtual ~Register16_t()
 	{
@@ -52,4 +55,15 @@ public:
 	virtual void writeHwordU(u16 value);
 	virtual s16 readHwordS();
 	virtual void writeHwordS(s16 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+private:
+	/*
+	The mnemonic.
+	*/
+	const std::string mMnemonic;
 };

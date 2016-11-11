@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include <string>
 
 /*
 FPRegister128_t is a register type used for VU floating point operations. It is made up of 4 x 32-bit single precision floats, and not intented to be a 128-bit 'float' type.
@@ -21,6 +22,7 @@ class FPRegister128_t
 public:
 	// Initialise union with 0 value.
 	explicit FPRegister128_t();
+	explicit FPRegister128_t(const char * mnemonic);
 
 	virtual ~FPRegister128_t()
 	{
@@ -28,6 +30,8 @@ public:
 
 	union
 	{
+		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
+		s64 SD[Constants::NUMBER_DWORDS_IN_QWORD];
 		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
 		s32 SW[Constants::NUMBER_WORDS_IN_QWORD];
 		f32 F[Constants::NUMBER_WORDS_IN_QWORD];
@@ -41,7 +45,22 @@ public:
 	virtual void writeWordU(u32 arrayIndex, u32 value);
 	virtual s32 readWordS(u32 arrayIndex);
 	virtual void writeWordS(u32 arrayIndex, s32 value);
+	virtual u64 readDwordU(u32 arrayIndex);
+	virtual void writeDwordU(u32 arrayIndex, u64 value);
+	virtual s64 readDwordS(u32 arrayIndex);
+	virtual void writeDwordS(u32 arrayIndex, s64 value);
 	virtual f32 readFloat(u32 arrayIndex);
 	virtual void writeFloat(u32 arrayIndex, f32 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+private:
+	/*
+	The mnemonic.
+	*/
+	const std::string mMnemonic;
 };
 

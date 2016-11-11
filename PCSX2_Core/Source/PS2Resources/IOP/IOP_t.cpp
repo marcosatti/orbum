@@ -17,6 +17,6 @@ IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_16B)),
 	MainMemory(std::make_shared<Memory_t>(PS2Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
 	ParallelPort(std::make_shared<DebugMemory_t>(PS2Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port")),
-	IOP_HW_REGISTERS(std::make_shared<DebugMemory_t>(0x2000, "IOP HW Memory"))
+	IOP_HW_REGISTERS(std::make_shared<Memory_t>(0x2000, "IOP HW Memory"))
 {
 }

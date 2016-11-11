@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "Common/Global/Globals.h"
 
 /*
@@ -26,10 +28,9 @@ class Register128_t
 public:
 	// Initialise union with 0 value.
 	explicit Register128_t();
+	explicit Register128_t(const char * mnemonic);
 
-	virtual ~Register128_t()
-	{
-	}
+	virtual ~Register128_t();
 
 	// The PS2 never operates or manipulates values above 64-bit - but it can do parallel operations on for example 2 x 64-bit or 16 x 8-bit values. 
 	// It is meaningless to provide a signed/unsigned combo of 128-bit variables since they can't be manipulated.
@@ -62,4 +63,15 @@ public:
 	virtual void writeDwordU(u32 arrayIndex, u64 value);
 	virtual s64 readDwordS(u32 arrayIndex);
 	virtual void writeDwordS(u32 arrayIndex, s64 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+private:
+	/*
+	The mnemonic.
+	*/
+	const std::string mMnemonic;
 };

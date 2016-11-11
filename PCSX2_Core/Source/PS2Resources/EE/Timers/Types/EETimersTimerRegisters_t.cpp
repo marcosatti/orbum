@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
-#include "PS2Resources/PS2Resources_t.h"
-#include "PS2Resources/EE/EE_t.h"
-#include "PS2Resources/EE/Timers/Timers_t.h"
+#include "PS2Resources/EE/Timers/EETimers_t.h"
 
-EETimersTimerRegister_Mode_t::EETimersTimerRegister_Mode_t(const std::shared_ptr<EETimersTimerRegister_Count_t> & count)
+EETimersTimerRegister_Mode_t::EETimersTimerRegister_Mode_t(const std::shared_ptr<EETimersTimerRegister_Count_t> & count) :
+	mCount(count)
 {
 	registerField(Fields::CLKS, "CLKS", 0, 2, 0);
 	registerField(Fields::GATE, "GATE", 2, 1, 0);
@@ -22,12 +21,12 @@ EETimersTimerRegister_Mode_t::EETimersTimerRegister_Mode_t(const std::shared_ptr
 void EETimersTimerRegister_Mode_t::writeWordU(u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
-	u32 originalValue = Register32_t::readWordU();
-	u32 newValue = ((value & 0xC00) ^ (originalValue & 0xC00)) | (value & ~0xC00);
-	Register32_t::writeWordU(newValue);
-
+	u32 originalValue = BitfieldRegister32_t::readWordU();
+	u32 newValue = (~(value & 0xC00) & (originalValue & 0xC00)) | (value & ~0xC00);
+	BitfieldRegister32_t::writeWordU(newValue);
+	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (value & 0x80)
+	if (getFieldValue(Fields::CUE))
 		mCount->reset();
 }
 

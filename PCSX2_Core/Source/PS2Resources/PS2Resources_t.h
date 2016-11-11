@@ -13,6 +13,9 @@ There is no hard definition of what is a component and what is a category, altho
 User is to make a judgement, just be sure to make clear your intentions.
 As an example, the EE & DMAC is defined as a category, and inside is the DMAC channel components and common registers.
 
+The naming convention is based off the component. For cases where for example the EE and IOP share component names, 
+ the source files are prefixed with EE or IOP.
+
 You should only ever need to create an object of the PS2Resources_t type from which you can access everything,
 which is ordered by components in the documentation groups, such as PS2Resources->PS2State->EE->EECore->R5900->GPR[1]->readWordU().
 
@@ -63,5 +66,6 @@ private:
 	*/
 	void mapPhysicalMemory_EE() const;
 	void mapPhysicalMemory_IOP() const;
-	// void mapPhysicalMemory_VU0() const;
+	void mapPhysicalMemory_VU0() const;
+	void mapPhysicalMemory_VU1() const;
 };

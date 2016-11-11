@@ -4,22 +4,22 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECore/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/DMACInterpreter/DMACInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/INTCHandler/INTCHandler.h"
-#include "VM/ExecutionCore/Interpreter/EE/TimersHandler/TimersHandler.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPCore/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
+#include "VM/ExecutionCore/Common/EE/INTC/EEIntc.h"
+#include "VM/ExecutionCore/Common/EE/Timers/EETimers.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{ ClockSource_t::VM },
 	mEECoreInterpreter(std::make_shared<EECoreInterpreter>(vmMain)),
-	mDMACInterpreter(std::make_shared<DMACInterpreter>(vmMain)),
-	mINTCHandler(std::make_shared<INTCHandler>(vmMain)),
-	mTimerHandler(std::make_shared<TimersHandler>(vmMain)),
-	mIOPInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
-	mComponents { mDMACInterpreter, mINTCHandler, mTimerHandler, mIOPInterpreter }
+	mEEDmac(std::make_shared<EEDmac>(vmMain)),
+	mEEIntc(std::make_shared<EEIntc>(vmMain)),
+	mEETimers(std::make_shared<EETimers>(vmMain)),
+	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
+	mComponents { mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter }
 {
 }
 
