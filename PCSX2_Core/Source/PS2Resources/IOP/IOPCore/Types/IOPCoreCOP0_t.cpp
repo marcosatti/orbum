@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 

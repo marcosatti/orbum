@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Tables/EEDmacTable/EEDmacTable.h"
+#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 #include <Common/Types/Memory/DeadMemory_t.h>
 
 /*
@@ -31,7 +31,7 @@ Subclassed by EE DMAC channels 0-9 (see EEDmacChannel_VIF0_t - EEDmacChannel_toS
 Not all of the registers are implemented in this base class for each channel.
 */
 
-using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
+using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 
 class EEDmacChannelRegister_CHCR_t;
 class EEDmacChannelRegister_MADR_t;
@@ -46,7 +46,7 @@ public:
 	explicit EEDmacChannel_t(const u32 & channelID);
 
 	/*
-	The ID of this channel. Used to look up properties in the EEDmacTable, which lists the physical mode, direction etc listed on EE Users Manual page 42.
+	The ID of this channel. Used to look up properties in the EEDmacChannelTable, which lists the physical mode, direction etc listed on EE Users Manual page 42.
 	*/
 	const u32 mChannelID;
 	const ChannelProperties_t * getChannelProperties() const;

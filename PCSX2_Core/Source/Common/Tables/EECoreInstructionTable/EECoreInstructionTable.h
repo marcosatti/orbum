@@ -71,6 +71,7 @@ public:
 	/*
 	An unknown instruction constant, used in tables not implemented.
 	*/
+	static const MIPSInstructionInfo_t EECORE_COP2_UNDEFINED;
 	static const MIPSInstructionInfo_t EECORE_INSTRUCTION_UNDEFINED;
 
 	/*

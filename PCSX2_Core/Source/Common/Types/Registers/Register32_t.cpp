@@ -15,6 +15,10 @@ Register32_t::Register32_t(const char* mnemonic) :
 {
 }
 
+Register32_t::~Register32_t()
+{
+}
+
 u8 Register32_t::readByteU(u32 arrayIndex)
 {
 	return UB[arrayIndex];

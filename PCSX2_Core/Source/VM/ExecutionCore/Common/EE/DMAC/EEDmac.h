@@ -5,10 +5,10 @@
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 #include "PS2Constants/PS2Constants.h"
-#include "Common/Tables/EEDmacTable/EEDmacTable.h"
+#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
-using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
-using Direction_t = EEDmacTable::Direction_t;
+using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
+using Direction_t = EEDmacChannelTable::Direction_t;
 
 /*
 The EE DMAC sytem controls the execution of the EE DMAC and transfers through DMA.
@@ -153,14 +153,9 @@ private:
 	/*
 	Sets mDMAtag to the tag read from memory/SPR (from the mTADR register).
 	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
+	If CHCR.TTE is set, transfers the tag.
 	*/
 	void readDMAtag();
-
-	/*
-	Transfer a DMAtag. It is only defined one way, from memory to peripheral (as it is only effective in source chain mode).
-	Therefore do not need to update mMADR and mQWC.
-	*/
-	void transferDMAtag() const;
 
 	/*
 	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (mQWC == 0 and TAG.IRQ/mCHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.

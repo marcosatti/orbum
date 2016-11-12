@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 
 COP0RegisterReserved_t::COP0RegisterReserved_t()
 {

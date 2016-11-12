@@ -11,10 +11,10 @@
 #include "Common/Types/Registers/PCRegister32_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0_BitfieldRegisters_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
-#include "Common/Tables/IOPExceptionsTable/IOPExceptionsTable.h"
+#include "Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h"
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
@@ -48,7 +48,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	mIOPException = &PS2Exception;
 
 	// Get the exception properties.
-	mExceptionProperties = IOPExceptionsTable::getExceptionInfo(PS2Exception.mExType);
+	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
 
 #if defined(BUILD_DEBUG)
 	// Debug print exception type.

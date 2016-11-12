@@ -3,7 +3,7 @@
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
 /*
-COP0_BitfieldRegister_t.h implements common COP0 control registers. This is used primarily by EECoreCOP0_t.h and IOPCoreCOP0_t.h.
+COP0Register_t.h implements common COP0 control registers. This is used primarily by EECoreCOP0_t.h and IOPCoreCOP0_t.h.
 Each register will have documentation attached to it, and is prefixed with COP0Register.
 Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
 

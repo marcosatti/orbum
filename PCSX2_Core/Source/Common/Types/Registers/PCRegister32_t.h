@@ -1,6 +1,6 @@
 #pragma once
 
-#include  "Common/Global/Globals.h"
+#include "Common/Global/Globals.h"
 
 #include "Common/Types/Registers/Register32_t.h"
 

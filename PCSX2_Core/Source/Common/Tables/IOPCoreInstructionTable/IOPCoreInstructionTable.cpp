@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "Common/Tables/IOPInstructionTable/IOPInstructionTable.h"
+#include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 
-const MIPSInstructionInfo_t * IOPInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
+const MIPSInstructionInfo_t * IOPCoreInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
 {
 	// A dummy class to kickstart the search.
 	const MIPSInstructionInfo_t rootInfo = {"root", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, IOP_INSTRUCTION_OPCODE_LOOKUP };
@@ -18,39 +18,39 @@ const MIPSInstructionInfo_t * IOPInstructionTable::getInstructionInfo(const MIPS
 	return returnInfo;
 }
 
-const MIPSInstructionInfo_t & IOPInstructionTable::IOP_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
+const MIPSInstructionInfo_t & IOPCoreInstructionTable::IOP_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
 {
 	return IOP_OPCODE_TABLE[instruction.getOpcode()];
 }
 
-const MIPSInstructionInfo_t& IOPInstructionTable::IOP_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
+const MIPSInstructionInfo_t& IOPCoreInstructionTable::IOP_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return IOP_SPECIAL_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& IOPInstructionTable::IOP_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
+const MIPSInstructionInfo_t& IOPCoreInstructionTable::IOP_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return IOP_REGIMM_TABLE[instruction.getRRt()];
 }
 
-const MIPSInstructionInfo_t& IOPInstructionTable::IOP_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
+const MIPSInstructionInfo_t& IOPCoreInstructionTable::IOP_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return IOP_COP0_TABLE[instruction.getRRs()];
 }
 
-const MIPSInstructionInfo_t& IOPInstructionTable::IOP_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
+const MIPSInstructionInfo_t& IOPCoreInstructionTable::IOP_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return IOP_COP2_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& IOPInstructionTable::IOP_INSTRUCTION_CP2BSC_LOOKUP(const MIPSInstruction_t& instruction)
+const MIPSInstructionInfo_t& IOPCoreInstructionTable::IOP_INSTRUCTION_CP2BSC_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	return IOP_CP2BSC_TABLE[instruction.getRRs()];
 }
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_INSTRUCTION_UNDEFINED = {"undefined", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_INSTRUCTION_UNDEFINED = {"undefined", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_CP2BSC_TABLE[32] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_CP2BSC_TABLE[32] =
 {
 	{ "CP2BSC", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MFC2", 87, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "CP2BSC", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -86,7 +86,7 @@ const MIPSInstructionInfo_t IOPInstructionTable::IOP_CP2BSC_TABLE[32] =
 	{ "CP2BSC", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_COP2_TABLE[64] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_COP2_TABLE[64] =
 {
 	{ "COP2", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "CP2BSC", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, IOP_INSTRUCTION_CP2BSC_LOOKUP },
 	{ "COP2", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RTPS", 66, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -154,7 +154,7 @@ const MIPSInstructionInfo_t IOPInstructionTable::IOP_COP2_TABLE[64] =
 	{ "COP2", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_COP0_TABLE[32] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_COP0_TABLE[32] =
 {
 	{ "COP0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MFC0", 61, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "COP0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -190,7 +190,7 @@ const MIPSInstructionInfo_t IOPInstructionTable::IOP_COP0_TABLE[32] =
 	{ "COP0", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_REGIMM_TABLE[32] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_REGIMM_TABLE[32] =
 { 
 	{ "REGIMM", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BLTZ", 57, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R3000_BRANCH, nullptr },
 	{ "REGIMM", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BGEZ", 58, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R3000_BRANCH, nullptr },
@@ -226,7 +226,7 @@ const MIPSInstructionInfo_t IOPInstructionTable::IOP_REGIMM_TABLE[32] =
 	{ "REGIMM", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, nullptr },
 };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_SPECIAL_TABLE[64] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_SPECIAL_TABLE[64] =
 { 
 	{ "SPECIAL", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "SLL", 29, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, nullptr },
 	{ "SPECIAL", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, nullptr },
@@ -294,7 +294,7 @@ const MIPSInstructionInfo_t IOPInstructionTable::IOP_SPECIAL_TABLE[64] =
 	{ "SPECIAL", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, nullptr },
 };
 
-const MIPSInstructionInfo_t IOPInstructionTable::IOP_OPCODE_TABLE[64] =
+const MIPSInstructionInfo_t IOPCoreInstructionTable::IOP_OPCODE_TABLE[64] =
 {
 	{ "OPCODE", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "SPECIAL", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, IOP_INSTRUCTION_SPECIAL_LOOKUP },
 	{ "OPCODE", 1, MIPSInstructionInfo_t::InstructionType::CLASS, "REGIMM", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, IOP_INSTRUCTION_REGIMM_LOOKUP },

@@ -154,22 +154,16 @@
     <ClInclude Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.h">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Tables\EEDmacTable\EeDmacTable.h" />
     <ClInclude Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.h" />
-    <ClInclude Include="Source\Common\Tables\IOPInstructionTable\IOPInstructionTable.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUUtil.h">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Util\MMUUtil\MMUUtil.h">
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.h" />
     <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
     <ClInclude Include="Source\Common\Types\BitfieldMap32\BitfieldMap32_t.h" />
-    <ClInclude Include="Source\Common\Types\MIPSCoprocessor\COP0_BitfieldRegisters_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor0_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h">
@@ -220,9 +214,6 @@
     <ClInclude Include="Source\PS2Resources\EE\IPU\IPU_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\SIF\SIF_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Types\BootROM_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\EE_t.h">
-      <Filter>Source\Common\PS2 Resources\EE</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PS2Resources\GS\GS_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\IOPCore_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOP_t.h" />
@@ -298,6 +289,20 @@
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ZeroFPRegister128_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.h" />
+    <ClInclude Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PS2Resources\EE\EE_t.h">
+      <Filter>Source\Common\PS2 Resources\EE</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF.h" />
+    <ClInclude Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.h" />
+    <ClInclude Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.h" />
+    <ClInclude Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.h" />
+    <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -321,19 +326,15 @@
     <ClCompile Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.cpp">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Tables\EEDmacTable\EeDmacTable.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
-    <ClCompile Include="Source\Common\Tables\IOPInstructionTable\IOPInstructionTable.cpp" />
     <ClCompile Include="Source\Common\Util\FPUUtil\FPUUtil.cpp">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Util\MMUUtil\MMUUtil.cpp">
       <Filter>Source\Common\Util\EECoreMMUUtil</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Tables\IOPExceptionsTable\IOPExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Interfaces\PhysicalMapped.cpp" />
     <ClCompile Include="Source\Common\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0_BitfieldRegisters_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor0_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.cpp">
@@ -472,6 +473,15 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ZeroFPRegister128_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.cpp" />
+    <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF.cpp" />
+    <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

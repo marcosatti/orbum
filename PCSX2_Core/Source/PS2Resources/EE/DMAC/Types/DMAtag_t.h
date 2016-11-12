@@ -5,10 +5,9 @@
 /*
 A class containing info as required by a DMAtag, as explained on page 58 of the EE Users Manual.
 
-Designed so it can be reused (use setDMAtagValue() to extract the field values).
+Designed so it can be reused (use setValue() and then the get functions to extract the field values).
 
-Although a DMAtag is 128-bit long, only the lower 64-bits are used (for the tag). It is compatible with DMADataUnit_t.
-It takes in two u64 values as the upper 64-bits may be used in a tag transfer.
+Although a DMAtag is 128-bit long, only the lower 64-bits are used (for the tag).
 
 Bitfield map (relevant only):
 - Bits 0-15 (length 16): "mQWC" (Quadword count).
@@ -23,24 +22,23 @@ class DMAtag_t
 {
 public:
 	/*
-	Initalise a DMAtag object optionally with the data unit parsed.
+	Initalise a DMAtag object optionally with the tag value.
 	*/
 	DMAtag_t();
-	DMAtag_t(const u128 & dataUnit);
+	DMAtag_t(const u64 & DMAtagValue);
 
 	/*
-	Holder for the data unit.
+	Holder for the tag value.
 	*/
-	u128 mDMADataUnit;
+	u64 mTagValue;
 
 	/*
-	Get/Set the data unit value. Allows an object to be reused so memory allocations are not wasted.
+	Set the tag value.
 	*/
-	const u128 & getDataUnit() const;
-	void setDataUnit(const u128 & dataUnit);
+	void setValue(const u64 & DMAtagValue);
 
 	/*
-	Get functions for the DMA tag field values.
+	Get functions for the DMAtag field values.
 	*/
 	u16 getQWC() const;
 	u8 getPCE() const;

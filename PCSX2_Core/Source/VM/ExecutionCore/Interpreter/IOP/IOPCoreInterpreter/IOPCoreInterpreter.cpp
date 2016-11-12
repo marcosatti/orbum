@@ -9,7 +9,7 @@
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Tables/IOPInstructionTable/IOPInstructionTable.h"
+#include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 
@@ -77,7 +77,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 	getInstruction().setInstructionValue(instructionValue);
 
 	// Get the instruction details
-	mInstructionInfo = IOPInstructionTable::getInstructionInfo(mInstruction);
+	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if (0) // defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x36a8c; //0x2aa05;

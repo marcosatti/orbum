@@ -4,7 +4,7 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
-#include "Common/Tables/IOPExceptionsTable/IOPExceptionsTable.h"
+#include "Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h"
 
 /*
 The exception handler provides 2 main points of functionality:
@@ -13,7 +13,7 @@ The exception handler provides 2 main points of functionality:
  See for example: http://mescal.imag.fr/membres/vania.marangozova-martin/TEACHING/NACHOS/NACHOS_DOC/mips.html#exception
 */
 
-using ExceptionProperties_t = IOPExceptionsTable::ExceptionProperties_t;
+using ExceptionProperties_t = IOPCoreExceptionsTable::ExceptionProperties_t;
 class VMMain;
 
 class IOPCoreExceptionHandler : public VMExecutionCoreComponent
@@ -74,7 +74,7 @@ private:
 	void EX_HANDLER_RESET(); // Not documented as an exception but used for resetting the R3000 state within the emulator.
 
 	/*
-	Static arrays needed to call the appropriate exception handler function. Based upon IOPExceptionsTable::ExceptionProperties_t::mImplementationIndex.
+	Static arrays needed to call the appropriate exception handler function. Based upon IOPCoreExceptionsTable::ExceptionProperties_t::mImplementationIndex.
 	*/
 	void(IOPCoreExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS])() =
 	{

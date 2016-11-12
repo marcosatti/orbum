@@ -2,7 +2,7 @@
 
 #include "PS2Constants/PS2Constants.h"
 
-class EEDmacTable
+class EEDmacChannelTable
 {
 public:
 

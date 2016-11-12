@@ -40,7 +40,7 @@ Due to macro issues caused by <math>, all of the exceptions have EX_ as a prefix
 
 See the IOPCoreExceptionHandler class for how they are handled, and the EE Core Users Manual.
 
-NOTE: Do NOT change the order - they are sync'd with the IOPExceptionsTable::ExceptionProperties[] array. If you change one you must reflect the changes in the other.
+NOTE: Do NOT change the order - they are sync'd with the IOPCoreExceptionsTable::ExceptionProperties[] array. If you change one you must reflect the changes in the other.
 */
 struct IOPCoreException_t
 {

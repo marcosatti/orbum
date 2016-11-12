@@ -15,13 +15,13 @@ The instruction tables are defined in IOP Instruction Implementation Register.xl
 The purpose of this class is to decode the given instruction, so that an execution core knows which instruction implementation to use.
 For example (pseduo-code): 
  MIPSInstruction = 0xABCD1234
- Info = IOPInstructionTable::getInstructionInfo(MIPSInstruction)
+ Info = IOPCoreInstructionTable::getInstructionInfo(MIPSInstruction)
  ExecutionCore.ExecuteInstruction(Info.mImplementationIndex)
 
 The mImplementationIndex is a linear UNIQUE index of all of the instructions for the IOP - there should be no two instructions with the same index.
 Therefore in an execution core, a simple function pointer array of size = MAX(Implementation Indexes) will be enough, which is simply used as in the example above.
 */
-class IOPInstructionTable
+class IOPCoreInstructionTable
 {
 public:
 	/*

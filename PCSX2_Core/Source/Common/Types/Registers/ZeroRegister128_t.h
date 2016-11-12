@@ -1,4 +1,6 @@
 #pragma once
+
+#include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
 /*

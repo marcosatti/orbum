@@ -28,9 +28,7 @@ public:
 	// Initialise union with 0 value.
 	explicit Register64_t();
 
-	virtual ~Register64_t()
-	{
-	}
+	virtual ~Register64_t();
 
 	union
 	{

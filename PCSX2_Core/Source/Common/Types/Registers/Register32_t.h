@@ -31,9 +31,7 @@ public:
 	explicit Register32_t();
 	explicit Register32_t(const char * mnemonic);
 
-	virtual ~Register32_t()
-	{
-	}
+	virtual ~Register32_t();
 
 	union 
 	{

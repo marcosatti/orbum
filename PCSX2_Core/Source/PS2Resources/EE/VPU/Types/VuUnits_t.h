@@ -7,6 +7,7 @@
 class Memory_t;
 class PhysicalMMU_t;
 class FPRegister128_t;
+class FPRegister32_t;
 class Register16_t;
 
 /*
@@ -25,12 +26,41 @@ public:
 
 	/*
 	VU0 Floating Point Registers (VF) (128-bit) and Integer Registers (VI) (16-bit).
-	Inititalised in class.
 	See VU Users Manual page 18.
 	*/
 	std::shared_ptr<FPRegister128_t> VF[PS2Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];
 	std::shared_ptr<Register16_t> VI[PS2Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
 
+	/*
+	ACC register. Used by instructions such as ADDA and MULA.
+	See VU Users Manual page 33.
+	*/
+	std::shared_ptr<FPRegister128_t> ACC;
+
+	/*
+	I register. Used to store immediate values.
+	See VU Users Manual page 33.
+	*/
+	std::shared_ptr<FPRegister32_t> I;
+
+	/*
+	Q register. Used to store division/sqrt values.
+	See VU Users Manual page 34.
+	*/
+	std::shared_ptr<FPRegister32_t> Q;
+
+	/*
+	P register. Used to store random numbers generated.
+	See VU Users Manual page 34.
+	*/
+	std::shared_ptr<FPRegister32_t> R;
+
+	/*
+	P register. Used to store EFU result values.
+	See VU Users Manual page 34.
+	*/
+	std::shared_ptr<FPRegister32_t> P;
+	
 	/*
 	VU0 contains a physical memory map of its real working space (& mirrors) and the VU1 registers.
 	For VU1, it is just a direct map of its real working space (needed to keep it OOP friendly).

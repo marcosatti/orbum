@@ -6,7 +6,7 @@
 
 using ExType = IOPCoreException_t::ExType;
 
-class IOPExceptionsTable
+class IOPCoreExceptionsTable
 {
 public:
 	/*

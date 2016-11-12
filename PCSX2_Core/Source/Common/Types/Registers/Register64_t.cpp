@@ -8,6 +8,10 @@ Register64_t::Register64_t() :
 {
 }
 
+Register64_t::~Register64_t()
+{
+}
+
 u8 Register64_t::readByteU(u32 arrayIndex)
 {
 	return UB[arrayIndex];

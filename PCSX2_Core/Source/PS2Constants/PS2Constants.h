@@ -104,6 +104,13 @@ public:
 
 		struct VPU
 		{
+			struct VIF
+			{
+				// Number of instructions is based off the CMD field in the VIFcode, without the leading interrupt bit and the m bit in the UNPACK instructions.
+				// See EE Users Manual page 87.
+				static constexpr u32 NUMBER_INSTRUCTIONS = 34;
+			};
+
 			struct VU
 			{
 				static constexpr u32 NUMBER_VF_REGISTERS = 32;

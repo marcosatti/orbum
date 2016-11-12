@@ -23,7 +23,7 @@ EEDmacChannel_t::EEDmacChannel_t(const u32 & channelID) :
 
 const ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
 {
-	return EEDmacTable::getChannelInfo(mChannelID);
+	return EEDmacChannelTable::getChannelInfo(mChannelID);
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t() :

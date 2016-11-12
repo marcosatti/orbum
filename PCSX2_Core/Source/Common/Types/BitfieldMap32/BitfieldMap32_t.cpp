@@ -18,8 +18,10 @@ BitfieldMap32_t::~BitfieldMap32_t()
 
 void BitfieldMap32_t::registerField(const u8& fieldIndex, const std::string & fieldName, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
 {
+#if defined(BUILD_DEBUG)
 	if (!(fieldIndex < FIELD_MAP_SIZE))
 		throw std::runtime_error("Invalid map index.");
+#endif
 
 	setBitRange32(fieldStartPosition, fieldLength, fieldInitialValue);
 	mFieldMap[fieldIndex] = { fieldName, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue };
@@ -27,16 +29,20 @@ void BitfieldMap32_t::registerField(const u8& fieldIndex, const std::string & fi
 
 const u32 & BitfieldMap32_t::getFieldValue(const u8& fieldIndex)
 {
+#if defined(BUILD_DEBUG)
 	if (!(fieldIndex < FIELD_MAP_SIZE))
 		throw std::runtime_error("Invalid map index.");
+#endif
 
 	return mFieldMap[fieldIndex].mFieldValue;
 }
 
 void BitfieldMap32_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
+#if defined(BUILD_DEBUG)
 	if (!(fieldIndex < FIELD_MAP_SIZE))
 		throw std::runtime_error("Invalid map index.");
+#endif
 
 	BitfieldProperties_t & props = mFieldMap[fieldIndex];
 	props.mFieldValue = value;

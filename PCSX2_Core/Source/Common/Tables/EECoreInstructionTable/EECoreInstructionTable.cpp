@@ -96,9 +96,10 @@ const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_W_LOOKUP
 const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
 {
 	// TODO: Implement.
-	return { "COP2 (VU0, PLEASE IMPLEMENT LOOKUP TABLE!)", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
+	return EECORE_COP2_UNDEFINED;
 }
 
+const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP2_UNDEFINED = { "COP2 (VU0, PLEASE IMPLEMENT LOOKUP TABLE!)", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
 const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_INSTRUCTION_UNDEFINED = {"undefined", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
 
 const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64] =

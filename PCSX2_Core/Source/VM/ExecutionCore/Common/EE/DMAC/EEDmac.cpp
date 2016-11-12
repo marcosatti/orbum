@@ -3,8 +3,8 @@
 #include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
 #include "PS2Constants/PS2Constants.h"
 #include "VM/VMMain.h"
-#include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
@@ -14,14 +14,14 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Tables/EEDmacTable/EEDmacTable.h"
+#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
 using ExType = EECoreException_t::ExType;
-using ChannelProperties_t = EEDmacTable::ChannelProperties_t;
-using ChannelID_t = EEDmacTable::ChannelID_t;
-using Direction_t = EEDmacTable::Direction_t;
-using PhysicalMode_t = EEDmacTable::PhysicalMode_t;
-using ChainMode_t = EEDmacTable::ChainMode_t;
+using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
+using ChannelID_t = EEDmacChannelTable::ChannelID_t;
+using Direction_t = EEDmacChannelTable::Direction_t;
+using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
+using ChainMode_t = EEDmacChannelTable::ChainMode_t;
 
 EEDmac::EEDmac(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -145,12 +145,8 @@ void EEDmac::executionStep_Chain()
 	}
 	else
 	{
-		// Read in a tag and set mCHCR.TAG to bits 16-31.
+		// Read in a tag and set mCHCR.TAG to bits 16-31. Also transfer the tag if the CHCR.TTE bit is set.
 		readDMAtag();
-
-		// Check if we need to transfer the tag.
-		if (Channel->mCHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
-			transferDMAtag();
 
 		// Check if we are in source or dest chain mode. Perform action based on tag id (which will set mMADR, mQWC, etc).
 		switch (mChannelProperties->ChainMode)
@@ -295,7 +291,7 @@ bool EEDmac::isSourceStallControlOn() const
 	if (getRuntimeDirection() == Direction_t::FROM)
 	{
 		const u32 STS = DMAC->REGISTER_CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::STS);
-		if (mChannelIndex == EEDmacTable::getSTSChannelIndex(STS))
+		if (mChannelIndex == EEDmacChannelTable::getSTSChannelIndex(STS))
 		{
 			return true;
 		}
@@ -311,7 +307,7 @@ bool EEDmac::isDrainStallControlOn() const
 	if (getRuntimeDirection() == Direction_t::TO)
 	{
 		const u32 STD = DMAC->REGISTER_CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::STD);
-		if (mChannelIndex == EEDmacTable::getSTDChannelIndex(STD))
+		if (mChannelIndex == EEDmacChannelTable::getSTDChannelIndex(STD))
 		{
 			return true;
 		}
@@ -459,22 +455,21 @@ void EEDmac::readDMAtag()
 	const bool SPRFlag = (Channel->mTADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
 
 	// Set mDMAtag based upon the u128 read from memory.
-	mDMAtag = readDataMemory(TADR, SPRFlag);
+	u128 data = readDataMemory(TADR, SPRFlag);
+	mDMAtag.setValue(data.lo);
 
 	// Set mCHCR.TAG based upon the DMA tag read (bits 16-31).
-	Channel->mCHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.getDataUnit().lo >> 16) & 0xFFFF);
-}
+	Channel->mCHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (data.lo >> 16) & 0xFFFF);
 
-void EEDmac::transferDMAtag() const
-{
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
-	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+	// Check if we need to transfer the tag.
+	if (Channel->mCHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
+	{
+		// Write the tag to the channel.
+		writeDataChannel(data);
 
-	// Write the tag to the channel.
-	writeDataChannel(mDMAtag.getDataUnit());
-
-	// Update DataCountState by 1 (counts towards slice channel quota).
-	Channel->mSliceCountState += 1;
+		// Update DataCountState by 1 (counts towards slice channel quota).
+		Channel->mSliceCountState += 1;
+	}
 }
 
 void EEDmac::checkDMAtagPacketInterrupt() const
