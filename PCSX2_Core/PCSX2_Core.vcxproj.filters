@@ -298,11 +298,12 @@
     <ClInclude Include="Source\PS2Resources\EE\EE_t.h">
       <Filter>Source\Common\PS2 Resources\EE</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF.h" />
     <ClInclude Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -477,11 +478,13 @@
     <ClCompile Include="Source\Common\Types\Registers\ZeroFPRegister128_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF.cpp" />
     <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_COP2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

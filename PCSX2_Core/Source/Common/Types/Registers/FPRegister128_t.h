@@ -16,6 +16,8 @@ In particular, the FPU does not support (in comparison to IEEE-754):
  - Denormalised numbers.
  - Plus and minus infinity.
  - 'NaN' (not a number) representation.
+
+When looking through the VU manual etc, the fields / vector components x, y, z, w correspond to F[0], F[1], F[2], F[3] respectively.
 */
 class FPRegister128_t
 {

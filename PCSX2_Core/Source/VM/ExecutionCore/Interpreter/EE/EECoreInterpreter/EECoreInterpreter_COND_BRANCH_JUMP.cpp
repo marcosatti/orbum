@@ -316,46 +316,6 @@ void EECoreInterpreter::BC1TL()
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BC2F()
-{
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) BC2F: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("BC2F: Not implemented.");
-#endif
-}
-
-void EECoreInterpreter::BC2FL()
-{
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) BC2FL: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("BC2FL: Not implemented.");
-#endif
-}
-
-void EECoreInterpreter::BC2T()
-{
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) BC2T: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("BC2T: Not implemented.");
-#endif
-}
-
-void EECoreInterpreter::BC2TL()
-{
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("BC2TL: Not implemented.");
-#endif
-}
-
 void EECoreInterpreter::J()
 {
 	// JUMP(). No Exceptions.

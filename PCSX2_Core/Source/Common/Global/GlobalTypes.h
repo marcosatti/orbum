@@ -24,6 +24,7 @@ Do not change the ordering of the unions inside the s/u128 types as they have be
 */
 
 #include <cstdint>
+#include "GlobalConstants.h"
 
 // Signed types
 typedef int8_t s8;
@@ -46,7 +47,7 @@ typedef float f32;
 /*
 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
 Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2.
-Mnemonic: v64 stands for value (64-bit), v32 stands for value (32-bit), etc.
+Mnemonic: UD stands for value (64-bit), UW stands for value (32-bit), etc.
 TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, 
        and for the arrays, it is layed out (MSB to LSB) [3]->[2]->[1]->[0].
 */
@@ -59,10 +60,10 @@ struct u128
 			u64 lo;
 		};
 
-		u64 v64[2];
-		u32 v32[4];
-		u16 v16[8];
-		u8  v8[16];
+		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
+		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
+		u16 UH[Constants::NUMBER_HWORDS_IN_QWORD];
+		u8  UB[Constants::NUMBER_BYTES_IN_QWORD];
 	};
 
 	// Zero value on construction.

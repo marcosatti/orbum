@@ -8,8 +8,14 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/ZeroFPRegister128_t.h"
 #include "Common/Types/Registers/ZeroRegister16_t.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 
-VuUnit_t::VuUnit_t(const u32 & unitID) :
+VuUnit_t::VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID) :
+	PS2ResourcesSubobject(PS2Resources),
 	mUnitID(unitID),
 	VF{ std::make_shared<ZeroFPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(),
 		std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(),
@@ -28,15 +34,24 @@ VuUnit_t::VuUnit_t(const u32 & unitID) :
 {
 }
 
-VuUnit_0_t::VuUnit_0_t() :
-	VuUnit_t(UNIT_ID)
+VuUnit_0_t::VuUnit_0_t(const PS2Resources_t* const PS2Resources) :
+	VuUnit_t(PS2Resources, UNIT_ID)
 {
 	MEMORY_Micro = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Micro Mem");
 	MEMORY_Mem = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Main Mem");
 }
 
-VuUnit_1_t::VuUnit_1_t() :
-	VuUnit_t(UNIT_ID)
+bool VuUnit_0_t::isCoprocessorUsable() const
+{
+	// Check that CU[bit 2] == 1 (ie: >0) in the status register.
+	if ((getRootResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x4) > 0)
+		return true;
+	else
+		return false;
+}
+
+VuUnit_1_t::VuUnit_1_t(const PS2Resources_t* const PS2Resources) :
+	VuUnit_t(PS2Resources, UNIT_ID)
 {
 	MEMORY_Micro = std::make_shared<Memory_t>(Constants::SIZE_16KB, "VU1 Micro Mem");
 	MEMORY_Mem = std::make_shared<Memory_t>(Constants::SIZE_16KB, "VU1 Main Mem");

@@ -109,12 +109,16 @@ public:
 				// Number of instructions is based off the CMD field in the VIFcode, without the leading interrupt bit and the m bit in the UNPACK instructions.
 				// See EE Users Manual page 87.
 				static constexpr u32 NUMBER_INSTRUCTIONS = 34;
+				static constexpr u32 NUMBER_VIF_UNITS = 2;
+				// VIF units run at 150 MHz, aka the BUSCLK.
 			};
 
 			struct VU
 			{
 				static constexpr u32 NUMBER_VF_REGISTERS = 32;
 				static constexpr u32 NUMBER_VI_REGISTERS = 16;
+				static constexpr u32 NUMBER_VU_UNITS = 2;
+				// VU units run at 150 MHz, aka the BUSCLK.
 			};
 		};
 

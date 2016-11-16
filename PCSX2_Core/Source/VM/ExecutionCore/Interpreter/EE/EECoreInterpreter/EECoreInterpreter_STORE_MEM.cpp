@@ -241,7 +241,7 @@ void EECoreInterpreter::SQ()
 		return; // Return early, dont bother trying to write the second dword.
 	}
 
-	getMMUHandler()->writeDwordU(PS2VirtualAddress + 8, source2Reg->readDwordU(1));
+	getMMUHandler()->writeDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD, source2Reg->readDwordU(1));
 	// Check for MMU error.
 	if (getMMUHandler()->hasExceptionOccurred())
 	{

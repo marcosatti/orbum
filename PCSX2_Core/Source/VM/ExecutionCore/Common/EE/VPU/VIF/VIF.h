@@ -4,17 +4,20 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "PS2Constants/PS2Constants.h"
+#include "PS2Resources/EE/VPU/Types/VIFcode_t.h"
 
 /*
 An implementation of the VIF channel system.
 
-The VIF is responsible for transfering data to the VU units, or optionally the GIF in the case of VIF1.
+The VIF is responsible for processing and transfering data to the VU units, or optionally the GIF in the case of VIF1.
+
+For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the size of 1 DMA transfer unit of 128-bits.
 */
 
 class VIF : public VMExecutionCoreComponent
 {
 public:
-	explicit VIF(VMMain * vmMain);
+	explicit VIF(VMMain * vmMain, u32 vifUnitIndex);
 	~VIF();
 
 	/*
@@ -31,9 +34,24 @@ public:
 private:
 
 	/*
+	Context of which VIF this system is processing.
+	*/
+	const u32 mVIFUnitIndex;
+
+	/*
 	A temporary holder for a DMA packet currently being processed from the FIFO queue.
 	*/
 	u128 mDMAPacket;
+
+	/*
+	A holder for a VIFcode instruction.
+	*/
+	VIFcode_t mVIFcode;
+
+	/*
+	Checks if the VIF has stalled by looking at the STAT register fields.
+	*/
+	bool isVIFStalled() const;
 
 	/*
 	Check the FIFO queue for an incoming packet.
@@ -82,7 +100,7 @@ private:
 
 	/*
 	Static arrays needed to call the appropriate VIFcode handler function.
-	In total without the leading interrupt bit, there are 128 possible handlers, although only a handful are defined.
+	In total there are 34 unique instructions, based on the VIFcodeInstructionTable unique index.
 	*/
 	void(VIF::*const INSTRUCTION_TABLE[PS2Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])() =
 	{

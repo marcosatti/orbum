@@ -3,6 +3,8 @@
 #include <memory>
 
 #include "PS2Constants/PS2Constants.h"
+#include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
+#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 class Memory_t;
 class PhysicalMMU_t;
@@ -14,10 +16,10 @@ class Register16_t;
 A base class for an implementation of a VU resource. Common resources are initalised, all others set to nullptr (see below).
 Extended by VU0_t and VU1_t.
 */
-class VuUnit_t
+class VuUnit_t : public PS2ResourcesSubobject
 {
 public:
-	explicit VuUnit_t(const u32 & unitID);
+	explicit VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
 
 	/*
 	ID of the VU unit. Currently used for debug.
@@ -79,13 +81,19 @@ public:
 
 /*
 Represents the VU0 unit.
+It is attached as a MIPS coprocessor to the EE Core, as COP2.
 */
-class VuUnit_0_t : public VuUnit_t
+class VuUnit_0_t : public VuUnit_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VuUnit_0_t();
+	explicit VuUnit_0_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 0;
+
+	/*
+	Check if this VU unit is usable in macro mode from the EE Core by checking the EE Core's COP0.Status.CU2 bit.
+	*/
+	bool isCoprocessorUsable() const override;
 };
 
 /*
@@ -94,7 +102,7 @@ Represents the VU1 unit.
 class VuUnit_1_t : public VuUnit_t
 {
 public:
-	explicit VuUnit_1_t();
+	explicit VuUnit_1_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 1;
 };

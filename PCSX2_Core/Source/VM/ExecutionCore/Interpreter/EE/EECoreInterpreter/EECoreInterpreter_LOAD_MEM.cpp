@@ -326,7 +326,7 @@ void EECoreInterpreter::LQ()
 	else 
 		destReg->writeDwordU(0, value); // Get first 8 bytes (bytes 0 -> 7).
 
-	value = getMMUHandler()->readDwordU(PS2VirtualAddress + 8);
+	value = getMMUHandler()->readDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD);
 	// Check for MMU error (2).
 	if (getMMUHandler()->hasExceptionOccurred())
 	{

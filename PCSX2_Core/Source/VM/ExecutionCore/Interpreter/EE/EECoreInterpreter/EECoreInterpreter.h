@@ -384,7 +384,7 @@ private:
 	void CTC1();
 
 	/*
-	Conditional Branch and Jump Instructions. See EECoreInterpreter_COND_BRANCH_JUMP.cpp for implementations (26 instructions total).
+	Conditional Branch and Jump Instructions. See EECoreInterpreter_COND_BRANCH_JUMP.cpp for implementations (22 instructions total).
 	*/
 	void BEQ();
 	void BEQL();
@@ -406,10 +406,6 @@ private:
 	void BC1FL();
 	void BC1T();
 	void BC1TL();
-	void BC2F();
-	void BC2FL();
-	void BC2T();
-	void BC2TL();
 	void J();
 	void JR();
 
@@ -454,6 +450,104 @@ private:
 	void TLBR();
 	void TLBWI();
 	void TLBWR();
+
+	/*
+	VU0 (attached as COP2) Instructions. For reference, see VU Users Manual page 206 onwards. 
+	In total there are 92 instructions, however, the instructions prefixed with V* are delegate functions to the VU Interpeter system (see the VU system for implementation).
+	For the EE Core, the first 10 instructions are implemented as COP2 instructions.
+	*/
+	void QMFC2();
+	void QMTC2();
+	void LQC2();
+	void SQC2();
+	void CFC2();
+	void CTC2();
+	void BC2F();
+	void BC2FL();
+	void BC2T();
+	void BC2TL();
+	void VABS();
+	void VADD();
+	void VADDi();
+	void VADDq();
+	void VADDbc();
+	void VADDA();
+	void VADDAi();
+	void VADDAq();
+	void VADDAbc();
+	void VSUB();
+	void VSUBi();
+	void VSUBq();
+	void VSUBbc();
+	void VSUBA();
+	void VSUBAi();
+	void VSUBAq();
+	void VSUBAbc();
+	void VMU();
+	void VMULi();
+	void VMULq();
+	void VMULbc();
+	void VMULA();
+	void VMULAi();
+	void VMULAq();
+	void VMULAbc();
+	void VMADD();
+	void VMADDi();
+	void VMADDq();
+	void VMADDbc();
+	void VMADDA();
+	void VMADDAi();
+	void VMADDAq();
+	void VMADDAbc();
+	void VMSUB();
+	void VMSUBi();
+	void VMSUBq();
+	void VMSUBbc();
+	void VMSUBA();
+	void VMSUBAi();
+	void VMSUBAq();
+	void VMSUBAbc();
+	void VMAX();
+	void VMAXi();
+	void VMAXbc();
+	void VMINI();
+	void VMINIi();
+	void VMINIbc();
+	void VOPMULA();
+	void VOPMSUB();
+	void VNOP();
+	void VFTOI0();
+	void VFTOI4();
+	void VFTOI12();
+	void VFTOI15();
+	void VITOF0();
+	void VITOF4();
+	void VITOF12();
+	void VITOF15();
+	void VCLIP();
+	void VDIV();
+	void VSQRT();
+	void VRSQRT();
+	void VIADD();
+	void VIADDI();
+	void VIAND();
+	void VIOR();
+	void VISUB();
+	void VMOVE();
+	void VMFIR();
+	void VMTIR();
+	void VMR32();
+	void VLQD();
+	void VLQI();
+	void VSQD();
+	void VSQI();
+	void VILWR();
+	void VISWR();
+	void VRINIT();
+	void VRGET();
+	void VRNEXT();
+	void VRXOR();
+	void VWAITQ();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
@@ -508,10 +602,10 @@ private:
 		&EECoreInterpreter::CACHE,
 		&EECoreInterpreter::LWC1,
 		&EECoreInterpreter::PREF,
-		&EECoreInterpreter::INSTRUCTION_UNKNOWN, // &LQC2,
+		&EECoreInterpreter::LQC2,
 		&EECoreInterpreter::LD,
 		&EECoreInterpreter::SWC1,
-		&EECoreInterpreter::INSTRUCTION_UNKNOWN, // &SQC2,
+		&EECoreInterpreter::LQC2,
 		&EECoreInterpreter::SD,
 		&EECoreInterpreter::SLL,
 		&EECoreInterpreter::SRL,
