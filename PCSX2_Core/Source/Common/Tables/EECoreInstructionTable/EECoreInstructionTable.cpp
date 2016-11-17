@@ -2,13 +2,25 @@
 
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
 
-const MIPSInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const MIPSInstruction_t & instruction)
+EECoreInstructionInfo_t::EECoreInstructionInfo_t(const char* const baseClass, const u8 classIndex, const MIPSInstructionInfo_t::InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const MIPSInstructionInfo_t::BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t & (*const lookupFunction)(const EECoreInstruction_t& instruction)) :
+	mBaseClass(baseClass),
+	mClassIndex(classIndex),
+	mInstructionType(instructionType),
+	mMnemonic(mnemonic),
+	mImplementationIndex(implementationIndex),
+	mBranchDelayType(branchDelayType),
+	mCycles(cycles),
+	mLookupFuncion(lookupFunction)
+{
+}
+
+const EECoreInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const EECoreInstruction_t & instruction)
 {
 	// A dummy class to kickstart the search.
-	const MIPSInstructionInfo_t rootInfo = {"root", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, EECORE_INSTRUCTION_OPCODE_LOOKUP };
-	const MIPSInstructionInfo_t * returnInfo = &rootInfo;
+	const EECoreInstructionInfo_t rootInfo = {"root", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "OPCODE", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, EECORE_INSTRUCTION_OPCODE_LOOKUP };
+	const EECoreInstructionInfo_t * returnInfo = &rootInfo;
 
 	while (returnInfo->mInstructionType == MIPSInstructionInfo_t::InstructionType::CLASS)
 	{
@@ -18,91 +30,396 @@ const MIPSInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const M
 	return returnInfo;
 }
 
-const MIPSInstructionInfo_t & EECoreInstructionTable::EECORE_INSTRUCTION_OPCODE_LOOKUP(const MIPSInstruction_t & instruction)
+const EECoreInstructionInfo_t & EECoreInstructionTable::EECORE_INSTRUCTION_OPCODE_LOOKUP(const EECoreInstruction_t & instruction)
 {
 	return EECORE_OPCODE_TABLE[instruction.getOpcode()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_SPECIAL_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_SPECIAL_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_SPECIAL_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_REGIMM_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_REGIMM_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_REGIMM_TABLE[instruction.getRRt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_MMI_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI0_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_MMI0_TABLE[instruction.getRShamt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI1_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_MMI1_TABLE[instruction.getRShamt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI2_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI2_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_MMI2_TABLE[instruction.getRShamt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI3_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_MMI3_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_MMI3_TABLE[instruction.getRShamt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP0_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_COP0_TABLE[instruction.getRRs()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC0_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_BC0_TABLE[instruction.getRRt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_C0_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_C0_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_C0_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP1_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_COP1_TABLE[instruction.getRRs()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC1_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC1_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_BC1_TABLE[instruction.getRRt()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_S_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_S_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_S_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_W_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_W_LOOKUP(const EECoreInstruction_t& instruction)
 {
 	return EECORE_W_TABLE[instruction.getRFunct()];
 }
 
-const MIPSInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP2_LOOKUP(const MIPSInstruction_t& instruction)
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_COP2_LOOKUP(const EECoreInstruction_t& instruction)
 {
-	// TODO: Implement.
-	return EECORE_COP2_UNDEFINED;
+	return EECORE_COP2_TABLE[instruction.getVCO()];
 }
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP2_UNDEFINED = { "COP2 (VU0, PLEASE IMPLEMENT LOOKUP TABLE!)", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_INSTRUCTION_UNDEFINED = {"undefined", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, nullptr };
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_CO0_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_CO0_TABLE[instruction.getVDest()];
+}
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64] =
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_BC2_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_BC2_TABLE[instruction.getRRt()];
+}
+
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_CO1_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_CO1_TABLE[instruction.getRFunct()];
+}
+
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_VEXT0_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_VEXT0_TABLE[instruction.getRShamt()];
+}
+
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_VEXT1_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_VEXT1_TABLE[instruction.getRShamt()];
+}
+
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_VEXT2_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_VEXT2_TABLE[instruction.getRShamt()];
+}
+
+const EECoreInstructionInfo_t& EECoreInstructionTable::EECORE_INSTRUCTION_VEXT3_LOOKUP(const EECoreInstruction_t& instruction)
+{
+	return EECORE_VEXT3_TABLE[instruction.getRShamt()];
+}
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT3_TABLE[32] =
+{
+	{ "VEXT3", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAbc.3", 373, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAbc.3", 374, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAbc.3", 375, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAbc.3", 376, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VITOF15", 377, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VFTOI15", 378, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAbc.3", 379, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VCLIP", 380, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAi", 381, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAi", 382, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VNOP", 383, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSQD", 384, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VWAITQ", 385, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VISWR", 386, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VRXOR", 387, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT3", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT2_TABLE[32] =
+{
+	{ "VEXT2", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAbc.2", 357, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAbc.2", 358, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAbc.2", 359, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAbc.2", 360, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VITOF12", 361, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VFTOI12", 362, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAbc.2", 363, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAi", 364, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAi", 365, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAi", 366, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULA", 367, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VOPMULA", 368, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VLQD", 369, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VRSQRT", 370, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VILWR", 371, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VRINIT", 372, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT2", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT1_TABLE[32] =
+{
+	{ "VEXT1", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAbc.1", 340, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAbc.1", 341, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAbc.1", 342, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAbc.1", 343, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VITOF4", 344, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VFTOI4", 345, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAbc.1", 346, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VABS", 347, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAq", 348, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAq", 349, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDA", 350, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBA", 351, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMR32", 352, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSQI", 353, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSQRT", 354, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMFIR", 355, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VRGET", 356, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT1", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT0_TABLE[32] =
+{
+	{ "VEXT0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAbc.0", 323, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAbc.0", 324, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDAbc.0", 325, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBAbc.0", 326, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VITOF0", 327, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VFTOI0", 328, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAbc.0", 329, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULAq", 330, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDAq", 331, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBAq", 332, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDA", 333, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBA", 334, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMOVE", 335, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VLQI", 336, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VDIV", 337, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMTIR", 338, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VRNEXT", 339, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "VEXT0", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_CO1_TABLE[64] =
+{
+	{ "CO1", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDbc.0", 268, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDbc.1", 269, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDbc.2", 270, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDbc.3", 271, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBbc.0", 272, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBbc.1", 273, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBbc.2", 274, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBbc.3", 275, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDbc.0", 276, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDbc.1", 277, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDbc.2", 278, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDbc.3", 279, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBbc.0", 280, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBbc.1", 281, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBbc.2", 282, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBbc.3", 283, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAXbc.0", 284, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAXbc.1", 285, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAXbc.2", 286, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAXbc.3", 287, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINIbc.0", 288, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINIbc.1", 289, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINIbc.2", 290, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINIbc.3", 291, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULbc.0", 292, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULbc.1", 293, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULbc.2", 294, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULbc.3", 295, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULq", 296, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAXi", 297, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMULi", 298, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINIi", 299, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 32, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDq", 300, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 33, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDq", 301, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 34, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADDi", 302, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 35, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADDi", 303, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 36, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBq", 304, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 37, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBq", 305, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 38, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUBi", 306, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 39, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUBi", 307, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 40, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VADD", 308, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 41, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMADD", 309, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 42, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMUL", 310, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 43, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMAX", 311, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 44, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VSUB", 312, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 45, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMSUB", 313, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 46, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VOPMSUB", 314, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 47, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VMINI", 315, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 48, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VIADD", 316, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 49, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VISUB", 317, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 50, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VIADDI", 318, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 51, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 52, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VIAND", 319, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 53, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VIOR", 320, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 54, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 55, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 56, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VCALLMS", 321, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 57, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "VCALLMSR", 322, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 58, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 59, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO1", 60, MIPSInstructionInfo_t::InstructionType::CLASS, "VEXT0", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_VEXT0_LOOKUP },
+	{ "CO1", 61, MIPSInstructionInfo_t::InstructionType::CLASS, "VEXT1", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_VEXT1_LOOKUP },
+	{ "CO1", 62, MIPSInstructionInfo_t::InstructionType::CLASS, "VEXT2", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_VEXT2_LOOKUP },
+	{ "CO1", 63, MIPSInstructionInfo_t::InstructionType::CLASS, "VEXT3", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_VEXT3_LOOKUP }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC2_TABLE[32] =
+{
+	{ "BC2", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC2F", 264, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
+	{ "BC2", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC2T", 265, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
+	{ "BC2", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC2FL", 266, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY_LIKELY, CycleConstants::COP_BRANCH, nullptr },
+	{ "BC2", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC2TL", 267, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY_LIKELY, CycleConstants::COP_BRANCH, nullptr },
+	{ "BC2", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 8, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 16, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 17, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 18, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 19, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 20, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 21, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 22, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 23, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 24, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 25, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 26, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 27, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 28, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 29, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 30, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "BC2", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_CO0_TABLE[16] =
+{
+	{ "CO0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "QMFC2", 260, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 2, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "CFC2", 261, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 3, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 4, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 5, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "QMTC2", 262, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 6, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "CTC2", 263, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 7, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 8, MIPSInstructionInfo_t::InstructionType::CLASS, "BC2", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_BC2_LOOKUP },
+	{ "CO0", 9, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 10, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 11, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 12, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 13, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 14, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
+	{ "CO0", 15, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP2_TABLE[2] =
+{
+	{ "COP2", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "CO0", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_CO0_LOOKUP },
+	{ "COP2", 1, MIPSInstructionInfo_t::InstructionType::CLASS, "CO1", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_CO1_LOOKUP }
+};
+
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64] =
 {
 	{ "W", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "W", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -170,7 +487,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64] =
 	{ "W", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_S_TABLE[64] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_S_TABLE[64] =
 {
 	{ "S", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "ADD", 236, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "S", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "SUB", 237, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -238,7 +555,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_S_TABLE[64] =
 	{ "S", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_BC1_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC1_TABLE[32] =
 {
 	{ "BC1", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC1F", 232, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
 	{ "BC1", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC1T", 233, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
@@ -274,7 +591,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_BC1_TABLE[32] =
 	{ "BC1", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP1_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP1_TABLE[32] =
 {
 	{ "COP1", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MFC1", 228, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "COP1", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -310,7 +627,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP1_TABLE[32] =
 	{ "COP1", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_C0_TABLE[64] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_C0_TABLE[64] =
 {
 	{ "C0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
 	{ "C0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "TLBR", 221, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -378,7 +695,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_C0_TABLE[64] =
 	{ "C0", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "UNDEFINED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_BC0_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC0_TABLE[32] =
 {
 	{ "BC0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC0F", 217, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
 	{ "BC0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BC0T", 218, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::COP_BRANCH, nullptr },
@@ -414,7 +731,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_BC0_TABLE[32] =
 	{ "BC0", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP0_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP0_TABLE[32] =
 {
 	{ "COP0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MFC0", 215, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP0_MFC0, nullptr },
 	{ "COP0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr },
@@ -450,7 +767,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_COP0_TABLE[32] =
 	{ "COP0", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::COP_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI3_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI3_TABLE[32] =
 {
 	{ "MMI3", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PMADDUW", 202, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI3", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -486,7 +803,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI3_TABLE[32] =
 	{ "MMI3", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI2_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI2_TABLE[32] =
 {
 	{ "MMI2", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PMADDW", 180, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI2", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -522,7 +839,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI2_TABLE[32] =
 	{ "MMI2", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PROT3W", 201, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI1_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI1_TABLE[32] =
 {
 	{ "MMI1", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI1", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PABSW", 162, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -558,7 +875,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI1_TABLE[32] =
 	{ "MMI1", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI0_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI0_TABLE[32] =
 {
 	{ "MMI0", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PADDW", 137, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
 	{ "MMI0", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PSUBW", 138, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr },
@@ -594,7 +911,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI0_TABLE[32] =
 	{ "MMI0", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PPAC5", 161, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI_TABLE[64] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI_TABLE[64] =
 {
 	{ "MMI", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MADD", 116, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_MULTIPLY, nullptr },
 	{ "MMI", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "MADDU", 117, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_MULTIPLY, nullptr },
@@ -662,7 +979,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_MMI_TABLE[64] =
 	{ "MMI", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "PSRAW", 136, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::MMI_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_REGIMM_TABLE[32] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_REGIMM_TABLE[32] =
 {
 	{ "REGIMM", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BLTZ", 100, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R5900_BRANCH, nullptr },
 	{ "REGIMM", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "BGEZ", 101, MIPSInstructionInfo_t::BranchDelayType::BRANCH_DELAY, CycleConstants::R5900_BRANCH, nullptr },
@@ -698,7 +1015,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_REGIMM_TABLE[32] =
 	{ "REGIMM", 31, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_SPECIAL_TABLE[64] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_SPECIAL_TABLE[64] =
 { 
 	{ "SPECIAL", 0, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "SLL", 48, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr },
 	{ "SPECIAL", 1, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "RESERVED", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr },
@@ -766,7 +1083,7 @@ const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_SPECIAL_TABLE[64] =
 	{ "SPECIAL", 63, MIPSInstructionInfo_t::InstructionType::INSTRUCTION, "DSRA32", 99, MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, nullptr }
 };
 
-const MIPSInstructionInfo_t EECoreInstructionTable::EECORE_OPCODE_TABLE[64] =
+const EECoreInstructionInfo_t EECoreInstructionTable::EECORE_OPCODE_TABLE[64] =
 {
 	{ "OPCODE", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "SPECIAL", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_SPECIAL_LOOKUP },
 	{ "OPCODE", 1, MIPSInstructionInfo_t::InstructionType::CLASS, "REGIMM", 0, MIPSInstructionInfo_t::BranchDelayType::NONE, 0, EECORE_INSTRUCTION_REGIMM_LOOKUP },

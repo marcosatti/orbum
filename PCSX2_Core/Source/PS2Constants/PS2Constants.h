@@ -74,7 +74,7 @@ public:
 				static constexpr u32 MASK_VPN2_FIELD_16MB = 0x0007F000;
 			};
 
-			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 260;
+			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 388;
 		};
 
 		struct Timers

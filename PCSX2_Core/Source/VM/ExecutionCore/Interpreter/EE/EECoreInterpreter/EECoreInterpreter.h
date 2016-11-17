@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
+#include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
 #include "PS2Constants/PS2Constants.h"
 
 class PS2Resources_t;
@@ -82,8 +82,8 @@ private:
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
 	It is also used while an instruction is being performed.
 	*/
-	MIPSInstruction_t mInstruction;
-	const MIPSInstructionInfo_t * mInstructionInfo;
+	EECoreInstruction_t mInstruction;
+	const EECoreInstructionInfo_t * mInstructionInfo;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
@@ -453,7 +453,7 @@ private:
 
 	/*
 	VU0 (attached as COP2) Instructions. For reference, see VU Users Manual page 206 onwards. 
-	In total there are 92 instructions, however, the instructions prefixed with V* are delegate functions to the VU Interpeter system (see the VU system for implementation).
+	In total there are 140 instructions, however, the instructions prefixed with V* are delegate functions to the VU Interpeter system (see the VU system for implementation).
 	For the EE Core, the first 10 instructions are implemented as COP2 instructions.
 	*/
 	void QMFC2();
@@ -471,48 +471,96 @@ private:
 	void VADDi();
 	void VADDq();
 	void VADDbc();
+	void VADDbc_0();
+	void VADDbc_1();
+	void VADDbc_2();
+	void VADDbc_3();
 	void VADDA();
 	void VADDAi();
 	void VADDAq();
 	void VADDAbc();
+	void VADDAbc_0();
+	void VADDAbc_1();
+	void VADDAbc_2();
+	void VADDAbc_3();
 	void VSUB();
 	void VSUBi();
 	void VSUBq();
 	void VSUBbc();
+	void VSUBbc_0();
+	void VSUBbc_1();
+	void VSUBbc_2();
+	void VSUBbc_3();
 	void VSUBA();
 	void VSUBAi();
 	void VSUBAq();
 	void VSUBAbc();
-	void VMU();
+	void VSUBAbc_0();
+	void VSUBAbc_1();
+	void VSUBAbc_2();
+	void VSUBAbc_3();
+	void VMUL();
 	void VMULi();
 	void VMULq();
 	void VMULbc();
+	void VMULbc_0();
+	void VMULbc_1();
+	void VMULbc_2();
+	void VMULbc_3();
 	void VMULA();
 	void VMULAi();
 	void VMULAq();
 	void VMULAbc();
+	void VMULAbc_0();
+	void VMULAbc_1();
+	void VMULAbc_2();
+	void VMULAbc_3();
 	void VMADD();
 	void VMADDi();
 	void VMADDq();
 	void VMADDbc();
+	void VMADDbc_0();
+	void VMADDbc_1();
+	void VMADDbc_2();
+	void VMADDbc_3();
 	void VMADDA();
 	void VMADDAi();
 	void VMADDAq();
 	void VMADDAbc();
+	void VMADDAbc_0();
+	void VMADDAbc_1();
+	void VMADDAbc_2();
+	void VMADDAbc_3();
 	void VMSUB();
 	void VMSUBi();
 	void VMSUBq();
 	void VMSUBbc();
+	void VMSUBbc_0();
+	void VMSUBbc_1();
+	void VMSUBbc_2();
+	void VMSUBbc_3();
 	void VMSUBA();
 	void VMSUBAi();
 	void VMSUBAq();
 	void VMSUBAbc();
+	void VMSUBAbc_0();
+	void VMSUBAbc_1();
+	void VMSUBAbc_2();
+	void VMSUBAbc_3();
 	void VMAX();
 	void VMAXi();
 	void VMAXbc();
+	void VMAXbc_0();
+	void VMAXbc_1();
+	void VMAXbc_2();
+	void VMAXbc_3();
 	void VMINI();
 	void VMINIi();
 	void VMINIbc();
+	void VMINIbc_0();
+	void VMINIbc_1();
+	void VMINIbc_2();
+	void VMINIbc_3();
 	void VOPMULA();
 	void VOPMSUB();
 	void VNOP();
@@ -548,6 +596,8 @@ private:
 	void VRNEXT();
 	void VRXOR();
 	void VWAITQ();
+	void VCALLMS();
+	void VCALLMSR();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 
@@ -556,7 +606,6 @@ private:
 	Sometimes there are differences in the instruction mnemonics within the manual. 
 	Alternative names have been provided as comments against the array function used.
 	*/
-	// TODO: surely there is an easier way.. reasearch how to initalise static arrays outside of the header file. I'm sure I'm missing something completely obvious here..
 	void(EECoreInterpreter::*const EECORE_INSTRUCTION_TABLE[PS2Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() =
 	{
 		&EECoreInterpreter::INSTRUCTION_UNKNOWN,
@@ -818,7 +867,134 @@ private:
 		&EECoreInterpreter::C_EQ_S, // &C_EQ,
 		&EECoreInterpreter::C_LT_S, // &C_LT,
 		&EECoreInterpreter::C_LE_S, // &C_LE,
-		&EECoreInterpreter::CVT_S_W // &CVTS,
+		&EECoreInterpreter::CVT_S_W, // &CVTS,
+		&EECoreInterpreter::QMFC2,
+		&EECoreInterpreter::CFC2,
+		&EECoreInterpreter::QMTC2,
+		&EECoreInterpreter::CTC2,
+		&EECoreInterpreter::BC2F,
+		&EECoreInterpreter::BC2T,
+		&EECoreInterpreter::BC2FL,
+		&EECoreInterpreter::BC2TL,
+		&EECoreInterpreter::VADDbc_0,
+		&EECoreInterpreter::VADDbc_1,
+		&EECoreInterpreter::VADDbc_2,
+		&EECoreInterpreter::VADDbc_3,
+		&EECoreInterpreter::VSUBbc_0,
+		&EECoreInterpreter::VSUBbc_1,
+		&EECoreInterpreter::VSUBbc_2,
+		&EECoreInterpreter::VSUBbc_3,
+		&EECoreInterpreter::VMADDbc_0,
+		&EECoreInterpreter::VMADDbc_1,
+		&EECoreInterpreter::VMADDbc_2,
+		&EECoreInterpreter::VMADDbc_3,
+		&EECoreInterpreter::VMSUBbc_0,
+		&EECoreInterpreter::VMSUBbc_1,
+		&EECoreInterpreter::VMSUBbc_2,
+		&EECoreInterpreter::VMSUBbc_3,
+		&EECoreInterpreter::VMAXbc_0,
+		&EECoreInterpreter::VMAXbc_1,
+		&EECoreInterpreter::VMAXbc_2,
+		&EECoreInterpreter::VMAXbc_3,
+		&EECoreInterpreter::VMINIbc_0,
+		&EECoreInterpreter::VMINIbc_1,
+		&EECoreInterpreter::VMINIbc_2,
+		&EECoreInterpreter::VMINIbc_3,
+		&EECoreInterpreter::VMULbc_0,
+		&EECoreInterpreter::VMULbc_1,
+		&EECoreInterpreter::VMULbc_2,
+		&EECoreInterpreter::VMULbc_3,
+		&EECoreInterpreter::VMULq,
+		&EECoreInterpreter::VMAXi,
+		&EECoreInterpreter::VMULi,
+		&EECoreInterpreter::VMINIi,
+		&EECoreInterpreter::VADDq,
+		&EECoreInterpreter::VMADDq,
+		&EECoreInterpreter::VADDi,
+		&EECoreInterpreter::VMADDi,
+		&EECoreInterpreter::VSUBq,
+		&EECoreInterpreter::VMSUBq,
+		&EECoreInterpreter::VSUBi,
+		&EECoreInterpreter::VMSUBi,
+		&EECoreInterpreter::VADD,
+		&EECoreInterpreter::VMADD,
+		&EECoreInterpreter::VMUL,
+		&EECoreInterpreter::VMAX,
+		&EECoreInterpreter::VSUB,
+		&EECoreInterpreter::VMSUB,
+		&EECoreInterpreter::VOPMSUB,
+		&EECoreInterpreter::VMINI,
+		&EECoreInterpreter::VIADD,
+		&EECoreInterpreter::VISUB,
+		&EECoreInterpreter::VIADDI,
+		&EECoreInterpreter::VIAND,
+		&EECoreInterpreter::VIOR,
+		&EECoreInterpreter::VCALLMS,
+		&EECoreInterpreter::VCALLMSR,
+		&EECoreInterpreter::VADDAbc_0,
+		&EECoreInterpreter::VSUBAbc_0,
+		&EECoreInterpreter::VMADDAbc_0,
+		&EECoreInterpreter::VMSUBAbc_0,
+		&EECoreInterpreter::VITOF0,
+		&EECoreInterpreter::VFTOI0,
+		&EECoreInterpreter::VMULAbc_0,
+		&EECoreInterpreter::VMULAq,
+		&EECoreInterpreter::VADDAq,
+		&EECoreInterpreter::VSUBAq,
+		&EECoreInterpreter::VADDA,
+		&EECoreInterpreter::VSUBA,
+		&EECoreInterpreter::VMOVE,
+		&EECoreInterpreter::VLQI,
+		&EECoreInterpreter::VDIV,
+		&EECoreInterpreter::VMTIR,
+		&EECoreInterpreter::VRNEXT,
+		&EECoreInterpreter::VADDAbc_1,
+		&EECoreInterpreter::VSUBAbc_1,
+		&EECoreInterpreter::VMADDAbc_1,
+		&EECoreInterpreter::VMSUBAbc_1,
+		&EECoreInterpreter::VITOF4,
+		&EECoreInterpreter::VFTOI4,
+		&EECoreInterpreter::VMULAbc_1,
+		&EECoreInterpreter::VABS,
+		&EECoreInterpreter::VMADDAq,
+		&EECoreInterpreter::VMSUBAq,
+		&EECoreInterpreter::VMADDA,
+		&EECoreInterpreter::VMSUBA,
+		&EECoreInterpreter::VMR32,
+		&EECoreInterpreter::VSQI,
+		&EECoreInterpreter::VSQRT,
+		&EECoreInterpreter::VMFIR,
+		&EECoreInterpreter::VRGET,
+		&EECoreInterpreter::VADDAbc_2,
+		&EECoreInterpreter::VSUBAbc_2,
+		&EECoreInterpreter::VMADDAbc_2,
+		&EECoreInterpreter::VMSUBAbc_2,
+		&EECoreInterpreter::VITOF12,
+		&EECoreInterpreter::VFTOI12,
+		&EECoreInterpreter::VMULAbc_2,
+		&EECoreInterpreter::VMULAi,
+		&EECoreInterpreter::VADDAi,
+		&EECoreInterpreter::VSUBAi,
+		&EECoreInterpreter::VMULA,
+		&EECoreInterpreter::VOPMULA,
+		&EECoreInterpreter::VLQD,
+		&EECoreInterpreter::VRSQRT,
+		&EECoreInterpreter::VILWR,
+		&EECoreInterpreter::VRINIT,
+		&EECoreInterpreter::VADDAbc_3,
+		&EECoreInterpreter::VSUBAbc_3,
+		&EECoreInterpreter::VMADDAbc_3,
+		&EECoreInterpreter::VMSUBAbc_3,
+		&EECoreInterpreter::VITOF15,
+		&EECoreInterpreter::VFTOI15,
+		&EECoreInterpreter::VMULAbc_3,
+		&EECoreInterpreter::VCLIP,
+		&EECoreInterpreter::VMADDAi,
+		&EECoreInterpreter::VMSUBAi,
+		&EECoreInterpreter::VNOP,
+		&EECoreInterpreter::VSQD,
+		&EECoreInterpreter::VWAITQ,
+		&EECoreInterpreter::VISWR,
+		&EECoreInterpreter::VRXOR
 	};
 };
-

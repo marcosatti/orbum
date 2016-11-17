@@ -2,16 +2,15 @@
 #include <gtest/gtest.h>
 
 #include <Common/Global/Globals.h>
-#include <Common/Types/MIPSInstruction/MIPSInstruction_t.h>
 #include <Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h>
-#include <Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h>
+#include <PS2Resources/EE/EECore/Types/EECoreInstruction_t.h>
 
 TEST(R5900Instruction_Test_Raw, RType)
 {
 	// SUB $7, $8, $9
 	u32 rawInstruction = 0x01093822; // (8 << 21) | (9 << 16) | (7 << 11) | 34;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 0);
@@ -27,7 +26,7 @@ TEST(R5900Instruction_Test_Raw, IType)
 	// LHU $5, +254($10)
 	u32 rawInstruction = 0x954500FE; // (37 << 26) | (10 << 21) | (5 << 16) | 254;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 37);
@@ -41,7 +40,7 @@ TEST(R5900Instruction_Test_Raw, JType)
 	// J 4096
 	u32 rawInstruction = 0x08001000;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 
 	ASSERT_EQ(instruction.getOpcode(), 2);
@@ -53,7 +52,7 @@ TEST(R5900Instruction_Test_Info, RType)
 	// SUB $7, $8, $9
 	u32 rawInstruction = 0x01093822; // (8 << 21) | (9 << 16) | (7 << 11) | 34;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 
@@ -67,7 +66,7 @@ TEST(R5900Instruction_Test_Info, IType)
 	// LHU $5, +254($10)
 	u32 rawInstruction = 0x954500FE; // (37 << 26) | (10 << 21) | (5 << 16) | 254;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 
@@ -81,7 +80,7 @@ TEST(R5900Instruction_Test_Info, JType)
 	// J -4096
 	u32 rawInstruction = 0x0BFFF000;
 
-	MIPSInstruction_t instruction;
+	EECoreInstruction_t instruction;
 	instruction.setInstructionValue(rawInstruction);
 	auto info = EECoreInstructionTable::getInstructionInfo(instruction);
 

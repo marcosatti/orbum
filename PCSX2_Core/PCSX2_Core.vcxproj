@@ -339,6 +339,7 @@
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0Registers_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreInstruction_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VifUnitRegisters_t.h" />
@@ -453,6 +454,7 @@
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0Registers_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VifUnitRegisters_t.cpp" />

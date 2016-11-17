@@ -9,8 +9,8 @@ VPU_t::VPU_t(const PS2Resources_t* const PS2Resources) :
 	VIF0(std::make_shared<VifUnit_VIF0_t>()),
 	VIF1(std::make_shared<VifUnit_VIF1_t>()),
 	VIF_UNITS{ VIF0, VIF1 },
-	VU0(std::make_shared<VuUnit_0_t>()),
-	VU1(std::make_shared<VuUnit_1_t>()),
+	VU0(std::make_shared<VuUnit_0_t>(getRootResources())),
+	VU1(std::make_shared<VuUnit_1_t>(getRootResources())),
 	VU_UNITS{ VU0, VU1 }
 {
 }

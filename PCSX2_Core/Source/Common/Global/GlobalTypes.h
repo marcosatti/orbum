@@ -24,7 +24,6 @@ Do not change the ordering of the unions inside the s/u128 types as they have be
 */
 
 #include <cstdint>
-#include "GlobalConstants.h"
 
 // Signed types
 typedef int8_t s8;
@@ -60,10 +59,10 @@ struct u128
 			u64 lo;
 		};
 
-		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
-		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
-		u16 UH[Constants::NUMBER_HWORDS_IN_QWORD];
-		u8  UB[Constants::NUMBER_BYTES_IN_QWORD];
+		u64 UD[2];
+		u32 UW[4];
+		u16 UH[8];
+		u8  UB[16];
 	};
 
 	// Zero value on construction.
