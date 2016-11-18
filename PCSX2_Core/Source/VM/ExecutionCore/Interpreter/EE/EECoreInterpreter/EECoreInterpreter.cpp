@@ -6,6 +6,7 @@
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
+#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
@@ -22,12 +23,13 @@
 
 using ExType = EECoreException_t::ExType;
 
-EECoreInterpreter::EECoreInterpreter(VMMain * vmMain) :
+EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{},
 	mExceptionHandler(std::make_unique<EECoreExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<EECoreMMUHandler>(vmMain)),
-	mInstructionInfo(nullptr)
+	mInstructionInfo(nullptr),
+	mVU0Interpreter(vuInterpreter)
 {
 }
 
@@ -81,7 +83,7 @@ const std::unique_ptr<EECoreMMUHandler>& EECoreInterpreter::getMMUHandler() cons
 	return mMMUHandler;
 }
 
-MIPSInstruction_t & EECoreInterpreter::getInstruction()
+EECoreInstruction_t & EECoreInterpreter::getInstruction()
 {
 	return mInstruction;
 }

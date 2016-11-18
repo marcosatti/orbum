@@ -4,6 +4,7 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Types/Registers/Register16_t.h"
+#include "Common/Types/Registers/Wrapper16Register32_t.h"
 #include "Common/Types/Memory/Memory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/ZeroFPRegister128_t.h"
@@ -35,7 +36,11 @@ VuUnit_t::VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID)
 }
 
 VuUnit_0_t::VuUnit_0_t(const PS2Resources_t* const PS2Resources) :
-	VuUnit_t(PS2Resources, UNIT_ID)
+	VuUnit_t(PS2Resources, UNIT_ID),
+	CCR{ std::make_shared<Wrapper16Register32_t>(VI[0]), std::make_shared<Wrapper16Register32_t>(VI[1]), std::make_shared<Wrapper16Register32_t>(VI[2]), std::make_shared<Wrapper16Register32_t>(VI[3]), std::make_shared<Wrapper16Register32_t>(VI[4]), std::make_shared<Wrapper16Register32_t>(VI[5]), std::make_shared<Wrapper16Register32_t>(VI[6]), std::make_shared<Wrapper16Register32_t>(VI[7]),
+		 std::make_shared<Wrapper16Register32_t>(VI[8]), std::make_shared<Wrapper16Register32_t>(VI[9]), std::make_shared<Wrapper16Register32_t>(VI[10]), std::make_shared<Wrapper16Register32_t>(VI[11]), std::make_shared<Wrapper16Register32_t>(VI[12]), std::make_shared<Wrapper16Register32_t>(VI[13]), std::make_shared<Wrapper16Register32_t>(VI[14]), std::make_shared<Wrapper16Register32_t>(VI[15]),
+		 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+		 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }
 {
 	MEMORY_Micro = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Micro Mem");
 	MEMORY_Mem = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Main Mem");

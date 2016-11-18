@@ -19,8 +19,8 @@ VIFcodeInstructionInfo_t::VIFcodeInstructionInfo_t(const VIFcodeInstructionInfo_
 VIFcodeInstructionInfo_t VIFcodeInstructionTable::getInstructionInfo(const VIFcode_t& vifCode)
 {
 	u8 CMD = vifCode.getCMD();
-	bool IBit = static_cast<bool>(CMD & 0x80); // Test bit 7.
-	bool MBit = static_cast<bool>(CMD & 0x10); // Test bit 4.
+	bool IBit = (CMD & 0x80) > 0; // Test bit 7.
+	bool MBit = (CMD & 0x10) > 0; // Test bit 4.
 
 	// Test for the unpack table (bits 5 & 6 set)
 	if ((CMD & 0x60) == 0x60)

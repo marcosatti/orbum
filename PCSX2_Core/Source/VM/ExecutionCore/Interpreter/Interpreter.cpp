@@ -4,6 +4,8 @@
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
+#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/ExecutionCore/Common/EE/VPU/VIF/VIF.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
 #include "VM/ExecutionCore/Common/EE/INTC/EEIntc.h"
@@ -14,12 +16,16 @@
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mClockSources{ ClockSource_t::VM },
-	mEECoreInterpreter(std::make_shared<EECoreInterpreter>(vmMain)),
+	mInterpreterVU0(std::make_shared<VUInterpreter>(vmMain, 0)),
+	mInterpreterVU1(std::make_shared<VUInterpreter>(vmMain, 1)),
+	mVIF0(std::make_shared<VIF>(vmMain, 0)),
+	mVIF1(std::make_shared<VIF>(vmMain, 1)),
+	mEECoreInterpreter(std::make_shared<EECoreInterpreter>(vmMain, mInterpreterVU0)),
 	mEEDmac(std::make_shared<EEDmac>(vmMain)),
 	mEEIntc(std::make_shared<EEIntc>(vmMain)),
 	mEETimers(std::make_shared<EETimers>(vmMain)),
 	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
-	mComponents { mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter }
+	mComponents { mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter }
 {
 }
 

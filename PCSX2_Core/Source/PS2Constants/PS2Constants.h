@@ -118,6 +118,8 @@ public:
 				static constexpr u32 NUMBER_VF_REGISTERS = 32;
 				static constexpr u32 NUMBER_VI_REGISTERS = 16;
 				static constexpr u32 NUMBER_VU_UNITS = 2;
+				static constexpr u32 NUMBER_VU0_CCR_REGISTERS = 32;
+				static constexpr u32 NUMBER_VU_INSTRUCTIONS = 164;
 				// VU units run at 150 MHz, aka the BUSCLK.
 			};
 		};

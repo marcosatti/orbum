@@ -11,6 +11,7 @@ class PhysicalMMU_t;
 class FPRegister128_t;
 class FPRegister32_t;
 class Register16_t;
+class Register32_t;
 
 /*
 A base class for an implementation of a VU resource. Common resources are initalised, all others set to nullptr (see below).
@@ -90,10 +91,19 @@ public:
 
 	static constexpr u32 UNIT_ID = 0;
 
+	// COP2 (attached to EE Core) functionality.
+
+	/*
+	The CCR (control registers) array (32) needed for the CTC2 and CFC2 EE Core instructions.
+	See VU Users Manual page 200 & 201.
+	*/
+	const std::shared_ptr<Register32_t> CCR[PS2Constants::EE::VPU::VU::NUMBER_VU0_CCR_REGISTERS];
+
 	/*
 	Check if this VU unit is usable in macro mode from the EE Core by checking the EE Core's COP0.Status.CU2 bit.
 	*/
 	bool isCoprocessorUsable() const override;
+
 };
 
 /*

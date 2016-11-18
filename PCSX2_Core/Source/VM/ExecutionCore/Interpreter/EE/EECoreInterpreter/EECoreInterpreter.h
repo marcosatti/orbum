@@ -11,7 +11,7 @@ class PS2Resources_t;
 class VMMain;
 class EECoreMMUHandler;
 class EECoreExceptionHandler;
-struct MIPSInstructionInfo_t;
+class VUInterpreter;
 
 /*
 The EE Core interpreter.
@@ -19,13 +19,16 @@ The EE Core interpreter.
 This also acts as the control for synchronisation across components, as this is the fastest clocked device in the PS2 (294 MHz).
 Each time executionStep() is run, PS2Resources->Clock->updateClocks() is also run, which updates other clock sources such as the BUSCLK.
 
+Needs a reference to the VU0 interpreter, which is called upon when any of the COP2 instructions starting with V* mnemonics are called.
+This is done in order to avoid reimplementing the same function twice.
+
 TODO: Finish documentation.
 */
 
 class EECoreInterpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit EECoreInterpreter(VMMain * vmMain);
+	explicit EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter);
 	~EECoreInterpreter();
 
 	/*
@@ -55,7 +58,7 @@ public:
 	// Component state functions
 	const std::unique_ptr<EECoreExceptionHandler> & getExceptionHandler() const;
 	const std::unique_ptr<EECoreMMUHandler> & getMMUHandler() const;
-	MIPSInstruction_t & getInstruction();
+	EECoreInstruction_t & getInstruction();
 
 private:
 
@@ -84,6 +87,11 @@ private:
 	*/
 	EECoreInstruction_t mInstruction;
 	const EECoreInstructionInfo_t * mInstructionInfo;
+
+	/*
+	The VU interpreter reference, used to call any COP2 instructions prefixed with V* as the mnemonic.
+	*/
+	const std::shared_ptr<VUInterpreter> mVU0Interpreter;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
@@ -452,10 +460,12 @@ private:
 	void TLBWR();
 
 	/*
-	VU0 (attached as COP2) Instructions. For reference, see VU Users Manual page 206 onwards. 
-	In total there are 140 instructions, however, the instructions prefixed with V* are delegate functions to the VU Interpeter system (see the VU system for implementation).
-	For the EE Core, the first 10 instructions are implemented as COP2 instructions.
+	VU0 (attached as COP2) Macro Instructions. For reference, see VU Users Manual page 206 onwards. 
+	In total there are 140 instructions, however, the instructions prefixed with V* are delegate functions to the VU0 system (see the VU system for implementation).
+	The two exceptions to this is the VCALLMS/VCALLMSR instructions.
+	For the EE Core, the first 12 instructions are implemented as pure COP2 instructions.
 	*/
+	// ------------- Raw COP2 Instructions -------------
 	void QMFC2();
 	void QMTC2();
 	void LQC2();
@@ -466,11 +476,13 @@ private:
 	void BC2FL();
 	void BC2T();
 	void BC2TL();
+	void VCALLMS();
+	void VCALLMSR();
+	// ------------- VU0 Delegate Instructions -------------
 	void VABS();
 	void VADD();
 	void VADDi();
 	void VADDq();
-	void VADDbc();
 	void VADDbc_0();
 	void VADDbc_1();
 	void VADDbc_2();
@@ -478,7 +490,6 @@ private:
 	void VADDA();
 	void VADDAi();
 	void VADDAq();
-	void VADDAbc();
 	void VADDAbc_0();
 	void VADDAbc_1();
 	void VADDAbc_2();
@@ -486,7 +497,6 @@ private:
 	void VSUB();
 	void VSUBi();
 	void VSUBq();
-	void VSUBbc();
 	void VSUBbc_0();
 	void VSUBbc_1();
 	void VSUBbc_2();
@@ -494,7 +504,6 @@ private:
 	void VSUBA();
 	void VSUBAi();
 	void VSUBAq();
-	void VSUBAbc();
 	void VSUBAbc_0();
 	void VSUBAbc_1();
 	void VSUBAbc_2();
@@ -502,7 +511,6 @@ private:
 	void VMUL();
 	void VMULi();
 	void VMULq();
-	void VMULbc();
 	void VMULbc_0();
 	void VMULbc_1();
 	void VMULbc_2();
@@ -510,7 +518,6 @@ private:
 	void VMULA();
 	void VMULAi();
 	void VMULAq();
-	void VMULAbc();
 	void VMULAbc_0();
 	void VMULAbc_1();
 	void VMULAbc_2();
@@ -518,7 +525,6 @@ private:
 	void VMADD();
 	void VMADDi();
 	void VMADDq();
-	void VMADDbc();
 	void VMADDbc_0();
 	void VMADDbc_1();
 	void VMADDbc_2();
@@ -526,7 +532,6 @@ private:
 	void VMADDA();
 	void VMADDAi();
 	void VMADDAq();
-	void VMADDAbc();
 	void VMADDAbc_0();
 	void VMADDAbc_1();
 	void VMADDAbc_2();
@@ -534,7 +539,6 @@ private:
 	void VMSUB();
 	void VMSUBi();
 	void VMSUBq();
-	void VMSUBbc();
 	void VMSUBbc_0();
 	void VMSUBbc_1();
 	void VMSUBbc_2();
@@ -542,21 +546,18 @@ private:
 	void VMSUBA();
 	void VMSUBAi();
 	void VMSUBAq();
-	void VMSUBAbc();
 	void VMSUBAbc_0();
 	void VMSUBAbc_1();
 	void VMSUBAbc_2();
 	void VMSUBAbc_3();
 	void VMAX();
 	void VMAXi();
-	void VMAXbc();
 	void VMAXbc_0();
 	void VMAXbc_1();
 	void VMAXbc_2();
 	void VMAXbc_3();
 	void VMINI();
 	void VMINIi();
-	void VMINIbc();
 	void VMINIbc_0();
 	void VMINIbc_1();
 	void VMINIbc_2();
@@ -596,8 +597,6 @@ private:
 	void VRNEXT();
 	void VRXOR();
 	void VWAITQ();
-	void VCALLMS();
-	void VCALLMSR();
 
 	/*
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index. 

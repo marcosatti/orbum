@@ -17,3 +17,9 @@ const std::vector<ClockSource_t>& VUInterpreter::getClockSources()
 {
 	return mClockSources;
 }
+
+s64 VUInterpreter::executionStep(const ClockSource_t& clockSource)
+{
+	// TODO: Implement.
+	return 1;
+}

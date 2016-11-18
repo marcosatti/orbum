@@ -18,13 +18,14 @@ For example, the BUSCLK is half that of the PS2CLK. Therefore for every 2 execut
 The timing is all implemented in the PS2Resources_t::Clock_t class, which is used here.
 */
 
+class VUInterpreter;
+class VIF;
 class VMMain;
 class EECoreInterpreter;
 class EEDmac;
 class EEIntc;
 class EETimers;
 class IOPCoreInterpreter;
-//class InterpreterVU;
 //class InterpreterGS;
 
 class Interpreter : public VMExecutionCoreComponent
@@ -50,16 +51,19 @@ public:
 	void initalise() override;
 
 private:
+	std::shared_ptr<VUInterpreter> mInterpreterVU0;
+	std::shared_ptr<VUInterpreter> mInterpreterVU1;
+	std::shared_ptr<VIF> mVIF0;
+	std::shared_ptr<VIF> mVIF1;
 	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
 	std::shared_ptr<EEDmac> mEEDmac;
 	std::shared_ptr<EEIntc> mEEIntc;
 	std::shared_ptr<EETimers> mEETimers;
-	//std::unique_ptr<InterpreterVU> mInterpreterVU; 
 	//std::unique_ptr<InterpreterGS> mInterpreterGS;
 	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
 
 	/*
-	Used to iterate through all components except the EE Core interpreter.
+	Used to iterate through all components EXCEPT the EE Core interpreter, which is used to control timing of the other components.
 	*/
 	std::vector<std::shared_ptr<VMExecutionCoreComponent>> mComponents;
 };
