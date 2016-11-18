@@ -7,11 +7,14 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Common/Types/Registers/PCRegister32_t.h"
 #include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Util/MathUtil/MathUtil.h"
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -30,13 +33,13 @@ const std::vector<ClockSource_t>& IOPCoreInterpreter::getClockSources()
 void IOPCoreInterpreter::initalise()
 {
 	// A Reset is done by raising a Reset exception.
-	getExceptionHandler()->handleException(IOPCoreException_t(IOPCoreException_t::ExType::EX_RESET));
+	mExceptionHandler->handleException(IOPCoreException_t(IOPCoreException_t::ExType::EX_RESET));
 }
 
 s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	getExceptionHandler()->checkExceptionState();
+	mExceptionHandler->checkExceptionState();
 
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	checkBranchDelaySlot();
@@ -73,8 +76,8 @@ s64 IOPCoreInterpreter::executeInstruction()
 	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 & instructionValue = getMMUHandler()->readWordU(IOPCore->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
-	getInstruction().setInstructionValue(instructionValue);
+	const u32 & instructionValue = mMMUHandler->readWordU(IOPCore->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
+	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
@@ -115,20 +118,32 @@ s64 IOPCoreInterpreter::executeInstruction()
 	return mInstructionInfo->mCycles;
 }
 
-const std::unique_ptr<IOPCoreExceptionHandler>& IOPCoreInterpreter::getExceptionHandler() const
+bool IOPCoreInterpreter::checkNoMMUError() const
 {
-	return mExceptionHandler;
+	if (mMMUHandler->hasExceptionOccurred())
+	{
+		// Something went wrong in the MMU.
+		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		Exceptions->setException(mMMUHandler->getExceptionInfo());
+		return false;
+	}
+
+	// MMU was ok.
+	return true;
 }
 
-
-const std::unique_ptr<IOPCoreMMUHandler>& IOPCoreInterpreter::getMMUHandler() const
+bool IOPCoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) const
 {
-	return mMMUHandler;
-}
+	if (MathUtil::testOverOrUnderflow32(x, y))
+	{
+		// Over/Under flow occured.
+		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_OVERFLOW));
+		return false;
+	}
 
-MIPSInstruction_t& IOPCoreInterpreter::getInstruction()
-{
-	return mInstruction;
+	// No error occured.
+	return true;
 }
 
 void IOPCoreInterpreter::INSTRUCTION_UNKNOWN()

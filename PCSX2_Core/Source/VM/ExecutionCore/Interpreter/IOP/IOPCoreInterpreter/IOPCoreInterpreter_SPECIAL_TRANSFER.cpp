@@ -23,8 +23,8 @@ void IOPCoreInterpreter::MFC0()
 		return;
 	}
 
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
+	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeWordU(static_cast<u32>(sourceReg->readWordU()));
 }
@@ -39,8 +39,8 @@ void IOPCoreInterpreter::MTC0()
 		return;
 	}
 
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRt()];
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[getInstruction().getRRd()];
+	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
+	auto& destReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeWordU(sourceReg->readWordU());
 }
@@ -48,7 +48,7 @@ void IOPCoreInterpreter::MTC0()
 void IOPCoreInterpreter::MFHI()
 {
 	// Rd = HI. No exceptions.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->HI;
 
 	destReg->writeWordU(source1Reg->readWordU());
@@ -57,7 +57,7 @@ void IOPCoreInterpreter::MFHI()
 void IOPCoreInterpreter::MFLO()
 {
 	// Rd = LO. No exceptions.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
+	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->LO;
 
 	destReg->writeWordU(source1Reg->readWordU());
@@ -66,7 +66,7 @@ void IOPCoreInterpreter::MFLO()
 void IOPCoreInterpreter::MTHI()
 {
 	// HI = Rd. No exceptions.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->HI;
 
 	destReg->writeWordU(source1Reg->readWordU());
@@ -75,7 +75,7 @@ void IOPCoreInterpreter::MTHI()
 void IOPCoreInterpreter::MTLO()
 {
 	// LO = Rd. No exceptions.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->LO;
 
 	destReg->writeWordU(source1Reg->readWordU());

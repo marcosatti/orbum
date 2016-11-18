@@ -7,8 +7,6 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
@@ -23,17 +21,12 @@ void EECoreInterpreter::ADD_S()
 {
 	// Fd = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
 	
@@ -57,16 +50,11 @@ void EECoreInterpreter::ADDA_S()
 {
 	// ACC = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
@@ -91,19 +79,14 @@ void EECoreInterpreter::MADD_S()
 {
 	// Fd = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 result = source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
 
@@ -127,17 +110,12 @@ void EECoreInterpreter::MADDA_S()
 {
 	// ACC = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
@@ -162,17 +140,12 @@ void EECoreInterpreter::MUL_S()
 {
 	// Fd = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
 
@@ -196,16 +169,11 @@ void EECoreInterpreter::MULA_S()
 {
 	// ACC = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
@@ -230,17 +198,12 @@ void EECoreInterpreter::DIV_S()
 {
 	// Fd = Fs / Ft (Exception on FPU unusable).
 	// TODO: Check if status bits need to be set.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	// Set flags when special conditions occur.
 	f32 result;
@@ -272,18 +235,13 @@ void EECoreInterpreter::MSUB_S()
 	// Fd = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 result = source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
 
@@ -308,16 +266,11 @@ void EECoreInterpreter::MSUBA_S()
 	// ACC = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
@@ -342,17 +295,12 @@ void EECoreInterpreter::SUB_S()
 {
 	// Fd = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
 
@@ -376,16 +324,11 @@ void EECoreInterpreter::SUBA_S()
 {
 	// ACC = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 
 	f32 result = source1Reg->readFloat() - source2Reg->readFloat();

@@ -9,17 +9,21 @@
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
+#include "PS2Resources/EE/VPU/VPU_t.h"
+#include "PS2Resources/EE/VPU/Types/VuUnits_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
+#include "Common/Util/MathUtil/MathUtil.h"
 
 using ExType = EECoreException_t::ExType;
 
@@ -48,7 +52,7 @@ void EECoreInterpreter::initalise()
 	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
 	// After this is done, call VMMMain::Run() to begin execution.
 
-	getExceptionHandler()->handleException(EECoreException_t(ExType::EX_RESET));
+	mExceptionHandler->handleException(EECoreException_t(ExType::EX_RESET));
 }
 
 s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
@@ -57,7 +61,7 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	checkCountTimerEvent();
 
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	getExceptionHandler()->checkExceptionState();
+	mExceptionHandler->checkExceptionState();
 		
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	checkBranchDelaySlot();
@@ -71,21 +75,6 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 #endif
 
 	return cycles;
-}
-
-const std::unique_ptr<EECoreExceptionHandler> & EECoreInterpreter::getExceptionHandler() const
-{
-	return mExceptionHandler;
-}
-
-const std::unique_ptr<EECoreMMUHandler>& EECoreInterpreter::getMMUHandler() const
-{
-	return mMMUHandler;
-}
-
-EECoreInstruction_t & EECoreInterpreter::getInstruction()
-{
-	return mInstruction;
 }
 
 void EECoreInterpreter::checkBranchDelaySlot() const
@@ -127,8 +116,8 @@ u32 EECoreInterpreter::executeInstruction()
 	auto& EECore = getVM()->getResources()->EE->EECore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 & instructionValue = getMMUHandler()->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking for address bus error.
-	getInstruction().setInstructionValue(instructionValue);
+	const u32 & instructionValue = mMMUHandler->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking for address bus error.
+	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
@@ -167,7 +156,92 @@ u32 EECoreInterpreter::executeInstruction()
 	return mInstructionInfo->mCycles;
 }
 
-// Begin EECore Instruction Implementation
+bool EECoreInterpreter::checkCOP0Usable() const
+{
+	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
+	{
+		// Coprocessor was not usable. Raise an exception.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return false;
+	}
+
+	// Coprocessor is usable, proceed.
+	return true;
+}
+
+bool EECoreInterpreter::checkCOP1Usable() const
+{
+	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	{
+		// Coprocessor was not usable. Raise an exception.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 1 };
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return false;
+	}
+
+	// Coprocessor is usable, proceed.
+	return true;
+}
+
+bool EECoreInterpreter::checkCOP2Usable() const
+{
+	if (!getVM()->getResources()->EE->VPU->VU0->isCoprocessorUsable())
+	{
+		// Coprocessor was not usable. Raise an exception.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 2 };
+		Exceptions->setException(EECoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return false;
+	}
+
+	// Coprocessor is usable, proceed.
+	return true;
+}
+
+bool EECoreInterpreter::checkNoMMUError() const
+{
+	if (mMMUHandler->hasExceptionOccurred())
+	{
+		// Something went wrong in the MMU.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(mMMUHandler->getExceptionInfo());
+		return false;
+	}
+
+	// MMU was ok.
+	return true;
+}
+
+bool EECoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) const
+{
+	if (MathUtil::testOverOrUnderflow32(x, y))
+	{
+		// Over/Under flow occured.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return false;
+	}
+
+	// No error occured.
+	return true;
+}
+
+bool EECoreInterpreter::checkNoOverOrUnderflow64(const s64& x, const s64& y) const
+{
+	if (MathUtil::testOverOrUnderflow64(x, y))
+	{
+		// Over/Under flow occured.
+		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		return false;
+	}
+
+	// No error occured.
+	return true;
+}
 
 void EECoreInterpreter::INSTRUCTION_UNKNOWN()
 {

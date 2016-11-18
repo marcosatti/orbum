@@ -53,7 +53,7 @@ public:
 	std::shared_ptr<FPRegister32_t> Q;
 
 	/*
-	P register. Used to store random numbers generated.
+	R register. Used to store random numbers generated.
 	See VU Users Manual page 34.
 	*/
 	std::shared_ptr<FPRegister32_t> R;
@@ -72,9 +72,8 @@ public:
 	std::shared_ptr<PhysicalMMU_t> MemPhysicalMMU;
 
 	/*
-	VU memory, defined on page 25 of the EE Users Manual.
-	Not initalised in class.
-	Different for VU0 (4KB) and VU1 (16KB).
+	VU memory, defined on page 18 of the VU Users Manual.
+	Initalised by subclasses; different for VU0 (4KB) and VU1 (16KB).
 	*/
 	std::shared_ptr<Memory_t> MEMORY_Micro;
 	std::shared_ptr<Memory_t> MEMORY_Mem;

@@ -15,8 +15,8 @@
 void EECoreInterpreter::BGEZAL()
 {
 	// BRANCH_LINK(Rs >= 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
-	const s16 offset = getInstruction().getIImmS();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	const s16 offset = mInstruction.getIImmS();
 
 	if (source1Reg->readDwordS(0) >= 0)
 	{
@@ -28,8 +28,8 @@ void EECoreInterpreter::BGEZAL()
 void EECoreInterpreter::BGEZALL()
 {
 	// BRANCH_LINK(Rs >= 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
-	const s16 offset = getInstruction().getIImmS();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	const s16 offset = mInstruction.getIImmS();
 
 	if (source1Reg->readDwordS(0) >= 0)
 	{
@@ -43,8 +43,8 @@ void EECoreInterpreter::BGEZALL()
 void EECoreInterpreter::BLTZAL()
 {
 	// BRANCH_LINK(Rs < 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
-	const s16 offset = getInstruction().getIImmS();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	const s16 offset = mInstruction.getIImmS();
 
 	if (source1Reg->readDwordS(0) < 0)
 	{
@@ -56,8 +56,8 @@ void EECoreInterpreter::BLTZAL()
 void EECoreInterpreter::BLTZALL()
 {
 	// BRANCH_LINK(Rs < 0). No exceptions.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getIRs()];
-	const s16 offset = getInstruction().getIImmS();
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	const s16 offset = mInstruction.getIImmS();
 
 	if (source1Reg->readDwordS(0) < 0)
 	{
@@ -72,15 +72,15 @@ void EECoreInterpreter::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	getVM()->getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-	const s32 offset = getInstruction().getJRegionAddress();
+	const s32 offset = mInstruction.getJRegionAddress();
 	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCJRegion(offset, 1);
 }
 
 void EECoreInterpreter::JALR()
 {
 	// JUMP_LINK_REGISTER(). Address error exception generated upon instruction load - but not in this instruction.
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	destReg->writeDwordU(0, static_cast<u64>(getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() + 8));
 	getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWordU(0), 1);

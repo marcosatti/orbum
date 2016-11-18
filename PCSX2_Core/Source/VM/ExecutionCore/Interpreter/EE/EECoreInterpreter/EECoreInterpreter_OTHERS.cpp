@@ -7,12 +7,9 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 
@@ -77,13 +74,8 @@ void EECoreInterpreter::CACHE()
 void EECoreInterpreter::TLBP()
 {
 	// PROBE_TLB(index). Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP0Usable())
+        return;
 
 	u32 value = 0x80000000; // Only set index if an entry is found, otherwise return with the sign bit = 1, indicating not found..
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
@@ -112,13 +104,8 @@ void EECoreInterpreter::TLBP()
 void EECoreInterpreter::TLBR()
 {
 	// COP0{PageMask, EntryHi/Lo} = GET_TLB(index). Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP0Usable())
+        return;
 
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
 	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
@@ -155,13 +142,8 @@ void EECoreInterpreter::TLBR()
 void EECoreInterpreter::TLBWI()
 {
 	// TLB[Index] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
- 		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP0Usable())
+        return;
 
 	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
 	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
@@ -202,13 +184,8 @@ void EECoreInterpreter::TLBWI()
 void EECoreInterpreter::TLBWR()
 {
 	// TLB[random] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
-	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP0Usable())
+        return;
 
 	auto& Random = getVM()->getResources()->EE->EECore->COP0->Random;
 	auto& MMU = getVM()->getResources()->EE->EECore->TLB;

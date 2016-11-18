@@ -73,3 +73,65 @@ u32 MathUtil::log2N(u32 value)
 
 	return r;
 }
+
+bool MathUtil::testOverflow32(s32 x, s32 y)
+{
+	if (((x > 0) && (y > Constants::VALUE_S32_MAX - x)))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool MathUtil::testUnderflow32(s32 x, s32 y)
+{
+	if (((x < 0) && (y < Constants::VALUE_S32_MIN - x)))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool MathUtil::testOverOrUnderflow32(s32 x, s32 y)
+{
+	if (((x > 0) && (y > Constants::VALUE_S32_MAX - x))
+		|| ((x < 0) && (y < Constants::VALUE_S32_MIN - x)))
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+bool MathUtil::testOverflow64(s64 x, s64 y)
+{
+	if (((x > 0) && (y > Constants::VALUE_S64_MAX - x)))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool MathUtil::testUnderflow64(s64 x, s64 y)
+{
+	if (((x < 0) && (y < Constants::VALUE_S64_MIN - x)))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool MathUtil::testOverOrUnderflow64(s64 x, s64 y)
+{
+	if (((x > 0) && (y > Constants::VALUE_S64_MAX - x))
+		|| ((x < 0) && (y < Constants::VALUE_S64_MIN - x)))
+	{
+		return true;
+	}
+
+	return false;
+}

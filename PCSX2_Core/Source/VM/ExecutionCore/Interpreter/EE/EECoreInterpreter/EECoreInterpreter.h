@@ -46,6 +46,17 @@ public:
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;
+
+private:
+
+#if defined(BUILD_DEBUG)
+	// Debug loop counter 
+	u64 DEBUG_LOOP_COUNTER = 0;
+	// SYNC counter
+	u64 DEBUG_INSTRUCTION_SYNC = 0;
+#endif
+
+	// Component helper functions.
 	void checkBranchDelaySlot() const;
 	u32 executeInstruction();
 
@@ -55,24 +66,8 @@ public:
 	*/
 	void checkCountTimerEvent() const;
 
-	// Component state functions
-	const std::unique_ptr<EECoreExceptionHandler> & getExceptionHandler() const;
-	const std::unique_ptr<EECoreMMUHandler> & getMMUHandler() const;
-	EECoreInstruction_t & getInstruction();
-
-private:
-
-	// Component state functions
-
-#if defined(BUILD_DEBUG)
-	// Debug loop counter 
-	u64 DEBUG_LOOP_COUNTER = 0;
-	// SYNC counter
-	u64 DEBUG_INSTRUCTION_SYNC = 0;
-#endif
-
 	/*
-	The EECore exception handler.
+	The EECore exception handler, which handles and processes the EECore->Exceptions state.
 	*/
 	const std::unique_ptr<EECoreExceptionHandler> mExceptionHandler;
 
@@ -92,6 +87,22 @@ private:
 	The VU interpreter reference, used to call any COP2 instructions prefixed with V* as the mnemonic.
 	*/
 	const std::shared_ptr<VUInterpreter> mVU0Interpreter;
+
+	/*
+	Helper functions to check:
+	 - The usability conditions of COP0, 1, 2 (VU0) of the EE Core
+	 - The condition that no MMUHandler error occured.
+	 - No over or underflow will occur for signed 32 bit integers.
+	Returns a bool indicating if the instruction should return early because of unavailablity.
+	Return early from instruction = true, Proceed with instruction = false.
+	They will automatically set the exception state as well.
+	*/
+	bool checkCOP0Usable() const;
+	bool checkCOP1Usable() const;
+	bool checkCOP2Usable() const;
+	bool checkNoMMUError() const;
+	bool checkNoOverOrUnderflow32(const s32 & x, const s32 & y) const;
+	bool checkNoOverOrUnderflow64(const s64 & x, const s64 & y) const;
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
 	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.

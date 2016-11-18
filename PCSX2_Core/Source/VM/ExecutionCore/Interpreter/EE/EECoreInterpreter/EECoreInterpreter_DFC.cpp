@@ -9,8 +9,6 @@
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
@@ -23,8 +21,8 @@ void EECoreInterpreter::PEXT5()
 {
 	// Rd = EXTEND[1-5-5-5 -> 32](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -42,8 +40,8 @@ void EECoreInterpreter::PPAC5()
 {
 	// Rd = PACK[32 -> 1-5-5-5](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -60,16 +58,11 @@ void EECoreInterpreter::PPAC5()
 void EECoreInterpreter::CVT_S_W()
 {
 	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on FPU unusable).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
 }
@@ -77,16 +70,11 @@ void EECoreInterpreter::CVT_S_W()
 void EECoreInterpreter::CVT_W_S()
 {
 	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on FPU unusable). Clamping occurs if exponent is > 0x9D.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat();
 

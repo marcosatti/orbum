@@ -41,4 +41,15 @@ public:
 	*/
 	static u32 log2N(u32 value);
 
+	/*
+	Provided x and y, returns a bool for the condition that addition it will not overflow, and for subtraction it will not underflow.
+	User must select the appropriate bit size (ie 32, 64).
+	Thanks to http://stackoverflow.com/questions/199333/how-to-detect-integer-overflow-in-c-c
+	*/
+	static bool testOverflow32(s32 x, s32 y);
+	static bool testUnderflow32(s32 x, s32 y);
+	static bool testOverOrUnderflow32(s32 x, s32 y);
+	static bool testOverflow64(s64 x, s64 y);
+	static bool testUnderflow64(s64 x, s64 y);
+	static bool testOverOrUnderflow64(s64 x, s64 y);
 };

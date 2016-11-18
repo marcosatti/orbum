@@ -38,22 +38,20 @@ public:
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;
-	void checkBranchDelaySlot() const;
-	s64 executeInstruction();
-
-	// Component state functions
-	const std::unique_ptr<IOPCoreExceptionHandler> & getExceptionHandler() const;
-	const std::unique_ptr<IOPCoreMMUHandler> & getMMUHandler() const;
-	MIPSInstruction_t & getInstruction();
 
 private:
+
 #if defined(BUILD_DEBUG)
 	// Debug loop counter 
 	u64 DEBUG_LOOP_COUNTER = 0;
 #endif
 
+	// Component helper functions.
+	void checkBranchDelaySlot() const;
+	s64 executeInstruction();
+
 	/*
-	The IOP exception handler.
+	The IOP exception handler, which handles and processes the IOPCore->Exceptions state.
 	*/
 	const std::unique_ptr<IOPCoreExceptionHandler> mExceptionHandler;
 
@@ -68,6 +66,17 @@ private:
 	*/
 	MIPSInstruction_t mInstruction;
 	const MIPSInstructionInfo_t * mInstructionInfo;
+
+	/*
+	Helper functions to check for: 
+	 - The condition that no MMUHandler error occured.
+	 - No over or underflow will occur for signed 32 bit integers.
+	Returns a bool indicating if the instruction should return early because of unavailablity.
+	Return early from instruction = true, Proceed with instruction = false.
+	They will automatically set the exception state as well.
+	*/
+	bool checkNoMMUError() const;
+	bool checkNoOverOrUnderflow32(const s32 & x, const s32 & y) const;
 
 	// IOP Instruction funtionality.
 

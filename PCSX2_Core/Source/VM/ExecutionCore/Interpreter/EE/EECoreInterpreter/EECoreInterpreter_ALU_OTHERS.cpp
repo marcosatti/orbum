@@ -14,16 +14,14 @@
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 void EECoreInterpreter::PABSH()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -38,8 +36,8 @@ void EECoreInterpreter::PABSH()
 void EECoreInterpreter::PABSW()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRt()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -54,8 +52,8 @@ void EECoreInterpreter::PABSW()
 void EECoreInterpreter::PLZCW()
 {
 	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRd()];
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[getInstruction().getRRs()];
+	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
@@ -68,16 +66,11 @@ void EECoreInterpreter::PLZCW()
 void EECoreInterpreter::ABS_S()
 {
 	// Fd = ABS(Fs) (Exception on FPU unusable only).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
@@ -88,16 +81,11 @@ void EECoreInterpreter::ABS_S()
 void EECoreInterpreter::NEG_S()
 {
 	// Fd = NEG(Fs) (Exception on FPU unusable only).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 
@@ -108,17 +96,12 @@ void EECoreInterpreter::NEG_S()
 void EECoreInterpreter::RSQRT_S()
 {
 	// Fd = RSQRT(Fs, Ft) (Exception on FPU unusable only).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
@@ -152,16 +135,11 @@ void EECoreInterpreter::RSQRT_S()
 void EECoreInterpreter::SQRT_S()
 {
 	// Fd = SQRT(Ft) (Exception on FPU unusable only).
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-		return;
-	}
+	if (!checkCOP1Usable())
+        return;
 
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[getInstruction().getRShamt()]; // Fd
+	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 source2Val = source2Reg->readFloat();
 	f32 result;

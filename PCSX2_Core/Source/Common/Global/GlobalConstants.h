@@ -47,6 +47,8 @@ struct Constants
 	static constexpr s32 VALUE_S32_MAX = 2147483647;
 	static constexpr s32 VALUE_S32_MIN = -2147483647 - 1; // Hmm... interesting. Can't use -2147483648, as it results in compiler error C4146 (too big) on VS, so use this workaround. Thanks: http://stackoverflow.com/questions/29355956/how-can-i-fix-error-code-c4146-unary-minus-operator-applied-to-unsigned-type-re
 	static constexpr u64 VALUE_U64_MAX = 18446744073709551615;
+	static constexpr s64 VALUE_S64_MAX = 9223372036854775807;
+	static constexpr s64 VALUE_S64_MIN = -9223372036854775807 - 1; // Same reason as above.
 
 	static constexpr u32 SIZE_MIPS_INSTRUCTION = 4;
 };
