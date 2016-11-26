@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
-#include "PS2Resources/EE/VPU/Types/VIFcode_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
 VIFcodeInstructionInfo_Base_t::VIFcodeInstructionInfo_Base_t(const char *const mnemonic, const u32 implementationIndex) :
 	mMnemonic(mnemonic),

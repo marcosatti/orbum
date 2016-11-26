@@ -20,7 +20,8 @@
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
@@ -188,7 +189,7 @@ bool EECoreInterpreter::checkCOP1Usable() const
 
 bool EECoreInterpreter::checkCOP2Usable() const
 {
-	if (!getVM()->getResources()->EE->VPU->VU0->isCoprocessorUsable())
+	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;

@@ -17,10 +17,15 @@ The naming convention is based off the component. For cases where for example th
  the source files are prefixed with EE or IOP.
 
 You should only ever need to create an object of the PS2Resources_t type from which you can access everything,
-which is ordered by components in the documentation groups, such as PS2Resources->PS2State->EE->EECore->R5900->GPR[1]->readWordU().
+which is ordered by components in the documentation groups, such as PS2Resources->EE->EECore->R5900->GPR[1]->readWordU().
 
 Subobjects of this resources class should be extended from the PS2ResourcesSubobject interface if required - this is so they may inspect other resources
-on function calls. An example of this is for some R5900 registers (ie: LinkRegister), where they can set other registers automatically.
+ on function calls. An example of this is for some R5900 registers (ie: LinkRegister), where they can set other registers automatically.
+This should not be used for object construction purposes as it makes the code harder to understand. Instead, for things like memory maps, initalise
+ them after all of the base components have been initalised in this class. See for example initPhysicalMemoryMap_EE().
+For small cases, such as the EE Timer's Mode register having a dependency on the Count register, a constructor argument is acceptable, with a note 
+ to the effect of "must be initalised in this order due to dependency".
+TODO: may look into a better interface class to do this, such as "registering" a component that has a onPostInitalisation() function.
 
 Note: In order to reduce compile times, try to define the subobjects in the classes initalisation list, and use forward delarations where possible 
 This applies to every object defined in this hierarchy. Yes, it looks ugly. 
@@ -60,12 +65,21 @@ public:
 
 
 private:
+
+	// Post initalisaiton functions.
+
 	/*
 	Initalise the EE and IOP physical memory space. 
 	Has to be done after the sub classes above have been initalised otherwise null pointer errors can occur.
+	For the mapping details, see primarily the EE Users Manual page 20 onwards.
 	*/
-	void mapPhysicalMemory_EE() const;
-	void mapPhysicalMemory_IOP() const;
-	void mapPhysicalMemory_VU0() const;
-	void mapPhysicalMemory_VU1() const;
+	void initPhysicalMemoryMap_EE() const;
+	void initPhysicalMemoryMap_IOP() const;
+	void initPhysicalMemoryMap_VU0() const;
+	void initPhysicalMemoryMap_VU1() const;
+
+	/*
+	Initalise the VU0 (COP2) control register map.
+	*/
+	void initControlRegistersMap_VU0() const;
 };

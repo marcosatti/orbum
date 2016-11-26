@@ -12,23 +12,28 @@ class FPRegister128_t;
 class FPRegister32_t;
 class Register16_t;
 class Register32_t;
+class PCRegister16_t;
+class VectorUnitRegister_MAC_t;
+class VectorUnitRegister_Status_t;
+class VectorUnitRegister_Clipping_t;
+class VectorUnitRegister_CMSAR_t;
 
 /*
 A base class for an implementation of a VU resource. Common resources are initalised, all others set to nullptr (see below).
 Extended by VU0_t and VU1_t.
 */
-class VuUnit_t : public PS2ResourcesSubobject
+class VectorUnit_t : public PS2ResourcesSubobject
 {
 public:
-	explicit VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
+	explicit VectorUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
 
 	/*
-	ID of the VU unit. Currently used for debug.
+	ID of the VU. Currently used for debug.
 	*/
 	const u32 mUnitID;
 
 	/*
-	VU0 Floating Point Registers (VF) (128-bit) and Integer Registers (VI) (16-bit).
+	VU Floating Point Registers (VF) (128-bit) and Integer Registers (VI) (16-bit).
 	See VU Users Manual page 18.
 	*/
 	std::shared_ptr<FPRegister128_t> VF[PS2Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];
@@ -63,7 +68,30 @@ public:
 	See VU Users Manual page 34.
 	*/
 	std::shared_ptr<FPRegister32_t> P;
-	
+
+	/*
+	The Flag registers (MAC, Status and Clipping), used to hold special results from calculations.
+	See VU Users Manual page 40.
+
+	The MAC register is dependant on the Status register for special functionality.
+	*/
+	std::shared_ptr<VectorUnitRegister_Status_t>   Status;
+	std::shared_ptr<VectorUnitRegister_MAC_t>      MAC;
+	std::shared_ptr<VectorUnitRegister_Clipping_t> Clipping;
+
+	/*
+	PC (program counter) register for micro subroutines.
+	Also known as the TPC (termination PC).
+	See VU Users Manual page 202 for the TPC definition, although there is no explicit definition for the PC register.
+	*/
+	std::shared_ptr<PCRegister16_t> PC;
+
+	/*
+	The CMSAR register used for micro subroutine execution.
+	See VU Users Manual page 202.
+	*/
+	std::shared_ptr<VectorUnitRegister_CMSAR_t> CMSAR;
+
 	/*
 	VU0 contains a physical memory map of its real working space (& mirrors) and the VU1 registers.
 	For VU1, it is just a direct map of its real working space (needed to keep it OOP friendly).
@@ -80,13 +108,13 @@ public:
 };
 
 /*
-Represents the VU0 unit.
+Represents VU0.
 It is attached as a MIPS coprocessor to the EE Core, as COP2.
 */
-class VuUnit_0_t : public VuUnit_t, public MIPSCoprocessor_t
+class VectorUnit_0_t : public VectorUnit_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VuUnit_0_t(const PS2Resources_t* const PS2Resources);
+	explicit VectorUnit_0_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 0;
 
@@ -95,8 +123,11 @@ public:
 	/*
 	The CCR (control registers) array (32) needed for the CTC2 and CFC2 EE Core instructions.
 	See VU Users Manual page 200 & 201.
+
+	The first 16 registers are allocated to the VU0 VI registers, with the last 16 registers allocated to various control registers.
+	Due to dependency on registers outside this class, initalisation is done on post PS2Resources initalsation. See initControlRegistersMap_VU0().
 	*/
-	const std::shared_ptr<Register32_t> CCR[PS2Constants::EE::VPU::VU::NUMBER_VU0_CCR_REGISTERS];
+	std::shared_ptr<Register32_t> CCR[PS2Constants::EE::VPU::VU::NUMBER_VU0_CCR_REGISTERS];
 
 	/*
 	Check if this VU unit is usable in macro mode from the EE Core by checking the EE Core's COP0.Status.CU2 bit.
@@ -106,12 +137,12 @@ public:
 };
 
 /*
-Represents the VU1 unit.
+Represents VU1.
 */
-class VuUnit_1_t : public VuUnit_t
+class VectorUnit_1_t : public VectorUnit_t
 {
 public:
-	explicit VuUnit_1_t(const PS2Resources_t* const PS2Resources);
+	explicit VectorUnit_1_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 1;
 };

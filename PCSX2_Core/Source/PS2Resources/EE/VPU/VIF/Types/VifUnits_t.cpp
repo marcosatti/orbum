@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "PS2Resources/EE/VPU/Types/VifUnits_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 
 VifUnit_t::VifUnit_t(const u32 & unitID) :
 	mUnitID(unitID),

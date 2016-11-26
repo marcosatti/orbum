@@ -92,7 +92,7 @@ private:
 	Helper functions to check:
 	 - The usability conditions of COP0, 1, 2 (VU0) of the EE Core
 	 - The condition that no MMUHandler error occured.
-	 - No over or underflow will occur for signed 32 bit integers.
+	 - No over or underflow will occur for signed 32/64 bit integers.
 	Returns a bool indicating if the instruction should return early because of unavailablity.
 	Return early from instruction = true, Proceed with instruction = false.
 	They will automatically set the exception state as well.

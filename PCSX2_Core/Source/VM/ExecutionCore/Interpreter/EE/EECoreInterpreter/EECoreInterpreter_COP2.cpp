@@ -13,7 +13,8 @@
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
@@ -31,7 +32,7 @@ void EECoreInterpreter::QMFC2()
 	}
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU0->VF[mInstruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
 	destReg->writeDwordU(1, source1Reg->readDwordU(1));
@@ -49,7 +50,7 @@ void EECoreInterpreter::QMTC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getVM()->getResources()->EE->VPU->VU0->VF[mInstruction.getRRd()];
+	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0));
@@ -62,7 +63,7 @@ void EECoreInterpreter::LQC2()
 	if (!checkCOP2Usable())
         return;
 
-	auto& destReg = getVM()->getResources()->EE->VPU->VU0->VF[mInstruction.getIRt()];
+	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU0->VF[mInstruction.getIRt()];
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
@@ -96,7 +97,7 @@ void EECoreInterpreter::SQC2()
         return;
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU0->VF[mInstruction.getIRt()];
+	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU0->VF[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -124,7 +125,10 @@ void EECoreInterpreter::CFC2()
 	}
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU0->CCR[mInstruction.getRRd()];
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
+
+	if (mInstruction.getRRd() > 15)
+		logDebug("break");
 
 	destReg->writeDwordS(0, static_cast<s64>(source1Reg->readWordU()));
 }
@@ -140,8 +144,11 @@ void EECoreInterpreter::CTC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getVM()->getResources()->EE->VPU->VU0->CCR[mInstruction.getRRd()];
+	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+
+	if (mInstruction.getRRd() > 15)
+		logDebug("break");
 
 	destReg->writeWordU(static_cast<u32>(source1Reg->readWordU(0)));
 }
@@ -200,7 +207,7 @@ void EECoreInterpreter::BC2TL()
 
 void EECoreInterpreter::VCALLMS()
 {
-	if (!getVM()->getResources()->EE->VPU->VU0->isCoprocessorUsable())
+	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 2 };
@@ -218,7 +225,7 @@ void EECoreInterpreter::VCALLMS()
 
 void EECoreInterpreter::VCALLMSR()
 {
-	if (!getVM()->getResources()->EE->VPU->VU0->isCoprocessorUsable())
+	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
 	{
 		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 2 };

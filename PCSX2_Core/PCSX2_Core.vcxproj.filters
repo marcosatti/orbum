@@ -283,15 +283,11 @@
     <ClInclude Include="Source\PS2Resources\EE\DMAC\EEDmac_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\INTC\EEIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\EETimers_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VifUnitRegisters_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VuUnits_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VifUnits_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ZeroRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ZeroFPRegister128_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Types</Filter>
     </ClInclude>
@@ -306,6 +302,17 @@
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreInstruction_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Wrapper16Register32_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\VIF_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VU\VU_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VectorUnitRegisters_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VectorUnits_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnits_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\WrapperF32Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\PCRegister16_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -470,15 +477,11 @@
     <ClCompile Include="Source\PS2Resources\EE\DMAC\EEDmac_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\INTC\EEIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\EETimers_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VifUnitRegisters_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VuUnits_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VifUnits_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ZeroRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ZeroFPRegister128_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VIFcode_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.cpp" />
     <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
@@ -496,6 +499,17 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter_OTHER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter_CONVERT.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VU\VU_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\VIF_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VectorUnitRegisters_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VectorUnits_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnits_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\WrapperF32Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\PCRegister16_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

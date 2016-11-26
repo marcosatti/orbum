@@ -4,7 +4,7 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "PS2Constants/PS2Constants.h"
-#include "PS2Resources/EE/VPU/Types/VIFcode_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
 /*
 An implementation of the VIF channel system.

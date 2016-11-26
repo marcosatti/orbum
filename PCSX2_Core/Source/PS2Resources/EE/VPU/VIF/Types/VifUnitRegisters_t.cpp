@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "PS2Resources/EE/VPU/Types/VifUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 
 VifUnitRegister_R_t::VifUnitRegister_R_t()
 {

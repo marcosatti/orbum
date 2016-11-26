@@ -27,8 +27,8 @@ public:
 	void setPCValueAbsolute(const u32& absoluteLocation);
 
 	/*
-	Increments the PC by 4 (equal to the size of a MIPS instruction).
+	Increments the PC by a default size of 4 bytes (equal to the size of a MIPS instruction).
 	*/
-	void setPCValueNext();
+	void setPCValueNext(const u32 instructionSize = Constants::SIZE_MIPS_INSTRUCTION);
 };
 

@@ -5,8 +5,9 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnits_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VIF/VIF_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 #include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
 
 VIF::VIF(VMMain* vmMain, u32 vifUnitIndex) :
@@ -28,7 +29,7 @@ const std::vector<ClockSource_t>& VIF::getClockSources()
 
 s64 VIF::executionStep(const ClockSource_t& clockSource)
 {
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 
 	// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
 	if (isVIFStalled())
@@ -69,7 +70,7 @@ s64 VIF::executionStep(const ClockSource_t& clockSource)
 
 bool VIF::isVIFStalled() const
 {
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 	auto& STAT = VIF->mSTAT;
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 

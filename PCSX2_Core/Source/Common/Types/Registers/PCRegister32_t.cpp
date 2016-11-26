@@ -17,7 +17,7 @@ void PCRegister32_t::setPCValueAbsolute(const u32& absoluteLocation)
 	writeWordU(absoluteLocation);
 }
 
-void PCRegister32_t::setPCValueNext()
+void PCRegister32_t::setPCValueNext(const u32 instructionSize)
 {
-	setPCValueRelative(Constants::SIZE_MIPS_INSTRUCTION);
+	setPCValueRelative(instructionSize);
 }

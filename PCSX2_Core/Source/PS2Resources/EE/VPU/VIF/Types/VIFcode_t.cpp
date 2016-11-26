@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "PS2Resources/EE/VPU/Types/VIFcode_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
 
 VIFcode_t::VIFcode_t() :

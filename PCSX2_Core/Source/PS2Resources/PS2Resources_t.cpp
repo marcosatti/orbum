@@ -10,6 +10,9 @@
 #include "PS2Resources/IOP/IOP_t.h"
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/Registers/PCRegister16_t.h"
+#include "Common/Types/Registers/Wrapper16Register32_t.h"
+#include "Common/Types/Registers/WrapperF32Register32_t.h"
 
 #include "PS2Resources/EE/Types/EERegisters_t.h"
 #include "PS2Resources/EE/Types/BootROM_t.h"
@@ -26,9 +29,14 @@
 #include "PS2Resources/EE/IPU/IPU_t.h"
 #include "PS2Resources/EE/GIF/GIF_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnits_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnitRegisters_t.h"
-#include "PS2Resources/EE/VPU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/Types/VPURegisters_t.h"
+#include "PS2Resources/EE/VPU/VIF/VIF_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
+#include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VectorUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VURegisters_t.h"
 
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 
@@ -38,13 +46,14 @@ PS2Resources_t::PS2Resources_t() :
 	EE(std::make_shared<EE_t>(this)),
 	IOP(std::make_shared<IOP_t>(this))
 {
-	mapPhysicalMemory_EE();
-	mapPhysicalMemory_IOP();
-	mapPhysicalMemory_VU0();
-	mapPhysicalMemory_VU1();
+	initPhysicalMemoryMap_EE();
+	initPhysicalMemoryMap_IOP();
+	initPhysicalMemoryMap_VU0();
+	initPhysicalMemoryMap_VU1();
+	initControlRegistersMap_VU0();
 }
 
-void PS2Resources_t::mapPhysicalMemory_EE() const
+void PS2Resources_t::initPhysicalMemoryMap_EE() const
 {
 	// EE Memory.
 	{
@@ -107,50 +116,50 @@ void PS2Resources_t::mapPhysicalMemory_EE() const
 		EE->PhysicalMMU->mapMemory(0x100030a0, EE->GIF->REGISTER_P3TAG);
 
 		// VIF0 Registers.
-		EE->PhysicalMMU->mapMemory(0x10003800, EE->VPU->VIF0->mSTAT);
-		EE->PhysicalMMU->mapMemory(0x10003810, EE->VPU->VIF0->mFBRST);
-		EE->PhysicalMMU->mapMemory(0x10003820, EE->VPU->VIF0->mERR);
-		EE->PhysicalMMU->mapMemory(0x10003830, EE->VPU->VIF0->mMARK);
-		EE->PhysicalMMU->mapMemory(0x10003840, EE->VPU->VIF0->mCYCLE);
-		EE->PhysicalMMU->mapMemory(0x10003850, EE->VPU->VIF0->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10003860, EE->VPU->VIF0->mNUM);
-		EE->PhysicalMMU->mapMemory(0x10003870, EE->VPU->VIF0->mMASK);
-		EE->PhysicalMMU->mapMemory(0x10003880, EE->VPU->VIF0->mCODE);
-		EE->PhysicalMMU->mapMemory(0x10003890, EE->VPU->VIF0->mITOPS);
-		EE->PhysicalMMU->mapMemory(0x100038d0, EE->VPU->VIF0->mITOP);
-		EE->PhysicalMMU->mapMemory(0x10003900, EE->VPU->VIF0->mR0);
-		EE->PhysicalMMU->mapMemory(0x10003910, EE->VPU->VIF0->mR1);
-		EE->PhysicalMMU->mapMemory(0x10003920, EE->VPU->VIF0->mR2);
-		EE->PhysicalMMU->mapMemory(0x10003930, EE->VPU->VIF0->mR3);
-		EE->PhysicalMMU->mapMemory(0x10003940, EE->VPU->VIF0->mC0);
-		EE->PhysicalMMU->mapMemory(0x10003950, EE->VPU->VIF0->mC1);
-		EE->PhysicalMMU->mapMemory(0x10003960, EE->VPU->VIF0->mC2);
-		EE->PhysicalMMU->mapMemory(0x10003970, EE->VPU->VIF0->mC3);
+		EE->PhysicalMMU->mapMemory(0x10003800, EE->VPU->VIF->VIF0->mSTAT);
+		EE->PhysicalMMU->mapMemory(0x10003810, EE->VPU->VIF->VIF0->mFBRST);
+		EE->PhysicalMMU->mapMemory(0x10003820, EE->VPU->VIF->VIF0->mERR);
+		EE->PhysicalMMU->mapMemory(0x10003830, EE->VPU->VIF->VIF0->mMARK);
+		EE->PhysicalMMU->mapMemory(0x10003840, EE->VPU->VIF->VIF0->mCYCLE);
+		EE->PhysicalMMU->mapMemory(0x10003850, EE->VPU->VIF->VIF0->mMODE);
+		EE->PhysicalMMU->mapMemory(0x10003860, EE->VPU->VIF->VIF0->mNUM);
+		EE->PhysicalMMU->mapMemory(0x10003870, EE->VPU->VIF->VIF0->mMASK);
+		EE->PhysicalMMU->mapMemory(0x10003880, EE->VPU->VIF->VIF0->mCODE);
+		EE->PhysicalMMU->mapMemory(0x10003890, EE->VPU->VIF->VIF0->mITOPS);
+		EE->PhysicalMMU->mapMemory(0x100038d0, EE->VPU->VIF->VIF0->mITOP);
+		EE->PhysicalMMU->mapMemory(0x10003900, EE->VPU->VIF->VIF0->mR0);
+		EE->PhysicalMMU->mapMemory(0x10003910, EE->VPU->VIF->VIF0->mR1);
+		EE->PhysicalMMU->mapMemory(0x10003920, EE->VPU->VIF->VIF0->mR2);
+		EE->PhysicalMMU->mapMemory(0x10003930, EE->VPU->VIF->VIF0->mR3);
+		EE->PhysicalMMU->mapMemory(0x10003940, EE->VPU->VIF->VIF0->mC0);
+		EE->PhysicalMMU->mapMemory(0x10003950, EE->VPU->VIF->VIF0->mC1);
+		EE->PhysicalMMU->mapMemory(0x10003960, EE->VPU->VIF->VIF0->mC2);
+		EE->PhysicalMMU->mapMemory(0x10003970, EE->VPU->VIF->VIF0->mC3);
 
 		// VIF1 Registers.
-		EE->PhysicalMMU->mapMemory(0x10003c00, EE->VPU->VIF1->mSTAT);
-		EE->PhysicalMMU->mapMemory(0x10003c10, EE->VPU->VIF1->mFBRST);
-		EE->PhysicalMMU->mapMemory(0x10003c20, EE->VPU->VIF1->mERR);
-		EE->PhysicalMMU->mapMemory(0x10003c30, EE->VPU->VIF1->mMARK);
-		EE->PhysicalMMU->mapMemory(0x10003c40, EE->VPU->VIF1->mCYCLE);
-		EE->PhysicalMMU->mapMemory(0x10003c50, EE->VPU->VIF1->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10003c60, EE->VPU->VIF1->mNUM);
-		EE->PhysicalMMU->mapMemory(0x10003c70, EE->VPU->VIF1->mMASK);
-		EE->PhysicalMMU->mapMemory(0x10003c80, EE->VPU->VIF1->mCODE);
-		EE->PhysicalMMU->mapMemory(0x10003c90, EE->VPU->VIF1->mITOPS);
-		EE->PhysicalMMU->mapMemory(0x10003ca0, EE->VPU->VIF1->mBASE);
-		EE->PhysicalMMU->mapMemory(0x10003cb0, EE->VPU->VIF1->mOFST);
-		EE->PhysicalMMU->mapMemory(0x10003cc0, EE->VPU->VIF1->mTOPS);
-		EE->PhysicalMMU->mapMemory(0x10003cd0, EE->VPU->VIF1->mITOP);
-		EE->PhysicalMMU->mapMemory(0x10003ce0, EE->VPU->VIF1->mTOP);
-		EE->PhysicalMMU->mapMemory(0x10003d00, EE->VPU->VIF1->mR0);
-		EE->PhysicalMMU->mapMemory(0x10003d10, EE->VPU->VIF1->mR1);
-		EE->PhysicalMMU->mapMemory(0x10003d20, EE->VPU->VIF1->mR2);
-		EE->PhysicalMMU->mapMemory(0x10003d30, EE->VPU->VIF1->mR3);
-		EE->PhysicalMMU->mapMemory(0x10003d40, EE->VPU->VIF1->mC0);
-		EE->PhysicalMMU->mapMemory(0x10003d50, EE->VPU->VIF1->mC1);
-		EE->PhysicalMMU->mapMemory(0x10003d60, EE->VPU->VIF1->mC2);
-		EE->PhysicalMMU->mapMemory(0x10003d70, EE->VPU->VIF1->mC3);
+		EE->PhysicalMMU->mapMemory(0x10003c00, EE->VPU->VIF->VIF1->mSTAT);
+		EE->PhysicalMMU->mapMemory(0x10003c10, EE->VPU->VIF->VIF1->mFBRST);
+		EE->PhysicalMMU->mapMemory(0x10003c20, EE->VPU->VIF->VIF1->mERR);
+		EE->PhysicalMMU->mapMemory(0x10003c30, EE->VPU->VIF->VIF1->mMARK);
+		EE->PhysicalMMU->mapMemory(0x10003c40, EE->VPU->VIF->VIF1->mCYCLE);
+		EE->PhysicalMMU->mapMemory(0x10003c50, EE->VPU->VIF->VIF1->mMODE);
+		EE->PhysicalMMU->mapMemory(0x10003c60, EE->VPU->VIF->VIF1->mNUM);
+		EE->PhysicalMMU->mapMemory(0x10003c70, EE->VPU->VIF->VIF1->mMASK);
+		EE->PhysicalMMU->mapMemory(0x10003c80, EE->VPU->VIF->VIF1->mCODE);
+		EE->PhysicalMMU->mapMemory(0x10003c90, EE->VPU->VIF->VIF1->mITOPS);
+		EE->PhysicalMMU->mapMemory(0x10003ca0, EE->VPU->VIF->VIF1->mBASE);
+		EE->PhysicalMMU->mapMemory(0x10003cb0, EE->VPU->VIF->VIF1->mOFST);
+		EE->PhysicalMMU->mapMemory(0x10003cc0, EE->VPU->VIF->VIF1->mTOPS);
+		EE->PhysicalMMU->mapMemory(0x10003cd0, EE->VPU->VIF->VIF1->mITOP);
+		EE->PhysicalMMU->mapMemory(0x10003ce0, EE->VPU->VIF->VIF1->mTOP);
+		EE->PhysicalMMU->mapMemory(0x10003d00, EE->VPU->VIF->VIF1->mR0);
+		EE->PhysicalMMU->mapMemory(0x10003d10, EE->VPU->VIF->VIF1->mR1);
+		EE->PhysicalMMU->mapMemory(0x10003d20, EE->VPU->VIF->VIF1->mR2);
+		EE->PhysicalMMU->mapMemory(0x10003d30, EE->VPU->VIF->VIF1->mR3);
+		EE->PhysicalMMU->mapMemory(0x10003d40, EE->VPU->VIF->VIF1->mC0);
+		EE->PhysicalMMU->mapMemory(0x10003d50, EE->VPU->VIF->VIF1->mC1);
+		EE->PhysicalMMU->mapMemory(0x10003d60, EE->VPU->VIF->VIF1->mC2);
+		EE->PhysicalMMU->mapMemory(0x10003d70, EE->VPU->VIF->VIF1->mC3);
 
 		// FIFO Registers.
 		EE->PhysicalMMU->mapMemory(0x10004000, EE->FIFO_VIF0);
@@ -236,10 +245,10 @@ void PS2Resources_t::mapPhysicalMemory_EE() const
 
 	// VU0/1 Memory
 	{
-		EE->PhysicalMMU->mapMemory(0x11000000, EE->VPU->VU0->MEMORY_Micro);
-		EE->PhysicalMMU->mapMemory(0x11004000, EE->VPU->VU0->MEMORY_Mem);
-		EE->PhysicalMMU->mapMemory(0x11008000, EE->VPU->VU1->MEMORY_Micro);
-		EE->PhysicalMMU->mapMemory(0x1100c000, EE->VPU->VU1->MEMORY_Mem);
+		EE->PhysicalMMU->mapMemory(0x11000000, EE->VPU->VU->VU0->MEMORY_Micro);
+		EE->PhysicalMMU->mapMemory(0x11004000, EE->VPU->VU->VU0->MEMORY_Mem);
+		EE->PhysicalMMU->mapMemory(0x11008000, EE->VPU->VU->VU1->MEMORY_Micro);
+		EE->PhysicalMMU->mapMemory(0x1100c000, EE->VPU->VU->VU1->MEMORY_Mem);
 	}
 
 	// GS Privileged Registers.
@@ -273,7 +282,7 @@ void PS2Resources_t::mapPhysicalMemory_EE() const
 	}
 }
 
-void PS2Resources_t::mapPhysicalMemory_IOP() const
+void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 {
 	// Main Memory
 	IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY, IOP->MainMemory);
@@ -294,31 +303,74 @@ void PS2Resources_t::mapPhysicalMemory_IOP() const
 	IOP->PhysicalMMU->mapMemory(0xFFC00000, EE->BootROM);
 }
 
-void PS2Resources_t::mapPhysicalMemory_VU0() const
+void PS2Resources_t::initPhysicalMemoryMap_VU0() const
 {
 	// VU0 Memory.
 	{
-		EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x0000, EE->VPU->VU0->MEMORY_Mem);
-		EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x1000, EE->VPU->VU0->MEMORY_Mem);
-		EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x2000, EE->VPU->VU0->MEMORY_Mem);
-		EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x3000, EE->VPU->VU0->MEMORY_Mem);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x0000, EE->VPU->VU->VU0->MEMORY_Mem);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x1000, EE->VPU->VU->VU0->MEMORY_Mem);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x2000, EE->VPU->VU->VU0->MEMORY_Mem);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x3000, EE->VPU->VU->VU0->MEMORY_Mem);
 	}
 
 	// VU1 Registers.
 	{
 		// VF Registers.
 		for (auto i = 0; i < PS2Constants::EE::VPU::VU::NUMBER_VF_REGISTERS; i++)
-			EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x4000 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU1->VF[i]);
+			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4000 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU->VU1->VF[i]);
 
 		// VI Registers. Aligned on 128-bit boundaries, NOT the register size of 16-bit! See EE Users Manual page 84. 
 		// The upper 112-bits are left unmapped.
 		for (auto i = 0; i < PS2Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
-			EE->VPU->VU0->MemPhysicalMMU->mapMemory(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU1->VI[i]);
+			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU->VU1->VI[i]);
 	}
 }
 
-void PS2Resources_t::mapPhysicalMemory_VU1() const
+void PS2Resources_t::initPhysicalMemoryMap_VU1() const
 {
 	// VU1 Memory.
-	EE->VPU->VU1->MemPhysicalMMU->mapMemory(0x0000, EE->VPU->VU1->MEMORY_Mem);
+	EE->VPU->VU->VU1->MemPhysicalMMU->mapMemory(0x0000, EE->VPU->VU->VU1->MEMORY_Mem);
+}
+
+void PS2Resources_t::initControlRegistersMap_VU0() const
+{
+	auto& VU0 = EE->VPU->VU->VU0;
+	auto& VU1 = EE->VPU->VU->VU1;
+	auto& VU = EE->VPU->VU;
+	auto& VPU = EE->VPU;
+
+	// Init the CCR array, which contains the list of registers used by some EE Core COP2 instructions.
+	// See VU Users Manual page 200 for the list. There are 32 registers total.
+	VU0->CCR[0] = std::make_shared<Wrapper16Register32_t>(VU0->VI[0]);
+	VU0->CCR[1] = std::make_shared<Wrapper16Register32_t>(VU0->VI[1]); 
+	VU0->CCR[2] = std::make_shared<Wrapper16Register32_t>(VU0->VI[2]); 
+	VU0->CCR[3] = std::make_shared<Wrapper16Register32_t>(VU0->VI[3]);
+	VU0->CCR[4] = std::make_shared<Wrapper16Register32_t>(VU0->VI[4]); 
+	VU0->CCR[5] = std::make_shared<Wrapper16Register32_t>(VU0->VI[5]); 
+	VU0->CCR[6] = std::make_shared<Wrapper16Register32_t>(VU0->VI[6]); 
+	VU0->CCR[7] = std::make_shared<Wrapper16Register32_t>(VU0->VI[7]);
+	VU0->CCR[8] = std::make_shared<Wrapper16Register32_t>(VU0->VI[8]); 
+	VU0->CCR[9] = std::make_shared<Wrapper16Register32_t>(VU0->VI[9]); 
+	VU0->CCR[10] = std::make_shared<Wrapper16Register32_t>(VU0->VI[10]); 
+	VU0->CCR[11] = std::make_shared<Wrapper16Register32_t>(VU0->VI[11]); 
+	VU0->CCR[12] = std::make_shared<Wrapper16Register32_t>(VU0->VI[12]); 
+	VU0->CCR[13] = std::make_shared<Wrapper16Register32_t>(VU0->VI[13]); 
+	VU0->CCR[14] = std::make_shared<Wrapper16Register32_t>(VU0->VI[14]); 
+	VU0->CCR[15] = std::make_shared<Wrapper16Register32_t>(VU0->VI[15]);
+	VU0->CCR[16] = VU0->Status; 
+	VU0->CCR[17] = VU0->MAC; 
+	VU0->CCR[18] = VU0->Clipping; 
+	VU0->CCR[19] = nullptr; 
+	VU0->CCR[20] = std::make_shared<WrapperF32Register32_t>(VU0->R); 
+	VU0->CCR[21] = std::make_shared<WrapperF32Register32_t>(VU0->I); 
+	VU0->CCR[22] = std::make_shared<WrapperF32Register32_t>(VU0->Q); 
+	VU0->CCR[23] = nullptr;
+	VU0->CCR[24] = nullptr; 
+	VU0->CCR[25] = nullptr; 
+	VU0->CCR[26] = std::make_shared<Wrapper16Register32_t>(VU0->PC); 
+	VU0->CCR[27] = VU0->CMSAR;
+	VU0->CCR[28] = VU->FBRST;
+	VU0->CCR[29] = VPU->STAT;
+	VU0->CCR[30] = nullptr; 
+	VU0->CCR[31] = VU1->CMSAR;
 }

@@ -1,16 +1,14 @@
 #include "stdafx.h"
 
 #include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/Types/VifUnits_t.h"
-#include "PS2Resources/EE/VPU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/VIF/VIF_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/Types/VPURegisters_t.h"
 
 VPU_t::VPU_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
-	VIF0(std::make_shared<VifUnit_VIF0_t>()),
-	VIF1(std::make_shared<VifUnit_VIF1_t>()),
-	VIF_UNITS{ VIF0, VIF1 },
-	VU0(std::make_shared<VuUnit_0_t>(getRootResources())),
-	VU1(std::make_shared<VuUnit_1_t>(getRootResources())),
-	VU_UNITS{ VU0, VU1 }
+	VIF(std::make_shared<VIF_t>(getRootResources())),
+	VU(std::make_shared<VU_t>(getRootResources())),
+	STAT(std::make_shared<VPURegister_STAT_t>())
 {
 }
