@@ -13,19 +13,19 @@ class FPRegister32_t;
 class Register16_t;
 class Register32_t;
 class PCRegister16_t;
-class VectorUnitRegister_MAC_t;
-class VectorUnitRegister_Status_t;
-class VectorUnitRegister_Clipping_t;
-class VectorUnitRegister_CMSAR_t;
+class VuUnitRegister_MAC_t;
+class VuUnitRegister_Status_t;
+class VuUnitRegister_Clipping_t;
+class VuUnitRegister_CMSAR_t;
 
 /*
-A base class for an implementation of a VU resource. Common resources are initalised, all others set to nullptr (see below).
-Extended by VU0_t and VU1_t.
+A base class for an implementation of a VU unit resource. Common resources are initalised, all others set to nullptr (see below).
+Extended by VuUnit_VU0_t and VuUnit_VU1_t.
 */
-class VectorUnit_t : public PS2ResourcesSubobject
+class VuUnit_t : public PS2ResourcesSubobject
 {
 public:
-	explicit VectorUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
+	explicit VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
 
 	/*
 	ID of the VU. Currently used for debug.
@@ -75,9 +75,9 @@ public:
 
 	The MAC register is dependant on the Status register for special functionality.
 	*/
-	std::shared_ptr<VectorUnitRegister_Status_t>   Status;
-	std::shared_ptr<VectorUnitRegister_MAC_t>      MAC;
-	std::shared_ptr<VectorUnitRegister_Clipping_t> Clipping;
+	std::shared_ptr<VuUnitRegister_Status_t>   Status;
+	std::shared_ptr<VuUnitRegister_MAC_t>      MAC;
+	std::shared_ptr<VuUnitRegister_Clipping_t> Clipping;
 
 	/*
 	PC (program counter) register for micro subroutines.
@@ -90,7 +90,7 @@ public:
 	The CMSAR register used for micro subroutine execution.
 	See VU Users Manual page 202.
 	*/
-	std::shared_ptr<VectorUnitRegister_CMSAR_t> CMSAR;
+	std::shared_ptr<VuUnitRegister_CMSAR_t> CMSAR;
 
 	/*
 	VU0 contains a physical memory map of its real working space (& mirrors) and the VU1 registers.
@@ -111,10 +111,10 @@ public:
 Represents VU0.
 It is attached as a MIPS coprocessor to the EE Core, as COP2.
 */
-class VectorUnit_0_t : public VectorUnit_t, public MIPSCoprocessor_t
+class VuUnit_VU0_t : public VuUnit_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VectorUnit_0_t(const PS2Resources_t* const PS2Resources);
+	explicit VuUnit_VU0_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 0;
 
@@ -139,10 +139,10 @@ public:
 /*
 Represents VU1.
 */
-class VectorUnit_1_t : public VectorUnit_t
+class VuUnit_VU1_t : public VuUnit_t
 {
 public:
-	explicit VectorUnit_1_t(const PS2Resources_t* const PS2Resources);
+	explicit VuUnit_VU1_t(const PS2Resources_t* const PS2Resources);
 
 	static constexpr u32 UNIT_ID = 1;
 };

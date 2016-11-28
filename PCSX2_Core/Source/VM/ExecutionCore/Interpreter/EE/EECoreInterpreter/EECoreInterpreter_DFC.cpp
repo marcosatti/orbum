@@ -80,7 +80,7 @@ void EECoreInterpreter::CVT_W_S()
 
 	if (FPUUtil::getExponent(source1Val) <= 0x9D)
 		destReg->writeWordS(static_cast<s32>(source1Val));
-	else if (FPUUtil::getSign(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
+	else if (FPUUtil::isNegative(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
 		destReg->writeWordS(Constants::VALUE_S32_MIN);
 	else
 		destReg->writeWordS(Constants::VALUE_S32_MAX);

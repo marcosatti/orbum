@@ -11,10 +11,9 @@
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
-#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
@@ -127,9 +126,6 @@ void EECoreInterpreter::CFC2()
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
 
-	if (mInstruction.getRRd() > 15)
-		logDebug("break");
-
 	destReg->writeDwordS(0, static_cast<s64>(source1Reg->readWordU()));
 }
 
@@ -146,9 +142,6 @@ void EECoreInterpreter::CTC2()
 
 	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
 	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-
-	if (mInstruction.getRRd() > 15)
-		logDebug("break");
 
 	destReg->writeWordU(static_cast<u32>(source1Reg->readWordU(0)));
 }
@@ -207,13 +200,8 @@ void EECoreInterpreter::BC2TL()
 
 void EECoreInterpreter::VCALLMS()
 {
-	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 2 };
-		Exceptions->setException(EECoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	if (!checkCOP2Usable())
 		return;
-	}
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -225,13 +213,8 @@ void EECoreInterpreter::VCALLMS()
 
 void EECoreInterpreter::VCALLMSR()
 {
-	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 2 };
-		Exceptions->setException(EECoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	if (!checkCOP2Usable())
 		return;
-	}
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -1255,6 +1238,7 @@ void EECoreInterpreter::VISWR()
         return;
 
 	// Delegate to the VU0 system.
+	mVU0Interpreter->mInstruction.setValue(mInstruction.getInstructionValue());
 	mVU0Interpreter->ISWR();
 }
 

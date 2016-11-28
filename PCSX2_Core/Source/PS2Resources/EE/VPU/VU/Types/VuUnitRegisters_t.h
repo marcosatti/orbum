@@ -4,14 +4,15 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Util/FPUUtil/FPUFlags_t.h"
 
 /*
-The VU Status flags register.
+The VU unit Status flags register.
 See VU Users Manual page 39.
 
 Declared before the MAC register due to dependency.
 */
-class VectorUnitRegister_Status_t : public BitfieldRegister32_t
+class VuUnitRegister_Status_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -30,22 +31,27 @@ public:
 		static constexpr u8 DS = 11;
 	};
 
-	VectorUnitRegister_Status_t();
+	VuUnitRegister_Status_t();
 
 	/*
 	Overriden write functions to trigger the update of the sticky bit flags.
 	See VU Users Manual page 40.
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+
+	/*
+	Clear the non-sticky flags, which should be done on each instruction that modifies this register.
+	*/
+	void clearFlags();
 };
 
 /*
-The VU MAC flags register.
+The VU unit MAC flags register.
 See VU Users Manual page 39.
 
 Needs a reference to the associated Status register for its special functionality.
 */
-class VectorUnitRegister_MAC_t : public BitfieldRegister32_t
+class VuUnitRegister_MAC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -66,9 +72,14 @@ public:
 		static constexpr u8 Oz = 13;
 		static constexpr u8 Oy = 14;
 		static constexpr u8 Ox = 15;
+
+		static constexpr u8 X_FLAGS[] = { Zx, Sx, Ux, Ox };
+		static constexpr u8 Y_FLAGS[] = { Zy, Sy, Uy, Oy };
+		static constexpr u8 Z_FLAGS[] = { Zz, Sz, Uz, Oz };
+		static constexpr u8 W_FLAGS[] = { Zw, Sw, Uw, Ow };
 	};
 
-	VectorUnitRegister_MAC_t(const std::shared_ptr<VectorUnitRegister_Status_t> & status);
+	VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status);
 
 	/*
 	Overriden set bit field function to trigger changes to the associated VU status register.
@@ -76,17 +87,25 @@ public:
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
 
+	/*
+	Updates or clear all flags (Z, S, U, O) for the given vector field, of which at least one function should be run on each instruction that modifies this register.
+	Mapping: fieldIndex    0 -> 3
+	         vector field  x -> w
+	*/
+	void updateVectorField(const u8 & fieldIndex, const FPUFlags_t & flags);
+	void clearVectorField(const u8 & fieldIndex);
+
 private:
 
 	/*
 	A reference to the VU status flags register, which fields are changed when various MAC register write conditions occur.
 	See VU Users Manual page 39.
 	*/
-	const std::shared_ptr<VectorUnitRegister_Status_t> mStatus;
+	const std::shared_ptr<VuUnitRegister_Status_t> mStatus;
 };
 
 /*
-The VU Clipping flags register.
+The VU unit Clipping flags register.
 See VU Users Manual page 39.
 
 Bitfields are organsied by {Neg/Pos}{X/Y/Z}_{digit below} for:
@@ -95,7 +114,7 @@ Bitfields are organsied by {Neg/Pos}{X/Y/Z}_{digit below} for:
 - 2nd previous judgement = 2.
 - 3rd previous judgement = 3.
 */
-class VectorUnitRegister_Clipping_t : public BitfieldRegister32_t
+class VuUnitRegister_Clipping_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -126,7 +145,7 @@ public:
 		static constexpr u8 PosZ_3 = 23;
 	};
 
-	VectorUnitRegister_Clipping_t();
+	VuUnitRegister_Clipping_t();
 
 	/*
 	Shifts the register 6-bits (judgement) right, evicting the MSB 6-bits (LSB's set to 0).
@@ -138,12 +157,12 @@ public:
 };
 
 /*
-The VU CMSAR register.
+The VU unit CMSAR register.
 See VU Users Manual page 202.
 
 CMSAR0 and CMSAR1 are the same register, so it is defined simply as CMSAR.
 */
-class VectorUnitRegister_CMSAR_t : public BitfieldRegister32_t
+class VuUnitRegister_CMSAR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -151,5 +170,5 @@ public:
 		static constexpr u8 CMSAR = 0;
 	};
 
-	VectorUnitRegister_CMSAR_t();
+	VuUnitRegister_CMSAR_t();
 };

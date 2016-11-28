@@ -3,6 +3,15 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "Common/Types/Registers/FPRegister128_t.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
+#include "VM/VMMain.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/VPU/VPU_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 
 void VUInterpreter::ABS()
 {
@@ -144,12 +153,27 @@ void VUInterpreter::ADDAbc_3()
 
 void VUInterpreter::SUB()
 {
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) SUB: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("SUB: Not implemented.");
-#endif
+	// Fd = Fs - Ft.
+	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFd()];
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()]; 
+	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFt()]; 
+	auto& MAC = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MAC;
+	auto& Status = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->Status;
+
+	Status->clearFlags();
+
+	FPUFlags_t flags;
+	for (auto i = 0; i < 4; i++)
+	{
+		if (mInstruction.testDestField(i))
+		{
+			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(i) - source2Reg->readFloat(i), flags);
+			destReg->writeFloat(i, result);
+			MAC->updateVectorField(i, flags);
+		}
+		else
+			MAC->clearVectorField(i);
+	}
 }
 
 void VUInterpreter::SUBi()

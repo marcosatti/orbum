@@ -16,13 +16,13 @@ Currently used for implementing the VU0 COP2 control registers (CCR's), where th
 
 TODO: Currently the underlying Register32_t is allocated memory.. Need to separate the interface from implementation. However probably not worth it since it is only used for 16 VI registers and nothing else.
 */
-class Wrapper16Register32_t : public Register32_t
+class WrapperR16Register32_t : public Register32_t
 {
 public:
-	explicit Wrapper16Register32_t(const std::shared_ptr<Register16_t> & register16);
-	explicit Wrapper16Register32_t(const char * mnemonic, const std::shared_ptr<Register16_t> & register16);
+	explicit WrapperR16Register32_t(const std::shared_ptr<Register16_t> & register16);
+	explicit WrapperR16Register32_t(const char * mnemonic, const std::shared_ptr<Register16_t> & register16);
 
-	~Wrapper16Register32_t();
+	~WrapperR16Register32_t();
 
 	u8 readByteU(u32 arrayIndex) override;
 	void writeByteU(u32 arrayIndex, u8 value) override;

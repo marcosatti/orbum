@@ -3,6 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "PS2Constants/PS2Constants.h"
+#include "PS2Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
 class VUInterpreter : public VMExecutionCoreComponent
 {
@@ -30,6 +31,13 @@ private:
 	Context of which VU this system is processing.
 	*/
 	const u32 mVUUnitIndex;
+
+	/*
+	Temporary holder for the current instruction, while the operation to perform is being determined.
+	It is also used while an instruction is being performed.
+	TODO: make thread safe, need to make sure if COP2 (macro) instruction is running it doesnt interfere with micro instruction running.
+	*/
+	VUInstruction_t mInstruction;
 
 	/*
 	Upper instruction functions. There are 59 instructions total.

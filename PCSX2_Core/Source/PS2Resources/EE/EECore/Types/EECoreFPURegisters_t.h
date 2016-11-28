@@ -17,6 +17,8 @@ All of the available field functions are listed in the BitfieldRegister32_t clas
 The actual fields are defined at runtime within the COP1_BitfieldRegisters_t.cpp file.
 */
 
+struct FPUFlags_t;
+
 /*
 The IRR (Implementation and Revision Register (FCR0)) of FPU, subclassed off the base BitfieldRegister32_t & Register32_t class.
 Implements the bitfields specified in the docs. See EE Core Users Manual page 158.
@@ -77,4 +79,17 @@ public:
 	};
 
 	explicit FPURegister_CSR_t();
+
+	/*
+	Overriden set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).
+	See EE Core Users Manual page 159.
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+
+	/*
+	Update or clears the U, O, (D, I) flags, which both should be done on each instruction that modifies this register.
+	The C flag is not changed! Needs to be done manually.
+	*/
+	void updateResultFlags(const FPUFlags_t & flags);
+	void clearFlags(); // Clears the D and I flags too.
 };

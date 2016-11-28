@@ -12,6 +12,7 @@
 #include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister32_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
+#include "Common/Types/PhysicalMMU/MappedFPRegister32_t.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister128_t.h"
 
 PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 & directorySizeBytes, const u32 & pageSizeBytes) :
@@ -110,6 +111,11 @@ void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr
 void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register128_t>& register128)
 {
 	mapMemory(std::make_shared<MappedRegister128_t>(physicalAddress, register128));
+}
+
+void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<FPRegister32_t>& fpRegister32)
+{
+	mapMemory(std::make_shared<MappedFPRegister32_t>(physicalAddress, fpRegister32));
 }
 
 void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t>& fpRegister128)

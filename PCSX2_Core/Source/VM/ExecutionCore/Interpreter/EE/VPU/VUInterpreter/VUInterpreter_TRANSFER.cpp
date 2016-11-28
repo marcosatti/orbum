@@ -3,6 +3,15 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/Registers/Register16_t.h"
+#include "Common/Types/Registers/FPRegister128_t.h"
+#include "VM/VMMain.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/VPU/VPU_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
 void VUInterpreter::MOVE()
 {
@@ -96,12 +105,22 @@ void VUInterpreter::SQD()
 
 void VUInterpreter::SQI()
 {
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) SQI: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("SQI: Not implemented.");
-#endif
+	// MEM(Ft) = Fs
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()];
+	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Mem Addr.
+	auto& Mem = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+
+	// Real address obtained by VI * 16.
+	u32 realPhysicalAddress = source2Reg->readHwordU() * 16;
+
+	// 32-bit write for each dest subfield.
+	if (mInstruction.testDestX()) Mem->writeWordU(realPhysicalAddress, source1Reg->readWordU(0));
+	if (mInstruction.testDestY()) Mem->writeWordU(realPhysicalAddress + 4, source1Reg->readWordU(1));
+	if (mInstruction.testDestZ()) Mem->writeWordU(realPhysicalAddress + 8, source1Reg->readWordU(2));
+	if (mInstruction.testDestW()) Mem->writeWordU(realPhysicalAddress + 12, source1Reg->readWordU(3));
+
+	// Post increment.
+	source2Reg->writeHwordU(source2Reg->readHwordU() + 1);
 }
 
 void VUInterpreter::ILW()
@@ -136,12 +155,19 @@ void VUInterpreter::ILWR()
 
 void VUInterpreter::ISWR()
 {
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) ISWR: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("ISWR: Not implemented.");
-#endif
+	// MEM(Fs) = Ft.
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Data.
+	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // Mem Addr.
+	auto& Mem = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+
+	// Real address obtained by VI * 16.
+	u32 realPhysicalAddress = source2Reg->readHwordU() * 16;
+
+	// 32-bit write for each dest subfield. Upper 16-bits of VI[Ft] value is set to 0.
+	if (mInstruction.testDestX()) Mem->writeWordU(realPhysicalAddress, static_cast<u32>(source1Reg->readHwordU()));
+	if (mInstruction.testDestY()) Mem->writeWordU(realPhysicalAddress + 4, static_cast<u32>(source1Reg->readHwordU()));
+	if (mInstruction.testDestZ()) Mem->writeWordU(realPhysicalAddress + 8, static_cast<u32>(source1Reg->readHwordU()));
+	if (mInstruction.testDestW()) Mem->writeWordU(realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHwordU()));
 }
 
 void VUInterpreter::LOI()

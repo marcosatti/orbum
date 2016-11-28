@@ -24,9 +24,10 @@ public:
 	u32 mInstructionValue;
 
 	/*
-	Set the instruction value. Allows an object to be reused so memory allocations are not wasted.
+	Set/Get the instruction value. Allows an object to be reused so memory allocations are not wasted.
 	*/
 	void setInstructionValue(const u32 instructionValue);
+	const u32 & getInstructionValue() const;
 
 	/*
 	Returns the opcode field of the instruction.

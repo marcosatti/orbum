@@ -11,7 +11,7 @@
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/PCRegister16_t.h"
-#include "Common/Types/Registers/Wrapper16Register32_t.h"
+#include "Common/Types/Registers/WrapperR16Register32_t.h"
 #include "Common/Types/Registers/WrapperF32Register32_t.h"
 
 #include "PS2Resources/EE/Types/EERegisters_t.h"
@@ -34,8 +34,8 @@
 #include "PS2Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
 #include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
-#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
-#include "PS2Resources/EE/VPU/VU/Types/VectorUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VURegisters_t.h"
 
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
@@ -313,16 +313,28 @@ void PS2Resources_t::initPhysicalMemoryMap_VU0() const
 		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x3000, EE->VPU->VU->VU0->MEMORY_Mem);
 	}
 
-	// VU1 Registers.
+	// VU1 Registers, see VU Users Manual page 222. 
 	{
 		// VF Registers.
 		for (auto i = 0; i < PS2Constants::EE::VPU::VU::NUMBER_VF_REGISTERS; i++)
 			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4000 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU->VU1->VF[i]);
 
-		// VI Registers. Aligned on 128-bit boundaries, NOT the register size of 16-bit! See EE Users Manual page 84. 
+		// VI Registers. Aligned on 128-bit boundaries, accessed by 32-bit r/w, but upper 16-bits discarded! 
+		// NOT mapped as the true register size of 16-bit (need to do a Register32_t wrapping)! 
+		// See EE Users Manual page 84.
 		// The upper 112-bits are left unmapped.
 		for (auto i = 0; i < PS2Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
-			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, EE->VPU->VU->VU1->VI[i]);
+			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, std::make_shared<WrapperR16Register32_t>(EE->VPU->VU->VU1->VI[i]));
+
+		// Misc Registers.
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4300, EE->VPU->VU->VU1->Status);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4310, EE->VPU->VU->VU1->MAC);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4320, EE->VPU->VU->VU1->Clipping);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4340, EE->VPU->VU->VU1->R);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4350, EE->VPU->VU->VU1->I);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4360, EE->VPU->VU->VU1->Q);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4370, EE->VPU->VU->VU1->P);
+		EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x43A0, EE->VPU->VU->VU1->PC); // TPC.
 	}
 }
 
@@ -341,22 +353,22 @@ void PS2Resources_t::initControlRegistersMap_VU0() const
 
 	// Init the CCR array, which contains the list of registers used by some EE Core COP2 instructions.
 	// See VU Users Manual page 200 for the list. There are 32 registers total.
-	VU0->CCR[0] = std::make_shared<Wrapper16Register32_t>(VU0->VI[0]);
-	VU0->CCR[1] = std::make_shared<Wrapper16Register32_t>(VU0->VI[1]); 
-	VU0->CCR[2] = std::make_shared<Wrapper16Register32_t>(VU0->VI[2]); 
-	VU0->CCR[3] = std::make_shared<Wrapper16Register32_t>(VU0->VI[3]);
-	VU0->CCR[4] = std::make_shared<Wrapper16Register32_t>(VU0->VI[4]); 
-	VU0->CCR[5] = std::make_shared<Wrapper16Register32_t>(VU0->VI[5]); 
-	VU0->CCR[6] = std::make_shared<Wrapper16Register32_t>(VU0->VI[6]); 
-	VU0->CCR[7] = std::make_shared<Wrapper16Register32_t>(VU0->VI[7]);
-	VU0->CCR[8] = std::make_shared<Wrapper16Register32_t>(VU0->VI[8]); 
-	VU0->CCR[9] = std::make_shared<Wrapper16Register32_t>(VU0->VI[9]); 
-	VU0->CCR[10] = std::make_shared<Wrapper16Register32_t>(VU0->VI[10]); 
-	VU0->CCR[11] = std::make_shared<Wrapper16Register32_t>(VU0->VI[11]); 
-	VU0->CCR[12] = std::make_shared<Wrapper16Register32_t>(VU0->VI[12]); 
-	VU0->CCR[13] = std::make_shared<Wrapper16Register32_t>(VU0->VI[13]); 
-	VU0->CCR[14] = std::make_shared<Wrapper16Register32_t>(VU0->VI[14]); 
-	VU0->CCR[15] = std::make_shared<Wrapper16Register32_t>(VU0->VI[15]);
+	VU0->CCR[0] = std::make_shared<WrapperR16Register32_t>(VU0->VI[0]);
+	VU0->CCR[1] = std::make_shared<WrapperR16Register32_t>(VU0->VI[1]); 
+	VU0->CCR[2] = std::make_shared<WrapperR16Register32_t>(VU0->VI[2]); 
+	VU0->CCR[3] = std::make_shared<WrapperR16Register32_t>(VU0->VI[3]);
+	VU0->CCR[4] = std::make_shared<WrapperR16Register32_t>(VU0->VI[4]); 
+	VU0->CCR[5] = std::make_shared<WrapperR16Register32_t>(VU0->VI[5]); 
+	VU0->CCR[6] = std::make_shared<WrapperR16Register32_t>(VU0->VI[6]); 
+	VU0->CCR[7] = std::make_shared<WrapperR16Register32_t>(VU0->VI[7]);
+	VU0->CCR[8] = std::make_shared<WrapperR16Register32_t>(VU0->VI[8]); 
+	VU0->CCR[9] = std::make_shared<WrapperR16Register32_t>(VU0->VI[9]); 
+	VU0->CCR[10] = std::make_shared<WrapperR16Register32_t>(VU0->VI[10]); 
+	VU0->CCR[11] = std::make_shared<WrapperR16Register32_t>(VU0->VI[11]); 
+	VU0->CCR[12] = std::make_shared<WrapperR16Register32_t>(VU0->VI[12]); 
+	VU0->CCR[13] = std::make_shared<WrapperR16Register32_t>(VU0->VI[13]); 
+	VU0->CCR[14] = std::make_shared<WrapperR16Register32_t>(VU0->VI[14]); 
+	VU0->CCR[15] = std::make_shared<WrapperR16Register32_t>(VU0->VI[15]);
 	VU0->CCR[16] = VU0->Status; 
 	VU0->CCR[17] = VU0->MAC; 
 	VU0->CCR[18] = VU0->Clipping; 
@@ -367,7 +379,7 @@ void PS2Resources_t::initControlRegistersMap_VU0() const
 	VU0->CCR[23] = nullptr;
 	VU0->CCR[24] = nullptr; 
 	VU0->CCR[25] = nullptr; 
-	VU0->CCR[26] = std::make_shared<Wrapper16Register32_t>(VU0->PC); 
+	VU0->CCR[26] = std::make_shared<WrapperR16Register32_t>(VU0->PC); // TPC.
 	VU0->CCR[27] = VU0->CMSAR;
 	VU0->CCR[28] = VU->FBRST;
 	VU0->CCR[29] = VPU->STAT;

@@ -4,7 +4,14 @@
 #include "Common/Types/Registers/FPRegister32_t.h"
 
 FPRegister32_t::FPRegister32_t() : 
-	F(0)
+	F(0),
+	mMnemonic("")
+{
+}
+
+FPRegister32_t::FPRegister32_t(const char* mnemonic) :
+	F(0),
+	mMnemonic(mnemonic)
 {
 }
 
@@ -36,4 +43,9 @@ f32 FPRegister32_t::readFloat()
 void FPRegister32_t::writeFloat(f32 value)
 {
 	F = value;
+}
+
+const char* FPRegister32_t::getMnemonic() const
+{
+	return mMnemonic.c_str();
 }

@@ -1,26 +1,18 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/Util/FPUUtil/FPUFlags_t.h"
 
 class FPUUtil
 {
 public:
 	/*
-	Checks if the parsed float is overflowed (meaning equal to +/-Inf).
-	*/
-	static bool isOverflowed(const f32 & value);
-
-	/*
-	Checks if the parsed float is underflowed (meaning denormalised number -> exponent equal to 0 and non-zero fraction).
-	*/
-	static bool isUnderflowed(const f32 & value);
-
-	/*
 	Formats an IEEE 754 float into a PS2 spec float, by clamping NaN's and +/-Infinity to +/-Fmax and rounding denormalised values towards +/-0.
 	A PS2 spec float can be thought of as a subset of the IEEE 754 float.
-	This should NEVER be used if the value is not one of the conditions above - a runtime exception is thrown. Use the other functions (isOverflow() etc) to determine if float is abnormal to the PS2 spec.
+	
+	When converting, a set of flags will be filled in that can be used to set eg: the VU MAC flags.
 	*/
-	static f32 formatIEEEToPS2Float(const f32 & value);
+	static f32 formatIEEEToPS2Float(const f32 & value, FPUFlags_t & flags);
 
 	/*
 	Gets the resulting sign according to the PS2 FPU spec when a instruction is carried out that has a XOR-type sign (eg: multiply or divide).
@@ -29,9 +21,10 @@ public:
 	static u32 getXORSign(const f32 & value1, const f32 & value2);
 
 	/*
-	Gets the sign (bit 31).
+	Checks if the parsed float is negative.
+	True = negative, false = positive.
 	*/
-	static bool getSign(const f32 & value);
+	static bool isNegative(const f32 & value);
 
 	/*
 	Gets the exponent (8 bits starting from position 23).

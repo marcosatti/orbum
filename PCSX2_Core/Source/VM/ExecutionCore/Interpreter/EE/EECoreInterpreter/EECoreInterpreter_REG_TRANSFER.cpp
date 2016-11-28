@@ -304,7 +304,7 @@ void EECoreInterpreter::MFC1()
 	destReg->writeWordU(0, source1Reg->readWordU());
 
 	// Sign extend
-	if (FPUUtil::getSign(source1Reg->readFloat()))
+	if (FPUUtil::isNegative(source1Reg->readFloat()))
 	{
 		destReg->writeWordU(1, Constants::VALUE_U32_MAX);
 		destReg->writeWordU(2, Constants::VALUE_U32_MAX);

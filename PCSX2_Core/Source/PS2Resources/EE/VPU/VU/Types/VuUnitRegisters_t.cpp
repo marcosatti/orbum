@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "PS2Resources/EE/VPU/VU/Types/VectorUnitRegisters_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 
-VectorUnitRegister_Status_t::VectorUnitRegister_Status_t()
+VuUnitRegister_Status_t::VuUnitRegister_Status_t()
 {
 	registerField(Fields::Z, "Z", 0, 1, 0);
 	registerField(Fields::S, "S", 1, 1, 0);
@@ -18,7 +18,7 @@ VectorUnitRegister_Status_t::VectorUnitRegister_Status_t()
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VectorUnitRegister_Status_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void VuUnitRegister_Status_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 
@@ -26,12 +26,22 @@ void VectorUnitRegister_Status_t::setFieldValue(const u8& fieldIndex, const u32&
 	// TODO: relies on the fact that the sticky bit is always N + 6 apart.
 	if (fieldIndex >= Fields::Z && fieldIndex <= Fields::D)
 	{
-		u8 oldStickyValue = getFieldValue(fieldIndex + 6);
+		u32 oldStickyValue = getFieldValue(fieldIndex + 6);
 		BitfieldRegister32_t::setFieldValue(fieldIndex + 6, oldStickyValue | value);
 	}
 }
 
-VectorUnitRegister_MAC_t::VectorUnitRegister_MAC_t(const std::shared_ptr<VectorUnitRegister_Status_t> & status) :
+void VuUnitRegister_Status_t::clearFlags()
+{
+	setFieldValue(Fields::Z, 0);
+	setFieldValue(Fields::S, 0);
+	setFieldValue(Fields::U, 0);
+	setFieldValue(Fields::O, 0);
+	setFieldValue(Fields::I, 0);
+	setFieldValue(Fields::D, 0);
+}
+
+VuUnitRegister_MAC_t::VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status) :
 	mStatus(status)
 {
 	registerField(Fields::Zw, "Zw", 0, 1, 0);
@@ -52,22 +62,48 @@ VectorUnitRegister_MAC_t::VectorUnitRegister_MAC_t(const std::shared_ptr<VectorU
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VectorUnitRegister_MAC_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void VuUnitRegister_MAC_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 
-	// Check which flag fieldIndex belongs to, and set the corresponding Status flag.
+	// Check which flag fieldIndex belongs to, and set the corresponding Status flag (OR with previous value).
 	// Only valid if fieldIndex falls in the Zw -> Ox range, which should always be true...
-	// TODO: relies on the fact that the MAC and Status registers have the same order of flags (ie: can use fieldIndex % 4).
+	// TODO: relies on the fact that the MAC and Status registers have the same order of flags (ie: can use fieldIndex / 4).
 #if defined(BUILD_DEBUG)
 	if (fieldIndex >= Fields::Zw && fieldIndex <= Fields::Ox)
-		mStatus->setFieldValue(fieldIndex % 4, 1);
+		mStatus->setFieldValue(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
 #else
-	mStatus->setFieldValue(fieldIndex % 4, 1);
+	mStatus->setFieldValue(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
 #endif
 }
 
-VectorUnitRegister_Clipping_t::VectorUnitRegister_Clipping_t()
+void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlags_t& flags)
+{
+	// Determine if its for x, y, z, w.
+	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
+	const u8 *const FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
+
+	// Set the relevant flags (Z, S, U, O).
+	setFieldValue(FIELD_FLAGS_SET[0], flags.ZF ? 1 : 0);
+	setFieldValue(FIELD_FLAGS_SET[1], flags.SF ? 1 : 0);
+	setFieldValue(FIELD_FLAGS_SET[2], flags.UF ? 1 : 0);
+	setFieldValue(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
+}
+
+void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
+{
+	// Determine if its for x, y, z, w.
+	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
+	const u8 *const FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
+
+	// Clear the relevant flags (O, U, S, Z).
+	for (auto i = 0; i < 4; i++)
+		setFieldValue(FIELD_FLAGS_SET[i], 0);
+}
+
+VuUnitRegister_Clipping_t::VuUnitRegister_Clipping_t()
 {
 	registerField(Fields::NegX_0, "NegX_0", 0, 1, 0);
 	registerField(Fields::PosX_0, "PosX_0", 1, 1, 0);
@@ -95,12 +131,12 @@ VectorUnitRegister_Clipping_t::VectorUnitRegister_Clipping_t()
 	registerField(Fields::PosZ_3, "PosZ_3", 23, 1, 0);
 }
 
-void VectorUnitRegister_Clipping_t::shiftJudgement()
+void VuUnitRegister_Clipping_t::shiftJudgement()
 {
 	writeWordU((readWordU() << 6) & 0x00FFFFFF);
 }
 
-VectorUnitRegister_CMSAR_t::VectorUnitRegister_CMSAR_t()
+VuUnitRegister_CMSAR_t::VuUnitRegister_CMSAR_t()
 {
 	registerField(Fields::CMSAR, "CMSAR", 0, 16, 0);
 }

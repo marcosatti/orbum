@@ -71,11 +71,10 @@ void EECoreInterpreter::ABS_S()
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
+	CSR->clearFlags();
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
-
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::NEG_S()
@@ -86,11 +85,10 @@ void EECoreInterpreter::NEG_S()
 
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
+	CSR->clearFlags();
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
-
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0);
-	getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::RSQRT_S()
@@ -102,12 +100,14 @@ void EECoreInterpreter::RSQRT_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
+	CSR->clearFlags();
 	if (source2Val == 0.0F)
 	{
 		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::D, 1);
@@ -125,10 +125,11 @@ void EECoreInterpreter::RSQRT_S()
 		result = source1Val / std::sqrtf(source2Val);
 	}
 
-	// Check for overflow or underflow (no flags set?).
-	if (FPUUtil::isOverflowed(result) || FPUUtil::isUnderflowed(result))
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		
+	// Update flags.
+	FPUFlags_t flags;
+	result = FPUUtil::formatIEEEToPS2Float(result, flags);
+	CSR->updateResultFlags(flags);
+
 	destReg->writeFloat(result);
 }
 
@@ -140,12 +141,14 @@ void EECoreInterpreter::SQRT_S()
 
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
 	f32 source2Val = source2Reg->readFloat();
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
-	if (source2Val == 0.0F && FPUUtil::getSign(source2Val))
+	CSR->clearFlags();
+	if (source2Val == 0.0F && FPUUtil::isNegative(source2Val))
 	{
 		result = -0.0F;
 	}
@@ -157,8 +160,13 @@ void EECoreInterpreter::SQRT_S()
 	}
 	else
 	{
-		result = std::sqrtf(source2Val);
+		result = std::sqrtf(source2Reg->readFloat());
 	}
+
+	// Update flags.
+	FPUFlags_t flags;
+	result = FPUUtil::formatIEEEToPS2Float(result, flags);
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }

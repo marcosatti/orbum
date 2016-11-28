@@ -51,6 +51,7 @@ class Memory_t;
 class Register16_t;
 class Register32_t;
 class Register128_t;
+class FPRegister32_t;
 class FPRegister128_t;
 
 class PhysicalMMU_t
@@ -73,6 +74,7 @@ public:
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
+	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
 
 	/*

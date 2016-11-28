@@ -105,13 +105,11 @@ void EECoreInterpreter::MAX_S()
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
+	CSR->clearFlags();
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
-	f32 result = (source1Val >= source2Val) ? source1Val : source2Val;
+	f32 result = (source1Val >= source2Val) ? source1Val : source2Val; // Dont have to check for valid float as should already be valid from before.
 	destReg->writeFloat(result);
-
-	CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0); 
-	CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 
 void EECoreInterpreter::MIN_S()
@@ -130,12 +128,10 @@ void EECoreInterpreter::MIN_S()
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
+	CSR->clearFlags();
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
-	f32 result = (source1Val <= source2Val) ? source1Val : source2Val;
+	f32 result = (source1Val <= source2Val) ? source1Val : source2Val; // Dont have to check for valid float as should already be valid from before.
 	destReg->writeFloat(result);
-
-	CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 0);
-	CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 0);
 }
 

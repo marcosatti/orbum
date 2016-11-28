@@ -27,21 +27,13 @@ void EECoreInterpreter::ADD_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
-	
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() + source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -56,21 +48,13 @@ void EECoreInterpreter::ADDA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() + source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() + source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -87,21 +71,13 @@ void EECoreInterpreter::MADD_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -117,21 +93,13 @@ void EECoreInterpreter::MADDA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat());
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -146,21 +114,13 @@ void EECoreInterpreter::MUL_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() * source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -175,21 +135,13 @@ void EECoreInterpreter::MULA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() * source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() * source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -204,28 +156,30 @@ void EECoreInterpreter::DIV_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
 	// Set flags when special conditions occur.
 	f32 result;
+	CSR->clearFlags();
 	if (source1Reg->readFloat() != 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SD, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::D, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source1Reg->readFloat() == 0 && source2Reg->readFloat() == 0)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
+		CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
-
-	result = source1Reg->readFloat() / source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-		result = FPUUtil::formatIEEEToPS2Float(result);
-	else if (FPUUtil::isUnderflowed(result))
-		result = FPUUtil::formatIEEEToPS2Float(result);
+	else
+	{
+		// Calculate value and update flags.
+		FPUFlags_t flags;
+		result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() / source2Reg->readFloat(), flags);
+		CSR->updateResultFlags(flags);
+	}
 
 	destReg->writeFloat(result);
 }
@@ -242,21 +196,13 @@ void EECoreInterpreter::MSUB_S()
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -272,21 +218,13 @@ void EECoreInterpreter::MSUBA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat());
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -301,21 +239,13 @@ void EECoreInterpreter::SUB_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() - source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }
@@ -330,21 +260,13 @@ void EECoreInterpreter::SUBA_S()
 	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
 	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
 
-	f32 result = source1Reg->readFloat() - source2Reg->readFloat();
-
-	if (FPUUtil::isOverflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::O, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SO, 1);
-	}
-	else if (FPUUtil::isUnderflowed(result))
-	{
-		result = FPUUtil::formatIEEEToPS2Float(result);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::U, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SU, 1);
-	}
+	// Calculate value and update flags.
+	FPUFlags_t flags;
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() - source2Reg->readFloat(), flags);
+	CSR->clearFlags();
+	CSR->updateResultFlags(flags);
 
 	destReg->writeFloat(result);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "Common/Global/Globals.h"
 
 /*
@@ -22,6 +24,7 @@ class FPRegister32_t
 public:
 
 	explicit FPRegister32_t();
+	explicit FPRegister32_t(const char * mnemonic);
 
 	virtual ~FPRegister32_t()
 	{
@@ -44,5 +47,16 @@ public:
 	virtual void writeWordS(s32 value);
 	virtual f32 readFloat();
 	virtual void writeFloat(f32 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+private:
+	/*
+	The mnemonic.
+	*/
+	const std::string mMnemonic;
 };
 

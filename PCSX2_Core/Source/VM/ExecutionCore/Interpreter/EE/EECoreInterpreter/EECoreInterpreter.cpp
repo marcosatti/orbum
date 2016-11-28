@@ -21,7 +21,7 @@
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
-#include "PS2Resources/EE/VPU/VU/Types/VectorUnits_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
@@ -123,8 +123,8 @@ u32 EECoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if (0) // defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x838dc;
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x200eb6;
 	static u32 DEBUG_PC_BREAKPOINT = 0x9fc43070;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -133,7 +133,7 @@ u32 EECoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
-			EECore->R5900->PC->getPCValue(), mEECoreInterpreter->R5900->mIsInBranchDelay, 
+			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
 		// Breakpoint.
