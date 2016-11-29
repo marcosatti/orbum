@@ -19,10 +19,12 @@ EECoreFPU_t::EECoreFPU_t(const PS2Resources_t* const PS2Resources) :
 		 std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(),
 		 std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>(), std::make_shared<FPRegister32_t>() },
 	ACC(std::make_shared<FPRegister32_t>()),
-	IRR(std::make_shared<FPURegister_IRR_t>()),
-	CSR(std::make_shared<FPURegister_CSR_t>()),
-	BitfieldRegisters { IRR, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 
-						nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, CSR }
+	IRR(std::make_shared<EECoreFPURegister_IRR_t>()),
+	CSR(std::make_shared<EECoreFPURegister_CSR_t>()),
+	FCR { IRR,     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 
+	      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 
+	      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 
+	      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, CSR }
 {
 }
 

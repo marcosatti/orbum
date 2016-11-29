@@ -123,7 +123,7 @@ public:
 
 	// Array of above registers (needed by some EECore instructions to access by index). 
 	// Generally you will never access registers directly through this, only the PS2 OS will.
-	std::shared_ptr<BitfieldRegister32_t> Registers[PS2Constants::EE::EECore::COP0::NUMBER_REGISTERS];
+	std::shared_ptr<BitfieldRegister32_t> CPR[PS2Constants::EE::EECore::COP0::NUMBER_REGISTERS];
 
 	// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
 	std::shared_ptr<BitfieldRegister32_t> PCRRegisters[PS2Constants::EE::EECore::COP0::NUMBER_PCR_REGISTERS];

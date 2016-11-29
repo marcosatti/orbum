@@ -110,14 +110,14 @@ void EECoreInterpreter::RSQRT_S()
 	CSR->clearFlags();
 	if (source2Val == 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SD, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::D, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -154,8 +154,8 @@ void EECoreInterpreter::SQRT_S()
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(FPURegister_CSR_t::Fields::SI, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
+		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

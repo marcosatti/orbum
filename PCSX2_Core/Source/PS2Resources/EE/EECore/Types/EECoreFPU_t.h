@@ -7,8 +7,8 @@
 
 class FPRegister32_t;
 class BitfieldRegister32_t;
-class FPURegister_IRR_t;
-class FPURegister_CSR_t;
+class EECoreFPURegister_IRR_t;
+class EECoreFPURegister_CSR_t;
 
 class EECoreFPU_t : public MIPSCoprocessor_t, public PS2ResourcesSubobject
 {
@@ -39,15 +39,15 @@ public:
 	FPU defines 2 control registers, which are implemented as bitfield registers.
 	See EE Core Users Manual, page 158.
 	*/
-	std::shared_ptr<FPURegister_IRR_t> IRR;
-	std::shared_ptr<FPURegister_CSR_t> CSR;
+	std::shared_ptr<EECoreFPURegister_IRR_t> IRR;
+	std::shared_ptr<EECoreFPURegister_CSR_t> CSR;
 	
 	/*
 	Array of above registers (needed by some EECore instructions to access by index). 
 	Generally you will never access registers through this, only the PS2 OS will.
 	Only FCR[0] and [31] are defined.
 	*/
-	std::shared_ptr<BitfieldRegister32_t> BitfieldRegisters[32];
+	std::shared_ptr<BitfieldRegister32_t> FCR[32];
 
 	/*
 	Checks if the FPU coprocessor (FPU) is usable. 

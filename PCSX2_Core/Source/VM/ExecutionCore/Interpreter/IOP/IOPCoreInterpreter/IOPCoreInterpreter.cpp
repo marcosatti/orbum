@@ -82,9 +82,9 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if (0) // defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x36a8c; //0x2aa05;
-	static u32 DEBUG_PC_BREAKPOINT = 0xBFC4a39c;
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x428ac; //0x2aa05;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0000af9c;
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{

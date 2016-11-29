@@ -33,7 +33,7 @@ public:
 	const u32 mUnitID;
 
 	/*
-	VU Floating Point Registers (VF) (128-bit) and Integer Registers (VI) (16-bit).
+	VU floating point registers (VF) (128-bit) and integer registers (VI) (16-bit).
 	See VU Users Manual page 18.
 	*/
 	std::shared_ptr<FPRegister128_t> VF[PS2Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];

@@ -229,7 +229,7 @@ void EECoreInterpreter::BC1F()
 
 	const s16 offset = mInstruction.getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
@@ -241,7 +241,7 @@ void EECoreInterpreter::BC1FL()
 
 	const s16 offset = mInstruction.getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 0)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
@@ -255,7 +255,7 @@ void EECoreInterpreter::BC1T()
 
 	const s16 offset = mInstruction.getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 }
 
@@ -267,7 +267,7 @@ void EECoreInterpreter::BC1TL()
 
 	const s16 offset = mInstruction.getIImmS();
 
-	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(FPURegister_CSR_t::Fields::C) == 1)
+	if (getVM()->getResources()->EE->EECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
 		getVM()->getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
 	else
 		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).

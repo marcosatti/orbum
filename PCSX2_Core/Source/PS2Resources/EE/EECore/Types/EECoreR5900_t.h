@@ -43,13 +43,6 @@ public:
 
 	/*
 	The Program Counter (PC) register. See EE Core Users manual, pg 61.
-	The PC has 3 states:
-	1) During normal program execution, it will point to the current instruction and then get incremented by 4 when finished to move on to the next instruction.
-	2) When a jump or branch instruction is encountered, it will point to the target address.
-	3) When an exception occurs, the PC is changed to point to the exception vector address.
-	It is a 32-bit register, pointing to a virtual address (NOT a PHYSICAL address! This means you need to use the MMUHandler component to get the proper PS2 physical address.)
-	Some convience functions are provided for manipulating this value.
-
 	Must be initalised before LinkRegister below due to dependency.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;

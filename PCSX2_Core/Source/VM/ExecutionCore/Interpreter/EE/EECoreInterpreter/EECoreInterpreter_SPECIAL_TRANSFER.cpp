@@ -68,7 +68,7 @@ void EECoreInterpreter::MFC0()
         return;
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->Registers[mInstruction.getRRd()];
+	auto& sourceReg = getVM()->getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
 
 	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
 }
@@ -183,7 +183,7 @@ void EECoreInterpreter::MTC0()
         return;
 
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->COP0->Registers[mInstruction.getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
 
 	destReg->writeWordU(sourceReg->readWordU(0));
 }
@@ -283,7 +283,7 @@ void EECoreInterpreter::CFC1()
         return;
 
 	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->FPU->BitfieldRegisters[mInstruction.getRRd()]; // Fs, can only be 0 or 31.
+	auto& sourceReg = getVM()->getResources()->EE->EECore->FPU->FCR[mInstruction.getRRd()]; // Fs, can only be 0 or 31.
 
 	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
 }
@@ -294,7 +294,7 @@ void EECoreInterpreter::CTC1()
         return;
 
 	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->BitfieldRegisters[mInstruction.getRRd()];
+	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FCR[mInstruction.getRRd()];
 
 	destReg->writeWordU(sourceReg->readWordU(0));
 }

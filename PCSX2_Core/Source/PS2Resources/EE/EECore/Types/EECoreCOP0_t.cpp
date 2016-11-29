@@ -47,7 +47,7 @@ EECoreCOP0_t::EECoreCOP0_t(const PS2Resources_t* const PS2Resources) :
 	PCCR(std::make_shared<EECoreCOP0Register_PCCR_t>()),
 	PCR0(std::make_shared<EECoreCOP0Register_PCR0_t>()),
 	PCR1(std::make_shared<EECoreCOP0Register_PCR1_t>()),
-	Registers{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, Reserved7,
+	CPR{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, Reserved7,
 		BadVAddr, Count, EntryHi, Compare, Status, Cause, EPC, PRId, Config, 
 		Reserved17, Reserved18, Reserved19, Reserved20, Reserved21, Reserved22, 
 		BadPAddr, BPC, PCCR, Reserved26, Reserved27, TagLo, TagHi, ErrorEPC, Reserved31 },
@@ -68,7 +68,7 @@ bool EECoreCOP0_t::isCoprocessorUsable() const
 
 void EECoreCOP0_t::initalise()
 {
-	for (auto& reg : Registers)
+	for (auto& reg : CPR)
 	{
 		if (reg != nullptr)
 			reg->initaliseAllFields();

@@ -13,9 +13,11 @@ public:
 
 	/*
 	Performs an iterative lookup on the TLB for the given VPN contained in the PS2VirtualAddress.
-	A return value of -1 indicates an entry was not found. Any functions that call this may throw a TLB refill exception if an entry was not found (this function doesn't do this automatically).
+	A return value of -1 indicates an entry was not found. 
+	Any functions that call this may throw a TLB refill exception if an entry was not found (this function doesn't do this automatically).
+	The process is based on EE Core Users Manual page 120.
 	*/
-	s32 findTLBIndex(u32 PS2VirtualAddress) const; // -1 indicates not found.
+	s32 findTLBIndex(u32 PS2VirtualAddress) const;
 
 	/*
 	Gets the TLB entry at the specified index - use findTLBIndex() to make sure it exists first.
@@ -23,12 +25,15 @@ public:
 	const EECoreTLBEntryInfo_t & getTLBEntry(s32 index) const;
 
 	/*
-	Sets the TLB entry at the specified index.
+	Copies the TLB entry info to the specified index.
 	*/
 	void setTLBEntry(const EECoreTLBEntryInfo_t & entry, const s32 & index);
 
 	/*
 	Gets an index to a new TLB entry position.
+	This is used whenever a MMU exception error is raised.
+	See for example EE Users Manual page 101.
+	TODO: currently not working properly.
 	*/
 	s32 getNewTLBIndex();
 

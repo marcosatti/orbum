@@ -28,7 +28,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 8-15 (length 8): "Imp".
 - Bits 16-31 (length 16): Constant 0.
 */
-class FPURegister_IRR_t : public BitfieldRegister32_t
+class EECoreFPURegister_IRR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -37,7 +37,7 @@ public:
 		static constexpr u8 Imp = 1;
 	};
 
-	explicit FPURegister_IRR_t();
+	explicit EECoreFPURegister_IRR_t();
 };
 
 /*
@@ -62,7 +62,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 24 (length 1): Constant 1.
 - Bits 25-31 (length 7): Constant 0.
 */
-class FPURegister_CSR_t : public BitfieldRegister32_t
+class EECoreFPURegister_CSR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -78,7 +78,7 @@ public:
 		static constexpr u8 C = 8;
 	};
 
-	explicit FPURegister_CSR_t();
+	explicit EECoreFPURegister_CSR_t();
 
 	/*
 	Overriden set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).

@@ -29,30 +29,57 @@ Marco.
 
 ## Current status
 
-As of 28/10/16:
+As of 30/11/16:
 - Main loop & VM (including timing of components and the host MMU) implemented.
 - EE Core mostly implemented. No handling of the cache modes supported.
 - EE Timers, INTC, DMAC implemented.
 - IOP Core mostly implemented.
 - GS not implemented.
-- VU's not implemented.
+- VU's/VIF's structure implemented, system logic to follow.
+- No input, sound, graphics yet. Will try to get a basic software graphics solution going before anything else.
 
 Starting to see some promising debug messages :)
 ```
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize memory (rev:3.17, ctm:393Mhz, cpuclk:295Mhz )
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Total accessable memory size: 32 MB (B:2:8:0)
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # TLB spad=0 kernel=1:12 default=13:30 extended=31:38
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize Start.
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize GS ...
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize INTC ...
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize TIMER ...
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize DMAC ...
-[DEBUG] (ee_registers_t.cpp, 29) SIO Message: # Initialize VU1 ...
-(Crash)
+[DEBUG] (eecoreexceptionhandler.cpp, 55) EECoreExceptionHandler called! Type = EX_RESET
+[DEBUG] (iopcoreexceptionhandler.cpp, 55) IOPCoreExceptionHandler called! Type = EX_RESET
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize memory (rev:3.17, ctm:393Mhz, cpuclk:295Mhz )
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Total accessable memory size: 32 MB (B:2:8:0)
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # TLB spad=0 kernel=1:12 default=13:30 extended=31:38
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize Start.
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize GS ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize INTC ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize TIMER ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize DMAC ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize VU1 ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize VIF1 ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize GIF ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize VU0 ...
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (vuinterpreter_integer.cpp, 11) IADD: Not implemented.
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize VIF0 ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize IPU ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize FPU ...
+[DEBUG] (eeregisters_t.cpp, 28) SIO Message: # Initialize User Memory ...
+(Crash in IOP.)
 ```
 ## Build Instructions
 
-Currently, only compiling on Visual Studio 2015 (community edition, update 2 +) is supported. Both x86-32 and x86-64 supported currently.
+Currently, only compiling in x86-64 on Visual Studio 2015 (community edition, update 2 +) is tested. 
+However, it should be ok to compile on any other system so far (platform independent code).
+The only thing that may require a change is the f32 (float) definition, if the float type keyword in C++ is not 32-bit.
 See the solution file PCSX2_Rewrite.sln.
 
 The project uses the following libraries as git submodules:
