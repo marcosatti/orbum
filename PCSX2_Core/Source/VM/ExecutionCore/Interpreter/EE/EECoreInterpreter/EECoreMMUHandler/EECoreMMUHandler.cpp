@@ -364,8 +364,9 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage3()
 
 	// Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
 	// This is done by checking the LSB of the VPN from the original address accessed.
-	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN.
-	mIndexEvenOdd = mPS2VirtualAddress & (mTLBEntryInfo->mMask + 1);
+	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN. Note that this mask is always equal to or greater than 4KB.
+	u32 indexEvenOddMask = ((mTLBEntryInfo->mMask << 12) | 0xFFF) + 1;
+	mIndexEvenOdd = (mPS2VirtualAddress & mIndexEvenOdd) ? 1 : 0;
 
 	// Check if the entry is valid (V bit)
 	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mV)

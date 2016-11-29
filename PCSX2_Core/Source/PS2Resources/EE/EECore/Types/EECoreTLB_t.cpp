@@ -20,7 +20,7 @@ s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 	// Note that the TLB entries' VPN are stored as VPN / 2 (aka VPN2), so we need to search by using the same. This is done as each VPN represents 2 physical pages (named 'even' and 'odd').
 	//  Therefore the LSB of the VPN is ommitted and only 19 bits are used at most. I am not 100% sure on the details on this, however. If the above is true, then we need to search using the
 	//  last 7 bits.
-	u32 searchVPN2 = (PS2VirtualAddress >> 25); // End up with 7 bits. Normally this would be ((value >> 24) / 2) but dividing by 2 is exactly the same as shifting it right by 1 (ie: >> 25).
+	u32 searchVPN2 = (PS2VirtualAddress >> 25); // End up with 7 bits.
 	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)
 	{
 		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18).
@@ -30,11 +30,11 @@ s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 		if (searchVPN2 == tlbMaskedVPN2)
 		{
 			// A potential match was found. Need to now check if the VPN is actually correct by using the TLB entry mask. It is up to the callee to check for the ASID and G bits.
-			u32 realTlbMask = (~tlbEntry.mMask) & 0x0007FFFF;
-			u32 realVPN2 = (PS2VirtualAddress >> 13) & (realTlbMask);
+			u32 realTlbMask = (~tlbEntry.mMask) << 13;
+			u32 realVPN2 = (PS2VirtualAddress & realTlbMask) >> 13;
 			if (realVPN2 == tlbEntry.mVPN2)
 				return i; // A match was found. I will assume that there will never be 2 entries with the same VPN.
-
+			
 			// Need to also check for the scratchpad RAM mapping. In this case, MASK will be 0 (indicating page size of 4KB), but the SPRAM occupies 16KB of continuous space (4 x 4KB pages).
 			if (tlbEntry.mS)
 			{

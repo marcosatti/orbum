@@ -124,8 +124,8 @@ u32 EECoreInterpreter::executeInstruction()
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x200eb6;
-	static u32 DEBUG_PC_BREAKPOINT = 0x9fc43070;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x201a50;
+	static u32 DEBUG_PC_BREAKPOINT = 0x8000b2A8;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -137,7 +137,7 @@ u32 EECoreInterpreter::executeInstruction()
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
 		// Breakpoint.
-		if (EECore->R5900->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
+		if (EECore->R5900->PC->UW == DEBUG_PC_BREAKPOINT)
 		{
 			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
 		}
