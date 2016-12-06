@@ -48,6 +48,7 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB max addre
 
 class PhysicalMapped;
 class Memory_t;
+class Register8_t;
 class Register16_t;
 class Register32_t;
 class Register128_t;
@@ -71,6 +72,7 @@ public:
 	*/
 	void mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMapped);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
+	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
 	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);

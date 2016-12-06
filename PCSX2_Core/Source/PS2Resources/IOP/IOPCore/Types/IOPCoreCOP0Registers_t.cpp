@@ -29,6 +29,22 @@ IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t()
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
+void IOPCoreCOP0Register_Status_t::pushExStack()
+{
+	setFieldValue(Fields::KUo, getFieldValue(Fields::KUp));
+	setFieldValue(Fields::IEo, getFieldValue(Fields::IEp));
+	setFieldValue(Fields::KUp, getFieldValue(Fields::KUc));
+	setFieldValue(Fields::IEp, getFieldValue(Fields::IEc));
+}
+
+void IOPCoreCOP0Register_Status_t::popExStack()
+{
+	setFieldValue(Fields::KUc, getFieldValue(Fields::KUp));
+	setFieldValue(Fields::IEc, getFieldValue(Fields::IEp));
+	setFieldValue(Fields::KUp, getFieldValue(Fields::KUo));
+	setFieldValue(Fields::IEp, getFieldValue(Fields::IEo));
+}
+
 IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()
 {
 	registerField(Fields::ExcCode, "ExcCode", 2, 5, 0);

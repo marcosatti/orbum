@@ -40,17 +40,16 @@ void IOPCoreExceptionHandler::checkExceptionState()
 
 void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
 {
-#if defined(BUILD_DEBUG)
-	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
-#endif
+	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& PC = getVM()->getResources()->IOP->IOPCore->R3000->PC;
 
-	// Set the PS2Exception pointer.
+	// Set the PS2Exception pointer and get properties.
 	mIOPException = &PS2Exception;
-
-	// Get the exception properties.
 	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
 
 #if defined(BUILD_DEBUG)
+	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
+
 	// Debug print exception type.
 	logDebug("(%s, %d) IOPCoreExceptionHandler called! Type = %s", __FILENAME__, __LINE__, mExceptionProperties->mMnemonic);
 #endif
@@ -59,9 +58,9 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	(this->*EXCEPTION_HANDLERS[mExceptionProperties->mImplementationIndex])();
 
 	// If its a reset exception, set PC to reset vector and return.
-	if (mIOPException->mExType == IOPCoreException_t::ExType::EX_RESET)
+	if (mIOPException->mExType == ExType::EX_RESET)
 	{
-		getVM()->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
+		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 		return;
 	}
 
@@ -70,58 +69,45 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
+	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
 
-	// Set EPC and Cause.BD fields.
-	if (getVM()->getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot()) // Check if in the branch delay slot.
+	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
+	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+	if (getVM()->getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot())
 	{
-		u32 pcValue = getVM()->getResources()->IOP->IOPCore->R3000->PC->getPCValue() - 4;
-		getVM()->getResources()->IOP->IOPCore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
+		// TODO: no idea if this code works, yet to encounter a branch delay exception.
+		u32 pcValue = PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
 	}
 	else
 	{
-		u32 pcValue = getVM()->getResources()->IOP->IOPCore->R3000->PC->getPCValue();
-		getVM()->getResources()->IOP->IOPCore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-		getVM()->getResources()->IOP->IOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
+		u32 pcValue = PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}
 
 	// Select the vector to use (set vectorOffset).
-	if (mIOPException->mExType == IOPCoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
-		|| mIOPException->mExType == IOPCoreException_t::ExType::EX_TLB_REFILL_STORE)
-	{
-		vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
-	}
-	else if (mIOPException->mExType == IOPCoreException_t::ExType::EX_INTERRUPT)
-	{
-		vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT;
-	}
+	if (mIOPException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD || mIOPException->mExType == ExType::EX_TLB_REFILL_STORE)
+		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 	else
-	{
-		vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
-	}
+		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 
 	// Select vector base to use and set PC to use the specified vector.
-	if (getVM()->getResources()->IOP->IOPCore->COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV) == 1)
-	{
-		getVM()->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
-	}
+	if (COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV) == 1)
+		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 	else
-	{
-		getVM()->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
-	}
+		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 	
+	// Push the exception state within the COP0.Status register.
+	COP0->Status->pushExStack();
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
 	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
-	
-	// The EE Core Users Manual page 99 mentions that if an interrupt signal is asserted and deasserted in a very short time, the Cause.IP[i] may not
-	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
-	// TODO: check for timing issues.
-	
-	// COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::IP2, mIOPException->mIntExceptionInfo.mInt1);
+
+	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()

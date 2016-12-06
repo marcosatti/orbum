@@ -21,6 +21,7 @@ class BootROM_t;
 class PhysicalMMU_t;
 
 class Memory_t;
+class ROMemory_t;
 class Register32_t;
 class DeadMemory_t;
 class BusErrorMemory_t;
@@ -78,10 +79,16 @@ public:
 	std::shared_ptr<Memory_t> MainMemory;
 
 	/* 
-	Boot ROM (4MB). Allocated at 0x1FC00000.
-	Also mapped in the IOP physical memory space at 0x1FC00000.
+	Various ROM banks. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp") and the EE Users Manual page 20. 
+	BootROM (BIOS, 4MB). Allocated in EE & IOP physical memory space @ 0x1FC00000.
+	ROM1 (DVD Player, 256kB). Allocaled in EE & IOP physical memory space @ 0x1E000000.
+	EROM (DVD Player extensions, 1,792kB). Allocated in EE physical memory space @ 0x1E040000.
+	ROM2 (Chinese ROM extensions, 512kB). Allocated in EE physical memory space @ 0x1E400000.
 	*/
-	std::shared_ptr<BootROM_t> BootROM;
+	std::shared_ptr<BootROM_t>  BootROM;
+	std::shared_ptr<ROMemory_t> ROM1;
+	std::shared_ptr<ROMemory_t> EROM;
+	std::shared_ptr<ROMemory_t> ROM2;
 
 	/*
 	Other memory.
@@ -89,8 +96,9 @@ public:
 	std::shared_ptr<DeadMemory_t>     UNKNOWN_1A000000;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
 
 	/*
-	EE registers, defined on page 21 onwards of the EE Users Manual. 
+	EE memory/registers, defined on page 21 onwards of the EE Users Manual. 
 	The registers listed here are for any miscellaneous systems that are too small to have its own category.
+	Any unknown or undocumented memory/registers have comments listed next to them.
 	*/
 	std::shared_ptr<Memory_t>         FIFO_VIF0;
 	std::shared_ptr<Memory_t>         FIFO_VIF1;

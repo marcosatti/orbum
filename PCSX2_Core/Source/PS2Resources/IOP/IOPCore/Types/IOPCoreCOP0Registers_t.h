@@ -66,6 +66,16 @@ public:
 	};
 
 	explicit IOPCoreCOP0Register_Status_t();
+
+	/*
+	Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level.
+	In the bitfield names for those bits,
+	"c" refers to the current status.
+	"p" refers to the previous status.
+	"o" refers to the oldest status.
+	*/
+	void pushExStack();
+	void popExStack();
 };
 
 /*

@@ -95,11 +95,23 @@ public:
 			static constexpr size_t SIZE_MAIN_MEMORY = 0x02000000; // 32MB.. which isn't actually documented anywhere in the offical docs?
 		};
 
-		struct BootROM
+		struct ROM
 		{
-			// Boot Rom. See EE Users Manual page 20.
+			// BootROM. See EE Users Manual page 20.
 			static constexpr u32 PADDRESS_BOOT_ROM = 0x1FC00000;
 			static constexpr size_t SIZE_BOOT_ROM = 0x00400000;
+
+			// ROM1. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
+			static constexpr u32 PADDRESS_ROM1 = 0x1E000000;
+			static constexpr size_t SIZE_ROM1 = 0x00040000;
+
+			// EROM. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
+			static constexpr u32 PADDRESS_EROM = 0x1E040000;
+			static constexpr size_t SIZE_EROM = 0x001C0000;
+
+			// ROM2. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
+			static constexpr u32 PADDRESS_ROM2 = 0x1E400000;
+			static constexpr size_t SIZE_ROM2 = 0x00080000;
 		};
 
 		struct VPU
@@ -218,15 +230,31 @@ public:
 
 		struct Exceptions
 		{
-			// Common exception vector properties listed on EE Core Users Manual page 90. A0 = Address 0, A1 = Address 1.
-			static constexpr u32 VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
-			static constexpr u32 VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00200;
-			static constexpr u32 VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000; // This is a special value used when bootstrapping.
-			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
-			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COUNTER = 0x00000080;
-			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_DEBUG = 0x00000100;
-			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
-			static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
+			// Split into the MIPS COP0.PRId.Imp values. These values are set according to the MIPS ISA, not Sony (REV is for vendors to set).
+			struct Imp0
+			{
+				// Used by the IOP (R3000).
+				// Taken from PSX docs, plus PCSX2 source code (R3000A.cpp).
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00100;
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000; // This is a special value used when bootstrapping.
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000080;
+			};
+			
+			struct Imp46
+			{
+				// Used by the EE Core (R5900).
+				// See EE Core Users Manual page 90. A0 = Address 0, A1 = Address 1.
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00200;
+				static constexpr u32 VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000; // This is a special value used when bootstrapping.
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COUNTER = 0x00000080;
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_DEBUG = 0x00000100;
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
+				static constexpr u32 OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
+			};
 		};
 	};
 };

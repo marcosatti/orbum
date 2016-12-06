@@ -4,8 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-class VifUnitRegister_R_t;
-class VifUnitRegister_C_t;
+class Register32_t;
 class VifUnitRegister_CYCLE_t;
 class VifUnitRegister_MASK_t;
 class VifUnitRegister_MODE_t;
@@ -40,14 +39,14 @@ public:
 	VIF registers. See page 124 of EE Users Manual.
 	Implementing classes will set some of these to null (ie: VIF0 sets REGISTER_TOP to null).
 	*/
-	std::shared_ptr<VifUnitRegister_R_t>     mR0;
-	std::shared_ptr<VifUnitRegister_R_t>     mR1;
-	std::shared_ptr<VifUnitRegister_R_t>     mR2;
-	std::shared_ptr<VifUnitRegister_R_t>     mR3;
-	std::shared_ptr<VifUnitRegister_C_t>     mC0;
-	std::shared_ptr<VifUnitRegister_C_t>     mC1;
-	std::shared_ptr<VifUnitRegister_C_t>     mC2;
-	std::shared_ptr<VifUnitRegister_C_t>     mC3;
+	std::shared_ptr<Register32_t>			 mR0;
+	std::shared_ptr<Register32_t>			 mR1;
+	std::shared_ptr<Register32_t>			 mR2;
+	std::shared_ptr<Register32_t>			 mR3;
+	std::shared_ptr<Register32_t>			 mC0;
+	std::shared_ptr<Register32_t>			 mC1;
+	std::shared_ptr<Register32_t>			 mC2;
+	std::shared_ptr<Register32_t>			 mC3;
 	std::shared_ptr<VifUnitRegister_CYCLE_t> mCYCLE;
 	std::shared_ptr<VifUnitRegister_MASK_t>  mMASK;
 	std::shared_ptr<VifUnitRegister_MODE_t>  mMODE;

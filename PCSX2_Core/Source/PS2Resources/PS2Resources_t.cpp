@@ -11,6 +11,7 @@
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/PCRegister16_t.h"
+#include "Common/Types/Registers/ZeroRegister8_t.h"
 #include "Common/Types/Registers/WrapperR16Register32_t.h"
 #include "Common/Types/Registers/WrapperF32Register32_t.h"
 
@@ -39,6 +40,7 @@
 #include "PS2Resources/EE/VPU/VU/Types/VURegisters_t.h"
 
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/CDVD/CDVD_t.h"
 
 PS2Resources_t::PS2Resources_t() :
 	Clock(std::make_shared<Clock_t>()),
@@ -63,8 +65,11 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 		// Scratchpad memory 16KB
 		EE->PhysicalMMU->mapMemory(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY, EE->EECore->ScratchpadMemory);
 
-		// Boot ROM 4MB
-		EE->PhysicalMMU->mapMemory(PS2Constants::EE::BootROM::PADDRESS_BOOT_ROM, EE->BootROM);
+		// Various ROMs.
+		EE->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_BOOT_ROM, EE->BootROM);
+		EE->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_ROM1, EE->ROM1);
+		EE->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_EROM, EE->EROM);
+		EE->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_ROM2, EE->ROM2);
 
 		// Unknown memory.
 		EE->PhysicalMMU->mapMemory(0x1A000000, EE->UNKNOWN_1A000000);
@@ -284,23 +289,68 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 
 void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 {
-	// Main Memory
-	IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY, IOP->MainMemory);
+	// IOP Memory.
+	{
+		// Main Memory.
+		IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY, IOP->MainMemory);
 
-	// Boot ROM
-	IOP->PhysicalMMU->mapMemory(PS2Constants::EE::BootROM::PADDRESS_BOOT_ROM, EE->BootROM);
+		// Various ROMs.
+		IOP->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_BOOT_ROM, EE->BootROM);
+		IOP->PhysicalMMU->mapMemory(PS2Constants::EE::ROM::PADDRESS_ROM1, EE->ROM1);
 
-	// Scratchpad Memory
-	IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::IOPCore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY, IOP->IOPCore->ScratchpadMemory);
+		// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation.
+		IOP->PhysicalMMU->mapMemory(0xFFC00000, EE->BootROM);
 
-	// Parallel Port
-	IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
+		// Scratchpad Memory.
+		IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::IOPCore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY, IOP->IOPCore->ScratchpadMemory);
+	}
 
-	// HW Registers
-	IOP->PhysicalMMU->mapMemory(0x1F801000, IOP->IOP_HW_REGISTERS);
+	// IOP Registers.
+	{
+		// Parallel Port.
+		IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
 
-	// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation.
-	IOP->PhysicalMMU->mapMemory(0xFFC00000, EE->BootROM);
+		// HW Registers.
+		IOP->PhysicalMMU->mapMemory(0x1F801000, IOP->IOP_HW_REGISTERS);
+	}
+
+	// CDVD Registers.
+	{
+		IOP->PhysicalMMU->mapMemory(0x1F402004, IOP->CDVD->NCommand);
+		IOP->PhysicalMMU->mapMemory(0x1F402005, IOP->CDVD->NReady);
+		IOP->PhysicalMMU->mapMemory(0x1F402006, IOP->CDVD->Error);
+		IOP->PhysicalMMU->mapMemory(0x1F402007, IOP->CDVD->Break);
+		IOP->PhysicalMMU->mapMemory(0x1F402008, IOP->CDVD->Status);
+		IOP->PhysicalMMU->mapMemory(0x1F40200A, IOP->CDVD->Status); // Mirrored.
+		IOP->PhysicalMMU->mapMemory(0x1F40200B, IOP->CDVD->TrayState);
+		IOP->PhysicalMMU->mapMemory(0x1F40200C, IOP->CDVD->CRTMinute);
+		IOP->PhysicalMMU->mapMemory(0x1F40200D, IOP->CDVD->CRTSecond);
+		IOP->PhysicalMMU->mapMemory(0x1F40200E, IOP->CDVD->CRTFrame);
+		IOP->PhysicalMMU->mapMemory(0x1F40200F, IOP->CDVD->Type);
+		IOP->PhysicalMMU->mapMemory(0x1F402013, IOP->CDVD->Unknown13);
+		IOP->PhysicalMMU->mapMemory(0x1F402015, IOP->CDVD->RSV);
+		IOP->PhysicalMMU->mapMemory(0x1F402016, IOP->CDVD->SCommand);
+		IOP->PhysicalMMU->mapMemory(0x1F402017, IOP->CDVD->SReady);
+		IOP->PhysicalMMU->mapMemory(0x1F402018, IOP->CDVD->SDataOut);
+		IOP->PhysicalMMU->mapMemory(0x1F402020, IOP->CDVD->Key20);
+		IOP->PhysicalMMU->mapMemory(0x1F402021, IOP->CDVD->Key21);
+		IOP->PhysicalMMU->mapMemory(0x1F402022, IOP->CDVD->Key22);
+		IOP->PhysicalMMU->mapMemory(0x1F402023, IOP->CDVD->Key23);
+		IOP->PhysicalMMU->mapMemory(0x1F402024, IOP->CDVD->Key24);
+		IOP->PhysicalMMU->mapMemory(0x1F402028, IOP->CDVD->Key28);
+		IOP->PhysicalMMU->mapMemory(0x1F402029, IOP->CDVD->Key29);
+		IOP->PhysicalMMU->mapMemory(0x1F40202A, IOP->CDVD->Key2A);
+		IOP->PhysicalMMU->mapMemory(0x1F40202B, IOP->CDVD->Key2B);
+		IOP->PhysicalMMU->mapMemory(0x1F40202C, IOP->CDVD->Key2C);
+		IOP->PhysicalMMU->mapMemory(0x1F402030, IOP->CDVD->Key30);
+		IOP->PhysicalMMU->mapMemory(0x1F402031, IOP->CDVD->Key31);
+		IOP->PhysicalMMU->mapMemory(0x1F402032, IOP->CDVD->Key32);
+		IOP->PhysicalMMU->mapMemory(0x1F402033, IOP->CDVD->Key33);
+		IOP->PhysicalMMU->mapMemory(0x1F402034, IOP->CDVD->Key34);
+		IOP->PhysicalMMU->mapMemory(0x1F402038, IOP->CDVD->Key38);
+		IOP->PhysicalMMU->mapMemory(0x1F402039, IOP->CDVD->KeyXor);
+		IOP->PhysicalMMU->mapMemory(0x1F40203A, IOP->CDVD->DecSet);
+	}
 }
 
 void PS2Resources_t::initPhysicalMemoryMap_VU0() const

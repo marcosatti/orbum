@@ -6,7 +6,7 @@
 
 /*
 Register type and size definitions.
-Register16, Register32, Register64 and Register128 define the register sizes used thoughout the EE.
+Register8, Register16, Register32, Register64 and Register128 define the register sizes used thoughout the EE.
 
 These registers are implemented (at core) as a union of the signed and unsigned sums (to the register size) of these types, meaning you are able to tell the compiler
  to access them as signed or unsigned, and also only a subsection of the registers.
@@ -19,9 +19,9 @@ TODO: Check byte order / endianess - it is assumed within the emulator that, for
  Register128_t.(S or U)W[2] = bits 64-95.              ↓
  Register128_t.(S or U)W[3] = bits 96-127.  Most significant bits
 
-The primary difference between a Register type and MappedMemory type is that registers are accessed by the size index, not by the byte index.
+The primary difference between a Register type and Memory type is that registers are accessed by the size index, not by the byte index.
 For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 32-63.
-See the MappedMemory type for the counter-example.
+See the Memory type for the counter-example.
 */
 class Register128_t
 {

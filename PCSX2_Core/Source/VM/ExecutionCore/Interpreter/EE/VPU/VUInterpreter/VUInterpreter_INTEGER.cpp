@@ -3,15 +3,23 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "Common/Types/Registers/Register16_t.h"
+#include "Common/Types/Registers/FPRegister128_t.h"
+#include "VM/VMMain.h"
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
+#include "PS2Resources/EE/VPU/VPU_t.h"
+#include "PS2Resources/EE/VPU/VU/VU_t.h"
+#include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
 void VUInterpreter::IADD()
 {
-	// TODO: Implement.
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) IADD: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("IADD: Not implemented.");
-#endif
+	// ID = IS + IT.
+	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // IS.
+	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // IT.
+	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFd()]; // ID.
+
+	destReg->writeHwordU(source1Reg->readHwordU() + source2Reg->readHwordU());
 }
 
 void VUInterpreter::IADDI()

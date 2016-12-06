@@ -33,7 +33,7 @@ const std::vector<ClockSource_t>& IOPCoreInterpreter::getClockSources()
 void IOPCoreInterpreter::initalise()
 {
 	// A Reset is done by raising a Reset exception.
-	mExceptionHandler->handleException(IOPCoreException_t(IOPCoreException_t::ExType::EX_RESET));
+	mExceptionHandler->handleException(IOPCoreException_t(ExType::EX_RESET));
 }
 
 s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
@@ -83,7 +83,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x428ac; //0x2aa05;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x1B4245; // 0x428a0;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0000af9c;
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -96,13 +96,9 @@ s64 IOPCoreInterpreter::executeInstruction()
 			IOPCore->R3000->PC->getPCValue(), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
-		if (IOPCore->R3000->PC->getPCValue() == DEBUG_PC_BREAKPOINT)
-		{
-			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
-		}
 	}
 
-	if (IOPCore->R3000->PC->getPCValue() == 0x00000890)
+	if (mInstructionInfo->mImplementationIndex == 0)
 	{
 		logDebug("(%s, %d) Stop condition hit.", __FILENAME__, __LINE__);
 	}
@@ -138,7 +134,7 @@ bool IOPCoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) co
 	{
 		// Over/Under flow occured.
 		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
-		Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_OVERFLOW));
+		Exceptions->setException(IOPCoreException_t(ExType::EX_OVERFLOW));
 		return false;
 	}
 

@@ -8,20 +8,22 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 
 void IOPCoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
 	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_BREAK));
+	Exceptions->setException(IOPCoreException_t(ExType::EX_BREAK));
 }
 
 void IOPCoreInterpreter::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
 	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_SYSTEMCALL));
+	Exceptions->setException(IOPCoreException_t(ExType::EX_SYSTEMCALL));
 }
 
 void IOPCoreInterpreter::TLBP()
@@ -74,9 +76,9 @@ void IOPCoreInterpreter::CTC0()
 
 void IOPCoreInterpreter::RFE()
 {
-#if defined(BUILD_DEBUG)
-	logDebug("(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
-#endif
+	// Pop the COP0.Status exception state.
+	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	COP0->Status->popExStack();
 }
 
 void IOPCoreInterpreter::RTPS()

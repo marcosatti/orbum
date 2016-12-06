@@ -83,21 +83,23 @@ void EECoreExceptionHandler::handleException_L1() const
 	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
 	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1)
 	{
-		vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
+		vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 	}
 	// Normal exception processing.
 	else
 	{
 		// Set EPC and Cause.BD fields.
-		if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
+		// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+		if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 		{
-			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
+			// TODO: no idea if this code works, yet to encounter a branch delay exception.
+			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
 			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
 		}
 		else
 		{
-			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
+			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
 			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
 		}
@@ -109,25 +111,25 @@ void EECoreExceptionHandler::handleException_L1() const
 		if (mEECoreException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
 			|| mEECoreException->mExType == ExType::EX_TLB_REFILL_STORE)
 		{
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 		}
 		else if (mEECoreException->mExType == ExType::EX_INTERRUPT)
 		{
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT;
 		}
 		else
 		{
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
 		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		} 
 		else
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }
@@ -143,15 +145,17 @@ void EECoreExceptionHandler::handleException_L2() const
 	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, mExceptionProperties->mEXC2);
 
 	// Set EPC and Cause.BD fields.
-	if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot()) // Check if in the branch delay slot.
+	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+	if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 	{
-		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - 4;
+		// TODO: no idea if this code works, yet to encounter a branch delay exception.
+		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
 		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
 	}
 	else
 	{
-		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue();
+		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
 		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
 		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
 	}
@@ -163,32 +167,32 @@ void EECoreExceptionHandler::handleException_L2() const
 	if (mEECoreException->mExType == ExType::EX_NMI 
 		|| mEECoreException->mExType == ExType::EX_RESET) 
 	{
-		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
+		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 	}
 	else
 	{
 		if (mEECoreException->mExType == ExType::EX_PERFORMANCE_COUNTER)
 		{
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_COUNTER;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COUNTER;
 		}
 		else if (mEECoreException->mExType == ExType::EX_DEBUG)
 		{
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_DEBUG;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_DEBUG;
 		}
 		else
 		{
 			// Use V_TLB_REFIL (offset 0x00000000) (should get optimised out).
-			vectorOffset = PS2Constants::MIPS::Exceptions::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
 		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::DEV) == 1)
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		}
 		else
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }

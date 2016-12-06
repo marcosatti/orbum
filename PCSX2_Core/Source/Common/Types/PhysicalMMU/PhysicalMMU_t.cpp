@@ -9,6 +9,7 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Interfaces/PhysicalMapped.h"
 #include "Common/Types/PhysicalMMU/MappedMemory_t.h"
+#include "Common/Types/PhysicalMMU/MappedRegister8_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister32_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
@@ -96,6 +97,11 @@ void PhysicalMMU_t::mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMa
 void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr<Memory_t>& memory)
 {
 	mapMemory(std::make_shared<MappedMemory_t>(physicalAddress, memory));
+}
+
+void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register8_t>& register8)
+{
+	mapMemory(std::make_shared<MappedRegister8_t>(physicalAddress, register8));
 }
 
 void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register16_t>& register16)

@@ -2,16 +2,6 @@
 
 #include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 
-VifUnitRegister_R_t::VifUnitRegister_R_t()
-{
-	registerField(Fields::R, "R", 0, 32, 0);
-}
-
-VifUnitRegister_C_t::VifUnitRegister_C_t()
-{
-	registerField(Fields::C, "C", 0, 32, 0);
-}
-
 VifUnitRegister_CYCLE_t::VifUnitRegister_CYCLE_t()
 {
 	registerField(Fields::CL, "CL", 0, 8, 0);

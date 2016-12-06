@@ -316,6 +316,10 @@
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\WrapperR16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister8_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -515,6 +519,10 @@
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\WrapperR16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister8_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

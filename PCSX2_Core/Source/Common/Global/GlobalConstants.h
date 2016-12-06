@@ -17,6 +17,7 @@ struct Constants
 	static constexpr u32    SIZE_4MB   = 0x400000;
 	static constexpr u32    SIZE_32KB  = 0x8000;
 	static constexpr u32    SIZE_16KB  = 0x4000;
+	static constexpr u32    SIZE_8KB   = 0x2000;
 	static constexpr u32    SIZE_4KB   = 0x1000;
 	static constexpr u32    SIZE_16B   = 0x10;
 

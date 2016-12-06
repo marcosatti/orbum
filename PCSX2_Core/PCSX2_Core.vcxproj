@@ -330,12 +330,15 @@
   <ItemGroup>
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\PCRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\WrapperR16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\WrapperF32Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ZeroFPRegister128_t.h" />
@@ -357,6 +360,7 @@
     <ClInclude Include="Source\PS2Resources\EE\VPU\VPU_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\VU_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\DebugMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register16_t.h" />
@@ -456,12 +460,15 @@
     <ClCompile Include="Source\Common\Global\GlobalTypes.cpp" />
     <ClCompile Include="Source\Common\Interfaces\PhysicalMapped.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\PCRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\WrapperR16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\WrapperF32Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ZeroFPRegister128_t.cpp" />
@@ -482,6 +489,7 @@
     <ClCompile Include="Source\PS2Resources\EE\VPU\VPU_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\VU_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.cpp" />

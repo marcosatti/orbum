@@ -19,7 +19,7 @@ void IOPCoreInterpreter::MFC0()
 	{
 		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return;
 	}
 
@@ -35,7 +35,7 @@ void IOPCoreInterpreter::MTC0()
 	{
 		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(IOPCoreException_t(IOPCoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return;
 	}
 
