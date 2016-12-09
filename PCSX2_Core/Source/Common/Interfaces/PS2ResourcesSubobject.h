@@ -12,8 +12,13 @@ public:
 	/*
 	Returns the root resources object.
 	*/
-	const PS2Resources_t* getRootResources() const;
+	inline const PS2Resources_t * getRoot() const;
 
 private:
 	const PS2Resources_t *const mPS2Resources;
 };
+
+const PS2Resources_t* PS2ResourcesSubobject::getRoot() const
+{
+	return mPS2Resources;
+}

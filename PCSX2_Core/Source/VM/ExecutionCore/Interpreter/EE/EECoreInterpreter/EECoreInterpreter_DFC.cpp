@@ -21,8 +21,8 @@ void EECoreInterpreter::PEXT5()
 {
 	// Rd = EXTEND[1-5-5-5 -> 32](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -40,8 +40,8 @@ void EECoreInterpreter::PPAC5()
 {
 	// Rd = PACK[32 -> 1-5-5-5](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -61,8 +61,8 @@ void EECoreInterpreter::CVT_S_W()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
 }
@@ -73,8 +73,8 @@ void EECoreInterpreter::CVT_W_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat();
 

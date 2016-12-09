@@ -10,8 +10,3 @@ PS2ResourcesSubobject::PS2ResourcesSubobject(const PS2Resources_t* const PS2Reso
 PS2ResourcesSubobject::~PS2ResourcesSubobject()
 {
 }
-
-const PS2Resources_t* PS2ResourcesSubobject::getRootResources() const
-{
-	return mPS2Resources;
-}

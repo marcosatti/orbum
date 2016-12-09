@@ -18,20 +18,14 @@
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
-	mClockSources{},
 	mIOPException(nullptr), 
 	mExceptionProperties(nullptr)
 {
 }
 
-const std::vector<ClockSource_t>& IOPCoreExceptionHandler::getClockSources()
-{
-	return mClockSources;
-}
-
 void IOPCoreExceptionHandler::checkExceptionState()
 {
-	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 	if (Exceptions->hasExceptionOccurred())
 	{
 		handleException(Exceptions->getException());
@@ -40,8 +34,8 @@ void IOPCoreExceptionHandler::checkExceptionState()
 
 void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
-	auto& PC = getVM()->getResources()->IOP->IOPCore->R3000->PC;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
+	auto& PC = getResources()->IOP->IOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
 	mIOPException = &PS2Exception;
@@ -73,7 +67,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 
 	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
 	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-	if (getVM()->getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot())
+	if (getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot())
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
 		u32 pcValue = PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
@@ -105,42 +99,42 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 
 void IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	throw std::runtime_error("IOP exception handler function not implemented.");
 }
@@ -172,7 +166,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION()
 
 void IOPCoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, mIOPException->mCOPExceptionInfo.mCOPUnusable);
 }
@@ -184,7 +178,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_OVERFLOW()
 
 void IOPCoreExceptionHandler::EX_HANDLER_RESET()
 {
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
 	// Initalise all of the COP0 registers.
 	COP0->initalise();

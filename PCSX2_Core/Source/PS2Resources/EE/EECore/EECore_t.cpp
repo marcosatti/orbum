@@ -10,11 +10,11 @@
 
 EECore_t::EECore_t(const PS2Resources_t* const PS2Resources) : 
 	PS2ResourcesSubobject(PS2Resources),
-	R5900(std::make_shared<EECoreR5900_t>(getRootResources())),
-	COP0(std::make_shared<EECoreCOP0_t>(getRootResources())),
-	FPU(std::make_shared<EECoreFPU_t>(getRootResources())),
+	R5900(std::make_shared<EECoreR5900_t>(getRoot())),
+	COP0(std::make_shared<EECoreCOP0_t>(getRoot())),
+	FPU(std::make_shared<EECoreFPU_t>(getRoot())),
 	ScratchpadMemory(std::make_shared<Memory_t>(PS2Constants::EE::EECore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "EE Core Scratchpad Memory")),
-	Exceptions(std::make_shared<EECoreExceptions_t>(getRootResources())),
-	TLB(std::make_shared<EECoreTLB_t>(getRootResources()))
+	Exceptions(std::make_shared<EECoreExceptions_t>(getRoot())),
+	TLB(std::make_shared<EECoreTLB_t>(getRoot()))
 {
 }

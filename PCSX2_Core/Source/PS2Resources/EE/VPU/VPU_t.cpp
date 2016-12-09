@@ -7,8 +7,8 @@
 
 VPU_t::VPU_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
-	VIF(std::make_shared<VIF_t>(getRootResources())),
-	VU(std::make_shared<VU_t>(getRootResources())),
+	VIF(std::make_shared<VIF_t>(getRoot())),
+	VU(std::make_shared<VU_t>(getRoot())),
 	STAT(std::make_shared<VPURegister_STAT_t>())
 {
 }

@@ -24,10 +24,10 @@ void EECoreInterpreter::ADD_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -45,10 +45,10 @@ void EECoreInterpreter::ADDA_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -67,11 +67,11 @@ void EECoreInterpreter::MADD_S()
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source3Reg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -90,10 +90,10 @@ void EECoreInterpreter::MADDA_S()
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -111,10 +111,10 @@ void EECoreInterpreter::MUL_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -132,10 +132,10 @@ void EECoreInterpreter::MULA_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -153,10 +153,10 @@ void EECoreInterpreter::DIV_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Set flags when special conditions occur.
 	f32 result;
@@ -192,11 +192,11 @@ void EECoreInterpreter::MSUB_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& source3Reg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source3Reg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -215,10 +215,10 @@ void EECoreInterpreter::MSUBA_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -236,10 +236,10 @@ void EECoreInterpreter::SUB_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
@@ -257,10 +257,10 @@ void EECoreInterpreter::SUBA_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->ACC; // ACC
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->ACC; // ACC
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;

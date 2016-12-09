@@ -17,25 +17,6 @@ Enable the BUILD_DEBUG token if a debug build configuration is detected.
 #endif
 
 /*
-Inlineing of functions.
-*/
-#if defined(ENV_WINDOWS)
- #if defined(BUILD_DEBUG)
-  #define INLINE 
- #else
-  #define INLINE __declspec(inline)
- #endif
- #define NO_INLINE __declspec(noinline)
-#elif defined(ENV_UNIX)
- #if defined(BUILD_DEBUG)
-  #define INLINE 
- #else
-  #define INLINE __attribute__((inline))
- #endif
- #define NO_INLINE __attribute__((noinline))
-#endif
-
-/*
 Get the filename only from __FILENAME__, thanks to http://stackoverflow.com/questions/8487986/file-macro-shows-full-path.
 */
 #include <string.h>

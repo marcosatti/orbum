@@ -1,16 +1,17 @@
 #pragma once
 
 /*
-Represents the type of clock source. 
+Represents the type of clock source. This lists all possible sources of clock events in the PS2.
+See the PS2Resources_t::Clock class, which assigns clock speed ratios to the enums listed.
 */
 enum class ClockSource_t
 {
-	VM = 0, // Value included to represent a VM loop.
-	PS2CLK = 1,
-	BUSCLK = 2,
-	BUSCLK16 = 3,
-	BUSCLK256 = 4,
-	HBLNK = 5,
-	IOP = 6,
-	NUMBER_SOURCES // Trick to determine the number of clock sources in total, used for creating arrays.
+	PS2CLK    = 0,
+	BUSCLK    = 1,
+	BUSCLK16  = 2,
+	BUSCLK256 = 3,
+	HBLNK     = 4,
+	IOP       = 5,
+
+	NUM_SOURCES // Provided to create arrays.
 };

@@ -6,8 +6,8 @@
 #include "PS2Resources/Clock/Clock_t.h"
 
 VMExecutionCoreComponent::VMExecutionCoreComponent(VMMain * vmMain):
-	VMBaseComponent(vmMain),
-	mNumTicksPS2CLK{0}
+	VMBaseComponent(vmMain), 
+	mClockTicks{0}
 {
 }
 
@@ -17,35 +17,33 @@ VMExecutionCoreComponent::~VMExecutionCoreComponent()
 
 s64 VMExecutionCoreComponent::executionStep(const ClockSource_t & clockSource)
 {
-	// Returns 0 by default, must be overriden to return a meaningful value.
-	return 0;
+	// Throws runtime error by default (valid for reactive components).
+	// Must be overriden for proactive components.
+	throw std::runtime_error("executionStep() called for a reactive component. Not allowed.");
 }
 
-void VMExecutionCoreComponent::produceTicks(const s64 & ticksPS2CLK)
+void VMExecutionCoreComponent::initalise()
 {
-	for (auto& sourceTicks : mNumTicksPS2CLK)
-		sourceTicks += ticksPS2CLK;
 }
 
-void VMExecutionCoreComponent::consumeTicks(const ClockSource_t & clockSource, const s64 & clockSourceTicks)
+void VMExecutionCoreComponent::produceTicks(const ClockSource_t& clockSource, const s64 & PS2CLKTicks)
 {
-	u32 clockSourceIdx = static_cast<u32>(clockSource);
-	auto& RATIO_PS2CLK_SOURCE = getVM()->getResources()->Clock->RATIO_PS2CLK[clockSourceIdx];
-
-	mNumTicksPS2CLK[clockSourceIdx] -= clockSourceTicks * RATIO_PS2CLK_SOURCE;
+	mClockTicks[static_cast<u32>(clockSource)] += PS2CLKTicks;
 }
+
 
 bool VMExecutionCoreComponent::isTicked(const ClockSource_t & clockSource) const
 {
-	u32 clockSourceIdx = static_cast<u32>(clockSource);
-	auto& RATIO_PS2CLK_SOURCE = getVM()->getResources()->Clock->RATIO_PS2CLK[clockSourceIdx];
+	auto& ratio = getResources()->Clock->getClockRatio(clockSource);
 
-	if (mNumTicksPS2CLK[clockSourceIdx] >= RATIO_PS2CLK_SOURCE)
+	if (mClockTicks[static_cast<u32>(clockSource)] >= ratio)
 		return true;
 	else
 		return false;
 }
 
-void VMExecutionCoreComponent::initalise()
+void VMExecutionCoreComponent::consumeTicks(const ClockSource_t & clockSource, const s64 & clockSourceTicks)
 {
+	auto& ratio = getResources()->Clock->getClockRatio(clockSource);
+	mClockTicks[static_cast<u32>(clockSource)] -= clockSourceTicks * ratio;
 }

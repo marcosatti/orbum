@@ -25,7 +25,6 @@ using ChainMode_t = EEDmacChannelTable::ChainMode_t;
 
 EEDmac::EEDmac(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
-	mClockSources{ ClockSource_t::BUSCLK },
 	mChannelIndex(0),
 	mChannelProperties(nullptr),
 	mDMAtag()
@@ -36,14 +35,9 @@ EEDmac::~EEDmac()
 {
 }
 
-const std::vector<ClockSource_t>& EEDmac::getClockSources()
-{
-	return mClockSources;
-}
-
 s64 EEDmac::executionStep(const ClockSource_t & clockSource)
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channels = DMAC->CHANNELS;
 
 	// Check if DMA transfers are enabled.
@@ -58,11 +52,11 @@ s64 EEDmac::executionStep(const ClockSource_t & clockSource)
 			mChannelProperties = Channels[mChannelIndex]->getChannelProperties();
 			switch (Channels[mChannelIndex]->mCHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD))
 			{
-			case 0x0:
+			case 0x0: 
 				executionStep_Normal();      break;
-			case 0x1:
+			case 0x1: 
 				executionStep_Chain();       break;
-			case 0x2:
+			case 0x2: 
 				executionStep_Interleaved(); break;
 			default:
 				throw std::runtime_error("Could not determine DMA transfer logical mode context. Please fix!");
@@ -79,7 +73,7 @@ s64 EEDmac::executionStep(const ClockSource_t & clockSource)
 
 void EEDmac::executionStep_Normal() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Check the mQWC register, make sure that size > 0 in order to start transfer.
@@ -110,7 +104,7 @@ void EEDmac::executionStep_Normal() const
 
 void EEDmac::executionStep_Chain()
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Check the mQWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
@@ -166,7 +160,7 @@ void EEDmac::executionStep_Chain()
 
 void EEDmac::executionStep_Interleaved() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Check the mQWC register, make sure that size > 0 in order to start transfer.
@@ -204,7 +198,7 @@ void EEDmac::executionStep_Interleaved() const
 
 void EEDmac::checkSliceQuota() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
@@ -217,7 +211,7 @@ void EEDmac::checkSliceQuota() const
 
 void EEDmac::suspendTransfer() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Emit the interrupt status bit.
@@ -230,17 +224,17 @@ void EEDmac::suspendTransfer() const
 
 void EEDmac::checkInterruptStatus() const
 {
-	auto& D_STAT = getVM()->getResources()->EE->DMAC->REGISTER_STAT;
-	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+	auto& D_STAT = getResources()->EE->DMAC->REGISTER_STAT;
+	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 
 	// Check channel interrupt status.
 	for (auto i = 0; i < PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; i++)
 	{
-		auto& cis_key = EEDmacRegister_STAT_t::Fields::CIS_KEYS[i];
-		auto& cim_key = EEDmacRegister_STAT_t::Fields::CIM_KEYS[i];
+		auto& cisKey = EEDmacRegister_STAT_t::Fields::CIS_KEYS[i];
+		auto& cimKey = EEDmacRegister_STAT_t::Fields::CIM_KEYS[i];
 
-		auto& cisValue = D_STAT->getFieldValue(cis_key);
-		auto& cimValue = D_STAT->getFieldValue(cim_key);
+		auto& cisValue = D_STAT->getFieldValue(cisKey);
+		auto& cimValue = D_STAT->getFieldValue(cimKey);
 
 		// Set EE Core interrupt if (CIS & CIM) is true.
 		if (cisValue & cimValue)
@@ -274,7 +268,7 @@ void EEDmac::checkInterruptStatus() const
 
 Direction_t EEDmac::getRuntimeDirection() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Direction_t direction = mChannelProperties->Direction;
@@ -286,7 +280,7 @@ Direction_t EEDmac::getRuntimeDirection() const
 
 bool EEDmac::isSourceStallControlOn() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 
 	if (getRuntimeDirection() == Direction_t::FROM)
 	{
@@ -302,7 +296,7 @@ bool EEDmac::isSourceStallControlOn() const
 
 bool EEDmac::isDrainStallControlOn() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 
 	if (getRuntimeDirection() == Direction_t::TO)
 	{
@@ -318,7 +312,7 @@ bool EEDmac::isDrainStallControlOn() const
 
 void EEDmac::updateSourceStallControlAddress() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	const u32 MADR = Channel->mMADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
@@ -327,7 +321,7 @@ void EEDmac::updateSourceStallControlAddress() const
 
 bool EEDmac::isDrainStallControlWaiting() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	const u32 MADR = Channel->mMADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
@@ -344,7 +338,7 @@ bool EEDmac::isDrainStallControlWaiting() const
 
 void EEDmac::transferDataUnit() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the mCHCR.DIR field.
@@ -409,7 +403,7 @@ void EEDmac::writeDataChannel(u128 data) const
 
 u128 EEDmac::readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const
 {
-	auto& EEMMU = getVM()->getResources()->EE->PhysicalMMU;
+	auto& EEMMU = getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
@@ -429,7 +423,7 @@ u128 EEDmac::readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const
 
 void EEDmac::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const
 {
-	auto& EEMMU = getVM()->getResources()->EE->PhysicalMMU;
+	auto& EEMMU = getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
@@ -447,7 +441,7 @@ void EEDmac::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 dat
 
 void EEDmac::readDMAtag()
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	// Get the main memory or SPR address we are reading or writing from.
@@ -474,7 +468,7 @@ void EEDmac::readDMAtag()
 
 void EEDmac::checkDMAtagPacketInterrupt() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	if (Channel->mCHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) != 0 
@@ -486,7 +480,7 @@ void EEDmac::checkDMAtagPacketInterrupt() const
 
 void EEDmac::checkChainExit() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	if (Channel->mChainExitState)
@@ -507,7 +501,7 @@ void EEDmac::INSTRUCTION_UNSUPPORTED()
 void EEDmac::REFE()
 {
 	// Transfers mQWC qwords from ADDR, and suspends after packet transfer.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -519,7 +513,7 @@ void EEDmac::REFE()
 void EEDmac::CNT()
 {
 	// Transfers mQWC qwords after the tag, and reads the next qword as the next tag.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -536,7 +530,7 @@ void EEDmac::CNT()
 void EEDmac::NEXT()
 {
 	// Transfers mQWC qwords after the tag, and reads the ADDR field as the next tag.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -553,7 +547,7 @@ void EEDmac::NEXT()
 void EEDmac::REF()
 {
 	// Transfers mQWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -571,7 +565,7 @@ void EEDmac::REFS()
 	// TODO: add in stall control.
 
 	// Transfers mQWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -587,7 +581,7 @@ void EEDmac::REFS()
 void EEDmac::CALL()
 {
 	// Transfers mQWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -616,7 +610,7 @@ void EEDmac::CALL()
 void EEDmac::RET()
 {
 	// Transfers mQWC qwords after tag, pops next tag from stack. If stack level = 0, transfers mQWC qwords after tag and suspends transfer.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	u8 & stackIdx = Channel->mChainStackLevelState;	
@@ -642,7 +636,7 @@ void EEDmac::RET()
 void EEDmac::END()
 {
 	// Transfers mQWC qwords after tag, and suspends after packet transfer.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -655,7 +649,7 @@ void EEDmac::CNTS()
 {
 	// TODO: need to copy mMADR to STADR during the transfer.
 	// Transfers mQWC qwords after the tag, and reads the next qword as the next tag.
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->mQWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -671,7 +665,7 @@ void EEDmac::CNTS()
 
 void EEDmac::checkInterleaveCount() const
 {
-	auto& DMAC = getVM()->getResources()->EE->DMAC;
+	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];;
 
 	// Are we in a transfer or skip block?

@@ -25,9 +25,9 @@ void EECoreInterpreter::PMAXH()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -42,9 +42,9 @@ void EECoreInterpreter::PMAXW()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -59,9 +59,9 @@ void EECoreInterpreter::PMINH()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -76,9 +76,9 @@ void EECoreInterpreter::PMINW()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -93,17 +93,17 @@ void EECoreInterpreter::MAX_S()
 {
 	// Fd = MAX(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();
 	f32 source1Val = source1Reg->readFloat();
@@ -116,17 +116,17 @@ void EECoreInterpreter::MIN_S()
 {
 	// Fd = MIN(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();
 	f32 source1Val = source1Reg->readFloat();

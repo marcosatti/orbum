@@ -13,8 +13,8 @@
 void IOPCoreInterpreter::LB()
 {
 	// Rd = MEM[SB]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU() + imm;
@@ -30,8 +30,8 @@ void IOPCoreInterpreter::LB()
 void IOPCoreInterpreter::LBU()
 {
 	// Rd = MEM[UB]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU() + imm;
@@ -47,8 +47,8 @@ void IOPCoreInterpreter::LBU()
 void IOPCoreInterpreter::LH()
 {
 	// Rd = MEM[SH]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU() + imm;
@@ -64,8 +64,8 @@ void IOPCoreInterpreter::LH()
 void IOPCoreInterpreter::LHU()
 {
 	// Rd = MEM[UH]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU() + imm;
@@ -81,7 +81,7 @@ void IOPCoreInterpreter::LHU()
 void IOPCoreInterpreter::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	destReg->writeWordS(static_cast<s32>(imm << 16));
@@ -90,8 +90,8 @@ void IOPCoreInterpreter::LUI()
 void IOPCoreInterpreter::LW()
 {
 	// Rd = MEM[SW]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU() + imm;
@@ -111,8 +111,8 @@ void IOPCoreInterpreter::LWL()
 	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWL is to be used with LWR, to read in a full 32-bit value.
 	// LWL reads in the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LDR.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU() + imm; // Get the unaligned virtual address.
@@ -140,8 +140,8 @@ void IOPCoreInterpreter::LWR()
 	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWR is to be used with LWL, to read in a full 32-bit value.
 	// LWR reads in the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LWL.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU() + imm; // Get the unaligned virtual address.
@@ -165,8 +165,8 @@ void IOPCoreInterpreter::LWR()
 void IOPCoreInterpreter::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU() + imm;
@@ -180,8 +180,8 @@ void IOPCoreInterpreter::SB()
 void IOPCoreInterpreter::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU() + imm;
@@ -195,8 +195,8 @@ void IOPCoreInterpreter::SH()
 void IOPCoreInterpreter::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU() + imm;
@@ -214,8 +214,8 @@ void IOPCoreInterpreter::SWL()
 	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWL is to be used with SWR, to write a full 32-bit value.
 	// SWL writes the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in the register are not changed. They are changed through SWR.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU() + imm; // Get the unaligned virtual address.
@@ -243,8 +243,8 @@ void IOPCoreInterpreter::SWR()
 	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWR is to be used with SWL, to write a full 32-bit value.
 	// SWR writes the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in the register are not changed. They are changed through SWL.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU() + imm; // Get the unaligned virtual address.

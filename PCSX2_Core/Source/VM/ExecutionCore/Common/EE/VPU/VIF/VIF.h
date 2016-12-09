@@ -21,12 +21,6 @@ public:
 	~VIF();
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Check the FIFO queue and process data if available.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;

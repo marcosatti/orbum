@@ -12,9 +12,9 @@
 
 IOPCore_t::IOPCore_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
-	R3000(std::make_shared<IOPCoreR3000_t>(getRootResources())),
-	COP0(std::make_shared<IOPCoreCOP0_t>(getRootResources())),
-	Exceptions(std::make_shared<IOPCoreExceptions_t>(getRootResources())),
+	R3000(std::make_shared<IOPCoreR3000_t>(getRoot())),
+	COP0(std::make_shared<IOPCoreCOP0_t>(getRoot())),
+	Exceptions(std::make_shared<IOPCoreExceptions_t>(getRoot())),
 	ScratchpadMemory(std::make_shared<DebugMemory_t>(PS2Constants::IOP::IOPCore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "IOP Core Scratchpad Memory"))
 {
 }

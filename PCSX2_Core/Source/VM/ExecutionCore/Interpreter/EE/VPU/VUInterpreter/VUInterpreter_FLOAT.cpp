@@ -154,11 +154,11 @@ void VUInterpreter::ADDAbc_3()
 void VUInterpreter::SUB()
 {
 	// Fd = Fs - Ft.
-	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFd()];
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()]; 
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFt()]; 
-	auto& MAC = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MAC;
-	auto& Status = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->Status;
+	auto& destReg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFd()];
+	auto& source1Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()]; 
+	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFt()]; 
+	auto& MAC = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MAC;
+	auto& Status = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->Status;
 
 	Status->clearFlags();
 

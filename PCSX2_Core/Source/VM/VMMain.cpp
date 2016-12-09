@@ -30,7 +30,7 @@ void VMMain::Reset()
 	initaliseBootROM();
 	
 	// Initalise the execution core.
-	mExecutionCoreComponent->initalise();
+	mExecutionCore->initalise();
 }
 
 void VMMain::Run()
@@ -41,7 +41,7 @@ void VMMain::Run()
 	// Run the VM.
 	while (mStatus == VMStatus::RUNNING)
 	{
-		mExecutionCoreComponent->executionStep(ClockSource_t::VM);
+		mExecutionCore->executionStep();
 	}
 }
 
@@ -64,7 +64,7 @@ void VMMain::setStatus(const VMStatus& status)
 	mStatus = status;
 }
 
-const std::shared_ptr<PS2Resources_t>& VMMain::getResources() const
+const std::shared_ptr<PS2Resources_t> & VMMain::getResources() const
 {
 	return mPS2Resources;
 }
@@ -80,7 +80,7 @@ void VMMain::initaliseExecutionCore()
 	{
 	case ExecutionCore_t::Interpreter:
 	{
-		mExecutionCoreComponent = std::make_unique<Interpreter>(this);
+		mExecutionCore = std::make_unique<Interpreter>(this);
 		break;
 	}
 	case ExecutionCore_t::Recompiler:

@@ -24,12 +24,6 @@ public:
 	explicit IOPCoreInterpreter(VMMain* const vmMain);
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Initalisation.
 	*/
 	void initalise() override;

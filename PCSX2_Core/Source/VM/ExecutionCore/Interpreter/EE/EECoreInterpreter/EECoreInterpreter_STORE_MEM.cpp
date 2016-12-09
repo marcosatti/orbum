@@ -18,8 +18,8 @@
 void EECoreInterpreter::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -33,8 +33,8 @@ void EECoreInterpreter::SB()
 void EECoreInterpreter::SD()
 {
 	// MEM[UD] = Rt. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -52,8 +52,8 @@ void EECoreInterpreter::SDL()
 	// Unaligned memory write. Alignment occurs on an 8 byte boundary, but this instruction allows an unaligned write. SDL is to be used with SDR, to write a full 64-bit value.
 	// SDL writes the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in memory are not changed. They are changed through SDR.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU(0) + imm;
@@ -81,8 +81,8 @@ void EECoreInterpreter::SDR()
 	// Unaligned memory write. Alignment occurs on an 8 byte boundary, but this instruction allows an unaligned write. SDR is to be used with SDL, to write a full 64-bit value.
 	// SDR writes the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in memory are not changed. They are changed through SDL.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -106,8 +106,8 @@ void EECoreInterpreter::SDR()
 void EECoreInterpreter::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -121,8 +121,8 @@ void EECoreInterpreter::SH()
 void EECoreInterpreter::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -140,8 +140,8 @@ void EECoreInterpreter::SWL()
 	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWL is to be used with SWR, to write a full 32-bit value.
 	// SWL writes the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in the register are not changed. They are changed through SWR.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -169,8 +169,8 @@ void EECoreInterpreter::SWR()
 	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWR is to be used with SWL, to write a full 32-bit value.
 	// SWR writes the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
 	// Note that the other bytes already in the register are not changed. They are changed through SWL.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = source1Reg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -194,8 +194,8 @@ void EECoreInterpreter::SWR()
 void EECoreInterpreter::SQ()
 {
 	// MEM[UQ] = Rd. Address error or TLB error generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
@@ -214,15 +214,15 @@ void EECoreInterpreter::SQ()
 void EECoreInterpreter::SWC1()
 {
 	// MEM[UW] = Ft. Address error or TLB error generated.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getIRt()]; // Ft
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getIRt()]; // Ft
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = (source1Reg->readWordU(0) + imm);

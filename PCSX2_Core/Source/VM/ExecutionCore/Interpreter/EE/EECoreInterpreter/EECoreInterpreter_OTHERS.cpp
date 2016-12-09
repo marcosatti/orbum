@@ -37,7 +37,7 @@ void EECoreInterpreter::PREF()
 void EECoreInterpreter::DI()
 {
 	// Disable Interrupts. No Exceptions.
-	auto& statusReg = getVM()->getResources()->EE->EECore->COP0->Status;
+	auto& statusReg = getResources()->EE->EECore->COP0->Status;
 
 	if ((statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
 		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
@@ -51,7 +51,7 @@ void EECoreInterpreter::DI()
 void EECoreInterpreter::EI()
 {
 	// Enable Interrupts. No Exceptions.
-	auto& statusReg = getVM()->getResources()->EE->EECore->COP0->Status;
+	auto& statusReg = getResources()->EE->EECore->COP0->Status;
 
 	if ((statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
 		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
@@ -78,9 +78,9 @@ void EECoreInterpreter::TLBP()
         return;
 
 	u32 value = 0x80000000; // Only set index if an entry is found, otherwise return with the sign bit = 1, indicating not found..
-	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
-	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
+	auto& Index = getResources()->EE->EECore->COP0->Index;
+	auto& MMU = getResources()->EE->EECore->TLB;
+	auto& EntryHi = getResources()->EE->EECore->COP0->EntryHi;
 
 	// Find by VPN2 first.
 	u32 searchVpn2 = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2) << 13;
@@ -107,12 +107,12 @@ void EECoreInterpreter::TLBR()
 	if (!checkCOP0Usable())
         return;
 
-	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
-	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
-	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
-	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
-	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
+	auto& Index = getResources()->EE->EECore->COP0->Index;
+	auto& MMU = getResources()->EE->EECore->TLB;
+	auto& PageMask = getResources()->EE->EECore->COP0->PageMask;
+	auto& EntryHi = getResources()->EE->EECore->COP0->EntryHi;
+	auto& EntryLo0 = getResources()->EE->EECore->COP0->EntryLo0;
+	auto& EntryLo1 = getResources()->EE->EECore->COP0->EntryLo1;
 
 	auto& tlbEntry = MMU->getTLBEntry(static_cast<s32>(Index->getFieldValue(EECoreCOP0Register_Index_t::Fields::Index)));
 
@@ -145,12 +145,12 @@ void EECoreInterpreter::TLBWI()
 	if (!checkCOP0Usable())
         return;
 
-	auto& Index = getVM()->getResources()->EE->EECore->COP0->Index;
-	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
-	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
-	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
-	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
-	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
+	auto& Index = getResources()->EE->EECore->COP0->Index;
+	auto& MMU = getResources()->EE->EECore->TLB;
+	auto& PageMask = getResources()->EE->EECore->COP0->PageMask;
+	auto& EntryHi = getResources()->EE->EECore->COP0->EntryHi;
+	auto& EntryLo0 = getResources()->EE->EECore->COP0->EntryLo0;
+	auto& EntryLo1 = getResources()->EE->EECore->COP0->EntryLo1;
 
 	EECoreTLBEntryInfo_t tlbEntry;
 
@@ -187,12 +187,12 @@ void EECoreInterpreter::TLBWR()
 	if (!checkCOP0Usable())
         return;
 
-	auto& Random = getVM()->getResources()->EE->EECore->COP0->Random;
-	auto& MMU = getVM()->getResources()->EE->EECore->TLB;
-	auto& PageMask = getVM()->getResources()->EE->EECore->COP0->PageMask;
-	auto& EntryHi = getVM()->getResources()->EE->EECore->COP0->EntryHi;
-	auto& EntryLo0 = getVM()->getResources()->EE->EECore->COP0->EntryLo0;
-	auto& EntryLo1 = getVM()->getResources()->EE->EECore->COP0->EntryLo1;
+	auto& Random = getResources()->EE->EECore->COP0->Random;
+	auto& MMU = getResources()->EE->EECore->TLB;
+	auto& PageMask = getResources()->EE->EECore->COP0->PageMask;
+	auto& EntryHi = getResources()->EE->EECore->COP0->EntryHi;
+	auto& EntryLo0 = getResources()->EE->EECore->COP0->EntryLo0;
+	auto& EntryLo1 = getResources()->EE->EECore->COP0->EntryLo1;
 
 	EECoreTLBEntryInfo_t tlbEntry;
 

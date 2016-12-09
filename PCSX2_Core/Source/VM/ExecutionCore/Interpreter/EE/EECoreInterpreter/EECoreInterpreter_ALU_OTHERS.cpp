@@ -20,8 +20,8 @@
 void EECoreInterpreter::PABSH()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -36,8 +36,8 @@ void EECoreInterpreter::PABSH()
 void EECoreInterpreter::PABSW()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -52,8 +52,8 @@ void EECoreInterpreter::PABSW()
 void EECoreInterpreter::PLZCW()
 {
 	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
@@ -69,9 +69,9 @@ void EECoreInterpreter::ABS_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	CSR->clearFlags();
 	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
@@ -83,9 +83,9 @@ void EECoreInterpreter::NEG_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	CSR->clearFlags();
 	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
@@ -97,10 +97,10 @@ void EECoreInterpreter::RSQRT_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source1Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	f32 source1Val = source1Reg->readFloat();
 	f32 source2Val = source2Reg->readFloat();
@@ -110,14 +110,14 @@ void EECoreInterpreter::RSQRT_S()
 	CSR->clearFlags();
 	if (source2Val == 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::D, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SD, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::D, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -139,9 +139,9 @@ void EECoreInterpreter::SQRT_S()
 	if (!checkCOP1Usable())
         return;
 
-	auto& source2Reg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
-	auto& CSR = getVM()->getResources()->EE->EECore->FPU->CSR;
+	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	f32 source2Val = source2Reg->readFloat();
 	f32 result;
@@ -154,8 +154,8 @@ void EECoreInterpreter::SQRT_S()
 	}
 	else if (source2Val < 0.0F)
 	{
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
-		getVM()->getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
+		getResources()->EE->EECore->FPU->CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else

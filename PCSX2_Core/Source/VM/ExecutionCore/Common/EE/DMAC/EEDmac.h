@@ -37,12 +37,6 @@ public:
 	~EEDmac();
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Check through the channels and initate data transfers. 
 	Slice channels transfer 8 qwords (128 bytes) before suspending transfer, where as burst channels transfer all data without suspending.
 	TODO: Currently it is assumed that the software uses the DMAC correctly (such as using correct chain mode for a channel). Need to add in checks?

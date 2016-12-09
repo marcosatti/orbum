@@ -30,7 +30,7 @@ const EECoreException_t& EECoreExceptions_t::getException() const
 
 void EECoreExceptions_t::setException(const EECoreException_t& eeCoreException)
 {
-	auto& EECore = getRootResources()->EE->EECore;
+	auto& EECore = getRoot()->EE->EECore;
 
 	// Interrupt exceptions are only taken when conditions are correct.
 	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.

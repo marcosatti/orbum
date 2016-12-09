@@ -12,7 +12,6 @@
 
 VIF::VIF(VMMain* vmMain, u32 vifUnitIndex) :
 	VMExecutionCoreComponent(vmMain),
-	mClockSources{ ClockSource_t::BUSCLK },
 	mVIFUnitIndex(vifUnitIndex),
 	mDMAPacket()
 {
@@ -22,14 +21,9 @@ VIF::~VIF()
 {
 }
 
-const std::vector<ClockSource_t>& VIF::getClockSources()
-{
-	return mClockSources;
-}
-
 s64 VIF::executionStep(const ClockSource_t& clockSource)
 {
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 
 	// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
 	if (isVIFStalled())
@@ -70,7 +64,7 @@ s64 VIF::executionStep(const ClockSource_t& clockSource)
 
 bool VIF::isVIFStalled() const
 {
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 	auto& STAT = VIF->mSTAT;
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 

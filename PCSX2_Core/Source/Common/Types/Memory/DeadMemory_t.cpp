@@ -4,7 +4,6 @@
 
 #include "Common/Types/Memory/DeadMemory_t.h"
 
-
 DeadMemory_t::DeadMemory_t(const size_t & size, const char *const mnemonic) :
 	Memory_t(0, mnemonic),
 	mSize(size)

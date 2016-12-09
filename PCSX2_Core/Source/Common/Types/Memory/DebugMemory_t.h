@@ -4,11 +4,6 @@
 
 #if defined(BUILD_DEBUG)
 
-/*
-Choose if to log values read/written as hex instead of decimal.
-*/
-#define LOG_VALUE_AS_HEX 1
-
 #include "Common/Types/Memory/Memory_t.h"
 
 /*

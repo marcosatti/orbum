@@ -18,16 +18,10 @@
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
-	mClockSources{ ClockSource_t::IOP },
 	mExceptionHandler(std::make_unique<IOPCoreExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<IOPCoreMMUHandler>(vmMain)),
 	mInstructionInfo(nullptr)
 {
-}
-
-const std::vector<ClockSource_t>& IOPCoreInterpreter::getClockSources()
-{
-	return mClockSources;
 }
 
 void IOPCoreInterpreter::initalise()
@@ -58,7 +52,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 void IOPCoreInterpreter::checkBranchDelaySlot() const
 {
-	auto& R3000 = getVM()->getResources()->IOP->IOPCore->R3000;
+	auto& R3000 = getResources()->IOP->IOPCore->R3000;
 	if (R3000->mIsInBranchDelay)
 	{
 		if (R3000->mBranchDelayCycles == 0)
@@ -73,7 +67,7 @@ void IOPCoreInterpreter::checkBranchDelaySlot() const
 
 s64 IOPCoreInterpreter::executeInstruction()
 {
-	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
+	auto& IOPCore = getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
 	const u32 & instructionValue = mMMUHandler->readWordU(IOPCore->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
@@ -83,10 +77,10 @@ s64 IOPCoreInterpreter::executeInstruction()
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x1B4245; // 0x428a0;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x1B4245;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0000af9c;
 
-	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
+	if (0) // (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
 		logDebug("(%s, %d) IOPCore loop 0x%llX: "
@@ -100,7 +94,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 
 	if (mInstructionInfo->mImplementationIndex == 0)
 	{
-		logDebug("(%s, %d) Stop condition hit.", __FILENAME__, __LINE__);
+		logDebug("(%s, %d) Oops... Instruction Impl. Index was 0 @ IOPCore loop 0x%llX!", __FILENAME__, __LINE__, DEBUG_LOOP_COUNTER);
 	}
 #endif
 
@@ -119,7 +113,7 @@ bool IOPCoreInterpreter::checkNoMMUError() const
 	if (mMMUHandler->hasExceptionOccurred())
 	{
 		// Something went wrong in the MMU.
-		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 		Exceptions->setException(mMMUHandler->getExceptionInfo());
 		return false;
 	}
@@ -133,7 +127,7 @@ bool IOPCoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) co
 	if (MathUtil::testOverOrUnderflow32(x, y))
 	{
 		// Over/Under flow occured.
-		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 		Exceptions->setException(IOPCoreException_t(ExType::EX_OVERFLOW));
 		return false;
 	}

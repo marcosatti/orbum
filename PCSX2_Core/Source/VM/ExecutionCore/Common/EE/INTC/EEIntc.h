@@ -8,12 +8,6 @@ public:
 	explicit EEIntc(VMMain * vmMain);
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any
 	interrupts to send to the EE Core to process.
 

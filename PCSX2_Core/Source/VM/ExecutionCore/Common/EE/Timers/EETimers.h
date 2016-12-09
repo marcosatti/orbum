@@ -18,12 +18,6 @@ public:
 	~EETimers();
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-	
-	/*
 	Updates the timers with the specified clock source type.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;

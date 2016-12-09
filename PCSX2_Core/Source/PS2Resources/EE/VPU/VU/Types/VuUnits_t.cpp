@@ -51,7 +51,7 @@ VuUnit_VU0_t::VuUnit_VU0_t(const PS2Resources_t* const PS2Resources) :
 bool VuUnit_VU0_t::isCoprocessorUsable() const
 {
 	// Check that CU[bit 2] == 1 (ie: >0) in the status register.
-	if ((getRootResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x4) > 0)
+	if ((getRoot()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x4) > 0)
 		return true;
 	else
 		return false;

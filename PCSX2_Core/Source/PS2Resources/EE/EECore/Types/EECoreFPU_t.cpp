@@ -31,7 +31,7 @@ EECoreFPU_t::EECoreFPU_t(const PS2Resources_t* const PS2Resources) :
 bool EECoreFPU_t::isCoprocessorUsable() const
 {
 	// Check that CU[bit 1] == 1 (ie: >0) in the status register.
-	if ((getRootResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x2) > 0)
+	if ((getRoot()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x2) > 0)
 		return true;
 	else
 		return false;

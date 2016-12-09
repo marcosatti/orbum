@@ -15,14 +15,14 @@
 void IOPCoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
-	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 	Exceptions->setException(IOPCoreException_t(ExType::EX_BREAK));
 }
 
 void IOPCoreInterpreter::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
-	auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 	Exceptions->setException(IOPCoreException_t(ExType::EX_SYSTEMCALL));
 }
 
@@ -77,7 +77,7 @@ void IOPCoreInterpreter::CTC0()
 void IOPCoreInterpreter::RFE()
 {
 	// Pop the COP0.Status exception state.
-	auto& COP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 	COP0->Status->popExStack();
 }
 

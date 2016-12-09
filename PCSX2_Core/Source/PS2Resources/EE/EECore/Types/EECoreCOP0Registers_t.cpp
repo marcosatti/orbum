@@ -61,7 +61,7 @@ EECoreCOP0Register_Count_t::EECoreCOP0Register_Count_t()
 
 void EECoreCOP0Register_Count_t::increment(u32 value)
 {
-	setFieldValue(EECoreCOP0Register_Count_t::Fields::Count, getFieldValue(EECoreCOP0Register_Count_t::Fields::Count) + value);
+	setFieldValue(Fields::Count, getFieldValue(Fields::Count) + value);
 }
 
 EECoreCOP0Register_EntryHi_t::EECoreCOP0Register_EntryHi_t()

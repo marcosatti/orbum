@@ -12,12 +12,6 @@ public:
 	~VUInterpreter();
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	TODO: implement.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;

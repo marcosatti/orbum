@@ -32,12 +32,6 @@ public:
 	~EECoreInterpreter();
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Initalisation.
 	*/
 	void initalise() override;

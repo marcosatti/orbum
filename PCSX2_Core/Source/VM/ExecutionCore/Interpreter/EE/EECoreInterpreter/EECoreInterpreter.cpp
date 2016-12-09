@@ -30,7 +30,6 @@ using ExType = EECoreException_t::ExType;
 
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMExecutionCoreComponent(vmMain),
-	mClockSources{},
 	mExceptionHandler(std::make_unique<EECoreExceptionHandler>(vmMain)),
 	mMMUHandler(std::make_unique<EECoreMMUHandler>(vmMain)),
 	mInstructionInfo(nullptr),
@@ -40,11 +39,6 @@ EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUIn
 
 EECoreInterpreter::~EECoreInterpreter()
 {
-}
-
-const std::vector<ClockSource_t>& EECoreInterpreter::getClockSources()
-{
-	return mClockSources;
 }
 
 void EECoreInterpreter::initalise()
@@ -80,7 +74,7 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 void EECoreInterpreter::checkBranchDelaySlot() const
 {
-	auto& R5900 = getVM()->getResources()->EE->EECore->R5900;
+	auto& R5900 = getResources()->EE->EECore->R5900;
 	if (R5900->mIsInBranchDelay)
 	{
 		if (R5900->mBranchDelayCycles == 0)
@@ -95,7 +89,7 @@ void EECoreInterpreter::checkBranchDelaySlot() const
 
 void EECoreInterpreter::checkCountTimerEvent() const
 {
-	auto& EECore = getVM()->getResources()->EE->EECore;
+	auto& EECore = getResources()->EE->EECore;
 
 	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
 	// The docs specify that an interrupt is raised when the two values are equal, but this is impossible to get correct (due to how emulation works), 
@@ -114,7 +108,7 @@ void EECoreInterpreter::checkCountTimerEvent() const
 
 u32 EECoreInterpreter::executeInstruction()
 {
-	auto& EECore = getVM()->getResources()->EE->EECore;
+	auto& EECore = getResources()->EE->EECore;
 
 	// Set the instruction holder to the instruction at the current PC.
 	const u32 & instructionValue = mMMUHandler->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking for address bus error.
@@ -159,10 +153,10 @@ u32 EECoreInterpreter::executeInstruction()
 
 bool EECoreInterpreter::checkCOP0Usable() const
 {
-	if (!getVM()->getResources()->EE->EECore->COP0->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return false;
@@ -174,10 +168,10 @@ bool EECoreInterpreter::checkCOP0Usable() const
 
 bool EECoreInterpreter::checkCOP1Usable() const
 {
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return false;
@@ -189,10 +183,10 @@ bool EECoreInterpreter::checkCOP1Usable() const
 
 bool EECoreInterpreter::checkCOP2Usable() const
 {
-	if (!getVM()->getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
+	if (!getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 2 };
 		Exceptions->setException(EECoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return false;
@@ -207,7 +201,7 @@ bool EECoreInterpreter::checkNoMMUError() const
 	if (mMMUHandler->hasExceptionOccurred())
 	{
 		// Something went wrong in the MMU.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		Exceptions->setException(mMMUHandler->getExceptionInfo());
 		return false;
 	}
@@ -221,7 +215,7 @@ bool EECoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) con
 	if (MathUtil::testOverOrUnderflow32(x, y))
 	{
 		// Over/Under flow occured.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return false;
 	}
@@ -235,7 +229,7 @@ bool EECoreInterpreter::checkNoOverOrUnderflow64(const s64& x, const s64& y) con
 	if (MathUtil::testOverOrUnderflow64(x, y))
 	{
 		// Over/Under flow occured.
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
 		return false;
 	}

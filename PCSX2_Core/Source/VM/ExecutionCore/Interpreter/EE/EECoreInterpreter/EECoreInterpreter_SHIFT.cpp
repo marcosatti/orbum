@@ -21,8 +21,8 @@ void EECoreInterpreter::DSRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
@@ -32,8 +32,8 @@ void EECoreInterpreter::DSLL()
 {
 	// Rd = Rt << shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
@@ -43,8 +43,8 @@ void EECoreInterpreter::DSLL32()
 {
 	// Rd = Rt << shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
@@ -54,9 +54,9 @@ void EECoreInterpreter::DSLLV()
 {
 	// Rd = Rt << Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) << shamt);
@@ -66,8 +66,8 @@ void EECoreInterpreter::DSRA32()
 {
 	// Rd = Rt >> shamt(32->61). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
@@ -77,9 +77,9 @@ void EECoreInterpreter::DSRAV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordS(0, source1Reg->readDwordS(0) >> shamt);
@@ -89,8 +89,8 @@ void EECoreInterpreter::DSRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
@@ -100,8 +100,8 @@ void EECoreInterpreter::DSRL32()
 {
 	// Rd = Rt >> shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
@@ -111,9 +111,9 @@ void EECoreInterpreter::DSRLV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x3F;
 
 	destReg->writeDwordU(0, source1Reg->readDwordU(0) >> shamt);
@@ -123,8 +123,8 @@ void EECoreInterpreter::SLL()
 {
 	// Rd = SignExtend<s64>(Rt << shamt(0->31)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) << shamt);
@@ -135,9 +135,9 @@ void EECoreInterpreter::SLLV()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) << shamt);
@@ -148,8 +148,8 @@ void EECoreInterpreter::SRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordS(0) >> shamt);
@@ -160,9 +160,9 @@ void EECoreInterpreter::SRAV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordS(0) >> shamt);
@@ -173,8 +173,8 @@ void EECoreInterpreter::SRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) >> shamt);
@@ -185,9 +185,9 @@ void EECoreInterpreter::SRLV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByteU(0) & 0x1F;
 
 	s64 result = static_cast<s64>(source1Reg->readWordU(0) >> shamt);
@@ -198,8 +198,8 @@ void EECoreInterpreter::PSLLH()
 {
 	// Rd = Rt << shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
@@ -212,9 +212,9 @@ void EECoreInterpreter::PSLLVW()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -228,8 +228,8 @@ void EECoreInterpreter::PSLLW()
 {
 	// Rd = Rt << shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
@@ -242,8 +242,8 @@ void EECoreInterpreter::PSRAH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
@@ -256,9 +256,9 @@ void EECoreInterpreter::PSRAVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -272,8 +272,8 @@ void EECoreInterpreter::PSRAW()
 {
 	// Rd = Rt >> shamt. Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
@@ -286,8 +286,8 @@ void EECoreInterpreter::PSRLH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
@@ -300,9 +300,9 @@ void EECoreInterpreter::PSRLVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -316,8 +316,8 @@ void EECoreInterpreter::PSRLW()
 {
 	// Rd = Rt >> shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
@@ -331,10 +331,10 @@ void EECoreInterpreter::QFSRV()
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.
 	// TODO: check this instruction... were they high when they created this???
-	auto& source1Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	auto& SAReg = getVM()->getResources()->EE->EECore->R5900->SA;
+	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& SAReg = getResources()->EE->EECore->R5900->SA;
 
 	u32 shamt = SAReg->readWordU(); // From the docs it must be a multiple of bytes or halfwords, as you use the MTSAB or MTSAH instructions to write to the SA register.
 

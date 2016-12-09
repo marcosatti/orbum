@@ -1,7 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
+#include "Common/Interfaces/VMExecutionCore.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 
 
@@ -26,45 +28,47 @@ class EEDmac;
 class EEIntc;
 class EETimers;
 class IOPCoreInterpreter;
-//class InterpreterGS;
 
-class Interpreter : public VMExecutionCoreComponent
+class Interpreter : public VMExecutionCore
 {
 public:
 	explicit Interpreter(VMMain * vmMain);
-
-	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
-	Always runs the EE Core.
-	For the other components, first checks if they should be run and then controls their timing.
-	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	~Interpreter();
 
 	/*
 	Delegates to all components by calling mComponents[i]->intialise().
 	*/
 	void initalise() override;
 
+	/*
+	Always runs the EE Core.
+	For the other components, first checks if they should be run and then controls their timing.
+	*/
+	void executionStep() override;
+
 private:
-	std::shared_ptr<VUInterpreter> mInterpreterVU0;
-	std::shared_ptr<VUInterpreter> mInterpreterVU1;
-	std::shared_ptr<VIF> mVIF0;
-	std::shared_ptr<VIF> mVIF1;
-	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
-	std::shared_ptr<EEDmac> mEEDmac;
-	std::shared_ptr<EEIntc> mEEIntc;
-	std::shared_ptr<EETimers> mEETimers;
-	//std::unique_ptr<InterpreterGS> mInterpreterGS;
-	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
+	const std::shared_ptr<VUInterpreter> mInterpreterVU0;
+	const std::shared_ptr<VUInterpreter> mInterpreterVU1;
+	const std::shared_ptr<VIF> mVIF0;
+	const std::shared_ptr<VIF> mVIF1;
+	const std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
+	const std::shared_ptr<EEDmac> mEEDmac;
+	const std::shared_ptr<EEIntc> mEEIntc;
+	const std::shared_ptr<EETimers> mEETimers;
+	const std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
 
 	/*
-	Used to iterate through all components EXCEPT the EE Core interpreter, which is used to control timing of the other components.
+	Used to iterate through all components, for initalsation.
 	*/
-	std::vector<std::shared_ptr<VMExecutionCoreComponent>> mComponents;
+	const std::shared_ptr<VMExecutionCoreComponent> mComponents[7];
+
+	/*
+	Clock source component arrays, used to iterate through.
+	*/
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK[5];
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[1];
 };
 

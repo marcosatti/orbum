@@ -5,7 +5,7 @@
 
 #include "Types/VMOptions_t.h"
 
-class VMExecutionCoreComponent;
+class VMExecutionCore;
 class PS2Resources_t;
 
 /*
@@ -47,9 +47,9 @@ public:
 	/*
 	VMMain state functions.
 	*/
-	const VMStatus& getStatus() const;
+	const VMStatus & getStatus() const;
 	void setStatus(const VMStatus & status);
-	const std::shared_ptr<PS2Resources_t>& getResources() const;
+	const std::shared_ptr<PS2Resources_t> & getResources() const;
 	
 	/*
 	Misc helper functions.
@@ -62,7 +62,7 @@ private:
 	VMOptions_t mVMOptions;
 	VMStatus mStatus;
 	std::shared_ptr<PS2Resources_t> mPS2Resources;
-	std::unique_ptr<VMExecutionCoreComponent> mExecutionCoreComponent;
+	std::unique_ptr<VMExecutionCore> mExecutionCore;
 
 	// Initalisation (called through reset()).
 	/*

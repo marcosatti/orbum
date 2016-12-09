@@ -8,7 +8,7 @@
 #include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
-TODO: Fill in documentation.
+Base class for a PS2 system compnent - either triggered to run by a clock source (proactive), or by another PS2 system component (reactive).
 */
 
 class VMMain;
@@ -27,33 +27,35 @@ public:
 
 	/*
 	Executes a "cycle", in which the return value should be indicative of how many real world cycles would have happened (for that clock source).
+	For example, in the EE Core, calling executionStep() will run an instruction instead of 1 real world cycle - usually an instruction is on the order of 10 cycles.
+	This does not have to be implemented for all components (ie: for reactive components).
 
-	For example, in the EE Core, calling executionStep() will run an instruction instead of 1 cycle.
-	In this case, the return value indicates the number of cycles that instruction took to execute in the real world (as PS2CLK's).
+	It is possible to return a negative cycle count, which outside of the context of the EE Core (as this is the control, see below), 
+	 means that this component requests more time to be run.
 	*/
 	virtual s64 executionStep(const ClockSource_t & clockSource);
 
 
 
 	// Clock/Tick functionality. 
-	// Note that the functionality doesn't have to be used, in which case the values do not matter.
-	// See Interpreter::exceutionStep() for how it is used.
+	// Note that the functionality doesn't have to be used, in the case of reactive components.
+	// See Interpreter::exceutionStep() as an example on how it is used.
+	// The EE Core should be used as the control component for timing all others.
 
 	/*
 	Gives this component the specified number of PS2CLK ticks that happened (adds).
 	From this, use isTicked() to determine if the component should run.
 
-	As the EE Core is used as the control in this emulator, ticksPS2CLK should always be equal to the number of EE Core 
-	 cycles that just occurred.
+	As the EE Core is used as the control in this emulator, PS2CLKTicks should always be equal to the number of EE Core cycles that just occurred.
 	*/
-	void produceTicks(const s64 & PS2CLKTicks);
+	void produceTicks(const ClockSource_t & clockSource, const s64 & PS2CLKTicks);
 
 	/*
 	Determines if the component should be allowed to run, by checking the number of produced ticks against the 
 	 clock ratio. Returns true if the number of produced ticks is higher than the clock speed ratio.
 
 	This should be used in a while loop ( while(isTicked()) ), in conjuction with consumeTicks after the component has been allowed to run.
-	This will make sure that the component is allowed to run for the approoriate time instead of just once.
+	This will make sure that the component is allowed to run for the approoriate time.
 	*/
 	bool isTicked(const ClockSource_t & clockSource) const;
 
@@ -65,22 +67,13 @@ public:
 	*/
 	void consumeTicks(const ClockSource_t & clockSource, const s64 & clockSourceTicks);
 
-	/*
-	Returns a list of clock sources that this component is "subscribed" to (in an event fashion).
-	The values in the list returned can be used in the executionStep(), isTicked() and consumeTicks() functions as parameters.
-	*/
-	virtual const std::vector<ClockSource_t> & getClockSources() = 0;
-
 private:
 
 	/*
-	Records the number of PS2CLK's for each clock source available.
-	Not all of the array will be used, only the clock sources listed by getClockSources() will be used.
-
-	The values recorded can be used to check if the component should run.
-	See produceTicks(), isTicked() and consumeTicks() functions.
+	Records the number of PS2CLK ticks available for each clock source, used to control the timing of this component.
+	See produceTicks(), isTicked() and consumeTicks() functions above on how these are used.
 	*/
-	s64 mNumTicksPS2CLK[static_cast<u32>(ClockSource_t::NUMBER_SOURCES)];
+	s64 mClockTicks[static_cast<u32>(ClockSource_t::NUM_SOURCES)];
 
 };
 

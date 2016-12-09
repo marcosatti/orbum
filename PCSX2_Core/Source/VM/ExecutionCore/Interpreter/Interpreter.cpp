@@ -2,20 +2,21 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
+
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
+#include "VM/VMMain.h"
+
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 #include "VM/ExecutionCore/Common/EE/VPU/VIF/VIF.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
 #include "VM/ExecutionCore/Common/EE/INTC/EEIntc.h"
 #include "VM/ExecutionCore/Common/EE/Timers/EETimers.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
-#include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 
 Interpreter::Interpreter(VMMain * vmMain) :
-	VMExecutionCoreComponent(vmMain),
-	mClockSources{ ClockSource_t::VM },
+	VMExecutionCore(vmMain),
 	mInterpreterVU0(std::make_shared<VUInterpreter>(vmMain, 0)),
 	mInterpreterVU1(std::make_shared<VUInterpreter>(vmMain, 1)),
 	mVIF0(std::make_shared<VIF>(vmMain, 0)),
@@ -25,45 +26,83 @@ Interpreter::Interpreter(VMMain * vmMain) :
 	mEEIntc(std::make_shared<EEIntc>(vmMain)),
 	mEETimers(std::make_shared<EETimers>(vmMain)),
 	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
-	mComponents { mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter }
+	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter },
+	mComponentsBUSCLK{ mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers },
+	mComponentsBUSCLK16{ mEETimers },
+	mComponentsBUSCLK256{ mEETimers },
+	mComponentsHBLNK{ mEETimers },
+	mComponentsIOP{ mIOPCoreInterpreter }
 {
 }
 
-const std::vector<ClockSource_t>& Interpreter::getClockSources()
+Interpreter::~Interpreter()
 {
-	return mClockSources;
-}
-
-s64 Interpreter::executionStep(const ClockSource_t & clockSource)
-{
-	// Process base EE Core event (in which every other component timing is based off).
-	s64 PS2CLKTicks = mEECoreInterpreter->executionStep(ClockSource_t::PS2CLK);
-
-	// Process the other components.
-	for (auto& component : mComponents)
-	{
-		component->produceTicks(PS2CLKTicks);
-
-		for (auto& componentClockSource : component->getClockSources())
-		{
-			while (component->isTicked(componentClockSource))
-			{
-				s64 componentClockSourceTicks = component->executionStep(componentClockSource);
-				component->consumeTicks(componentClockSource, componentClockSourceTicks);
-			}
-		}
-	}
-
-	// Returns 1 "VM" cycle, although this is not actually used.
-	return 1;
 }
 
 void Interpreter::initalise()
 {
-	// Always done as its not apart of the mComponents array.
-	mEECoreInterpreter->initalise();
-
-	// Iterate through the other components.
+	// Iterate through all components, initalising them.
 	for (auto& component : mComponents)
 		component->initalise();
+}
+
+void Interpreter::executionStep()
+{
+	// Process base EE Core event (in which every other component timing is based off).
+	const s64 PS2CLKTicks = mEECoreInterpreter->executionStep(ClockSource_t::PS2CLK);
+
+	// Process BUSCLK components.
+	for (auto& component : mComponentsBUSCLK)
+	{
+		component->produceTicks(ClockSource_t::BUSCLK, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::BUSCLK))
+		{
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::BUSCLK);
+			component->consumeTicks(ClockSource_t::BUSCLK, componentClockSourceTicks);
+		}
+	}
+
+	// Process BUSCLK16 components.
+	for (auto& component : mComponentsBUSCLK16)
+	{
+		component->produceTicks(ClockSource_t::BUSCLK16, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::BUSCLK16))
+		{
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::BUSCLK16);
+			component->consumeTicks(ClockSource_t::BUSCLK16, componentClockSourceTicks);
+		}
+	}
+
+	// Process BUSCLK256 components.
+	for (auto& component : mComponentsBUSCLK256)
+	{
+		component->produceTicks(ClockSource_t::BUSCLK256, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::BUSCLK256))
+		{
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::BUSCLK256);
+			component->consumeTicks(ClockSource_t::BUSCLK256, componentClockSourceTicks);
+		}
+	}
+
+	// Process HBLNK components.
+	for (auto& component : mComponentsHBLNK)
+	{
+		component->produceTicks(ClockSource_t::HBLNK, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::HBLNK))
+		{
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::HBLNK);
+			component->consumeTicks(ClockSource_t::HBLNK, componentClockSourceTicks);
+		}
+	}
+
+	// Process IOP components.
+	for (auto& component : mComponentsIOP)
+	{
+		component->produceTicks(ClockSource_t::IOP, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::IOP))
+		{
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::IOP);
+			component->consumeTicks(ClockSource_t::IOP, componentClockSourceTicks);
+		}
+	}
 }

@@ -18,20 +18,14 @@
 
 EECoreExceptionHandler::EECoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
-	mClockSources{},
 	mEECoreException(nullptr), 
 	mExceptionProperties(nullptr)
 {
 }
 
-const std::vector<ClockSource_t>& EECoreExceptionHandler::getClockSources()
-{
-	return mClockSources;
-}
-
 void EECoreExceptionHandler::checkExceptionState()
 {
-	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	if (Exceptions->hasExceptionOccurred())
 	{
 		handleException(Exceptions->getException());
@@ -78,10 +72,10 @@ void EECoreExceptionHandler::handleException_L1() const
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
+	getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
 
 	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
-	if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1)
+	if (getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1)
 	{
 		vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 	}
@@ -90,22 +84,22 @@ void EECoreExceptionHandler::handleException_L1() const
 	{
 		// Set EPC and Cause.BD fields.
 		// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-		if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot())
+		if (getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 		{
 			// TODO: no idea if this code works, yet to encounter a branch delay exception.
-			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
-			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
+			u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
 		}
 		else
 		{
-			u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
-			getVM()->getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
-			getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
+			u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
 		}
 
 		// Set to kernel mode and disable interrupts.
-		getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 1);
+		getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 1);
 
 		// Select the vector to use (set vectorOffset).
 		if (mEECoreException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
@@ -123,13 +117,13 @@ void EECoreExceptionHandler::handleException_L1() const
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
+		if (getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+			getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		} 
 		else
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+			getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }
@@ -142,32 +136,32 @@ void EECoreExceptionHandler::handleException_L2() const
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.EXC2 value.
-	getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, mExceptionProperties->mEXC2);
+	getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, mExceptionProperties->mEXC2);
 
 	// Set EPC and Cause.BD fields.
 	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-	if (getVM()->getResources()->EE->EECore->R5900->isInBranchDelaySlot())
+	if (getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
-		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
-		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
-		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
+		u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
 	}
 	else
 	{
-		u32 pcValue = getVM()->getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
-		getVM()->getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
-		getVM()->getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
+		u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
 	}
 
 	// Set to kernel mode and disable interrupts.
-	getVM()->getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
+	getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
 
 	// Select vector to use and set PC to use it.
 	if (mEECoreException->mExType == ExType::EX_NMI 
 		|| mEECoreException->mExType == ExType::EX_RESET) 
 	{
-		getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
+		getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 	}
 	else
 	{
@@ -186,20 +180,20 @@ void EECoreExceptionHandler::handleException_L2() const
 		}
 
 		// Select vector base to use and set PC to use the specified vector.
-		if (getVM()->getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::DEV) == 1)
+		if (getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::DEV) == 1)
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+			getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 		}
 		else
 		{
-			getVM()->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+			getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
 	}
 }
 
 void EECoreExceptionHandler::EX_HANDLER_RESET()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	// Initalise all of the COP0 registers.
 	COP0->initalise();
@@ -233,7 +227,7 @@ void EECoreExceptionHandler::EX_HANDLER_RESET()
 
 void EECoreExceptionHandler::EX_HANDLER_NMI()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEV, 1);
 }
@@ -250,7 +244,7 @@ void EECoreExceptionHandler::EX_HANDLER_DEBUG()
 
 void EECoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 	
 	// The EE Core Users Manual page 99 mentions that if an interrupt signal is asserted and deasserted in a very short time, the Cause.IP[i] may not
 	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
@@ -262,7 +256,7 @@ void EECoreExceptionHandler::EX_HANDLER_INTERRUPT()
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
@@ -275,7 +269,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
@@ -289,7 +283,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
@@ -303,8 +297,8 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
-	auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+	auto& COP0 = getResources()->EE->EECore->COP0;
+	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
@@ -318,7 +312,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
@@ -332,7 +326,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 
 void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->writeWordU(0);
@@ -343,7 +337,7 @@ void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 
 void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->writeWordU(0);
@@ -379,7 +373,7 @@ void EECoreExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION()
 
 void EECoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
-	auto& COP0 = getVM()->getResources()->EE->EECore->COP0;
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, mEECoreException->mCOPExceptionInfo.mCOPUnusable);
 }

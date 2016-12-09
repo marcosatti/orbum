@@ -22,6 +22,16 @@ Syncing between the fields and the u32 value:
 
 A class that extends this class must implement get/setBitRange32() in order to sync between the map <==> u32 value.
 */
+
+// Option of whether to throw a runtime error on index out of bounds access. 
+// Turn off if you are sure that no errors will occur and want to debug quicker.
+// Disabled anyway on release builds.
+#if defined(BUILD_DEBUG)
+ #define ERROR_ON_FIELD_INDEX_RANGE 0
+#else
+ #define ERROR_ON_FIELD_INDEX_RANGE 0
+#endif
+
 class BitfieldMap32_t
 {
 public:
@@ -43,7 +53,7 @@ public:
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual const u32 & getFieldValue(const u8 & fieldIndex);
+	inline const u32 & getFieldValue(const u8 & fieldIndex) const;
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
@@ -90,6 +100,15 @@ private:
 	Map which stores all of the registered fields, along with their associated properties.
 	*/
 	static constexpr u8 FIELD_MAP_SIZE = 32;
-	BitfieldProperties_t mFieldMap[32];
+	BitfieldProperties_t mFieldMap[FIELD_MAP_SIZE];
 };
 
+const u32 & BitfieldMap32_t::getFieldValue(const u8 & fieldIndex) const
+{
+#if ERROR_ON_FIELD_INDEX_RANGE
+	if (!(fieldIndex < FIELD_MAP_SIZE))
+		throw std::runtime_error("Invalid map index.");
+#endif
+
+	return mFieldMap[fieldIndex].mFieldValue;
+}

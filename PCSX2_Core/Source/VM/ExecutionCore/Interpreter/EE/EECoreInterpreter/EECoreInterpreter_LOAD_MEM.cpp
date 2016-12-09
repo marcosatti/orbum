@@ -18,8 +18,8 @@
 void EECoreInterpreter::LB()
 {
 	// Rd = MEM[SB]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -35,8 +35,8 @@ void EECoreInterpreter::LB()
 void EECoreInterpreter::LBU()
 {
 	// Rd = MEM[UB]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -52,8 +52,8 @@ void EECoreInterpreter::LBU()
 void EECoreInterpreter::LD()
 {
 	// Rd = MEM[UD]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -73,8 +73,8 @@ void EECoreInterpreter::LDL()
 	// Unaligned memory read. Alignment occurs on an 8 byte boundary, but this instruction allows an unaligned read. LDL is to be used with LDR, to read in a full 64-bit value.
 	// LDL reads in the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LDR.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU(0) + imm;
@@ -103,8 +103,8 @@ void EECoreInterpreter::LDR()
 	// Unaligned memory read. Alignment occurs on an 8 byte boundary, but this instruction allows an unaligned read. LDR is to be used with LDL, to read in a full 64-bit value.
 	// LDR reads in the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LDL.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -128,8 +128,8 @@ void EECoreInterpreter::LDR()
 void EECoreInterpreter::LH()
 {
 	// Rd = MEM[SH]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -145,8 +145,8 @@ void EECoreInterpreter::LH()
 void EECoreInterpreter::LHU()
 {
 	// Rd = MEM[UH]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -162,7 +162,7 @@ void EECoreInterpreter::LHU()
 void EECoreInterpreter::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
 	destReg->writeDwordS(0, static_cast<s64>(imm << 16));
@@ -171,8 +171,8 @@ void EECoreInterpreter::LUI()
 void EECoreInterpreter::LW()
 {
 	// Rd = MEM[SW]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -192,8 +192,8 @@ void EECoreInterpreter::LWL()
 	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWL is to be used with LWR, to read in a full 32-bit value.
 	// LWL reads in the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LDR.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -221,8 +221,8 @@ void EECoreInterpreter::LWR()
 	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWR is to be used with LWL, to read in a full 32-bit value.
 	// LWR reads in the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
 	// Note that the other bytes already in the register are not changed. They are changed through LWL.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
@@ -246,8 +246,8 @@ void EECoreInterpreter::LWR()
 void EECoreInterpreter::LWU()
 {
 	// Rd = MEM[UW]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
@@ -263,8 +263,8 @@ void EECoreInterpreter::LWU()
 void EECoreInterpreter::LQ()
 {
 	// Rd = MEM[UQ]. Address error or TLB error generated.
-	auto& destReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
@@ -275,7 +275,7 @@ void EECoreInterpreter::LQ()
 	// Check for MMU error (1).
 	if (mMMUHandler->hasExceptionOccurred())
 	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		Exceptions->setException(mMMUHandler->getExceptionInfo());
 		return; // Return early, dont bother trying to load the second dword.
 	}
@@ -293,15 +293,15 @@ void EECoreInterpreter::LQ()
 void EECoreInterpreter::LWC1()
 {
 	// Ft = MEM[UQ]. Address error or TLB error generated.
-	if (!getVM()->getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+		auto& Exceptions = getResources()->EE->EECore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 1 };
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 	}
 
-	auto& destReg = getVM()->getResources()->EE->EECore->FPU->FPR[mInstruction.getIRt()]; // Ft
-	auto& sourceReg = getVM()->getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
+	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getIRt()]; // Ft
+	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm);

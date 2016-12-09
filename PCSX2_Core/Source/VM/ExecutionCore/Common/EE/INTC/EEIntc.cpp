@@ -13,27 +13,21 @@
 using ExType = EECoreException_t::ExType;
 
 EEIntc::EEIntc(VMMain * vmMain) : 
-	VMExecutionCoreComponent(vmMain),
-	mClockSources{ ClockSource_t::BUSCLK }
+	VMExecutionCoreComponent(vmMain)
 {
-}
-
-const std::vector<ClockSource_t>& EEIntc::getClockSources()
-{
-	return mClockSources;
 }
 
 s64 EEIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-	const u32 I_STAT = getVM()->getResources()->EE->INTC->REGISTER_STAT->readWordU();
+	const u32 I_STAT = getResources()->EE->INTC->REGISTER_STAT->readWordU();
 	if (I_STAT > 0)
 	{
-		const u32 I_MASK = getVM()->getResources()->EE->INTC->REGISTER_MASK->readWordU();
+		const u32 I_MASK = getResources()->EE->INTC->REGISTER_MASK->readWordU();
 		if ((I_STAT & I_MASK) > 0)
 		{
 			// Generate an INT0 signal/interrupt exception (the EE Core exception handler will determine if it should be masked).
-			auto& Exceptions = getVM()->getResources()->EE->EECore->Exceptions;
+			auto& Exceptions = getResources()->EE->EECore->Exceptions;
 			IntExceptionInfo_t intInfo = { 0, 1, 0 };
 			Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
 		}

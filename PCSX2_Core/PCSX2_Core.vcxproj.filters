@@ -320,6 +320,7 @@
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ZeroRegister8_t.h" />
+    <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -523,6 +524,7 @@
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ZeroRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

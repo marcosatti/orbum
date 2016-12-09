@@ -15,32 +15,32 @@
 
 void IOPCoreInterpreter::MFC0()
 {
-	if (!getVM()->getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
+	if (!getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return;
 	}
 
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
+	auto& sourceReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeWordU(static_cast<u32>(sourceReg->readWordU()));
 }
 
 void IOPCoreInterpreter::MTC0()
 {
-	if (!getVM()->getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
+	if (!getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
 	{
-		auto& Exceptions = getVM()->getResources()->IOP->IOPCore->Exceptions;
+		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 		COPExceptionInfo_t copExInfo = { 0 };
 		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
 		return;
 	}
 
-	auto& sourceReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
+	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
+	auto& destReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeWordU(sourceReg->readWordU());
 }
@@ -48,8 +48,8 @@ void IOPCoreInterpreter::MTC0()
 void IOPCoreInterpreter::MFHI()
 {
 	// Rd = HI. No exceptions.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->HI;
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->HI;
 
 	destReg->writeWordU(source1Reg->readWordU());
 }
@@ -57,8 +57,8 @@ void IOPCoreInterpreter::MFHI()
 void IOPCoreInterpreter::MFLO()
 {
 	// Rd = LO. No exceptions.
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->LO;
+	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->LO;
 
 	destReg->writeWordU(source1Reg->readWordU());
 }
@@ -66,8 +66,8 @@ void IOPCoreInterpreter::MFLO()
 void IOPCoreInterpreter::MTHI()
 {
 	// HI = Rd. No exceptions.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->HI;
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
+	auto& destReg = getResources()->IOP->IOPCore->R3000->HI;
 
 	destReg->writeWordU(source1Reg->readWordU());
 }
@@ -75,8 +75,8 @@ void IOPCoreInterpreter::MTHI()
 void IOPCoreInterpreter::MTLO()
 {
 	// LO = Rd. No exceptions.
-	auto& source1Reg = getVM()->getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
-	auto& destReg = getVM()->getResources()->IOP->IOPCore->R3000->LO;
+	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
+	auto& destReg = getResources()->IOP->IOPCore->R3000->LO;
 
 	destReg->writeWordU(source1Reg->readWordU());
 }

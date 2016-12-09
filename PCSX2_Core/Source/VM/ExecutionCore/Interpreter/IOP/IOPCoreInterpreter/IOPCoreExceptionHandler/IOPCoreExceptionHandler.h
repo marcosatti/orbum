@@ -22,12 +22,6 @@ public:
 	explicit IOPCoreExceptionHandler(VMMain * vmMain);
 
 	/*
-	See VMExecutionCoreComponent for documentation.
-	*/
-	std::vector<ClockSource_t> mClockSources;
-	const std::vector<ClockSource_t> & getClockSources() override;
-
-	/*
 	Check the exception state (PS2Resources->IOP->Exceptions), and make a call to handleException if one is set (and not masked).
 	*/
 	void checkExceptionState();

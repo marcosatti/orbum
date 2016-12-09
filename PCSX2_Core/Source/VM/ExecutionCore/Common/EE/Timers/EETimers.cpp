@@ -13,8 +13,7 @@
 #include "PS2Constants/PS2Constants.h"
 
 EETimers::EETimers(VMMain * vmMain) :
-	VMExecutionCoreComponent(vmMain),
-	mClockSources{ClockSource_t::BUSCLK, ClockSource_t::BUSCLK16, ClockSource_t::BUSCLK256, ClockSource_t::HBLNK}
+	VMExecutionCoreComponent(vmMain)
 {
 }
 
@@ -22,15 +21,10 @@ EETimers::~EETimers()
 {
 }
 
-const std::vector<ClockSource_t>& EETimers::getClockSources()
-{
-	return mClockSources;
-}
-
 s64 EETimers::executionStep(const ClockSource_t & clockSource)
 {
-	auto& Timers = getVM()->getResources()->EE->Timers;
-	auto& GS = getVM()->getResources()->GS;
+	auto& Timers = getResources()->EE->Timers;
+	auto& GS = getResources()->GS;
 	const u8 * gateSources[] = { &GS->SIGNAL_HBLNK, &GS->SIGNAL_VBLNK };
 
 	// Update the timers which are set to count based on the type of event recieved.
@@ -81,7 +75,7 @@ s64 EETimers::executionStep(const ClockSource_t & clockSource)
 
 bool EETimers::isTimerCLKSEqual(const u32 & timerNumber, const ClockSource_t & clockSource) const
 {
-	auto& timer = getVM()->getResources()->EE->Timers->TIMERS[timerNumber];
+	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
 	
 	// Static array used to cast the CLKS into the correct emulator ClockSource_t type. See EE Users Manual page 36.
 	static const ClockSource_t emuCLKS[4] = { ClockSource_t::BUSCLK, ClockSource_t::BUSCLK16, ClockSource_t::BUSCLK256, ClockSource_t::HBLNK };
@@ -95,8 +89,8 @@ bool EETimers::isTimerCLKSEqual(const u32 & timerNumber, const ClockSource_t & c
 
 void EETimers::checkTimerInterrupt(const u32& timerNumber) const
 {
-	auto& I_STAT = getVM()->getResources()->EE->INTC->REGISTER_STAT; 
-	auto& timer = getVM()->getResources()->EE->Timers->TIMERS[timerNumber];
+	auto& I_STAT = getResources()->EE->INTC->REGISTER_STAT; 
+	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
 
 	// Create a temp array of field keys needed for accessing the I_STAT register.
 	u8 timerKeys[] = { EEIntcRegister_STAT_t::Fields::TIM0, EEIntcRegister_STAT_t::Fields::TIM1, EEIntcRegister_STAT_t::Fields::TIM2, EEIntcRegister_STAT_t::Fields::TIM3 };
@@ -122,7 +116,7 @@ void EETimers::checkTimerInterrupt(const u32& timerNumber) const
 
 void EETimers::checkTimerZRET(const u32& timerNumber) const
 {
-	auto& timerRegister = getVM()->getResources()->EE->Timers->TIMERS[timerNumber];
+	auto& timerRegister = getResources()->EE->Timers->TIMERS[timerNumber];
 
 	// Check for ZRET condition.
 	if (timerRegister->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::ZRET))
@@ -138,8 +132,8 @@ void EETimers::checkTimerZRET(const u32& timerNumber) const
 
 bool EETimers::isTimerGateSpecialHBLNK(const u32& timerNumber) const
 {
-	if (getVM()->getResources()->EE->Timers->TIMERS[timerNumber]->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::CLKS) == 3 &&
-		getVM()->getResources()->EE->Timers->TIMERS[timerNumber]->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::GATS) == 0)
+	if (getResources()->EE->Timers->TIMERS[timerNumber]->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::CLKS) == 3 &&
+		getResources()->EE->Timers->TIMERS[timerNumber]->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::GATS) == 0)
 	{
 		return true;
 	}
@@ -151,8 +145,8 @@ bool EETimers::isTimerGateSpecialHBLNK(const u32& timerNumber) const
 
 void EETimers::checkTimerGateReset(const u32& timerNumber) const
 {
-	auto& timer = getVM()->getResources()->EE->Timers->TIMERS[timerNumber];
-	auto& GS = getVM()->getResources()->GS;
+	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
+	auto& GS = getResources()->GS;
 
 	auto GATM = timer->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::GATM);
 	auto GATS = timer->mMODE->getFieldValue(EETimersTimerRegister_Mode_t::Fields::GATS);
