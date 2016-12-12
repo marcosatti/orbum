@@ -4,7 +4,7 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "Common/Types/Memory/Memory_t.h"
-#include "Common/Types/Memory/DeadMemory_t.h"
+#include "Common/Types/Memory/ZeroMemory_t.h"
 
 EEDmac_t::EEDmac_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
@@ -29,11 +29,11 @@ EEDmac_t::EEDmac_t(const PS2Resources_t* const PS2Resources) :
 	REGISTER_RBSR(std::make_shared<EEDmacRegister_RBSR_t>()),
 	REGISTER_RBOR(std::make_shared<EEDmacRegister_RBOR_t>()),
 	REGISTER_STADR(std::make_shared<EEDmacRegister_STADR_t>()),
-	MEMORY_e070(std::make_shared<DeadMemory_t>(0xF90, "DMAC: DMAC_e070 (reserved)")),
+	MEMORY_e070(std::make_shared<ZeroMemory_t>(0xF90, "DMAC: DMAC_e070 (reserved)")),
 	MEMORY_F500(std::make_shared<Memory_t>(0x20, "Undocumented: F500")),
 	REGISTER_ENABLER(std::make_shared<EEDmacRegister_ENABLER_t>()),
-	MEMORY_F530(std::make_shared<DeadMemory_t>(0x60, "DMAC: F530 (reserved)")),
+	MEMORY_F530(std::make_shared<ZeroMemory_t>(0x60, "DMAC: F530 (reserved)")),
 	REGISTER_ENABLEW(std::make_shared<EEDmacRegister_ENABLEW_t>()),
-	MEMORY_F5A0(std::make_shared<DeadMemory_t>(0x60, "DMAC: F5A0 (reserved)"))
+	MEMORY_F5A0(std::make_shared<ZeroMemory_t>(0x60, "DMAC: F5A0 (reserved)"))
 {
 }

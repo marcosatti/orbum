@@ -5,16 +5,16 @@
 #include "Common/Types/Memory/Memory_t.h"
 
 /*
-A 'dead' storage object, where reads return 0 and writes do nothing.
+A zero-ed memory object, where reads return 0 and writes do nothing.
 Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
 The size parameter in the constructor is used only for Physical MMU mapping purposes.
 The parsed size is not allocated (always set to 0 in the underlying MappedMemory_t).
 */
-class DeadMemory_t : public Memory_t
+class ZeroMemory_t : public Memory_t
 {
 public:
-	DeadMemory_t(const size_t & size, const char *const mnemonic);
-	~DeadMemory_t();
+	ZeroMemory_t(const size_t & size, const char *const mnemonic);
+	~ZeroMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;

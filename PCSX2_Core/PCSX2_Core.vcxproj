@@ -331,12 +331,14 @@
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
+    <ClInclude Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\DebugRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\ZeroRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\PCRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
@@ -349,7 +351,7 @@
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0Registers_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreInstruction_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.h" />
+    <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.h" />
@@ -367,6 +369,9 @@
     <ClInclude Include="Source\Common\Types\Registers\Register16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\FPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister32_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.h" />
     <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
@@ -392,7 +397,7 @@
     <ClInclude Include="Source\PS2Resources\EE\INTC\EEIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\INTC\Types\EEIntcRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacRegisters_t.h" />
-    <ClInclude Include="Source\PS2Resources\EE\SIF\SIF_t.h" />
+    <ClInclude Include="Source\PS2Resources\SIF\SIF_t.h" />
     <ClInclude Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLBEntryInfo_t.h" />
@@ -410,7 +415,7 @@
     <ClInclude Include="Source\PS2Resources\GS\GS_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Types\EERegisters_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\BusErrMemory_t.h" />
-    <ClInclude Include="Source\Common\Types\Memory\DeadMemory_t.h" />
+    <ClInclude Include="Source\Common\Types\Memory\ZeroMemory_t.h" />
     <ClInclude Include="Source\Common\Util\MMUUtil\MMUUtil.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreExceptions_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLB_t.h" />
@@ -462,12 +467,14 @@
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
     <ClCompile Include="Source\Common\Interfaces\PhysicalMapped.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\DebugRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\ZeroRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\PCRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
@@ -479,7 +486,7 @@
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.cpp" />
@@ -510,6 +517,9 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_COP2.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.cpp" />
@@ -529,7 +539,7 @@
     <ClCompile Include="Source\PS2Resources\EE\INTC\EEIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\INTC\Types\EEIntcRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacRegisters_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\SIF\SIF_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\SIF\SIF_t.cpp" />
     <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Types\BitfieldMap32\BitfieldMap32_t.cpp" />
@@ -576,7 +586,7 @@
     <ClCompile Include="Source\PS2Resources\EE\Types\EERegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\PS2Resources_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\BusErrMemory_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Memory\DeadMemory_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Memory\ZeroMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\MMUUtil\MMUUtil.cpp" />

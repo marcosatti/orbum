@@ -28,7 +28,7 @@ class EEDmacRegister_ENABLEW_t;
 class EEDmacRegister_ENABLER_t;
 
 class Memory_t;
-class DeadMemory_t;
+class ZeroMemory_t;
 
 class EEDmac_t : public PS2ResourcesSubobject
 {
@@ -62,11 +62,11 @@ public:
 	std::shared_ptr<EEDmacRegister_RBSR_t>    REGISTER_RBSR;
 	std::shared_ptr<EEDmacRegister_RBOR_t>    REGISTER_RBOR;
 	std::shared_ptr<EEDmacRegister_STADR_t>   REGISTER_STADR;
-	std::shared_ptr<DeadMemory_t>             MEMORY_e070;
+	std::shared_ptr<ZeroMemory_t>             MEMORY_e070;
 	std::shared_ptr<Memory_t>                 MEMORY_F500;        // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F520. Not in manual!
 	std::shared_ptr<EEDmacRegister_ENABLER_t> REGISTER_ENABLER;
-	std::shared_ptr<DeadMemory_t>             MEMORY_F530;
+	std::shared_ptr<ZeroMemory_t>             MEMORY_F530;
 	std::shared_ptr<EEDmacRegister_ENABLEW_t> REGISTER_ENABLEW;
-	std::shared_ptr<DeadMemory_t>             MEMORY_F5A0;
+	std::shared_ptr<ZeroMemory_t>             MEMORY_F5A0;
 };
 

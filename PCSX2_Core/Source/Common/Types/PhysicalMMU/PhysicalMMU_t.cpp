@@ -178,7 +178,7 @@ std::shared_ptr<PhysicalMapped> & PhysicalMMU_t::getMappedMemory(u32 baseVDN, u3
 	if (tableDirectory == nullptr)
 	{
 		char message[1000];
-		sprintf_s(message, "Not found: Given baseVDN returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", baseVDN, baseVPN);
+		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", (baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS)), baseVDN, baseVPN);
 		throw std::runtime_error(message);
 	}
 #endif
@@ -188,7 +188,7 @@ std::shared_ptr<PhysicalMapped> & PhysicalMMU_t::getMappedMemory(u32 baseVDN, u3
 	if (mappedMemory == nullptr)
 	{
 		char message[1000];
-		sprintf_s(message, "Not found: Given baseVPN returned a null PFN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", baseVDN, baseVPN);
+		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null PFN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", (baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS)), baseVDN, baseVPN);
 		throw std::runtime_error(message);
 	}
 #endif

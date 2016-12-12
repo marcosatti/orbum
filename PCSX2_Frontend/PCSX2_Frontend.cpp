@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "VM/VmMain.h"
+#include "VM/VMMain.h"
 #include "VM/Types/VMOptions_t.h"
 #include <fstream>
 
@@ -25,9 +25,17 @@ int main()
 		ExecutionCore_t::Interpreter
 	};
 
-	VMMain vm(vmOptions);
-
-	vm.Run();
+	try 
+	{
+		VMMain vm(vmOptions);
+		vm.Run();
+	}
+	catch (std::exception ex)
+	{
+		std::string msg("EXCEPTION: ");
+		msg += ex.what();
+		log(msg.c_str());
+	}
 
 	logFile.close();
 	

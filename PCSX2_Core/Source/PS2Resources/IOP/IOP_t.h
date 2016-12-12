@@ -6,6 +6,7 @@
 
 class IOPCore_t;
 class CDVD_t;
+class IOPTimers_t;
 class Memory_t;
 class DebugMemory_t;
 class PhysicalMMU_t;
@@ -16,7 +17,6 @@ There is no official documentation - some online resources exist for the PS1 whi
  it has been reversed engineered.
 Big props to the PCSX2 team here - most of the implementation is based off their work.
 */
-
 class IOP_t : public PS2ResourcesSubobject
 {
 public:
@@ -33,6 +33,11 @@ public:
 	std::shared_ptr<CDVD_t> CDVD;
 
 	/*
+	Timers resources.
+	*/
+	std::shared_ptr<IOPTimers_t> Timers;
+
+	/*
 	The IOP physical memory space.
 	*/
 	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
@@ -43,15 +48,8 @@ public:
 	std::shared_ptr<Memory_t> MainMemory;
 
 	/*
-	IOP Parallel Port IO (?, 64KB). Allocated at 0x1F000000.
+	IOP Parallel Port IO (64KB). Allocated at 0x1F000000.
 	*/
 	std::shared_ptr<Memory_t> ParallelPort;
-
-	/*
-	HW mapped registers (64KB or 8KB?). Allocated at 0x1F801000.
-	DEBUG
-	*/
-	std::shared_ptr<Memory_t> IOP_HW_REGISTERS;
-
 
 };

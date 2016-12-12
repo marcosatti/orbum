@@ -8,10 +8,13 @@
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/GS/GS_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/SIF/SIF_t.h"
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/PCRegister16_t.h"
 #include "Common/Types/Registers/ZeroRegister8_t.h"
+#include "Common/Types/Registers/ZeroRegister32_t.h"
+#include "Common/Types/Registers/DebugRegister32_t.h"
 #include "Common/Types/Registers/WrapperR16Register32_t.h"
 #include "Common/Types/Registers/WrapperF32Register32_t.h"
 
@@ -19,7 +22,7 @@
 #include "PS2Resources/EE/Types/BootROM_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/Timers/EETimers_t.h"
-#include "PS2Resources/EE/Timers/Types/EETimersTimers_t.h"
+#include "PS2Resources/EE/Timers/Types/EETimersTimer_t.h"
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 #include "PS2Resources/EE/DMAC/EEDmac_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
@@ -41,12 +44,16 @@
 
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/CDVD/CDVD_t.h"
+#include "PS2Resources/IOP/Timers/IOPTimers_t.h"
+#include "PS2Resources/IOP/Timers/Types/IOPTimersTimer_t.h"
+#include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 
 PS2Resources_t::PS2Resources_t() :
 	Clock(std::make_shared<Clock_t>()),
 	GS(std::make_shared<GS_t>(this)),
 	EE(std::make_shared<EE_t>(this)),
-	IOP(std::make_shared<IOP_t>(this))
+	IOP(std::make_shared<IOP_t>(this)),
+	SIF(std::make_shared<SIF_t>(this))
 {
 	initPhysicalMemoryMap_EE();
 	initPhysicalMemoryMap_IOP();
@@ -79,7 +86,6 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 	{
 		// MISC EE registers.
 		EE->PhysicalMMU->mapMemory(0x1000F100, EE->MEMORY_SIO);
-		EE->PhysicalMMU->mapMemory(0x1000f230, EE->REGISTER_SB_SMFLG);
 		EE->PhysicalMMU->mapMemory(0x1000f400, EE->REGISTER_F400);
 		EE->PhysicalMMU->mapMemory(0x1000f410, EE->MEMORY_F410);
 		EE->PhysicalMMU->mapMemory(0x1000f420, EE->REGISTER_F420);
@@ -87,20 +93,20 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 		EE->PhysicalMMU->mapMemory(0x1000f450, EE->MEMORY_F450);
 
 		// Timers Registers.
-		EE->PhysicalMMU->mapMemory(0x10000000, EE->Timers->TIMER0->mCOUNT);
-		EE->PhysicalMMU->mapMemory(0x10000010, EE->Timers->TIMER0->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10000020, EE->Timers->TIMER0->mCOMP);
-		EE->PhysicalMMU->mapMemory(0x10000030, EE->Timers->TIMER0->mHOLD);
-		EE->PhysicalMMU->mapMemory(0x10000800, EE->Timers->TIMER1->mCOUNT);
-		EE->PhysicalMMU->mapMemory(0x10000810, EE->Timers->TIMER1->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10000820, EE->Timers->TIMER1->mCOMP);
-		EE->PhysicalMMU->mapMemory(0x10000830, EE->Timers->TIMER1->mHOLD);
-		EE->PhysicalMMU->mapMemory(0x10001000, EE->Timers->TIMER2->mCOUNT);
-		EE->PhysicalMMU->mapMemory(0x10001010, EE->Timers->TIMER2->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10001020, EE->Timers->TIMER2->mCOMP);
-		EE->PhysicalMMU->mapMemory(0x10001800, EE->Timers->TIMER3->mCOUNT);
-		EE->PhysicalMMU->mapMemory(0x10001810, EE->Timers->TIMER3->mMODE);
-		EE->PhysicalMMU->mapMemory(0x10001820, EE->Timers->TIMER3->mCOMP);
+		EE->PhysicalMMU->mapMemory(0x10000000, EE->Timers->TIMER_0->Count);
+		EE->PhysicalMMU->mapMemory(0x10000010, EE->Timers->TIMER_0->Mode);
+		EE->PhysicalMMU->mapMemory(0x10000020, EE->Timers->TIMER_0->Compare);
+		EE->PhysicalMMU->mapMemory(0x10000030, EE->Timers->TIMER_0->Hold);
+		EE->PhysicalMMU->mapMemory(0x10000800, EE->Timers->TIMER_1->Count);
+		EE->PhysicalMMU->mapMemory(0x10000810, EE->Timers->TIMER_1->Mode);
+		EE->PhysicalMMU->mapMemory(0x10000820, EE->Timers->TIMER_1->Compare);
+		EE->PhysicalMMU->mapMemory(0x10000830, EE->Timers->TIMER_1->Hold);
+		EE->PhysicalMMU->mapMemory(0x10001000, EE->Timers->TIMER_2->Count);
+		EE->PhysicalMMU->mapMemory(0x10001010, EE->Timers->TIMER_2->Mode);
+		EE->PhysicalMMU->mapMemory(0x10001020, EE->Timers->TIMER_2->Compare);
+		EE->PhysicalMMU->mapMemory(0x10001800, EE->Timers->TIMER_3->Count);
+		EE->PhysicalMMU->mapMemory(0x10001810, EE->Timers->TIMER_3->Mode);
+		EE->PhysicalMMU->mapMemory(0x10001820, EE->Timers->TIMER_3->Compare);
 
 		// IPU Registers.
 		EE->PhysicalMMU->mapMemory(0x10002000, EE->IPU->REGISTER_CMD);
@@ -282,8 +288,15 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 
 	// IOP Mirrors
 	{
-		EE->PhysicalMMU->mapMemory(0x1F801000, IOP->IOP_HW_REGISTERS);
 		EE->PhysicalMMU->mapMemory(0x1C000000, IOP->MainMemory);
+	}
+
+	// SIF Registers
+	{
+		EE->PhysicalMMU->mapMemory(0x1000f200, SIF->REGISTER_MSCOM);
+		EE->PhysicalMMU->mapMemory(0x1000f210, SIF->REGISTER_SMCOM);
+		EE->PhysicalMMU->mapMemory(0x1000f220, SIF->REGISTER_MSFLG);
+		EE->PhysicalMMU->mapMemory(0x1000f230, SIF->REGISTER_SMFLG);
 	}
 }
 
@@ -307,21 +320,13 @@ void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 
 	// IOP Registers.
 	{
-		// Parallel Port.
-		IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
-
-		// HW Registers.
-		IOP->PhysicalMMU->mapMemory(0x1F801000, IOP->IOP_HW_REGISTERS);
-	}
-
-	// CDVD Registers.
-	{
+		// CDVD Registers.
 		IOP->PhysicalMMU->mapMemory(0x1F402004, IOP->CDVD->NCommand);
 		IOP->PhysicalMMU->mapMemory(0x1F402005, IOP->CDVD->NReady);
 		IOP->PhysicalMMU->mapMemory(0x1F402006, IOP->CDVD->Error);
 		IOP->PhysicalMMU->mapMemory(0x1F402007, IOP->CDVD->Break);
 		IOP->PhysicalMMU->mapMemory(0x1F402008, IOP->CDVD->Status);
-		IOP->PhysicalMMU->mapMemory(0x1F40200A, IOP->CDVD->Status); // Mirrored.
+		IOP->PhysicalMMU->mapMemory(0x1F40200A, IOP->CDVD->Status); // Mirrored?
 		IOP->PhysicalMMU->mapMemory(0x1F40200B, IOP->CDVD->TrayState);
 		IOP->PhysicalMMU->mapMemory(0x1F40200C, IOP->CDVD->CRTMinute);
 		IOP->PhysicalMMU->mapMemory(0x1F40200D, IOP->CDVD->CRTSecond);
@@ -350,6 +355,45 @@ void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 		IOP->PhysicalMMU->mapMemory(0x1F402038, IOP->CDVD->Key38);
 		IOP->PhysicalMMU->mapMemory(0x1F402039, IOP->CDVD->KeyXor);
 		IOP->PhysicalMMU->mapMemory(0x1F40203A, IOP->CDVD->DecSet);
+
+		// Timers Registers.
+		IOP->PhysicalMMU->mapMemory(0x1F801100, IOP->Timers->TIMER_0->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801104, IOP->Timers->TIMER_0->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801108, IOP->Timers->TIMER_0->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801110, IOP->Timers->TIMER_1->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801114, IOP->Timers->TIMER_1->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801118, IOP->Timers->TIMER_1->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801120, IOP->Timers->TIMER_2->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801124, IOP->Timers->TIMER_2->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801128, IOP->Timers->TIMER_2->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801130, IOP->Timers->TIMER_3->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801134, IOP->Timers->TIMER_3->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801138, IOP->Timers->TIMER_3->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801140, IOP->Timers->TIMER_4->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801144, IOP->Timers->TIMER_4->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801148, IOP->Timers->TIMER_4->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801150, IOP->Timers->TIMER_5->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801154, IOP->Timers->TIMER_5->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801158, IOP->Timers->TIMER_5->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801160, IOP->Timers->TIMER_6->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801164, IOP->Timers->TIMER_6->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801168, IOP->Timers->TIMER_6->Compare);
+		IOP->PhysicalMMU->mapMemory(0x1F801170, IOP->Timers->TIMER_7->Count);
+		IOP->PhysicalMMU->mapMemory(0x1F801174, IOP->Timers->TIMER_7->Mode);
+		IOP->PhysicalMMU->mapMemory(0x1F801178, IOP->Timers->TIMER_7->Compare);
+
+		// Parallel Port.
+		IOP->PhysicalMMU->mapMemory(PS2Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
+
+	}
+
+	// SIF Registers
+	{
+		IOP->PhysicalMMU->mapMemory(0x1D000000, SIF->REGISTER_MSCOM);
+		IOP->PhysicalMMU->mapMemory(0x1D000010, SIF->REGISTER_SMCOM);
+		IOP->PhysicalMMU->mapMemory(0x1D000020, SIF->REGISTER_MSFLG);
+		IOP->PhysicalMMU->mapMemory(0x1D000030, SIF->REGISTER_SMFLG);
+		IOP->PhysicalMMU->mapMemory(0x1D000060, SIF->REGISTER_1D000060);
 	}
 }
 
@@ -372,7 +416,6 @@ void PS2Resources_t::initPhysicalMemoryMap_VU0() const
 		// VI Registers. Aligned on 128-bit boundaries, accessed by 32-bit r/w, but upper 16-bits discarded! 
 		// NOT mapped as the true register size of 16-bit (need to do a Register32_t wrapping)! 
 		// See EE Users Manual page 84.
-		// The upper 112-bits are left unmapped.
 		for (auto i = 0; i < PS2Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
 			EE->VPU->VU->VU0->MemPhysicalMMU->mapMemory(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, std::make_shared<WrapperR16Register32_t>(EE->VPU->VU->VU1->VI[i]));
 

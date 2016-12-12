@@ -6,7 +6,7 @@
 #include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
-EETimers updates TIMER0, TIMER1, TIMER2, TIMER3 as defined in the EE Users Manual, starting on page 33.
+EETimers updates TIMER_0, TIMER_1, TIMER_2, TIMER_3 as defined in the EE Users Manual, starting on page 33.
 
 The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 or HBLNK clocks.
 */

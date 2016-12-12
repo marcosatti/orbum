@@ -4,7 +4,7 @@
 
 #include "PS2Resources/GS/GS_t.h"
 #include "Common/Types/Memory/Memory_t.h"
-#include "Common/Types/Memory/DeadMemory_t.h"
+#include "Common/Types/Memory/ZeroMemory_t.h"
 #include "Common/Types/Memory/BusErrMemory_t.h"
 
 GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
@@ -26,16 +26,16 @@ GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
 	GS_P_REGISTER_EXTDATA(std::make_shared<Memory_t>(0x04, "SPE: EXTDATA")),
 	GS_P_REGISTER_EXTWRITE(std::make_shared<Memory_t>(0x04, "SPE: EXTWRITE")),
 	GS_P_REGISTER_BGCOLOR(std::make_shared<Memory_t>(0x04, "SPE: BGCOLOR")),
-	GS_P_REGISTER_SPE_00f0(std::make_shared<DeadMemory_t>(0x310, "SPE: SPE_00f0 (reserved)")),
+	GS_P_REGISTER_SPE_00f0(std::make_shared<ZeroMemory_t>(0x310, "SPE: SPE_00f0 (reserved)")),
 	GS_P_REGISTER_CSR(std::make_shared<Memory_t>(0x04, "SPE: CSR")),
 	GS_P_REGISTER_IMR(std::make_shared<Memory_t>(0x04, "SPE: IMR")),
-	GS_P_REGISTER_SPE_1020(std::make_shared<DeadMemory_t>(0x20, "SPE: SPE_1020 (reserved)")),
+	GS_P_REGISTER_SPE_1020(std::make_shared<ZeroMemory_t>(0x20, "SPE: SPE_1020 (reserved)")),
 	GS_P_REGISTER_BUSDIR(std::make_shared<Memory_t>(0x04, "SPE: BUSDIR")),
-	GS_P_REGISTER_SPE_1050(std::make_shared<DeadMemory_t>(0x30, "SPE: SPE_1050 (reserved)")),
+	GS_P_REGISTER_SPE_1050(std::make_shared<ZeroMemory_t>(0x30, "SPE: SPE_1050 (reserved)")),
 	GS_P_REGISTER_SIGLBLID(std::make_shared<Memory_t>(0x04, "SPE: SIGLBLID")),
-	GS_P_REGISTER_SPE_1090(std::make_shared<DeadMemory_t>(0x60, "SPE: SPE_1090 (reserved)")),
-	GS_P_REGISTER_SPE_1100(std::make_shared<DeadMemory_t>(0x300, "SPE: SPE_1100 (reserved)")),
-	GS_P_REGISTER_SPE_2000(std::make_shared<DeadMemory_t>(0xE000, "SPE: SPE_2000 (reserved)")),
+	GS_P_REGISTER_SPE_1090(std::make_shared<ZeroMemory_t>(0x60, "SPE: SPE_1090 (reserved)")),
+	GS_P_REGISTER_SPE_1100(std::make_shared<ZeroMemory_t>(0x300, "SPE: SPE_1100 (reserved)")),
+	GS_P_REGISTER_SPE_2000(std::make_shared<ZeroMemory_t>(0xE000, "SPE: SPE_2000 (reserved)")),
 	GS_P_REGISTER_SPEBusErr(std::make_shared<BusErrMemory_t>(0x1FF0000, "SPE: SPEBusErr"))
 {
 }

@@ -33,10 +33,11 @@ TODO: find a better solution? Don't think there is one besides sacraficing more 
 
 */
 
+class Clock_t;
 class EE_t;
 class GS_t;
 class IOP_t;
-class Clock_t;
+class SIF_t;
 
 class PS2Resources_t
 {
@@ -63,6 +64,10 @@ public:
 	*/
 	std::shared_ptr<IOP_t> IOP;
 
+	/*
+	The SIF structure (shared between EE and IOP).
+	*/
+	std::shared_ptr<SIF_t> SIF;
 
 private:
 

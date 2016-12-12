@@ -180,6 +180,11 @@ public:
 			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
 		};
 
+		struct Timers
+		{
+			static constexpr u32 NUMBER_TIMERS = 8;
+		};
+
 		struct IOPMemory
 		{
 			// IOP Memory. No official documentation - from PCSX2. 

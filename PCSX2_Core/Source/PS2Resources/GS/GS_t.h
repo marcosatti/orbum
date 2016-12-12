@@ -10,7 +10,7 @@ GS_t defines the structure needed for the GS (graphics synthesiser unit).
 
 class PS2Resources_t;
 class Memory_t;
-class DeadMemory_t;
+class ZeroMemory_t;
 class BusErrMemory_t;
 
 class GS_t : public PS2ResourcesSubobject
@@ -55,20 +55,20 @@ public:
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_EXTDATA;
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_EXTWRITE;
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_BGCOLOR;
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_00f0;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_00f0;
 
 	// 0x12001000.
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_CSR;
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_IMR;
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_1020;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_1020;
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_BUSDIR;
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_1050;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_1050;
 	std::shared_ptr<Memory_t>         GS_P_REGISTER_SIGLBLID;
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_1090;
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_1100;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_1090;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_1100;
 
 	// 0x12002000.
-	std::shared_ptr<DeadMemory_t>     GS_P_REGISTER_SPE_2000;
+	std::shared_ptr<ZeroMemory_t>     GS_P_REGISTER_SPE_2000;
 	std::shared_ptr<BusErrMemory_t> GS_P_REGISTER_SPEBusErr;
 
 };

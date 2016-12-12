@@ -6,11 +6,11 @@
 #include "PS2Constants/PS2Constants.h"
 
 class EETimersTimer_t;
-class EETimersTimer_Timer0_t;
-class EETimersTimer_Timer1_t;
-class EETimersTimer_Timer2_t;
-class EETimersTimer_Timer3_t;
 
+/*
+The EE Timers resources.
+Defines the 4 timers within the EE, as listed on page 33 onwards of the EE Users Manual.
+*/
 class EETimers_t : public PS2ResourcesSubobject
 {
 public:
@@ -21,11 +21,11 @@ public:
 	See EE Users Manual page 33 onwards.
 	Also provided is an array used in iterations.
 	*/
-	std::shared_ptr<EETimersTimer_Timer0_t> TIMER0;
-	std::shared_ptr<EETimersTimer_Timer1_t> TIMER1;
-	std::shared_ptr<EETimersTimer_Timer2_t> TIMER2;
-	std::shared_ptr<EETimersTimer_Timer3_t> TIMER3;
-	std::shared_ptr<EETimersTimer_t>        TIMERS[PS2Constants::EE::Timers::NUMBER_TIMERS];
+	std::shared_ptr<EETimersTimer_t> TIMER_0;
+	std::shared_ptr<EETimersTimer_t> TIMER_1;
+	std::shared_ptr<EETimersTimer_t> TIMER_2;
+	std::shared_ptr<EETimersTimer_t> TIMER_3;
+	std::shared_ptr<EETimersTimer_t> TIMERS[PS2Constants::EE::Timers::NUMBER_TIMERS];
 
 };
 

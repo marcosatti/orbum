@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
-#include <Common/Types/Memory/DeadMemory_t.h>
+#include <Common/Types/Memory/ZeroMemory_t.h>
 
 /*
 EEDmacChannels_t defines all of the channels available in the EE DMAC.
@@ -119,7 +119,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -139,7 +139,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -159,7 +159,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -179,7 +179,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -199,7 +199,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -219,7 +219,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -239,7 +239,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -259,7 +259,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED;
+	std::shared_ptr<ZeroMemory_t> mRESERVED;
 };
 
 /*
@@ -279,8 +279,8 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED0;
-	std::shared_ptr<DeadMemory_t> mRESERVED1;
+	std::shared_ptr<ZeroMemory_t> mRESERVED0;
+	std::shared_ptr<ZeroMemory_t> mRESERVED1;
 };
 
 /*
@@ -300,6 +300,6 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<DeadMemory_t> mRESERVED0;
-	std::shared_ptr<DeadMemory_t> mRESERVED1;
+	std::shared_ptr<ZeroMemory_t> mRESERVED0;
+	std::shared_ptr<ZeroMemory_t> mRESERVED1;
 };

@@ -28,7 +28,7 @@ const ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0xFA0, "EE DMAC VIF0 Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0xFA0, "EE DMAC VIF0 Reserved Memory"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 	mASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>();
@@ -37,7 +37,7 @@ EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t() :
 
 EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0xFA0, "EE DMAC VIF1 Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0xFA0, "EE DMAC VIF1 Reserved Memory"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 	mASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>();
@@ -46,7 +46,7 @@ EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t() :
 
 EEDmacChannel_GIF_t::EEDmacChannel_GIF_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0xFA0, "EE DMAC GIF Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0xFA0, "EE DMAC GIF Reserved Memory"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 	mASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>();
@@ -55,48 +55,48 @@ EEDmacChannel_GIF_t::EEDmacChannel_GIF_t() :
 
 EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0x3D0, "EE DMAC fromIPU Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0x3D0, "EE DMAC fromIPU Reserved Memory"))
 {
 }
 
 EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0xBC0, "EE DMAC toIPU Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0xBC0, "EE DMAC toIPU Reserved Memory"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 }
 
 EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0x3D0, "EE DMAC SIF0 Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0x3D0, "EE DMAC SIF0 Reserved Memory"))
 {
 }
 
 EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0x3C0, "EE DMAC SIF1 Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0x3C0, "EE DMAC SIF1 Reserved Memory"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 }
 
 EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED(std::make_shared<DeadMemory_t>(0x7D0, "EE DMAC SIF2 Reserved Memory"))
+	mRESERVED(std::make_shared<ZeroMemory_t>(0x7D0, "EE DMAC SIF2 Reserved Memory"))
 {
 }
 
 EEDmacChannel_fromSPR_t::EEDmacChannel_fromSPR_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED0(std::make_shared<DeadMemory_t>(0x50, "EE DMAC fromSPR Reserved Memory0")),
-	mRESERVED1(std::make_shared<DeadMemory_t>(0x370, "EE DMAC fromSPR Reserved Memory1"))
+	mRESERVED0(std::make_shared<ZeroMemory_t>(0x50, "EE DMAC fromSPR Reserved Memory0")),
+	mRESERVED1(std::make_shared<ZeroMemory_t>(0x370, "EE DMAC fromSPR Reserved Memory1"))
 {
 	mSADR = std::make_shared<EEDmacChannelRegister_SADR_t>();
 }
 
 EEDmacChannel_toSPR_t::EEDmacChannel_toSPR_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	mRESERVED0(std::make_shared<DeadMemory_t>(0x40, "EE DMAC toSPR Reserved Memory0")),
-	mRESERVED1(std::make_shared<DeadMemory_t>(0xB70, "EE DMAC fromSPR Reserved Memory1"))
+	mRESERVED0(std::make_shared<ZeroMemory_t>(0x40, "EE DMAC toSPR Reserved Memory0")),
+	mRESERVED1(std::make_shared<ZeroMemory_t>(0xB70, "EE DMAC fromSPR Reserved Memory1"))
 {
 	mTADR = std::make_shared<EEDmacChannelRegister_TADR_t>();
 	mSADR = std::make_shared<EEDmacChannelRegister_SADR_t>();
