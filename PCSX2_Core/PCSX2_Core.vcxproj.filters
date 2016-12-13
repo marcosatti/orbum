@@ -200,10 +200,6 @@
       <Filter>Source\Common\Types\Registers</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Types\Registers\RevBitfieldRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister128_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PS2Resources\Clock\Types\ClockSource_t.h" />
     <ClInclude Include="Source\PS2Resources\Clock\Clock_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\DMAtag_t.h" />
@@ -283,8 +279,6 @@
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ZeroFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0\Types</Filter>
     </ClInclude>
@@ -316,16 +310,23 @@
     <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ZeroRegister8_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
     <ClInclude Include="Source\PS2Resources\SIF\SIF_t.h" />
-    <ClInclude Include="Source\Common\Types\Memory\ZeroMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\DebugRegister32_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ConstantFPRegister128_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister8_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister128_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Memory\ConstantMemory_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -394,10 +395,6 @@
       <Filter>Source\Common\Types\Registers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Types\Registers\RevBitfieldRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister128_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PS2Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\DMAtag_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\EECore_t.cpp" />
@@ -490,8 +487,6 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ZeroFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\COP0Registers_t.cpp" />
     <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
@@ -525,16 +520,23 @@
     <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ZeroRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
     <ClCompile Include="Source\PS2Resources\SIF\SIF_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Memory\ZeroMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\DebugRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ConstantFPRegister128_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister128_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Memory\ConstantMemory_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

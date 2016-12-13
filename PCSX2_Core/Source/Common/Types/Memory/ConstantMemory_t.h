@@ -5,16 +5,16 @@
 #include "Common/Types/Memory/Memory_t.h"
 
 /*
-A zero-ed memory object, where reads return 0 and writes do nothing.
+A constant memory object, where reads return the constant u64 value (downcasted where appropriate) set at creation and writes do nothing.
 Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
 The size parameter in the constructor is used only for Physical MMU mapping purposes.
-The parsed size is not allocated (always set to 0 in the underlying MappedMemory_t).
+The parsed size is not allocated (always set to 0 in the underlying Memory_t).
 */
-class ZeroMemory_t : public Memory_t
+class ConstantMemory_t : public Memory_t
 {
 public:
-	ZeroMemory_t(const size_t & size, const char *const mnemonic);
-	~ZeroMemory_t();
+	ConstantMemory_t(const size_t & size, const char *const mnemonic, const u64 D = 0);
+	~ConstantMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -41,5 +41,6 @@ public:
 
 private:
 	const size_t mSize; // Provided for debug only.
+	const u64 mConstantValue; // Set at creation, returned in the read function calls.
 };
 

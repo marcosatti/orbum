@@ -5,7 +5,7 @@
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/Registers/ZeroRegister128_t.h"
+#include "Common/Types/Registers/ConstantRegister128_t.h"
 #include "Common/Types/Registers/PCRegister32_t.h"
 #include "Common/Types/Registers/LinkRegister128_t.h"
 
@@ -15,7 +15,7 @@ EECoreR5900_t::EECoreR5900_t(const PS2Resources_t* const PS2Resources) :
 	mBranchDelayCycles(0),
 	mBranchDelayPCTarget(0x0),
 	PC(std::make_shared<PCRegister32_t>()),
-	ZeroRegister(std::make_shared<ZeroRegister128_t>()),
+	ZeroRegister(std::make_shared<ConstantRegister128_t>()),
 	LinkRegister(std::make_shared<LinkRegister128_t>(PC)),
 	GPR{ ZeroRegister, std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),
 		std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(), std::make_shared<Register128_t>(),

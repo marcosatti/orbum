@@ -10,7 +10,7 @@ class PS2Resources_t;
 class Register32_t;
 class PCRegister32_t;
 class LinkRegister32_t;
-class ZeroRegister32_t;
+class ConstantRegister32_t;
 
 /*
 The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
@@ -60,7 +60,7 @@ public:
 	GPR[0] is hardwired to 0.
 	GPR[31] is known as the link register.
 	*/
-	std::shared_ptr<ZeroRegister32_t> ZeroRegister;
+	std::shared_ptr<ConstantRegister32_t> ZeroRegister;
 	std::shared_ptr<LinkRegister32_t> LinkRegister;
 	std::shared_ptr<Register32_t> GPR[PS2Constants::IOP::IOPCore::R3000A::NUMBER_GP_REGISTERS];
 

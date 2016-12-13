@@ -5,7 +5,7 @@
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 class Register8_t;
-class ZeroRegister8_t;
+class ConstantRegister8_t;
 
 /*
 Describes the CD-ROM / DVD resources that is attached through the IOP.
@@ -26,7 +26,7 @@ public:
 	std::shared_ptr<Register8_t>     NCommand;  // Register "NCommand"  @ 0x1F402004.
 	std::shared_ptr<Register8_t>     NReady;    // Register "NReady"    @ 0x1F402005.
 	std::shared_ptr<Register8_t>     Error;     // Register "Error"     @ 0x1F402006.
-	std::shared_ptr<ZeroRegister8_t> Break;     // Register "Break"     @ 0x1F402007.
+	std::shared_ptr<ConstantRegister8_t> Break;     // Register "Break"     @ 0x1F402007.
 	std::shared_ptr<Register8_t>     Status;    // Register "Status"    @ 0x1F402008 and 0x1F40200A (mirror).
 	std::shared_ptr<Register8_t>     TrayState; // Register "TrayState" @ 0x1F40200B.
 	std::shared_ptr<Register8_t>     CRTMinute; // Register "CRTMinute" @ 0x1F40200C.

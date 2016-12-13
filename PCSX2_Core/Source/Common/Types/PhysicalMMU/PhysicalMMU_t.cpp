@@ -47,7 +47,7 @@ PhysicalMMU_t::~PhysicalMMU_t()
 	delete[] mPageTable;
 }
 
-void PhysicalMMU_t::mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMapped)
+void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped> & physicalMapped)
 {
 	// Do not do anything for getSize equal to 0.
 	if (physicalMapped->getSize() == 0) 
@@ -94,39 +94,39 @@ void PhysicalMMU_t::mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMa
 	}
 }
 
-void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr<Memory_t>& memory)
+void PhysicalMMU_t::mapObject(const u32 & physicalAddress, const std::shared_ptr<Memory_t>& memory)
 {
-	mapMemory(std::make_shared<MappedMemory_t>(physicalAddress, memory));
+	mapObject(std::make_shared<MappedMemory_t>(physicalAddress, memory));
 }
 
-void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register8_t>& register8)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<Register8_t>& register8)
 {
-	mapMemory(std::make_shared<MappedRegister8_t>(physicalAddress, register8));
+	mapObject(std::make_shared<MappedRegister8_t>(physicalAddress, register8));
 }
 
-void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register16_t>& register16)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<Register16_t>& register16)
 {
-	mapMemory(std::make_shared<MappedRegister16_t>(physicalAddress, register16));
+	mapObject(std::make_shared<MappedRegister16_t>(physicalAddress, register16));
 }
 
-void PhysicalMMU_t::mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t>& register32)
+void PhysicalMMU_t::mapObject(const u32 & physicalAddress, const std::shared_ptr<Register32_t>& register32)
 {
-	mapMemory(std::make_shared<MappedRegister32_t>(physicalAddress, register32));
+	mapObject(std::make_shared<MappedRegister32_t>(physicalAddress, register32));
 }
 
-void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<Register128_t>& register128)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<Register128_t>& register128)
 {
-	mapMemory(std::make_shared<MappedRegister128_t>(physicalAddress, register128));
+	mapObject(std::make_shared<MappedRegister128_t>(physicalAddress, register128));
 }
 
-void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<FPRegister32_t>& fpRegister32)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<FPRegister32_t>& fpRegister32)
 {
-	mapMemory(std::make_shared<MappedFPRegister32_t>(physicalAddress, fpRegister32));
+	mapObject(std::make_shared<MappedFPRegister32_t>(physicalAddress, fpRegister32));
 }
 
-void PhysicalMMU_t::mapMemory(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t>& fpRegister128)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t>& fpRegister128)
 {
-	mapMemory(std::make_shared<MappedFPRegister128_t>(physicalAddress, fpRegister128));
+	mapObject(std::make_shared<MappedFPRegister128_t>(physicalAddress, fpRegister128));
 }
 
 u32 PhysicalMMU_t::getVDN(u32 PS2PhysicalAddress) const

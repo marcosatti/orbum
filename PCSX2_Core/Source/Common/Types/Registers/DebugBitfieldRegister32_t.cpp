@@ -4,12 +4,8 @@
 #include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-DebugBitfieldRegister32_t::DebugBitfieldRegister32_t()
-{
-}
-
 DebugBitfieldRegister32_t::DebugBitfieldRegister32_t(const char* mnemonic) :
-	Register32_t(mnemonic)
+	DebugRegister32_t(mnemonic)
 {
 }
 

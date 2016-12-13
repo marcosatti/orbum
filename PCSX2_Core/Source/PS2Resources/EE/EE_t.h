@@ -23,7 +23,7 @@ class PhysicalMMU_t;
 class Memory_t;
 class ROMemory_t;
 class Register32_t;
-class ZeroMemory_t;
+class ConstantMemory_t;
 class BusErrorMemory_t;
 class EERegister_SIO_t;
 class EERegister_MCH_t;
@@ -93,7 +93,7 @@ public:
 	/*
 	Other memory.
 	*/
-	std::shared_ptr<ZeroMemory_t>     UNKNOWN_1A000000;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
+	std::shared_ptr<ConstantMemory_t>     UNKNOWN_1A000000;	// Undocumented memory/register @ 0x1A000000 -> 0x1A00FFFF. 
 
 	/*
 	EE memory/registers, defined on page 21 onwards of the EE Users Manual. 
@@ -108,7 +108,7 @@ public:
 	std::shared_ptr<EERegister_SIO_t> MEMORY_SIO;         // Register "SIO"                @ 0x1000F100 -> 0x1000F200. Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
 	
 	std::shared_ptr<Register32_t>     REGISTER_F400;      // Register "Undocumented: F400" @ 0x1000F400 -> 0x1000F410.
-	std::shared_ptr<ZeroMemory_t>     MEMORY_F410;        // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F420. Needs to be a dead storage (by BIOS).
+	std::shared_ptr<ConstantMemory_t>     MEMORY_F410;        // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F420. Needs to be a dead storage (by BIOS).
 	std::shared_ptr<Register32_t>     REGISTER_F420;      // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F430.
 	std::shared_ptr<EERegister_MCH_t> MEMORY_MCH;		  // Register "MCH"                @ 0x1000F430 -> 0x1000F450. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
 	std::shared_ptr<Memory_t>         MEMORY_F450;        // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F500.  

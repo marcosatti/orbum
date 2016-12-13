@@ -4,12 +4,14 @@
 #include "Common/Types/Registers/Register16_t.h"
 
 /*
-ZeroRegister16_t is used as a register with a constant 0 value. Any writes are discarded, and any reads are always 0.
+ConstantRegister16_t is used as a register with a constant value. Any writes are discarded, and any reads are the value set at creation.
+By default set to all 0.
 */
-
-class ZeroRegister16_t : public Register16_t
+class ConstantRegister16_t : public Register16_t
 {
 public:
+	ConstantRegister16_t(const u16 H = 0);
+
 	/*
 	Overwritten write functions that discard any value.
 	*/

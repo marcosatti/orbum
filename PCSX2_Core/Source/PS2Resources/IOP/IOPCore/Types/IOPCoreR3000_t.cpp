@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/Registers/ZeroRegister32_t.h"
+#include "Common/Types/Registers/ConstantRegister32_t.h"
 #include "Common/Types/Registers/LinkRegister32_t.h"
 
 IOPCoreR3000_t::IOPCoreR3000_t(const PS2Resources_t* const PS2Resources) :
@@ -12,7 +12,7 @@ IOPCoreR3000_t::IOPCoreR3000_t(const PS2Resources_t* const PS2Resources) :
 	mBranchDelayCycles(0),
 	mBranchDelayPCTarget(0x0),
 	PC(std::make_shared<PCRegister32_t>()),
-	ZeroRegister(std::make_shared<ZeroRegister32_t>()),
+	ZeroRegister(std::make_shared<ConstantRegister32_t>()),
 	LinkRegister(std::make_shared<LinkRegister32_t>(PC)),
 	GPR{ ZeroRegister, std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(),
 		std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(), std::make_shared<Register32_t>(),

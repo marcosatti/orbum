@@ -2,14 +2,14 @@
 
 #include "PS2Resources/IOP/CDVD/CDVD_t.h"
 #include "Common/Types/Registers/Register8_t.h"
-#include "Common/Types/Registers/ZeroRegister8_t.h"
+#include "Common/Types/Registers/ConstantRegister8_t.h"
 
 CDVD_t::CDVD_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 	NCommand(std::make_shared<Register8_t>()),
 	NReady(std::make_shared<Register8_t>()),
 	Error(std::make_shared<Register8_t>()),
-	Break(std::make_shared<ZeroRegister8_t>()),
+	Break(std::make_shared<ConstantRegister8_t>()),
 	Status(std::make_shared<Register8_t>()),
 	TrayState(std::make_shared<Register8_t>()),
 	CRTMinute(std::make_shared<Register8_t>()),

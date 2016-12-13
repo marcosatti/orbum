@@ -4,12 +4,15 @@
 #include "Common/Types/Registers/Register128_t.h"
 
 /*
-ZeroRegister128_t is used as a register with a constant 0 value. Any writes are discarded, and any reads are always 0.
+ConstantRegister128_t is used as a register with a constant value. Any writes are discarded, and any reads are the value set at creation.
+By default set to all 0.
 */
 
-class ZeroRegister128_t : public Register128_t
+class ConstantRegister128_t : public Register128_t
 {
 public:
+	ConstantRegister128_t(const u64 D0 = 0, const u64 D1 = 0);
+
 	/*
 	Overwritten write functions that discard any value.
 	*/

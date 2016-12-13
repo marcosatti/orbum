@@ -4,7 +4,7 @@
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
-class ZeroMemory_t;
+class ConstantMemory_t;
 class EEIntcRegister_STAT_t;
 class EEIntcRegister_MASK_t;
 
@@ -18,6 +18,6 @@ public:
 	*/
 	std::shared_ptr<EEIntcRegister_STAT_t> REGISTER_STAT;
 	std::shared_ptr<EEIntcRegister_MASK_t> REGISTER_MASK;
-	std::shared_ptr<ZeroMemory_t>          MEMORY_f020;
+	std::shared_ptr<ConstantMemory_t>          MEMORY_f020;
 };
 

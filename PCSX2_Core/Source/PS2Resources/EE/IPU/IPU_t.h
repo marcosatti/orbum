@@ -5,7 +5,7 @@
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 class Register32_t;
-class ZeroMemory_t;
+class ConstantMemory_t;
 
 class IPU_t : public PS2ResourcesSubobject
 {
@@ -20,6 +20,6 @@ public:
 	std::shared_ptr<Register32_t> REGISTER_CTRL;
 	std::shared_ptr<Register32_t> REGISTER_BP;
 	std::shared_ptr<Register32_t> REGISTER_TOP;
-	std::shared_ptr<ZeroMemory_t> MEMORY_2040;
+	std::shared_ptr<ConstantMemory_t> MEMORY_2040;
 };
 

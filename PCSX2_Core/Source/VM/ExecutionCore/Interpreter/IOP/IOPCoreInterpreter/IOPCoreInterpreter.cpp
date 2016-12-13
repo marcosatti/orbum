@@ -92,9 +92,9 @@ s64 IOPCoreInterpreter::executeInstruction()
 
 	}
 
-	if (mInstructionInfo->mImplementationIndex == 0)
+	if (0)
 	{
-		logDebug("(%s, %d) Oops... Instruction Impl. Index was 0 @ IOPCore loop 0x%llX!", __FILENAME__, __LINE__, DEBUG_LOOP_COUNTER);
+		logDebug("(%s, %d) Break Hit.", __FILENAME__, __LINE__);
 	}
 #endif
 

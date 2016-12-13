@@ -9,7 +9,7 @@
 
 class Register128_t;
 class Register32_t;
-class ZeroRegister128_t;
+class ConstantRegister128_t;
 class LinkRegister128_t;
 class PCRegister32_t;
 
@@ -60,7 +60,7 @@ public:
 	- r31 is the link register used by the link and jump instructions. This is not to be used by other instructions.
 	Special registers can be accessed through the EECoreR5900_t class, but are also included in the GPR array.
 	*/
-	std::shared_ptr<ZeroRegister128_t> ZeroRegister;
+	std::shared_ptr<ConstantRegister128_t> ZeroRegister;
 	std::shared_ptr<LinkRegister128_t> LinkRegister;
 	std::shared_ptr<Register128_t> GPR[PS2Constants::EE::EECore::R5900::NUMBER_GP_REGISTERS];
 

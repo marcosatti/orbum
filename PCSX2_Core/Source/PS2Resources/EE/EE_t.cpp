@@ -5,7 +5,7 @@
 #include "PS2Resources/EE/EE_t.h"
 #include "Common/Types/Memory/Memory_t.h"
 #include "Common/Types/Memory/ROMemory_t.h"
-#include "Common/Types/Memory/ZeroMemory_t.h"
+#include "Common/Types/Memory/ConstantMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "PS2Resources/PS2Resources_t.h"
@@ -35,7 +35,7 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	ROM1(std::make_shared<ROMemory_t>(PS2Constants::EE::ROM::SIZE_ROM1, "ROM1")),
 	EROM(std::make_shared<ROMemory_t>(PS2Constants::EE::ROM::SIZE_EROM, "EROM")),
 	ROM2(std::make_shared<ROMemory_t>(PS2Constants::EE::ROM::SIZE_ROM2, "ROM2")),
-	UNKNOWN_1A000000(std::make_shared<ZeroMemory_t>(0x10000, "Unknown: 1A00")),
+	UNKNOWN_1A000000(std::make_shared<ConstantMemory_t>(0x10000, "Unknown: 1A00")),
 
 	// Registers.
 	FIFO_VIF0(std::make_shared<Memory_t>(0x10, "FIFO: VIF0_FIFO")),
@@ -46,7 +46,7 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 
 	MEMORY_SIO(std::make_shared<EERegister_SIO_t>()),
 	REGISTER_F400(std::make_shared<Register32_t>()),
-	MEMORY_F410(std::make_shared<ZeroMemory_t>(0x04, "Undocumented: F410")),
+	MEMORY_F410(std::make_shared<ConstantMemory_t>(0x04, "Undocumented: F410")),
 	REGISTER_F420(std::make_shared<Register32_t>()),
 	MEMORY_MCH(std::make_shared<EERegister_MCH_t>()),
 	MEMORY_F450(std::make_shared<Memory_t>(0xB0, "Undocumented: F450"))

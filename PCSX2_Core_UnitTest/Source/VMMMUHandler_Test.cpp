@@ -8,7 +8,7 @@ TEST(MMUHandler_Test, EECore_ReadAndWrite) {
 	PhysicalMMU_t a(Constants::SIZE_512MB, Constants::SIZE_4MB, Constants::SIZE_16B);
 	u32 PS2MemoryAddress = 0x00017FC4;
 	std::shared_ptr<Memory_t> mem = std::make_shared<Memory_t>(128, "");
-	a.mapMemory(PS2MemoryAddress, mem);
+	a.mapObject(PS2MemoryAddress, mem);
 
 	// 8-bit test.
 	u8 valueU8 = 123;

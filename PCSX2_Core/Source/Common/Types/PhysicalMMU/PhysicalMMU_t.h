@@ -16,7 +16,7 @@ This means that for each separate physical memory space in the PS2, there are 2 
 By using this, it is up to the user to make sure no addresses overlap - they will be overwritten and existing map data lost.
 
 It will throw different runtime errors when the following conditions occur:
-- range_error exception if more than PAGE_TABLE_MAX_SIZE in the page tableis accessed.
+- range_error exception if more than PAGE_TABLE_MAX_SIZE in the page table is accessed.
 - runtime_error exception if the returned PFN from the page table was null (indicates invalid entry, needs to be mapped first).
 
 * Why is an PhysicalMapped object used instead of a raw pointer to a block of memory?
@@ -44,7 +44,7 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB max addre
  | 31                         29 | 28            22 | 21                       4  | 3      0 |
  | (throws error if any bit set) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
  =============================================================================================
- */
+*/
 
 class PhysicalMapped;
 class Memory_t;
@@ -62,27 +62,27 @@ public:
 	~PhysicalMMU_t();
 
 	/*
-	Maps the given memory object into the PS2 physical address space.
+	Maps the given object into the PS2 physical address space, provided it inherits the PhysicalMapped interface.
 	Once this has been executed sucesfully, you will be able to use the read and write functions below to read/write to the PS2 physical addresses defined in the object.
 	Once the correct object has been retreived, a call will be made to the same function of that object.
 
-	Note that this function simply remaps the memory in a linear fashion, meaning that for example, a PS2 physical address of 0x00000400 - 0x00000600 will map directly to (example mapping) 0x1234A000 - 0x1234A200
+	Note that this function simply remaps the memory in a linear fashion, meaning that for example, a PS2 physical address of 0x00000400 - 0x00000600 will map directly to 0x1234A000 - 0x1234A200.
 	
-	Convenience mapping functions have been provided that maps the object with the appropriate wrapper class (makes it compatible with PhysicalMapped).
+	Convenience mapping functions have been provided that maps the object with the appropriate wrapper class (makes it compatible with the PhysicalMapped interface).
 	*/
-	void mapMemory(const std::shared_ptr<PhysicalMapped> & physicalMapped);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
-	void mapMemory(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
+	void mapObject(const std::shared_ptr<PhysicalMapped> & physicalMapped);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
-	You cannot use these functions before mapMemory() has been called - it will return an runtime_error exception otherwise.
+	You cannot use these functions before mapObject() has been called - it will return an runtime_error exception otherwise.
 	The functions have the syntax "{read or write}{type}{[U]nsigned or [S]igned}()".
 	Unfortunately C++ does not allow templating of virtual functions defined in the parent class, so a read/write for each type has to be made.
 	*/
@@ -133,7 +133,7 @@ private:
 	std::shared_ptr<PhysicalMapped> & getMappedMemory(u32 baseVDN, u32 baseVPN) const;
 
 	/*
-	Helper functions for mapMemory & others to 
+	Helper functions for mapObject & others to 
 	 - Determine which directory a page belongs to (if they were layed out end to end).
 	 - The page offset in a directory.
 	 - The absolute page (if they were layed out end to end).
