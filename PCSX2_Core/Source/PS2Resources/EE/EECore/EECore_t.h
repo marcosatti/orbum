@@ -33,9 +33,6 @@ public:
 	// FPU (COP1) coprocessor.
 	std::shared_ptr<EECoreFPU_t> FPU;
 
-	// VPU0 (COP2) coprocessor. Points to same object as EE::VPU0.
-	// VPU_t VPU0;
-
 	// Scratchpad memory.
 	std::shared_ptr<Memory_t> ScratchpadMemory;
 

@@ -9,21 +9,18 @@
 /*
 A transition layer, allowing a register to be mapped into the PS2 physical memory space.
 Ie: translates from byte index accesses into size index accesses.
+If the underlying register size is larger than the access size, the LSB's will be returned. 
+On byte/hword access, a runtime_error is thrown, reason being that the underlying FPRegister128_t does not implement these.
+If the underlying register size is smaller than the access size, a runtime_error is thrown.
+The storageIndex param must be equal to 0, otherwise a runtime_error is thrown (alignment conditions).
+TODO: look into size conditions - the EE manual mentions "... only accessible by word ...", but this allows any size.
 */
-
 class MappedFPRegister128_t : public PhysicalMapped
 {
 public:
 	explicit MappedFPRegister128_t(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
 	virtual ~MappedFPRegister128_t();
 
-	/*
-	For 128-bit FPRegisters, only read/writeWord and Dword is allowed. All others throw a runtime exception.
-	Access must conform to alignment conditions. ie: for word access, storage index must be (storageIndex % 4 == 0),
-	 however it is up to the user to correctly align the mapping to the physical memory space.
-	A runtime exception is thrown on unaligned conditions.
-	This is provided to mimic the PS2 alginment conditions, for example, with the EE registers defined in the EE Users Manual ("...only word accessible...").
-	*/
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
 	s8 readByteS(u32 storageIndex) override;

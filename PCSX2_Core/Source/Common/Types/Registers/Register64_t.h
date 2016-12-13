@@ -1,6 +1,9 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "Common/Global/Globals.h"
+
 
 /*
 Register type and size definitions.
@@ -21,12 +24,12 @@ The primary difference between a Register type and Memory type is that registers
 For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 32-63.
 See the Memory type for the counter-example.
 */
-
 class Register64_t 
 {
 public:
 	// Initialise union with 0 value.
 	explicit Register64_t();
+	explicit Register64_t(const char * mnemonic);
 
 	virtual ~Register64_t();
 
@@ -60,11 +63,14 @@ public:
 	virtual s64 readDwordS();
 	virtual void writeDwordS(s64 value);
 
-	// Convenience function to access individual bits. The returned u8 value will either be 1 or 0.
-	// Index must be between 0 -> 63.
-	u8 getBit64(u8 index) const;
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
 
-	// Convenience function to set individual bits. The bit value at index will be set to bitValue.
-	// Index must be between 0 -> 63.
-	void setBit64(u8 index, u64 bitValue);
+private:
+	/*
+	The mnemonic.
+	*/
+	const std::string mMnemonic;
 };

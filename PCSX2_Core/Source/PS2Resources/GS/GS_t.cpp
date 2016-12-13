@@ -3,40 +3,38 @@
 #include "Common/Global/Globals.h"
 
 #include "PS2Resources/GS/GS_t.h"
-#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Registers/Register64_t.h"
 #include "Common/Types/Memory/ConstantMemory_t.h"
-#include "Common/Types/Memory/BusErrMemory_t.h"
 
 GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 
 	// Registers.
-	GS_P_REGISTER_PMODE(std::make_shared<Memory_t>(0x04, "SPE: PMODE")),
-	GS_P_REGISTER_SMODE1(std::make_shared<Memory_t>(0x04, "SPE: SMODE1")),
-	GS_P_REGISTER_SMODE2(std::make_shared<Memory_t>(0x04, "SPE: SMODE2")),
-	GS_P_REGISTER_SRFSH(std::make_shared<Memory_t>(0x04, "SPE: SRFSH")),
-	GS_P_REGISTER_SYNCH1(std::make_shared<Memory_t>(0x04, "SPE: SYNCH1")),
-	GS_P_REGISTER_SYNCH2(std::make_shared<Memory_t>(0x04, "SPE: SYNCH2")),
-	GS_P_REGISTER_SYNCV(std::make_shared<Memory_t>(0x04, "SPE: SYNCV")),
-	GS_P_REGISTER_DISPFB1(std::make_shared<Memory_t>(0x04, "SPE: DISPFB1")),
-	GS_P_REGISTER_DISPLAY1(std::make_shared<Memory_t>(0x04, "SPE: DISPLAY1")),
-	GS_P_REGISTER_DISPFB2(std::make_shared<Memory_t>(0x04, "SPE: DISPFB2")),
-	GS_P_REGISTER_DISPLAY2(std::make_shared<Memory_t>(0x04, "SPE: DISPLAY2")),
-	GS_P_REGISTER_EXTBUF(std::make_shared<Memory_t>(0x04, "SPE: EXTBUF")),
-	GS_P_REGISTER_EXTDATA(std::make_shared<Memory_t>(0x04, "SPE: EXTDATA")),
-	GS_P_REGISTER_EXTWRITE(std::make_shared<Memory_t>(0x04, "SPE: EXTWRITE")),
-	GS_P_REGISTER_BGCOLOR(std::make_shared<Memory_t>(0x04, "SPE: BGCOLOR")),
-	GS_P_REGISTER_SPE_00f0(std::make_shared<ConstantMemory_t>(0x310, "SPE: SPE_00f0 (reserved)")),
-	GS_P_REGISTER_CSR(std::make_shared<Memory_t>(0x04, "SPE: CSR")),
-	GS_P_REGISTER_IMR(std::make_shared<Memory_t>(0x04, "SPE: IMR")),
-	GS_P_REGISTER_SPE_1020(std::make_shared<ConstantMemory_t>(0x20, "SPE: SPE_1020 (reserved)")),
-	GS_P_REGISTER_BUSDIR(std::make_shared<Memory_t>(0x04, "SPE: BUSDIR")),
-	GS_P_REGISTER_SPE_1050(std::make_shared<ConstantMemory_t>(0x30, "SPE: SPE_1050 (reserved)")),
-	GS_P_REGISTER_SIGLBLID(std::make_shared<Memory_t>(0x04, "SPE: SIGLBLID")),
-	GS_P_REGISTER_SPE_1090(std::make_shared<ConstantMemory_t>(0x60, "SPE: SPE_1090 (reserved)")),
-	GS_P_REGISTER_SPE_1100(std::make_shared<ConstantMemory_t>(0x300, "SPE: SPE_1100 (reserved)")),
-	GS_P_REGISTER_SPE_2000(std::make_shared<ConstantMemory_t>(0xE000, "SPE: SPE_2000 (reserved)")),
-	GS_P_REGISTER_SPEBusErr(std::make_shared<BusErrMemory_t>(0x1FF0000, "SPE: SPEBusErr"))
+	PMODE(std::make_shared<Register64_t>("SPE: PMODE")),
+	SMODE1(std::make_shared<Register64_t>("SPE: SMODE1")),
+	SMODE2(std::make_shared<Register64_t>("SPE: SMODE2")),
+	SRFSH(std::make_shared<Register64_t>("SPE: SRFSH")),
+	SYNCH1(std::make_shared<Register64_t>("SPE: SYNCH1")),
+	SYNCH2(std::make_shared<Register64_t>("SPE: SYNCH2")),
+	SYNCV(std::make_shared<Register64_t>("SPE: SYNCV")),
+	DISPFB1(std::make_shared<Register64_t>("SPE: DISPFB1")),
+	DISPLAY1(std::make_shared<Register64_t>("SPE: DISPLAY1")),
+	DISPFB2(std::make_shared<Register64_t>("SPE: DISPFB2")),
+	DISPLAY2(std::make_shared<Register64_t>("SPE: DISPLAY2")),
+	EXTBUF(std::make_shared<Register64_t>("SPE: EXTBUF")),
+	EXTDATA(std::make_shared<Register64_t>("SPE: EXTDATA")),
+	EXTWRITE(std::make_shared<Register64_t>("SPE: EXTWRITE")),
+	BGCOLOR(std::make_shared<Register64_t>("SPE: BGCOLOR")),
+	MEMORY_00F0(std::make_shared<ConstantMemory_t>(0x310, "SPE: SPE_00f0 (reserved)")),
+	CSR(std::make_shared<Register64_t>("SPE: CSR")),
+	IMR(std::make_shared<Register64_t>("SPE: IMR")),
+	MEMORY_1020(std::make_shared<ConstantMemory_t>(0x20, "SPE: SPE_1020 (reserved)")),
+	BUSDIR(std::make_shared<Register64_t>("SPE: BUSDIR")),
+	MEMORY_1050(std::make_shared<ConstantMemory_t>(0x30, "SPE: SPE_1050 (reserved)")),
+	SIGLBLID(std::make_shared<Register64_t>("SPE: SIGLBLID")),
+	MEMORY_1090(std::make_shared<ConstantMemory_t>(0x60, "SPE: SPE_1090 (reserved)")),
+	MEMORY_1100(std::make_shared<ConstantMemory_t>(0x300, "SPE: SPE_1100 (reserved)")),
+	MEMORY_2000(std::make_shared<ConstantMemory_t>(0xE000, "SPE: SPE_2000 (reserved)"))
 {
 }
 

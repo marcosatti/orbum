@@ -16,8 +16,8 @@ public:
 	/*
 	INTC memory mapped registers. See page 24 of EE Users Manual.
 	*/
-	std::shared_ptr<EEIntcRegister_STAT_t> REGISTER_STAT;
-	std::shared_ptr<EEIntcRegister_MASK_t> REGISTER_MASK;
-	std::shared_ptr<ConstantMemory_t>          MEMORY_f020;
+	std::shared_ptr<EEIntcRegister_STAT_t> STAT;
+	std::shared_ptr<EEIntcRegister_MASK_t> MASK;
+	std::shared_ptr<ConstantMemory_t>      MEMORY_F020;
 };
 

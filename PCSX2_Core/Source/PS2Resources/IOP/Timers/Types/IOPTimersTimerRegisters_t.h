@@ -5,12 +5,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
-class IOPTimersTimerRegister_Count_t; // Forward Decl - see below.
+class IOPTimersTimerRegister_COUNT_t; // Forward Decl - see below.
 
 /*
 The Timer Mode register type.
 */
-class IOPTimersTimerRegister_Mode_t : public BitfieldRegister32_t
+class IOPTimersTimerRegister_MODE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -18,13 +18,13 @@ public:
 		// TODO: fill in.
 	};
 
-	IOPTimersTimerRegister_Mode_t(const std::shared_ptr<IOPTimersTimerRegister_Count_t> & count);
+	IOPTimersTimerRegister_MODE_t(const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
 
 private:
 	/*
 	// TODO: fill in.
 	*/
-	const std::shared_ptr<IOPTimersTimerRegister_Count_t> mCount;
+	const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> mCount;
 };
 
 /*
@@ -33,10 +33,10 @@ Provides the increment function, which also wraps the u32 value around once over
 Can also reset the counter.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
 */
-class IOPTimersTimerRegister_Count_t : public Register32_t
+class IOPTimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	IOPTimersTimerRegister_Count_t();
+	IOPTimersTimerRegister_COUNT_t();
 
 	void increment(u16 value);
 	bool isOverflowed();

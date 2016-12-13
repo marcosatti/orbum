@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/PhysicalMapped.h"
-#include "Common/Types/Registers/Register8_t.h"
+#include "Common/Types/Registers/Register64_t.h"
 
 /*
 A transition layer, allowing a register to be mapped into the PS2 physical memory space.
@@ -14,11 +14,11 @@ If the underlying register size is smaller than the access size, a runtime_error
 The storageIndex param must be equal to 0, otherwise a runtime_error is thrown (alignment conditions).
 TODO: look into size conditions - the EE manual mentions "... only accessible by word ...", but this allows any size.
 */
-class MappedRegister8_t : public PhysicalMapped
+class MappedRegister64_t : public PhysicalMapped
 {
 public:
-	explicit MappedRegister8_t(const u32& physicalAddress, const std::shared_ptr<Register8_t> & register8);
-	virtual ~MappedRegister8_t();
+	explicit MappedRegister64_t(const u32& physicalAddress, const std::shared_ptr<Register64_t> & register64);
+	virtual ~MappedRegister64_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -51,5 +51,5 @@ private:
 	/*
 	The underlying register this class maps to.
 	*/
-	const std::shared_ptr<Register8_t> mRegister8;
+	const std::shared_ptr<Register64_t> mRegister64;
 };

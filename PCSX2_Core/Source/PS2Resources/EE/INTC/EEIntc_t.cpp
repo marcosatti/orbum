@@ -8,8 +8,8 @@ EEIntc_t::EEIntc_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 
 	// Registers
-	REGISTER_STAT(std::make_shared<EEIntcRegister_STAT_t>()),
-	REGISTER_MASK(std::make_shared<EEIntcRegister_MASK_t>()),
-	MEMORY_f020(std::make_shared<ConstantMemory_t>(0xE0, "INTC: INTC_f020 (reserved)"))
+	STAT(std::make_shared<EEIntcRegister_STAT_t>()),
+	MASK(std::make_shared<EEIntcRegister_MASK_t>()),
+	MEMORY_F020(std::make_shared<ConstantMemory_t>(0xE0, "INTC: INTC_f020 (reserved)"))
 {
 }

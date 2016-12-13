@@ -37,7 +37,7 @@ s64 VIF::executionStep(const ClockSource_t& clockSource)
 	for (auto& data : mDMAPacket.UW)
 	{
 		// Check the NUM register, to determine if we are continuing a VIFcode instruction instead of reading a VIFcode.
-		if (VIF->mNUM->getFieldValue(VifUnitRegister_NUM_t::Fields::NUM))
+		if (VIF->NUM->getFieldValue(VifUnitRegister_NUM_t::Fields::NUM))
 		{
 		
 		}
@@ -65,7 +65,7 @@ s64 VIF::executionStep(const ClockSource_t& clockSource)
 bool VIF::isVIFStalled() const
 {
 	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
-	auto& STAT = VIF->mSTAT;
+	auto& STAT = VIF->STAT;
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 
 	//  then the VIF has stalled and needs to be reset by writing to FBRST.STC.

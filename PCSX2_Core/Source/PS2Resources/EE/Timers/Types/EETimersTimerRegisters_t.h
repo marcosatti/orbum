@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
-class EETimersTimerRegister_Count_t; // Forward Decl - see below.
+class EETimersTimerRegister_COUNT_t; // Forward Decl - see below.
 
 /*
 The Timer Mode register type. See EE Users Manual page 36.
@@ -14,7 +14,7 @@ Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, beha
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
 */
-class EETimersTimerRegister_Mode_t : public BitfieldRegister32_t
+class EETimersTimerRegister_MODE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -31,7 +31,7 @@ public:
 		static constexpr u8 OVFF = 9;
 	};
 
-	EETimersTimerRegister_Mode_t(const std::shared_ptr<EETimersTimerRegister_Count_t> & count);
+	EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
 
 	void writeWordU(u32 value) override;
 
@@ -39,7 +39,7 @@ private:
 	/*
 	A reference to the associated Count register, which is reset when the CUE flag is set to 1.
 	*/
-	const std::shared_ptr<EETimersTimerRegister_Count_t> mCount;
+	const std::shared_ptr<EETimersTimerRegister_COUNT_t> mCount;
 };
 
 /*
@@ -48,10 +48,10 @@ Provides the increment function, which also wraps the u32 value around once over
 Can also reset the counter.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
 */
-class EETimersTimerRegister_Count_t : public Register32_t
+class EETimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	EETimersTimerRegister_Count_t();
+	EETimersTimerRegister_COUNT_t();
 
 	void increment(u16 value);
 	bool isOverflowed();

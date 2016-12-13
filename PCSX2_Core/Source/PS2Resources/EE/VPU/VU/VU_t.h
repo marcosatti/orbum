@@ -5,18 +5,17 @@
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Constants/PS2Constants.h"
 
+class VuUnit_VU0_t;
+class VuUnit_VU1_t;
+class VuUnit_t; 
+class VURegister_FBRST_t;
+
 /*
 TODO: finish writing documentation.
 VU_t declares the vector units of the EE (VU0 and VU1).
 
 VU0 is connected to the EE Core as COP2.
 */
-
-class VuUnit_VU0_t;
-class VuUnit_VU1_t;
-class VuUnit_t; 
-class VURegister_FBRST_t;
-
 class VU_t : public PS2ResourcesSubobject
 {
 public:

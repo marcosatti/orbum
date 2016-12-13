@@ -23,10 +23,10 @@ public:
 	/*
 	SIF Registers.
 	*/
-	std::shared_ptr<Register32_t>         REGISTER_MSCOM;    // Register "MSCOM"                      @ 0x1000F200 (EE) & 0x1D000000 (IOP). Main -> Sub-CPU command buffer.
-	std::shared_ptr<Register32_t>         REGISTER_SMCOM;    // Register "SMCOM"                      @ 0x1000F210 (EE) & 0x1D000010 (IOP). Sub -> Main-CPU command buffer.
-	std::shared_ptr<Register32_t>         REGISTER_MSFLG;    // Register "MSFLAG"                     @ 0x1000F220 (EE) & 0x1D000020 (IOP). Main -> Sub-CPU flag.
-	std::shared_ptr<Register32_t>         REGISTER_SMFLG;    // Register "SMFLAG"                     @ 0x1000F230 (EE) & 0x1D000030 (IOP). Sub -> Main-CPU flag.
-	std::shared_ptr<ConstantRegister32_t> REGISTER_1D000060; // Register "Unknown: REGISTER_1D000060" @ 0x1D000060 (IOP).
+	std::shared_ptr<Register32_t>         MSCOM;         // Register "MSCOM"              @ 0x1000F200 (EE) & 0x1D000000 (IOP). Main -> Sub-CPU command buffer.
+	std::shared_ptr<Register32_t>         SMCOM;         // Register "SMCOM"              @ 0x1000F210 (EE) & 0x1D000010 (IOP). Sub -> Main-CPU command buffer.
+	std::shared_ptr<Register32_t>         MSFLG;         // Register "MSFLAG"             @ 0x1000F220 (EE) & 0x1D000020 (IOP). Main -> Sub-CPU flag.
+	std::shared_ptr<Register32_t>         SMFLG;         // Register "SMFLAG"             @ 0x1000F230 (EE) & 0x1D000030 (IOP). Sub -> Main-CPU flag.
+	std::shared_ptr<ConstantRegister32_t> REGISTER_0060; // Register "Undocumented: 0060" @ 0x1D000060 (IOP).
 };
 

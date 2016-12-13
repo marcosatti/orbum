@@ -106,12 +106,12 @@ private:
 	bool isDrainStallControlOn() const;
 
 	/*
-	Updates STADR from the mMADR register (from source channels). Use with isSourceStallControlOn().
+	Updates STADR from the MADR register (from source channels). Use with isSourceStallControlOn().
 	*/
 	void updateSourceStallControlAddress() const;
 
 	/*
-	Returns true if mMADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
+	Returns true if MADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
 	Also controls the D_STAT.SISn bit - sets to 1 if a stall occurred.
 	TODO: According to the docs, "SIS bit doesn't change even if the transfer restarts"! PS2 OS sets it back to 0?
 	*/
@@ -145,14 +145,14 @@ private:
 	DMAtag_t mDMAtag;
 
 	/*
-	Sets mDMAtag to the tag read from memory/SPR (from the mTADR register).
+	Sets mDMAtag to the tag read from memory/SPR (from the TADR register).
 	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
 	If CHCR.TTE is set, transfers the tag.
 	*/
 	void readDMAtag();
 
 	/*
-	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (mQWC == 0 and TAG.IRQ/mCHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
+	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (QWC == 0 and TAG.IRQ/CHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
 	*/
 	void checkDMAtagPacketInterrupt() const;
 

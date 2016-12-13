@@ -4,8 +4,8 @@
 
 #include "Common/Global/Globals.h"
 
-class IOPTimersTimerRegister_Mode_t;
-class IOPTimersTimerRegister_Count_t;
+class IOPTimersTimerRegister_MODE_t;
+class IOPTimersTimerRegister_COUNT_t;
 class Register32_t;
 
 /*
@@ -27,7 +27,7 @@ public:
 	The Mode, Count and Compare registers are defined for each timer.
 	Count must be initalised before Mode due to dependency.
 	*/
-	std::shared_ptr<IOPTimersTimerRegister_Count_t> Count;
-	std::shared_ptr<IOPTimersTimerRegister_Mode_t>  Mode;
-	std::shared_ptr<Register32_t>                   Compare;
+	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> COUNT;
+	std::shared_ptr<IOPTimersTimerRegister_MODE_t>  MODE;
+	std::shared_ptr<Register32_t>                   COMP;
 };

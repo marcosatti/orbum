@@ -5,9 +5,9 @@
 
 IOPDmac_t::IOPDmac_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
-	REGISTER_PCR(std::make_shared<Register32_t>()),
-	REGISTER_ICR(std::make_shared<Register32_t>()),
-	REGISTER_PCR2(std::make_shared<Register32_t>()),
-	REGISTER_ICR2(std::make_shared<Register32_t>())
+	PCR(std::make_shared<Register32_t>()),
+	ICR(std::make_shared<Register32_t>()),
+	PCR2(std::make_shared<Register32_t>()),
+	ICR2(std::make_shared<Register32_t>())
 {
 }

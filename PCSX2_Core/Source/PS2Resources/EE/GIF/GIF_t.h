@@ -15,17 +15,17 @@ public:
 	/*
 	GIF memory mapped registers. See page 21 of EE Users Manual.
 	*/
-	std::shared_ptr<Register32_t>  REGISTER_CTRL;
-	std::shared_ptr<Register32_t>  REGISTER_MODE;
-	std::shared_ptr<Register32_t>  REGISTER_STAT;
+	std::shared_ptr<Register32_t>     CTRL;
+	std::shared_ptr<Register32_t>     MODE;
+	std::shared_ptr<Register32_t>     STAT;
 	std::shared_ptr<ConstantMemory_t> MEMORY_3030;
-	std::shared_ptr<Register32_t>  REGISTER_TAG0;
-	std::shared_ptr<Register32_t>  REGISTER_TAG1;
-	std::shared_ptr<Register32_t>  REGISTER_TAG2;
-	std::shared_ptr<Register32_t>  REGISTER_TAG3;
-	std::shared_ptr<Register32_t>  REGISTER_CNT;
-	std::shared_ptr<Register32_t>  REGISTER_P3CNT;
-	std::shared_ptr<Register32_t>  REGISTER_P3TAG;
-	std::shared_ptr<ConstantMemory_t> MEMORY_30b0;
+	std::shared_ptr<Register32_t>     TAG0;
+	std::shared_ptr<Register32_t>     TAG1;
+	std::shared_ptr<Register32_t>     TAG2;
+	std::shared_ptr<Register32_t>     TAG3;
+	std::shared_ptr<Register32_t>     CNT;
+	std::shared_ptr<Register32_t>     P3CNT;
+	std::shared_ptr<Register32_t>     P3TAG;
+	std::shared_ptr<ConstantMemory_t> MEMORY_30B0;
 };
 

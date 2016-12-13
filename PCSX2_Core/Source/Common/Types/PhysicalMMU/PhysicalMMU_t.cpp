@@ -12,6 +12,7 @@
 #include "Common/Types/PhysicalMMU/MappedRegister8_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister32_t.h"
+#include "Common/Types/PhysicalMMU/MappedRegister64_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister32_t.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister128_t.h"
@@ -112,6 +113,11 @@ void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<
 void PhysicalMMU_t::mapObject(const u32 & physicalAddress, const std::shared_ptr<Register32_t>& register32)
 {
 	mapObject(std::make_shared<MappedRegister32_t>(physicalAddress, register32));
+}
+
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<Register64_t>& register64)
+{
+	mapObject(std::make_shared<MappedRegister64_t>(physicalAddress, register64));
 }
 
 void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<Register128_t>& register128)

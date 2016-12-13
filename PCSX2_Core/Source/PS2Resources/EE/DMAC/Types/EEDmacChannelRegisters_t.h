@@ -66,7 +66,7 @@ public:
 	EEDmacChannelRegister_QWC_t();
 
 	/*
-	Decrements the mQWC counter by 1. Should be called when a data unit has been transferred.
+	Decrements the QWC counter by 1. Should be called when a data unit has been transferred.
 	*/
 	void decrement();
 };

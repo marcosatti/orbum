@@ -4,8 +4,8 @@
 
 #include "Common/Global/Globals.h"
 
-class EETimersTimerRegister_Mode_t;
-class EETimersTimerRegister_Count_t;
+class EETimersTimerRegister_MODE_t;
+class EETimersTimerRegister_COUNT_t;
 class Register32_t;
 
 /*
@@ -26,11 +26,11 @@ public:
 	/*
 	EE Timers timer registers.
 	See EE Users Manual page 35.
-	The Mode, Count and Compare registers are always defined for each timer, and Hold only for timers 0 and 1.
+	The MODE, COUNT and COMP registers are always defined for each timer, and HOLD only for timers 0 and 1.
 	COUNT must be initalised before MODE due to dependency.
 	*/
-	std::shared_ptr<EETimersTimerRegister_Count_t> Count;
-	std::shared_ptr<EETimersTimerRegister_Mode_t>  Mode;
-	std::shared_ptr<Register32_t>                  Compare;
-	std::shared_ptr<Register32_t>                  Hold;
+	std::shared_ptr<EETimersTimerRegister_COUNT_t> COUNT;
+	std::shared_ptr<EETimersTimerRegister_MODE_t>  MODE;
+	std::shared_ptr<Register32_t>                  COMP;
+	std::shared_ptr<Register32_t>                  HOLD;
 };

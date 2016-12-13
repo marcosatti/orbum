@@ -55,18 +55,18 @@ public:
 	/*
 	DMAC common registers. Defined on page 63 of the EE Users Manual.
 	*/
-	std::shared_ptr<EEDmacRegister_CTRL_t>    REGISTER_CTRL;
-	std::shared_ptr<EEDmacRegister_STAT_t>    REGISTER_STAT;
-	std::shared_ptr<EEDmacRegister_PCR_t>     REGISTER_PCR;
-	std::shared_ptr<EEDmacRegister_SWQC_t>    REGISTER_SQWC;
-	std::shared_ptr<EEDmacRegister_RBSR_t>    REGISTER_RBSR;
-	std::shared_ptr<EEDmacRegister_RBOR_t>    REGISTER_RBOR;
-	std::shared_ptr<EEDmacRegister_STADR_t>   REGISTER_STADR;
-	std::shared_ptr<ConstantMemory_t>             MEMORY_e070;
-	std::shared_ptr<Memory_t>                 MEMORY_F500;        // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F520. Not in manual!
-	std::shared_ptr<EEDmacRegister_ENABLER_t> REGISTER_ENABLER;
-	std::shared_ptr<ConstantMemory_t>             MEMORY_F530;
-	std::shared_ptr<EEDmacRegister_ENABLEW_t> REGISTER_ENABLEW;
-	std::shared_ptr<ConstantMemory_t>             MEMORY_F5A0;
+	std::shared_ptr<EEDmacRegister_CTRL_t>    CTRL;
+	std::shared_ptr<EEDmacRegister_STAT_t>    STAT;
+	std::shared_ptr<EEDmacRegister_PCR_t>     PCR;
+	std::shared_ptr<EEDmacRegister_SWQC_t>    SQWC;
+	std::shared_ptr<EEDmacRegister_RBSR_t>    RBSR;
+	std::shared_ptr<EEDmacRegister_RBOR_t>    RBOR;
+	std::shared_ptr<EEDmacRegister_STADR_t>   STADR;
+	std::shared_ptr<ConstantMemory_t>         MEMORY_E070;
+	std::shared_ptr<Memory_t>                 MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
+	std::shared_ptr<EEDmacRegister_ENABLER_t> ENABLER;
+	std::shared_ptr<ConstantMemory_t>         MEMORY_F530;
+	std::shared_ptr<EEDmacRegister_ENABLEW_t> ENABLEW;
+	std::shared_ptr<ConstantMemory_t>         MEMORY_F5A0;
 };
 

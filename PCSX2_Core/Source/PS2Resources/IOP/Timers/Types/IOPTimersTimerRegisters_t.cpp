@@ -3,17 +3,17 @@
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 
-IOPTimersTimerRegister_Mode_t::IOPTimersTimerRegister_Mode_t(const std::shared_ptr<IOPTimersTimerRegister_Count_t> & count) :
+IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
 	mCount(count)
 {
 }
 
-IOPTimersTimerRegister_Count_t::IOPTimersTimerRegister_Count_t() :
+IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t() :
 	mIsOverflowed(false)
 {
 }
 
-void IOPTimersTimerRegister_Count_t::increment(u16 value)
+void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
 {
 	u32 temp = readWordU() + value;
 
@@ -27,14 +27,14 @@ void IOPTimersTimerRegister_Count_t::increment(u16 value)
 	writeWordU(temp);
 }
 
-bool IOPTimersTimerRegister_Count_t::isOverflowed()
+bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 {
 	bool temp = mIsOverflowed;
 	mIsOverflowed = false;
 	return temp;
 }
 
-void IOPTimersTimerRegister_Count_t::reset()
+void IOPTimersTimerRegister_COUNT_t::reset()
 {
 	writeWordU(0);
 }

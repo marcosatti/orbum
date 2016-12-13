@@ -10,7 +10,7 @@ Designed so it can be reused (use setValue() and then the get functions to extra
 Although a DMAtag is 128-bit long, only the lower 64-bits are used (for the tag).
 
 Bitfield map (relevant only):
-- Bits 0-15 (length 16): "mQWC" (Quadword count).
+- Bits 0-15 (length 16): "QWC" (Quadword count).
 - Bits 26-27 (length 2): "PCE" (Priority control enable).
 - Bits 28-30 (length 3): "ID" (Tag ID, used as a DMAC instruction).
 - Bits 31 (length 1): "IRQ" (Interrupt request, to the EE Core on IRQ1).

@@ -4,15 +4,14 @@
 
 #include "Common/Interfaces/PS2ResourcesSubobject.h"
 
-/*
-TODO: finish writing documentation.
-VPU_t declares the collective VIF structure and collective VU structure of the EE.
-*/
-
 class VIF_t;
 class VU_t;
 class VPURegister_STAT_t;
 
+/*
+TODO: finish writing documentation.
+VPU_t declares the collective VIF structure and collective VU structure of the EE.
+*/
 class VPU_t : public PS2ResourcesSubobject
 {
 public:

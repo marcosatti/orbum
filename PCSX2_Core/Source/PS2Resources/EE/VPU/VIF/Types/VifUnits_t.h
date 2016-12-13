@@ -39,29 +39,29 @@ public:
 	VIF registers. See page 124 of EE Users Manual.
 	Implementing classes will set some of these to null (ie: VIF0 sets REGISTER_TOP to null).
 	*/
-	std::shared_ptr<Register32_t>			 mR0;
-	std::shared_ptr<Register32_t>			 mR1;
-	std::shared_ptr<Register32_t>			 mR2;
-	std::shared_ptr<Register32_t>			 mR3;
-	std::shared_ptr<Register32_t>			 mC0;
-	std::shared_ptr<Register32_t>			 mC1;
-	std::shared_ptr<Register32_t>			 mC2;
-	std::shared_ptr<Register32_t>			 mC3;
-	std::shared_ptr<VifUnitRegister_CYCLE_t> mCYCLE;
-	std::shared_ptr<VifUnitRegister_MASK_t>  mMASK;
-	std::shared_ptr<VifUnitRegister_MODE_t>  mMODE;
-	std::shared_ptr<VifUnitRegister_ITOP_t>  mITOP;
-	std::shared_ptr<VifUnitRegister_ITOPS_t> mITOPS;
-	std::shared_ptr<VifUnitRegister_BASE_t>  mBASE;
-	std::shared_ptr<VifUnitRegister_OFST_t>  mOFST;
-	std::shared_ptr<VifUnitRegister_TOP_t>   mTOP;
-	std::shared_ptr<VifUnitRegister_TOPS_t>  mTOPS;
-	std::shared_ptr<VifUnitRegister_MASK_t>  mMARK;
-	std::shared_ptr<VifUnitRegister_NUM_t>   mNUM;
-	std::shared_ptr<VifUnitRegister_CODE_t>  mCODE;
-	std::shared_ptr<VifUnitRegister_STAT_t>  mSTAT;
-	std::shared_ptr<VifUnitRegister_FBRST_t> mFBRST;
-	std::shared_ptr<VifUnitRegister_ERR_t>   mERR;
+	std::shared_ptr<Register32_t>			 R0;
+	std::shared_ptr<Register32_t>			 R1;
+	std::shared_ptr<Register32_t>			 R2;
+	std::shared_ptr<Register32_t>			 R3;
+	std::shared_ptr<Register32_t>			 C0;
+	std::shared_ptr<Register32_t>			 C1;
+	std::shared_ptr<Register32_t>			 C2;
+	std::shared_ptr<Register32_t>			 C3;
+	std::shared_ptr<VifUnitRegister_CYCLE_t> CYCLE;
+	std::shared_ptr<VifUnitRegister_MASK_t>  MASK;
+	std::shared_ptr<VifUnitRegister_MODE_t>  MODE;
+	std::shared_ptr<VifUnitRegister_ITOP_t>  ITOP;
+	std::shared_ptr<VifUnitRegister_ITOPS_t> ITOPS;
+	std::shared_ptr<VifUnitRegister_BASE_t>  BASE;
+	std::shared_ptr<VifUnitRegister_OFST_t>  OFST;
+	std::shared_ptr<VifUnitRegister_TOP_t>   TOP;
+	std::shared_ptr<VifUnitRegister_TOPS_t>  TOPS;
+	std::shared_ptr<VifUnitRegister_MASK_t>  MARK;
+	std::shared_ptr<VifUnitRegister_NUM_t>   NUM;
+	std::shared_ptr<VifUnitRegister_CODE_t>  CODE;
+	std::shared_ptr<VifUnitRegister_STAT_t>  STAT;
+	std::shared_ptr<VifUnitRegister_FBRST_t> FBRST;
+	std::shared_ptr<VifUnitRegister_ERR_t>   ERR;
 };
 
 /*

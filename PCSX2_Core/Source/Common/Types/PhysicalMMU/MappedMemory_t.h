@@ -11,7 +11,6 @@ A transition layer, allowing a Memory_t object to be mapped into a PhysicalMMU_t
 The API between PhysicalMMU_t and Memory_t is directly compatible, so this class just forwards on the request.
 Requires a mnemonic (for debug) and a PS2 physical address of where it should be mapped from.
 */
-
 class MappedMemory_t : public PhysicalMapped
 {
 public:

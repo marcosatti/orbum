@@ -327,6 +327,7 @@
     </ClInclude>
     <ClInclude Include="Source\Common\Types\Memory\ConstantMemory_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -537,6 +538,7 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Types\Memory\ConstantMemory_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

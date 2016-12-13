@@ -57,26 +57,26 @@ public:
 
 	CHCR, MADR and QWC is always defined for each channel - they are initalised in this base class.
 	*/
-	std::shared_ptr<EEDmacChannelRegister_CHCR_t> mCHCR;
-	std::shared_ptr<EEDmacChannelRegister_MADR_t> mMADR;
-	std::shared_ptr<EEDmacChannelRegister_QWC_t>  mQWC;
-	std::shared_ptr<EEDmacChannelRegister_TADR_t> mTADR;
-	std::shared_ptr<EEDmacChannelRegister_ASR_t>  mASR0;
-	std::shared_ptr<EEDmacChannelRegister_ASR_t>  mASR1;
-	std::shared_ptr<EEDmacChannelRegister_SADR_t> mSADR;
+	std::shared_ptr<EEDmacChannelRegister_CHCR_t> CHCR;
+	std::shared_ptr<EEDmacChannelRegister_MADR_t> MADR;
+	std::shared_ptr<EEDmacChannelRegister_QWC_t>  QWC;
+	std::shared_ptr<EEDmacChannelRegister_TADR_t> TADR;
+	std::shared_ptr<EEDmacChannelRegister_ASR_t>  ASR0;
+	std::shared_ptr<EEDmacChannelRegister_ASR_t>  ASR1;
+	std::shared_ptr<EEDmacChannelRegister_SADR_t> SADR;
 
 	/*
-	ASR array used for iterations/indexing (mASR0 and mASR1).
+	ASR array used for iterations/indexing (ASR0 and ASR1).
 	*/
-	std::shared_ptr<EEDmacChannelRegister_ASR_t> mASR[2];
+	std::shared_ptr<EEDmacChannelRegister_ASR_t> ASR[2];
 
 	/*
 	A DMAC channel transfer count save array, needed to determine how many data units (qwords) have been transfered since start, which is used to
 	determine if the DMAC should stop transferring in slice mode (after 8 qwords).
 	Only used for slice channels.
 
-	Reset to 0 whenever mCHCR.STR bit is set to 1 (ie: when starting/restarting a transfer).
-	The mCHCR register is supplied a reference to this count variable, and has writeWordU() overriden.
+	Reset to 0 whenever CHCR.STR bit is set to 1 (ie: when starting/restarting a transfer).
+	The CHCR register is supplied a reference to this count variable, and has writeWordU() overriden.
 	*/
 	u32 mSliceCountState;
 
@@ -119,7 +119,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_8060;
 };
 
 /*
@@ -139,7 +139,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_9060;
 };
 
 /*
@@ -159,7 +159,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_A060;
 };
 
 /*
@@ -179,7 +179,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_B030;
 };
 
 /*
@@ -199,7 +199,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_B440;
 };
 
 /*
@@ -219,7 +219,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_C030;
 };
 
 /*
@@ -239,7 +239,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_C440;
 };
 
 /*
@@ -259,7 +259,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED;
+	std::shared_ptr<ConstantMemory_t> MEMORY_C830;
 };
 
 /*
@@ -279,8 +279,8 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED0;
-	std::shared_ptr<ConstantMemory_t> mRESERVED1;
+	std::shared_ptr<ConstantMemory_t> MEMORY_D030;
+	std::shared_ptr<ConstantMemory_t> MEMORY_D090;
 };
 
 /*
@@ -300,6 +300,6 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> mRESERVED0;
-	std::shared_ptr<ConstantMemory_t> mRESERVED1;
+	std::shared_ptr<ConstantMemory_t> MEMORY_D440;
+	std::shared_ptr<ConstantMemory_t> MEMORY_D490;
 };

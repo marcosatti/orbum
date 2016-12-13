@@ -4,7 +4,14 @@
 #include "Common/Types/Registers/Register64_t.h"
 
 Register64_t::Register64_t() : 
-	UD(0)
+	UD(0),
+	mMnemonic("")
+{
+}
+
+Register64_t::Register64_t(const char* mnemonic) :
+	UD(0),
+	mMnemonic(mnemonic)
 {
 }
 
@@ -90,4 +97,9 @@ s64 Register64_t::readDwordS()
 void Register64_t::writeDwordS(s64 value)
 {
 	SD = value;
+}
+
+const char* Register64_t::getMnemonic() const
+{
+	return mMnemonic.c_str();
 }

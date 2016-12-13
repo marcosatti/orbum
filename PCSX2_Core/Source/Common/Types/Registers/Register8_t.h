@@ -26,7 +26,6 @@ The primary difference between a Register type and Memory type is that registers
 For example, a writeWordU(0, value) will write to the first 0-31 bits, while writeWordU(1, value) will write to bits 32-63.
 See the Memory type for the counter-example.
 */
-
 class Register8_t
 {
 public:

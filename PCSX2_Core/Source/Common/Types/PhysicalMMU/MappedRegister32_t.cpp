@@ -27,88 +27,103 @@ const char* MappedRegister32_t::getMnemonic() const
 
 u8 MappedRegister32_t::readByteU(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	return mRegister32->readByteU(0);
 }
 
 void MappedRegister32_t::writeByteU(u32 storageIndex, u8 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	mRegister32->writeByteU(0, value);
 }
 
 s8 MappedRegister32_t::readByteS(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	return mRegister32->readByteS(0);
 }
 
 void MappedRegister32_t::writeByteS(u32 storageIndex, s8 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	mRegister32->writeByteS(0, value);
 }
 
 u16 MappedRegister32_t::readHwordU(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	return mRegister32->readHwordU(0);
 }
 
 void MappedRegister32_t::writeHwordU(u32 storageIndex, u16 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	mRegister32->writeHwordU(0, value);
 }
 
 s16 MappedRegister32_t::readHwordS(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	return mRegister32->readHwordS(0);
 }
 
 void MappedRegister32_t::writeHwordS(u32 storageIndex, s16 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
+	mRegister32->writeHwordU(0, value);
 }
 
 u32 MappedRegister32_t::readWordU(u32 storageIndex)
 {
 	if (storageIndex != 0)
-		throw std::runtime_error("Tried to access MappedRegister32_t unaligned (storageIndex != 0). Not allowed.");
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
 	return mRegister32->readWordU();
 }
 
 void MappedRegister32_t::writeWordU(u32 storageIndex, u32 value)
 {
 	if (storageIndex != 0)
-		throw std::runtime_error("Tried to access MappedRegister32_t unaligned (storageIndex != 0). Not allowed.");
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
 	mRegister32->writeWordU(value);
 }
 
 s32 MappedRegister32_t::readWordS(u32 storageIndex)
 {
 	if (storageIndex != 0)
-		throw std::runtime_error("Tried to access MappedRegister32_t unaligned (storageIndex != 0). Not allowed.");
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
 	return mRegister32->readWordS();
 }
 
 void MappedRegister32_t::writeWordS(u32 storageIndex, s32 value)
 {
 	if (storageIndex != 0)
-		throw std::runtime_error("Tried to access MappedRegister32_t unaligned (storageIndex != 0). Not allowed.");
+		throw std::runtime_error("Tried to access MappedRegister32_t with unaligned index. Not allowed.");
 	mRegister32->writeWordS(value);
 }
-
 u64 MappedRegister32_t::readDwordU(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	throw std::runtime_error("Tried to access MappedRegister32_t with larger than allowed size. Not allowed.");
 }
 
 void MappedRegister32_t::writeDwordU(u32 storageIndex, u64 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	throw std::runtime_error("Tried to access MappedRegister32_t with larger than allowed size. Not allowed.");
 }
 
 s64 MappedRegister32_t::readDwordS(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	throw std::runtime_error("Tried to access MappedRegister32_t with larger than allowed size. Not allowed.");
 }
 
 void MappedRegister32_t::writeDwordS(u32 storageIndex, s64 value)
 {
-	throw std::runtime_error("Tried to access MappedRegister32_t with a size other than Word. Not allowed.");
+	throw std::runtime_error("Tried to access MappedRegister32_t with larger than allowed size. Not allowed.");
 }

@@ -5,8 +5,8 @@
 
 IOPTimersTimer_t::IOPTimersTimer_t(const u32& timerID) :
 	mTimerID(timerID),
-	Count(std::make_shared<IOPTimersTimerRegister_Count_t>()),
-	Mode(std::make_shared<IOPTimersTimerRegister_Mode_t>(Count)),
-	Compare(std::make_shared<Register32_t>())
+	COUNT(std::make_shared<IOPTimersTimerRegister_COUNT_t>()),
+	MODE(std::make_shared<IOPTimersTimerRegister_MODE_t>(COUNT)),
+	COMP(std::make_shared<Register32_t>())
 {
 }

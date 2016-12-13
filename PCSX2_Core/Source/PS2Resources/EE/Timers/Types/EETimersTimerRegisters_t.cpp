@@ -3,7 +3,7 @@
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 #include "PS2Resources/EE/Timers/EETimers_t.h"
 
-EETimersTimerRegister_Mode_t::EETimersTimerRegister_Mode_t(const std::shared_ptr<EETimersTimerRegister_Count_t> & count) :
+EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
 	mCount(count)
 {
 	registerField(Fields::CLKS, "CLKS", 0, 2, 0);
@@ -18,7 +18,7 @@ EETimersTimerRegister_Mode_t::EETimersTimerRegister_Mode_t(const std::shared_ptr
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_Mode_t::writeWordU(u32 value)
+void EETimersTimerRegister_MODE_t::writeWordU(u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	u32 originalValue = BitfieldRegister32_t::readWordU();
@@ -30,12 +30,12 @@ void EETimersTimerRegister_Mode_t::writeWordU(u32 value)
 		mCount->reset();
 }
 
-EETimersTimerRegister_Count_t::EETimersTimerRegister_Count_t() :
+EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t() :
 	mIsOverflowed(false)
 {
 }
 
-void EETimersTimerRegister_Count_t::increment(u16 value)
+void EETimersTimerRegister_COUNT_t::increment(u16 value)
 {
 	u32 temp = readWordU() + value;
 
@@ -49,14 +49,14 @@ void EETimersTimerRegister_Count_t::increment(u16 value)
 	writeWordU(temp);
 }
 
-bool EETimersTimerRegister_Count_t::isOverflowed()
+bool EETimersTimerRegister_COUNT_t::isOverflowed()
 {
 	bool temp = mIsOverflowed;
 	mIsOverflowed = false;
 	return temp;
 }
 
-void EETimersTimerRegister_Count_t::reset()
+void EETimersTimerRegister_COUNT_t::reset()
 {
 	writeWordU(0);
 }
