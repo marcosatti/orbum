@@ -27,33 +27,29 @@ const char* MappedRegister8_t::getMnemonic() const
 
 u8 MappedRegister8_t::readByteU(u32 storageIndex)
 {
-	// Technically should not happen as due to the way its mapped storageIndex will always be 0.
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	return mRegister8->readByteU();
 }
 
 void MappedRegister8_t::writeByteU(u32 storageIndex, u8 value)
 {
-	// Technically should not happen as due to the way its mapped storageIndex will always be 0.
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	mRegister8->writeByteU(value);
 }
 
 s8 MappedRegister8_t::readByteS(u32 storageIndex)
 {
-	// Technically should not happen as due to the way its mapped storageIndex will always be 0.
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	return mRegister8->readByteS();
 }
 
 void MappedRegister8_t::writeByteS(u32 storageIndex, s8 value)
 {
-	// Technically should not happen as due to the way its mapped storageIndex will always be 0.
-	if (storageIndex != 0)
-		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed."); 
+	if (storageIndex % 1 != 0)
+		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	mRegister8->writeByteS(value);
 }
 
@@ -96,6 +92,7 @@ void MappedRegister8_t::writeWordS(u32 storageIndex, s32 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
+
 u64 MappedRegister8_t::readDwordU(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");

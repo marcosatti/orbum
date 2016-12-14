@@ -13,8 +13,6 @@ IOPTimers_t::IOPTimers_t(const PS2Resources_t* const PS2Resources) :
 	TIMER_3(std::make_shared<IOPTimersTimer_t>(3)),
 	TIMER_4(std::make_shared<IOPTimersTimer_t>(4)),
 	TIMER_5(std::make_shared<IOPTimersTimer_t>(5)),
-	TIMER_6(std::make_shared<IOPTimersTimer_t>(6)),
-	TIMER_7(std::make_shared<IOPTimersTimer_t>(7)),
-	TIMERS{ TIMER_0, TIMER_1, TIMER_2, TIMER_3, TIMER_4, TIMER_5, TIMER_6, TIMER_7 }
+	TIMERS{ TIMER_0, TIMER_1, TIMER_2, TIMER_3, TIMER_4, TIMER_5 }
 {
 }

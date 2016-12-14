@@ -27,56 +27,56 @@ const char* MappedRegister16_t::getMnemonic() const
 
 u8 MappedRegister16_t::readByteU(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	return mRegister16->readByteU(0);
+	return mRegister16->readByteU(storageIndex / 1);
 }
 
 void MappedRegister16_t::writeByteU(u32 storageIndex, u8 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	mRegister16->writeByteU(0, value);
+	mRegister16->writeByteU(storageIndex / 1, value);
 }
 
 s8 MappedRegister16_t::readByteS(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	return mRegister16->readByteS(0);
+	return mRegister16->readByteS(storageIndex / 1);
 }
 
 void MappedRegister16_t::writeByteS(u32 storageIndex, s8 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	mRegister16->writeByteS(0, value);
+	mRegister16->writeByteS(storageIndex / 1, value);
 }
 
 u16 MappedRegister16_t::readHwordU(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
 	return mRegister16->readHwordU();
 }
 
 void MappedRegister16_t::writeHwordU(u32 storageIndex, u16 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
 	mRegister16->writeHwordU(value);
 }
 
 s16 MappedRegister16_t::readHwordS(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
 	return mRegister16->readHwordS();
 }
 
 void MappedRegister16_t::writeHwordS(u32 storageIndex, s16 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
 	mRegister16->writeHwordU(value);
 }

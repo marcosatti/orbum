@@ -29,7 +29,7 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	IPU(std::make_shared<IPU_t>(getRoot())),
 	GIF(std::make_shared<GIF_t>(getRoot())),
 	VPU(std::make_shared<VPU_t>(getRoot())),
-	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_16B)),
+	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_4B)),
 	MainMemory(std::make_shared<Memory_t>(PS2Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
 	BootROM(std::make_shared<BootROM_t>()),
 	ROM1(std::make_shared<ROMemory_t>(PS2Constants::EE::ROM::SIZE_ROM1, "ROM1")),

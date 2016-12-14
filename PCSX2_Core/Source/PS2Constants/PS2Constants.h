@@ -180,9 +180,14 @@ public:
 			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
 		};
 
+		struct DMAC
+		{
+			static constexpr u32 NUMBER_DMAC_CHANNELS = 13;
+		};
+
 		struct Timers
 		{
-			static constexpr u32 NUMBER_TIMERS = 8;
+			static constexpr u32 NUMBER_TIMERS = 6;
 		};
 
 		struct IOPMemory

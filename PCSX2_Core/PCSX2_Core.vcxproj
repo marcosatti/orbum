@@ -366,6 +366,8 @@
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\VU_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\DebugMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register16_t.h" />
@@ -503,6 +505,8 @@
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\VU_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.cpp" />

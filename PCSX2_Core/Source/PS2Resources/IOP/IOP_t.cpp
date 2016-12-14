@@ -7,6 +7,7 @@
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/DMAC/IOPDmac_t.h"
+#include "PS2Resources/IOP/INTC/IOPIntc_t.h"
 #include "PS2Resources/IOP/CDVD/CDVD_t.h"
 #include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 
@@ -20,6 +21,7 @@ IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	PS2ResourcesSubobject(PS2Resources),
 	IOPCore(std::make_shared<IOPCore_t>(getRoot())),
 	DMAC(std::make_shared<IOPDmac_t>(getRoot())),
+	INTC(std::make_shared<IOPIntc_t>(getRoot())),
 	CDVD(std::make_shared<CDVD_t>(getRoot())),
 	Timers(std::make_shared<IOPTimers_t>(getRoot())),
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_8KB, 1)),
@@ -36,6 +38,7 @@ IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	HW_SSBUS_DEV5_DELAY(std::make_shared<Register32_t>()),
 	HW_SSBUS_PIO_DELAY(std::make_shared<Register32_t>()),
 	HW_SSBUS_COM_DELAY(std::make_shared<Register32_t>()),
+	HW_RAM_SIZE(std::make_shared<Register32_t>()),
 	HW_SSBUS_DEV1_ADDR(std::make_shared<Register32_t>()),
 	HW_SSBUS_SPU_ADDR(std::make_shared<Register32_t>()),
 	HW_SSBUS_DEV5_ADDR(std::make_shared<Register32_t>()),
@@ -46,6 +49,12 @@ IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	HW_SSBUS_DEV9_DELAY3(std::make_shared<Register32_t>()),
 	HW_SSBUS_DEV9_DELAY1(std::make_shared<Register32_t>()),
 	HW_ICFG(std::make_shared<Register32_t>()),
+	REGISTER_1470(std::make_shared<Register32_t>()),
+	REGISTER_1560(std::make_shared<Register32_t>()),
+	REGISTER_1564(std::make_shared<Register32_t>()),
+	REGISTER_1568(std::make_shared<Register32_t>()),
+	REGISTER_1578(std::make_shared<Register32_t>()),
+	REGISTER_15F0(std::make_shared<Register32_t>()),
 	REGISTER_2070(std::make_shared<Register32_t>())
 {
 }

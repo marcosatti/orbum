@@ -9,9 +9,10 @@
 /*
 A transition layer, allowing a register to be mapped into the PS2 physical memory space.
 Ie: translates from byte index accesses into size index accesses.
-If the underlying register size is larger than the access size, the LSB's will be returned.
-If the underlying register size is smaller than the access size, a runtime_error is thrown.
-The storageIndex param must be equal to 0, otherwise a runtime_error is thrown (alignment conditions).
+If the access size is smaller than the register size, but aligned on a boundary, then the appropriate array index will be accessed in the register.
+For example, for a 32-bit register mapped @ 0x1F801470 accessed by readHwordU(0x1F801472) will return Register32->UH[1].
+If the access is not aligned on the appropriate boundary, then a runtime_error is thrown.
+If the access size is larger than the register size, a runtime_error is thrown.
 TODO: look into size conditions - the EE manual mentions "... only accessible by word ...", but this allows any size.
 */
 class MappedRegister64_t : public PhysicalMapped

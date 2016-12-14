@@ -30,13 +30,17 @@ class EEDmacRegister_ENABLER_t;
 class Memory_t;
 class ConstantMemory_t;
 
+
+/*
+EE DMAC Resources. See page 41 onwards of the EE Users Manual.
+*/
 class EEDmac_t : public PS2ResourcesSubobject
 {
 public:
 	explicit EEDmac_t(const PS2Resources_t *const PS2Resources);
 
 	/*
-	DMA Channels. See page 41 onwards of EE Users Manual.
+	DMA Channels. See page 42 of the EE Users Manual.
 	Each channel contains the set of registers defined on page 73 in the EE Users Manual.
 	An array is also defined for use in iterations.
 	*/

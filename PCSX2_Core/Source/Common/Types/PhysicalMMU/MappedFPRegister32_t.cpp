@@ -67,28 +67,28 @@ void MappedFPRegister32_t::writeHwordS(u32 storageIndex, s16 value)
 
 u32 MappedFPRegister32_t::readWordU(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister32_t with unaligned index. Not allowed.");
 	return mFPRegister32->readWordU();
 }
 
 void MappedFPRegister32_t::writeWordU(u32 storageIndex, u32 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister32_t with unaligned index. Not allowed.");
 	mFPRegister32->writeWordU(value);
 }
 
 s32 MappedFPRegister32_t::readWordS(u32 storageIndex)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister32_t with unaligned index. Not allowed.");
 	return mFPRegister32->readWordS();
 }
 
 void MappedFPRegister32_t::writeWordS(u32 storageIndex, s32 value)
 {
-	if (storageIndex != 0)
+	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister32_t with unaligned index. Not allowed.");
 	mFPRegister32->writeWordS(value);
 }

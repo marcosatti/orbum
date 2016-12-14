@@ -9,8 +9,8 @@ class IOPTimersTimer_t;
 
 /*
 IOP Timers resources.
-Contains 8 32-bit timers.
-// TODO: fill in.
+Contains 3 16-bit and 3 32-bit timers.
+TODO: double check and fill in.
 */
 class IOPTimers_t : public PS2ResourcesSubobject
 {
@@ -27,8 +27,6 @@ public:
 	std::shared_ptr<IOPTimersTimer_t> TIMER_3;
 	std::shared_ptr<IOPTimersTimer_t> TIMER_4;
 	std::shared_ptr<IOPTimersTimer_t> TIMER_5;
-	std::shared_ptr<IOPTimersTimer_t> TIMER_6;
-	std::shared_ptr<IOPTimersTimer_t> TIMER_7;
 	std::shared_ptr<IOPTimersTimer_t> TIMERS[PS2Constants::IOP::Timers::NUMBER_TIMERS];
 
 };

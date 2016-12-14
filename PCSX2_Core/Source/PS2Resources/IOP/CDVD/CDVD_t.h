@@ -22,7 +22,7 @@ public:
 	CDVD Registers.
 	DEBUG.
 	*/
-	std::shared_ptr<Register8_t>         N_COMMAND;      // Register "N_COMMAND"         @ 0x1F402004.
+	std::shared_ptr<Register8_t>         N_COMMAND;     // Register "N_COMMAND"          @ 0x1F402004.
 	std::shared_ptr<Register8_t>         N_READY;       // Register "N_READY"            @ 0x1F402005.
 	std::shared_ptr<Register8_t>         ERROR;         // Register "ERROR"              @ 0x1F402006.
 	std::shared_ptr<ConstantRegister8_t> BREAK;         // Register "BREAK"              @ 0x1F402007.
