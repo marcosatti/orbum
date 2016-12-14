@@ -294,6 +294,7 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 		// Misc IOP Registers.
 		EE->PhysicalMMU->mapObject(0x1F80141C, IOP->HW_SSBUS_DEV9_DELAY3);
 		EE->PhysicalMMU->mapObject(0x1F801470, IOP->REGISTER_1470);
+		EE->PhysicalMMU->mapObject(0x1F803800, IOP->REGISTER_3800);
 
 		// Main Memory.
 		EE->PhysicalMMU->mapObject(0x1C000000, IOP->MainMemory);
@@ -305,6 +306,11 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 		EE->PhysicalMMU->mapObject(0x1000F210, SIF->SMCOM);
 		EE->PhysicalMMU->mapObject(0x1000F220, SIF->MSFLG);
 		EE->PhysicalMMU->mapObject(0x1000F230, SIF->SMFLG);
+		EE->PhysicalMMU->mapObject(0x1000F240, SIF->REGISTER_F240);
+		EE->PhysicalMMU->mapObject(0x1000F250, SIF->REGISTER_F250);
+		EE->PhysicalMMU->mapObject(0x1000F260, SIF->REGISTER_F260);
+		EE->PhysicalMMU->mapObject(0x1000F300, SIF->REGISTER_F300);
+		EE->PhysicalMMU->mapObject(0x1000F380, SIF->REGISTER_F380);
 	}
 }
 
@@ -486,7 +492,8 @@ void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 		IOP->PhysicalMMU->mapObject(0x1D000010, SIF->SMCOM);
 		IOP->PhysicalMMU->mapObject(0x1D000020, SIF->MSFLG);
 		IOP->PhysicalMMU->mapObject(0x1D000030, SIF->SMFLG);
-		IOP->PhysicalMMU->mapObject(0x1D000060, SIF->REGISTER_0060);
+		IOP->PhysicalMMU->mapObject(0x1D000040, SIF->REGISTER_F240);
+		IOP->PhysicalMMU->mapObject(0x1D000060, SIF->REGISTER_F260);
 	}
 }
 

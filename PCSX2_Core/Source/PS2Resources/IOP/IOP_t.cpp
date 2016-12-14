@@ -55,6 +55,7 @@ IOP_t::IOP_t(const PS2Resources_t* const PS2Resources) :
 	REGISTER_1568(std::make_shared<Register32_t>()),
 	REGISTER_1578(std::make_shared<Register32_t>()),
 	REGISTER_15F0(std::make_shared<Register32_t>()),
-	REGISTER_2070(std::make_shared<Register32_t>())
+	REGISTER_2070(std::make_shared<Register32_t>()),
+	REGISTER_3800(std::make_shared<Register32_t>())
 {
 }
