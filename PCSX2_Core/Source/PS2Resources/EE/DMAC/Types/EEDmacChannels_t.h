@@ -74,11 +74,16 @@ public:
 	A DMAC channel transfer count save array, needed to determine how many data units (qwords) have been transfered since start, which is used to
 	determine if the DMAC should stop transferring in slice mode (after 8 qwords).
 	Only used for slice channels.
-
-	Reset to 0 whenever CHCR.STR bit is set to 1 (ie: when starting/restarting a transfer).
-	The CHCR register is supplied a reference to this count variable, and has writeWordU() overriden.
 	*/
 	u32 mSliceCountState;
+
+	/*
+	A chain mode tag source status for each channel. Determines if the DMAC should read a tag from the MADR register, or the TADR register.
+	In source chain mode, initially a tag is read from the MADR register, but can be read from the TADR register if the appropriate tag ID is called.
+	In dest chain mode, a tag is always read from the MADR register as there is no tag ID that can specify the TADR register (doesn't exist anyway).
+	Only used for chain mode channels.
+	*/
+	bool mChainTagFromTADR;
 
 	/*
 	A chain mode exit status for each channel. When an exiting DMAtag instruction such as end is called, true is written to the appropriate index,
@@ -91,14 +96,14 @@ public:
 	A stack level count, for chain mode (CALL / RET instructions). Used to check if the DMA transfer should end.
 	Only used for chain mode channels.
 	*/
-	u8 mChainStackLevelState;
+	u32 mChainStackLevelState;
 
 	/*
 	Interleaved transfer state variables. Used to determine when to transfer data and when to skip data.
 	Only used for interleave channels.
 	*/
-	bool mInterleavedSkipState;
-	u8 mInterleavedCountState;
+	bool mInterleavedInSkipBlock;
+	u32 mInterleavedBlockCount;
 
 };
 

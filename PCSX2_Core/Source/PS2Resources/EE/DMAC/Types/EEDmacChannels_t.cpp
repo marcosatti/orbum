@@ -5,7 +5,7 @@
 
 EEDmacChannel_t::EEDmacChannel_t(const u32 & channelID) :
 	mChannelID(channelID),
-	CHCR(std::make_shared<EEDmacChannelRegister_CHCR_t>(mSliceCountState)),
+	CHCR(std::make_shared<EEDmacChannelRegister_CHCR_t>()),
 	MADR(std::make_shared<EEDmacChannelRegister_MADR_t>()),
 	QWC(std::make_shared<EEDmacChannelRegister_QWC_t>()),
 	TADR(nullptr),
@@ -13,11 +13,12 @@ EEDmacChannel_t::EEDmacChannel_t(const u32 & channelID) :
 	ASR1(nullptr),
 	SADR(nullptr),
 	ASR{ ASR0, ASR1 },
-	mSliceCountState(0),
+	mSliceCountState(0), 
+	mChainTagFromTADR(false),
 	mChainExitState(false),
 	mChainStackLevelState(0),
-	mInterleavedSkipState(false),
-	mInterleavedCountState(0)
+	mInterleavedInSkipBlock(false),
+	mInterleavedBlockCount(0)
 {
 }
 

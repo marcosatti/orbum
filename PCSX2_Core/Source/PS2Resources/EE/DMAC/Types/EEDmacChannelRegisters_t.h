@@ -21,15 +21,7 @@ public:
 		static constexpr u8 TAG = 6;
 	};
 
-	EEDmacChannelRegister_CHCR_t(u32 & sliceCountState);
-
-	void writeWordU(u32 value) override;
-
-private:
-	/*
-	A pointer to the DMAC channel slice count state, used to determine if a transfer should stop after 8 qwords (a "slice").
-	*/
-	u32 & mSliceCountState;
+	EEDmacChannelRegister_CHCR_t();
 };
 
 /*
@@ -84,6 +76,11 @@ public:
 	};
 
 	EEDmacChannelRegister_TADR_t();
+
+	/*
+	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
+	*/
+	void increment();
 };
 
 /*

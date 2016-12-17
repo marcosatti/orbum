@@ -171,19 +171,13 @@ void EEDmac::executionStep_Interleaved() const
 	}
 	
 	// Data of size D_SQWC.TQWC is transferred first, then data of size D_SQWC.SQWC is skipped, until Dn_QWC is reached.
-	if (!Channel->mInterleavedSkipState)
-	{
-		// Transfer data.
-		transferDataUnit();
-	}
+	if (!Channel->mInterleavedInSkipBlock)
+		transferDataUnit();         // Transfer data.
 	else
-	{
-		// Skip data by incrementing the channel MADR.
-		Channel->MADR->increment();
-	}
+		Channel->MADR->increment(); // Skip data by incrementing the channel MADR.
 
 	// Increment the mInterleavedCountState.
-	Channel->mInterleavedCountState += 1;
+	Channel->mInterleavedBlockCount += 1;
 
 	// Check the interleaved mode (transferring/skipping), and change mInterleavedSkipState if required, based on mInterleavedCountState.
 	checkInterleaveCount();
@@ -201,10 +195,11 @@ void EEDmac::checkSliceQuota() const
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
-	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
+	// If the physical mode is set to slice, reset state and suspend transfer after 8 units are completed.
 	if ((mChannelProperties->PhysicalMode == PhysicalMode_t::SLICE)
 		&& (Channel->mSliceCountState % 8 == 0))
 	{
+		Channel->mSliceCountState = 0;
 		suspendTransfer();
 	}
 }
@@ -369,7 +364,8 @@ void EEDmac::transferDataUnit() const
 		// Increment the SADR address as well as MADR etc (done below).
 		Channel->SADR->increment();
 	}
-	else {
+	else 
+	{
 		// Else transfer data normally.
 		if (direction == Direction_t::FROM)
 		{
@@ -401,41 +397,41 @@ void EEDmac::writeDataChannel(u128 data) const
 	throw std::runtime_error("DMA channel write qword not implemented.");
 }
 
-u128 EEDmac::readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const
+u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess) const
 {
 	auto& EEMMU = getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
 		// Read spr[tadr] (lower 64 bits) and spr[tadr + 8] (upper 64 bits).
-		u64 lower = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset);
-		u64 upper = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8);
+		u64 lower = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
+		u64 upper = EEMMU->readDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress + 8);
 		return u128(lower, upper);
 	}
 	else
 	{
 		// Read mem[tadr] (lower 64 bits) and mem[tadr + 8] (upper 64 bits).
-		u64 lower = EEMMU->readDwordU(PhysicalAddressOffset);
-		u64 upper = EEMMU->readDwordU(PhysicalAddressOffset + 8);
+		u64 lower = EEMMU->readDwordU(physicalAddress);
+		u64 upper = EEMMU->readDwordU(physicalAddress + 8);
 		return u128(lower, upper);
 	}
 }
 
-void EEDmac::writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const
+void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) const
 {
 	auto& EEMMU = getResources()->EE->PhysicalMMU;
 
 	if (SPRAccess)
 	{
 		// Write spr[address] (lower 64 bits) and spr[address + 8] (upper 64 bits).
-		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset, data.lo);
-		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + PhysicalAddressOffset + 8, data.hi);
+		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data.lo);
+		EEMMU->writeDwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress + 8, data.hi);
 	}
 	else
 	{
 		// Write mem[address] (lower 64 bits) and mem[address + 8] (upper 64 bits).
-		EEMMU->writeDwordU(PhysicalAddressOffset, data.lo);
-		EEMMU->writeDwordU(PhysicalAddressOffset + 8, data.hi);
+		EEMMU->writeDwordU(physicalAddress, data.lo);
+		EEMMU->writeDwordU(physicalAddress + 8, data.hi);
 	}
 }
 
@@ -444,12 +440,25 @@ void EEDmac::readDMAtag()
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
-	// Get the main memory or SPR address we are reading or writing from.
-	const u32 TADR = Channel->TADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
-	const bool SPRFlag = (Channel->TADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
+	// Determine where we are reading the tag from (based on MADR or TADR).
+	u128 data;
+	if (Channel->mChainTagFromTADR)
+	{
+		// Read from TADR.
+		// Get the main memory or SPR address we are reading or writing from.
+		const u32 TADR = Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR);
+		const bool SPRFlag = (Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR) != 0);
+		data = readDataMemory(TADR, SPRFlag);
+	}
+	else
+	{
+		// Read from MADR.
+		const u32 MADR = Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
+		const bool SPRFlag = (Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
+		data = readDataMemory(MADR, SPRFlag);
+	}
 
 	// Set mDMAtag based upon the u128 read from memory.
-	u128 data = readDataMemory(TADR, SPRFlag);
 	mDMAtag.setValue(data.lo);
 
 	// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
@@ -486,6 +495,7 @@ void EEDmac::checkChainExit() const
 	if (Channel->mChainExitState)
 	{
 		// Reset chain state variables.
+		Channel->mChainTagFromTADR = false;
 		Channel->mChainExitState = false;
 		Channel->mChainStackLevelState = 0;
 
@@ -498,7 +508,113 @@ void EEDmac::INSTRUCTION_UNSUPPORTED()
 	throw std::runtime_error("DMAC chain mode called invalid tag ID");
 }
 
-void EEDmac::REFE()
+void EEDmac::SRC_CNT()
+{
+	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Copy TADR or MADR + 0x10 into MADR, based on where the tag was read from.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	}
+	else
+	{
+		Channel->MADR->increment();
+	}
+
+	// Do not use TADR register for next tag read, which is done next to data.
+	Channel->mChainTagFromTADR = false;
+}
+
+void EEDmac::SRC_NEXT()
+{
+	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Copy TADR or MADR + 0x10 into MADR, based on where the tag was read from.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	}
+	else
+	{
+		Channel->MADR->increment();
+	}
+
+	// Set next tag (uses TADR register).
+	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getSPR());
+
+	// Use TADR register for next tag read.
+	Channel->mChainTagFromTADR = true;
+}
+
+void EEDmac::SRC_REF()
+{
+	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Set next tag as qword after tag.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->TADR->increment();
+	}
+	else
+	{
+		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR) + 0x10);
+		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR));
+	}
+
+	// Use TADR register for next tag read.
+	Channel->mChainTagFromTADR = true;
+
+	// Set MADR = tag.ADDR.
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+}
+
+void EEDmac::SRC_REFS()
+{
+	// TODO: add in stall control.
+
+	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Set next tag as qword after tag.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->TADR->increment();
+	}
+	else
+	{
+		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR) + 0x10);
+		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, Channel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR));
+	}
+
+	// Use TADR register for next tag read.
+	Channel->mChainTagFromTADR = true;
+
+	// Set MADR = tag.ADDR.
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+}
+
+void EEDmac::SRC_REFE()
 {
 	// Transfers QWC qwords from ADDR, and suspends after packet transfer.
 	auto& DMAC = getResources()->EE->DMAC;
@@ -510,88 +626,34 @@ void EEDmac::REFE()
 	Channel->mChainExitState = true;
 }
 
-void EEDmac::CNT()
-{
-	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
-	auto& DMAC = getResources()->EE->DMAC;
-	auto& Channel = DMAC->CHANNELS[mChannelIndex];
-
-	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-
-	// Copy TADR + 0x10 into MADR.
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-
-	// Calculate where the next tag will be.
-	u32 nextTagAddr = Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + (mDMAtag.getQWC() + 1) * 0x10;
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
-}
-
-void EEDmac::NEXT()
-{
-	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
-	auto& DMAC = getResources()->EE->DMAC;
-	auto& Channel = DMAC->CHANNELS[mChannelIndex];
-
-	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-
-	// Copy TADR + 0x10 into MADR.
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-
-	// Set next tag.
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getSPR()); 
-}
-
-void EEDmac::REF()
-{
-	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& DMAC = getResources()->EE->DMAC;
-	auto& Channel = DMAC->CHANNELS[mChannelIndex];
-
-	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-
-	// Set MADR = tag.ADDR.
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
-
-	// Set next qword as tag.
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
-}
-
-void EEDmac::REFS()
-{
-	// TODO: add in stall control.
-
-	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	auto& DMAC = getResources()->EE->DMAC;
-	auto& Channel = DMAC->CHANNELS[mChannelIndex];
-
-	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-
-	// Set MADR = tag.ADDR.
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
-
-	// Set next qword as tag.
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
-}
-
-void EEDmac::CALL()
+void EEDmac::SRC_CALL()
 {
 	// Transfers QWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+
+	// Copy TADR or MADR + 0x10 into MADR, based on where the tag was read from.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	}
+	else
+	{
+		Channel->MADR->increment();
+	}
+
+	// Set next tag location.
 	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
 	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, mDMAtag.getSPR());
 
+	// Use TADR register for next tag read.
+	Channel->mChainTagFromTADR = true;
+
 	// Set stack to after tag.
-	u8 & stackIdx = Channel->mChainStackLevelState;
+	u32 & stackIdx = Channel->mChainStackLevelState;
 
 	if (stackIdx >= 2)
 	{
@@ -607,18 +669,22 @@ void EEDmac::CALL()
 	}
 }
 
-void EEDmac::RET()
+void EEDmac::SRC_RET()
 {
 	// Transfers QWC qwords after tag, pops next tag from stack. If stack level = 0, transfers QWC qwords after tag and suspends transfer.
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
-	u8 & stackIdx = Channel->mChainStackLevelState;	
+	u32 & stackIdx = Channel->mChainStackLevelState;	
 	if (stackIdx > 0)
 	{
 		// Pop the stack.
 		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->ASR[stackIdx]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
 		Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, Channel->ASR[stackIdx]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
+
+		// Use TADR register for next tag read.
+		Channel->mChainTagFromTADR = true;
+
 		stackIdx -= 1;
 	}
 	else
@@ -629,38 +695,80 @@ void EEDmac::RET()
 
 	// In both cases, QWC following the tag is always performed.
 	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+
+	// Copy TADR or MADR + 0x10 into MADR, based on where the tag was read from.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	}
+	else
+	{
+		Channel->MADR->increment();
+	}
 }
 
-void EEDmac::END()
+void EEDmac::SRC_END()
 {
 	// Transfers QWC qwords after tag, and suspends after packet transfer.
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	
+	// Copy TADR or MADR + 0x10 into MADR, based on where the tag was read from.
+	if (Channel->mChainTagFromTADR)
+	{
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	}
+	else
+	{
+		Channel->MADR->increment();
+	}
+
 	Channel->mChainExitState = true;
 }
 
-void EEDmac::CNTS()
+void EEDmac::DST_CNT()
 {
-	// TODO: need to copy MADR to STADR during the transfer.
-	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
+	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
 	auto& DMAC = getResources()->EE->DMAC;
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];
 
 	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
 
-	// Copy TADR + 0x10 into MADR.
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	// Set MADR to tag values.
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+}
 
-	// Calculate where the next tag will be.
-	u32 nextTagAddr = Channel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + (mDMAtag.getQWC() + 1) * 0x10;
-	Channel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
+void EEDmac::DST_CNTS()
+{
+	// TODO: need to copy MADR to STADR during the transfer.
+	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Set MADR to tag values.
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+}
+
+void EEDmac::DST_END()
+{
+	// Transfers QWC qwords after the tag to tag.ADDR, and suspends transfer after completing.
+	auto& DMAC = getResources()->EE->DMAC;
+	auto& Channel = DMAC->CHANNELS[mChannelIndex];
+
+	Channel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+
+	// Set MADR to tag values.
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	Channel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	Channel->mChainExitState = true;
 }
 
 void EEDmac::checkInterleaveCount() const
@@ -669,24 +777,24 @@ void EEDmac::checkInterleaveCount() const
 	auto& Channel = DMAC->CHANNELS[mChannelIndex];;
 
 	// Are we in a transfer or skip block?
-	if (!Channel->mInterleavedSkipState)
+	if (!Channel->mInterleavedInSkipBlock)
 	{
 		// Have we reached the TWQC limit?
-		if (Channel->mInterleavedCountState >= DMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::TQWC))
+		if (Channel->mInterleavedBlockCount >= DMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::TQWC))
 		{
 			// Change to skip mode and reset the count.
-			Channel->mInterleavedSkipState = !Channel->mInterleavedSkipState;
-			Channel->mInterleavedCountState = 0;
+			Channel->mInterleavedInSkipBlock = !Channel->mInterleavedInSkipBlock;
+			Channel->mInterleavedBlockCount = 0;
 		}
 	}
 	else
 	{
 		// Have we reached the SQWC limit?
-		if (Channel->mInterleavedCountState >= DMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::SQWC))
+		if (Channel->mInterleavedBlockCount >= DMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::SQWC))
 		{
 			// Change to skip mode and reset the count.
-			Channel->mInterleavedSkipState = !Channel->mInterleavedSkipState;
-			Channel->mInterleavedCountState = 0;
+			Channel->mInterleavedInSkipBlock = !Channel->mInterleavedInSkipBlock;
+			Channel->mInterleavedBlockCount = 0;
 		}
 	}
 }

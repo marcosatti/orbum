@@ -13,8 +13,7 @@ using Direction_t = EEDmacChannelTable::Direction_t;
 /*
 The EE DMAC sytem controls the execution of the EE DMAC and transfers through DMA.
 
-The EE DMAC is synced to the BUSCLK clock source, and at most transfers a qword (a 4 x 32-bit data unit) every tick (128 bits) on slice and burst channels 
- (since the bus is 128-bit long).
+The EE DMAC is synced to the BUSCLK clock source, and at most transfers a qword (a 128-bit data unit) every tick on slice and burst channels.
 In a slice physical transfer mode, 8 qwords are transfered before the DMAC releases the bus to the CPU - it waits for a 'DMA request' command before continuing.
 In a burst physical transfer mode, n qwords are transfered all at once - the CPU must wait for the DMAC to release the bus.
 
@@ -162,18 +161,20 @@ private:
 	void checkChainExit() const;
 
 	/*
-	Chain DMAtag handler functions. Consult page 59 and 60 of EE Users Manual.
+	Chain DMAtag handler functions. Consult page 59 - 61 of EE Users Manual.
 	*/
 	void INSTRUCTION_UNSUPPORTED();
-	void REFE();
-	void CNT();
-	void NEXT();
-	void REF();
-	void REFS();
-	void CALL();
-	void RET();
-	void END();
-	void CNTS();
+	void SRC_CNT();
+	void SRC_NEXT();
+	void SRC_REF();
+	void SRC_REFS();
+	void SRC_REFE();
+	void SRC_CALL();
+	void SRC_RET();
+	void SRC_END();
+	void DST_CNT();
+	void DST_CNTS();
+	void DST_END();
 
 	/*
 	Static arrays needed to call the appropriate DMAtag handler function.
@@ -181,25 +182,25 @@ private:
 	*/
 	void(EEDmac::*const SRC_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac::REFE,
-		&EEDmac::CNT,
-		&EEDmac::NEXT,
-		&EEDmac::REF,
-		&EEDmac::REFS,
-		&EEDmac::CALL,
-		&EEDmac::RET,
-		&EEDmac::END
+		&EEDmac::SRC_REFE,
+		&EEDmac::SRC_CNT,
+		&EEDmac::SRC_NEXT,
+		&EEDmac::SRC_REF,
+		&EEDmac::SRC_REFS,
+		&EEDmac::SRC_CALL,
+		&EEDmac::SRC_RET,
+		&EEDmac::SRC_END
 	};
 	void(EEDmac::*const DST_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac::CNTS,
-		&EEDmac::CNT,
+		&EEDmac::DST_CNTS,
+		&EEDmac::DST_CNT,
 		&EEDmac::INSTRUCTION_UNSUPPORTED,
 		&EEDmac::INSTRUCTION_UNSUPPORTED,
 		&EEDmac::INSTRUCTION_UNSUPPORTED,
 		&EEDmac::INSTRUCTION_UNSUPPORTED,
 		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::END,
+		&EEDmac::DST_END,
 	};
 
 
