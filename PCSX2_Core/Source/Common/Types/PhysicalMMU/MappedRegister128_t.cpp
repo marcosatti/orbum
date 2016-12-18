@@ -5,9 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
 
-MappedRegister128_t::MappedRegister128_t(const u32& physicalAddress, const std::shared_ptr<Register128_t> & fpRegister128) :
+MappedRegister128_t::MappedRegister128_t(const u32& physicalAddress, const std::shared_ptr<Register128_t> & register128) :
 	PhysicalMapped(physicalAddress),
-	mRegister128(fpRegister128)
+	mRegister128(register128)
 {
 }
 
@@ -135,4 +135,18 @@ void MappedRegister128_t::writeDwordS(u32 storageIndex, s64 value)
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
 	mRegister128->writeDwordS(storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
+}
+
+u128 MappedRegister128_t::readQwordU(u32 storageIndex)
+{
+	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
+		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
+	return mRegister128->readQwordU();
+}
+
+void MappedRegister128_t::writeQwordU(u32 storageIndex, u128 value)
+{
+	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
+		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
+	mRegister128->writeQwordU(value);
 }

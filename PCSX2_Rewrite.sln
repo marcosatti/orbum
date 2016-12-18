@@ -18,6 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{69D468DB-F5D3-4F0E-82F6-CDC24C11E194}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Frontend", "PCSX2_Frontend\PCSX2_Frontend.vcxproj", "{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E} = {CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

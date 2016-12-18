@@ -87,6 +87,15 @@ void ConstantMemory_t::writeDwordS(u32 storageIndex, s64 value)
 {
 }
 
+u128 ConstantMemory_t::readQwordU(u32 storageIndex)
+{
+	return u128(mConstantValue, mConstantValue);
+}
+
+void ConstantMemory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+}
+
 size_t ConstantMemory_t::getSize()
 {
 	return mSize;

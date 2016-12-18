@@ -67,3 +67,10 @@ void ROMemory_t::writeDwordS(u32 storageIndex, s64 value)
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
 #endif
 }
+
+void ROMemory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+#if DEBUG_LOG_RO_MM_WRITES
+	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d).", getMnemonic(), storageIndex, value.lo, value.hi);
+#endif
+}

@@ -45,6 +45,8 @@ public:
 	void writeDwordU(u32 PS2VirtualAddress, u64 value);
 	s64 readDwordS(u32 PS2VirtualAddress);
 	void writeDwordS(u32 PS2VirtualAddress, s64 value);
+	u128 readQwordU(u32 PS2VirtualAddress);
+	void writeQwordU(u32 PS2VirtualAddress, u128 value);
 
 	/*
 	Exception handling functionality. Because this is used within the EE Core instruction implementations, there needs to be a way for the exception to

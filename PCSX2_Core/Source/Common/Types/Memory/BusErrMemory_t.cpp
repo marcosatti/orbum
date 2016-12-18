@@ -96,6 +96,16 @@ void BusErrMemory_t::writeDwordS(u32 storageIndex, s64 value)
 	throw std::runtime_error("Bus Error occured, but not implemented as an exception.");
 }
 
+u128 BusErrMemory_t::readQwordU(u32 storageIndex)
+{
+	throw std::runtime_error("Bus Error occured, but not implemented as an exception.");
+}
+
+void BusErrMemory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+	throw std::runtime_error("Bus Error occured, but not implemented as an exception.");
+}
+
 size_t BusErrMemory_t::getSize()
 {
 	return mSize;

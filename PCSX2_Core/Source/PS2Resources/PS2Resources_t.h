@@ -37,7 +37,7 @@ class Clock_t;
 class EE_t;
 class GS_t;
 class IOP_t;
-class SIF_t;
+class Common_t;
 
 class PS2Resources_t
 {
@@ -65,13 +65,24 @@ public:
 	std::shared_ptr<IOP_t> IOP;
 
 	/*
-	The SIF structure (shared between EE and IOP).
+	Common resources structure (shared between EE, GS and/or IOP).
 	*/
-	std::shared_ptr<SIF_t> SIF;
+	std::shared_ptr<Common_t> Common;
 
 private:
 
 	// Post initalisaiton functions.
+
+	/*
+	Initalise the VU0 (COP2) control register map.
+	*/
+	void initControlRegistersMap_VU0() const;
+
+	/*
+	Initalise the EE and IOP DMAC channel's with the appropriate FIFO queue attached.
+	*/
+	void initDMAChannelFifoQueues_EE() const;
+	// void initDMAChannelFifoQueues_IOP() const;
 
 	/*
 	Initalise the EE and IOP physical memory space. 
@@ -82,9 +93,4 @@ private:
 	void initPhysicalMemoryMap_IOP() const;
 	void initPhysicalMemoryMap_VU0() const;
 	void initPhysicalMemoryMap_VU1() const;
-
-	/*
-	Initalise the VU0 (COP2) control register map.
-	*/
-	void initControlRegistersMap_VU0() const;
 };

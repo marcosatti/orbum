@@ -16,5 +16,6 @@ public:
 	void writeWordS(u32 arrayIndex, s32 value) override;
 	void writeDwordU(u32 arrayIndex, u64 value) override;
 	void writeDwordS(u32 arrayIndex, s64 value) override;
+	void writeQwordU(u128 value) override;
 	void writeFloat(u32 arrayIndex, f32 value) override;
 };

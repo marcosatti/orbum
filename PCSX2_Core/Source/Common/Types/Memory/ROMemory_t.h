@@ -14,8 +14,8 @@ public:
 	virtual ~ROMemory_t();
 
 	/*
-	All writes are discarded - this is a silent error!
-	Can optionally log when this happens.
+	All writes are discarded - this is a silent discard!
+	Can optionally debug log when this happens.
 	*/
 	void writeByteU(u32 storageIndex, u8 value) override;
 	void writeByteS(u32 storageIndex, s8 value) override;
@@ -25,4 +25,5 @@ public:
 	void writeWordS(u32 storageIndex, s32 value) override;
 	void writeDwordU(u32 storageIndex, u64 value) override;
 	void writeDwordS(u32 storageIndex, s64 value) override;
+	void writeQwordU(u32 storageIndex, u128 value) override;
 };

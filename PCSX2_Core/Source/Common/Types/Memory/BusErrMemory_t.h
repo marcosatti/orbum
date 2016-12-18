@@ -32,6 +32,8 @@ public:
 	void writeDwordU(u32 storageIndex, u64 value) override;
 	s64 readDwordS(u32 storageIndex) override;
 	void writeDwordS(u32 storageIndex, s64 value) override;
+	u128 readQwordU(u32 storageIndex) override;
+	void writeQwordU(u32 storageIndex, u128 value) override;
 
 	/*
 	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getSize(), return the size set

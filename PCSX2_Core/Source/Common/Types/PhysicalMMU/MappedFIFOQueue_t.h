@@ -4,22 +4,17 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/PhysicalMapped.h"
-#include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 /*
-A transition layer, allowing a register to be mapped into the PS2 physical memory space.
-Ie: translates from byte index accesses into size index accesses.
-If the access size is smaller than the register size, but aligned on a boundary, then the appropriate array index will be accessed in the register.
-For example, for a 32-bit register mapped @ 0x1F801470 accessed by readHwordU(0x1F801472) will return Register32->UH[1].
-If the access is not aligned on the appropriate boundary, then a runtime_error is thrown.
-If the access size is larger than the register size, a runtime_error is thrown.
-TODO: look into size conditions - the EE manual mentions "... only accessible by word ...", but this allows any size.
+A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
+Only read/writeQwordU is allowed on aligned addresses - all other combinations throw a runtime error.
 */
-class MappedRegister128_t : public PhysicalMapped
+class MappedFIFOQueue_t : public PhysicalMapped
 {
 public:
-	explicit MappedRegister128_t(const u32& physicalAddress, const std::shared_ptr<Register128_t> & register128);
-	virtual ~MappedRegister128_t();
+	explicit MappedFIFOQueue_t(const u32& physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	virtual ~MappedFIFOQueue_t();
 
 	u8 readByteU(u32 storageIndex) override;
 	void writeByteU(u32 storageIndex, u8 value) override;
@@ -52,7 +47,7 @@ public:
 
 private:
 	/*
-	The underlying register this class maps to.
+	The underlying FIFO queue this class maps to.
 	*/
-	const std::shared_ptr<Register128_t> mRegister128;
+	const std::shared_ptr<FIFOQueue_t> mFIFOQueue;
 };

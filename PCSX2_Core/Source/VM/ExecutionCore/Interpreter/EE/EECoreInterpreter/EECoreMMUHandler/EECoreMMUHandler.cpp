@@ -155,6 +155,22 @@ void EECoreMMUHandler::writeDwordS(u32 PS2MemoryAddress, s64 value)
 		getResources()->EE->PhysicalMMU->writeDwordS(PS2PhysicalAddress, value);
 }
 
+u128 EECoreMMUHandler::readQwordU(u32 PS2VirtualAddress)
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2VirtualAddress, READ);
+	if (!mHasExceptionOccurred)
+		return getResources()->EE->PhysicalMMU->readQwordU(PS2PhysicalAddress);
+	else
+		return u128(0, 0);
+}
+
+void EECoreMMUHandler::writeQwordU(u32 PS2VirtualAddress, u128 value)
+{
+	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2VirtualAddress, WRITE);
+	if (!mHasExceptionOccurred)
+		getResources()->EE->PhysicalMMU->writeQwordU(PS2PhysicalAddress, value);
+}
+
 bool EECoreMMUHandler::hasExceptionOccurred() const
 {
 	return mHasExceptionOccurred;

@@ -10,6 +10,10 @@
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
 
+class EEDmac_t;
+class PhysicalMMU_t;
+class EEDmacChannel_t;
+
 /*
 The EE DMAC sytem controls the execution of the EE DMAC and transfers through DMA.
 
@@ -28,7 +32,6 @@ TODO: Speedups can be done here:
  - Dont need to transfer 1-qword at a time.
  - Dont need to turn on cycle stealing if requested? Kind of redundant in an emulator.
 */
-
 class EEDmac : public VMExecutionCoreComponent
 {
 public:
@@ -44,14 +47,18 @@ public:
 
 private:
 	/*
-	Temporary context variables set by executionStep() in each cycle. Used by all of the functions below (ie: in Normal, Chain or Interleaved mode).
+	Context variables set by executionStep() in each cycle. 
+	Used by all of the functions below.
 	*/
 	u32 mChannelIndex;
+	std::shared_ptr<EEDmac_t> mDMAC;
+	std::shared_ptr<PhysicalMMU_t> mEEMMU;
+	std::shared_ptr<EEDmacChannel_t> mChannel;
 	const ChannelProperties_t * mChannelProperties;
 
 
 
-	// Logical mode functions.
+	// Logical mode functions, called by the base executionStep() function.
 
 	/*
 	Do a normal logical mode transfer through the specified DMA channel.
@@ -111,7 +118,7 @@ private:
 
 	/*
 	Returns true if MADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
-	Also controls the D_STAT.SISn bit - sets to 1 if a stall occurred.
+	Callee is responsible for setting the D_STAT.SIS bit.
 	TODO: According to the docs, "SIS bit doesn't change even if the transfer restarts"! PS2 OS sets it back to 0?
 	*/
 	bool isDrainStallControlWaiting() const;
@@ -144,11 +151,17 @@ private:
 	DMAtag_t mDMAtag;
 
 	/*
-	Sets mDMAtag to the tag read from memory/SPR (from the TADR register).
+	Sets mDMAtag to the tag from the TADR register (src chain) or from the channel FIFO (dst chain).
 	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
 	If CHCR.TTE is set, transfers the tag.
 	*/
-	void readDMAtag();
+	void readChainSrcDMAtag();
+	void readChainDstDMAtag();
+
+	/*
+	Checks if this cycle is the first one for a source chain mode channel. Needed to set the initial TADR value.
+	*/
+	void checkChainSrcFirstRun() const;
 
 	/*
 	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (QWC == 0 and TAG.IRQ/CHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.

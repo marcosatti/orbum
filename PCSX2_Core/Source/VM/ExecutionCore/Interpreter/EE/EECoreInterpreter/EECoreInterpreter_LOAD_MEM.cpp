@@ -268,26 +268,14 @@ void EECoreInterpreter::LQ()
 	const s16 imm = mInstruction.getIImmS();
 
 	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
-	u64 value;
 	// TODO: Im not sure if this is correct for big-endian.
 	
-	value = mMMUHandler->readDwordU(PS2VirtualAddress);
-	// Check for MMU error (1).
-	if (mMMUHandler->hasExceptionOccurred())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(mMMUHandler->getExceptionInfo());
-		return; // Return early, dont bother trying to load the second dword.
-	}
-	else 
-		destReg->writeDwordU(0, value); // Get first 8 bytes (bytes 0 -> 7).
-
-	value = mMMUHandler->readDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD);
-	// Check for MMU error (2).
+	u128 value = mMMUHandler->readQwordU(PS2VirtualAddress);
+	// Check for MMU error.
 	if (!checkNoMMUError())
-        return;
+		return;
 	else
-		destReg->writeDwordU(1, value); // Get second 8 bytes (bytes 8 -> 15).
+		destReg->writeQwordU(value);
 }
 
 void EECoreInterpreter::LWC1()

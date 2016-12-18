@@ -328,9 +328,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
@@ -401,7 +403,7 @@
     <ClInclude Include="Source\PS2Resources\EE\INTC\EEIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\INTC\Types\EEIntcRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacRegisters_t.h" />
-    <ClInclude Include="Source\PS2Resources\SIF\SIF_t.h" />
+    <ClInclude Include="Source\PS2Resources\Common\Common_t.h" />
     <ClInclude Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLBEntryInfo_t.h" />
@@ -467,10 +469,12 @@
     <ClInclude Include="Source\PS2Resources\EE\Timers\EETimers_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Global\GlobalTypes.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
     <ClCompile Include="Source\Common\Interfaces\PhysicalMapped.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
@@ -547,7 +551,7 @@
     <ClCompile Include="Source\PS2Resources\EE\INTC\EEIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\INTC\Types\EEIntcRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacRegisters_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\SIF\SIF_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\Common\Common_t.cpp" />
     <ClCompile Include="Source\Common\Tables\EEDmacChannelTable\EEDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Types\BitfieldMap32\BitfieldMap32_t.cpp" />

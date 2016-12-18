@@ -311,7 +311,6 @@
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
-    <ClInclude Include="Source\PS2Resources\SIF\SIF_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\DebugRegister32_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.h" />
@@ -330,6 +329,9 @@
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
+    <ClInclude Include="Source\PS2Resources\Common\Common_t.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -524,7 +526,6 @@
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
-    <ClCompile Include="Source\PS2Resources\SIF\SIF_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\DebugRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.cpp" />
@@ -543,6 +544,9 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\Common\Common_t.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

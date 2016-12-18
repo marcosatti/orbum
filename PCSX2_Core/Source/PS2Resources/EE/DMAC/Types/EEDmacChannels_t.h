@@ -6,19 +6,30 @@
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 #include <Common/Types/Memory/ConstantMemory_t.h>
 
+
+using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
+
+class EEDmacChannelRegister_CHCR_t;
+class EEDmacChannelRegister_MADR_t;
+class EEDmacChannelRegister_QWC_t;
+class EEDmacChannelRegister_TADR_t;
+class EEDmacChannelRegister_ASR_t;
+class EEDmacChannelRegister_SADR_t;
+class FIFOQueue_t;
+
 /*
 EEDmacChannels_t defines all of the channels available in the EE DMAC.
 These include (see EE Users Manual page 73):
- - VIF0
- - VIF1
- - GIF
- - fromIPU
- - toIPU
- - SIF0
- - SIF1
- - SIF2
- - fromSPR
- - toSPR
+- VIF0
+- VIF1
+- GIF
+- fromIPU
+- toIPU
+- SIF0
+- SIF1
+- SIF2
+- fromSPR
+- toSPR
 
 They are subclassed from the base channel class - EEDmacChannel_t.
 */
@@ -30,20 +41,11 @@ See EE Users Manual page 73 for the list of registers declared forming this type
 Subclassed by EE DMAC channels 0-9 (see EEDmacChannel_VIF0_t - EEDmacChannel_toSPR_t).
 Not all of the registers are implemented in this base class for each channel.
 */
-
-using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
-
-class EEDmacChannelRegister_CHCR_t;
-class EEDmacChannelRegister_MADR_t;
-class EEDmacChannelRegister_QWC_t;
-class EEDmacChannelRegister_TADR_t;
-class EEDmacChannelRegister_ASR_t;
-class EEDmacChannelRegister_SADR_t;
-
 class EEDmacChannel_t
 {
 public:
 	explicit EEDmacChannel_t(const u32 & channelID);
+	explicit EEDmacChannel_t(const u32 & channelID, std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
 	The ID of this channel. Used to look up properties in the EEDmacChannelTable, which lists the physical mode, direction etc listed on EE Users Manual page 42.
@@ -71,6 +73,11 @@ public:
 	std::shared_ptr<EEDmacChannelRegister_ASR_t> ASR[2];
 
 	/*
+	A reference to the associated FIFO queue, set at creation.
+	*/
+	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
+
+	/*
 	A DMAC channel transfer count save array, needed to determine how many data units (qwords) have been transfered since start, which is used to
 	determine if the DMAC should stop transferring in slice mode (after 8 qwords).
 	Only used for slice channels.
@@ -78,12 +85,11 @@ public:
 	u32 mSliceCountState;
 
 	/*
-	A chain mode tag source status for each channel. Determines if the DMAC should read a tag from the MADR register, or the TADR register.
-	In source chain mode, initially a tag is read from the MADR register, but can be read from the TADR register if the appropriate tag ID is called.
-	In dest chain mode, a tag is always read from the MADR register as there is no tag ID that can specify the TADR register (doesn't exist anyway).
-	Only used for chain mode channels.
+	For source chain mode, this determines if the current DMAC cycle is the first cycle on the channel.
+	This is used to set the TADR register on the first run, and should be reset to true after a transfer has finished (ie: on chain exit).
+	Only used for source chain mode channels.
 	*/
-	bool mChainTagFromTADR;
+	bool mChainSrcFirstRun;
 
 	/*
 	A chain mode exit status for each channel. When an exiting DMAtag instruction such as end is called, true is written to the appropriate index,
@@ -115,7 +121,7 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF0_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_VIF0_t();
+	explicit EEDmacChannel_VIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 0;
 
@@ -135,7 +141,7 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF1_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_VIF1_t();
+	explicit EEDmacChannel_VIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 1;
 
@@ -155,7 +161,7 @@ The SADR register is left undefined.
 class EEDmacChannel_GIF_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_GIF_t();
+	explicit EEDmacChannel_GIF_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 2;
 
@@ -175,7 +181,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_fromIPU_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_fromIPU_t();
+	explicit EEDmacChannel_fromIPU_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 3;
 
@@ -195,7 +201,7 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_toIPU_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_toIPU_t();
+	explicit EEDmacChannel_toIPU_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 4;
 
@@ -215,7 +221,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF0_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF0_t();
+	explicit EEDmacChannel_SIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 5;
 
@@ -235,7 +241,7 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF1_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF1_t();
+	explicit EEDmacChannel_SIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 6;
 
@@ -255,7 +261,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF2_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF2_t();
+	explicit EEDmacChannel_SIF2_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 7;
 
@@ -271,6 +277,7 @@ public:
 Represents EE DMAC channel 8 - the fromSPR channel.
 The SIF2 channel inherits a base EE DMAC channel additionally with SADR defined.
 The TADR and ASR0/1 registers are left undefined.
+There is no FIFO queue associated with this channel.
 */
 class EEDmacChannel_fromSPR_t : public EEDmacChannel_t
 {
@@ -292,6 +299,7 @@ public:
 Represents EE DMAC channel 8 - the fromSPR channel.
 The SIF2 channel inherits a base EE DMAC channel additionally with TADR and SADR defined.
 The ASR0/1 registers are left undefined.
+There is no FIFO queue associated with this channel.
 */
 class EEDmacChannel_toSPR_t : public EEDmacChannel_t
 {

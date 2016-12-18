@@ -183,6 +183,27 @@ void Memory_t::writeDwordS(u32 storageIndex, s64 value)
 	*hostMemoryAddress = value;
 }
 
+u128 Memory_t::readQwordU(u32 storageIndex)
+{
+	// Get host storage address.
+	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);
+	u64 * hostMemoryAddressMSB = reinterpret_cast<u64*>(&mStorage[storageIndex + Constants::NUMBER_BYTES_IN_DWORD]);
+
+	// Read the value.
+	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
+}
+
+void Memory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+	// Get host storage address.
+	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);
+	u64 * hostMemoryAddressMSB = reinterpret_cast<u64*>(&mStorage[storageIndex + Constants::NUMBER_BYTES_IN_DWORD]);
+
+	// Write the value.
+	*hostMemoryAddressLSB = value.lo;
+	*hostMemoryAddressMSB = value.hi;
+}
+
 size_t Memory_t::getSize()
 {
 	return mStorageSize;

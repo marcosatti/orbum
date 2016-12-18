@@ -104,3 +104,13 @@ void MappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
 {
 	mMemory->writeDwordS(storageIndex, value);
 }
+
+u128 MappedMemory_t::readQwordU(u32 storageIndex)
+{
+	return mMemory->readQwordU(storageIndex);
+}
+
+void MappedMemory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+	mMemory->writeQwordU(storageIndex, value);
+}

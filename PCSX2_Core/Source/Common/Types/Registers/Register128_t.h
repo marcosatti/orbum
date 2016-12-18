@@ -63,6 +63,8 @@ public:
 	virtual void writeDwordU(u32 arrayIndex, u64 value);
 	virtual s64 readDwordS(u32 arrayIndex);
 	virtual void writeDwordS(u32 arrayIndex, s64 value);
+	virtual u128 readQwordU();
+	virtual void writeQwordU(u128 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.

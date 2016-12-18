@@ -183,4 +183,25 @@ void DebugMemory_t::writeDwordS(u32 storageIndex, s64 value)
 	Memory_t::writeDwordS(storageIndex, value);
 }
 
+u128 DebugMemory_t::readQwordU(u32 storageIndex)
+{
+	auto value = Memory_t::readQwordU(storageIndex);
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Read u64 @ Offset = 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X", getMnemonic(), storageIndex, value.lo, value.hi);
+#else
+	logDebug("%s: Read u64 @ Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d", getMnemonic(), storageIndex, value.lo, value.hi);
+#endif
+	return value;
+}
+
+void DebugMemory_t::writeQwordU(u32 storageIndex, u128 value)
+{
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Write u64 @ Offset = 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X", getMnemonic(), storageIndex, value.lo, value.hi);
+#else
+	logDebug("%s: Write u64 @ Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d", getMnemonic(), storageIndex, value.lo, value.hi);
+#endif
+	Memory_t::writeQwordU(storageIndex, value);
+}
+
 #endif

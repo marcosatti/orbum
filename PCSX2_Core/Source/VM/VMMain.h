@@ -78,6 +78,6 @@ private:
 	/*
 	Load the bios into the BootROM resource
 	*/
-	void initaliseBootROM() const;
+	void initaliseROMs() const;
 };
 

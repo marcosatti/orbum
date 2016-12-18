@@ -43,6 +43,7 @@ public:
 	DMA Channels. See page 42 of the EE Users Manual.
 	Each channel contains the set of registers defined on page 73 in the EE Users Manual.
 	An array is also defined for use in iterations.
+	Initalised at runtime due to FIFO queue dependencies! See PS2Resources::initDMAChannelFifoQueues_EE().
 	*/
 	std::shared_ptr<EEDmacChannel_VIF0_t>    CHANNEL_VIF0;
 	std::shared_ptr<EEDmacChannel_VIF1_t>    CHANNEL_VIF1;

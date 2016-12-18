@@ -119,3 +119,13 @@ void MappedRegister16_t::writeDwordS(u32 storageIndex, s64 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
+
+u128 MappedRegister16_t::readQwordU(u32 storageIndex)
+{
+	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
+}
+
+void MappedRegister16_t::writeQwordU(u32 storageIndex, u128 value)
+{
+	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
+}

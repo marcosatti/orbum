@@ -99,13 +99,7 @@ public:
 	The registers listed here are for any miscellaneous systems that are too small to have its own category.
 	Any unknown or undocumented memory/registers have comments listed next to them.
 	*/
-	std::shared_ptr<Memory_t>         FIFO_VIF0;
-	std::shared_ptr<Memory_t>         FIFO_VIF1;
-	std::shared_ptr<Memory_t>         FIFO_GIF;
-	std::shared_ptr<Memory_t>         FIFO_IPU_out;
-	std::shared_ptr<Memory_t>         FIFO_IPU_in;
 	std::shared_ptr<EERegister_SIO_t> MEMORY_SIO;         // Register "SIO"                @ 0x1000F100 -> 0x1000F1FF. Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
-	
 	std::shared_ptr<Register32_t>     REGISTER_F400;      // Register "Undocumented: F400" @ 0x1000F400 -> 0x1000F403.
 	std::shared_ptr<ConstantMemory_t> MEMORY_F410;        // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F41F. Needs to be a dead storage (by BIOS).
 	std::shared_ptr<Register32_t>     REGISTER_F420;      // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F423.

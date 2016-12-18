@@ -8,7 +8,7 @@
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/GS/GS_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
-#include "PS2Resources/SIF/SIF_t.h"
+#include "PS2Resources/Common/Common_t.h"
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/PCRegister16_t.h"
@@ -56,13 +56,14 @@ PS2Resources_t::PS2Resources_t() :
 	GS(std::make_shared<GS_t>(this)),
 	EE(std::make_shared<EE_t>(this)),
 	IOP(std::make_shared<IOP_t>(this)),
-	SIF(std::make_shared<SIF_t>(this))
+	Common(std::make_shared<Common_t>(this))
 {
+	initControlRegistersMap_VU0();
+	initDMAChannelFifoQueues_EE();
 	initPhysicalMemoryMap_EE();
 	initPhysicalMemoryMap_IOP();
 	initPhysicalMemoryMap_VU0();
 	initPhysicalMemoryMap_VU1();
-	initControlRegistersMap_VU0();
 }
 
 void PS2Resources_t::initPhysicalMemoryMap_EE() const
@@ -176,11 +177,11 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 		EE->PhysicalMMU->mapObject(0x10003d70, EE->VPU->VIF->VIF1->C3);
 
 		// FIFO Registers.
-		EE->PhysicalMMU->mapObject(0x10004000, EE->FIFO_VIF0);
-		EE->PhysicalMMU->mapObject(0x10005000, EE->FIFO_VIF1);
-		EE->PhysicalMMU->mapObject(0x10006000, EE->FIFO_GIF);
-		EE->PhysicalMMU->mapObject(0x10007000, EE->FIFO_IPU_out);
-		EE->PhysicalMMU->mapObject(0x10007010, EE->FIFO_IPU_in);
+		EE->PhysicalMMU->mapObject(0x10004000, Common->FIFO_VIF0);
+		EE->PhysicalMMU->mapObject(0x10005000, Common->FIFO_VIF1);
+		EE->PhysicalMMU->mapObject(0x10006000, Common->FIFO_GIF);
+		EE->PhysicalMMU->mapObject(0x10007000, Common->FIFO_IPU); // Meant to be read only...
+		EE->PhysicalMMU->mapObject(0x10007010, Common->FIFO_IPU); // Meant to be write only...
 
 		// DMAC registers.
 		EE->PhysicalMMU->mapObject(0x10008000, EE->DMAC->CHANNEL_VIF0->CHCR);
@@ -302,15 +303,15 @@ void PS2Resources_t::initPhysicalMemoryMap_EE() const
 
 	// SIF Registers.
 	{
-		EE->PhysicalMMU->mapObject(0x1000F200, SIF->MSCOM);
-		EE->PhysicalMMU->mapObject(0x1000F210, SIF->SMCOM);
-		EE->PhysicalMMU->mapObject(0x1000F220, SIF->MSFLG);
-		EE->PhysicalMMU->mapObject(0x1000F230, SIF->SMFLG);
-		EE->PhysicalMMU->mapObject(0x1000F240, SIF->REGISTER_F240);
-		EE->PhysicalMMU->mapObject(0x1000F250, SIF->REGISTER_F250);
-		EE->PhysicalMMU->mapObject(0x1000F260, SIF->REGISTER_F260);
-		EE->PhysicalMMU->mapObject(0x1000F300, SIF->REGISTER_F300);
-		EE->PhysicalMMU->mapObject(0x1000F380, SIF->REGISTER_F380);
+		EE->PhysicalMMU->mapObject(0x1000F200, Common->MSCOM);
+		EE->PhysicalMMU->mapObject(0x1000F210, Common->SMCOM);
+		EE->PhysicalMMU->mapObject(0x1000F220, Common->MSFLG);
+		EE->PhysicalMMU->mapObject(0x1000F230, Common->SMFLG);
+		EE->PhysicalMMU->mapObject(0x1000F240, Common->REGISTER_F240);
+		EE->PhysicalMMU->mapObject(0x1000F250, Common->REGISTER_F250);
+		EE->PhysicalMMU->mapObject(0x1000F260, Common->REGISTER_F260);
+		EE->PhysicalMMU->mapObject(0x1000F300, Common->REGISTER_F300);
+		EE->PhysicalMMU->mapObject(0x1000F380, Common->REGISTER_F380);
 	}
 }
 
@@ -488,12 +489,12 @@ void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 
 	// SIF Registers
 	{
-		IOP->PhysicalMMU->mapObject(0x1D000000, SIF->MSCOM);
-		IOP->PhysicalMMU->mapObject(0x1D000010, SIF->SMCOM);
-		IOP->PhysicalMMU->mapObject(0x1D000020, SIF->MSFLG);
-		IOP->PhysicalMMU->mapObject(0x1D000030, SIF->SMFLG);
-		IOP->PhysicalMMU->mapObject(0x1D000040, SIF->REGISTER_F240);
-		IOP->PhysicalMMU->mapObject(0x1D000060, SIF->REGISTER_F260);
+		IOP->PhysicalMMU->mapObject(0x1D000000, Common->MSCOM);
+		IOP->PhysicalMMU->mapObject(0x1D000010, Common->SMCOM);
+		IOP->PhysicalMMU->mapObject(0x1D000020, Common->MSFLG);
+		IOP->PhysicalMMU->mapObject(0x1D000030, Common->SMFLG);
+		IOP->PhysicalMMU->mapObject(0x1D000040, Common->REGISTER_F240);
+		IOP->PhysicalMMU->mapObject(0x1D000060, Common->REGISTER_F260);
 	}
 }
 
@@ -578,4 +579,29 @@ void PS2Resources_t::initControlRegistersMap_VU0() const
 	VU0->CCR[29] = VPU->STAT;
 	VU0->CCR[30] = nullptr; 
 	VU0->CCR[31] = VU1->CMSAR;
+}
+
+void PS2Resources_t::initDMAChannelFifoQueues_EE() const
+{
+	EE->DMAC->CHANNEL_VIF0 = std::make_shared<EEDmacChannel_VIF0_t>(Common->FIFO_VIF0);
+	EE->DMAC->CHANNEL_VIF1 = std::make_shared<EEDmacChannel_VIF1_t>(Common->FIFO_VIF1);
+	EE->DMAC->CHANNEL_GIF = std::make_shared<EEDmacChannel_GIF_t>(Common->FIFO_GIF);
+	EE->DMAC->CHANNEL_fromIPU = std::make_shared<EEDmacChannel_fromIPU_t>(Common->FIFO_IPU);
+	EE->DMAC->CHANNEL_toIPU = std::make_shared<EEDmacChannel_toIPU_t>(Common->FIFO_IPU);
+	EE->DMAC->CHANNEL_SIF0 = std::make_shared<EEDmacChannel_SIF0_t>(Common->FIFO_SIF0);
+	EE->DMAC->CHANNEL_SIF1 = std::make_shared<EEDmacChannel_SIF1_t>(Common->FIFO_SIF1);
+	EE->DMAC->CHANNEL_SIF2 = std::make_shared<EEDmacChannel_SIF2_t>(Common->FIFO_SIF2);
+	EE->DMAC->CHANNEL_fromSPR = std::make_shared<EEDmacChannel_fromSPR_t>();
+	EE->DMAC->CHANNEL_toSPR = std::make_shared<EEDmacChannel_toSPR_t>();
+
+	EE->DMAC->CHANNELS[0] = EE->DMAC->CHANNEL_VIF0;
+	EE->DMAC->CHANNELS[1] = EE->DMAC->CHANNEL_VIF1;
+	EE->DMAC->CHANNELS[2] = EE->DMAC->CHANNEL_GIF;
+	EE->DMAC->CHANNELS[3] = EE->DMAC->CHANNEL_fromIPU;
+	EE->DMAC->CHANNELS[4] = EE->DMAC->CHANNEL_toIPU;
+	EE->DMAC->CHANNELS[5] = EE->DMAC->CHANNEL_SIF0;
+	EE->DMAC->CHANNELS[6] = EE->DMAC->CHANNEL_SIF1;
+	EE->DMAC->CHANNELS[7] = EE->DMAC->CHANNEL_SIF2;
+	EE->DMAC->CHANNELS[8] = EE->DMAC->CHANNEL_fromSPR;
+	EE->DMAC->CHANNELS[9] = EE->DMAC->CHANNEL_toSPR;
 }

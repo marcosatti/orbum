@@ -38,6 +38,8 @@ public:
 	virtual void writeDwordU(u32 storageIndex, u64 value);
 	virtual s64 readDwordS(u32 storageIndex);
 	virtual void writeDwordS(u32 storageIndex, s64 value);
+	virtual u128 readQwordU(u32 storageIndex);
+	virtual void writeQwordU(u32 storageIndex, u128 value);
 
 	/*
 	Gets the storage length.

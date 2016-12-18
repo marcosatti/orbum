@@ -200,12 +200,7 @@ void EECoreInterpreter::SQ()
 
 	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
 
-	mMMUHandler->writeDwordU(PS2VirtualAddress, source2Reg->readDwordU(0));
-	// Check for MMU error.
-	if (!checkNoMMUError())
-        return;
-
-	mMMUHandler->writeDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD, source2Reg->readDwordU(1));
+	mMMUHandler->writeQwordU(PS2VirtualAddress, source2Reg->readQwordU());
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;

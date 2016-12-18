@@ -45,7 +45,7 @@ typedef float f32;
 
 /*
 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
-Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2.
+Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2 (but we just call it unsigned).
 Mnemonic: UD stands for value (64-bit), UW stands for value (32-bit), etc.
 TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, 
        and for the arrays, it is layed out (MSB to LSB) [3]->[2]->[1]->[0].
@@ -65,7 +65,7 @@ struct u128
 		u8  UB[16];
 	};
 
-	// Zero value on construction.
+	// Zero value on construction or initalised with 2 x 64-bit values.
 	u128();
 	u128(const u64 & upper, const u64 & lower);
 

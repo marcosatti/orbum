@@ -55,6 +55,17 @@ void FPRegister128_t::writeDwordS(u32 arrayIndex, s64 value)
 	SD[arrayIndex] = value;
 }
 
+u128 FPRegister128_t::readQwordU()
+{
+	return u128(UD[0], UD[1]);
+}
+
+void FPRegister128_t::writeQwordU(u128 value)
+{
+	UD[0] = value.lo;
+	UD[1] = value.hi;
+}
+
 f32 FPRegister128_t::readFloat(u32 arrayIndex)
 {
 	return F[arrayIndex];

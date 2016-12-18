@@ -10,7 +10,7 @@
 #include "PS2Resources/EE/Types/BootROM_t.h"
 
 VMMain::VMMain(const VMOptions_t & vmOptions) : 
-	mStatus(VMMain::VMStatus::CREATED),
+	mStatus(VMStatus::CREATED),
 	mVMOptions(vmOptions)
 {
 	// Initialise everything.
@@ -22,14 +22,16 @@ void VMMain::Reset()
 	// Set the log delegate function.
 	logDelegate = mVMOptions.LOG_DELEGATE_FUNCPTR;
 
-	// Initalise VM.
+	// Initalise resources.
 	initaliseResources();
+
+	// Initiaise ROMs.
+	initaliseROMs();
+
+	// Initalise the execution core class.
 	initaliseExecutionCore();
 
-	// Initiaise BIOS (BootROM).
-	initaliseBootROM();
-	
-	// Initalise the execution core.
+	// Initalise the execution core & components.
 	mExecutionCore->initalise();
 }
 
@@ -91,7 +93,12 @@ void VMMain::initaliseExecutionCore()
 	}
 }
 
-void VMMain::initaliseBootROM() const
+void VMMain::initaliseROMs() const
 {
+	// Initalise BootROM.
 	getResources()->EE->BootROM->loadBIOS(mVMOptions.BOOT_ROM_PATH);
+
+	// Initalise ROM1.
+	// Initalise EROM.
+	// Initalise ROM2.
 }

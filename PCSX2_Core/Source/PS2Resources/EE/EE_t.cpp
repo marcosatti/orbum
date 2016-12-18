@@ -38,12 +38,6 @@ EE_t::EE_t(const PS2Resources_t* const PS2Resources) :
 	UNKNOWN_1A000000(std::make_shared<ConstantMemory_t>(0x10000, "Unknown: 1A00")),
 
 	// Registers.
-	FIFO_VIF0(std::make_shared<Memory_t>(0x10, "FIFO: VIF0_FIFO")),
-	FIFO_VIF1(std::make_shared<Memory_t>(0x10, "FIFO: VIF1_FIFO")),
-	FIFO_GIF(std::make_shared<Memory_t>(0x10, "FIFO: GIF_FIFO")),
-	FIFO_IPU_out(std::make_shared<Memory_t>(0x10, "FIFO: IPU_out_FIFO")),
-	FIFO_IPU_in(std::make_shared<Memory_t>(0x10, "FIFO: IPU_in_FIFO")),
-
 	MEMORY_SIO(std::make_shared<EERegister_SIO_t>()),
 	REGISTER_F400(std::make_shared<Register32_t>()),
 	MEMORY_F410(std::make_shared<ConstantMemory_t>(0x04, "Undocumented: F410")),

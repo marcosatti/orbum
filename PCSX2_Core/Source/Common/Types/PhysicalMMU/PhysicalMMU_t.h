@@ -55,6 +55,7 @@ class Register64_t;
 class Register128_t;
 class FPRegister32_t;
 class FPRegister128_t;
+class FIFOQueue_t;
 
 class PhysicalMMU_t
 {
@@ -80,6 +81,7 @@ public:
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
@@ -104,6 +106,8 @@ public:
 	void writeDwordU(u32 PS2PhysicalAddress, u64 value) const;
 	s64 readDwordS(u32 PS2PhysicalAddress) const;
 	void writeDwordS(u32 PS2PhysicalAddress, s64 value) const;
+	u128 readQwordU(u32 PS2PhysicalAddress) const;
+	void writeQwordU(u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*
