@@ -9,6 +9,7 @@
 
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
+using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
 
 class EEDmac_t;
 class PhysicalMMU_t;
@@ -56,14 +57,14 @@ private:
 	std::shared_ptr<EEDmacChannel_t> mChannel;
 	const ChannelProperties_t * mChannelProperties;
 
+	
 
-
-	// Logical mode functions, called by the base executionStep() function.
+	// DMAC helper functions.
 
 	/*
 	Do a normal logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Normal() const;
+	void executionStep_Normal();
 
 	/*
 	Do a chain logical mode transfer through the specified DMA channel.
@@ -73,77 +74,157 @@ private:
 	/*
 	Do a interleaved logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Interleaved() const;
-
-
-
-	// Common functions (for Normal, Chain, Interleaved modes).
+	void executionStep_Interleaved();
 
 	/*
-	Checks the slice channel quota limit, and suspends transfer if it has been reached.
+	Returns if the DMAC is enabled.
 	*/
-	void checkSliceQuota() const;
+	bool isDMACEnabled();
 
 	/*
-	Suspends the current DMA transfer by:
-	- Setting the appropriate interrupt (CIS) bit of the D_STAT register.
-	- Setting CHCH.STR to 0.
+	Returns if there is an interrupt pending, indicating the EE Core should be interrupted.
 	*/
-	void suspendTransfer() const;
+	bool isInterruptPending();
 
 	/*
-	Checks for D_STAT CIS & CIM conditions, and sends interrupt if the AND of both is 1.
+	Raises an interrupt request with the EE Core, by setting the exception context.
 	*/
-	void checkInterruptStatus() const;
+	void raiseInterrupt();
+
+	/*
+	Transfers data units (128-bits) between mem <-> channel.
+	Returns the number of data units transfered.
+	On no data available, returns 0.
+	TODO: for now, always attempts to transfer one unit (and returns 1 on success, 0 on "try again next cycle").
+	*/
+	u32 transferData();
+
+
+
+
+
+	// Channel helper functions.
+
+	/*
+	Returns if the channel is enabled for transfers.
+	*/
+	bool isChannelEnabled();
+
+	/*
+	Returns if the channel FIFO queue has no data available.
+	*/
+	bool isChannelQueueEmpty();
+
+	/*
+	Returns if the channel FIFO queue is full.
+	*/
+	bool isChannelQueueFull();
+
+	/*
+	Returns if the channels slice limit quota has been reached.
+	*/
+	bool isChannelSliceQuotaReached();
+
+	/*
+	Returns the channel runtime logical mode its operating in.
+	*/
+	u32 getChannelRuntimeLogicalMode();
 
 	/*
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
-	Direction_t getRuntimeDirection() const;
+	Direction_t getChannelRuntimeDirection();
+
+	/*
+	Convenience function to get the channel QWC count.
+	*/
+	u32 getChannelQWC();
+
+	/*
+	Sets the channel slice quota back to 0 (resets state).
+	*/
+	void setChannelSliceQuotaReset();
+
+	/*
+	Sets the channel state for suspend conditions.
+	*/
+	void setChannelStateSuspended();
+
+	/*
+	Sets the channel state for failed transfer conditions.
+	TODO: not yet implemented, throws runtime_error.
+	*/
+	void setChannelStateFailedTransfer();
+
+
+
+
+
+	// Raw data transfer helper functions.
+
+	/*
+	Read a qword from the current channel.
+	Should be first checked for data using isChannelQueueEmpty().
+	*/
+	u128 readDataChannel();
+
+	/*
+	Writes a qword to the current channel.
+	Should be first checked for space using isChannelQueueFull().
+	*/
+	void writeDataChannel(u128 data);
+
+	/*
+	Reads a qword from memory using the address given.
+	SPRAccess controls if the read is through the EE main memory or the EE Core scratchpad.
+	*/
+	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess);
+
+	/*
+	Writes a qword to memory using the address given.
+	SPRAccess controls if the write is through the EE main memory or the EE Core scratchpad.
+	*/
+	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data);
+
+
+
+
+
+	// Stall control helper functions.
 
 	/*
 	Returns if source stall control checks should occur, by checking the channel direction and D_CTRL.STS.
 	*/
-	bool isSourceStallControlOn() const;
+	bool isSourceStallControlOn();
 
 	/*
 	Returns if drain stall control checks should occur, by checking the channel direction and D_CTRL.STD.
 	*/
-	bool isDrainStallControlOn() const;
-
-	/*
-	Updates STADR from the MADR register (from source channels). Use with isSourceStallControlOn().
-	*/
-	void updateSourceStallControlAddress() const;
+	bool isDrainStallControlOn();
 
 	/*
 	Returns true if MADR + 8 > STADR, which is the condition a drain channel stalls on with stall control.
 	Callee is responsible for setting the D_STAT.SIS bit.
 	TODO: According to the docs, "SIS bit doesn't change even if the transfer restarts"! PS2 OS sets it back to 0?
 	*/
-	bool isDrainStallControlWaiting() const;
-
-
-
-	// Data transfer functions (for Normal, Chain, Interleaved modes).
+	bool isDrainStallControlWaiting();
 
 	/*
-	Transfer one data unit using the DMA channel register settings. This is common to both Slice and Burst channels.
+	Sets the DMAC STADR register to the current channel conditions.
 	*/
-	void transferDataUnit() const;
+	void setDMACStallControlSTADR();
 
 	/*
-	Read and write a qword from the specified peripheral, or from physical memory (either main memory or SPR (scratchpad ram)).
-	Note: the DMAC operates on physical addresses only - the TLB/PS2 EECoreMMU is not involved.
+	Sets the DMAC STAT.SISx bit to the current channel.
 	*/
-	u128 readDataChannel() const;
-	void writeDataChannel(u128 data) const;
-	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
-	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const;
+	void setDMACStallControlSIS();
 
 
 
-	// Chain mode functions.
+
+
+
+	// Chain mode helper functions.
 
 	/*
 	Temporary context variables, set by the chain mode functions.
@@ -151,27 +232,53 @@ private:
 	DMAtag_t mDMAtag;
 
 	/*
-	Sets mDMAtag to the tag from the TADR register (src chain) or from the channel FIFO (dst chain).
-	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read.
-	If CHCR.TTE is set, transfers the tag.
+	Returns if we are in a tag instruction that requires drain stall control to be used ("refs" tag).
 	*/
-	void readChainSrcDMAtag();
-	void readChainDstDMAtag();
+	bool isChainInDrainStallControlTag();
 
 	/*
-	Checks if this cycle is the first one for a source chain mode channel. Needed to set the initial TADR value.
+	Returns if we are in a tag instruction that requires source stall control to be used ("cnts" tag).
 	*/
-	void checkChainSrcFirstRun() const;
+	bool isChainInSourceStallControlTag();
 
 	/*
-	Checks if a DMAtag transfer should be suspended at the end of the packet transfer (QWC == 0 and TAG.IRQ/CHCR.TIE condition). Use bit 31 of CHCH.TAG to do this.
+	Returns if there is a pending tag interrupt requested.
 	*/
-	void checkDMAtagPacketInterrupt() const;
+	bool isChainInInterruptTag();
 
 	/*
-	Checks if we are in a tag instruction that ends the transfer after the packet has completed. If so, changes the channel to a suspended state.
+	Returns if there is a pending tag exit requested.
 	*/
-	void checkChainExit() const;
+	bool isChainInExitTag();
+
+	/*
+	Returns if this is the first cycle of the transfer, given that the channel is in source chain mode.
+	*/
+	bool isChainSourceInFirstCycle();
+
+	/*
+	Sets the channel context needed for the first cycle of a source chain mode channel.
+	*/
+	void setChainSourceFirstCycle();
+
+	/*
+	Resets the channel chain mode context variables, needed for next time the channel is activated.
+	*/
+	void setChainExitContextReset();
+
+	/*
+	Sets mDMAtag to the tag from the TADR register.
+	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
+	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
+	*/
+	bool readChainSourceTag();
+
+	/*
+	Sets mDMAtag to the tag from the channel queue.
+	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
+	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
+	*/
+	bool readChainDestTag();
 
 	/*
 	Chain DMAtag handler functions. Consult page 59 - 61 of EE Users Manual.
@@ -218,11 +325,35 @@ private:
 
 
 
-	// Interleaved Mode Functions.
+
+
+
+	// Interleaved mode helper Functions.
 
 	/*
-	Checks if the mInterleavedCountState has reached the approriate state (limit of transferred data or skip data), and toggles the state.
+	Returns if the transfer should be skipped for the current cycle.
 	*/
-	void checkInterleaveCount() const;
+	bool isInterleaveInSkipMode();
+
+	/*
+	Returns if the transfer or skip limit has been reached.
+	(The two states are mutually exclusive).
+	*/
+	bool isInterleaveLimitReached();
+
+	/*
+	Toggles the interleave mode (skip/transfer).
+	*/
+	void setInterleaveModeToggle();
+
+	/*
+	Increments the interleave mode count.
+	*/
+	void setInterleaveModeCountIncrement();
+
+	/*
+	Updates the channel to reflect skipped data.
+	*/
+	void setInterleaveSkipDataCycle();
 };
 
