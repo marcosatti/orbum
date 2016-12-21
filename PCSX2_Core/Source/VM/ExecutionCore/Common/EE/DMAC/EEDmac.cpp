@@ -14,8 +14,8 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 using ExType = EECoreException_t::ExType;
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
@@ -52,21 +52,21 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 			mChannelProperties = mChannel->getChannelProperties();
 
 			// Check if channel is enabled for transfer.
-			if (isChannelEnabled())
+			if (mChannel->isEnabled())
 			{
-				switch (getChannelRuntimeLogicalMode())
+				switch (mChannel->getRuntimeLogicalMode())
 				{
-				case 0x0:
+				case LogicalMode_t::NORMAL:
 				{
 					executionStep_Normal();
 					break;
 				}
-				case 0x1:
+				case LogicalMode_t::CHAIN:
 				{
 					executionStep_Chain();       
 					break;
 				}
-				case 0x2:
+				case LogicalMode_t::INTERLEAVED:
 				{
 					executionStep_Interleaved(); 
 					break;
@@ -88,19 +88,10 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 	return 1;
 }
 
-Direction_t EEDmac::getChannelRuntimeDirection()
-{
-	Direction_t direction = mChannelProperties->Direction;
-	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::DIR));
-
-	return direction;
-}
-
 u32 EEDmac::transferData()
 {
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
-	Direction_t direction = getChannelRuntimeDirection();
+	Direction_t direction = mChannel->getRuntimeDirection();
 
 	// Get the main memory or SPR address we are reading or writing from. 
 	// NOTE: The mask of 0x1FFFFFF0 comes from PCSX2, also in my own testing, the PS2 OS acceses illegal addresses, such as 0x3xxxxxxx.
@@ -128,8 +119,7 @@ u32 EEDmac::transferData()
 			writeDataMemory(SPRPhysicalAddressOffset, true, packet);
 		}
 
-		// Update slice count by 1, the MADR & SADR register by 0x10 (increment), and decrement the QWC register by 1.
-		mChannel->mSliceCountState += 1;
+		// Increment the MADR & SADR register by a qword, and decrement the QWC register by a qword.
 		mChannel->MADR->increment();
 		mChannel->SADR->increment();
 		mChannel->QWC->decrement();
@@ -142,24 +132,23 @@ u32 EEDmac::transferData()
 		if (direction == Direction_t::FROM)
 		{
 			// Check if channel does not have data ready - need to try again next cycle.
-			if (isChannelQueueEmpty())
+			if (mChannel->mFIFOQueue->isEmpty())
 				return 0;
 
-			u128 packet = readDataChannel();
+			u128 packet = mChannel->mFIFOQueue->read();
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 		}
 		else if (direction == Direction_t::TO)
 		{
 			// Check if channel is full - need to try again next cycle.
-			if (isChannelQueueFull())
+			if (mChannel->mFIFOQueue->isFull())
 				return 0;
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
-			writeDataChannel(packet);
+			mChannel->mFIFOQueue->write(packet);
 		}
 
-		// Update slice count by 1, the MADR register by 0x10 (increment), and decrement the QWC register by 1.
-		mChannel->mSliceCountState += 1;
+		// Increment the MADR register by a qword, and decrement the QWC register by a qword.
 		mChannel->MADR->increment();
 		mChannel->QWC->decrement();
 
@@ -167,53 +156,7 @@ u32 EEDmac::transferData()
 	}
 }
 
-bool EEDmac::isChannelEnabled()
-{
-	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
-		return true;
-	else
-		return false;
-}
-
-u32 EEDmac::getChannelRuntimeLogicalMode()
-{
-	return mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD);
-}
-
-u32 EEDmac::getChannelQWC()
-{
-	return mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC);
-}
-
-bool EEDmac::isChannelQueueEmpty()
-{
-	return mChannel->mFIFOQueue->getCurrentSize() == 0;
-}
-
-bool EEDmac::isChannelQueueFull()
-{
-	return !(mChannel->mFIFOQueue->getCurrentSize() < mChannel->mFIFOQueue->getMaxSize());
-}
-
-bool EEDmac::isChannelSliceQuotaReached()
-{
-	if (mChannelProperties->PhysicalMode == PhysicalMode_t::SLICE)
-	{
-		if (mChannel->mSliceCountState % 8 == 0)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void EEDmac::setChannelSliceQuotaReset()
-{
-	mChannel->mSliceCountState = 0;
-}
-
-void EEDmac::setChannelStateSuspended()
+void EEDmac::setStateSuspended() const
 {
 	// Emit the interrupt status bit.
 	mDMAC->STAT->setFieldValue(EEDmacRegister_STAT_t::Fields::CIS_KEYS[mChannelIndex], 1);
@@ -222,7 +165,7 @@ void EEDmac::setChannelStateSuspended()
 	mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR, 0);
 }
 
-void EEDmac::setChannelStateFailedTransfer()
+void EEDmac::setStateFailedTransfer() const
 {
 	throw std::runtime_error("failed transfer not implemented.");
 }
@@ -231,9 +174,9 @@ void EEDmac::setChannelStateFailedTransfer()
 void EEDmac::executionStep_Normal()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (getChannelQWC() == 0)
+	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
 	{
-		setChannelStateFailedTransfer();
+		setStateFailedTransfer();
 		return;
 	}
 
@@ -258,26 +201,19 @@ void EEDmac::executionStep_Normal()
 	}
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (getChannelQWC() == 0)
+	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
 	{
-		setChannelStateSuspended();
-	}
-
-	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
-	if (isChannelSliceQuotaReached())
-	{
-		setChannelSliceQuotaReset();
-		setChannelStateSuspended();
+		setStateSuspended();
 	}
 }
 
 void EEDmac::executionStep_Chain()
 {
 	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
-	if (getChannelQWC() > 0)
+	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) > 0)
 	{
 		// Check for drain stall control conditions (including if we are in "refs" tag), and skip cycle if the data is not ready.
-		if (isChainInDrainStallControlTag() && isDrainStallControlOn() && isDrainStallControlWaiting())
+		if (mChannel->isChainInDrainStallControlTag() && isDrainStallControlOn() && isDrainStallControlWaiting())
 		{
 			setDMACStallControlSIS();
 			return;
@@ -291,25 +227,25 @@ void EEDmac::executionStep_Chain()
 		}
 
 		// Check for source stall control conditions (including if we are in "cnts" tag id), and update D_STADR if required.
-		if (isChainInSourceStallControlTag() && isSourceStallControlOn())
+		if (mChannel->isChainInSourceStallControlTag() && isSourceStallControlOn())
 		{
 			setDMACStallControlSTADR();
 		}
 
 		// If QWC is now 0, check for suspend conditions.
-		if (getChannelQWC() == 0)
+		if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
 		{
 			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed).
-			if (isChainInInterruptTag())
+			if (mChannel->isChainInInterruptTag())
 			{
-				setChannelStateSuspended();
+				setStateSuspended();
 			}
 
 			// Check if we need to exit based on tag instruction ("end", "ret", etc).
-			if (isChainInExitTag())
+			if (mChannel->isChainInExitTag())
 			{
-				setChainExitContextReset();
-				setChannelStateSuspended();
+				mChannel->setChainExitStateReset();
+				setStateSuspended();
 			}
 		}
 	}
@@ -321,8 +257,8 @@ void EEDmac::executionStep_Chain()
 		case ChainMode_t::SOURCE:
 		{
 			// Some additional processing needed on src chain first run before starting a transfer (set TADR register).
-			if (isChainSourceInFirstCycle())
-				setChainSourceFirstCycle();
+			if (mChannel->isChainSourceInFirstCycle())
+				mChannel->setChainSourceFirstCycle();
 
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainSourceTag())
@@ -348,27 +284,19 @@ void EEDmac::executionStep_Chain()
 		}
 		}
 	}
-
-	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
-	// Common to both tag reads and transfers.
-	if (isChannelSliceQuotaReached())
-	{
-		setChannelSliceQuotaReset();
-		setChannelStateSuspended();
-	}
 }
 
 void EEDmac::executionStep_Interleaved()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (getChannelQWC() == 0)
+	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
 	{
-		setChannelStateFailedTransfer();
+		setStateFailedTransfer();
 		return;
 	}
 
 	// Data of size D_SQWC.TQWC is transferred first, then data of size D_SQWC.SQWC is skipped, until Dn_QWC is reached.
-	if (!isInterleaveInSkipMode())
+	if (!mChannel->isInterleaveInSkipMode())
 	{
 		// Transfer a data unit (128-bits). If no data was transfered, try again next cycle.
 		u32 dataCount = transferData();
@@ -380,33 +308,26 @@ void EEDmac::executionStep_Interleaved()
 	else
 	{
 		// Skip data by incrementing the channel MADR.
-		setInterleaveSkipDataCycle();
+		mChannel->setInterleaveSkipDataCycle();
 	}
 		
-	// Increment the mInterleavedCountState.
-	setInterleaveModeCountIncrement();
+	// Increment the interleaved count.
+	mChannel->setInterleaveCountIncrement();
 
 	// Check the interleaved mode (transferring/skipping), and change mInterleavedSkipState if required, based on mInterleavedCountState.
 	if (isInterleaveLimitReached())
 	{
-		setInterleaveModeToggle();
+		mChannel->setInterleaveModeToggle();
 	}
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (getChannelQWC() == 0)
+	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
 	{
-		setChannelStateSuspended();
-	}
-
-	// If the physical mode is set to slice, suspend transfer after 8 units are completed.
-	if (isChannelSliceQuotaReached())
-	{
-		setChannelSliceQuotaReset();
-		setChannelStateSuspended();
+		setStateSuspended();
 	}
 }
 
-bool EEDmac::isDMACEnabled()
+bool EEDmac::isDMACEnabled() const
 {
 	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)
 		return true;
@@ -414,7 +335,7 @@ bool EEDmac::isDMACEnabled()
 		return false;
 }
 
-bool EEDmac::isInterruptPending()
+bool EEDmac::isInterruptPending() const
 {
 	auto& D_STAT = mDMAC->STAT;
 
@@ -455,16 +376,16 @@ bool EEDmac::isInterruptPending()
 	return false;
 }
 
-void EEDmac::raiseInterrupt()
+void EEDmac::raiseInterrupt() const
 {
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	IntExceptionInfo_t intex = {1, 0, 0};
 	Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
 }
 
-bool EEDmac::isSourceStallControlOn()
+bool EEDmac::isSourceStallControlOn() const
 {
-	if (getChannelRuntimeDirection() == Direction_t::FROM)
+	if (mChannel->getRuntimeDirection() == Direction_t::FROM)
 	{
 		const u32 STS = mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::STS);
 		if (mChannelIndex == EEDmacChannelTable::getSTSChannelIndex(STS))
@@ -476,9 +397,9 @@ bool EEDmac::isSourceStallControlOn()
 	return false;
 }
 
-bool EEDmac::isDrainStallControlOn()
+bool EEDmac::isDrainStallControlOn() const
 {
-	if (getChannelRuntimeDirection() == Direction_t::TO)
+	if (mChannel->getRuntimeDirection() == Direction_t::TO)
 	{
 		auto STD = mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::STD);
 		if (mChannelIndex == EEDmacChannelTable::getSTDChannelIndex(STD))
@@ -490,20 +411,20 @@ bool EEDmac::isDrainStallControlOn()
 	return false;
 }
 
-void EEDmac::setDMACStallControlSTADR()
+void EEDmac::setDMACStallControlSTADR() const
 {
 	u32 MADR = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
 	mDMAC->STADR->setFieldValue(EEDmacRegister_STADR_t::Fields::ADDR, MADR);
 }
 
-void EEDmac::setDMACStallControlSIS()
+void EEDmac::setDMACStallControlSIS() const
 {
 	mDMAC->STAT->setFieldValue(EEDmacRegister_STAT_t::Fields::SIS, 1);
 }
 
-bool EEDmac::isDrainStallControlWaiting()
+bool EEDmac::isDrainStallControlWaiting() const
 {
-	if (getChannelRuntimeDirection() == Direction_t::TO)
+	if (mChannel->getRuntimeDirection() == Direction_t::TO)
 	{
 		const u32 MADR = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
 		const u32 STADR = mDMAC->STADR->getFieldValue(EEDmacRegister_STADR_t::Fields::ADDR);
@@ -515,16 +436,6 @@ bool EEDmac::isDrainStallControlWaiting()
 	}
 
 	return false;
-}
-
-u128 EEDmac::readDataChannel()
-{
-	return mChannel->mFIFOQueue->read();
-}
-
-void EEDmac::writeDataChannel(u128 data)
-{
-	mChannel->mFIFOQueue->write(data);
 }
 
 u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess)
@@ -545,70 +456,12 @@ void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data)
 		mEEMMU->writeQwordU(physicalAddress, data);
 }
 
-bool EEDmac::isChainInDrainStallControlTag()
-{
-	return ((mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x4;
-}
-
-bool EEDmac::isChainInSourceStallControlTag()
-{
-	return ((mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x0;
-}
-
-bool EEDmac::isChainInInterruptTag()
-{
-	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) != 0
-		&& (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) & 0x8000) != 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool EEDmac::isChainInExitTag()
-{
-	if (mChannel->mChainExitState)
-		return true;
-	else
-		return false;
-}
-
-bool EEDmac::isChainSourceInFirstCycle()
-{
-	if (mChannel->mChainSrcFirstRun)
-		return true;
-	else
-		return false;
-}
-
-void EEDmac::setChainSourceFirstCycle()
-{
-	// Set TADR to (MADR + (QWC * 0x10)) as the next tag address on first run.
-	auto ADDR = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
-	auto SPRFlag = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR);
-	auto QWC = mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC);
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ADDR + (QWC * 0x10));
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, SPRFlag);
-
-	mChannel->mChainSrcFirstRun = false;
-}
-
-void EEDmac::setChainExitContextReset()
-{
-	mChannel->mChainSrcFirstRun = true;
-	mChannel->mChainExitState = false;
-	mChannel->mChainStackLevelState = 0;
-}
-
 bool EEDmac::readChainSourceTag()
 {
 	// Check first if we need to transfer the tag - return false if the channel queue is full.
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
-		if (isChannelQueueFull())
+		if (mChannel->mFIFOQueue->isFull())
 			return false;
 	}
 
@@ -629,10 +482,7 @@ bool EEDmac::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
 		// Write the tag to the channel.
-		writeDataChannel(data);
-
-		// Update DataCountState by 1 (counts towards slice channel quota).
-		mChannel->mSliceCountState += 1;
+		mChannel->mFIFOQueue->write(data);
 	}
 
 	return true;
@@ -641,11 +491,11 @@ bool EEDmac::readChainSourceTag()
 bool EEDmac::readChainDestTag()
 {
 	// Check first if there is data available.
-	if (isChannelQueueEmpty())
+	if (mChannel->mFIFOQueue->isEmpty())
 		return false;
 
 	// Read tag from channel FIFO (always next to transfer data).
-	u128 data = readDataChannel();
+	u128 data = mChannel->mFIFOQueue->read();
 
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);
@@ -661,9 +511,6 @@ bool EEDmac::readChainDestTag()
 		const bool SPRFlag = (mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
 		writeDataMemory(MADR, SPRFlag, data);
 		mChannel->MADR->increment();
-
-		// Update DataCountState by 1 (counts towards slice channel quota).
-		mChannel->mSliceCountState += 1;
 	}
 	
 	return true;
@@ -736,7 +583,7 @@ void EEDmac::SRC_REFE()
 	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
-	mChannel->mChainExitState = true;
+	mChannel->setChainExitStateTrue();
 }
 
 void EEDmac::SRC_CALL()
@@ -748,39 +595,22 @@ void EEDmac::SRC_CALL()
 	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, mDMAtag.getSPR());
 
-	// Set stack to after tag.
-	u32& stackIdx = mChannel->mChainStackLevelState;
-
-	if (stackIdx >= 2)
-	{
-		// Check for stack overflow.
-		mChannel->mChainExitState = true;
-	}
+	// Check for stack overflow, else push the stack.
+	if (mChannel->isChainStackOverflowed())
+		mChannel->setChainExitStateTrue();
 	else
-	{
-		// Push onto the stack.
-		mChannel->ASR[stackIdx]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-		mChannel->ASR[stackIdx]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-		stackIdx += 1;
-	}
+		mChannel->pushChainStack();
 }
 
 void EEDmac::SRC_RET()
 {
 	// Transfers QWC qwords after tag, pops next tag from stack. If stack level = 0, transfers QWC qwords after tag and suspends transfer.
-	u32& stackIdx = mChannel->mChainStackLevelState;
-	if (stackIdx > 0)
-	{
-		// Pop the stack.
-		mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[stackIdx]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
-		mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[stackIdx]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
-		stackIdx -= 1;
-	}
+	
+	// Check for stack underflow, else pop the stack.
+	if (mChannel->isChainStackUnderflowed())
+		mChannel->setChainExitStateTrue();
 	else
-	{
-		// Check for stack underflow.
-		mChannel->mChainExitState = true;
-	}
+		mChannel->popChainStack();
 
 	// In both cases, QWC following the tag is always performed.
 	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
@@ -794,7 +624,7 @@ void EEDmac::SRC_END()
 	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-	mChannel->mChainExitState = true;
+	mChannel->setChainExitStateTrue();
 }
 
 void EEDmac::DST_CNT()
@@ -826,55 +656,29 @@ void EEDmac::DST_END()
 	// Set MADR to tag values.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
-	mChannel->mChainExitState = true;
-}
-
-bool EEDmac::isInterleaveInSkipMode()
-{
-	if (mChannel->mInterleavedInSkipBlock)
-		return true;
-	else
-		return false;
+	mChannel->setChainExitStateTrue();
 }
 
 bool EEDmac::isInterleaveLimitReached()
 {
 	// In transfer block?
-	if (!mChannel->mInterleavedInSkipBlock)
+	if (!mChannel->isInterleaveInSkipMode())
 	{
 		// Have we reached the TWQC limit?
-		if (mChannel->mInterleavedBlockCount >= mDMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::TQWC))
+		if (mChannel->getInterleavedCount() >= mDMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::TQWC))
 		{
 			return true;
 		}
 	}
-
 	// In skip block?
-	if (mChannel->mInterleavedInSkipBlock)
+	else
 	{
 		// Have we reached the TWQC limit?
-		if (mChannel->mInterleavedBlockCount >= mDMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::SQWC))
+		if (mChannel->getInterleavedCount() >= mDMAC->SQWC->getFieldValue(EEDmacRegister_SWQC_t::Fields::SQWC))
 		{
 			return true;
 		}
 	}
 
 	return false;
-}
-
-void EEDmac::setInterleaveModeToggle()
-{
-	// Toggle mode and reset the count.
-	mChannel->mInterleavedInSkipBlock = !mChannel->mInterleavedInSkipBlock;
-	mChannel->mInterleavedBlockCount = 0;
-}
-
-void EEDmac::setInterleaveModeCountIncrement()
-{
-	mChannel->mInterleavedBlockCount += 1;
-}
-
-void EEDmac::setInterleaveSkipDataCycle()
-{
-	mChannel->MADR->increment();
 }

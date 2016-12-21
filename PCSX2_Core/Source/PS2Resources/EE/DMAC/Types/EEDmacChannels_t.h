@@ -4,10 +4,11 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
-#include <Common/Types/Memory/ConstantMemory_t.h>
-
+#include "Common/Types/Memory/ConstantMemory_t.h"
 
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
+using Direction_t = EEDmacChannelTable::Direction_t;
+using LogicalMode_t = EEDmacChannelTable::LogicalMode_t;
 
 class EEDmacChannelRegister_CHCR_t;
 class EEDmacChannelRegister_MADR_t;
@@ -44,11 +45,11 @@ Not all of the registers are implemented in this base class for each channel.
 class EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_t(const u32 & channelID);
-	explicit EEDmacChannel_t(const u32 & channelID, std::shared_ptr<FIFOQueue_t> & fifoQueue);
-
+	explicit EEDmacChannel_t(const u32 & channelID, std::shared_ptr<FIFOQueue_t> & fifoQueue); // Default constructor for most channels.
+	explicit EEDmacChannel_t(const u32 & channelID); // Sets mFIFOQueue to nullptr. Provided for the to/fromSPR channels where a FIFO queue is not used.
+	
 	/*
-	The ID of this channel. Used to look up properties in the EEDmacChannelTable, which lists the physical mode, direction etc listed on EE Users Manual page 42.
+	The ID of this channel. Used to look up properties in the EEDmacChannelTable, which lists the physical mode, direction, etc listed on EE Users Manual page 42.
 	*/
 	const u32 mChannelID;
 	const ChannelProperties_t * getChannelProperties() const;
@@ -76,6 +77,108 @@ public:
 	A reference to the associated FIFO queue, set at creation.
 	*/
 	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
+
+	/*
+	Returns if the channel is enabled for transfers, by checking the CHCR.STR bit.
+	*/
+	bool isEnabled() const;
+
+	/*
+	Returns if we are in a tag instruction that requires drain stall control to be used ("refs" tag).
+	*/
+	bool isChainInDrainStallControlTag() const;
+
+	/*
+	Returns if we are in a tag instruction that requires source stall control to be used ("cnts" tag).
+	*/
+	bool isChainInSourceStallControlTag() const;
+
+	/*
+	Returns if there is a pending tag interrupt requested.
+	*/
+	bool isChainInInterruptTag() const;
+
+	/*
+	Returns if there is a pending tag exit requested.
+	*/
+	bool isChainInExitTag() const;
+
+	/*
+	Returns if this is the first cycle of the transfer, given that the channel is in source chain mode.
+	*/
+	bool isChainSourceInFirstCycle() const;
+
+	/*
+	Returns if the stack has overflowed (over 2 levels), used when pushing a stack level.
+	*/
+	bool isChainStackOverflowed() const;
+
+	/*
+	Returns if the stack has underflowed (under 1 levels), used when poping a stack level.
+	*/
+	bool isChainStackUnderflowed() const;
+
+	/*
+	Returns if the transfer should be skipped for the current cycle.
+	*/
+	bool isInterleaveInSkipMode() const;
+
+	/*
+	Returns the channel runtime logical mode its operating in.
+	*/
+	LogicalMode_t getRuntimeLogicalMode() const;
+
+	/*
+	Gets the runtime direction. Useful for channels where it can be either way.
+	*/
+	Direction_t getRuntimeDirection() const;
+
+	/*
+	Gets the interleaved block count.
+	*/
+	u32 getInterleavedCount() const;
+
+	/*
+	Sets the channel context needed for the first cycle of a source chain mode channel.
+	*/
+	void setChainSourceFirstCycle();
+
+	/*
+	Resets the channel chain mode context variables, needed for next time the channel is activated.
+	*/
+	void setChainExitStateReset();
+
+	/*
+	Sets the channel chain mode exit state to true, indicating the channel should quit transfering after the current tag.
+	*/
+	void setChainExitStateTrue();
+
+	/*
+	Toggles the interleave mode (skip/transfer).
+	*/
+	void setInterleaveModeToggle();
+
+	/*
+	Increments the interleave mode count.
+	*/
+	void setInterleaveCountIncrement();
+
+	/*
+	Updates the channel to reflect skipped data (increments MADR).
+	*/
+	void setInterleaveSkipDataCycle() const;
+
+	/*
+	Pushes a chain level onto the stack, by setting the ASR register to the TADR register values and incrementing the stack level.
+	*/
+	void pushChainStack();
+
+	/*
+	Pops a chain level from the stack, by setting the TADR register to the ASR register values and decrementing the stack level.
+	*/
+	void popChainStack();
+
+private:
 
 	/*
 	A DMAC channel transfer count save array, needed to determine how many data units (qwords) have been transfered since start, which is used to

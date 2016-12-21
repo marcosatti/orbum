@@ -33,6 +33,16 @@ void FIFOQueue_t::write(const u128 & data)
 	mFIFOQueue.push(data);
 }
 
+bool FIFOQueue_t::isEmpty() const
+{
+	return getCurrentSize() == 0;
+}
+
+bool FIFOQueue_t::isFull() const
+{
+	return !(getCurrentSize() < getMaxSize());
+}
+
 size_t FIFOQueue_t::getCurrentSize() const
 {
 	return mFIFOQueue.size();

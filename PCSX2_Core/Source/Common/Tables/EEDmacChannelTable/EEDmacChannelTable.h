@@ -19,13 +19,13 @@ public:
 		SIF0 = 5,
 		SIF1 = 6,
 		SIF2 = 7,
-		fromSPR = 8, // From scratchpad ram.
-		toSPR = 9  // To scratchpad ram.
+		fromSPR = 8, 
+		toSPR = 9 
 	};
 	enum class Direction_t
 	{
 		// Do not change order! Sync'd to Dn_CHCR.DIR order (needed in order to static_cast<Direction_t>), 
-		//  except for BOTH in which case the direction is determined at runtime.
+		//  except for BOTH in which case the direction should be determined at runtime by checking Dn_CHCR.DIR.
 		FROM = 0,
 		TO = 1,
 		BOTH = 2
@@ -35,10 +35,17 @@ public:
 		SLICE = 0,
 		BURST = 1
 	};
+	enum class LogicalMode_t
+	{
+		// Do not change order! Sync'd to Dn_CHCR.MOD order (needed in order to static_cast<LogicalMode_t>).
+		NORMAL = 0,
+		CHAIN = 1,
+		INTERLEAVED = 2
+	};
 	enum class ChainMode_t
 	{
 		SOURCE = 0,
-		DEST = 1, // Destination.
+		DEST = 1,
 		NONE = 2
 	};
 	struct ChannelProperties_t
@@ -54,12 +61,12 @@ public:
 		{ "VIF0",    ChannelID_t::VIF0,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
 		{ "VIF1",    ChannelID_t::VIF1,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
 		{ "GIF",     ChannelID_t::GIF,     Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ "fromIPU", ChannelID_t::fromIPU, Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::NONE },
+		{ "fromIPU", ChannelID_t::fromIPU, Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::NONE   },
 		{ "toIPU",   ChannelID_t::toIPU,   Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ "SIF0",    ChannelID_t::SIF0,    Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::DEST },
+		{ "SIF0",    ChannelID_t::SIF0,    Direction_t::FROM, PhysicalMode_t::SLICE, ChainMode_t::DEST   },
 		{ "SIF1",    ChannelID_t::SIF1,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
-		{ "SIF2",    ChannelID_t::SIF2,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::NONE },
-		{ "fromSPR", ChannelID_t::fromSPR, Direction_t::FROM, PhysicalMode_t::BURST, ChainMode_t::DEST },
+		{ "SIF2",    ChannelID_t::SIF2,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::NONE   },
+		{ "fromSPR", ChannelID_t::fromSPR, Direction_t::FROM, PhysicalMode_t::BURST, ChainMode_t::DEST   },
 		{ "toSPR",   ChannelID_t::toSPR,   Direction_t::TO,   PhysicalMode_t::BURST, ChainMode_t::SOURCE }
 	};
 

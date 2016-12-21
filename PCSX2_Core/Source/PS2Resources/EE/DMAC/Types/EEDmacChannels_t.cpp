@@ -2,6 +2,7 @@
 
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 EEDmacChannel_t::EEDmacChannel_t(const u32& channelID) :
 	mChannelID(channelID),
@@ -46,6 +47,149 @@ EEDmacChannel_t::EEDmacChannel_t(const u32& channelID, std::shared_ptr<FIFOQueue
 const ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
 {
 	return EEDmacChannelTable::getChannelInfo(mChannelID);
+}
+
+bool EEDmacChannel_t::isEnabled() const
+{
+	if (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
+		return true;
+	
+	return false;
+}
+
+bool EEDmacChannel_t::isChainInDrainStallControlTag() const
+{
+	return ((CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x4;
+}
+
+bool EEDmacChannel_t::isChainInSourceStallControlTag() const
+{
+	return ((CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x0;
+}
+
+bool EEDmacChannel_t::isChainInInterruptTag() const
+{
+	if (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) != 0 
+		&& (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) & 0x8000) != 0)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+bool EEDmacChannel_t::isChainInExitTag() const
+{
+	if (mChainExitState)
+		return true;
+
+	return false;
+}
+
+bool EEDmacChannel_t::isChainSourceInFirstCycle() const
+{
+	if (mChainSrcFirstRun)
+		return true;
+
+	return false;
+}
+
+bool EEDmacChannel_t::isChainStackOverflowed() const
+{
+	if (mChainStackLevelState >= 2) // Remember: 0 indexed!
+		return true;
+
+	return false;
+}
+
+bool EEDmacChannel_t::isChainStackUnderflowed() const
+{
+	if (mChainStackLevelState == 0)
+		return true;
+
+	return false;
+}
+
+bool EEDmacChannel_t::isInterleaveInSkipMode() const
+{
+	if (mInterleavedInSkipBlock)
+		return true;
+	
+	return false;
+}
+
+LogicalMode_t EEDmacChannel_t::getRuntimeLogicalMode() const
+{
+	return static_cast<LogicalMode_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD));
+}
+
+Direction_t EEDmacChannel_t::getRuntimeDirection() const
+{
+	Direction_t direction = getChannelProperties()->Direction;
+	if (direction == Direction_t::BOTH)
+		direction = static_cast<Direction_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::DIR));
+
+	return direction;
+}
+
+u32 EEDmacChannel_t::getInterleavedCount() const
+{
+	return mInterleavedBlockCount;
+}
+
+void EEDmacChannel_t::setChainSourceFirstCycle()
+{
+	// Set TADR to (MADR + (QWC * 0x10)) as the next tag address on first run.
+	u32 ADDR = MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
+	u32 SPRFlag = MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR);
+	u32 QWCValue = QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC);
+	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ADDR + (QWCValue * 0x10));
+	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, SPRFlag);
+
+	mChainSrcFirstRun = false;
+}
+
+void EEDmacChannel_t::setChainExitStateReset()
+{
+	mChainSrcFirstRun = true;
+	mChainExitState = false;
+	mChainStackLevelState = 0;
+}
+
+void EEDmacChannel_t::setChainExitStateTrue()
+{
+	mChainExitState = true;
+}
+
+void EEDmacChannel_t::setInterleaveModeToggle()
+{
+	// Toggle mode and reset the count.
+	mInterleavedInSkipBlock = !mInterleavedInSkipBlock;
+	mInterleavedBlockCount = 0;
+}
+
+void EEDmacChannel_t::setInterleaveCountIncrement()
+{
+	mInterleavedBlockCount += 1;
+}
+
+void EEDmacChannel_t::setInterleaveSkipDataCycle() const
+{
+	MADR->increment();
+}
+
+void EEDmacChannel_t::pushChainStack()
+{
+	ASR[mChainStackLevelState]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR, TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	ASR[mChainStackLevelState]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR, TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChainStackLevelState += 1;
+}
+
+void EEDmacChannel_t::popChainStack()
+{
+	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
+	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
+	mChainStackLevelState -= 1;
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue) :

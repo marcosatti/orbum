@@ -27,6 +27,16 @@ public:
 	void write(const u128 & data);
 
 	/*
+	Returns if the FIFO queue has no data available.
+	*/
+	bool isEmpty() const;
+
+	/*
+	Returns if the FIFO queue is full.
+	*/
+	bool isFull() const;
+
+	/*
 	Gets the current number of 128-bit data elements in the queue.
 	*/
 	size_t getCurrentSize() const;
