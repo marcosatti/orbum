@@ -67,7 +67,7 @@ struct u128
 
 	// Zero value on construction or initalised with 2 x 64-bit values.
 	u128();
-	u128(const u64 & upper, const u64 & lower);
+	u128(const u64 & lower, const u64 & upper);
 
 	// Below functions are convenience functions for:
 	// - Comparing the 128-bit value to another.

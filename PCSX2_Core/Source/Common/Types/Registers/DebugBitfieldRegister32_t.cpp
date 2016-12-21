@@ -1,11 +1,13 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
+
+#if defined(BUILD_DEBUG)
+
 #include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
-#include "Common/Util/MathUtil/MathUtil.h"
 
 DebugBitfieldRegister32_t::DebugBitfieldRegister32_t(const char* mnemonic) :
-	DebugRegister32_t(mnemonic)
+	BitfieldRegister32_t(mnemonic)
 {
 }
 
@@ -13,23 +15,46 @@ DebugBitfieldRegister32_t::~DebugBitfieldRegister32_t()
 {
 }
 
-u32 DebugBitfieldRegister32_t::getBitRange32(u8 startPosition, u8 bitLength)
+u32 DebugBitfieldRegister32_t::readWordU()
 {
-	return MathUtil::extractMaskedValue32(UW, startPosition, bitLength);
-}
-
-void DebugBitfieldRegister32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 value)
-{
-	UW = MathUtil::insertMaskedValue32(UW, value, startPosition, bitLength);
+	auto value = BitfieldRegister32_t::readWordU();
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Read u32, Value = 0x%X.", getMnemonic(), value);
+#else
+	logDebug("%s: Read u32, Value = %d.", getMnemonic(), value);
+#endif
+	return value;
 }
 
 void DebugBitfieldRegister32_t::writeWordU(u32 value)
 {
-	Register32_t::writeWordU(value);
-	BitfieldMap32_t::syncMapFromMemory();
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Write u32, Value = 0x%X.", getMnemonic(), value);
+#else
+	logDebug("%s: Write u32, Value = %d.", getMnemonic() value);
+#endif
+	BitfieldRegister32_t::writeWordU(value);
+}
+
+s32 DebugBitfieldRegister32_t::readWordS()
+{
+	auto value = BitfieldRegister32_t::readWordS();
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Read s32, Value = 0x%X.", getMnemonic(), value);
+#else
+	logDebug("%s: Read s32, Value = %d.", getMnemonic(), value);
+#endif
+	return value;
 }
 
 void DebugBitfieldRegister32_t::writeWordS(s32 value)
 {
-	writeWordU(static_cast<u32>(value));
+#if DEBUG_MEM_LOG_VALUE_AS_HEX
+	logDebug("%s: Write s32, Value = 0x%X.", getMnemonic(), value);
+#else
+	logDebug("%s: Write s32, Value = %d.", getMnemonic(), value);
+#endif
+	BitfieldRegister32_t::writeWordS(value);
 }
+
+#endif

@@ -8,7 +8,7 @@ u128::u128():
 {
 }
 
-u128::u128(const u64 & upper, const u64 & lower) :
+u128::u128(const u64 & lower, const u64 & upper) :
 	hi(upper),
 	lo(lower)
 {

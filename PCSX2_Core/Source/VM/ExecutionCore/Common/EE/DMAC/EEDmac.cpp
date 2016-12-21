@@ -256,10 +256,6 @@ void EEDmac::executionStep_Chain()
 		{
 		case ChainMode_t::SOURCE:
 		{
-			// Some additional processing needed on src chain first run before starting a transfer (set TADR register).
-			if (mChannel->isChainSourceInFirstCycle())
-				mChannel->setChainSourceFirstCycle();
-
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainSourceTag())
 				return;
@@ -472,7 +468,7 @@ bool EEDmac::readChainSourceTag()
 	const bool SPRFlag = (mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR) != 0);
 	data = readDataMemory(TADR, SPRFlag);
 
-	// Set mDMAtag based upon the u128 read from memory.
+	// Set mDMAtag based upon the u128 read from memory (lower 64-bits).
 	mDMAtag.setValue(data.lo);
 
 	// Set CHCR.TAG based upon the DMA tag read (bits 16-31).

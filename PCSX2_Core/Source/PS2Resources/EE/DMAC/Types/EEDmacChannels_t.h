@@ -104,11 +104,6 @@ public:
 	bool isChainInExitTag() const;
 
 	/*
-	Returns if this is the first cycle of the transfer, given that the channel is in source chain mode.
-	*/
-	bool isChainSourceInFirstCycle() const;
-
-	/*
 	Returns if the stack has overflowed (over 2 levels), used when pushing a stack level.
 	*/
 	bool isChainStackOverflowed() const;
@@ -137,11 +132,6 @@ public:
 	Gets the interleaved block count.
 	*/
 	u32 getInterleavedCount() const;
-
-	/*
-	Sets the channel context needed for the first cycle of a source chain mode channel.
-	*/
-	void setChainSourceFirstCycle();
 
 	/*
 	Resets the channel chain mode context variables, needed for next time the channel is activated.
@@ -179,20 +169,6 @@ public:
 	void popChainStack();
 
 private:
-
-	/*
-	A DMAC channel transfer count save array, needed to determine how many data units (qwords) have been transfered since start, which is used to
-	determine if the DMAC should stop transferring in slice mode (after 8 qwords).
-	Only used for slice channels.
-	*/
-	u32 mSliceCountState;
-
-	/*
-	For source chain mode, this determines if the current DMAC cycle is the first cycle on the channel.
-	This is used to set the TADR register on the first run, and should be reset to true after a transfer has finished (ie: on chain exit).
-	Only used for source chain mode channels.
-	*/
-	bool mChainSrcFirstRun;
 
 	/*
 	A chain mode exit status for each channel. When an exiting DMAtag instruction such as end is called, true is written to the appropriate index,
