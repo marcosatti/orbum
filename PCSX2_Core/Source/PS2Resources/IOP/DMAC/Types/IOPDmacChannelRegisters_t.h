@@ -1,57 +1,38 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
 
 /*
-The DMAC D_CHCR register.
+The IOP DMAC D_CHCR register.
+Based off the PSX docs.
 */
 class IOPDmacChannelRegister_CHCR_t : public DebugBitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
+		static constexpr u8 DR = 0;
+		static constexpr u8 CO = 1;
+		static constexpr u8 LI = 2;
+		static constexpr u8 TR = 3;
 	};
 
 	IOPDmacChannelRegister_CHCR_t(const char * mnemonic);
 };
 
 /*
-The DMAC D_MADR register.
-*/
-class IOPDmacChannelRegister_MADR_t : public DebugBitfieldRegister32_t
-{
-public:
-	struct Fields
-	{
-	};
-
-	IOPDmacChannelRegister_MADR_t(const char * mnemonic);
-};
-
-/*
-The DMAC D_BCR register.
+The IOP DMAC D_BCR register.
+Based of the PSX docs.
 */
 class IOPDmacChannelRegister_BCR_t : public DebugBitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
+		static constexpr u8 BS = 0;
+		static constexpr u8 BA = 1;
 	};
 
 	IOPDmacChannelRegister_BCR_t(const char * mnemonic);
-};
-
-/*
-The DMAC D_TADR register, aka tag address register.
-*/
-class IOPDmacChannelRegister_TADR_t : public DebugBitfieldRegister32_t
-{
-public:
-	struct Fields
-	{
-	};
-
-	IOPDmacChannelRegister_TADR_t(const char * mnemonic);
 };

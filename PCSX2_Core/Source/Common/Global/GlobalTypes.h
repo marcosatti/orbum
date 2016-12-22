@@ -65,9 +65,14 @@ struct u128
 		u8  UB[16];
 	};
 
-	// Zero value on construction or initalised with 2 x 64-bit values.
+	/*
+	- Zero value on construction or 
+	- Initalised with 2 x 64-bit values (LSB and MSB).
+	- Initalised with 4 x 32-bit values (LSB (w0) -> MSB (w3)).
+	*/
 	u128();
 	u128(const u64 & lower, const u64 & upper);
+	u128(const u32 & w0, const u32 & w1, const u32 & w2, const u32 & w3);
 
 	// Below functions are convenience functions for:
 	// - Comparing the 128-bit value to another.

@@ -134,7 +134,7 @@ u32 EEDmac::transferData()
 			if (mChannel->mFIFOQueue->isEmpty())
 				return 0;
 
-			u128 packet = mChannel->mFIFOQueue->read();
+			u128 packet = mChannel->mFIFOQueue->readQwordU();
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 		}
 		else if (direction == Direction_t::TO)
@@ -144,7 +144,7 @@ u32 EEDmac::transferData()
 				return 0;
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
-			mChannel->mFIFOQueue->write(packet);
+			mChannel->mFIFOQueue->writeQwordU(packet);
 		}
 
 		// Increment the MADR register by a qword, and decrement the QWC register by a qword.
@@ -477,7 +477,7 @@ bool EEDmac::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
 		// Write the tag to the channel.
-		mChannel->mFIFOQueue->write(data);
+		mChannel->mFIFOQueue->writeQwordU(data);
 	}
 
 	return true;
@@ -490,7 +490,7 @@ bool EEDmac::readChainDestTag()
 		return false;
 
 	// Read tag from channel FIFO (always next to transfer data).
-	u128 data = mChannel->mFIFOQueue->read();
+	u128 data = mChannel->mFIFOQueue->readQwordU();
 
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);

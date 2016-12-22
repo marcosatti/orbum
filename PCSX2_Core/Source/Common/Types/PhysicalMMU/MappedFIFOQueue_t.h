@@ -8,7 +8,7 @@
 
 /*
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
-Only read/writeQwordU is allowed on aligned addresses - all other combinations throw a runtime error.
+Only read/writeWordU and QwordU is allowed on non-zero storage indexes - all other combinations throw a runtime error.
 */
 class MappedFIFOQueue_t : public PhysicalMapped
 {

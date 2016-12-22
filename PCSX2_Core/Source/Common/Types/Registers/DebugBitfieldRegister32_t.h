@@ -20,6 +20,11 @@ public:
 	void writeWordU(u32 value) override;
 	s32 readWordS() override;
 	void writeWordS(s32 value) override;
+
+	/*
+	Debug logs all bitfield mnemonics with values.
+	*/
+	void logDebugAllFields();
 };
 
 #endif

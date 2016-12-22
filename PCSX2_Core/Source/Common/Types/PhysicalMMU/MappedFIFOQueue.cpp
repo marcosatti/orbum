@@ -68,12 +68,16 @@ void MappedFIFOQueue_t::writeHwordS(u32 storageIndex, s16 value)
 
 u32 MappedFIFOQueue_t::readWordU(u32 storageIndex)
 {
-	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
+	return mFIFOQueue->readWordU();
 }
 
 void MappedFIFOQueue_t::writeWordU(u32 storageIndex, u32 value)
 {
-	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
+	mFIFOQueue->writeWordU(value);
 }
 
 s32 MappedFIFOQueue_t::readWordS(u32 storageIndex)
@@ -108,14 +112,14 @@ void MappedFIFOQueue_t::writeDwordS(u32 storageIndex, s64 value)
 
 u128 MappedFIFOQueue_t::readQwordU(u32 storageIndex)
 {
-	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
-		throw std::runtime_error("Tried to access MappedFPFIFOQueue_t with unaligned index. Not allowed.");
-	return mFIFOQueue->read();
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
+	return mFIFOQueue->readQwordU();
 }
 
 void MappedFIFOQueue_t::writeQwordU(u32 storageIndex, u128 value)
 {
-	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
-		throw std::runtime_error("Tried to access MappedFPFIFOQueue_t with unaligned index. Not allowed.");
-	mFIFOQueue->write(value);
+	if (storageIndex != 0)
+		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
+	mFIFOQueue->writeQwordU(value);
 }

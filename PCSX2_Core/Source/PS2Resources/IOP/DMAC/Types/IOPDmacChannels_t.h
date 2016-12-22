@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-class IOPDmacChannelRegister_MADR_t;
+class DebugRegister32_t;
 class IOPDmacChannelRegister_BCR_t;
 class IOPDmacChannelRegister_CHCR_t;
 class IOPDmacChannelRegister_TADR_t;
@@ -25,10 +25,10 @@ public:
 	/*
 	IOP DMAC Channel Registers.
 	*/
-	std::shared_ptr<IOPDmacChannelRegister_MADR_t> MADR;
+	std::shared_ptr<DebugRegister32_t>             MADR;
 	std::shared_ptr<IOPDmacChannelRegister_BCR_t>  BCR;
 	std::shared_ptr<IOPDmacChannelRegister_CHCR_t> CHCR;
-	std::shared_ptr<IOPDmacChannelRegister_TADR_t> TADR;
+	std::shared_ptr<DebugRegister32_t>             TADR;
 };
 
 /*
