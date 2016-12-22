@@ -27,7 +27,7 @@ using ChainMode_t = EEDmacChannelTable::ChainMode_t;
 EEDmac::EEDmac(VMMain* vmMain) :
 	VMExecutionCoreComponent(vmMain),
 	mChannelIndex(0),
-	mChannelProperties(nullptr),
+	mChannel(nullptr),
 	mDMAtag()
 {
 	// Set resource pointer variables.
@@ -48,8 +48,7 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 		for (mChannelIndex = 0; mChannelIndex < PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)
 		{
 			// Set context variables.
-			mChannel = mDMAC->CHANNELS[mChannelIndex];
-			mChannelProperties = mChannel->getChannelProperties();
+			mChannel = &(*mDMAC->CHANNELS[mChannelIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
 
 			// Check if channel is enabled for transfer.
 			if (mChannel->isEnabled())
@@ -101,7 +100,7 @@ u32 EEDmac::transferData()
 
 	// If we are using the from/toSPR channels, then we need to get the SPR address, and take a different code path. 
 	// Within the these channels MADR.SPR is always 0 on these channels (have to use the SADR register as the SPR address).
-	if (mChannelProperties->ChannelID == ChannelID_t::toSPR || mChannelProperties->ChannelID == ChannelID_t::fromSPR)
+	if (mChannel->getChannelProperties()->ChannelID == ChannelID_t::toSPR || mChannel->getChannelProperties()->ChannelID == ChannelID_t::fromSPR)
 	{
 		// We are doing a mem->SPR or SPR->mem, use both MADR and SADR registers.
 		// NOTE: The mask of 0x3FF0 comes from PCSX2. I have not personally tested this, but assume it is required.
@@ -252,7 +251,7 @@ void EEDmac::executionStep_Chain()
 	else
 	{
 		// Check if we are in source or dest chain mode, read in a tag, and perform action based on tag id (which will set MADR, QWC, etc).
-		switch (mChannelProperties->ChainMode)
+		switch (mChannel->getChannelProperties()->ChainMode)
 		{
 		case ChainMode_t::SOURCE:
 		{

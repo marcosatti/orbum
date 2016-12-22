@@ -54,8 +54,7 @@ private:
 	u32 mChannelIndex;
 	std::shared_ptr<EEDmac_t> mDMAC;
 	std::shared_ptr<PhysicalMMU_t> mEEMMU;
-	std::shared_ptr<EEDmacChannel_t> mChannel;
-	const ChannelProperties_t * mChannelProperties;
+	EEDmacChannel_t * mChannel;
 
 	
 

@@ -44,6 +44,7 @@
 
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/DMAC/IOPDmac_t.h"
+#include "PS2Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "PS2Resources/IOP/INTC/IOPIntc_t.h"
 #include "PS2Resources/IOP/CDVD/CDVD_t.h"
@@ -364,58 +365,47 @@ void PS2Resources_t::initPhysicalMemoryMap_IOP() const
 		IOP->PhysicalMMU->mapObject(0x1F802070, IOP->REGISTER_2070);
 
 		// DMAC Registers.
-		IOP->PhysicalMMU->mapObject(0x1F801080, IOP->DMAC->CHANNEL_0->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801084, IOP->DMAC->CHANNEL_0->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801088, IOP->DMAC->CHANNEL_0->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80108C, IOP->DMAC->CHANNEL_0->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801090, IOP->DMAC->CHANNEL_1->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801094, IOP->DMAC->CHANNEL_1->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801098, IOP->DMAC->CHANNEL_1->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80109C, IOP->DMAC->CHANNEL_1->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010A0, IOP->DMAC->CHANNEL_2->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010A4, IOP->DMAC->CHANNEL_2->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010A8, IOP->DMAC->CHANNEL_2->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010AC, IOP->DMAC->CHANNEL_2->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010B0, IOP->DMAC->CHANNEL_3->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010B4, IOP->DMAC->CHANNEL_3->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010B8, IOP->DMAC->CHANNEL_3->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010BC, IOP->DMAC->CHANNEL_3->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010C0, IOP->DMAC->CHANNEL_4->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010C4, IOP->DMAC->CHANNEL_4->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010C8, IOP->DMAC->CHANNEL_4->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010CC, IOP->DMAC->CHANNEL_4->TADR);
+		IOP->PhysicalMMU->mapObject(0x1F801080, IOP->DMAC->CHANNEL_fromMDEC->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801084, IOP->DMAC->CHANNEL_fromMDEC->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801088, IOP->DMAC->CHANNEL_fromMDEC->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801090, IOP->DMAC->CHANNEL_toMDEC->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801094, IOP->DMAC->CHANNEL_toMDEC->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801098, IOP->DMAC->CHANNEL_toMDEC->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010A0, IOP->DMAC->CHANNEL_GPU->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F8010A4, IOP->DMAC->CHANNEL_GPU->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010A8, IOP->DMAC->CHANNEL_GPU->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010B0, IOP->DMAC->CHANNEL_CDROM->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F8010B4, IOP->DMAC->CHANNEL_CDROM->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010B8, IOP->DMAC->CHANNEL_CDROM->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010C0, IOP->DMAC->CHANNEL_SPU2c1->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F8010C4, IOP->DMAC->CHANNEL_SPU2c1->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010C8, IOP->DMAC->CHANNEL_SPU2c1->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010CC, IOP->DMAC->CHANNEL_SPU2c1->TADR);
 		IOP->PhysicalMMU->mapObject(0x1F8010D0, IOP->DMAC->CHANNEL_5->MADR);
 		IOP->PhysicalMMU->mapObject(0x1F8010D4, IOP->DMAC->CHANNEL_5->BCR);
 		IOP->PhysicalMMU->mapObject(0x1F8010D8, IOP->DMAC->CHANNEL_5->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010DC, IOP->DMAC->CHANNEL_5->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010E0, IOP->DMAC->CHANNEL_6->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F8010E4, IOP->DMAC->CHANNEL_6->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010E8, IOP->DMAC->CHANNEL_6->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F8010EC, IOP->DMAC->CHANNEL_6->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801500, IOP->DMAC->CHANNEL_7->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801504, IOP->DMAC->CHANNEL_7->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801508, IOP->DMAC->CHANNEL_7->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80150C, IOP->DMAC->CHANNEL_7->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801510, IOP->DMAC->CHANNEL_8->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801514, IOP->DMAC->CHANNEL_8->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801518, IOP->DMAC->CHANNEL_8->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80151C, IOP->DMAC->CHANNEL_8->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801520, IOP->DMAC->CHANNEL_9->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801524, IOP->DMAC->CHANNEL_9->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801528, IOP->DMAC->CHANNEL_9->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80152C, IOP->DMAC->CHANNEL_9->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801530, IOP->DMAC->CHANNEL_10->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801534, IOP->DMAC->CHANNEL_10->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801538, IOP->DMAC->CHANNEL_10->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80153C, IOP->DMAC->CHANNEL_10->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801540, IOP->DMAC->CHANNEL_11->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801544, IOP->DMAC->CHANNEL_11->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801548, IOP->DMAC->CHANNEL_11->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80154C, IOP->DMAC->CHANNEL_11->TADR);
-		IOP->PhysicalMMU->mapObject(0x1F801550, IOP->DMAC->CHANNEL_12->MADR);
-		IOP->PhysicalMMU->mapObject(0x1F801554, IOP->DMAC->CHANNEL_12->BCR);
-		IOP->PhysicalMMU->mapObject(0x1F801558, IOP->DMAC->CHANNEL_12->CHCR);
-		IOP->PhysicalMMU->mapObject(0x1F80155C, IOP->DMAC->CHANNEL_12->TADR);
+		IOP->PhysicalMMU->mapObject(0x1F8010E0, IOP->DMAC->CHANNEL_OTClear->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F8010E4, IOP->DMAC->CHANNEL_OTClear->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F8010E8, IOP->DMAC->CHANNEL_OTClear->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801500, IOP->DMAC->CHANNEL_SPU2c2->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801504, IOP->DMAC->CHANNEL_SPU2c2->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801508, IOP->DMAC->CHANNEL_SPU2c2->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801510, IOP->DMAC->CHANNEL_DEV9->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801514, IOP->DMAC->CHANNEL_DEV9->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801518, IOP->DMAC->CHANNEL_DEV9->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801520, IOP->DMAC->CHANNEL_SIF0->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801524, IOP->DMAC->CHANNEL_SIF0->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801528, IOP->DMAC->CHANNEL_SIF0->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F80152C, IOP->DMAC->CHANNEL_SIF0->TADR);
+		IOP->PhysicalMMU->mapObject(0x1F801530, IOP->DMAC->CHANNEL_SIF1->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801534, IOP->DMAC->CHANNEL_SIF1->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801538, IOP->DMAC->CHANNEL_SIF1->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801540, IOP->DMAC->CHANNEL_fromSIO2->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801544, IOP->DMAC->CHANNEL_fromSIO2->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801548, IOP->DMAC->CHANNEL_fromSIO2->CHCR);
+		IOP->PhysicalMMU->mapObject(0x1F801550, IOP->DMAC->CHANNEL_toSIO2->MADR);
+		IOP->PhysicalMMU->mapObject(0x1F801554, IOP->DMAC->CHANNEL_toSIO2->BCR);
+		IOP->PhysicalMMU->mapObject(0x1F801558, IOP->DMAC->CHANNEL_toSIO2->CHCR);
 		IOP->PhysicalMMU->mapObject(0x1F8010F0, IOP->DMAC->PCR);
 		IOP->PhysicalMMU->mapObject(0x1F8010F4, IOP->DMAC->ICR);
 		IOP->PhysicalMMU->mapObject(0x1F801570, IOP->DMAC->PCR2);

@@ -7,6 +7,19 @@
 
 class Register32_t;
 class IOPDmacChannel_t;
+class IOPDmacChannel_fromMDEC_t;
+class IOPDmacChannel_toMDEC_t;
+class IOPDmacChannel_GPU_t;
+class IOPDmacChannel_CDROM_t;
+class IOPDmacChannel_SPU2c1_t;
+class IOPDmacChannel_Channel5_t;
+class IOPDmacChannel_OTClear_t;
+class IOPDmacChannel_SPU2c2_t;
+class IOPDmacChannel_DEV9_t;
+class IOPDmacChannel_SIF0_t;
+class IOPDmacChannel_SIF1_t;
+class IOPDmacChannel_fromSIO2_t;
+class IOPDmacChannel_toSIO2_t;
 
 /*
 IOP DMAC resources.
@@ -20,19 +33,19 @@ public:
 	IOP DMA Channels. 
 	There are 12 channels in total.
 	*/
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_0;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_1;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_2;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_3;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_4;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_5;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_6;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_7;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_8;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_9;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_10;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_11;
-	std::shared_ptr<IOPDmacChannel_t> CHANNEL_12;
+	std::shared_ptr<IOPDmacChannel_fromMDEC_t> CHANNEL_fromMDEC;
+	std::shared_ptr<IOPDmacChannel_toMDEC_t>   CHANNEL_toMDEC;
+	std::shared_ptr<IOPDmacChannel_GPU_t>      CHANNEL_GPU;
+	std::shared_ptr<IOPDmacChannel_CDROM_t>    CHANNEL_CDROM;
+	std::shared_ptr<IOPDmacChannel_SPU2c1_t>   CHANNEL_SPU2c1;
+	std::shared_ptr<IOPDmacChannel_Channel5_t> CHANNEL_5;
+	std::shared_ptr<IOPDmacChannel_OTClear_t>  CHANNEL_OTClear;
+	std::shared_ptr<IOPDmacChannel_SPU2c2_t>   CHANNEL_SPU2c2;
+	std::shared_ptr<IOPDmacChannel_DEV9_t>     CHANNEL_DEV9;
+	std::shared_ptr<IOPDmacChannel_SIF0_t>     CHANNEL_SIF0;
+	std::shared_ptr<IOPDmacChannel_SIF1_t>     CHANNEL_SIF1;
+	std::shared_ptr<IOPDmacChannel_fromSIO2_t> CHANNEL_fromSIO2;
+	std::shared_ptr<IOPDmacChannel_toSIO2_t>   CHANNEL_toSIO2;
 	std::shared_ptr<IOPDmacChannel_t> CHANNELS[PS2Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
 
 	/*
