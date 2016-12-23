@@ -6,16 +6,11 @@
 
 /*
 Represents the program counter register of a MIPS CPU. It is defined as 32-bits long.
+Extends a normal 32-bit register to provide convenience functions for manipulating the PC value.
 */
 class PCRegister32_t : public Register32_t
 {
 public:
-
-	/*
-	Returns the current PC value.
-	*/
-	u32 getPCValue();
-
 	/*
 	Set the PC to a relative value.
 	*/

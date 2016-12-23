@@ -11,12 +11,6 @@ Currently used as the PC register for the VU units.
 class PCRegister16_t : public Register16_t
 {
 public:
-
-	/*
-	Returns the current PC value.
-	*/
-	u16 getPCValue();
-
 	/*
 	Set the PC to a relative value.
 	*/

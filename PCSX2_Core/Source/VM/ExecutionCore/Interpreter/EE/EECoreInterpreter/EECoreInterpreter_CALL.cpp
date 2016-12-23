@@ -82,6 +82,6 @@ void EECoreInterpreter::JALR()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDwordU(0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->getPCValue() + 8));
+	destReg->writeDwordU(0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWordU() + 8));
 	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWordU(0), 1);
 }

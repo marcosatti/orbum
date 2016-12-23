@@ -87,13 +87,13 @@ void EECoreExceptionHandler::handleException_L1() const
 		if (getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 		{
 			// TODO: no idea if this code works, yet to encounter a branch delay exception.
-			u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+			u32 pcValue = getResources()->EE->EECore->R5900->PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION * 2;
 			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
 		}
 		else
 		{
-			u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+			u32 pcValue = getResources()->EE->EECore->R5900->PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION;
 			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
 		}
@@ -143,13 +143,13 @@ void EECoreExceptionHandler::handleException_L2() const
 	if (getResources()->EE->EECore->R5900->isInBranchDelaySlot())
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
-		u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+		u32 pcValue = getResources()->EE->EECore->R5900->PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
 		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
 	}
 	else
 	{
-		u32 pcValue = getResources()->EE->EECore->R5900->PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+		u32 pcValue = getResources()->EE->EECore->R5900->PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION;
 		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
 		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
 	}

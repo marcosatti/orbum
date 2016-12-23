@@ -70,7 +70,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 	auto& IOPCore = getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 & instructionValue = mMMUHandler->readWordU(IOPCore->R3000->PC->getPCValue()); // TODO: Add error checking for address bus error.
+	const u32 instructionValue = mMMUHandler->readWordU(IOPCore->R3000->PC->readWordU()); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
@@ -87,7 +87,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
-			IOPCore->R3000->PC->getPCValue(), IOPCore->R3000->mIsInBranchDelay, 
+			IOPCore->R3000->PC->readWordU(), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
 	}

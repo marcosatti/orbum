@@ -127,7 +127,7 @@ void IOPCoreInterpreter::JALR()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 
-	destReg->writeWordU(static_cast<u32>(getResources()->IOP->IOPCore->R3000->PC->getPCValue() + 8));
+	destReg->writeWordU(static_cast<u32>(getResources()->IOP->IOPCore->R3000->PC->readWordU() + 8));
 	getResources()->IOP->IOPCore->R3000->setBranchDelayPCTarget(sourceReg->readWordU(), 1);
 }
 

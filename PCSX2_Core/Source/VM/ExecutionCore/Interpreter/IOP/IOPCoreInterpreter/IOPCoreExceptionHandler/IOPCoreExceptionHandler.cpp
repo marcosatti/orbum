@@ -70,13 +70,13 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	if (getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot())
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
-		u32 pcValue = PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION * 2;
+		u32 pcValue = PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
 	}
 	else
 	{
-		u32 pcValue = PC->getPCValue() - Constants::SIZE_MIPS_INSTRUCTION;
+		u32 pcValue = PC->readWordU() - Constants::SIZE_MIPS_INSTRUCTION;
 		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}

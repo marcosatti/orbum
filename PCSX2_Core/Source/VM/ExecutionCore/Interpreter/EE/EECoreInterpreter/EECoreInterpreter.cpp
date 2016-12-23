@@ -111,15 +111,15 @@ u32 EECoreInterpreter::executeInstruction()
 	auto& EECore = getResources()->EE->EECore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 & instructionValue = mMMUHandler->readWordU(EECore->R5900->PC->getPCValue()); // TODO: Add error checking for address bus error.
+	const u32 instructionValue = mMMUHandler->readWordU(EECore->R5900->PC->readWordU()); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if 0 //defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x300000; // 0x201a50;
-	static u32 DEBUG_PC_BREAKPOINT = 0x8000b2A8;
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0xfe42d0;
+	static u32 DEBUG_PC_BREAKPOINT = 0x800002D8;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -127,14 +127,15 @@ u32 EECoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
-			EECore->R5900->PC->getPCValue(), EECore->R5900->mIsInBranchDelay, 
+			EECore->R5900->PC->readWordU(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
-		// Breakpoint.
-		if (EECore->R5900->PC->UW == DEBUG_PC_BREAKPOINT)
-		{
-			logDebug("(%s, %d) Breakpoint hit.", __FILENAME__, __LINE__);
-		}
+	}
+
+	// Breakpoint.
+	if (EECore->R5900->PC->readWordU() == DEBUG_PC_BREAKPOINT)
+	{
+		logDebug("(%s, %d) Breakpoint hit @ EECore cycle = 0x%llX.", __FILENAME__, __LINE__, DEBUG_LOOP_COUNTER);
 	}
 #endif
 

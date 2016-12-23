@@ -10,5 +10,5 @@ LinkRegister128_t::LinkRegister128_t(const std::shared_ptr<PCRegister32_t> & pcR
 
 void LinkRegister128_t::setLinkAddress()
 {
-	writeDwordU(0, mPCRegister->getPCValue() + 8);
+	writeDwordU(0, mPCRegister->readWordU() + 8);
 }
