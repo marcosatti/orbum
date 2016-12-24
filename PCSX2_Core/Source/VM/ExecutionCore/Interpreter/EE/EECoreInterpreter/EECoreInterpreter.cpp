@@ -117,16 +117,16 @@ u32 EECoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if defined(BUILD_DEBUG)
+#if 0 // defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0xfe42d0;
 	static u32 DEBUG_PC_BREAKPOINT = 0x800002D8;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		logDebug("(%s, %d) EECore loop 0x%llX: "
+		logDebug("EECore cycle = 0x%llX: "
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
-			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
+			DEBUG_LOOP_COUNTER,
 			EECore->R5900->PC->readWordU(), EECore->R5900->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	
@@ -135,7 +135,7 @@ u32 EECoreInterpreter::executeInstruction()
 	// Breakpoint.
 	if (EECore->R5900->PC->readWordU() == DEBUG_PC_BREAKPOINT)
 	{
-		logDebug("(%s, %d) Breakpoint hit @ EECore cycle = 0x%llX.", __FILENAME__, __LINE__, DEBUG_LOOP_COUNTER);
+		logDebug("EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
 #endif
 

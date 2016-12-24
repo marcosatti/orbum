@@ -44,9 +44,9 @@ void EECoreExceptionHandler::handleException(const EECoreException_t& PS2Excepti
 	// Get the exception properties.
 	mExceptionProperties = EECoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
 
-#if defined(BUILD_DEBUG)
+#if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
-	logDebug("(%s, %d) EECoreExceptionHandler called! Type = %s", __FILENAME__, __LINE__, mExceptionProperties->mMnemonic);
+	logDebug("EECore ExceptionHandler called! Type = %s", mExceptionProperties->mMnemonic);
 #endif
 
 	// Call the exception specific handler contained in the ExceptionProperties_t.

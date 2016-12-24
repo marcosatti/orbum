@@ -328,6 +328,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
+    <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
@@ -470,6 +472,8 @@
     <ClInclude Include="Source\PS2Resources\EE\Timers\EETimers_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.cpp" />
+    <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Global\GlobalTypes.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />

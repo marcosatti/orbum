@@ -34,6 +34,10 @@ void IOPCoreExceptionHandler::checkExceptionState()
 
 void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
 {
+#if defined(BUILD_DEBUG)
+	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
+#endif
+
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 	auto& PC = getResources()->IOP->IOPCore->R3000->PC;
 
@@ -41,11 +45,9 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	mIOPException = &PS2Exception;
 	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
 
-#if defined(BUILD_DEBUG)
-	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
-
+#if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
-	logDebug("(%s, %d) IOPCoreExceptionHandler called! Type = %s", __FILENAME__, __LINE__, mExceptionProperties->mMnemonic);
+	logDebug("IOPCore ExceptionHandler called! Type = %s", mExceptionProperties->mMnemonic);
 #endif
 
 	// Call the exception specific handler contained in the ExceptionProperties_t.

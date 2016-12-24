@@ -14,6 +14,7 @@
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "Common/Tables/EECoreSyscallTable/EECoreSyscallTable.h"
 
 void EECoreInterpreter::BREAK()
 {
@@ -27,6 +28,17 @@ void EECoreInterpreter::SYSCALL()
 	// EXCEPTION(SYSCALL)
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_SYSTEMCALL));
+
+#if defined(BUILD_DEBUG)
+	// Debug print the syscall mnemonic.
+	// The convention is to store the syscall number in register $v1 ($3), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
+	// When the syscall number is loaded into $v1, it is done so through
+	//   ADDIU $v1, $0, number.
+	// If the 16-bit 'number' above has the sign bit set (aka is negative), the EE OS will first make it unsigned then call the appropriate handler.
+	// The EE OS only defines handlers for syscall numbers 0 -> 127 (128 total). 
+	u8 index = getResources()->EE->EECore->R5900->GPR[3]->readByteU(0);
+	logDebug("EECore Syscall, number %d (%s).", index, EECoreSyscallTable::getSyscallMnemonic(index));
+#endif
 }
 
 void EECoreInterpreter::TEQ()

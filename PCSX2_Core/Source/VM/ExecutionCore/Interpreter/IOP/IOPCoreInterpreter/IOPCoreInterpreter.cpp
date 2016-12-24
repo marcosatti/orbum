@@ -76,17 +76,17 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if defined(BUILD_DEBUG)
+#if 0 // defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1B4245;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0000af9c;
 
-	if (0) // (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
+	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		logDebug("(%s, %d) IOPCore loop 0x%llX: "
+		logDebug("IOPCore cycle 0x%llX: "
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
-			__FILENAME__, __LINE__, DEBUG_LOOP_COUNTER,
+			DEBUG_LOOP_COUNTER,
 			IOPCore->R3000->PC->readWordU(), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
@@ -94,7 +94,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 
 	if (0)
 	{
-		logDebug("(%s, %d) Break Hit.", __FILENAME__, __LINE__);
+		logDebug("IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
 #endif
 

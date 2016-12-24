@@ -8,9 +8,11 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
+#include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
 void IOPCoreInterpreter::BREAK()
 {
@@ -24,6 +26,16 @@ void IOPCoreInterpreter::SYSCALL()
 	// EXCEPTION(SYSCALL)
 	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 	Exceptions->setException(IOPCoreException_t(ExType::EX_SYSTEMCALL));
+
+#if defined(BUILD_DEBUG)
+	// Debug print the syscall mnemonic.
+	// The convention is to store the syscall number in register $v0 ($2), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
+	// When the syscall number is loaded into $v0, it is done so through
+	//   ADDIU $v0, $0, number.
+	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
+	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByteU(0);
+	logDebug("IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
+#endif
 }
 
 void IOPCoreInterpreter::TLBP()

@@ -71,9 +71,9 @@ void DebugBitfieldRegister32_t::logDebugAllFields()
 			break;
 
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
-		logDebug("\tMnemonic: %s, Value = 0x%X.", field.mFieldName.c_str(), field.mFieldValue);
+		logDebug("\t%s = 0x%X.", field.mFieldName.c_str(), field.mFieldValue);
 #else
-		logDebug("\tMnemonic: %s, Value = %d.", field.mFieldName.c_str(), field.mFieldValue);
+		logDebug("\t%s = %d.", field.mFieldName.c_str(), field.mFieldValue);
 #endif
 	}
 }

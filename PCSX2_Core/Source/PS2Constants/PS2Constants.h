@@ -40,6 +40,7 @@ public:
 			struct R5900
 			{
 				static constexpr u32 NUMBER_GP_REGISTERS = 32;
+				static constexpr u32 NUMBER_SYSCALLS = 256; // TODO: get real value.
 			};
 
 			struct COP0
@@ -146,9 +147,10 @@ public:
 	{
 		struct IOPCore
 		{
-			struct R3000A
+			struct R3000
 			{
 				static constexpr u32 NUMBER_GP_REGISTERS = 32;
+				static constexpr u32 NUMBER_SYSCALLS = 256; // TODO: get real value.
 			};
 
 			struct COP0
