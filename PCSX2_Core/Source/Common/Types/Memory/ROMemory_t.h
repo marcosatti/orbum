@@ -10,7 +10,7 @@ Will not write anything when requested, and instead silently discards the data.
 class ROMemory_t : public Memory_t
 {
 public:
-	ROMemory_t(const size_t & size, const char *const mnemonic);
+	ROMemory_t(const size_t & size, const char * mnemonic);
 	virtual ~ROMemory_t();
 
 	/*

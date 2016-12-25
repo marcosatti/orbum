@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class EECore_t;
 class EEDmac_t;
@@ -27,10 +27,11 @@ TODO: finish writing documentation.
 EE_t delares the EE structure of the PS2.
 It encompasses everything seen on the diagram on page 22 of the EE Overview Manual, and the items within the EE Users Manual.
 */
-class EE_t : public PS2ResourcesSubobject
+class EE_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit EE_t(const PS2Resources_t *const PS2Resources);
+	explicit EE_t(const PS2Resources_t * PS2Resources);
+	void postResourcesInit() override;
 
 	/*
 	EE Core resources.
@@ -105,4 +106,11 @@ public:
 	std::shared_ptr<Register32_t>     REGISTER_F420;      // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F423.
 	std::shared_ptr<EERegister_MCH_t> MEMORY_MCH;		  // Register "MCH"                @ 0x1000F430 -> 0x1000F44F. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
 	std::shared_ptr<Memory_t>         MEMORY_F450;        // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F4FF.  
+
+private:
+	/*
+	Initalise the EE physical memory space.
+	For the mapping details, see primarily the EE Users Manual page 20 onwards.
+	*/
+	void initEEPhysicalMemoryMap() const;
 };

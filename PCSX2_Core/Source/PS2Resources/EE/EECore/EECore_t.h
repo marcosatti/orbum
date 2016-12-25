@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 /*
 TODO: finish off documentation when all components are ready.
@@ -19,27 +19,39 @@ class Memory_t;
 class EECoreExceptions_t;
 class EECoreTLB_t;
 
-class EECore_t : public PS2ResourcesSubobject
+class EECore_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit EECore_t(const PS2Resources_t* const PS2Resources);
+	explicit EECore_t(const PS2Resources_t* PS2Resources);
 
-	// R5900 CPU.
+	/*
+	R5900 CPU.
+	*/
 	std::shared_ptr<EECoreR5900_t> R5900;
 
-	// COP0 coprocessor.
+	/*
+	COP0 coprocessor.
+	*/
 	std::shared_ptr<EECoreCOP0_t> COP0;
 
-	// FPU (COP1) coprocessor.
+	/*
+	FPU (COP1) coprocessor.
+	*/
 	std::shared_ptr<EECoreFPU_t> FPU;
 
-	// Scratchpad memory.
+	/*
+	Scratchpad memory.
+	*/
 	std::shared_ptr<Memory_t> ScratchpadMemory;
 
-	// Exception/Interrupt State.
+	/*
+	Exception/Interrupt State.
+	*/
 	std::shared_ptr<EECoreExceptions_t> Exceptions;
 
-	// TLB state.
+	/*
+	TLB state.
+	*/
 	std::shared_ptr<EECoreTLB_t> TLB;
 
 };

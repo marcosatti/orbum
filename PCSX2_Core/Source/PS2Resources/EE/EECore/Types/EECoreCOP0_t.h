@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Constants/PS2Constants.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor0_t.h"
 
@@ -44,10 +43,10 @@ class EECoreCOP0Register_PCCR_t;
 class EECoreCOP0Register_PCR0_t;
 class EECoreCOP0Register_PCR1_t;
 
-class EECoreCOP0_t : public MIPSCoprocessor0_t, public PS2ResourcesSubobject
+class EECoreCOP0_t : public MIPSCoprocessor0_t
 {
 public:
-	explicit EECoreCOP0_t(const PS2Resources_t* const PS2Resources);
+	explicit EECoreCOP0_t();
 
 	/*
 	Checks if the EECore COP0 coprocessor is usable. 

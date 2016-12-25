@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class Register8_t;
 class ConstantRegister8_t;
@@ -13,10 +13,10 @@ No official documentation - everything comes from PCSX2. Thanks to everyone invo
 
 The registers are assigned to the 0x1F402000 -> 0x1F402FFF space, mirrored across the region.
 */
-class CDVD_t : public PS2ResourcesSubobject
+class CDVD_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit CDVD_t(const PS2Resources_t *const PS2Resources);
+	explicit CDVD_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	CDVD Registers.

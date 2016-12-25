@@ -6,7 +6,7 @@
 
 #include "Common/Types/Registers/DebugRegister32_t.h"
 
-DebugRegister32_t::DebugRegister32_t(const char* const mnemonic) :
+DebugRegister32_t::DebugRegister32_t(const char* mnemonic) :
 	Register32_t(mnemonic)
 {
 }

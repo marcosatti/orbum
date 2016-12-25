@@ -96,7 +96,7 @@ private:
 	Static arrays needed to call the appropriate VIFcode handler function.
 	In total there are 34 unique instructions, based on the VIFcodeInstructionTable unique index.
 	*/
-	void(VIF::*const INSTRUCTION_TABLE[PS2Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])() =
+	void(VIF::* INSTRUCTION_TABLE[PS2Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])() =
 	{
 		&VIF::INSTRUCTION_UNSUPPORTED,
 		&VIF::NOP,

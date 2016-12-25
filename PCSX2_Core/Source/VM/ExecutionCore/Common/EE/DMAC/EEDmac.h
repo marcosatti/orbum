@@ -206,7 +206,7 @@ private:
 	Static arrays needed to call the appropriate DMAtag handler function.
 	There is one for source and destination chain modes. See page 60 and 61 of EE Users Manual for the list of applicable DMAtag instructions.
 	*/
-	void(EEDmac::*const SRC_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
+	void(EEDmac::* SRC_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
 		&EEDmac::SRC_REFE,
 		&EEDmac::SRC_CNT,
@@ -217,7 +217,7 @@ private:
 		&EEDmac::SRC_RET,
 		&EEDmac::SRC_END
 	};
-	void(EEDmac::*const DST_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
+	void(EEDmac::* DST_CHAIN_INSTRUCTION_TABLE[PS2Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
 		&EEDmac::DST_CNTS,
 		&EEDmac::DST_CNT,

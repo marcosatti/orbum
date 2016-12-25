@@ -4,7 +4,6 @@
 
 #include "PS2Constants/PS2Constants.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 
 class Memory_t;
 class PhysicalMMU_t;
@@ -17,15 +16,16 @@ class VuUnitRegister_MAC_t;
 class VuUnitRegister_Status_t;
 class VuUnitRegister_Clipping_t;
 class VuUnitRegister_CMSAR_t;
+class EECoreCOP0_t;
 
 /*
 A base class for an implementation of a VU unit resource. Common resources are initalised, all others set to nullptr (see below).
 Extended by VuUnit_VU0_t and VuUnit_VU1_t.
 */
-class VuUnit_t : public PS2ResourcesSubobject
+class VuUnit_t
 {
 public:
-	explicit VuUnit_t(const PS2Resources_t* const PS2Resources, const u32 & unitID);
+	explicit VuUnit_t(const u32 & unitID);
 
 	/*
 	ID of the VU. Currently used for debug.
@@ -114,7 +114,7 @@ It is attached as a MIPS coprocessor to the EE Core, as COP2.
 class VuUnit_VU0_t : public VuUnit_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VuUnit_VU0_t(const PS2Resources_t* const PS2Resources);
+	explicit VuUnit_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	static constexpr u32 UNIT_ID = 0;
 
@@ -125,7 +125,7 @@ public:
 	See VU Users Manual page 200 & 201.
 
 	The first 16 registers are allocated to the VU0 VI registers, with the last 16 registers allocated to various control registers.
-	Due to dependency on registers outside this class, initalisation is done on post PS2Resources initalsation. See initControlRegistersMap_VU0().
+	Due to dependency on registers outside this class, initalisation is done on post PS2Resources initalsation.
 	*/
 	std::shared_ptr<Register32_t> CCR[PS2Constants::EE::VPU::VU::NUMBER_VU0_CCR_REGISTERS];
 
@@ -133,6 +133,12 @@ public:
 	Check if this VU unit is usable in macro mode from the EE Core by checking the EE Core's COP0.Status.CU2 bit.
 	*/
 	bool isCoprocessorUsable() const override;
+
+private:
+	/*
+	Pointer to the EE Core COP0 coprocessor, needed for the Status register.
+	*/
+	const std::shared_ptr<EECoreCOP0_t> COP0;
 
 };
 
@@ -142,7 +148,7 @@ Represents VU1.
 class VuUnit_VU1_t : public VuUnit_t
 {
 public:
-	explicit VuUnit_VU1_t(const PS2Resources_t* const PS2Resources);
+	explicit VuUnit_VU1_t();
 
 	static constexpr u32 UNIT_ID = 1;
 };

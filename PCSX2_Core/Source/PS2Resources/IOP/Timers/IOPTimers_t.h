@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
 class IOPTimersTimer_t;
@@ -12,10 +12,10 @@ IOP Timers resources.
 Contains 3 16-bit and 3 32-bit timers.
 TODO: double check and fill in.
 */
-class IOPTimers_t : public PS2ResourcesSubobject
+class IOPTimers_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit IOPTimers_t(const PS2Resources_t *const PS2Resources);
+	explicit IOPTimers_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	IOP timers.

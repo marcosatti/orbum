@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
 using ExType = IOPCoreException_t::ExType;
@@ -10,10 +9,10 @@ class PS2Resources_t;
 IOP Core exception state functionality.
 TODO: Finish implementing. Currently doesnt check the Status.IM bits etc.
 */
-class IOPCoreExceptions_t : public PS2ResourcesSubobject
+class IOPCoreExceptions_t
 {
 public:
-	explicit IOPCoreExceptions_t(const PS2Resources_t* const PS2Resources);
+	explicit IOPCoreExceptions_t();
 
 	/*
 	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.

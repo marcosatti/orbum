@@ -3,13 +3,12 @@
 #include "Common/Global/Globals.h"
 
 #include "PS2Constants/PS2Constants.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 
-class EECoreTLB_t : public PS2ResourcesSubobject
+class EECoreTLB_t
 {
 public:
-	explicit EECoreTLB_t(const PS2Resources_t* const PS2Resources);
+	explicit EECoreTLB_t();
 
 	/*
 	Performs an iterative lookup on the TLB for the given VPN contained in the PS2VirtualAddress.

@@ -3,13 +3,13 @@
 #include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
 #include "PS2Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
-VIFcodeInstructionInfo_Base_t::VIFcodeInstructionInfo_Base_t(const char *const mnemonic, const u32 implementationIndex) :
+VIFcodeInstructionInfo_Base_t::VIFcodeInstructionInfo_Base_t(const char * mnemonic, const u32 implementationIndex) :
 	mMnemonic(mnemonic),
 	mImplementationIndex(implementationIndex)
 {
 }
 
-VIFcodeInstructionInfo_t::VIFcodeInstructionInfo_t(const VIFcodeInstructionInfo_Base_t* const baseInfo, const bool interruptBitStatus, const bool unpackMBitStatus) :
+VIFcodeInstructionInfo_t::VIFcodeInstructionInfo_t(const VIFcodeInstructionInfo_Base_t* baseInfo, const bool interruptBitStatus, const bool unpackMBitStatus) :
 	mBaseInfo(baseInfo), 
 	mInterruptBitStatus(interruptBitStatus),
 	mUnpackMBitStatus(unpackMBitStatus)

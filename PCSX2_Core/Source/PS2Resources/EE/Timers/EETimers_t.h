@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
 class EETimersTimer_t;
@@ -11,10 +11,10 @@ class EETimersTimer_t;
 The EE Timers resources.
 Defines the 4 timers within the EE, as listed on page 33 onwards of the EE Users Manual.
 */
-class EETimers_t : public PS2ResourcesSubobject
+class EETimers_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit EETimers_t(const PS2Resources_t *const PS2Resources);
+	explicit EETimers_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	EE Timers resources. There are 4 timers in total.

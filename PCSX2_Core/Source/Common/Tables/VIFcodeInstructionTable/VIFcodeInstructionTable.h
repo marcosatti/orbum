@@ -14,16 +14,16 @@ This is used similar to the EECoreInstructionTable lookup. It does not have an a
 */
 struct VIFcodeInstructionInfo_Base_t
 {
-	VIFcodeInstructionInfo_Base_t(const char *const mnemonic, const u32 implementationIndex);
+	VIFcodeInstructionInfo_Base_t(const char * mnemonic, const u32 implementationIndex);
 
-	const char * const mMnemonic;
+	const char * mMnemonic;
 	const u32 mImplementationIndex;
 };
 struct VIFcodeInstructionInfo_t
 {
-	VIFcodeInstructionInfo_t(const VIFcodeInstructionInfo_Base_t* const baseInfo, const bool interruptBitStatus, const bool unpackMBitStatus);
+	VIFcodeInstructionInfo_t(const VIFcodeInstructionInfo_Base_t* baseInfo, const bool interruptBitStatus, const bool unpackMBitStatus);
 
-	const VIFcodeInstructionInfo_Base_t	*const mBaseInfo;
+	const VIFcodeInstructionInfo_Base_t	* mBaseInfo;
 	const bool mInterruptBitStatus;
 	const bool mUnpackMBitStatus;
 };

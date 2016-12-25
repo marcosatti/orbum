@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
@@ -10,10 +12,10 @@ The values can be updated at runtime. For the HBLNK clock source, this is contro
 This class is tightly coupled with VMExecutionCoreComponent - see for more details.
 */
 
-class Clock_t
+class Clock_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit Clock_t();
+	explicit Clock_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	Get/set ratio values for each clock source (within ClockSource_t) to the PS2CLK.

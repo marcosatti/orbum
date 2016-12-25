@@ -2,16 +2,16 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class ConstantMemory_t;
 class EEIntcRegister_STAT_t;
 class EEIntcRegister_MASK_t;
 
-class EEIntc_t : public PS2ResourcesSubobject
+class EEIntc_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit EEIntc_t(const PS2Resources_t *const PS2Resources);
+	explicit EEIntc_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	INTC memory mapped registers. See page 24 of EE Users Manual.

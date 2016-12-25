@@ -3,12 +3,10 @@
 #include "Common/Global/Globals.h"
 
 #include "PS2Constants/PS2Constants.h"
-#include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 
-EECoreTLB_t::EECoreTLB_t(const PS2Resources_t* const PS2Resources) : 
-	PS2ResourcesSubobject(PS2Resources),
+EECoreTLB_t::EECoreTLB_t() : 
 	mTLBEntries{ 0 }
 {
 }

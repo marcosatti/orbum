@@ -16,7 +16,7 @@ class Memory_t
 {
 public:
 	explicit Memory_t(const size_t & size);
-	explicit Memory_t(const size_t & size, const char *const mnemonic);
+	explicit Memory_t(const size_t & size, const char * mnemonic);
 	virtual ~Memory_t();
 
 	/*

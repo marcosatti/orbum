@@ -2,15 +2,15 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class Register32_t;
 class ConstantMemory_t;
 
-class GIF_t : public PS2ResourcesSubobject
+class GIF_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit GIF_t(const PS2Resources_t *const PS2Resources);
+	explicit GIF_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	GIF memory mapped registers. See page 21 of EE Users Manual.

@@ -2,17 +2,17 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class IOPCoreR3000_t;
 class IOPCoreCOP0_t;
 class IOPCoreExceptions_t;
 class Memory_t;
 
-class IOPCore_t : public PS2ResourcesSubobject
+class IOPCore_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit IOPCore_t(const PS2Resources_t *const PS2Resources);
+	explicit IOPCore_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	The R3000 CPU.

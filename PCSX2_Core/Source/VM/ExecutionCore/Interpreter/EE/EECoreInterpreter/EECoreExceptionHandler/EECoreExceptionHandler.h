@@ -84,7 +84,7 @@ private:
 	/*
 	Static arrays needed to call the appropriate exception handler function. Based upon EECoreExceptionsTable::ExceptionProperties_t::mImplementationIndex.
 	*/
-	void(EECoreExceptionHandler::*const EXCEPTION_HANDLERS[PS2Constants::EE::EECore::Exceptions::NUMBER_EXCEPTIONS])() =
+	void(EECoreExceptionHandler::* EXCEPTION_HANDLERS[PS2Constants::EE::EECore::Exceptions::NUMBER_EXCEPTIONS])() =
 	{
 		&EECoreExceptionHandler::EX_HANDLER_RESET,
 		&EECoreExceptionHandler::EX_HANDLER_NMI,

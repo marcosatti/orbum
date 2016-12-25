@@ -5,7 +5,8 @@
 #include "PS2Resources/Clock/Clock_t.h"
 #include "PS2Constants/PS2Constants.h"
 
-Clock_t::Clock_t() : 
+Clock_t::Clock_t(const PS2Resources_t * PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 	mClockRatio {
 		1,
 		PS2Constants::EE::RATIO_PS2CLK_BUSCLK,

@@ -6,7 +6,7 @@
 
 #include "Common/Types/Memory/DebugMemory_t.h"
 
-DebugMemory_t::DebugMemory_t(const size_t& size, const char* const mnemonic) :
+DebugMemory_t::DebugMemory_t(const size_t& size, const char* mnemonic) :
 	Memory_t(size, mnemonic)
 {
 }

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
 class VifUnit_t;
@@ -13,10 +13,10 @@ class VifUnit_VIF1_t;
 TODO: finish writing documentation.
 VIF_t declares the VIF units of the EE (VIF0 and VIF1).
 */
-class VIF_t : public PS2ResourcesSubobject
+class VIF_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit VIF_t(const PS2Resources_t *const PS2Resources);
+	explicit VIF_t(const PS2Resources_t * PS2Resources);
 
 	// VIF units.
 	std::shared_ptr<VifUnit_VIF0_t> VIF0;

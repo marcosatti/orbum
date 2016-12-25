@@ -4,8 +4,8 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
-Common_t::Common_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+Common_t::Common_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 	FIFO_VIF0(std::make_shared<FIFOQueue_t>("FIFO: VIF0", 128 * 4)),
 	FIFO_VIF1(std::make_shared<FIFOQueue_t>("FIFO: VIF1", 128 * 4)),
 	FIFO_GIF(std::make_shared<FIFOQueue_t>("FIFO: GIF", 128 * 4)),

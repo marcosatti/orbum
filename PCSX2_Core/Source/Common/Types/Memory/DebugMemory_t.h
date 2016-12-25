@@ -13,7 +13,7 @@ Debug mapped memory storage - logs all reads and writes.
 class DebugMemory_t : public Memory_t
 {
 public:
-	DebugMemory_t(const size_t & size, const char *const mnemonic);
+	DebugMemory_t(const size_t & size, const char * mnemonic);
 	virtual ~DebugMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;

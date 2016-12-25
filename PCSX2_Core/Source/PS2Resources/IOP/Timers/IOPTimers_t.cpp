@@ -3,8 +3,8 @@
 #include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimer_t.h"
 
-IOPTimers_t::IOPTimers_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+IOPTimers_t::IOPTimers_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Timers
 	TIMER_0(std::make_shared<IOPTimersTimer_t>(0)),

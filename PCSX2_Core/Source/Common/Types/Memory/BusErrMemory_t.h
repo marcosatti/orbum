@@ -13,7 +13,7 @@ TODO: Currently throws a runtime_error, need to implement the ps2 exception.
 class BusErrMemory_t : public Memory_t
 {
 public:
-	BusErrMemory_t(const size_t & size, const char *const mnemonic);
+	BusErrMemory_t(const size_t & size, const char * mnemonic);
 	~BusErrMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;

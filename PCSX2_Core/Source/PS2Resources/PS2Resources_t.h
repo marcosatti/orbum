@@ -43,6 +43,7 @@ class PS2Resources_t
 {
 public:
 	explicit PS2Resources_t();
+	void postResourcesInit() const;
 
 	/*
 	The Clock class, used to control timing accross components.
@@ -69,28 +70,4 @@ public:
 	*/
 	std::shared_ptr<Common_t> Common;
 
-private:
-
-	// Post initalisaiton functions.
-
-	/*
-	Initalise the VU0 (COP2) control register map.
-	*/
-	void initControlRegistersMap_VU0() const;
-
-	/*
-	Initalise the EE and IOP DMAC channel's with the appropriate FIFO queue attached.
-	*/
-	void initDMAChannelFifoQueues_EE() const;
-	// void initDMAChannelFifoQueues_IOP() const;
-
-	/*
-	Initalise the EE and IOP physical memory space. 
-	Has to be done after the sub classes above have been initalised otherwise null pointer errors can occur.
-	For the mapping details, see primarily the EE Users Manual page 20 onwards.
-	*/
-	void initPhysicalMemoryMap_EE() const;
-	void initPhysicalMemoryMap_IOP() const;
-	void initPhysicalMemoryMap_VU0() const;
-	void initPhysicalMemoryMap_VU1() const;
 };

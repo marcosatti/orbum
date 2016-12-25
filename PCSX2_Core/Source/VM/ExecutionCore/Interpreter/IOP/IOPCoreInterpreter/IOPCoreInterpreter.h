@@ -21,7 +21,7 @@ No official documentation, but there is resources available on the internet docu
 class IOPCoreInterpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit IOPCoreInterpreter(VMMain* const vmMain);
+	explicit IOPCoreInterpreter(VMMain* vmMain);
 
 	/*
 	Initalisation.
@@ -203,7 +203,7 @@ private:
 	Instruction Table. This table provides pointers to instruction implementations, which is accessed by the implementation index.
 	See IOPCoreInstructionTable and "IOP Instruction Implementation Register.xlsm" for more details.
 	*/
-	void(IOPCoreInterpreter::*const IOP_INSTRUCTION_TABLE[PS2Constants::IOP::IOPCore::NUMBER_IOP_INSTRUCTIONS])() =
+	void(IOPCoreInterpreter::* IOP_INSTRUCTION_TABLE[PS2Constants::IOP::IOPCore::NUMBER_IOP_INSTRUCTIONS])() =
 	{
 		&IOPCoreInterpreter::INSTRUCTION_UNKNOWN,
 		&IOPCoreInterpreter::J,

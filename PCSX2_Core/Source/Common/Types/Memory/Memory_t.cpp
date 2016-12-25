@@ -20,7 +20,7 @@ Memory_t::Memory_t(const size_t& size) :
 #endif
 }
 
-Memory_t::Memory_t(const size_t & size, const char *const mnemonic) :
+Memory_t::Memory_t(const size_t & size, const char * mnemonic) :
 	mStorageSize(size),
 	mStorage(new u8[mStorageSize]),
 	mMnemonic(mnemonic)

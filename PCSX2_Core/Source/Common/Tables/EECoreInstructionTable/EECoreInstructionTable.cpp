@@ -4,7 +4,7 @@
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
 
-EECoreInstructionInfo_t::EECoreInstructionInfo_t(const char* const baseClass, const u8 classIndex, const MIPSInstructionInfo_t::InstructionType instructionType, const char* const mnemonic, const u32 implementationIndex, const MIPSInstructionInfo_t::BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t & (*const lookupFunction)(const EECoreInstruction_t& instruction)) :
+EECoreInstructionInfo_t::EECoreInstructionInfo_t(const char* baseClass, const u8 classIndex, const MIPSInstructionInfo_t::InstructionType instructionType, const char* mnemonic, const u32 implementationIndex, const MIPSInstructionInfo_t::BranchDelayType branchDelayType, const u32 cycles, const EECoreInstructionInfo_t & (* lookupFunction)(const EECoreInstruction_t& instruction)) :
 	mBaseClass(baseClass),
 	mClassIndex(classIndex),
 	mInstructionType(instructionType),

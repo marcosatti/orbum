@@ -6,8 +6,8 @@
 #include "Common/Types/Registers/Register64_t.h"
 #include "Common/Types/Memory/ConstantMemory_t.h"
 
-GS_t::GS_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+GS_t::GS_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Registers.
 	PMODE(std::make_shared<Register64_t>("SPE: PMODE")),

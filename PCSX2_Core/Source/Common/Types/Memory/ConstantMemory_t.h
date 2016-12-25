@@ -14,7 +14,7 @@ The parsed size is not allocated (always set to 0 in the underlying Memory_t).
 class ConstantMemory_t : public Memory_t
 {
 public:
-	ConstantMemory_t(const size_t & size, const char *const mnemonic, const u64 D = 0);
+	ConstantMemory_t(const size_t & size, const char * mnemonic, const u64 D = 0);
 	~ConstantMemory_t();
 
 	u8 readByteU(u32 storageIndex) override;

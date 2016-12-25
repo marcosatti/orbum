@@ -2,11 +2,9 @@
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
-#include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPCoreCOP0_t::IOPCoreCOP0_t(const PS2Resources_t* const PS2Resources) : 
-	PS2ResourcesSubobject(PS2Resources),
+IOPCoreCOP0_t::IOPCoreCOP0_t() :
 	INDX(std::make_shared<COP0RegisterReserved_t>()),
 	RAND(std::make_shared<COP0RegisterReserved_t>()),
 	TLBL(std::make_shared<COP0RegisterReserved_t>()),

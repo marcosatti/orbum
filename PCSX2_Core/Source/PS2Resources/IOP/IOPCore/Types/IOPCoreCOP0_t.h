@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Constants/PS2Constants.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor0_t.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
@@ -21,10 +20,10 @@ class COP0RegisterEPC_t;
 class IOPCoreCOP0Register_PRId_t;
 class COP0RegisterReserved_t;
 
-class IOPCoreCOP0_t : public MIPSCoprocessor0_t, public PS2ResourcesSubobject
+class IOPCoreCOP0_t : public MIPSCoprocessor0_t
 {
 public:
-	explicit IOPCoreCOP0_t(const PS2Resources_t* const PS2Resources);
+	explicit IOPCoreCOP0_t();
 
 	/*
 	Checks if the IOP COP0 coprocessor is usable. 

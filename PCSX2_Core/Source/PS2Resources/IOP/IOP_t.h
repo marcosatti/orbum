@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class IOPCore_t;
 class IOPDmac_t;
@@ -20,10 +20,11 @@ There is no official documentation - some online resources exist for the PS1 whi
  it has been reversed engineered.
 Big props to the PCSX2 team here - most of the implementation is based off their work.
 */
-class IOP_t : public PS2ResourcesSubobject
+class IOP_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit IOP_t(const PS2Resources_t *const PS2Resources);
+	explicit IOP_t(const PS2Resources_t * PS2Resources);
+	void postResourcesInit() override;
 
 	/*
 	The IOP core.
@@ -98,4 +99,10 @@ public:
 	std::shared_ptr<Register32_t>  REGISTER_15F0;        // Register "Undocumented: 15F0"   @ 0x1F8015F0 -> 0x1F8015F3.
 	std::shared_ptr<Register32_t>  REGISTER_2070;        // Register "Undocumented: 2070"   @ 0x1F802070 -> 0x1F802073.
 	std::shared_ptr<Register32_t>  REGISTER_3800;        // Register "Undocumented: 3800"   @ 0x1F803800 -> 0x1F803800.
+
+private:
+	/*
+	Initalise the IOP physical memory space.
+	*/
+	void initIOPPhysicalMemoryMap() const;
 };

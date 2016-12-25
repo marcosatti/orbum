@@ -3,8 +3,8 @@
 #include "PS2Resources/IOP/INTC/IOPIntc_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-IOPIntc_t::IOPIntc_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+IOPIntc_t::IOPIntc_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Registers
 	STAT(std::make_shared<Register32_t>()),

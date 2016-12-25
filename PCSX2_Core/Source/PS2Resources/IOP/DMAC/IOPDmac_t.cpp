@@ -4,8 +4,8 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 
-IOPDmac_t::IOPDmac_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+IOPDmac_t::IOPDmac_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Channels.
 	CHANNEL_fromMDEC(std::make_shared<IOPDmacChannel_fromMDEC_t>()),

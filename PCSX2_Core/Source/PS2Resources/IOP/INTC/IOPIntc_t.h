@@ -2,17 +2,17 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class Register32_t;
 
 /*
 INTC resources.
 */
-class IOPIntc_t : public PS2ResourcesSubobject
+class IOPIntc_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit IOPIntc_t(const PS2Resources_t *const PS2Resources);
+	explicit IOPIntc_t(const PS2Resources_t * PS2Resources);
  
 	std::shared_ptr<Register32_t> STAT; // Register "STAT" @ 0x1F801070 -> 0x1F801073.
 	std::shared_ptr<Register32_t> MASK; // Register "MASK" @ 0x1F801074 -> 0x1F801077.

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class Register64_t;
 class ConstantMemory_t;
@@ -10,10 +10,10 @@ class ConstantMemory_t;
 /*
 GS_t defines the structure needed for the GS (graphics synthesiser unit).
 */
-class GS_t : public PS2ResourcesSubobject
+class GS_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit GS_t(const PS2Resources_t *const PS2Resources);
+	explicit GS_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	The H-BLNK and V-BLNK signals. These are needed by the EE Timers as gate conditions.

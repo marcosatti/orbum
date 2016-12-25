@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Constants/PS2Constants.h"
 
 
@@ -19,10 +18,10 @@ It uses a little-endian configuration (bit 0 is always the LSB).
 There is no official documentation from Sony on any of the IOP - implementation is based off PCSX2's code, and other documents available online.
 There are many user-submitted documents about the PSX architecture, which has been used to aid implementation.
 */
-class IOPCoreR3000_t : public PS2ResourcesSubobject
+class IOPCoreR3000_t
 {
 public:
-	explicit IOPCoreR3000_t(const PS2Resources_t* const PS2Resources);
+	explicit IOPCoreR3000_t();
 
 	// CPU state implementations.
 

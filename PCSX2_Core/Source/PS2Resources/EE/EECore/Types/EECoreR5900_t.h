@@ -4,7 +4,6 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Constants/PS2Constants.h"
 
 class Register128_t;
@@ -18,10 +17,10 @@ The R5900 is the EE Core's CPU.
 It has been modified from a stock R5900 to include Sony specific instructions (multimedia instructions targeting 128-bit operations etc).
 It uses a little-endian configuration.
 */
-class EECoreR5900_t : public PS2ResourcesSubobject
+class EECoreR5900_t
 {
 public:
-	explicit EECoreR5900_t(const PS2Resources_t* const PS2Resources);
+	explicit EECoreR5900_t();
 
 	// CPU state implementations.
 

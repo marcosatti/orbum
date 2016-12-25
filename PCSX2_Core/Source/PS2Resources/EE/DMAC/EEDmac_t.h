@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
 class EEDmacChannel_t;
@@ -34,10 +34,11 @@ class ConstantMemory_t;
 /*
 EE DMAC Resources. See page 41 onwards of the EE Users Manual.
 */
-class EEDmac_t : public PS2ResourcesSubobject
+class EEDmac_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit EEDmac_t(const PS2Resources_t *const PS2Resources);
+	explicit EEDmac_t(const PS2Resources_t * PS2Resources);
+	void postResourcesInit() override;
 
 	/*
 	DMA Channels. See page 42 of the EE Users Manual.
@@ -73,5 +74,11 @@ public:
 	std::shared_ptr<ConstantMemory_t>         MEMORY_F530;
 	std::shared_ptr<EEDmacRegister_ENABLEW_t> ENABLEW;
 	std::shared_ptr<ConstantMemory_t>         MEMORY_F5A0;
+
+private:
+	/*
+	Initalise the EE DMAC channel's with the appropriate FIFO queue attached.
+	*/
+	void initChannels();
 };
 

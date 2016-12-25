@@ -6,7 +6,7 @@
 
 #include "Common/Types/Memory/BusErrMemory_t.h"
 
-BusErrMemory_t::BusErrMemory_t(const size_t & size, const char *const mnemonic) :
+BusErrMemory_t::BusErrMemory_t(const size_t & size, const char * mnemonic) :
 	Memory_t(0, mnemonic),
 	mSize(size)
 {

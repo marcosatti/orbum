@@ -3,8 +3,8 @@
 #include "PS2Resources/EE/Timers/EETimers_t.h"
 #include "PS2Resources/EE/Timers/Types/EETimersTimer_t.h"
 
-EETimers_t::EETimers_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+EETimers_t::EETimers_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Timers
 	TIMER_0(std::make_shared<EETimersTimer_t>(0, true)),

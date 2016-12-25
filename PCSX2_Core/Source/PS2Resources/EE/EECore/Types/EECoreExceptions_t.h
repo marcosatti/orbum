@@ -1,18 +1,19 @@
 #pragma once
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include <memory>
+
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 using ExType = EECoreException_t::ExType;
-class PS2Resources_t;
+class EECoreCOP0_t;
 
 /*
 EE Core exceptions state functionality.
 */
-class EECoreExceptions_t : public PS2ResourcesSubobject
+class EECoreExceptions_t
 {
 public:
-	explicit EECoreExceptions_t(const PS2Resources_t* const PS2Resources);
+	explicit EECoreExceptions_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	/*
 	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.
@@ -33,4 +34,9 @@ private:
 	*/
 	bool ExceptionOccurred;
 	EECoreException_t Exception;
+
+	/*
+	Pointer to the EE Core COP0 coprocessor, needed for the Status register.
+	*/
+	const std::shared_ptr<EECoreCOP0_t> COP0;
 };

@@ -4,8 +4,8 @@
 #include "Common/Types/Registers/Register8_t.h"
 #include "Common/Types/Registers/ConstantRegister8_t.h"
 
-CDVD_t::CDVD_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+CDVD_t::CDVD_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 	N_COMMAND(std::make_shared<Register8_t>()),
 	N_READY(std::make_shared<Register8_t>()),
 	ERROR(std::make_shared<Register8_t>()),

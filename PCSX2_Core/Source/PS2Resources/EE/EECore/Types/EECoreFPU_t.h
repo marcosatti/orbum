@@ -2,18 +2,18 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
 
 class FPRegister32_t;
 class BitfieldRegister32_t;
 class EECoreFPURegister_IRR_t;
 class EECoreFPURegister_CSR_t;
+class EECoreCOP0_t;
 
-class EECoreFPU_t : public MIPSCoprocessor_t, public PS2ResourcesSubobject
+class EECoreFPU_t : public MIPSCoprocessor_t
 {
 public:
-	explicit EECoreFPU_t(const PS2Resources_t* const PS2Resources);
+	explicit EECoreFPU_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	/*
 	FPU refers to the FPU (floating-point unit) coprocessor.
@@ -54,5 +54,11 @@ public:
 	Can be used by the component calling this to raise a EECoreException_t(coprocessor unusable) if not available.
 	*/
 	bool isCoprocessorUsable() const override;
+
+private:
+	/*
+	Pointer to the EE Core COP0 coprocessor, needed for the Status register.
+	*/
+	const std::shared_ptr<EECoreCOP0_t> COP0;
 
 };

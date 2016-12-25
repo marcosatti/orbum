@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 
 class Register32_t;
 class FIFOQueue_t;
@@ -10,10 +10,10 @@ class FIFOQueue_t;
 /*
 Contains common resources needed between the EE/GS/IOP.
 */
-class Common_t : public PS2ResourcesSubobject
+class Common_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit Common_t(const PS2Resources_t *const PS2Resources);
+	explicit Common_t(const PS2Resources_t * PS2Resources);
 
 	/*
 	FIFO Queue registers, attached to both the EE and IOP DMAC channels.
@@ -40,7 +40,7 @@ public:
 	std::shared_ptr<Register32_t> REGISTER_F240; // Register "Undocumented: F240" @ 0x1000F240 (EE) & 0x1D000040 (IOP).
 	std::shared_ptr<Register32_t> REGISTER_F250; // Register "Undocumented: F250" @ 0x1000F250 (EE) & 0x1D000050 (IOP).
 	std::shared_ptr<Register32_t> REGISTER_F260; // Register "Undocumented: F260" @ 0x1000F260 (EE) & 0x1D000060 (IOP).
-	std::shared_ptr<Register32_t> REGISTER_F300; // Register "Undocumented: F300" @ 0x1000F300 (EE).
+	std::shared_ptr<Register32_t> REGISTER_F300; // Register "Undocumented: F300" @ 0x1000F300 (EE). // TODO: related to psx gpu, investigate (see PCSX2).
 	std::shared_ptr<Register32_t> REGISTER_F380; // Register "Undocumented: F380" @ 0x1000F380 (EE).
 };
 

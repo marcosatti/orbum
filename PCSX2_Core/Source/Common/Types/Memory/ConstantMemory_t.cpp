@@ -4,7 +4,7 @@
 
 #include "Common/Types/Memory/ConstantMemory_t.h"
 
-ConstantMemory_t::ConstantMemory_t(const size_t & size, const char *const mnemonic, const u64 D) :
+ConstantMemory_t::ConstantMemory_t(const size_t & size, const char * mnemonic, const u64 D) :
 	Memory_t(0, mnemonic),
 	mSize(size),
 	mConstantValue(D)

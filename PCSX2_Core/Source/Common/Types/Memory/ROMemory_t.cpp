@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROMemory_t.h"
 
-ROMemory_t::ROMemory_t(const size_t& size, const char* const mnemonic) :
+ROMemory_t::ROMemory_t(const size_t& size, const char* mnemonic) :
 	Memory_t(size, mnemonic)
 {
 }

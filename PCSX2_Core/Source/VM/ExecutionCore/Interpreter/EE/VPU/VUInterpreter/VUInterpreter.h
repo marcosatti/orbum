@@ -229,7 +229,7 @@ private:
 	
 	As mentioned above, the 'bc' class instructions are split up into the individual fields for x, y, z, w (0, 1, 2, 3) and listed instead of a generic bc-type instruction.
 	*/
-	void(VUInterpreter::*const VU_INSTRUCTION_TABLE[PS2Constants::EE::VPU::VU::NUMBER_VU_INSTRUCTIONS])() =
+	void(VUInterpreter::* VU_INSTRUCTION_TABLE[PS2Constants::EE::VPU::VU::NUMBER_VU_INSTRUCTIONS])() =
 	{
 	};
 };

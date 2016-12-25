@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
+#include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
 class Register32_t;
@@ -24,10 +24,10 @@ class IOPDmacChannel_toSIO2_t;
 /*
 IOP DMAC resources.
 */
-class IOPDmac_t : public PS2ResourcesSubobject
+class IOPDmac_t : public PS2ResourcesSubcategory
 {
 public:
-	explicit IOPDmac_t(const PS2Resources_t *const PS2Resources);
+	explicit IOPDmac_t(const PS2Resources_t * PS2Resources);
 	
 	/*
 	IOP DMA Channels. 

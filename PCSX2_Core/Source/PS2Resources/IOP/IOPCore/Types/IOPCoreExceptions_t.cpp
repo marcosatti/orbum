@@ -1,11 +1,9 @@
 #include "stdafx.h"
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
-#include "Common/Interfaces/PS2ResourcesSubobject.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
-IOPCoreExceptions_t::IOPCoreExceptions_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources), 
+IOPCoreExceptions_t::IOPCoreExceptions_t() :
 	ExceptionOccurred(false),
 	Exception()
 {

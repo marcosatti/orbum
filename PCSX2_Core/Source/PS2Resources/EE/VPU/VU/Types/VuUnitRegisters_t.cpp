@@ -81,7 +81,7 @@ void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlag
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
-	const u8 *const FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	const u8 * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Set the relevant flags (Z, S, U, O).
@@ -95,7 +95,7 @@ void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
-	const u8 *const FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	const u8 * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Clear the relevant flags (O, U, S, Z).

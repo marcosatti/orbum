@@ -4,8 +4,8 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Memory/ConstantMemory_t.h"
 
-GIF_t::GIF_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+GIF_t::GIF_t(const PS2Resources_t* PS2Resources) :
+	PS2ResourcesSubcategory(PS2Resources),
 
 	// Registers
 	CTRL(std::make_shared<Register32_t>()),

@@ -9,8 +9,7 @@
 #include "Common/Types/Registers/PCRegister32_t.h"
 #include "Common/Types/Registers/LinkRegister128_t.h"
 
-EECoreR5900_t::EECoreR5900_t(const PS2Resources_t* const PS2Resources) : 
-	PS2ResourcesSubobject(PS2Resources),
+EECoreR5900_t::EECoreR5900_t() : 
 	mIsInBranchDelay(false),
 	mBranchDelayCycles(0),
 	mBranchDelayPCTarget(0x0),

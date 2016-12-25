@@ -3,10 +3,8 @@
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
-#include "PS2Resources/PS2Resources_t.h"
 
-EECoreCOP0_t::EECoreCOP0_t(const PS2Resources_t* const PS2Resources) : 
-	PS2ResourcesSubobject(PS2Resources),
+EECoreCOP0_t::EECoreCOP0_t() :
 	Index(std::make_shared<EECoreCOP0Register_Index_t>()),
 	Random(std::make_shared<EECoreCOP0Register_Random_t>()),
 	EntryLo0(std::make_shared<EECoreCOP0Register_EntryLo0_t>()),

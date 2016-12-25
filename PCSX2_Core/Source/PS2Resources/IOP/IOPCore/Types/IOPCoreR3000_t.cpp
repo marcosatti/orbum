@@ -6,8 +6,7 @@
 #include "Common/Types/Registers/ConstantRegister32_t.h"
 #include "Common/Types/Registers/LinkRegister32_t.h"
 
-IOPCoreR3000_t::IOPCoreR3000_t(const PS2Resources_t* const PS2Resources) :
-	PS2ResourcesSubobject(PS2Resources),
+IOPCoreR3000_t::IOPCoreR3000_t() :
 	mIsInBranchDelay(false),
 	mBranchDelayCycles(0),
 	mBranchDelayPCTarget(0x0),
