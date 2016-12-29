@@ -28,6 +28,7 @@ class EEDmac;
 class EEIntc;
 class EETimers;
 class IOPCoreInterpreter;
+class IOPIntc;
 
 class Interpreter : public VMExecutionCore
 {
@@ -56,6 +57,7 @@ private:
 	const std::shared_ptr<EEIntc> mEEIntc;
 	const std::shared_ptr<EETimers> mEETimers;
 	const std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
+	const std::shared_ptr<IOPIntc> mIOPIntc;
 
 	/*
 	Used to iterate through all components, for initalsation.
@@ -69,6 +71,6 @@ private:
 	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
 	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
 	const std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[1];
+	const std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[2];
 };
 

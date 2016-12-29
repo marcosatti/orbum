@@ -22,7 +22,7 @@ Any other signals unused must be set to 0 upon creation, as the exception handle
 */
 struct IntExceptionInfo_t
 {
-	// TODO: Fill in info.
+	u8 mInt0;
 };
 
 /*

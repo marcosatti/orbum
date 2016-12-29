@@ -373,6 +373,7 @@
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\DebugMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register16_t.h" />
@@ -382,6 +383,7 @@
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.h" />
     <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.h" />
@@ -517,6 +519,7 @@
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.cpp" />
@@ -539,6 +542,7 @@
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_COP2.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter_CONVERT.cpp" />

@@ -6,13 +6,14 @@
 #include "VM/ExecutionCore/Interpreter/Interpreter.h"
 #include "VM/VMMain.h"
 
-#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 #include "VM/ExecutionCore/Common/EE/VPU/VIF/VIF.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
 #include "VM/ExecutionCore/Common/EE/INTC/EEIntc.h"
 #include "VM/ExecutionCore/Common/EE/Timers/EETimers.h"
+#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/ExecutionCore/Common/IOP/INTC/IOPIntc.h"
 
 
 Interpreter::Interpreter(VMMain * vmMain) :
@@ -26,12 +27,13 @@ Interpreter::Interpreter(VMMain * vmMain) :
 	mEEIntc(std::make_shared<EEIntc>(vmMain)),
 	mEETimers(std::make_shared<EETimers>(vmMain)),
 	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
+	mIOPIntc(std::make_shared<IOPIntc>(vmMain)),
 	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter },
 	mComponentsBUSCLK{ mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers },
 	mComponentsBUSCLK16{ mEETimers },
 	mComponentsBUSCLK256{ mEETimers },
 	mComponentsHBLNK{ mEETimers },
-	mComponentsIOP{ mIOPCoreInterpreter }
+	mComponentsIOP{ mIOPCoreInterpreter, mIOPIntc }
 {
 }
 

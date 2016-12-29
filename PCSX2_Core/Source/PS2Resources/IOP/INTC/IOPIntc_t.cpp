@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
 #include "PS2Resources/IOP/INTC/IOPIntc_t.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
 IOPIntc_t::IOPIntc_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
 
 	// Registers
-	STAT(std::make_shared<Register32_t>()),
-	MASK(std::make_shared<Register32_t>()),
-	CTRL(std::make_shared<Register32_t>())
+	STAT(std::make_shared<IOPIntcRegister_STAT_t>()),
+	MASK(std::make_shared<IOPIntcRegister_MASK_t>()),
+	CTRL(std::make_shared<IOPIntcRegister_CTRL_t>())
 {
 }

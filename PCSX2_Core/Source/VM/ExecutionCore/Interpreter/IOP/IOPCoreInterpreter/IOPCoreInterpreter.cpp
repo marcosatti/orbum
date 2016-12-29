@@ -76,9 +76,9 @@ s64 IOPCoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if 0 // defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x1B4245;
-	static u32 DEBUG_PC_BREAKPOINT = 0x0000af9c;
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x23eb7;
+	static u32 DEBUG_PC_BREAKPOINT = 0x40ac;
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -92,7 +92,7 @@ s64 IOPCoreInterpreter::executeInstruction()
 
 	}
 
-	if (0)
+	if (IOPCore->R3000->PC->readWordU() == DEBUG_PC_BREAKPOINT)
 	{
 		logDebug("IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}

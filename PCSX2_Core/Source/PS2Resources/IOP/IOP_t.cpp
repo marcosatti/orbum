@@ -180,7 +180,7 @@ void IOP_t::initIOPPhysicalMemoryMap() const
 		PhysicalMMU->mapObject(0x1F801070, INTC->STAT);
 		PhysicalMMU->mapObject(0x1F801074, INTC->MASK);
 		PhysicalMMU->mapObject(0x1F801078, INTC->CTRL);
-
+			
 		// CDVD Registers.
 		PhysicalMMU->mapObject(0x1F402004, CDVD->N_COMMAND);
 		PhysicalMMU->mapObject(0x1F402005, CDVD->N_READY);

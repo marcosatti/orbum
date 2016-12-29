@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "PS2Resources/IOP/DMAC/IOPDmac_t.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 
 IOPDmac_t::IOPDmac_t(const PS2Resources_t* PS2Resources) :
@@ -24,9 +24,9 @@ IOPDmac_t::IOPDmac_t(const PS2Resources_t* PS2Resources) :
 	CHANNELS{ CHANNEL_fromMDEC, CHANNEL_toMDEC, CHANNEL_GPU, CHANNEL_CDROM, CHANNEL_SPU2c1, CHANNEL_5, CHANNEL_OTClear,
 	          CHANNEL_SPU2c2, CHANNEL_DEV9, CHANNEL_SIF0, CHANNEL_SIF1, CHANNEL_fromSIO2, CHANNEL_toSIO2 },
 
-	PCR(std::make_shared<Register32_t>()),
-	ICR(std::make_shared<Register32_t>()),
-	PCR2(std::make_shared<Register32_t>()),
-	ICR2(std::make_shared<Register32_t>())
+	PCR(std::make_shared<DebugBitfieldRegister32_t>("IOP DMAC: PCR")),
+	ICR(std::make_shared<DebugBitfieldRegister32_t>("IOP DMAC: ICR")),
+	PCR2(std::make_shared<DebugBitfieldRegister32_t>("IOP DMAC: PCR2")),
+	ICR2(std::make_shared<DebugBitfieldRegister32_t>("IOP DMAC: ICR2"))
 {
 }

@@ -117,7 +117,7 @@ u32 EECoreInterpreter::executeInstruction()
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if defined(BUILD_DEBUG)
+#if 0 //defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1445b25;
 	static u32 DEBUG_PC_BREAKPOINT = 0x80006c18;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)

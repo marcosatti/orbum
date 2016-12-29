@@ -14,7 +14,7 @@ public:
 	explicit EEIntc_t(const PS2Resources_t * PS2Resources);
 
 	/*
-	INTC memory mapped registers. See page 24 of EE Users Manual.
+	EE INTC memory mapped registers. See page 24 of EE Users Manual.
 	*/
 	std::shared_ptr<EEIntcRegister_STAT_t> STAT;
 	std::shared_ptr<EEIntcRegister_MASK_t> MASK;

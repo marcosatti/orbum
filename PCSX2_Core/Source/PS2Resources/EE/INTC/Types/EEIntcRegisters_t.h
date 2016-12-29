@@ -5,7 +5,7 @@
 #include "Common/Types/Registers/RevBitfieldRegister32_t.h"
 
 /*
-The INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
+The EE INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 Bits are cleared by writing 1.
 */
 class EEIntcRegister_STAT_t : public ClrBitfieldRegister32_t
@@ -34,7 +34,7 @@ public:
 };
 
 /*
-The INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
+The EE INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
 Bits are reversed by writing 1.
 */
 class EEIntcRegister_MASK_t : public RevBitfieldRegister32_t
