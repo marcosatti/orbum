@@ -12,7 +12,7 @@ ClrBitfieldRegister32_t::~ClrBitfieldRegister32_t()
 {
 }
 
-void ClrBitfieldRegister32_t::writeWordU(u32 value)
+void ClrBitfieldRegister32_t::writeWord(u32 value)
 {
-	BitfieldRegister32_t::writeWordU(readWordU() & ~value);
+	BitfieldRegister32_t::writeWord(readWord() & ~value);
 }

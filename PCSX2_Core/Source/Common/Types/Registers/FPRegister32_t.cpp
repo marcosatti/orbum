@@ -15,24 +15,14 @@ FPRegister32_t::FPRegister32_t(const char* mnemonic) :
 {
 }
 
-u32 FPRegister32_t::readWordU()
+u32 FPRegister32_t::readWord()
 {
 	return UW;
 }
 
-void FPRegister32_t::writeWordU(u32 value)
+void FPRegister32_t::writeWord(u32 value)
 {
 	UW = value;
-}
-
-s32 FPRegister32_t::readWordS()
-{
-	return SW;
-}
-
-void FPRegister32_t::writeWordS(s32 value)
-{
-	SW = value;
 }
 
 f32 FPRegister32_t::readFloat()

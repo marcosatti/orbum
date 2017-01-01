@@ -31,10 +31,10 @@ void EECoreInterpreter::PMAXH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s16 source1Val = source1Reg->readHwordS(i);
-		s16 source2Val = source2Reg->readHwordS(i);
-		s16 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns parameter 1 if they are equal, and value in Rt is returned according to docs if they are equal.
-		destReg->writeHwordS(i, result);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -48,10 +48,10 @@ void EECoreInterpreter::PMAXW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s32 source1Val = source1Reg->readWordS(i);
-		s32 source2Val = source2Reg->readWordS(i);
-		s32 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns left parameter if they are equal, and value in Rt is returned according to docs if they are equal.
-		destReg->writeWordS(i, result);
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s32 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
+		destReg->writeWord(i, result);
 	}
 }
 
@@ -65,10 +65,10 @@ void EECoreInterpreter::PMINH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s16 source1Val = source1Reg->readHwordS(i);
-		s16 source2Val = source2Reg->readHwordS(i);
-		s16 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns left parameter if they are equal, and value in Rs is returned according to docs if they are equal.
-		destReg->writeHwordS(i, result);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -82,10 +82,10 @@ void EECoreInterpreter::PMINW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s32 source1Val = source1Reg->readWordS(i);
-		s32 source2Val = source2Reg->readWordS(i);
-		s32 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns left parameter if they are equal, and value in Rs is returned according to docs if they are equal.
-		destReg->writeWordS(i, result);
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s32 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
+		destReg->writeWord(i, result);
 	}
 }
 

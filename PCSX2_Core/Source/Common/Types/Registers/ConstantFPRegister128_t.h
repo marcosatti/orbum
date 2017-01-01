@@ -12,10 +12,8 @@ class ConstantFPRegister128_t : public FPRegister128_t
 public:
 	ConstantFPRegister128_t(const f32 f0 = 0.0f, const f32 f1 = 0.0f, const f32 f2 = 0.0f, const f32 f3 = 1.0f);
 
-	void writeWordU(u32 arrayIndex, u32 value) override;
-	void writeWordS(u32 arrayIndex, s32 value) override;
-	void writeDwordU(u32 arrayIndex, u64 value) override;
-	void writeDwordS(u32 arrayIndex, s64 value) override;
-	void writeQwordU(u128 value) override;
+	void writeWord(u32 arrayIndex, u32 value) override;
+	void writeDword(u32 arrayIndex, u64 value) override;
+	void writeQword(u128 value) override;
 	void writeFloat(u32 arrayIndex, f32 value) override;
 };

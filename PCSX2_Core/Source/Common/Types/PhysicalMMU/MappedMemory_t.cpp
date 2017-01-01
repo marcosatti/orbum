@@ -25,92 +25,52 @@ const char* MappedMemory_t::getMnemonic() const
 	return mMemory->getMnemonic();
 }
 
-u8 MappedMemory_t::readByteU(u32 storageIndex)
+u8 MappedMemory_t::readByte(u32 storageIndex)
 {
-	return mMemory->readByteU(storageIndex);
+	return mMemory->readByte(storageIndex);
 }
 
-void MappedMemory_t::writeByteU(u32 storageIndex, u8 value)
+void MappedMemory_t::writeByte(u32 storageIndex, u8 value)
 {
-	mMemory->writeByteU(storageIndex, value);
+	mMemory->writeByte(storageIndex, value);
 }
 
-s8 MappedMemory_t::readByteS(u32 storageIndex)
+u16 MappedMemory_t::readHword(u32 storageIndex)
 {
-	return mMemory->readByteS(storageIndex);	
+	return mMemory->readHword(storageIndex);
 }
 
-void MappedMemory_t::writeByteS(u32 storageIndex, s8 value)
+void MappedMemory_t::writeHword(u32 storageIndex, u16 value)
 {
-	mMemory->writeByteS(storageIndex, value);
+	mMemory->writeHword(storageIndex, value);
 }
 
-u16 MappedMemory_t::readHwordU(u32 storageIndex)
+u32 MappedMemory_t::readWord(u32 storageIndex)
 {
-	return mMemory->readHwordU(storageIndex);
+	return mMemory->readWord(storageIndex);
 }
 
-void MappedMemory_t::writeHwordU(u32 storageIndex, u16 value)
+void MappedMemory_t::writeWord(u32 storageIndex, u32 value)
 {
-	mMemory->writeHwordU(storageIndex, value);
+	mMemory->writeWord(storageIndex, value);
 }
 
-s16 MappedMemory_t::readHwordS(u32 storageIndex)
+u64 MappedMemory_t::readDword(u32 storageIndex)
 {
-	return mMemory->readHwordS(storageIndex);
+	return mMemory->readDword(storageIndex);
 }
 
-void MappedMemory_t::writeHwordS(u32 storageIndex, s16 value)
+void MappedMemory_t::writeDword(u32 storageIndex, u64 value)
 {
-	mMemory->writeHwordS(storageIndex, value);
+	mMemory->writeDword(storageIndex, value);
 }
 
-u32 MappedMemory_t::readWordU(u32 storageIndex)
+u128 MappedMemory_t::readQword(u32 storageIndex)
 {
-	return mMemory->readWordU(storageIndex);
+	return mMemory->readQword(storageIndex);
 }
 
-void MappedMemory_t::writeWordU(u32 storageIndex, u32 value)
+void MappedMemory_t::writeQword(u32 storageIndex, u128 value)
 {
-	mMemory->writeWordU(storageIndex, value);
-}
-
-s32 MappedMemory_t::readWordS(u32 storageIndex)
-{
-	return mMemory->readWordS(storageIndex);
-}
-
-void MappedMemory_t::writeWordS(u32 storageIndex, s32 value)
-{
-	mMemory->writeWordS(storageIndex, value);
-}
-
-u64 MappedMemory_t::readDwordU(u32 storageIndex)
-{
-	return mMemory->readDwordU(storageIndex);
-}
-
-void MappedMemory_t::writeDwordU(u32 storageIndex, u64 value)
-{
-	mMemory->writeDwordU(storageIndex, value);
-}
-
-s64 MappedMemory_t::readDwordS(u32 storageIndex)
-{
-	return mMemory->readDwordS(storageIndex);
-}
-
-void MappedMemory_t::writeDwordS(u32 storageIndex, s64 value)
-{
-	mMemory->writeDwordS(storageIndex, value);
-}
-
-u128 MappedMemory_t::readQwordU(u32 storageIndex)
-{
-	return mMemory->readQwordU(storageIndex);
-}
-
-void MappedMemory_t::writeQwordU(u32 storageIndex, u128 value)
-{
-	mMemory->writeQwordU(storageIndex, value);
+	mMemory->writeQword(storageIndex, value);
 }

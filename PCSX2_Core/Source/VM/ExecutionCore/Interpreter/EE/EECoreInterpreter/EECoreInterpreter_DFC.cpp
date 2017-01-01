@@ -26,13 +26,13 @@ void EECoreInterpreter::PEXT5()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
-		u16 packedValue = source1Reg->readHwordU(i);
+		u16 packedValue = source1Reg->readHword(i);
 		u32 temp0 = ((packedValue & 0x1F) << 3);
 		u32 temp1 = ((packedValue & 0x3E0) >> 5) << 11;
 		u32 temp2 = ((packedValue & 0x7C00) >> 10) << 19;
 		u32 temp3 = ((packedValue & 0x8000) >> 16) << 31;
 		u32 extendedValue = temp3 | temp2 | temp1 | temp0;
-		destReg->writeWordU(i / 2, extendedValue);
+		destReg->writeWord(i / 2, extendedValue);
 	}
 }
 
@@ -45,13 +45,13 @@ void EECoreInterpreter::PPAC5()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		u32 extendedValue = source1Reg->readWordU(i);
+		u32 extendedValue = source1Reg->readWord(i);
 		u8 temp0 = ((extendedValue & 0xF8) >> 3);
 		u8 temp1 = ((extendedValue & 0xF800) >> 11) << 5;
 		u8 temp2 = ((extendedValue & 0xF80000) >> 19) << 10;
 		u8 temp3 = ((extendedValue & 0x80000000) >> 31) << 15;
 		u32 packedValue = 0x0 | temp3 | temp2 | temp1 | temp0; // Slightly different to the above instruction - need to make sure the empty space is packed with 0's.
-		destReg->writeWordU(i, packedValue);
+		destReg->writeWord(i, packedValue);
 	}
 }
 
@@ -64,7 +64,7 @@ void EECoreInterpreter::CVT_S_W()
 	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 
-	destReg->writeFloat(static_cast<f32>(source1Reg->readWordS()));
+	destReg->writeFloat(static_cast<f32>(source1Reg->readWord()));
 }
 
 void EECoreInterpreter::CVT_W_S()
@@ -79,9 +79,9 @@ void EECoreInterpreter::CVT_W_S()
 	f32 source1Val = source1Reg->readFloat();
 
 	if (FPUUtil::getExponent(source1Val) <= 0x9D)
-		destReg->writeWordS(static_cast<s32>(source1Val));
+		destReg->writeWord(static_cast<u32>(source1Val));
 	else if (FPUUtil::isNegative(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
-		destReg->writeWordS(Constants::VALUE_S32_MIN);
+		destReg->writeWord(Constants::VALUE_S32_MIN);
 	else
-		destReg->writeWordS(Constants::VALUE_S32_MAX);
+		destReg->writeWord(Constants::VALUE_S32_MAX);
 }

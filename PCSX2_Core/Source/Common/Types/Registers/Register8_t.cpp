@@ -18,24 +18,14 @@ Register8_t::~Register8_t()
 {
 }
 
-u8 Register8_t::readByteU()
+u8 Register8_t::readByte()
 {
 	return UB;
 }
 
-void Register8_t::writeByteU(u8 value)
+void Register8_t::writeByte(u8 value)
 {
 	UB = value;
-}
-
-s8 Register8_t::readByteS()
-{
-	return SB;
-}
-
-void Register8_t::writeByteS(s8 value)
-{
-	SB = value;
 }
 
 const char* Register8_t::getMnemonic() const

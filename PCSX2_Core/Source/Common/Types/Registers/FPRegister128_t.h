@@ -33,9 +33,7 @@ public:
 	union
 	{
 		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
-		s64 SD[Constants::NUMBER_DWORDS_IN_QWORD];
 		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
-		s32 SW[Constants::NUMBER_WORDS_IN_QWORD];
 		f32 F[Constants::NUMBER_WORDS_IN_QWORD];
 	};
 
@@ -43,16 +41,12 @@ public:
 	Functions to access the register value - you should use these functions instead of accessing them directly.
 	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
 	*/
-	virtual u32 readWordU(u32 arrayIndex);
-	virtual void writeWordU(u32 arrayIndex, u32 value);
-	virtual s32 readWordS(u32 arrayIndex);
-	virtual void writeWordS(u32 arrayIndex, s32 value);
-	virtual u64 readDwordU(u32 arrayIndex);
-	virtual void writeDwordU(u32 arrayIndex, u64 value);
-	virtual s64 readDwordS(u32 arrayIndex);
-	virtual void writeDwordS(u32 arrayIndex, s64 value);
-	virtual u128 readQwordU();
-	virtual void writeQwordU(u128 value);
+	virtual u32 readWord(u32 arrayIndex);
+	virtual void writeWord(u32 arrayIndex, u32 value);
+	virtual u64 readDword(u32 arrayIndex);
+	virtual void writeDword(u32 arrayIndex, u64 value);
+	virtual u128 readQword();
+	virtual void writeQword(u128 value);
 	virtual f32 readFloat(u32 arrayIndex);
 	virtual void writeFloat(u32 arrayIndex, f32 value);
 

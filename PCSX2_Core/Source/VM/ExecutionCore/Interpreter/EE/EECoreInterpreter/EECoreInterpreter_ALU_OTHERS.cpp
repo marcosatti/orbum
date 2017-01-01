@@ -4,7 +4,6 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "PS2Resources/PS2Resources_t.h"
@@ -25,11 +24,11 @@ void EECoreInterpreter::PABSH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s16 source2Val = source2Reg->readHwordS(i);
+		s16 source2Val = static_cast<s16>(source2Reg->readHword(i));
 		if (source2Val == Constants::VALUE_S16_MIN) // Need to account for when the value is at the minimum for s16, as the absolute value will not fit in an s16. In this case it is set to abs(S16_MIN) - 1 aka S16_MAX.
-			destReg->writeHwordS(i, Constants::VALUE_S16_MAX);
+			destReg->writeHword(i, Constants::VALUE_S16_MAX);
 		else
-			destReg->writeHwordS(i, std::abs(source2Val));
+			destReg->writeHword(i, std::abs(source2Val));
 	}
 }
 
@@ -41,11 +40,11 @@ void EECoreInterpreter::PABSW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s32 source2Val = source2Reg->readWordS(i);
+		s32 source2Val = static_cast<s32>(source2Reg->readWord(i));
 		if (source2Val == Constants::VALUE_S32_MIN) // Need to account for when the value is at the minimum for s32, as the absolute value will not fit in an s32. In this case it is set to abs(S32_MIN) - 1 aka S32_MAX.
-			destReg->writeWordS(i, Constants::VALUE_S32_MAX);
+			destReg->writeWord(i, Constants::VALUE_S32_MAX);
 		else
-			destReg->writeWordS(i, std::abs(source2Val));
+			destReg->writeWord(i, std::abs(source2Val));
 	}
 }
 
@@ -57,9 +56,9 @@ void EECoreInterpreter::PLZCW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
-		u32 source1Val = source1Reg->readWordS(i);
+		u32 source1Val = source1Reg->readWord(i);
 		u32 leadingBitsCount = MathUtil::countLeadingBits(source1Val) - 1; // Minus 1 as the PS2 spec requires this (exclude the sign bit in the count).
-		destReg->writeWordU(i, leadingBitsCount);
+		destReg->writeWord(i, leadingBitsCount);
 	}
 }
 

@@ -17,6 +17,6 @@ public:
 	/*
 	Before commiting the value, XOR's the old value with new value, which reverses any bits that 1 is written to.
 	*/
-	void writeWordU(u32 value) override;
+	void writeWord(u32 value) override;
 };
 

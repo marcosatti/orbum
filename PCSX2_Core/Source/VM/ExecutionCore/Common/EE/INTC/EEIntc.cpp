@@ -20,10 +20,10 @@ EEIntc::EEIntc(VMMain * vmMain) :
 s64 EEIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-	const u32 I_STAT = getResources()->EE->INTC->STAT->readWordU();
+	const u32 I_STAT = getResources()->EE->INTC->STAT->readWord();
 	if (I_STAT > 0)
 	{
-		const u32 I_MASK = getResources()->EE->INTC->MASK->readWordU();
+		const u32 I_MASK = getResources()->EE->INTC->MASK->readWord();
 		if ((I_STAT & I_MASK) > 0)
 		{
 			// Generate an INT0 signal/interrupt exception (the EE Core exception handler will determine if it should be masked).

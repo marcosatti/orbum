@@ -12,7 +12,7 @@ RevBitfieldRegister32_t::~RevBitfieldRegister32_t()
 {
 }
 
-void RevBitfieldRegister32_t::writeWordU(u32 value)
+void RevBitfieldRegister32_t::writeWord(u32 value)
 {
-	BitfieldRegister32_t::writeWordU(readWordU() ^ value);
+	BitfieldRegister32_t::writeWord(readWord() ^ value);
 }

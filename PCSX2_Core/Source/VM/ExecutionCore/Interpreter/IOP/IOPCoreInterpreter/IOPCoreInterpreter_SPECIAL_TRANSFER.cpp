@@ -26,7 +26,7 @@ void IOPCoreInterpreter::MFC0()
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
-	destReg->writeWordU(static_cast<u32>(sourceReg->readWordU()));
+	destReg->writeWord(static_cast<u32>(sourceReg->readWord()));
 }
 
 void IOPCoreInterpreter::MTC0()
@@ -42,7 +42,7 @@ void IOPCoreInterpreter::MTC0()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
-	destReg->writeWordU(sourceReg->readWordU());
+	destReg->writeWord(sourceReg->readWord());
 }
 
 void IOPCoreInterpreter::MFHI()
@@ -51,7 +51,7 @@ void IOPCoreInterpreter::MFHI()
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->HI;
 
-	destReg->writeWordU(source1Reg->readWordU());
+	destReg->writeWord(source1Reg->readWord());
 }
 
 void IOPCoreInterpreter::MFLO()
@@ -60,7 +60,7 @@ void IOPCoreInterpreter::MFLO()
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->LO;
 
-	destReg->writeWordU(source1Reg->readWordU());
+	destReg->writeWord(source1Reg->readWord());
 }
 
 void IOPCoreInterpreter::MTHI()
@@ -69,7 +69,7 @@ void IOPCoreInterpreter::MTHI()
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->HI;
 
-	destReg->writeWordU(source1Reg->readWordU());
+	destReg->writeWord(source1Reg->readWord());
 }
 
 void IOPCoreInterpreter::MTLO()
@@ -78,5 +78,5 @@ void IOPCoreInterpreter::MTLO()
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->LO;
 
-	destReg->writeWordU(source1Reg->readWordU());
+	destReg->writeWord(source1Reg->readWord());
 }

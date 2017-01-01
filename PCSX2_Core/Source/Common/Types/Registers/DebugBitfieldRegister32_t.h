@@ -16,10 +16,8 @@ public:
 	explicit DebugBitfieldRegister32_t(const char * mnemonic);
 	virtual ~DebugBitfieldRegister32_t();
 
-	u32 readWordU() override;
-	void writeWordU(u32 value) override;
-	s32 readWordS() override;
-	void writeWordS(s32 value) override;
+	u32 readWord() override;
+	void writeWord(u32 value) override;
 
 	/*
 	Debug logs all bitfield mnemonics with values.

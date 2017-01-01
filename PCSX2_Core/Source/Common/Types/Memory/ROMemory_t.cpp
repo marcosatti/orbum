@@ -12,63 +12,35 @@ ROMemory_t::~ROMemory_t()
 {
 }
 
-void ROMemory_t::writeByteU(u32 storageIndex, u8 value)
+void ROMemory_t::writeByte(u32 storageIndex, u8 value)
 {
 #if DEBUG_LOG_RO_MM_WRITES
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
 #endif
 }
 
-void ROMemory_t::writeByteS(u32 storageIndex, s8 value)
+void ROMemory_t::writeHword(u32 storageIndex, u16 value)
 {
 #if DEBUG_LOG_RO_MM_WRITES
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
 #endif
 }
 
-void ROMemory_t::writeHwordU(u32 storageIndex, u16 value)
+void ROMemory_t::writeWord(u32 storageIndex, u32 value)
 {
 #if DEBUG_LOG_RO_MM_WRITES
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
 #endif
 }
 
-void ROMemory_t::writeHwordS(u32 storageIndex, s16 value)
+void ROMemory_t::writeDword(u32 storageIndex, u64 value)
 {
 #if DEBUG_LOG_RO_MM_WRITES
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
 #endif
 }
 
-void ROMemory_t::writeWordU(u32 storageIndex, u32 value)
-{
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
-}
-
-void ROMemory_t::writeWordS(u32 storageIndex, s32 value)
-{
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
-}
-
-void ROMemory_t::writeDwordU(u32 storageIndex, u64 value)
-{
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
-}
-
-void ROMemory_t::writeDwordS(u32 storageIndex, s64 value)
-{
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
-}
-
-void ROMemory_t::writeQwordU(u32 storageIndex, u128 value)
+void ROMemory_t::writeQword(u32 storageIndex, u128 value)
 {
 #if DEBUG_LOG_RO_MM_WRITES
 	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d).", getMnemonic(), storageIndex, value.lo, value.hi);

@@ -18,63 +18,32 @@ WrapperR16Register32_t::~WrapperR16Register32_t()
 {
 }
 
-u8 WrapperR16Register32_t::readByteU(u32 arrayIndex)
+u8 WrapperR16Register32_t::readByte(u32 arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
 }
 
-void WrapperR16Register32_t::writeByteU(u32 arrayIndex, u8 value)
+void WrapperR16Register32_t::writeByte(u32 arrayIndex, u8 value)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
 }
 
-s8 WrapperR16Register32_t::readByteS(u32 arrayIndex)
+u16 WrapperR16Register32_t::readHword(u32 arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
 }
 
-void WrapperR16Register32_t::writeByteS(u32 arrayIndex, s8 value)
+void WrapperR16Register32_t::writeHword(u32 arrayIndex, u16 value)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
 }
 
-u16 WrapperR16Register32_t::readHwordU(u32 arrayIndex)
+u32 WrapperR16Register32_t::readWord()
 {
-	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
+	return static_cast<u32>(mRegister16->readHword());
 }
 
-void WrapperR16Register32_t::writeHwordU(u32 arrayIndex, u16 value)
+void WrapperR16Register32_t::writeWord(u32 value)
 {
-	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
-}
-
-s16 WrapperR16Register32_t::readHwordS(u32 arrayIndex)
-{
-	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
-}
-
-void WrapperR16Register32_t::writeHwordS(u32 arrayIndex, s16 value)
-{
-	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");
-}
-
-u32 WrapperR16Register32_t::readWordU()
-{
-	return static_cast<u32>(mRegister16->readHwordU());
-}
-
-void WrapperR16Register32_t::writeWordU(u32 value)
-{
-	mRegister16->writeHwordU(static_cast<u16>(value));
-}
-
-s32 WrapperR16Register32_t::readWordS()
-{
-	// Additional processing - must keep upper 16-bits all zeros, which does not allow sign-extension.
-	return static_cast<s32>(static_cast<u32>(mRegister16->readHwordS()));
-}
-
-void WrapperR16Register32_t::writeWordS(s32 value)
-{
-	mRegister16->writeHwordS(static_cast<s16>(value));
+	mRegister16->writeHword(static_cast<u16>(value));
 }

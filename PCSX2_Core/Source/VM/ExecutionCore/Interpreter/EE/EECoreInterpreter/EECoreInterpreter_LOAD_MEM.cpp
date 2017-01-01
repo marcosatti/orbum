@@ -22,14 +22,14 @@ void EECoreInterpreter::LB()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readByteS(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readByte(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordS(0, static_cast<s64>(value));
+		destReg->writeDword(0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter::LBU()
@@ -39,14 +39,14 @@ void EECoreInterpreter::LBU()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readByteU(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readByte(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordU(0, static_cast<u64>(value));
+		destReg->writeDword(0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter::LD()
@@ -56,14 +56,14 @@ void EECoreInterpreter::LD()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readDwordU(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readDword(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordU(0, value);
+		destReg->writeDword(0, value);
 }
 
 void EECoreInterpreter::LDL()
@@ -77,11 +77,11 @@ void EECoreInterpreter::LDL()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWordU(0) + imm;
+	u32 unalignedAddress = sourceReg->readWord(0) + imm;
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x7); // Strip off the last 3 bits, making sure we are now aligned on a 8-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x7); // Get the value of the last 3 bits, which will be from 0 -> 7 indicating the byte offset within the 8-byte alignment.
 
-	u64 alignedValue = mMMUHandler->readDwordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u64 alignedValue = mMMUHandler->readDword(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	// Check for MMU error and do not continue if true.
 	if (!checkNoMMUError())
@@ -93,7 +93,7 @@ void EECoreInterpreter::LDL()
 
 	u64 keepMask = ~(MSBMask << MSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
 	
-	destReg->writeDwordU(0, (destReg->readDwordU(0) & keepMask) | MSBValue); // Calculate the new desination register value and write to it.
+	destReg->writeDword(0, (destReg->readDword(0) & keepMask) | MSBValue); // Calculate the new desination register value and write to it.
 }
 
 void EECoreInterpreter::LDR()
@@ -107,11 +107,11 @@ void EECoreInterpreter::LDR()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = sourceReg->readWord(0) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x7); // Strip off the last 3 bits, making sure we are now aligned on a 8-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x7); // Get the value of the last 3 bits, which will be from 0 -> 7 indicating the byte offset within the 8-byte alignment.
 
-	u64 alignedValue = mMMUHandler->readDwordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u64 alignedValue = mMMUHandler->readDword(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 	
 	// Check for MMU error and do not continue if true.
 	if (!checkNoMMUError())
@@ -122,7 +122,7 @@ void EECoreInterpreter::LDR()
 	u64 LSBValue = (alignedValue & LSBMask) >> LSBShift; // Calculate the LSB value part.
 
 	u64 keepMask = ~(LSBMask >> LSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeDwordU(0, (destReg->readDwordU(0) & keepMask) | LSBValue); // Calculate the new desination register value and write to it.
+	destReg->writeDword(0, (destReg->readDword(0) & keepMask) | LSBValue); // Calculate the new desination register value and write to it.
 }
 
 void EECoreInterpreter::LH()
@@ -132,14 +132,14 @@ void EECoreInterpreter::LH()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readHwordS(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readHword(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordS(0, static_cast<s64>(value));
+		destReg->writeDword(0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter::LHU()
@@ -149,23 +149,25 @@ void EECoreInterpreter::LHU()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readHwordU(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readHword(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordU(0, static_cast<u64>(value));
+		destReg->writeDword(0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto imm = static_cast<s32>(mInstruction.getIImmS());
 
-	destReg->writeDwordS(0, static_cast<s64>(imm << 16));
+	s64 result = static_cast<s64>(imm << 16);
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::LW()
@@ -175,14 +177,14 @@ void EECoreInterpreter::LW()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readWordS(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readWord(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordS(0, static_cast<s64>(value));
+		destReg->writeDword(0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter::LWL()
@@ -196,11 +198,11 @@ void EECoreInterpreter::LWL()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = sourceReg->readWord(0) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = mMMUHandler->readWordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = mMMUHandler->readWord(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	// Check for MMU error and do not continue if true.
 	if (!checkNoMMUError())
@@ -211,7 +213,7 @@ void EECoreInterpreter::LWL()
 	u32 MSBValue = (alignedValue & MSBMask) << MSBShift; // Calculate the MSB value part.
 
 	u32 keepMask = ~(MSBMask << MSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeDwordS(0, static_cast<s64>(static_cast<s32>((destReg->readWordU(0) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
+	destReg->writeDword(0, static_cast<s64>(static_cast<s32>((destReg->readWord(0) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
 }
 
 void EECoreInterpreter::LWR()
@@ -225,11 +227,11 @@ void EECoreInterpreter::LWR()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWordU(0) + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = sourceReg->readWord(0) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = mMMUHandler->readWordU(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = mMMUHandler->readWord(baseAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	// Check for MMU error and do not continue if true.
 	if (!checkNoMMUError())
@@ -240,7 +242,7 @@ void EECoreInterpreter::LWR()
 	u32 LSBValue = (alignedValue & LSBMask) >> LSBShift; // Calculate the LSB value part.
 
 	u32 keepMask = ~(LSBMask >> LSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeDwordS(0, static_cast<s64>(static_cast<s32>((destReg->readWordU(0) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
+	destReg->writeDword(0, static_cast<s64>(static_cast<s32>((destReg->readWord(0) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
 }
 
 void EECoreInterpreter::LWU()
@@ -250,14 +252,14 @@ void EECoreInterpreter::LWU()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWordU(0) + imm;
-	auto value = mMMUHandler->readWordU(PS2VirtualAddress);
+	u32 PS2VirtualAddress = sourceReg->readWord(0) + imm;
+	auto value = mMMUHandler->readWord(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordU(0, static_cast<u64>(value));
+		destReg->writeDword(0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter::LQ()
@@ -267,15 +269,15 @@ void EECoreInterpreter::LQ()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
+	u32 PS2VirtualAddress = (sourceReg->readWord(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
 	// TODO: Im not sure if this is correct for big-endian.
 	
-	u128 value = mMMUHandler->readQwordU(PS2VirtualAddress);
+	u128 value = mMMUHandler->readQword(PS2VirtualAddress);
 	// Check for MMU error.
 	if (!checkNoMMUError())
 		return;
 	else
-		destReg->writeQwordU(value);
+		destReg->writeQword(value);
 }
 
 void EECoreInterpreter::LWC1()
@@ -292,12 +294,12 @@ void EECoreInterpreter::LWC1()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm);
-	auto value = mMMUHandler->readWordU(PS2VirtualAddress);
+	u32 PS2VirtualAddress = (sourceReg->readWord(0) + imm);
+	auto value = mMMUHandler->readWord(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWordU(value);
+		destReg->writeWord(value);
 }

@@ -11,7 +11,7 @@ EERegister_SIO_t::EERegister_SIO_t() :
 {
 }
 
-void EERegister_SIO_t::writeByteU(u32 storageIndex, u8 value)
+void EERegister_SIO_t::writeByte(u32 storageIndex, u8 value)
 {
 	switch (storageIndex)
 	{
@@ -37,18 +37,13 @@ void EERegister_SIO_t::writeByteU(u32 storageIndex, u8 value)
 	}
 	default:
 	{
-		Memory_t::writeByteU(storageIndex, value);
+		Memory_t::writeByte(storageIndex, value);
 		break;
 	}
 	}
 }
 
-void EERegister_SIO_t::writeByteS(u32 storageIndex, s8 value)
-{
-	writeByteU(storageIndex, static_cast<u8>(value));
-}
-
-u32 EERegister_SIO_t::readWordU(u32 storageIndex)
+u32 EERegister_SIO_t::readWord(u32 storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -59,12 +54,12 @@ u32 EERegister_SIO_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return Memory_t::readWordU(storageIndex);
+		return Memory_t::readWord(storageIndex);
 	}
 	}
 }
 
-void EERegister_SIO_t::writeWordU(u32 storageIndex, u32 value)
+void EERegister_SIO_t::writeWord(u32 storageIndex, u32 value)
 {
 	switch (storageIndex)
 	{
@@ -72,25 +67,15 @@ void EERegister_SIO_t::writeWordU(u32 storageIndex, u32 value)
 	{
 		// Below logic is from the old PCSX2. I guess it writes a message transmitted through the SIO_TXFIFO register..
 		for (auto i = 0; i < Constants::NUMBER_BYTES_IN_WORD; i++)
-			writeByteU(storageIndex, reinterpret_cast<u8*>(&value)[i]);
+			writeByte(storageIndex, reinterpret_cast<u8*>(&value)[i]);
 		break;
 	}
 	default:
 	{
-		Memory_t::writeWordU(storageIndex, value);
+		Memory_t::writeWord(storageIndex, value);
 		break;
 	}
 	}
-}
-
-s32 EERegister_SIO_t::readWordS(u32 storageIndex)
-{
-	return static_cast<s32>(readWordU(storageIndex));
-}
-
-void EERegister_SIO_t::writeWordS(u32 storageIndex, s32 value)
-{
-	writeWordU(storageIndex, static_cast<u32>(value));
 }
 
 EERegister_MCH_t::EERegister_MCH_t() :
@@ -98,16 +83,16 @@ EERegister_MCH_t::EERegister_MCH_t() :
 {
 }
 
-u32 EERegister_MCH_t::readWordU(u32 storageIndex)
+u32 EERegister_MCH_t::readWord(u32 storageIndex)
 {
 	switch (storageIndex)
 	{
 	case OFFSET_MCH_DRD:
 	{
 		// Below logic is from the old PCSX2.
-		if (!((Memory_t::readWordU(OFFSET_MCH_RICM) >> 6) & 0xF))
+		if (!((Memory_t::readWord(OFFSET_MCH_RICM) >> 6) & 0xF))
 		{
-			switch ((Memory_t::readWordU(OFFSET_MCH_RICM) >> 16) & 0xFFF)
+			switch ((Memory_t::readWord(OFFSET_MCH_RICM) >> 16) & 0xFFF)
 			{
 				// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 			case 0x21: //INIT
@@ -126,7 +111,7 @@ u32 EERegister_MCH_t::readWordU(u32 storageIndex)
 				return 0x0090;	// SVER=0 | CORG=4(5x9x6) | SPT=1 | DEVTYP=0 | BYTE=0
 
 			case 0x40: // DEVID
-				return Memory_t::readWordU(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
+				return Memory_t::readWord(OFFSET_MCH_RICM) & 0x1F;	// =SDEV
 			}
 		}
 	}
@@ -136,12 +121,12 @@ u32 EERegister_MCH_t::readWordU(u32 storageIndex)
 	}
 	default:
 	{
-		return Memory_t::readWordU(storageIndex);
+		return Memory_t::readWord(storageIndex);
 	}
 	}
 }
 
-void EERegister_MCH_t::writeWordU(u32 storageIndex, u32 value)
+void EERegister_MCH_t::writeWord(u32 storageIndex, u32 value)
 {
 	switch (storageIndex)
 	{
@@ -150,27 +135,17 @@ void EERegister_MCH_t::writeWordU(u32 storageIndex, u32 value)
 		// Below logic is from the old PCSX2.
 		// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 
-		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((Memory_t::readWordU(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
+		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((Memory_t::readWord(OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
 			rdram_sdevid = 0;	// If SIO repeater is cleared, reset sdevid
 
-		Memory_t::writeWordU(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
+		Memory_t::writeWord(OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
 
 		break;
 	}
 	default:
 	{
-		Memory_t::writeWordU(storageIndex, value);
+		Memory_t::writeWord(storageIndex, value);
 		break;
 	}
 	}
-}
-
-s32 EERegister_MCH_t::readWordS(u32 storageIndex)
-{
-	return static_cast<s32>(readWordU(storageIndex));
-}
-
-void EERegister_MCH_t::writeWordS(u32 storageIndex, s32 value)
-{
-	writeWordU(storageIndex, static_cast<u32>(value));
 }

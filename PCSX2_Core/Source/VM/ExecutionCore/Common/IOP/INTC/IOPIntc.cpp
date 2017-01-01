@@ -20,14 +20,14 @@ IOPIntc::IOPIntc(VMMain * vmMain) :
 s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// First check the master CTRL register.
-	const u32 I_CTRL = getResources()->IOP->INTC->CTRL->readWordU();
+	const u32 I_CTRL = getResources()->IOP->INTC->CTRL->readWord();
 	if (I_CTRL > 0)
 	{
 		// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-		const u32 I_STAT = getResources()->IOP->INTC->STAT->readWordU();
+		const u32 I_STAT = getResources()->IOP->INTC->STAT->readWord();
 		if (I_STAT > 0)
 		{
-			const u32 I_MASK = getResources()->IOP->INTC->MASK->readWordU();
+			const u32 I_MASK = getResources()->IOP->INTC->MASK->readWord();
 			if ((I_STAT & I_MASK) > 0)
 			{
 				// Generate an INT0 signal/interrupt exception (the IOP Core exception handler will determine if it should be masked).

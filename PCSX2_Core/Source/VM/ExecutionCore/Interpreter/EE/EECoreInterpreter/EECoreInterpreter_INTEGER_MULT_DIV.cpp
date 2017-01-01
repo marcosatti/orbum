@@ -20,27 +20,35 @@ void EECoreInterpreter::DIV()
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
+
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
 
 	// Check for VALUE_S32_MIN / -1 (special condition).
-	if (source1Reg->readWordS(0) == Constants::VALUE_S32_MIN &&
-		source2Reg->readWordS(0) == -1)
+	if (source1Val == Constants::VALUE_S32_MIN &&
+		source2Val == -1)
 	{
-		getResources()->EE->EECore->R5900->LO->writeDwordS(0, static_cast<s64>(Constants::VALUE_S32_MIN));
-		getResources()->EE->EECore->R5900->HI->writeDwordS(0, static_cast<s64>(0));
+		LO->writeDword(0, static_cast<s64>(Constants::VALUE_S32_MIN));
+		HI->writeDword(0, static_cast<s64>(0));
 	}
 	// Check for divide by 0, in which case result is undefined (do nothing).
-	else if (source2Reg->readWordS(0) == 0)
+	else if (source2Val == 0)
 	{
 		// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
 	}
 	// Else perform normal operation.
 	else
 	{
+		s64 resultQ = source1Val / source2Val;
+		s64 resultR = source1Val % source2Val;
+
 		// Quotient.
-		getResources()->EE->EECore->R5900->LO->writeDwordS(0, static_cast<s64>(source1Reg->readWordS(0) / source2Reg->readWordS(0)));
+		LO->writeDword(0, resultQ);
 
 		// Remainder.
-		getResources()->EE->EECore->R5900->HI->writeDwordS(0, static_cast<s64>(source1Reg->readWordS(0) % source2Reg->readWordS(0)));
+		HI->writeDword(0, resultR);
 	}
 }
 
@@ -56,20 +64,28 @@ void EECoreInterpreter::DIVU()
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
+
+	auto source1Val = static_cast<u32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(0));
 
 	// Check for divide by 0, in which case result is undefined (do nothing).
-	if (source2Reg->readWordU(0) == 0)
+	if (source2Val == 0)
 	{
 		// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to -1).
 	}
 	// Else perform normal operation.
 	else
 	{
+		u64 resultQ = source1Val / source2Val;
+		u64 resultR = source1Val % source2Val;
+
 		// Quotient.
-		getResources()->EE->EECore->R5900->LO->writeDwordU(0, static_cast<u64>(source1Reg->readWordU(0) / source2Reg->readWordU(0)));
+		getResources()->EE->EECore->R5900->LO->writeDword(0, resultQ);
 
 		// Remainder.
-		getResources()->EE->EECore->R5900->HI->writeDwordU(0, static_cast<u64>(source1Reg->readWordU(0) % source2Reg->readWordU(0)));
+		getResources()->EE->EECore->R5900->HI->writeDword(0, resultR);
 	}
 }
 
@@ -86,11 +102,17 @@ void EECoreInterpreter::MULT()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	s64 result = source1Reg->readWordS(0) * source2Reg->readWordS(0);
-	destReg->writeDwordS(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-	getResources()->EE->EECore->R5900->LO->writeDwordS(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-	getResources()->EE->EECore->R5900->HI->writeDwordS(0, static_cast<s64>(static_cast<s32>(result >> 32)));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+
+	s64 result = source1Val * source2Val;
+
+	destReg->writeDword(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	LO->writeDword(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	HI->writeDword(0, static_cast<s64>(static_cast<s32>(result >> 32)));
 }
 
 void EECoreInterpreter::MULT1()
@@ -106,11 +128,17 @@ void EECoreInterpreter::MULTU()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	u64 result = source1Reg->readWordU(0) * source2Reg->readWordU(0);
-	destReg->writeDwordU(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	getResources()->EE->EECore->R5900->LO->writeDwordU(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	getResources()->EE->EECore->R5900->HI->writeDwordU(0, static_cast<u64>(static_cast<u32>(result >> 32)));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(0));
+
+	u64 result = source1Val * source2Val;
+
+	destReg->writeDword(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	LO->writeDword(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	HI->writeDword(0, static_cast<u64>(static_cast<u32>(result >> 32)));
 }
 
 void EECoreInterpreter::MULTU1()
@@ -125,29 +153,38 @@ void EECoreInterpreter::PDIVBW()
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
+
+	auto source2Val = static_cast<s16>(source2Reg->readHword(0)); // Constant.
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+
 		// Check for VALUE_S32_MIN / -1 (special condition).
-		if (source1Reg->readWordS(i) == Constants::VALUE_S32_MIN &&
-			source2Reg->readHwordS(0) == -1)
+		if (source1Val == Constants::VALUE_S32_MIN &&
+			source2Val == -1)
 		{
-			getResources()->EE->EECore->R5900->LO->writeWordS(i, static_cast<s32>(Constants::VALUE_S32_MIN));
-			getResources()->EE->EECore->R5900->HI->writeWordS(i, static_cast<s32>(0));
+			LO->writeWord(i, static_cast<s32>(Constants::VALUE_S32_MIN));
+			HI->writeWord(i, static_cast<s32>(0));
 		}
 		// Check for divide by 0, in which case result is undefined (do nothing).
-		else if (source2Reg->readHwordS(0) == 0)
+		else if (source2Val == 0)
 		{
 			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
 		}
 		// Else perform normal operation.
 		else
 		{
+			s32 resultQ = source1Val / source2Val;
+			s32 resultR = source1Val % source2Val;
+
 			// Quotient.
-			getResources()->EE->EECore->R5900->LO->writeWordS(i, static_cast<s64>(source1Reg->readWordS(i) / source2Reg->readHwordS(0)));
+			LO->writeWord(i, resultQ);
 
 			// Remainder.
-			getResources()->EE->EECore->R5900->HI->writeWordS(i, static_cast<s64>(source1Reg->readWordS(i) % source2Reg->readHwordS(0)));
+			HI->writeWord(i, resultR);
 		}
 	}
 }
@@ -158,55 +195,71 @@ void EECoreInterpreter::PDIVUW()
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
+		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+
 		// Check for divide by 0, in which case result is undefined (do nothing).
-		if (source2Reg->readWordU(i) == 0)
+		if (source2Val == 0)
 		{
 			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to -1).
 		}
 		// Else perform normal operation.
 		else
 		{
+			u64 resultQ = source1Val / source2Val;
+			u64 resultR = source1Val % source2Val;
+
 			// Quotient.
-			getResources()->EE->EECore->R5900->LO->writeDwordU(i / 2, static_cast<u64>(source1Reg->readWordU(i) / source2Reg->readWordU(i)));
+			LO->writeDword(i / 2, resultQ);
 
 			// Remainder.
-			getResources()->EE->EECore->R5900->HI->writeDwordU(i / 2, static_cast<u64>(source1Reg->readWordU(i) % source2Reg->readWordU(i)));
+			HI->writeDword(i / 2, resultR);
 		}
 	}
 }
 
 void EECoreInterpreter::PDIVW()
 {
-	// (LO, HI)(0,1) = SignExtend<u64>(Rs[SW](0,2) / Rt[SW](0,2)) Parallel.
+	// (LO, HI)(0,1) = SignExtend<s64>(Rs[SW](0,2) / Rt[SW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
+		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+
 		// Check for VALUE_S32_MIN / -1 (special condition).
-		if (source1Reg->readWordS(i) == Constants::VALUE_S32_MIN 
-			&& source2Reg->readWordS(i) == -1)
+		if (source1Val == Constants::VALUE_S32_MIN &&
+			source2Val == -1)
 		{
-			getResources()->EE->EECore->R5900->LO->writeDwordS(i / 2, static_cast<s64>(Constants::VALUE_S32_MIN));
-			getResources()->EE->EECore->R5900->HI->writeDwordS(i / 2, static_cast<s64>(0));
+			LO->writeDword(i / 2, static_cast<s64>(Constants::VALUE_S32_MIN));
+			HI->writeDword(i / 2, static_cast<s64>(0));
 		}
 		// Check for divide by 0, in which case result is undefined (do nothing).
-		else if (source2Reg->readWordS(i) == 0)
+		else if (source2Val == 0)
 		{
 			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
 		}
 		// Else perform normal operation.
 		else
 		{
+			u64 resultQ = source1Val / source2Val;
+			u64 resultR = source1Val % source2Val;
+
 			// Quotient.
-			getResources()->EE->EECore->R5900->LO->writeDwordS(i / 2, static_cast<s64>(source1Reg->readWordS(i) / source2Reg->readWordS(i)));
+			LO->writeDword(i / 2, resultQ);
 
 			// Remainder.
-			getResources()->EE->EECore->R5900->HI->writeDwordS(i / 2, static_cast<s64>(source1Reg->readWordS(i) % source2Reg->readWordS(i)));
+			HI->writeDword(i / 2, resultR);
 		}
 	}
 }
@@ -218,18 +271,22 @@ void EECoreInterpreter::PMULTH()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()]; // "A"
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()]; // "B"
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s32 result = source1Reg->readHwordS(i) * source2Reg->readHwordS(i);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s32 result = source1Val * source2Val;
 
 		if (i % 2 == 0)
-			destReg->writeWordS(i / 2, result); // Write to Rd for even indexes. A0xB0, A2xB2, A4xB4, A6xB6.
+			destReg->writeWord(i / 2, result); // Write to Rd for even indexes. A0xB0, A2xB2, A4xB4, A6xB6.
 
 		if ((i / 2) % 2 == 0)
-			getResources()->EE->EECore->R5900->LO->writeWordS(((i / 2 > 0) ? i - 2 : i), result); // A0xB0, A1xB1, A4xB4, A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
+			LO->writeWord(((i / 2 > 0) ? i - 2 : i), result); // A0xB0, A1xB1, A4xB4, A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
 		else
-			getResources()->EE->EECore->R5900->HI->writeWordS(((i / 2 > 1) ? i - 4 : i - 2), result); // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
+			HI->writeWord(((i / 2 > 1) ? i - 4 : i - 2), result); // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
 	}
 }
 
@@ -240,14 +297,18 @@ void EECoreInterpreter::PMULTUW()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		u64 result = source1Reg->readWordU(i) * source2Reg->readWordU(i);
+		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+		u64 result = source1Val * source2Val;
 
-		getResources()->EE->EECore->R5900->LO->writeDwordU(i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-		getResources()->EE->EECore->R5900->HI->writeDwordU(i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
-		destReg->writeDwordU(i / 2, result);
+		LO->writeDword(i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+		HI->writeDword(i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
+		destReg->writeDword(i / 2, result);
 	}
 }
 
@@ -258,13 +319,17 @@ void EECoreInterpreter::PMULTW()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
+	auto& LO = getResources()->EE->EECore->R5900->LO;
+	auto& HI = getResources()->EE->EECore->R5900->HI;
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		s64 result = source1Reg->readWordS(i) * source2Reg->readWordS(i);
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s64 result = source1Val * source2Val;
 
-		getResources()->EE->EECore->R5900->LO->writeDwordS(i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-		getResources()->EE->EECore->R5900->HI->writeDwordS(i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
-		destReg->writeDwordS(i / 2, result);
+		LO->writeDword(i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+		HI->writeDword(i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
+		destReg->writeDword(i / 2, result);
 	}
 }

@@ -25,11 +25,12 @@ void EECoreInterpreter::SLT()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	s64 source1Val = source1Reg->readDwordS(0);
-	s64 source2Val = source2Reg->readDwordS(0);
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+
 	s64 result = (source1Val < source2Val) ? 1 : 0;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::SLTI()
@@ -38,12 +39,13 @@ void EECoreInterpreter::SLTI()
 	// No Exceptions generated.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto imm = static_cast<s64>(mInstruction.getIImmS());
 
-	s64 source1Val = source1Reg->readDwordS(0);
-	s64 imm = static_cast<s64>(mInstruction.getIImmS());
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+
 	s64 result = (source1Val < imm) ? 1 : 0;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::SLTIU()
@@ -52,12 +54,13 @@ void EECoreInterpreter::SLTIU()
 	// No Exceptions generated.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
+	auto imm = static_cast<u64>(mInstruction.getIImmU());
 
-	u64 source1Val = source1Reg->readDwordU(0);
-	u64 imm = static_cast<u64>(mInstruction.getIImmU());
+	auto source1Val = static_cast<u64>(source1Reg->readDword(0));
+
 	u64 result = (source1Val < imm) ? 1 : 0;
 
-	destReg->writeDwordU(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::SLTU()
@@ -68,11 +71,12 @@ void EECoreInterpreter::SLTU()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	u64 source1Val = source1Reg->readDwordU(0);
-	u64 source2Val = source2Reg->readDwordU(0);
+	auto source1Val = static_cast<u64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<u64>(source2Reg->readDword(0));
+
 	u64 result = (source1Val < source2Val) ? 1 : 0;
 
-	destReg->writeDwordU(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::PCEQB()
@@ -85,10 +89,10 @@ void EECoreInterpreter::PCEQB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		u8 source1Val = source1Reg->readByteU(i);
-		u8 source2Val = source2Reg->readByteU(i);
+		u8 source1Val = source1Reg->readByte(i);
+		u8 source2Val = source2Reg->readByte(i);
 		u8 result = (source1Val == source2Val) ? 0xFF : 0x00;
-		destReg->writeByteU(i, result);
+		destReg->writeByte(i, result);
 	}
 }
 
@@ -102,10 +106,10 @@ void EECoreInterpreter::PCEQH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		u16 source1Val = source1Reg->readHwordU(i);
-		u16 source2Val = source2Reg->readHwordU(i);
+		u16 source1Val = source1Reg->readHword(i);
+		u16 source2Val = source2Reg->readHword(i);
 		u16 result = (source1Val == source2Val) ? 0xFFFF : 0x0000;
-		destReg->writeHwordU(i, result);
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -119,10 +123,10 @@ void EECoreInterpreter::PCEQW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		u32 source1Val = source1Reg->readWordU(i);
-		u32 source2Val = source2Reg->readWordU(i);
+		u32 source1Val = source1Reg->readWord(i);
+		u32 source2Val = source2Reg->readWord(i);
 		u32 result = (source1Val == source2Val) ? 0xFFFFFFFF : 0x00000000;
-		destReg->writeWordU(i, result);
+		destReg->writeWord(i, result);
 	}
 }
 
@@ -136,10 +140,10 @@ void EECoreInterpreter::PCGTB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		u8 source1Val = source1Reg->readByteU(i);
-		u8 source2Val = source2Reg->readByteU(i);
+		u8 source1Val = source1Reg->readByte(i);
+		u8 source2Val = source2Reg->readByte(i);
 		u8 result = (source1Val > source2Val) ? 0xFF : 0x00;
-		destReg->writeByteU(i, result);
+		destReg->writeByte(i, result);
 	}
 }
 
@@ -153,10 +157,10 @@ void EECoreInterpreter::PCGTH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		u16 source1Val = source1Reg->readHwordU(i);
-		u16 source2Val = source2Reg->readHwordU(i);
+		u16 source1Val = source1Reg->readHword(i);
+		u16 source2Val = source2Reg->readHword(i);
 		u16 result = (source1Val > source2Val) ? 0xFFFF : 0x0000;
-		destReg->writeHwordU(i, result);
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -170,10 +174,10 @@ void EECoreInterpreter::PCGTW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		u32 source1Val = source1Reg->readWordU(i);
-		u32 source2Val = source2Reg->readWordU(i);
+		u32 source1Val = source1Reg->readWord(i);
+		u32 source2Val = source2Reg->readWord(i);
 		u32 result = (source1Val > source2Val) ? 0xFFFFFFFF : 0x00000000;
-		destReg->writeWordU(i, result);
+		destReg->writeWord(i, result);
 	}
 }
 

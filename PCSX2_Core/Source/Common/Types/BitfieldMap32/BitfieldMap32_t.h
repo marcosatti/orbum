@@ -4,6 +4,15 @@
 
 #include "Common/Global/Globals.h"
 
+// Option of whether to throw a runtime error on index out of bounds access. 
+// Turn off if you are sure that no errors will occur and want to debug quicker.
+// Disabled anyway on release builds.
+#if defined(BUILD_DEBUG)
+ #define ERROR_ON_FIELD_INDEX_RANGE 0
+#else
+ #define ERROR_ON_FIELD_INDEX_RANGE 0
+#endif
+
 /*
 BitfieldMap32_t provides a bitfield implementation, which can be used as an abstraction over some memory (which is 32-bits long).
 
@@ -17,21 +26,11 @@ It is the users responsibility to make sure the values set are appropriate. For 
 You will only get 3 bits worth back, even though the field value may still reflect decimal 10.
 
 Syncing between the fields and the u32 value:
- - The underlying u32 value when a field is changed automatically (ie: through setFieldValue and others). It can always be called manually through syncMemoryFromMap().
- - It is up to an implementing class if it should sync with the fields whenever the u32 value is changed. The function to do this is syncMapFromMemory().
+- The underlying u32 value when a field is changed automatically (ie: through setFieldValue and others). It can always be called manually through syncMemoryFromMap().
+- It is up to an implementing class if it should sync with the fields whenever the u32 value is changed. The function to do this is syncMapFromMemory().
 
 A class that extends this class must implement get/setBitRange32() in order to sync between the map <==> u32 value.
 */
-
-// Option of whether to throw a runtime error on index out of bounds access. 
-// Turn off if you are sure that no errors will occur and want to debug quicker.
-// Disabled anyway on release builds.
-#if defined(BUILD_DEBUG)
- #define ERROR_ON_FIELD_INDEX_RANGE 0
-#else
- #define ERROR_ON_FIELD_INDEX_RANGE 0
-#endif
-
 class BitfieldMap32_t
 {
 public:

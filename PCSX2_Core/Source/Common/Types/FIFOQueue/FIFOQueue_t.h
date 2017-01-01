@@ -20,22 +20,22 @@ public:
 	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
 	*/
-	u32 readWordU();
+	u32 readWord();
 
 	/*
 	Read 128-bits of data out of the FIFO queue, and remove them (uses 4 x 32-bit reads stored in a u128).
 	*/
-	u128 readQwordU();
+	u128 readQword();
 
 	/*
 	Writes 32-bits of data to the FIFO queue.
 	*/
-	void writeWordU(const u32 & data);
+	void writeWord(const u32 & data);
 
 	/*
 	Write 128-bits of data to the FIFO queue (splits the u128 into 4 x 32-bit).
 	*/
-	void writeQwordU(const u128 & data);
+	void writeQword(const u128 & data);
 
 	/*
 	Returns if the FIFO queue has no data available.

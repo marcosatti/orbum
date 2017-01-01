@@ -18,14 +18,14 @@ FIFOQueue_t::~FIFOQueue_t()
 {
 }
 
-u32 FIFOQueue_t::readWordU()
+u32 FIFOQueue_t::readWord()
 {
 	auto temp = mFIFOQueue.front();
 	mFIFOQueue.pop();
 	return temp;
 }
 
-u128 FIFOQueue_t::readQwordU()
+u128 FIFOQueue_t::readQword()
 {
 	u128 data;
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
@@ -38,7 +38,7 @@ u128 FIFOQueue_t::readQwordU()
 	return data;
 }
 
-void FIFOQueue_t::writeWordU(const u32 & data)
+void FIFOQueue_t::writeWord(const u32 & data)
 {
 	if ((getCurrentSize() + 1) > mMaxSize)
 		throw std::runtime_error("FIFO Queue overloaded. Please fix.");
@@ -46,7 +46,7 @@ void FIFOQueue_t::writeWordU(const u32 & data)
 	mFIFOQueue.push(data);
 }
 
-void FIFOQueue_t::writeQwordU(const u128 & data)
+void FIFOQueue_t::writeQword(const u128 & data)
 {
 	if ((getCurrentSize() + Constants::NUMBER_WORDS_IN_QWORD) > mMaxSize)
 		throw std::runtime_error("FIFO Queue overloaded. Please fix.");

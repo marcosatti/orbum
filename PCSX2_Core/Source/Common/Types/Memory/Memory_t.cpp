@@ -39,7 +39,7 @@ Memory_t::~Memory_t()
 {
 }
 
-u8 Memory_t::readByteU(u32 storageIndex)
+u8 Memory_t::readByte(u32 storageIndex)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -48,7 +48,7 @@ u8 Memory_t::readByteU(u32 storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeByteU(u32 storageIndex, u8 value)
+void Memory_t::writeByte(u32 storageIndex, u8 value)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -57,25 +57,7 @@ void Memory_t::writeByteU(u32 storageIndex, u8 value)
 	*hostMemoryAddress = value;
 }
 
-s8 Memory_t::readByteS(u32 storageIndex)
-{
-	// Get host storage address.
-	s8 * hostMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
-
-	// Read the value.
-	return *hostMemoryAddress;
-}
-
-void Memory_t::writeByteS(u32 storageIndex, s8 value)
-{
-	// Get host storage address.
-	s8 * hostMemoryAddress = reinterpret_cast<s8*>(&mStorage[storageIndex]);
-
-	// Write the value.
-	*hostMemoryAddress = value;
-}
-
-u16 Memory_t::readHwordU(u32 storageIndex)
+u16 Memory_t::readHword(u32 storageIndex)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -84,7 +66,7 @@ u16 Memory_t::readHwordU(u32 storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeHwordU(u32 storageIndex, u16 value)
+void Memory_t::writeHword(u32 storageIndex, u16 value)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -93,25 +75,7 @@ void Memory_t::writeHwordU(u32 storageIndex, u16 value)
 	*hostMemoryAddress = value;
 }
 
-s16 Memory_t::readHwordS(u32 storageIndex)
-{
-	// Get host storage address.
-	s16 * hostMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
-
-	// Read the value.
-	return *hostMemoryAddress;
-}
-
-void Memory_t::writeHwordS(u32 storageIndex, s16 value)
-{
-	// Get host storage address.
-	s16 * hostMemoryAddress = reinterpret_cast<s16*>(&mStorage[storageIndex]);
-
-	// Write the value.
-	*hostMemoryAddress = value;
-}
-
-u32 Memory_t::readWordU(u32 storageIndex)
+u32 Memory_t::readWord(u32 storageIndex)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -120,7 +84,7 @@ u32 Memory_t::readWordU(u32 storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeWordU(u32 storageIndex, u32 value)
+void Memory_t::writeWord(u32 storageIndex, u32 value)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -129,25 +93,7 @@ void Memory_t::writeWordU(u32 storageIndex, u32 value)
 	*hostMemoryAddress = value;
 }
 
-s32 Memory_t::readWordS(u32 storageIndex)
-{
-	// Get host storage address.
-	s32 * hostMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
-
-	// Read the value.
-	return *hostMemoryAddress;
-}
-
-void Memory_t::writeWordS(u32 storageIndex, s32 value)
-{
-	// Get host storage address.
-	s32 * hostMemoryAddress = reinterpret_cast<s32*>(&mStorage[storageIndex]);
-
-	// Write the value.
-	*hostMemoryAddress = value;
-}
-
-u64 Memory_t::readDwordU(u32 storageIndex)
+u64 Memory_t::readDword(u32 storageIndex)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -156,7 +102,7 @@ u64 Memory_t::readDwordU(u32 storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeDwordU(u32 storageIndex, u64 value)
+void Memory_t::writeDword(u32 storageIndex, u64 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -165,25 +111,7 @@ void Memory_t::writeDwordU(u32 storageIndex, u64 value)
 	*hostMemoryAddress = value;
 }
 
-s64 Memory_t::readDwordS(u32 storageIndex)
-{
-	// Get host storage address.
-	s64 * hostMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
-
-	// Read the value.
-	return *hostMemoryAddress;
-}
-
-void Memory_t::writeDwordS(u32 storageIndex, s64 value)
-{
-	// Get host storage address.
-	s64 * hostMemoryAddress = reinterpret_cast<s64*>(&mStorage[storageIndex]);
-
-	// Write the value.
-	*hostMemoryAddress = value;
-}
-
-u128 Memory_t::readQwordU(u32 storageIndex)
+u128 Memory_t::readQword(u32 storageIndex)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -193,7 +121,7 @@ u128 Memory_t::readQwordU(u32 storageIndex)
 	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
 }
 
-void Memory_t::writeQwordU(u32 storageIndex, u128 value)
+void Memory_t::writeQword(u32 storageIndex, u128 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);

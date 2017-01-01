@@ -15,9 +15,9 @@ DebugMemory_t::~DebugMemory_t()
 {
 }
 
-u8 DebugMemory_t::readByteU(u32 storageIndex)
+u8 DebugMemory_t::readByte(u32 storageIndex)
 {
-	auto value = Memory_t::readByteU(storageIndex);
+	auto value = Memory_t::readByte(storageIndex);
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Read u8 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
@@ -26,40 +26,19 @@ u8 DebugMemory_t::readByteU(u32 storageIndex)
 	return value;
 }
 
-void DebugMemory_t::writeByteU(u32 storageIndex, u8 value)
+void DebugMemory_t::writeByte(u32 storageIndex, u8 value)
 {
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Write u8 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
 	logDebug("%s: Write u8 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
 #endif
-	Memory_t::writeByteU(storageIndex, value);
+	Memory_t::writeByte(storageIndex, value);
 }
 
-s8 DebugMemory_t::readByteS(u32 storageIndex)
+u16 DebugMemory_t::readHword(u32 storageIndex)
 {
-	auto value = Memory_t::readByteS(storageIndex);
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Read s8 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Read s8 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	return value;
-}
-
-void DebugMemory_t::writeByteS(u32 storageIndex, s8 value)
-{
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Write s8 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Write s8 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	Memory_t::writeByteS(storageIndex, value);
-}
-
-u16 DebugMemory_t::readHwordU(u32 storageIndex)
-{
-	auto value = Memory_t::readHwordU(storageIndex);
+	auto value = Memory_t::readHword(storageIndex);
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Read u16 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
@@ -68,40 +47,19 @@ u16 DebugMemory_t::readHwordU(u32 storageIndex)
 	return value;
 }
 
-void DebugMemory_t::writeHwordU(u32 storageIndex, u16 value)
+void DebugMemory_t::writeHword(u32 storageIndex, u16 value)
 {
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Write u16 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
 	logDebug("%s: Write u16 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
 #endif
-	Memory_t::writeHwordU(storageIndex, value);
+	Memory_t::writeHword(storageIndex, value);
 }
 
-s16 DebugMemory_t::readHwordS(u32 storageIndex)
+u32 DebugMemory_t::readWord(u32 storageIndex)
 {
-	auto value = Memory_t::readHwordS(storageIndex);
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Read s16 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Read s16 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	return value;
-}
-
-void DebugMemory_t::writeHwordS(u32 storageIndex, s16 value)
-{
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Write s16 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Write s16 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	Memory_t::writeHwordS(storageIndex, value);
-}
-
-u32 DebugMemory_t::readWordU(u32 storageIndex)
-{
-	auto value = Memory_t::readWordU(storageIndex);
+	auto value = Memory_t::readWord(storageIndex);
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Read u32 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
@@ -110,40 +68,19 @@ u32 DebugMemory_t::readWordU(u32 storageIndex)
 	return value;
 }
 
-void DebugMemory_t::writeWordU(u32 storageIndex, u32 value)
+void DebugMemory_t::writeWord(u32 storageIndex, u32 value)
 {
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Write u32 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
 	logDebug("%s: Write u32 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
 #endif
-	Memory_t::writeWordU(storageIndex, value);
+	Memory_t::writeWord(storageIndex, value);
 }
 
-s32 DebugMemory_t::readWordS(u32 storageIndex)
+u64 DebugMemory_t::readDword(u32 storageIndex)
 {
-	auto value = Memory_t::readWordS(storageIndex);
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Read s32 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Read s32 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	return value;
-}
-
-void DebugMemory_t::writeWordS(u32 storageIndex, s32 value)
-{
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Write s32 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Write s32 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	Memory_t::writeWordS(storageIndex, value);
-}
-
-u64 DebugMemory_t::readDwordU(u32 storageIndex)
-{
-	auto value = Memory_t::readDwordU(storageIndex);
+	auto value = Memory_t::readDword(storageIndex);
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Read u64 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
@@ -152,40 +89,19 @@ u64 DebugMemory_t::readDwordU(u32 storageIndex)
 	return value;
 }
 
-void DebugMemory_t::writeDwordU(u32 storageIndex, u64 value)
+void DebugMemory_t::writeDword(u32 storageIndex, u64 value)
 {
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Write u64 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
 #else
 	logDebug("%s: Write u64 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
 #endif
-	Memory_t::writeDwordU(storageIndex, value);
+	Memory_t::writeDword(storageIndex, value);
 }
 
-s64 DebugMemory_t::readDwordS(u32 storageIndex)
+u128 DebugMemory_t::readQword(u32 storageIndex)
 {
-	auto value = Memory_t::readDwordS(storageIndex);
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Read s64 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Read s64 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	return value;
-}
-
-void DebugMemory_t::writeDwordS(u32 storageIndex, s64 value)
-{
-#if DEBUG_MEM_LOG_VALUE_AS_HEX
-	logDebug("%s: Write s64 @ Offset = 0x%08X, Value = 0x%X", getMnemonic(), storageIndex, value);
-#else
-	logDebug("%s: Write s64 @ Offset = 0x%08X, Value = %d", getMnemonic(), storageIndex, value);
-#endif
-	Memory_t::writeDwordS(storageIndex, value);
-}
-
-u128 DebugMemory_t::readQwordU(u32 storageIndex)
-{
-	auto value = Memory_t::readQwordU(storageIndex);
+	auto value = Memory_t::readQword(storageIndex);
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Read u64 @ Offset = 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X", getMnemonic(), storageIndex, value.lo, value.hi);
 #else
@@ -194,14 +110,14 @@ u128 DebugMemory_t::readQwordU(u32 storageIndex)
 	return value;
 }
 
-void DebugMemory_t::writeQwordU(u32 storageIndex, u128 value)
+void DebugMemory_t::writeQword(u32 storageIndex, u128 value)
 {
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 	logDebug("%s: Write u64 @ Offset = 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X", getMnemonic(), storageIndex, value.lo, value.hi);
 #else
 	logDebug("%s: Write u64 @ Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d", getMnemonic(), storageIndex, value.lo, value.hi);
 #endif
-	Memory_t::writeQwordU(storageIndex, value);
+	Memory_t::writeQword(storageIndex, value);
 }
 
 #endif

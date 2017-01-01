@@ -70,15 +70,15 @@ s64 IOPCoreInterpreter::executeInstruction()
 	auto& IOPCore = getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 instructionValue = mMMUHandler->readWordU(IOPCore->R3000->PC->readWordU()); // TODO: Add error checking for address bus error.
+	const u32 instructionValue = mMMUHandler->readWord(IOPCore->R3000->PC->readWord()); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x23eb7;
-	static u32 DEBUG_PC_BREAKPOINT = 0x40ac;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x37120000;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -87,12 +87,12 @@ s64 IOPCoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			IOPCore->R3000->PC->readWordU(), IOPCore->R3000->mIsInBranchDelay, 
+			IOPCore->R3000->PC->readWord(), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
 	}
 
-	if (IOPCore->R3000->PC->readWordU() == DEBUG_PC_BREAKPOINT)
+	if (IOPCore->R3000->PC->readWord() == DEBUG_PC_BREAKPOINT)
 	{
 		logDebug("IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}

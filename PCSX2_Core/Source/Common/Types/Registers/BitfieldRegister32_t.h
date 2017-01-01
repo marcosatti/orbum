@@ -34,7 +34,6 @@ public:
 	Override writeWord[U/S] to sync with the bitfield map. WriteWordS calls the unsigned version.
 	WriteWordU() can be overriden by sub classes to provide pre processing on the value.
 	*/
-	void writeWordU(u32 value) override;
-	void writeWordS(s32 value) override;
+	void writeWord(u32 value) override;
 };
 

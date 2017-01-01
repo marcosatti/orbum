@@ -20,27 +20,17 @@ public:
 
 	/*
 	Read or write a value of a given type, to the specified byte index (storageIndex).
-	Only the unsigned type is provided for the Qword read/write. 
-	The PS2 never operates directly on 128-bit values, so a signed version is meaningless.
 	*/
-	virtual u8 readByteU(u32 storageIndex) = 0;
-	virtual void writeByteU(u32 storageIndex, u8 value) = 0;
-	virtual s8 readByteS(u32 storageIndex) = 0;
-	virtual void writeByteS(u32 storageIndex, s8 value) = 0;
-	virtual u16 readHwordU(u32 storageIndex) = 0;
-	virtual void writeHwordU(u32 storageIndex, u16 value) = 0;
-	virtual s16 readHwordS(u32 storageIndex) = 0;
-	virtual void writeHwordS(u32 storageIndex, s16 value) = 0;
-	virtual u32 readWordU(u32 storageIndex) = 0;
-	virtual void writeWordU(u32 storageIndex, u32 value) = 0;
-	virtual s32 readWordS(u32 storageIndex) = 0;
-	virtual void writeWordS(u32 storageIndex, s32 value) = 0;
-	virtual u64 readDwordU(u32 storageIndex) = 0;
-	virtual void writeDwordU(u32 storageIndex, u64 value) = 0;
-	virtual s64 readDwordS(u32 storageIndex) = 0;
-	virtual void writeDwordS(u32 storageIndex, s64 value) = 0;
-	virtual u128 readQwordU(u32 storageIndex) = 0;
-	virtual void writeQwordU(u32 storageIndex, u128 value) = 0;
+	virtual u8 readByte(u32 storageIndex) = 0;
+	virtual void writeByte(u32 storageIndex, u8 value) = 0;
+	virtual u16 readHword(u32 storageIndex) = 0;
+	virtual void writeHword(u32 storageIndex, u16 value) = 0;
+	virtual u32 readWord(u32 storageIndex) = 0;
+	virtual void writeWord(u32 storageIndex, u32 value) = 0;
+	virtual u64 readDword(u32 storageIndex) = 0;
+	virtual void writeDword(u32 storageIndex, u64 value) = 0;
+	virtual u128 readQword(u32 storageIndex) = 0;
+	virtual void writeQword(u32 storageIndex, u128 value) = 0;
 
 	/*
 	Gets the base PS2 physical address the mapping starts from.

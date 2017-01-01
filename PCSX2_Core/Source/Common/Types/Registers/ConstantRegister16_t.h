@@ -15,9 +15,7 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByteU(u32 arrayIndex, u8 value) override;
-	void writeByteS(u32 arrayIndex, s8 value) override;
-	void writeHwordU(u16 value) override;
-	void writeHwordS(s16 value) override;
+	void writeByte(u32 arrayIndex, u8 value) override;
+	void writeHword(u16 value) override;
 };
 

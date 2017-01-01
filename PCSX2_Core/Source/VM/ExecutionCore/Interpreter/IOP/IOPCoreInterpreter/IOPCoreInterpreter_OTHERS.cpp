@@ -33,7 +33,7 @@ void IOPCoreInterpreter::SYSCALL()
 	// When the syscall number is loaded into $v0, it is done so through
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
-	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByteU(0);
+	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByte(0);
 	logDebug("IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
 #endif
 }

@@ -134,7 +134,7 @@ u32 EEDmac::transferData()
 			if (mChannel->mFIFOQueue->isEmpty())
 				return 0;
 
-			u128 packet = mChannel->mFIFOQueue->readQwordU();
+			u128 packet = mChannel->mFIFOQueue->readQword();
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 		}
 		else if (direction == Direction_t::TO)
@@ -144,7 +144,7 @@ u32 EEDmac::transferData()
 				return 0;
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
-			mChannel->mFIFOQueue->writeQwordU(packet);
+			mChannel->mFIFOQueue->writeQword(packet);
 		}
 
 		// Increment the MADR register by a qword, and decrement the QWC register by a qword.
@@ -437,18 +437,18 @@ u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess)
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		return mEEMMU->readQwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
+		return mEEMMU->readQword(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
 	else
-		return mEEMMU->readQwordU(physicalAddress);
+		return mEEMMU->readQword(physicalAddress);
 }
 
 void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data)
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		mEEMMU->writeQwordU(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
+		mEEMMU->writeQword(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
 	else
-		mEEMMU->writeQwordU(physicalAddress, data);
+		mEEMMU->writeQword(physicalAddress, data);
 }
 
 bool EEDmac::readChainSourceTag()
@@ -477,7 +477,7 @@ bool EEDmac::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
 		// Write the tag to the channel.
-		mChannel->mFIFOQueue->writeQwordU(data);
+		mChannel->mFIFOQueue->writeQword(data);
 	}
 
 	return true;
@@ -490,7 +490,7 @@ bool EEDmac::readChainDestTag()
 		return false;
 
 	// Read tag from channel FIFO (always next to transfer data).
-	u128 data = mChannel->mFIFOQueue->readQwordU();
+	u128 data = mChannel->mFIFOQueue->readQword();
 
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);

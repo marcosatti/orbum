@@ -25,6 +25,7 @@
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimer_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
+#include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include "PS2Resources/Common/Common_t.h"
 
 IOP_t::IOP_t(const PS2Resources_t* PS2Resources) :

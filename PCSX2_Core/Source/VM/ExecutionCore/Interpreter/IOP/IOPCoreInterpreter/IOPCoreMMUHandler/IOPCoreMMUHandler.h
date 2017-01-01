@@ -34,18 +34,12 @@ public:
 	This is the main access point that any PS2 reads or writes will come through. On error, read functions will return 0, and write functions will not perform the operation.
 	To see what error it is, use getErrorInfo() defined below.
 	*/
-	u8 readByteU(u32 PS2VirtualAddress);
-	void writeByteU(u32 PS2VirtualAddress, u8 value);
-	s8 readByteS(u32 PS2VirtualAddress);
-	void writeByteS(u32 PS2VirtualAddress, s8 value);
-	u16 readHwordU(u32 PS2VirtualAddress);
-	void writeHwordU(u32 PS2VirtualAddress, u16 value);
-	s16 readHwordS(u32 PS2VirtualAddress);
-	void writeHwordS(u32 PS2VirtualAddress, s16 value);
-	u32 readWordU(u32 PS2VirtualAddress);
-	void writeWordU(u32 PS2VirtualAddress, u32 value);
-	s32 readWordS(u32 PS2VirtualAddress);
-	void writeWordS(u32 PS2VirtualAddress, s32 value);
+	u8 readByte(u32 PS2VirtualAddress);
+	void writeByte(u32 PS2VirtualAddress, u8 value);
+	u16 readHword(u32 PS2VirtualAddress);
+	void writeHword(u32 PS2VirtualAddress, u16 value);
+	u32 readWord(u32 PS2VirtualAddress);
+	void writeWord(u32 PS2VirtualAddress, u32 value);
 
 	/*
 	Exception handling functionality. Because this is used within the IOP Core instruction implementations, there needs to be a way for the exception to

@@ -22,7 +22,7 @@ void EECoreInterpreter::MFSA()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	auto& sourceReg = getResources()->EE->EECore->R5900->SA;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MTSA()
@@ -30,7 +30,7 @@ void EECoreInterpreter::MTSA()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->SA;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTSAB()
@@ -39,7 +39,7 @@ void EECoreInterpreter::MTSAB()
 	auto& destReg = getResources()->EE->EECore->R5900->SA;
 	s16 imm = mInstruction.getIImmS();
 
-	destReg->writeWordU(((sourceReg->readWordU(0) & 0xF) ^ (imm & 0xF)) * 8);
+	destReg->writeWord(((sourceReg->readWord(0) & 0xF) ^ (imm & 0xF)) * 8);
 }
 
 void EECoreInterpreter::MTSAH()
@@ -48,7 +48,7 @@ void EECoreInterpreter::MTSAH()
 	auto& destReg = getResources()->EE->EECore->R5900->SA;
 	s16 imm = mInstruction.getIImmS();
 
-	destReg->writeWordU(((sourceReg->readWordU(0) & 0x7) ^ (imm & 0x7)) * 16);
+	destReg->writeWord(((sourceReg->readWord(0) & 0x7) ^ (imm & 0x7)) * 16);
 }
 
 void EECoreInterpreter::MFBPC()
@@ -59,7 +59,7 @@ void EECoreInterpreter::MFBPC()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->BPC;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFC0()
@@ -70,7 +70,7 @@ void EECoreInterpreter::MFC0()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFDAB()
@@ -81,7 +81,7 @@ void EECoreInterpreter::MFDAB()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->DAB;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFDABM()
@@ -92,7 +92,7 @@ void EECoreInterpreter::MFDABM()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->DABM;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFDVB()
@@ -103,7 +103,7 @@ void EECoreInterpreter::MFDVB()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->DVB;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFDVBM()
@@ -114,7 +114,7 @@ void EECoreInterpreter::MFDVBM()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->DVBM;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFIAB()
@@ -125,7 +125,7 @@ void EECoreInterpreter::MFIAB()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->IAB;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFIABM()
@@ -140,7 +140,7 @@ void EECoreInterpreter::MFIABM()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->IABM;
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFPC()
@@ -152,7 +152,7 @@ void EECoreInterpreter::MFPC()
 	u8 perfRegisterIndex = mInstruction.getRFunct() & 0x3E; // Last 5 bits of the funct field contain the performace counter register number to use. Must be 0 or 1 (but not checked).
 	auto& sourceReg = getResources()->EE->EECore->COP0->PCRRegisters[perfRegisterIndex];
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MFPS()
@@ -163,7 +163,7 @@ void EECoreInterpreter::MFPS()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->PCCR; // The reg field in the documentation must be 0, meaning the PCCR register.
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::MTBPC()
@@ -174,7 +174,7 @@ void EECoreInterpreter::MTBPC()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->BPC;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTC0()
@@ -185,7 +185,7 @@ void EECoreInterpreter::MTC0()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTDAB()
@@ -196,7 +196,7 @@ void EECoreInterpreter::MTDAB()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->DAB;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTDABM()
@@ -207,7 +207,7 @@ void EECoreInterpreter::MTDABM()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->DABM;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTDVB()
@@ -218,7 +218,7 @@ void EECoreInterpreter::MTDVB()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->DVB;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTDVBM()
@@ -229,7 +229,7 @@ void EECoreInterpreter::MTDVBM()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->DVBM;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTIAB()
@@ -240,7 +240,7 @@ void EECoreInterpreter::MTIAB()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->IAB;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTIABM()
@@ -251,7 +251,7 @@ void EECoreInterpreter::MTIABM()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->IABM;
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTPC()
@@ -263,7 +263,7 @@ void EECoreInterpreter::MTPC()
 	u8 perfRegisterIndex = mInstruction.getRFunct() & 0x3E; // Last 5 bits of the funct field contain the performace counter register number to use. Must be 0 or 1 (but not checked).
 	auto& destReg = getResources()->EE->EECore->COP0->PCRRegisters[perfRegisterIndex];
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::MTPS()
@@ -274,7 +274,7 @@ void EECoreInterpreter::MTPS()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->COP0->PCCR; // The reg field in the documentation must be 0, meaning the PCCR register.
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }
 
 void EECoreInterpreter::CFC1()
@@ -285,7 +285,7 @@ void EECoreInterpreter::CFC1()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->FPU->FCR[mInstruction.getRRd()]; // Fs, can only be 0 or 31.
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readWordU()));
+	destReg->writeDword(0, static_cast<u64>(sourceReg->readWord()));
 }
 
 void EECoreInterpreter::CTC1()
@@ -296,5 +296,5 @@ void EECoreInterpreter::CTC1()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->FPU->FCR[mInstruction.getRRd()];
 
-	destReg->writeWordU(sourceReg->readWordU(0));
+	destReg->writeWord(sourceReg->readWord(0));
 }

@@ -15,52 +15,32 @@ FPRegister128_t::FPRegister128_t(const char* mnemonic) :
 {
 }
 
-u32 FPRegister128_t::readWordU(u32 arrayIndex)
+u32 FPRegister128_t::readWord(u32 arrayIndex)
 {
 	return UW[arrayIndex];
 }
 
-void FPRegister128_t::writeWordU(u32 arrayIndex, u32 value)
+void FPRegister128_t::writeWord(u32 arrayIndex, u32 value)
 {
 	UW[arrayIndex] = value;
 }
 
-s32 FPRegister128_t::readWordS(u32 arrayIndex)
-{
-	return SW[arrayIndex];
-}
-
-void FPRegister128_t::writeWordS(u32 arrayIndex, s32 value)
-{
-	SW[arrayIndex] = value;
-}
-
-u64 FPRegister128_t::readDwordU(u32 arrayIndex)
+u64 FPRegister128_t::readDword(u32 arrayIndex)
 {
 	return UD[arrayIndex];
 }
 
-void FPRegister128_t::writeDwordU(u32 arrayIndex, u64 value)
+void FPRegister128_t::writeDword(u32 arrayIndex, u64 value)
 {
 	UD[arrayIndex] = value;
 }
 
-s64 FPRegister128_t::readDwordS(u32 arrayIndex)
-{
-	return SD[arrayIndex];
-}
-
-void FPRegister128_t::writeDwordS(u32 arrayIndex, s64 value)
-{
-	SD[arrayIndex] = value;
-}
-
-u128 FPRegister128_t::readQwordU()
+u128 FPRegister128_t::readQword()
 {
 	return u128(UD[0], UD[1]);
 }
 
-void FPRegister128_t::writeQwordU(u128 value)
+void FPRegister128_t::writeQword(u128 value)
 {
 	UD[0] = value.lo;
 	UD[1] = value.hi;

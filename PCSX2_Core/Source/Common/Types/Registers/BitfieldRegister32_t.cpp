@@ -27,13 +27,8 @@ void BitfieldRegister32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 val
 	UW = MathUtil::insertMaskedValue32(UW, value, startPosition, bitLength);
 }
 
-void BitfieldRegister32_t::writeWordU(u32 value)
+void BitfieldRegister32_t::writeWord(u32 value)
 {
-	Register32_t::writeWordU(value);
+	Register32_t::writeWord(value);
 	BitfieldMap32_t::syncMapFromMemory();
-}
-
-void BitfieldRegister32_t::writeWordS(s32 value)
-{
-	writeWordU(static_cast<u32>(value));
 }

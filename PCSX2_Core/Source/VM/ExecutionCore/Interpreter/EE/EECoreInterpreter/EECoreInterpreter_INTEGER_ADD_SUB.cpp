@@ -21,13 +21,15 @@ void EECoreInterpreter::ADD()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	const s64 result = static_cast<s64>(source1Reg->readWordS(0) + source2Reg->readWordS(0));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	s64 result = source1Val + source2Val;
 
 	// Check for over/under flow.
-	if (!checkNoOverOrUnderflow32(source1Reg->readWordS(0), source2Reg->readWordS(0)))
+	if (!checkNoOverOrUnderflow32(source1Val, source2Val))
         return;
 	
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::ADDI()
@@ -35,15 +37,16 @@ void EECoreInterpreter::ADDI()
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	const s16 imm = mInstruction.getIImmS();
+	auto imm = mInstruction.getIImmS();
 
-	const s64 result = static_cast<s64>(sourceReg->readWordS(0) + imm);
+	auto sourceVal = static_cast<s32>(sourceReg->readWord(0));
+	s64 result = sourceVal + imm;
 
 	// Check for over/under flow.
-	if (!checkNoOverOrUnderflow32(sourceReg->readWordS(0), imm))
+	if (!checkNoOverOrUnderflow32(sourceVal, imm))
         return;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::ADDIU()
@@ -51,8 +54,12 @@ void EECoreInterpreter::ADDIU()
 	// Rt = Rs + Imm (signed).
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	auto imm = mInstruction.getIImmS();
 
-	destReg->writeDwordS(0, static_cast<s64>(sourceReg->readWordS(0) + mInstruction.getIImmS()));
+	auto sourceVal = static_cast<s32>(sourceReg->readWord(0));
+	s64 result = sourceVal + imm;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::ADDU()
@@ -62,7 +69,11 @@ void EECoreInterpreter::ADDU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDwordS(0, static_cast<s64>(source1Reg->readWordS(0) + source2Reg->readWordS(0)));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	s64 result = source1Val + source2Val;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DADD()
@@ -72,13 +83,15 @@ void EECoreInterpreter::DADD()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	const s64 result = static_cast<s64>(source1Reg->readDwordS(0) + source2Reg->readDwordS(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	s64 result = source1Val + source2Val;
 
 	// Check for over/under flow.
-	if (!checkNoOverOrUnderflow64(source1Reg->readDwordS(0), source2Reg->readDwordS(0)))
+	if (!checkNoOverOrUnderflow64(source1Val, source2Val))
         return;
 		
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DADDI()
@@ -86,15 +99,16 @@ void EECoreInterpreter::DADDI()
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	const s16 imm = mInstruction.getIImmS();
+	auto imm = mInstruction.getIImmS();
 
-	const s64 result = static_cast<s64>(sourceReg->readDwordS(0) + imm);
+	auto sourceVal = static_cast<s64>(sourceReg->readDword(0));
+	s64 result = sourceVal + imm;
 
 	// Check for over/under flow.
-    if (!checkNoOverOrUnderflow64(sourceReg->readDwordS(0), imm))
+    if (!checkNoOverOrUnderflow64(sourceVal, imm))
         return;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DADDIU()
@@ -102,8 +116,12 @@ void EECoreInterpreter::DADDIU()
 	// Rt = Rs + Imm (signed).
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
+	auto imm = mInstruction.getIImmS();
 
-	destReg->writeDwordU(0, static_cast<u64>(sourceReg->readDwordS(0) + mInstruction.getIImmS()));
+	auto sourceVal = static_cast<s64>(sourceReg->readDword(0));
+	s64 result = sourceVal + imm;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DADDU()
@@ -113,7 +131,11 @@ void EECoreInterpreter::DADDU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDwordU(0, static_cast<u64>(source1Reg->readDwordS(0) + source2Reg->readDwordS(0)));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	s64 result = source1Val + source2Val;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DSUB()
@@ -123,13 +145,15 @@ void EECoreInterpreter::DSUB()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	const s64 result = static_cast<s64>(source1Reg->readDwordS(0) - source2Reg->readDwordS(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	s64 result = source1Val - source2Val;
 
 	// Check for over/under flow.
-    if (!checkNoOverOrUnderflow64(source1Reg->readDwordS(0), source2Reg->readDwordS(0)))
-        return;
+	if (!checkNoOverOrUnderflow64(source1Val, source2Val))
+		return;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::DSUBU()
@@ -139,7 +163,11 @@ void EECoreInterpreter::DSUBU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDwordU(0, static_cast<s64>(source1Reg->readDwordU(0) - source2Reg->readDwordU(0)));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	s64 result = source1Val - source2Val;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::SUB()
@@ -149,13 +177,15 @@ void EECoreInterpreter::SUB()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	const s64 result = static_cast<s64>(source1Reg->readWordS(0) - source2Reg->readWordS(0));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	s64 result = source1Val - source2Val;
 
 	// Check for over/under flow.
-	if (!checkNoOverOrUnderflow32(source1Reg->readWordS(0), source2Reg->readWordS(0)))
-        return;
+	if (!checkNoOverOrUnderflow32(source1Val, source2Val))
+		return;
 
-	destReg->writeDwordS(0, result);
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::SUBU()
@@ -165,7 +195,11 @@ void EECoreInterpreter::SUBU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDwordU(0, static_cast<s64>(source1Reg->readWordU(0) - source2Reg->readWordU(0)));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	s64 result = source1Val - source2Val;
+
+	destReg->writeDword(0, result);
 }
 
 void EECoreInterpreter::PADDB()
@@ -175,8 +209,13 @@ void EECoreInterpreter::PADDB()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	for(auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
-		destReg->writeByteS(i, source1Reg->readByteS(i) + source2Reg->readByteS(i));
+	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
+	{
+		auto source1Val = static_cast<s8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<s8>(source2Reg->readByte(i));
+		s8 result = source1Val + source2Val;
+		destReg->writeByte(i, result);
+	}
 }
 
 void EECoreInterpreter::PADDH()
@@ -186,8 +225,13 @@ void EECoreInterpreter::PADDH()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
-		destReg->writeHwordS(i, source1Reg->readHwordS(i) + source2Reg->readHwordS(i));
+	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++) 
+	{
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = source1Val + source2Val;
+		destReg->writeHword(i, result);
+	}
 }
 
 void EECoreInterpreter::PADDSB()
@@ -199,14 +243,16 @@ void EECoreInterpreter::PADDSB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		s16 result = source1Reg->readByteS(i) + source2Reg->readByteS(i);
+		auto source1Val = static_cast<s8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<s8>(source2Reg->readByte(i));
+		s16 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_S8_MAX)
-			destReg->writeByteS(i, Constants::VALUE_S8_MAX);
+			destReg->writeByte(i, Constants::VALUE_S8_MAX);
 		else if (result < Constants::VALUE_S8_MIN)
-			destReg->writeByteS(i, Constants::VALUE_S8_MIN);
+			destReg->writeByte(i, Constants::VALUE_S8_MIN);
 		else
-			destReg->writeByteS(i, static_cast<s8>(result));
+			destReg->writeByte(i, static_cast<s8>(result));
 	}
 }
 
@@ -219,14 +265,16 @@ void EECoreInterpreter::PADDSH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s32 result = source1Reg->readHwordS(i) + source2Reg->readHwordS(i);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s32 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_S16_MAX)
-			destReg->writeHwordS(i, Constants::VALUE_S16_MAX);
+			destReg->writeHword(i, Constants::VALUE_S16_MAX);
 		else if (result < Constants::VALUE_S16_MIN)
-			destReg->writeHwordS(i, Constants::VALUE_S16_MIN);
+			destReg->writeHword(i, Constants::VALUE_S16_MIN);
 		else
-			destReg->writeHwordS(i, static_cast<s16>(result));
+			destReg->writeHword(i, static_cast<s16>(result));
 	}
 }
 
@@ -239,14 +287,16 @@ void EECoreInterpreter::PADDSW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s64 result = source1Reg->readWordS(i) + source2Reg->readWordS(i);
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s64 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_S32_MAX)
-			destReg->writeWordS(i, Constants::VALUE_S32_MAX);
+			destReg->writeWord(i, Constants::VALUE_S32_MAX);
 		else if (result < Constants::VALUE_S32_MIN)
-			destReg->writeWordS(i, Constants::VALUE_S32_MIN);
+			destReg->writeWord(i, Constants::VALUE_S32_MIN);
 		else
-			destReg->writeWordS(i, static_cast<s32>(result));
+			destReg->writeWord(i, static_cast<s32>(result));
 	}
 }
 
@@ -259,12 +309,14 @@ void EECoreInterpreter::PADDUB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		u16 result = source1Reg->readByteU(i) + source2Reg->readByteU(i);
+		auto source1Val = static_cast<u8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<u8>(source2Reg->readByte(i));
+		u16 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_U8_MAX)
-			destReg->writeByteU(i, Constants::VALUE_U8_MAX);
+			destReg->writeByte(i, Constants::VALUE_U8_MAX);
 		else
-			destReg->writeByteU(i, static_cast<u8>(result));
+			destReg->writeByte(i, static_cast<u8>(result));
 	}
 }
 
@@ -277,12 +329,14 @@ void EECoreInterpreter::PADDUH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		u32 result = source1Reg->readHwordU(i) + source2Reg->readHwordU(i);
+		auto source1Val = static_cast<u16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<u16>(source2Reg->readHword(i));
+		u32 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_U16_MAX)
-			destReg->writeHwordU(i, Constants::VALUE_U16_MAX);
+			destReg->writeHword(i, Constants::VALUE_U16_MAX);
 		else
-			destReg->writeHwordU(i, static_cast<u16>(result));
+			destReg->writeHword(i, static_cast<u16>(result));
 	}
 }
 
@@ -295,12 +349,14 @@ void EECoreInterpreter::PADDUW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		u64 result = source1Reg->readWordU(i) + source2Reg->readWordU(i);
+		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+		u64 result = source1Val + source2Val;
 
 		if (result > Constants::VALUE_U32_MAX)
-			destReg->writeWordU(i, Constants::VALUE_U32_MAX);
+			destReg->writeWord(i, Constants::VALUE_U32_MAX);
 		else
-			destReg->writeWordU(i, static_cast<u32>(result));
+			destReg->writeWord(i, static_cast<u32>(result));
 	}
 }
 
@@ -313,7 +369,10 @@ void EECoreInterpreter::PADDW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		destReg->writeWordS(i, source1Reg->readWordS(i) + source2Reg->readWordS(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s32 result = source1Val + source2Val;
+		destReg->writeWord(i, result);
 	}
 }
 
@@ -324,13 +383,19 @@ void EECoreInterpreter::PADSBH()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
+	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHwordS(i, source1Reg->readHwordS(i) - source2Reg->readHwordS(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = source1Val - source2Val;
+		destReg->writeHword(i, result);
 	}
 	for (auto i = Constants::NUMBER_HWORDS_IN_QWORD / 2; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHwordS(i, source1Reg->readHwordS(i) + source2Reg->readHwordS(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = source1Val + source2Val;
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -343,7 +408,10 @@ void EECoreInterpreter::PSUBB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		destReg->writeByteS(i, source1Reg->readByteS(i) - source2Reg->readByteS(i));
+		auto source1Val = static_cast<s8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<s8>(source2Reg->readByte(i));
+		s8 result = source1Val - source2Val;
+		destReg->writeByte(i, result);
 	}
 }
 
@@ -356,7 +424,10 @@ void EECoreInterpreter::PSUBH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHwordS(i, source1Reg->readHwordS(i) - source2Reg->readHwordS(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 result = source1Val - source2Val;
+		destReg->writeHword(i, result);
 	}
 }
 
@@ -369,14 +440,16 @@ void EECoreInterpreter::PSUBSB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		s16 result = source1Reg->readByteS(i) - source2Reg->readByteS(i);
+		auto source1Val = static_cast<s8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<s8>(source2Reg->readByte(i));
+		s16 result = source1Val - source2Val;
 
 		if (result > Constants::VALUE_S8_MAX)
-			destReg->writeByteS(i, Constants::VALUE_S8_MAX);
+			destReg->writeByte(i, Constants::VALUE_S8_MAX);
 		else if (result < Constants::VALUE_S8_MIN)
-			destReg->writeByteS(i, Constants::VALUE_S8_MIN);
+			destReg->writeByte(i, Constants::VALUE_S8_MIN);
 		else
-			destReg->writeByteS(i, static_cast<s8>(result));
+			destReg->writeByte(i, static_cast<s8>(result));
 	}
 }
 
@@ -389,14 +462,16 @@ void EECoreInterpreter::PSUBSH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s32 result = source1Reg->readHwordS(i) - source2Reg->readHwordS(i);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s32 result = source1Val - source2Val;
 
 		if (result > Constants::VALUE_S16_MAX)
-			destReg->writeHwordS(i, Constants::VALUE_S16_MAX);
+			destReg->writeHword(i, Constants::VALUE_S16_MAX);
 		else if (result < Constants::VALUE_S16_MIN)
-			destReg->writeHwordS(i, Constants::VALUE_S16_MIN);
+			destReg->writeHword(i, Constants::VALUE_S16_MIN);
 		else
-			destReg->writeHwordS(i, static_cast<s16>(result));
+			destReg->writeHword(i, static_cast<s16>(result));
 	}
 }
 
@@ -409,14 +484,16 @@ void EECoreInterpreter::PSUBSW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s64 result = source1Reg->readWordS(i) - source2Reg->readWordS(i);
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s64 result = source1Val - source2Val;
 
 		if (result > Constants::VALUE_S32_MAX)
-			destReg->writeWordS(i, Constants::VALUE_S32_MAX);
+			destReg->writeWord(i, Constants::VALUE_S32_MAX);
 		else if (result < Constants::VALUE_S32_MIN)
-			destReg->writeWordS(i, Constants::VALUE_S32_MIN);
+			destReg->writeWord(i, Constants::VALUE_S32_MIN);
 		else
-			destReg->writeWordS(i, static_cast<s32>(result));
+			destReg->writeWord(i, static_cast<s32>(result));
 	}
 }
 
@@ -429,12 +506,14 @@ void EECoreInterpreter::PSUBUB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
-		s16 result = source1Reg->readByteU(i) - source2Reg->readByteU(i);
+		auto source1Val = static_cast<s8>(source1Reg->readByte(i));
+		auto source2Val = static_cast<s8>(source2Reg->readByte(i));
+		s16 result = source1Val - source2Val;
 
 		if (result < 0)
-			destReg->writeByteU(i, 0);
+			destReg->writeByte(i, 0);
 		else
-			destReg->writeByteU(i, static_cast<u8>(result));
+			destReg->writeByte(i, static_cast<u8>(result));
 	}
 }
 
@@ -447,12 +526,14 @@ void EECoreInterpreter::PSUBUH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s32 result = source1Reg->readHwordU(i) - source2Reg->readHwordU(i);
+		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s32 result = source1Val - source2Val;
 
 		if (result < 0)
-			destReg->writeHwordU(i, 0);
+			destReg->writeHword(i, 0);
 		else
-			destReg->writeHwordU(i, static_cast<u16>(result));
+			destReg->writeHword(i, static_cast<u16>(result));
 	}
 }
 
@@ -465,12 +546,14 @@ void EECoreInterpreter::PSUBUW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s64 result = source1Reg->readWordU(i) - source2Reg->readWordU(i);
+		auto source1Val = static_cast<s32>(source1Reg->readHword(i));
+		auto source2Val = static_cast<s32>(source2Reg->readHword(i));
+		s64 result = source1Val - source2Val;
 
 		if (result < 0)
-			destReg->writeWordU(i, 0);
+			destReg->writeWord(i, 0);
 		else
-			destReg->writeWordU(i, static_cast<u32>(result));
+			destReg->writeWord(i, static_cast<u32>(result));
 	}
 }
 
@@ -483,7 +566,10 @@ void EECoreInterpreter::PSUBW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		destReg->writeWordS(i, source1Reg->readWordS(i) - source2Reg->readWordS(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s32 result = source1Val - source2Val;
+		destReg->writeWord(i, result);
 	}
 }
 

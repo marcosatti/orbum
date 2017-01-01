@@ -17,7 +17,14 @@ Doubleword (dword) size is 64-bit.
 Quadword (qword)   size is 128-bit.
 
 In PCSX2, these base types are defined starting with single letter for sign status (s for signed or u for unsigned), followed by the number of bits.
-For example, unsigned dword would be represented by u64, and a signed qword would be represented by s128.
+For example, unsigned dword would be represented by u64, and a signed byte would be represented by s8.
+
+Throughout the emulator you will also see the following abbreviations:
+UB & SB (unsigned/signed byte).
+UH & SH (unsigned/signed halfword).
+UW & SW (unsigned/signed word).
+UD & SD (unsigned/signed doubleword).
+UQ (unsigned quadword). There is no concept of a signed qword (SQ) as the PS2 never operates directly on 128-bit values.
 
 As there is no 128-bit types defined in the C++ standard (ie: no uint128_t), we make our own definitions of a 128-bit type.
 Do not change the ordering of the unions inside the s/u128 types as they have been crafted for little-endianess.

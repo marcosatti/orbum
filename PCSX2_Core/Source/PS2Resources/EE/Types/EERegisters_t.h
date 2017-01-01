@@ -28,12 +28,9 @@ public:
 	static constexpr u32 OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
 	static constexpr u32 OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
-	void writeByteU(u32 storageIndex, u8 value) override;
-	void writeByteS(u32 storageIndex, s8 value) override;
-	u32 readWordU(u32 storageIndex) override;
-	void writeWordU(u32 storageIndex, u32 value) override;
-	s32 readWordS(u32 storageIndex) override;
-	void writeWordS(u32 storageIndex, s32 value) override;
+	void writeByte(u32 storageIndex, u8 value) override;
+	u32 readWord(u32 storageIndex) override;
+	void writeWord(u32 storageIndex, u32 value) override;
 
 private:
 #if DEBUG_LOG_SIO_MESSAGES
@@ -59,10 +56,8 @@ public:
 	static constexpr u32 OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
 	static constexpr u32 OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 
-	u32 readWordU(u32 storageIndex) override;
-	void writeWordU(u32 storageIndex, u32 value) override;
-	s32 readWordS(u32 storageIndex) override;
-	void writeWordS(u32 storageIndex, s32 value) override;
+	u32 readWord(u32 storageIndex) override;
+	void writeWord(u32 storageIndex, u32 value) override;
 
 private:
 	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).

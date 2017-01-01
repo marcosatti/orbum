@@ -20,7 +20,7 @@ public:
 		static constexpr u8 TMR0 = 4;
 		static constexpr u8 TMR1 = 5;
 		static constexpr u8 TMR2 = 6;
-		static constexpr u8 CON_MC = 7;
+		static constexpr u8 PAD_MC = 7;
 		static constexpr u8 SIO = 8;
 		static constexpr u8 SPU = 9;
 		static constexpr u8 PIO = 10;
@@ -45,7 +45,7 @@ public:
 		static constexpr u8 TMR0 = 4;
 		static constexpr u8 TMR1 = 5;
 		static constexpr u8 TMR2 = 6;
-		static constexpr u8 CON_MC = 7;
+		static constexpr u8 PAD_MC = 7;
 		static constexpr u8 SIO = 8;
 		static constexpr u8 SPU = 9;
 		static constexpr u8 PIO = 10;
@@ -68,5 +68,5 @@ public:
 	/*
 	Returns the register value, and sets it to 0 after.
 	*/
-	s32 readWordS() override;
+	u32 readWord() override;
 };

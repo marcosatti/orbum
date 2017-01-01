@@ -19,7 +19,7 @@ void VUInterpreter::IADD()
 	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // IT.
 	auto& destReg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFd()]; // ID.
 
-	destReg->writeHwordU(source1Reg->readHwordU() + source2Reg->readHwordU());
+	destReg->writeHword(source1Reg->readHword() + source2Reg->readHword());
 }
 
 void VUInterpreter::IADDI()

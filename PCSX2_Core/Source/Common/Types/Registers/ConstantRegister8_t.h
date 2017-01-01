@@ -15,7 +15,6 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByteU(u8 value) override;
-	void writeByteS(s8 value) override;
+	void writeByte(u8 value) override;
 };
 

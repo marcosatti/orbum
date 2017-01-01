@@ -8,11 +8,10 @@ public:
 	explicit IOPIntc(VMMain * vmMain);
 
 	/*
-	Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any
+	Checks the CTRL master register and STAT register for any pending interrupts. If there are, AND's STAT with the MASK register and checks for any
 	interrupts to send to the IOP Core to process.
-
-	Note that the maximum time resolution that this can run at is limited to BUSCLK - the reason for this being that all interrupt sources run
-	 at BUSCLK or less. Therefore it should be included with the BUSCLK events in the main emulation loop.
+	TODO: Verify the clock speed. Assumed to be IOP clock speed (~37 MHz), as the max reported bus rate is 137 MB/s and width is 32-bit.
+	See https://en.wikipedia.org/wiki/PlayStation_technical_specifications and https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;
 };

@@ -25,100 +25,56 @@ const char* MappedRegister8_t::getMnemonic() const
 	return mRegister8->getMnemonic();
 }
 
-u8 MappedRegister8_t::readByteU(u32 storageIndex)
+u8 MappedRegister8_t::readByte(u32 storageIndex)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
-	return mRegister8->readByteU();
+	return mRegister8->readByte();
 }
 
-void MappedRegister8_t::writeByteU(u32 storageIndex, u8 value)
+void MappedRegister8_t::writeByte(u32 storageIndex, u8 value)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
-	mRegister8->writeByteU(value);
+	mRegister8->writeByte(value);
 }
 
-s8 MappedRegister8_t::readByteS(u32 storageIndex)
-{
-	if (storageIndex % 1 != 0)
-		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
-	return mRegister8->readByteS();
-}
-
-void MappedRegister8_t::writeByteS(u32 storageIndex, s8 value)
-{
-	if (storageIndex % 1 != 0)
-		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
-	mRegister8->writeByteS(value);
-}
-
-u16 MappedRegister8_t::readHwordU(u32 storageIndex)
+u16 MappedRegister8_t::readHword(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeHwordU(u32 storageIndex, u16 value)
+void MappedRegister8_t::writeHword(u32 storageIndex, u16 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-s16 MappedRegister8_t::readHwordS(u32 storageIndex)
+u32 MappedRegister8_t::readWord(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeHwordS(u32 storageIndex, s16 value)
+void MappedRegister8_t::writeWord(u32 storageIndex, u32 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-u32 MappedRegister8_t::readWordU(u32 storageIndex)
+u64 MappedRegister8_t::readDword(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeWordU(u32 storageIndex, u32 value)
+void MappedRegister8_t::writeDword(u32 storageIndex, u64 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-s32 MappedRegister8_t::readWordS(u32 storageIndex)
+u128 MappedRegister8_t::readQword(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeWordS(u32 storageIndex, s32 value)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-u64 MappedRegister8_t::readDwordU(u32 storageIndex)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-void MappedRegister8_t::writeDwordU(u32 storageIndex, u64 value)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-s64 MappedRegister8_t::readDwordS(u32 storageIndex)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-void MappedRegister8_t::writeDwordS(u32 storageIndex, s64 value)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-u128 MappedRegister8_t::readQwordU(u32 storageIndex)
-{
-	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
-}
-
-void MappedRegister8_t::writeQwordU(u32 storageIndex, u128 value)
+void MappedRegister8_t::writeQword(u32 storageIndex, u128 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }

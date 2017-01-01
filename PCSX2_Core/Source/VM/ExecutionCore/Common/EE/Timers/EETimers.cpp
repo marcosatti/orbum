@@ -98,7 +98,7 @@ void EETimers::checkTimerInterrupt(const u32& timerNumber) const
 	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
 	{
-		if (timer->COUNT->readWordU() >= timer->COMP->readWordU())
+		if (timer->COUNT->readWord() >= timer->COMP->readWord())
 		{
 			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
 		}
@@ -122,7 +122,7 @@ void EETimers::checkTimerZRET(const u32& timerNumber) const
 	if (timerRegister->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (timerRegister->COUNT->readWordU() >= timerRegister->COMP->readWordU())
+		if (timerRegister->COUNT->readWord() >= timerRegister->COMP->readWord())
 		{
 			// Set Count to 0.
 			timerRegister->COUNT->reset();

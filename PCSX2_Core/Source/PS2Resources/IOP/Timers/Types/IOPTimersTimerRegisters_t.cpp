@@ -15,7 +15,7 @@ IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t() :
 
 void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
 {
-	u32 temp = readWordU() + value;
+	u32 temp = readWord() + value;
 
 	if (temp > Constants::VALUE_U16_MAX)
 	{
@@ -24,7 +24,7 @@ void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
 		temp = temp % Constants::VALUE_U16_MAX;
 	}
 
-	writeWordU(temp);
+	writeWord(temp);
 }
 
 bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
@@ -36,5 +36,5 @@ bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 
 void IOPTimersTimerRegister_COUNT_t::reset()
 {
-	writeWordU(0);
+	writeWord(0);
 }

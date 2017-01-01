@@ -82,10 +82,10 @@ void EECoreCOP0Register_Compare_t::setFieldValue(const u8& fieldIndex, const u32
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 }
 
-void EECoreCOP0Register_Compare_t::writeWordU(u32 value)
+void EECoreCOP0Register_Compare_t::writeWord(u32 value)
 {
 	mCause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 0);
-	BitfieldRegister32_t::writeWordU(value);
+	BitfieldRegister32_t::writeWord(value);
 }
 
 EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()

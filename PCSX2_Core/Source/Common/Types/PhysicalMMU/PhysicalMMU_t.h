@@ -4,9 +4,20 @@
 
 #include "Common/Global/Globals.h"
 
+class PhysicalMapped;
+class Memory_t;
+class Register8_t;
+class Register16_t;
+class Register32_t;
+class Register64_t;
+class Register128_t;
+class FPRegister32_t;
+class FPRegister128_t;
+class FIFOQueue_t;
+
 /*
 PhysicalMMU_t is responsible for converting the PS2's physical memory into host memory.
-The mapping method is actually just a 2 level (directory and pages) page table! 
+The mapping method is actually just a 2 level (directory and pages) page table!
 It supports remapping up to 4GB only, due to the use of 32-bit value addresses.
 
 This means that for each separate physical memory space in the PS2, there are 2 "MMU's":
@@ -20,43 +31,31 @@ It will throw different runtime errors when the following conditions occur:
 - runtime_error exception if the returned PFN from the page table was null (indicates invalid entry, needs to be mapped first).
 
 * Why is an PhysicalMapped object used instead of a raw pointer to a block of memory?
-Some memory regions of the PS2 require special attributes - such as the reserved regions of the EE registers. When writing to these regions, the write is disregarded. 
+Some memory regions of the PS2 require special attributes - such as the reserved regions of the EE registers. When writing to these regions, the write is disregarded.
 When a read is performed, an indeterminate value is returned (0 for some registers due to undocumented behaviour).
 By using this class, we can override the read and writes performed very easily.
 
 * Why is two levels used instead of one?
-Some mapped storage such as the EE registers are separated only by 16 bytes. This means that in order to support every register, the page size would have to be 16B. 
+Some mapped storage such as the EE registers are separated only by 16 bytes. This means that in order to support every register, the page size would have to be 16B.
 This creates a sort of wasteful memory problem, as we would need to have 4GB / 16B = 268,435,456 page table entries (pointers).
-At 8 bytes a pointer (running in 64-bit mode), we would use up 2GB of memory, just for pointers! Even with todays PC's, this is very bad.
+At 8 bytes a pointer (running in 64-bit mode), we would use up 2GB of memory, just for pointers! This is wasteful.
 Instead, if we use a two level structure with for example a directory size of 4MB, we only allocate pointers for the directories used.
 For the directory table, we require 4GB / 4MB = 1,024 directories, and 1,024 * 8B = 8KB of memory.
-For a single directory, we require 4M * 8B = 32MB of memory for pointers. Still not ideal, but certainly not nearly as bad. 
+For a single directory, we require 4M * 8B = 32MB of memory for pointers. Still not ideal, but certainly not as bad.
 However, this works well with the EE physical map, where registers are often clumped together. This means that typically only a handful of directories are created.
 The advantage of keeping a page size of 16B is we have more fine grained control of memory, rather than having to allocate a big block of memory.
 
 * Example of how constructor parameters effects addresses.
 By using a directory size of 4MB and a page size of 16B, with a 512 MB max address range:
- - Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
- - Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
- - The offset (within 16B) requires 4 bits.
- - Total number of bits required = 29, which is correct for addressing 512MB. This is done within a 32-bit integer type (upper bits unused / will throw error).
- =============================================================================================
- | 31                         29 | 28            22 | 21                       4  | 3      0 |
- | (throws error if any bit set) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
- =============================================================================================
+- Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
+- Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
+- The offset (within 16B) requires 4 bits.
+- Total number of bits required = 29, which is correct for addressing 512MB. This is done within a 32-bit integer type (upper bits unused / will throw error).
+=============================================================================================
+| 31                         29 | 28            22 | 21                       4  | 3      0 |
+| (throws error if any bit set) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
+=============================================================================================
 */
-
-class PhysicalMapped;
-class Memory_t;
-class Register8_t;
-class Register16_t;
-class Register32_t;
-class Register64_t;
-class Register128_t;
-class FPRegister32_t;
-class FPRegister128_t;
-class FIFOQueue_t;
-
 class PhysicalMMU_t
 {
 public:
@@ -87,27 +86,17 @@ public:
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before mapObject() has been called - it will return an runtime_error exception otherwise.
-	The functions have the syntax "{read or write}{type}{[U]nsigned or [S]igned}()".
-	Unfortunately C++ does not allow templating of virtual functions defined in the parent class, so a read/write for each type has to be made.
 	*/
-	u8 readByteU(u32 PS2PhysicalAddress) const;
-	void writeByteU(u32 PS2PhysicalAddress, u8 value) const;
-	s8 readByteS(u32 PS2PhysicalAddress) const;
-	void writeByteS(u32 PS2PhysicalAddress, s8 value) const;
-	u16 readHwordU(u32 PS2PhysicalAddress) const;
-	void writeHwordU(u32 PS2PhysicalAddress, u16 value) const;
-	s16 readHwordS(u32 PS2PhysicalAddress) const;
-	void writeHwordS(u32 PS2PhysicalAddress, s16 value) const;
-	u32 readWordU(u32 PS2PhysicalAddress) const;
-	void writeWordU(u32 PS2PhysicalAddress, u32 value) const;
-	s32 readWordS(u32 PS2PhysicalAddress) const;
-	void writeWordS(u32 PS2PhysicalAddress, s32 value) const;
-	u64 readDwordU(u32 PS2PhysicalAddress) const;
-	void writeDwordU(u32 PS2PhysicalAddress, u64 value) const;
-	s64 readDwordS(u32 PS2PhysicalAddress) const;
-	void writeDwordS(u32 PS2PhysicalAddress, s64 value) const;
-	u128 readQwordU(u32 PS2PhysicalAddress) const;
-	void writeQwordU(u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(u32 PS2PhysicalAddress) const;
+	void writeByte(u32 PS2PhysicalAddress, u8 value) const;
+	u16 readHword(u32 PS2PhysicalAddress) const;
+	void writeHword(u32 PS2PhysicalAddress, u16 value) const;
+	u32 readWord(u32 PS2PhysicalAddress) const;
+	void writeWord(u32 PS2PhysicalAddress, u32 value) const;
+	u64 readDword(u32 PS2PhysicalAddress) const;
+	void writeDword(u32 PS2PhysicalAddress, u64 value) const;
+	u128 readQword(u32 PS2PhysicalAddress) const;
+	void writeQword(u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*

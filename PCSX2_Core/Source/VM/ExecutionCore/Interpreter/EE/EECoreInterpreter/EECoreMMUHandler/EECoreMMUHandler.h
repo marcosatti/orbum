@@ -29,24 +29,16 @@ public:
 	TODO: Add in address error exceptions. These will occur when an unaligned access is tried. See for example the instruction LDL on page 72 of the EE Core Instruction manual.
 	TODO: Produce the proper exception info, such as the TLB index or OS page table address. Not properly done at the moment.
 	*/
-	u8 readByteU(u32 PS2VirtualAddress);
-	void writeByteU(u32 PS2VirtualAddress, u8 value);
-	s8 readByteS(u32 PS2VirtualAddress);
-	void writeByteS(u32 PS2VirtualAddress, s8 value);
-	u16 readHwordU(u32 PS2VirtualAddress);
-	void writeHwordU(u32 PS2VirtualAddress, u16 value);
-	s16 readHwordS(u32 PS2VirtualAddress);
-	void writeHwordS(u32 PS2VirtualAddress, s16 value);
-	u32 readWordU(u32 PS2VirtualAddress);
-	void writeWordU(u32 PS2VirtualAddress, u32 value);
-	s32 readWordS(u32 PS2VirtualAddress);
-	void writeWordS(u32 PS2VirtualAddress, s32 value);
-	u64 readDwordU(u32 PS2VirtualAddress);
-	void writeDwordU(u32 PS2VirtualAddress, u64 value);
-	s64 readDwordS(u32 PS2VirtualAddress);
-	void writeDwordS(u32 PS2VirtualAddress, s64 value);
-	u128 readQwordU(u32 PS2VirtualAddress);
-	void writeQwordU(u32 PS2VirtualAddress, u128 value);
+	u8 readByte(u32 PS2VirtualAddress);
+	void writeByte(u32 PS2VirtualAddress, u8 value);
+	u16 readHword(u32 PS2VirtualAddress);
+	void writeHword(u32 PS2VirtualAddress, u16 value);
+	u32 readWord(u32 PS2VirtualAddress);
+	void writeWord(u32 PS2VirtualAddress, u32 value);
+	u64 readDword(u32 PS2VirtualAddress);
+	void writeDword(u32 PS2VirtualAddress, u64 value);
+	u128 readQword(u32 PS2VirtualAddress);
+	void writeQword(u32 PS2VirtualAddress, u128 value);
 
 	/*
 	Exception handling functionality. Because this is used within the EE Core instruction implementations, there needs to be a way for the exception to

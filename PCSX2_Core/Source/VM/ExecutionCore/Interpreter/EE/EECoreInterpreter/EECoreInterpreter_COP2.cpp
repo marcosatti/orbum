@@ -33,8 +33,8 @@ void EECoreInterpreter::QMFC2()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source1Reg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
 
-	destReg->writeDwordU(0, source1Reg->readDwordU(0));
-	destReg->writeDwordU(1, source1Reg->readDwordU(1));
+	destReg->writeDword(0, source1Reg->readDword(0));
+	destReg->writeDword(1, source1Reg->readDword(1));
 }
 
 void EECoreInterpreter::QMTC2()
@@ -52,8 +52,8 @@ void EECoreInterpreter::QMTC2()
 	auto& destReg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDwordU(0, source1Reg->readDwordU(0));
-	destReg->writeDwordU(1, source1Reg->readDwordU(1));
+	destReg->writeDword(0, source1Reg->readDword(0));
+	destReg->writeDword(1, source1Reg->readDword(1));
 }
 
 void EECoreInterpreter::LQC2()
@@ -66,11 +66,11 @@ void EECoreInterpreter::LQC2()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = (sourceReg->readWordU(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
+	u32 PS2VirtualAddress = (sourceReg->readWord(0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
 	u64 value;
 	// TODO: Im not sure if this is correct for big-endian.
 
-	value = mMMUHandler->readDwordU(PS2VirtualAddress);
+	value = mMMUHandler->readDword(PS2VirtualAddress);
 	// Check for MMU error (1).
 	if (mMMUHandler->hasExceptionOccurred())
 	{
@@ -79,14 +79,14 @@ void EECoreInterpreter::LQC2()
 		return; // Return early, dont bother trying to load the second dword.
 	}
 	else
-		destReg->writeDwordU(0, value); // Get first 8 bytes (bytes 0 -> 7).
+		destReg->writeDword(0, value); // Get first 8 bytes (bytes 0 -> 7).
 
-	value = mMMUHandler->readDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD);
+	value = mMMUHandler->readDword(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD);
 	// Check for MMU error (2).
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeDwordU(1, value); // Get second 8 bytes (bytes 8 -> 15).
+		destReg->writeDword(1, value); // Get second 8 bytes (bytes 8 -> 15).
 }
 
 void EECoreInterpreter::SQC2()
@@ -99,14 +99,14 @@ void EECoreInterpreter::SQC2()
 	auto& source2Reg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = source1Reg->readWordU(0) + imm;
+	u32 PS2VirtualAddress = source1Reg->readWord(0) + imm;
 
-	mMMUHandler->writeDwordU(PS2VirtualAddress, source2Reg->readDwordU(0));
+	mMMUHandler->writeDword(PS2VirtualAddress, source2Reg->readDword(0));
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 
-	mMMUHandler->writeDwordU(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD, source2Reg->readDwordU(1));
+	mMMUHandler->writeDword(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD, source2Reg->readDword(1));
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
@@ -126,7 +126,7 @@ void EECoreInterpreter::CFC2()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source1Reg = getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
 
-	destReg->writeDwordS(0, static_cast<s64>(source1Reg->readWordU()));
+	destReg->writeDword(0, static_cast<s64>(source1Reg->readWord()));
 }
 
 void EECoreInterpreter::CTC2()
@@ -143,7 +143,7 @@ void EECoreInterpreter::CTC2()
 	auto& destReg = getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeWordU(static_cast<u32>(source1Reg->readWordU(0)));
+	destReg->writeWord(static_cast<u32>(source1Reg->readWord(0)));
 }
 
 void EECoreInterpreter::BC2F()

@@ -25,112 +25,64 @@ const char* MappedFPRegister128_t::getMnemonic() const
 	return mFPRegister128->getMnemonic();
 }
 
-u8 MappedFPRegister128_t::readByteU(u32 storageIndex)
+u8 MappedFPRegister128_t::readByte(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
 }
 
-void MappedFPRegister128_t::writeByteU(u32 storageIndex, u8 value)
+void MappedFPRegister128_t::writeByte(u32 storageIndex, u8 value)
 {
 	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
 }
 
-s8 MappedFPRegister128_t::readByteS(u32 storageIndex)
+u16 MappedFPRegister128_t::readHword(u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
 }
 
-void MappedFPRegister128_t::writeByteS(u32 storageIndex, s8 value)
+void MappedFPRegister128_t::writeHword(u32 storageIndex, u16 value)
 {
 	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
 }
 
-u16 MappedFPRegister128_t::readHwordU(u32 storageIndex)
-{
-	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
-}
-
-void MappedFPRegister128_t::writeHwordU(u32 storageIndex, u16 value)
-{
-	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
-}
-
-s16 MappedFPRegister128_t::readHwordS(u32 storageIndex)
-{
-	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
-}
-
-void MappedFPRegister128_t::writeHwordS(u32 storageIndex, s16 value)
-{
-	throw std::runtime_error("Tried to access MappedFPRegister128_t with smaller than allowed size. Not allowed.");
-}
-
-u32 MappedFPRegister128_t::readWordU(u32 storageIndex)
+u32 MappedFPRegister128_t::readWord(u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mFPRegister128->readWordU(0);
+	return mFPRegister128->readWord(0);
 }
 
-void MappedFPRegister128_t::writeWordU(u32 storageIndex, u32 value)
+void MappedFPRegister128_t::writeWord(u32 storageIndex, u32 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mFPRegister128->writeWordU(0, value);
+	mFPRegister128->writeWord(0, value);
 }
 
-s32 MappedFPRegister128_t::readWordS(u32 storageIndex)
-{
-	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
-		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mFPRegister128->readWordS(0);
-}
-
-void MappedFPRegister128_t::writeWordS(u32 storageIndex, s32 value)
-{
-	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
-		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mFPRegister128->writeWordS(0, value);
-}
-
-u64 MappedFPRegister128_t::readDwordU(u32 storageIndex)
+u64 MappedFPRegister128_t::readDword(u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mFPRegister128->readDwordU(storageIndex / Constants::NUMBER_BYTES_IN_DWORD);
+	return mFPRegister128->readDword(storageIndex / Constants::NUMBER_BYTES_IN_DWORD);
 }
 
-void MappedFPRegister128_t::writeDwordU(u32 storageIndex, u64 value)
+void MappedFPRegister128_t::writeDword(u32 storageIndex, u64 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mFPRegister128->writeDwordU(storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
+	mFPRegister128->writeDword(storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
 }
 
-s64 MappedFPRegister128_t::readDwordS(u32 storageIndex)
-{
-	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
-		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mFPRegister128->readDwordS(storageIndex / Constants::NUMBER_BYTES_IN_DWORD);
-}
-
-void MappedFPRegister128_t::writeDwordS(u32 storageIndex, s64 value)
-{
-	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
-		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mFPRegister128->writeDwordS(storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
-}
-
-u128 MappedFPRegister128_t::readQwordU(u32 storageIndex)
+u128 MappedFPRegister128_t::readQword(u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mFPRegister128->readQwordU();
+	return mFPRegister128->readQword();
 }
 
-void MappedFPRegister128_t::writeQwordU(u32 storageIndex, u128 value)
+void MappedFPRegister128_t::writeQword(u32 storageIndex, u128 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mFPRegister128->writeQwordU(value);
+	mFPRegister128->writeQword(value);
 }

@@ -69,7 +69,7 @@ public:
 
 	EEDmacRegister_STAT_t();
 
-	void writeWordU(u32 value) override;
+	void writeWord(u32 value) override;
 };
 
 /*

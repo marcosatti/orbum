@@ -20,100 +20,52 @@ IOPCoreMMUHandler::IOPCoreMMUHandler(VMMain * vmMain) :
 {
 }
 
-u8 IOPCoreMMUHandler::readByteU(u32 PS2MemoryAddress)
+u8 IOPCoreMMUHandler::readByte(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readByteU(PS2PhysicalAddress);
+		return  getResources()->IOP->PhysicalMMU->readByte(PS2PhysicalAddress);
 	else
 		return 0;
 }
 
-void IOPCoreMMUHandler::writeByteU(u32 PS2MemoryAddress, u8 value) 
+void IOPCoreMMUHandler::writeByte(u32 PS2MemoryAddress, u8 value) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeByteU(PS2PhysicalAddress, value);	
+		 getResources()->IOP->PhysicalMMU->writeByte(PS2PhysicalAddress, value);	
 }
 
-s8 IOPCoreMMUHandler::readByteS(u32 PS2MemoryAddress)
+u16 IOPCoreMMUHandler::readHword(u32 PS2MemoryAddress) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readByteS(PS2PhysicalAddress);
+		return  getResources()->IOP->PhysicalMMU->readHword(PS2PhysicalAddress);
 	else
 		return 0;
 }
 
-void IOPCoreMMUHandler::writeByteS(u32 PS2MemoryAddress, s8 value)
+void IOPCoreMMUHandler::writeHword(u32 PS2MemoryAddress, u16 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeByteS(PS2PhysicalAddress, value);
+		 getResources()->IOP->PhysicalMMU->writeHword(PS2PhysicalAddress, value);
 }
 
-u16 IOPCoreMMUHandler::readHwordU(u32 PS2MemoryAddress) 
+u32 IOPCoreMMUHandler::readWord(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readHwordU(PS2PhysicalAddress);
+		return  getResources()->IOP->PhysicalMMU->readWord(PS2PhysicalAddress);
 	else
 		return 0;
 }
 
-void IOPCoreMMUHandler::writeHwordU(u32 PS2MemoryAddress, u16 value)
+void IOPCoreMMUHandler::writeWord(u32 PS2MemoryAddress, u32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeHwordU(PS2PhysicalAddress, value);
-}
-
-s16 IOPCoreMMUHandler::readHwordS(u32 PS2MemoryAddress)
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
-	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readHwordS(PS2PhysicalAddress);
-	else
-		return 0;
-}
-
-void IOPCoreMMUHandler::writeHwordS(u32 PS2MemoryAddress, s16 value) 
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
-	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeHwordS(PS2PhysicalAddress, value);
-}
-
-u32 IOPCoreMMUHandler::readWordU(u32 PS2MemoryAddress)
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
-	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readWordU(PS2PhysicalAddress);
-	else
-		return 0;
-}
-
-void IOPCoreMMUHandler::writeWordU(u32 PS2MemoryAddress, u32 value)
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
-	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeWordU(PS2PhysicalAddress, value);
-}
-
-s32 IOPCoreMMUHandler::readWordS(u32 PS2MemoryAddress)
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
-	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readWordS(PS2PhysicalAddress);
-	else
-		return 0;
-}
-
-void IOPCoreMMUHandler::writeWordS(u32 PS2MemoryAddress, s32 value)
-{
-	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
-	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeWordS(PS2PhysicalAddress, value);
+		 getResources()->IOP->PhysicalMMU->writeWord(PS2PhysicalAddress, value);
 }
 
 bool IOPCoreMMUHandler::hasExceptionOccurred() const

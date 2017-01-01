@@ -19,95 +19,54 @@ Register128_t::~Register128_t()
 {
 }
 
-u8 Register128_t::readByteU(u32 arrayIndex)
+u8 Register128_t::readByte(u32 arrayIndex)
 {
 	return UB[arrayIndex];
 }
 
-void Register128_t::writeByteU(u32 arrayIndex, u8 value)
+void Register128_t::writeByte(u32 arrayIndex, u8 value)
 {
 	UB[arrayIndex] = value;
 }
 
-s8 Register128_t::readByteS(u32 arrayIndex)
-{
-	return SB[arrayIndex];
-}
-
-void Register128_t::writeByteS(u32 arrayIndex, s8 value)
-{
-	SB[arrayIndex] = value;
-}
-
-u16 Register128_t::readHwordU(u32 arrayIndex)
+u16 Register128_t::readHword(u32 arrayIndex)
 {
 	return UH[arrayIndex];
 }
 
-void Register128_t::writeHwordU(u32 arrayIndex, u16 value)
+void Register128_t::writeHword(u32 arrayIndex, u16 value)
 {
 	UH[arrayIndex] = value;
 }
 
-s16 Register128_t::readHwordS(u32 arrayIndex)
-{
-	return SH[arrayIndex];
-}
-
-void Register128_t::writeHwordS(u32 arrayIndex, s16 value)
-{
-	SH[arrayIndex] = value;
-}
-
-u32 Register128_t::readWordU(u32 arrayIndex)
+u32 Register128_t::readWord(u32 arrayIndex)
 {
 	return UW[arrayIndex];
 }
 
-void Register128_t::writeWordU(u32 arrayIndex, u32 value)
+void Register128_t::writeWord(u32 arrayIndex, u32 value)
 {
 	UW[arrayIndex] = value;
 }
 
-s32 Register128_t::readWordS(u32 arrayIndex)
-{
-	return SW[arrayIndex];
-}
-
-void Register128_t::writeWordS(u32 arrayIndex, s32 value)
-{
-	SW[arrayIndex] = value;
-}
-
-u64 Register128_t::readDwordU(u32 arrayIndex)
+u64 Register128_t::readDword(u32 arrayIndex)
 {
 	return UD[arrayIndex];
 }
 
-void Register128_t::writeDwordU(u32 arrayIndex, u64 value)
+void Register128_t::writeDword(u32 arrayIndex, u64 value)
 {
 	UD[arrayIndex] = value;
 }
 
-s64 Register128_t::readDwordS(u32 arrayIndex)
+u128 Register128_t::readQword()
 {
-	return SD[arrayIndex];
+	return UQ;
 }
 
-void Register128_t::writeDwordS(u32 arrayIndex, s64 value)
+void Register128_t::writeQword(u128 value)
 {
-	SD[arrayIndex] = value;
-}
-
-u128 Register128_t::readQwordU()
-{
-	return u128(UD[0], UD[1]);
-}
-
-void Register128_t::writeQwordU(u128 value)
-{
-	UD[0] = value.lo;
-	UD[1] = value.hi;
+	UQ = value;
 }
 
 const char* Register128_t::getMnemonic() const

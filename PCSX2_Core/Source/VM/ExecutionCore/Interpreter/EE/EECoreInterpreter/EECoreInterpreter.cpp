@@ -95,7 +95,7 @@ void EECoreInterpreter::checkCountTimerEvent() const
 	// The docs specify that an interrupt is raised when the two values are equal, but this is impossible to get correct (due to how emulation works), 
 	//  so it is based on greater than or equal.
 	// TODO: check for errors.
-	if (EECore->COP0->Count->readWordU() >= EECore->COP0->Compare->readWordU())
+	if (EECore->COP0->Count->readWord() >= EECore->COP0->Compare->readWord())
 	{
 		// Set the IP7 field of the COP0.Cause register.
 		EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 1);
@@ -111,7 +111,7 @@ u32 EECoreInterpreter::executeInstruction()
 	auto& EECore = getResources()->EE->EECore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 instructionValue = mMMUHandler->readWordU(EECore->R5900->PC->readWordU()); // TODO: Add error checking for address bus error.
+	const u32 instructionValue = mMMUHandler->readWord(EECore->R5900->PC->readWord()); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details

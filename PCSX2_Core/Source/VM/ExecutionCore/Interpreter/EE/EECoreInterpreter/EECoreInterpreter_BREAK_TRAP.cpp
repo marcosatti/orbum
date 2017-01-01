@@ -34,9 +34,9 @@ void EECoreInterpreter::SYSCALL()
 	// The convention is to store the syscall number in register $v1 ($3), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v1, it is done so through
 	//   ADDIU $v1, $0, number.
-	// If the 16-bit 'number' above has the sign bit set (aka is negative), the EE OS will first make it unsigned then call the appropriate handler.
+	// If the 16-bit 'number' above has the sign bit set (aka is negative), the EE OS will first make it unsigned then call the handler with the (i) prefix... TODO: not sure what the differnece is.
 	// The EE OS only defines handlers for syscall numbers 0 -> 127 (128 total). 
-	u8 index = getResources()->EE->EECore->R5900->GPR[3]->readByteU(0);
+	u8 index = getResources()->EE->EECore->R5900->GPR[3]->readByte(0);
 	logDebug("EECore Syscall, number %d (%s).", index, EECoreSyscallTable::getSyscallMnemonic(index));
 #endif
 }
@@ -48,7 +48,10 @@ void EECoreInterpreter::TEQ()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordS(0) == source2Reg->readDwordS(0))
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+
+	if (source1Val == source2Val)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -57,9 +60,11 @@ void EECoreInterpreter::TEQI()
 	// TRAP_EXCEPTION(Rs == imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	s64 imm = static_cast<s64>(mInstruction.getIImmS());
+	auto imm = static_cast<s64>(mInstruction.getIImmS());
 
-	if (source1Reg->readDwordS(0) == imm)
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+
+	if (source1Val == imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -70,7 +75,10 @@ void EECoreInterpreter::TGE()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordS(0) >= source2Reg->readDwordS(0))
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+
+	if (source1Val >= source2Val)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -79,9 +87,11 @@ void EECoreInterpreter::TGEI()
 	// TRAP_EXCEPTION(Rs >= imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	s64 imm = static_cast<s64>(mInstruction.getIImmS());
+	auto imm = static_cast<s64>(mInstruction.getIImmS());
 
-	if (source1Reg->readDwordS(0) >= imm)
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+
+	if (source1Val >= imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -90,9 +100,11 @@ void EECoreInterpreter::TGEIU()
 	// TRAP_EXCEPTION(Rs >= imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	u64 imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
+	auto imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
 
-	if (source1Reg->readDwordU(0) >= imm)
+	auto source1Val = static_cast<u64>(source1Reg->readDword(0));
+
+	if (source1Val >= imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -103,7 +115,10 @@ void EECoreInterpreter::TGEU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordU(0) >= source2Reg->readDwordU(0))
+	auto source1Val = static_cast<u64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<u64>(source2Reg->readDword(0));
+
+	if (source1Val >= source2Val)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -114,7 +129,10 @@ void EECoreInterpreter::TLT()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordS(0) < source2Reg->readDwordS(0))
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+
+	if (source1Val < source2Val)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -123,9 +141,11 @@ void EECoreInterpreter::TLTI()
 	// TRAP_EXCEPTION(Rs < imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	s64 imm = static_cast<s64>(mInstruction.getIImmS());
+	auto imm = static_cast<s64>(mInstruction.getIImmS());
 
-	if (source1Reg->readDwordS(0) < imm)
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+
+	if (source1Val < imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -134,9 +154,11 @@ void EECoreInterpreter::TLTIU()
 	// TRAP_EXCEPTION(Rs < imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	u64 imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
+	auto imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS())); // Sign-extend first, then treat as unsigned. This is according to the docs.
 
-	if (source1Reg->readDwordU(0) < imm)
+	auto source1Val = static_cast<u64>(source1Reg->readDword(0));
+
+	if (source1Reg->readDword(0) < imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -147,7 +169,7 @@ void EECoreInterpreter::TLTU()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordU(0) < source2Reg->readDwordU(0))
+	if (source1Reg->readDword(0) < source2Reg->readDword(0))
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -158,7 +180,10 @@ void EECoreInterpreter::TNE()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
-	if (source1Reg->readDwordS(0) != source2Reg->readDwordS(0))
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+
+	if (source1Val != source2Val)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
@@ -167,9 +192,11 @@ void EECoreInterpreter::TNEI()
 	// TRAP_EXCEPTION(Rs != imm).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
-	s64 imm = static_cast<s64>(mInstruction.getIImmS());
+	auto imm = static_cast<s64>(mInstruction.getIImmS());
 
-	if (source1Reg->readDwordS(0) != imm)
+	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+
+	if (source1Val != imm)
 		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
 }
 
