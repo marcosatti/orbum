@@ -19,12 +19,12 @@ public:
 
 	~WrapperF32Register32_t();
 
-	u8 readByte(u32 arrayIndex) override;
-	void writeByte(u32 arrayIndex, u8 value) override;
-	u16 readHword(u32 arrayIndex) override;
-	void writeHword(u32 arrayIndex, u16 value) override;
-	u32 readWord() override;
-	void writeWord(u32 value) override;
+	u8 readByte(const Context_t& context, u32 arrayIndex) override;
+	void writeByte(const Context_t& context, u32 arrayIndex, u8 value) override;
+	u16 readHword(const Context_t& context, u32 arrayIndex) override;
+	void writeHword(const Context_t& context, u32 arrayIndex, u16 value) override;
+	u32 readWord(const Context_t& context) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 private:
 	/*

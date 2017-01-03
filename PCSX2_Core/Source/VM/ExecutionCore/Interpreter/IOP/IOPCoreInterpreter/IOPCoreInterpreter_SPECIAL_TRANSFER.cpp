@@ -1,48 +1,39 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
+
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
 
 void IOPCoreInterpreter::MFC0()
 {
-	if (!getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	if (!checkCOP0Usable())
 		return;
-	}
 
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
-	destReg->writeWord(static_cast<u32>(sourceReg->readWord()));
+	destReg->writeWord(Context_t::IOP, static_cast<u32>(sourceReg->readWord(Context_t::IOP)));
 }
 
 void IOPCoreInterpreter::MTC0()
 {
-	if (!getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+	if (!checkCOP0Usable())
 		return;
-	}
 
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->IOP->IOPCore->COP0->Registers[mInstruction.getRRd()];
 
-	destReg->writeWord(sourceReg->readWord());
+	destReg->writeWord(Context_t::IOP, sourceReg->readWord(Context_t::IOP));
 }
 
 void IOPCoreInterpreter::MFHI()
@@ -51,7 +42,7 @@ void IOPCoreInterpreter::MFHI()
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->HI;
 
-	destReg->writeWord(source1Reg->readWord());
+	destReg->writeWord(Context_t::IOP, source1Reg->readWord(Context_t::IOP));
 }
 
 void IOPCoreInterpreter::MFLO()
@@ -60,7 +51,7 @@ void IOPCoreInterpreter::MFLO()
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->LO;
 
-	destReg->writeWord(source1Reg->readWord());
+	destReg->writeWord(Context_t::IOP, source1Reg->readWord(Context_t::IOP));
 }
 
 void IOPCoreInterpreter::MTHI()
@@ -69,7 +60,7 @@ void IOPCoreInterpreter::MTHI()
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->HI;
 
-	destReg->writeWord(source1Reg->readWord());
+	destReg->writeWord(Context_t::IOP, source1Reg->readWord(Context_t::IOP));
 }
 
 void IOPCoreInterpreter::MTLO()
@@ -78,5 +69,5 @@ void IOPCoreInterpreter::MTLO()
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->LO;
 
-	destReg->writeWord(source1Reg->readWord());
+	destReg->writeWord(Context_t::IOP, source1Reg->readWord(Context_t::IOP));
 }

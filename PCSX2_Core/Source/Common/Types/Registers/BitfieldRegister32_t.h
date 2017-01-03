@@ -14,6 +14,19 @@ class BitfieldRegister32_t : public Register32_t, public BitfieldMap32_t
 public:
 	explicit BitfieldRegister32_t();
 	explicit BitfieldRegister32_t(const char * mnemonic);
+
+#if defined(BUILD_DEBUG)
+	explicit BitfieldRegister32_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
+	bool mDebug;
+
+	/*
+	Debug logs all bitfield mnemonics with values.
+	*/
+	void logDebugAllFields();
+
+	u32 readWord(const Context_t& context) override;
+#endif
+
 	virtual ~BitfieldRegister32_t();
 
 	/*
@@ -34,6 +47,6 @@ public:
 	Override writeWord[U/S] to sync with the bitfield map. WriteWordS calls the unsigned version.
 	WriteWordU() can be overriden by sub classes to provide pre processing on the value.
 	*/
-	void writeWord(u32 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 };
 

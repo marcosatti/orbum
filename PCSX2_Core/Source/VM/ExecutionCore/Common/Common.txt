@@ -6,5 +6,7 @@ The systems implemented in here are:
   -- DMAC
   -- INTC
   -- TIMERS
+  - VPU
+    -- VIF
 - IOP
-  -- Nothing yet
+  -- INTC

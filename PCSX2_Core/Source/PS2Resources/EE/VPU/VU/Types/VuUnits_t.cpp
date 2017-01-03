@@ -8,8 +8,8 @@
 #include "Common/Types/Registers/PCRegister16_t.h"
 #include "Common/Types/Memory/Memory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/Registers/ConstantFPRegister128_t.h"
-#include "Common/Types/Registers/ConstantRegister16_t.h"
+#include "Common/Types/Registers/Constant/ConstantFPRegister128_t.h"
+#include "Common/Types/Registers/Constant/ConstantRegister16_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 

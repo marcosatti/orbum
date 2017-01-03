@@ -3,8 +3,9 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h"
+
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
 /*
 The exception handler provides 2 main points of functionality:

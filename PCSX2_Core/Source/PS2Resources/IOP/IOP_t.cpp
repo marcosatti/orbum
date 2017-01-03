@@ -14,9 +14,8 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Memory/DebugMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
-#include "Common/Types/Registers/DebugRegister32_t.h"
-#include "Common/Types/Registers/ConstantRegister8_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Registers/Constant/ConstantRegister8_t.h"
 
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"

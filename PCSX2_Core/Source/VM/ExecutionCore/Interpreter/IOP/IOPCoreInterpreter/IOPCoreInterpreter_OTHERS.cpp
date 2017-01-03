@@ -2,9 +2,13 @@
 
 #include <stdexcept>
 
+#include "Common/Types/Context_t.h"
+#include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
+
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
@@ -12,7 +16,6 @@
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
-#include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
 void IOPCoreInterpreter::BREAK()
 {
@@ -33,7 +36,7 @@ void IOPCoreInterpreter::SYSCALL()
 	// When the syscall number is loaded into $v0, it is done so through
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
-	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByte(0);
+	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByte(Context_t::IOP, 0);
 	logDebug("IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
 #endif
 }

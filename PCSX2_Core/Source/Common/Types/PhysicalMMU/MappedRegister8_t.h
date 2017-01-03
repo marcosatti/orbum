@@ -21,16 +21,16 @@ public:
 	explicit MappedRegister8_t(const u32& physicalAddress, const std::shared_ptr<Register8_t> & register8);
 	virtual ~MappedRegister8_t();
 
-	u8 readByte(u32 storageIndex) override;
-	void writeByte(u32 storageIndex, u8 value) override;
-	u16 readHword(u32 storageIndex) override;
-	void writeHword(u32 storageIndex, u16 value) override;
-	u32 readWord(u32 storageIndex) override;
-	void writeWord(u32 storageIndex, u32 value) override;
-	u64 readDword(u32 storageIndex) override;
-	void writeDword(u32 storageIndex, u64 value) override;
-	u128 readQword(u32 storageIndex) override;
-	void writeQword(u32 storageIndex, u128 value) override;
+	u8 readByte(const Context_t& context, u32 storageIndex) override;
+	void writeByte(const Context_t& context, u32 storageIndex, u8 value) override;
+	u16 readHword(const Context_t& context, u32 storageIndex) override;
+	void writeHword(const Context_t& context, u32 storageIndex, u16 value) override;
+	u32 readWord(const Context_t& context, u32 storageIndex) override;
+	void writeWord(const Context_t& context, u32 storageIndex, u32 value) override;
+	u64 readDword(const Context_t& context, u32 storageIndex) override;
+	void writeDword(const Context_t& context, u32 storageIndex, u64 value) override;
+	u128 readQword(const Context_t& context, u32 storageIndex) override;
+	void writeQword(const Context_t& context, u32 storageIndex, u128 value) override;
 
 	/*
 	Gets the storage length, needed by the Physical MMU handler in order to map it.

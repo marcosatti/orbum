@@ -2,14 +2,13 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 

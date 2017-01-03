@@ -15,7 +15,7 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByte(u32 arrayIndex, u8 value) override;
-	void writeHword(u16 value) override;
+	void writeByte(const Context_t& context, u32 arrayIndex, u8 value) override;
+	void writeHword(const Context_t& context, u16 value) override;
 };
 

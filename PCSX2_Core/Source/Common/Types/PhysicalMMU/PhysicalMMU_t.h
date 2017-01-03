@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 class PhysicalMapped;
 class Memory_t;
@@ -45,7 +46,7 @@ For a single directory, we require 4M * 8B = 32MB of memory for pointers. Still 
 However, this works well with the EE physical map, where registers are often clumped together. This means that typically only a handful of directories are created.
 The advantage of keeping a page size of 16B is we have more fine grained control of memory, rather than having to allocate a big block of memory.
 
-* Example of how constructor parameters effects addresses.
+* Example of how constructor parameters affects address access.
 By using a directory size of 4MB and a page size of 16B, with a 512 MB max address range:
 - Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
 - Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
@@ -85,18 +86,18 @@ public:
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
-	You cannot use these functions before mapObject() has been called - it will return an runtime_error exception otherwise.
+	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(u32 PS2PhysicalAddress) const;
-	void writeByte(u32 PS2PhysicalAddress, u8 value) const;
-	u16 readHword(u32 PS2PhysicalAddress) const;
-	void writeHword(u32 PS2PhysicalAddress, u16 value) const;
-	u32 readWord(u32 PS2PhysicalAddress) const;
-	void writeWord(u32 PS2PhysicalAddress, u32 value) const;
-	u64 readDword(u32 PS2PhysicalAddress) const;
-	void writeDword(u32 PS2PhysicalAddress, u64 value) const;
-	u128 readQword(u32 PS2PhysicalAddress) const;
-	void writeQword(u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeByte(const Context_t & context, u32 PS2PhysicalAddress, u8 value) const;
+	u16 readHword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeHword(const Context_t & context, u32 PS2PhysicalAddress, u16 value) const;
+	u32 readWord(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeWord(const Context_t & context, u32 PS2PhysicalAddress, u32 value) const;
+	u64 readDword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeDword(const Context_t & context, u32 PS2PhysicalAddress, u64 value) const;
+	u128 readQword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeQword(const Context_t & context, u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*

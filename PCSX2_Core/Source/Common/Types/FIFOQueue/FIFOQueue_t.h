@@ -3,6 +3,7 @@
 #include <queue>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 Represents a FIFO queue used in (for example) the EE/IOP DMAC channels.
@@ -20,22 +21,22 @@ public:
 	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
 	*/
-	u32 readWord();
+	u32 readWord(const Context_t & context);
 
 	/*
 	Read 128-bits of data out of the FIFO queue, and remove them (uses 4 x 32-bit reads stored in a u128).
 	*/
-	u128 readQword();
+	u128 readQword(const Context_t & context);
 
 	/*
 	Writes 32-bits of data to the FIFO queue.
 	*/
-	void writeWord(const u32 & data);
+	void writeWord(const Context_t & context, const u32 & data);
 
 	/*
 	Write 128-bits of data to the FIFO queue (splits the u128 into 4 x 32-bit).
 	*/
-	void writeQword(const u128 & data);
+	void writeQword(const Context_t & context, const u128 & data);
 
 	/*
 	Returns if the FIFO queue has no data available.

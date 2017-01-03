@@ -1,15 +1,16 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-
-#include "VM/VMMain.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+
+#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
@@ -20,8 +21,8 @@ void EECoreInterpreter::BEQ()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
-	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val == source2Val)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -34,8 +35,8 @@ void EECoreInterpreter::BEQL()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
-	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val == source2Val)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -49,7 +50,7 @@ void EECoreInterpreter::BGEZ()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -61,7 +62,7 @@ void EECoreInterpreter::BGEZL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -75,7 +76,7 @@ void EECoreInterpreter::BGTZ()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val > 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -87,7 +88,7 @@ void EECoreInterpreter::BGTZL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val > 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -101,7 +102,7 @@ void EECoreInterpreter::BLEZ()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val <= 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -113,7 +114,7 @@ void EECoreInterpreter::BLEZL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val <= 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -127,7 +128,7 @@ void EECoreInterpreter::BLTZ()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -139,7 +140,7 @@ void EECoreInterpreter::BLTZL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < 0)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -154,8 +155,8 @@ void EECoreInterpreter::BNE()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
-	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val != source2Val)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -168,8 +169,8 @@ void EECoreInterpreter::BNEL()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
-	auto source2Val = static_cast<s64>(source2Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
+	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val != source2Val)
 		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
@@ -311,5 +312,5 @@ void EECoreInterpreter::JR()
 {
 	// JUMP(). Address error exception generated upon instruction load - but not in this instruction.
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
-	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(source1Reg->readWord(0), 1);
+	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(source1Reg->readWord(Context_t::EE, 0), 1);
 }

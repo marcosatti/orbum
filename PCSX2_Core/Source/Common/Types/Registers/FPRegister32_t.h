@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 FPRegister32_t is an additional register type defined within the PS2's floating point unit (FPU) system, which are used for operating on floating point numbers.
@@ -26,29 +27,32 @@ public:
 	explicit FPRegister32_t();
 	explicit FPRegister32_t(const char * mnemonic);
 
-	virtual ~FPRegister32_t()
-	{
-	}
-
-	union
-	{
-		u32 UW;
-		f32 F;
-	};
+	virtual ~FPRegister32_t();
 
 	/*
-	Functions to access the register value - you should use these functions instead of accessing them directly.
+	Read/write functions to access the register, with subclassed functionality. 
+	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
 	*/
-	virtual u32 readWord();
-	virtual void writeWord(u32 value);
-	virtual f32 readFloat();
-	virtual void writeFloat(f32 value);
+	virtual u32 readWord(const Context_t & context);
+	virtual void writeWord(const Context_t & context, u32 value);
+	virtual f32 readFloat(const Context_t & context);
+	virtual void writeFloat(const Context_t & context, f32 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.
 	*/
 	const char * getMnemonic() const;
+
+protected:
+	/*
+	Underlying storage for register.
+	*/
+	union
+	{
+		u32 UW;
+		f32 F;
+	};
 
 private:
 	/*

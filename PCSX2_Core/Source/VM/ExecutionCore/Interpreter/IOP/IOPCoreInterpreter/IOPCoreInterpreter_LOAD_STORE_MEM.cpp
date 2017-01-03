@@ -1,13 +1,16 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register32_t.h"
+
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
-#include "Common/Types/Registers/Register32_t.h"
 
 
 void IOPCoreInterpreter::LB()
@@ -17,14 +20,14 @@ void IOPCoreInterpreter::LB()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWord() + imm;
+	u32 PS2VirtualAddress = sourceReg->readWord(Context_t::IOP) + imm;
 	auto value = static_cast<s8>(mMMUHandler->readByte(PS2VirtualAddress));
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWord(static_cast<s32>(value));
+		destReg->writeWord(Context_t::IOP, static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter::LBU()
@@ -34,14 +37,14 @@ void IOPCoreInterpreter::LBU()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWord() + imm;
+	u32 PS2VirtualAddress = sourceReg->readWord(Context_t::IOP) + imm;
 	auto value = mMMUHandler->readByte(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWord(static_cast<u32>(value));
+		destReg->writeWord(Context_t::IOP, static_cast<u32>(value));
 }
 
 void IOPCoreInterpreter::LH()
@@ -51,14 +54,14 @@ void IOPCoreInterpreter::LH()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWord() + imm;
+	u32 PS2VirtualAddress = sourceReg->readWord(Context_t::IOP) + imm;
 	auto value = static_cast<s16>(mMMUHandler->readHword(PS2VirtualAddress));
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWord(static_cast<s32>(value));
+		destReg->writeWord(Context_t::IOP, static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter::LHU()
@@ -68,14 +71,14 @@ void IOPCoreInterpreter::LHU()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWord() + imm;
+	u32 PS2VirtualAddress = sourceReg->readWord(Context_t::IOP) + imm;
 	auto value = mMMUHandler->readHword(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWord(static_cast<u32>(value));
+		destReg->writeWord(Context_t::IOP, static_cast<u32>(value));
 }
 
 void IOPCoreInterpreter::LUI()
@@ -86,7 +89,7 @@ void IOPCoreInterpreter::LUI()
 
 	s32 result = imm << 16;
 
-	destReg->writeWord(result);
+	destReg->writeWord(Context_t::IOP, result);
 }
 
 void IOPCoreInterpreter::LW()
@@ -96,14 +99,14 @@ void IOPCoreInterpreter::LW()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = sourceReg->readWord() + imm;
+	u32 PS2VirtualAddress = sourceReg->readWord(Context_t::IOP) + imm;
 	auto value = mMMUHandler->readWord(PS2VirtualAddress);
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
         return;
 	else
-		destReg->writeWord(static_cast<s32>(value));
+		destReg->writeWord(Context_t::IOP, static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter::LWL()
@@ -117,7 +120,7 @@ void IOPCoreInterpreter::LWL()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWord() + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = sourceReg->readWord(Context_t::IOP) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
@@ -132,7 +135,7 @@ void IOPCoreInterpreter::LWL()
 	u32 MSBValue = (alignedValue & MSBMask) << MSBShift; // Calculate the MSB value part.
 
 	u32 keepMask = ~(MSBMask << MSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeWord(static_cast<s32>(static_cast<s32>((destReg->readWord() & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
+	destReg->writeWord(Context_t::IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(Context_t::IOP) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
 }
 
 void IOPCoreInterpreter::LWR()
@@ -146,7 +149,7 @@ void IOPCoreInterpreter::LWR()
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWord() + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = sourceReg->readWord(Context_t::IOP) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
@@ -161,7 +164,7 @@ void IOPCoreInterpreter::LWR()
 	u32 LSBValue = (alignedValue & LSBMask) >> LSBShift; // Calculate the LSB value part.
 
 	u32 keepMask = ~(LSBMask >> LSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeWord(static_cast<s32>(static_cast<s32>((destReg->readWord() & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
+	destReg->writeWord(Context_t::IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(Context_t::IOP) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
 }
 
 void IOPCoreInterpreter::SB()
@@ -171,8 +174,8 @@ void IOPCoreInterpreter::SB()
 	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = source1Reg->readWord() + imm;
-	mMMUHandler->writeByte(PS2VirtualAddress, source2Reg->readByte(0));
+	u32 PS2VirtualAddress = source1Reg->readWord(Context_t::IOP) + imm;
+	mMMUHandler->writeByte(PS2VirtualAddress, source2Reg->readByte(Context_t::IOP, 0));
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
@@ -186,8 +189,8 @@ void IOPCoreInterpreter::SH()
 	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = source1Reg->readWord() + imm;
-	mMMUHandler->writeHword(PS2VirtualAddress, source2Reg->readHword(0));
+	u32 PS2VirtualAddress = source1Reg->readWord(Context_t::IOP) + imm;
+	mMMUHandler->writeHword(PS2VirtualAddress, source2Reg->readHword(Context_t::IOP, 0));
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
@@ -201,8 +204,8 @@ void IOPCoreInterpreter::SW()
 	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 PS2VirtualAddress = source1Reg->readWord() + imm;
-	mMMUHandler->writeWord(PS2VirtualAddress, source2Reg->readWord());
+	u32 PS2VirtualAddress = source1Reg->readWord(Context_t::IOP) + imm;
+	mMMUHandler->writeWord(PS2VirtualAddress, source2Reg->readWord(Context_t::IOP));
 
 	// Check for MMU error.
 	if (!checkNoMMUError())
@@ -220,11 +223,11 @@ void IOPCoreInterpreter::SWL()
 	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = source1Reg->readWord() + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = source1Reg->readWord(Context_t::IOP) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = source2Reg->readWord(); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = source2Reg->readWord(Context_t::IOP); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	u8 MSBShift = ((4 - (offset + 1)) * 8); // A shift value used thoughout.
 	u32 MSBMask = Constants::VALUE_U32_MAX << MSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
@@ -249,11 +252,11 @@ void IOPCoreInterpreter::SWR()
 	auto& source2Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = source1Reg->readWord() + imm; // Get the unaligned virtual address.
+	u32 unalignedAddress = source1Reg->readWord(Context_t::IOP) + imm; // Get the unaligned virtual address.
 	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
 	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
 
-	u32 alignedValue = source2Reg->readWord(); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
+	u32 alignedValue = source2Reg->readWord(Context_t::IOP); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
 
 	u8 LSBShift = (offset * 8); // A shift value used thoughout.
 	u32 LSBMask = Constants::VALUE_U32_MAX >> LSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.

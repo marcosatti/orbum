@@ -80,8 +80,8 @@ public:
 	virtual void syncMemoryFromMap();
 
 private:
-	// Friend the DebugRegister32_t class to access the field map directly.
-	friend class DebugBitfieldRegister32_t;
+	// Friend the BitfieldRegister32_t class to access the field map directly (used in debug).
+	friend class BitfieldRegister32_t;
 
 	/*
 	Used internally for storing the information parsed though registerField().

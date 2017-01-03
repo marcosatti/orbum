@@ -25,68 +25,68 @@ const char* MappedRegister64_t::getMnemonic() const
 	return mRegister64->getMnemonic();
 }
 
-u8 MappedRegister64_t::readByte(u32 storageIndex)
+u8 MappedRegister64_t::readByte(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	return mRegister64->readByte(storageIndex / 1);
+	return mRegister64->readByte(context, storageIndex / 1);
 }
 
-void MappedRegister64_t::writeByte(u32 storageIndex, u8 value)
+void MappedRegister64_t::writeByte(const Context_t& context, u32 storageIndex, u8 value)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	mRegister64->writeByte(storageIndex / 1, value);
+	mRegister64->writeByte(context, storageIndex / 1, value);
 }
 
-u16 MappedRegister64_t::readHword(u32 storageIndex)
+u16 MappedRegister64_t::readHword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	return mRegister64->readHword(storageIndex / Constants::NUMBER_BYTES_IN_HWORD);
+	return mRegister64->readHword(context, storageIndex / Constants::NUMBER_BYTES_IN_HWORD);
 }
 
-void MappedRegister64_t::writeHword(u32 storageIndex, u16 value)
+void MappedRegister64_t::writeHword(const Context_t& context, u32 storageIndex, u16 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	mRegister64->writeHword(storageIndex / Constants::NUMBER_BYTES_IN_HWORD, value);
+	mRegister64->writeHword(context, storageIndex / Constants::NUMBER_BYTES_IN_HWORD, value);
 }
 
-u32 MappedRegister64_t::readWord(u32 storageIndex)
+u32 MappedRegister64_t::readWord(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	return mRegister64->readWord(storageIndex / Constants::NUMBER_BYTES_IN_WORD);
+	return mRegister64->readWord(context, storageIndex / Constants::NUMBER_BYTES_IN_WORD);
 }
 
-void MappedRegister64_t::writeWord(u32 storageIndex, u32 value)
+void MappedRegister64_t::writeWord(const Context_t& context, u32 storageIndex, u32 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	mRegister64->writeWord(storageIndex / Constants::NUMBER_BYTES_IN_WORD, value);
+	mRegister64->writeWord(context, storageIndex / Constants::NUMBER_BYTES_IN_WORD, value);
 }
 
-u64 MappedRegister64_t::readDword(u32 storageIndex)
+u64 MappedRegister64_t::readDword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	return mRegister64->readDword();
+	return mRegister64->readDword(context);
 }
 
-void MappedRegister64_t::writeDword(u32 storageIndex, u64 value)
+void MappedRegister64_t::writeDword(const Context_t& context, u32 storageIndex, u64 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister64_t with unaligned index. Not allowed.");
-	mRegister64->writeDword(value);
+	mRegister64->writeDword(context, value);
 }
 
-u128 MappedRegister64_t::readQword(u32 storageIndex)
+u128 MappedRegister64_t::readQword(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister64_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister64_t::writeQword(u32 storageIndex, u128 value)
+void MappedRegister64_t::writeQword(const Context_t& context, u32 storageIndex, u128 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister64_t with larger than allowed size. Not allowed.");
 }

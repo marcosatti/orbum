@@ -41,16 +41,16 @@ EEDmacRegister_STAT_t::EEDmacRegister_STAT_t()
 	registerField(Fields::MEIM, "MEIM", 30, 1, 0);
 }
 
-void EEDmacRegister_STAT_t::writeWord(u32 value)
+void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 {
 	// For bits 0-15, they are cleared when 1 is written. For bits 16-31, they are reversed when 1 is written.
-	u32 clrBits = readWord() & 0xFFFF;
+	u32 clrBits = readWord(context) & 0xFFFF;
 	u32 clrBitsValue = value & 0xFFFF;
-	u32 revBits = readWord() & 0xFFFF0000;
+	u32 revBits = readWord(context) & 0xFFFF0000;
 	u32 revBitsValue = value & 0xFFFF0000;
 
-	BitfieldRegister32_t::writeWord(clrBits & (~clrBitsValue));
-	BitfieldRegister32_t::writeWord(revBits ^ revBitsValue);
+	BitfieldRegister32_t::writeWord(context, clrBits & (~clrBitsValue));
+	BitfieldRegister32_t::writeWord(context, revBits ^ revBitsValue);
 }
 
 EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 #include "PS2Constants/PS2Constants.h"
+
 #include "PS2Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
 /*
@@ -13,7 +14,6 @@ The VIF is responsible for processing and transfering data to the VU units, or o
 
 For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the size of 1 DMA transfer unit of 128-bits.
 */
-
 class VIF : public VMExecutionCoreComponent
 {
 public:

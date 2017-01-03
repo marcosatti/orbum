@@ -1,15 +1,18 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
+#include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
-#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
@@ -22,9 +25,6 @@
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
-#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
-#include "Common/Util/MathUtil/MathUtil.h"
 
 using ExType = EECoreException_t::ExType;
 
@@ -95,7 +95,7 @@ void EECoreInterpreter::checkCountTimerEvent() const
 	// The docs specify that an interrupt is raised when the two values are equal, but this is impossible to get correct (due to how emulation works), 
 	//  so it is based on greater than or equal.
 	// TODO: check for errors.
-	if (EECore->COP0->Count->readWord() >= EECore->COP0->Compare->readWord())
+	if (EECore->COP0->Count->readWord(Context_t::EE) >= EECore->COP0->Compare->readWord(Context_t::EE))
 	{
 		// Set the IP7 field of the COP0.Cause register.
 		EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 1);
@@ -111,7 +111,8 @@ u32 EECoreInterpreter::executeInstruction()
 	auto& EECore = getResources()->EE->EECore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 instructionValue = mMMUHandler->readWord(EECore->R5900->PC->readWord()); // TODO: Add error checking for address bus error.
+	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE);
+	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details

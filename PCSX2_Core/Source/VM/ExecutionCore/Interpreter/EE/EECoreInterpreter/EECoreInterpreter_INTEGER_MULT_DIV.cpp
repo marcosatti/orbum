@@ -1,18 +1,15 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register128_t.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
-#include "Common/Types/Registers/Register128_t.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-
-/*
-Integer Multiply/Divide instruction family.
-*/
 
 void EECoreInterpreter::DIV()
 {
@@ -23,15 +20,15 @@ void EECoreInterpreter::DIV()
 	auto& LO = getResources()->EE->EECore->R5900->LO;
 	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, 0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, 0));
 
 	// Check for VALUE_S32_MIN / -1 (special condition).
 	if (source1Val == Constants::VALUE_S32_MIN &&
 		source2Val == -1)
 	{
-		LO->writeDword(0, static_cast<s64>(Constants::VALUE_S32_MIN));
-		HI->writeDword(0, static_cast<s64>(0));
+		LO->writeDword(Context_t::EE, 0, static_cast<s64>(Constants::VALUE_S32_MIN));
+		HI->writeDword(Context_t::EE, 0, static_cast<s64>(0));
 	}
 	// Check for divide by 0, in which case result is undefined (do nothing).
 	else if (source2Val == 0)
@@ -45,10 +42,10 @@ void EECoreInterpreter::DIV()
 		s64 resultR = source1Val % source2Val;
 
 		// Quotient.
-		LO->writeDword(0, resultQ);
+		LO->writeDword(Context_t::EE, 0, resultQ);
 
 		// Remainder.
-		HI->writeDword(0, resultR);
+		HI->writeDword(Context_t::EE, 0, resultR);
 	}
 }
 
@@ -67,8 +64,8 @@ void EECoreInterpreter::DIVU()
 	auto& LO = getResources()->EE->EECore->R5900->LO;
 	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(0));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(0));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(Context_t::EE, 0));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(Context_t::EE, 0));
 
 	// Check for divide by 0, in which case result is undefined (do nothing).
 	if (source2Val == 0)
@@ -82,10 +79,10 @@ void EECoreInterpreter::DIVU()
 		u64 resultR = source1Val % source2Val;
 
 		// Quotient.
-		getResources()->EE->EECore->R5900->LO->writeDword(0, resultQ);
+		getResources()->EE->EECore->R5900->LO->writeDword(Context_t::EE, 0, resultQ);
 
 		// Remainder.
-		getResources()->EE->EECore->R5900->HI->writeDword(0, resultR);
+		getResources()->EE->EECore->R5900->HI->writeDword(Context_t::EE, 0, resultR);
 	}
 }
 
@@ -105,14 +102,14 @@ void EECoreInterpreter::MULT()
 	auto& LO = getResources()->EE->EECore->R5900->LO;
 	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(0));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(0));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, 0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, 0));
 
 	s64 result = source1Val * source2Val;
 
-	destReg->writeDword(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-	LO->writeDword(0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-	HI->writeDword(0, static_cast<s64>(static_cast<s32>(result >> 32)));
+	destReg->writeDword(Context_t::EE, 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	LO->writeDword(Context_t::EE, 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	HI->writeDword(Context_t::EE, 0, static_cast<s64>(static_cast<s32>(result >> 32)));
 }
 
 void EECoreInterpreter::MULT1()
@@ -131,14 +128,14 @@ void EECoreInterpreter::MULTU()
 	auto& LO = getResources()->EE->EECore->R5900->LO;
 	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(0));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(0));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(Context_t::EE, 0));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(Context_t::EE, 0));
 
 	u64 result = source1Val * source2Val;
 
-	destReg->writeDword(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	LO->writeDword(0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	HI->writeDword(0, static_cast<u64>(static_cast<u32>(result >> 32)));
+	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	LO->writeDword(Context_t::EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	HI->writeDword(Context_t::EE, 0, static_cast<u64>(static_cast<u32>(result >> 32)));
 }
 
 void EECoreInterpreter::MULTU1()
@@ -156,18 +153,18 @@ void EECoreInterpreter::PDIVBW()
 	auto& LO = getResources()->EE->EECore->R5900->LO;
 	auto& HI = getResources()->EE->EECore->R5900->HI;
 
-	auto source2Val = static_cast<s16>(source2Reg->readHword(0)); // Constant.
+	auto source2Val = static_cast<s16>(source2Reg->readHword(Context_t::EE, 0)); // Constant.
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, i));
 
 		// Check for VALUE_S32_MIN / -1 (special condition).
 		if (source1Val == Constants::VALUE_S32_MIN &&
 			source2Val == -1)
 		{
-			LO->writeWord(i, static_cast<s32>(Constants::VALUE_S32_MIN));
-			HI->writeWord(i, static_cast<s32>(0));
+			LO->writeWord(Context_t::EE, i, static_cast<s32>(Constants::VALUE_S32_MIN));
+			HI->writeWord(Context_t::EE, i, static_cast<s32>(0));
 		}
 		// Check for divide by 0, in which case result is undefined (do nothing).
 		else if (source2Val == 0)
@@ -181,10 +178,10 @@ void EECoreInterpreter::PDIVBW()
 			s32 resultR = source1Val % source2Val;
 
 			// Quotient.
-			LO->writeWord(i, resultQ);
+			LO->writeWord(Context_t::EE, i, resultQ);
 
 			// Remainder.
-			HI->writeWord(i, resultR);
+			HI->writeWord(Context_t::EE, i, resultR);
 		}
 	}
 }
@@ -200,8 +197,8 @@ void EECoreInterpreter::PDIVUW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<u32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(Context_t::EE, i));
 
 		// Check for divide by 0, in which case result is undefined (do nothing).
 		if (source2Val == 0)
@@ -215,10 +212,10 @@ void EECoreInterpreter::PDIVUW()
 			u64 resultR = source1Val % source2Val;
 
 			// Quotient.
-			LO->writeDword(i / 2, resultQ);
+			LO->writeDword(Context_t::EE, i / 2, resultQ);
 
 			// Remainder.
-			HI->writeDword(i / 2, resultR);
+			HI->writeDword(Context_t::EE, i / 2, resultR);
 		}
 	}
 }
@@ -234,15 +231,15 @@ void EECoreInterpreter::PDIVW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<u32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(Context_t::EE, i));
 
 		// Check for VALUE_S32_MIN / -1 (special condition).
 		if (source1Val == Constants::VALUE_S32_MIN &&
 			source2Val == -1)
 		{
-			LO->writeDword(i / 2, static_cast<s64>(Constants::VALUE_S32_MIN));
-			HI->writeDword(i / 2, static_cast<s64>(0));
+			LO->writeDword(Context_t::EE, i / 2, static_cast<s64>(Constants::VALUE_S32_MIN));
+			HI->writeDword(Context_t::EE, i / 2, static_cast<s64>(0));
 		}
 		// Check for divide by 0, in which case result is undefined (do nothing).
 		else if (source2Val == 0)
@@ -256,10 +253,10 @@ void EECoreInterpreter::PDIVW()
 			u64 resultR = source1Val % source2Val;
 
 			// Quotient.
-			LO->writeDword(i / 2, resultQ);
+			LO->writeDword(Context_t::EE, i / 2, resultQ);
 
 			// Remainder.
-			HI->writeDword(i / 2, resultR);
+			HI->writeDword(Context_t::EE, i / 2, resultR);
 		}
 	}
 }
@@ -276,17 +273,17 @@ void EECoreInterpreter::PMULTH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
-		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(Context_t::EE, i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(Context_t::EE, i));
 		s32 result = source1Val * source2Val;
 
 		if (i % 2 == 0)
-			destReg->writeWord(i / 2, result); // Write to Rd for even indexes. A0xB0, A2xB2, A4xB4, A6xB6.
+			destReg->writeWord(Context_t::EE, i / 2, result); // Write to Rd for even indexes. A0xB0, A2xB2, A4xB4, A6xB6.
 
 		if ((i / 2) % 2 == 0)
-			LO->writeWord(((i / 2 > 0) ? i - 2 : i), result); // A0xB0, A1xB1, A4xB4, A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
+			LO->writeWord(Context_t::EE, ((i / 2 > 0) ? i - 2 : i), result); // A0xB0, A1xB1, A4xB4, A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
 		else
-			HI->writeWord(((i / 2 > 1) ? i - 4 : i - 2), result); // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
+			HI->writeWord(Context_t::EE, ((i / 2 > 1) ? i - 4 : i - 2), result); // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
 	}
 }
 
@@ -302,13 +299,13 @@ void EECoreInterpreter::PMULTUW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<u32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<u32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<u32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(Context_t::EE, i));
 		u64 result = source1Val * source2Val;
 
-		LO->writeDword(i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-		HI->writeDword(i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
-		destReg->writeDword(i / 2, result);
+		LO->writeDword(Context_t::EE, i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+		HI->writeDword(Context_t::EE, i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
+		destReg->writeDword(Context_t::EE, i / 2, result);
 	}
 }
 
@@ -324,12 +321,12 @@ void EECoreInterpreter::PMULTW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, i));
 		s64 result = source1Val * source2Val;
 
-		LO->writeDword(i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-		HI->writeDword(i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
-		destReg->writeDword(i / 2, result);
+		LO->writeDword(Context_t::EE, i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+		HI->writeDword(Context_t::EE, i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
+		destReg->writeDword(Context_t::EE, i / 2, result);
 	}
 }

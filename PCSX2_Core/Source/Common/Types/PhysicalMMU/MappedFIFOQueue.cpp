@@ -17,7 +17,7 @@ MappedFIFOQueue_t::~MappedFIFOQueue_t()
 
 size_t MappedFIFOQueue_t::getSize()
 {
-	// TODO: check if return size is always 16 bytes (128-bit) regardless of max fifo size listed?
+	// TODO: check if return size is always 16 bytes (128-bits) regardless of max fifo size listed? Should be as this is for the mem-map size, not the fifo size.
 	return Constants::NUMBER_BYTES_IN_QWORD; 
 }
 
@@ -26,60 +26,60 @@ const char* MappedFIFOQueue_t::getMnemonic() const
 	return mFIFOQueue->getMnemonic();
 }
 
-u8 MappedFIFOQueue_t::readByte(u32 storageIndex)
+u8 MappedFIFOQueue_t::readByte(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-void MappedFIFOQueue_t::writeByte(u32 storageIndex, u8 value)
+void MappedFIFOQueue_t::writeByte(const Context_t& context, u32 storageIndex, u8 value)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-u16 MappedFIFOQueue_t::readHword(u32 storageIndex)
+u16 MappedFIFOQueue_t::readHword(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-void MappedFIFOQueue_t::writeHword(u32 storageIndex, u16 value)
+void MappedFIFOQueue_t::writeHword(const Context_t& context, u32 storageIndex, u16 value)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-u32 MappedFIFOQueue_t::readWord(u32 storageIndex)
+u32 MappedFIFOQueue_t::readWord(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex != 0)
 		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
-	return mFIFOQueue->readWord();
+	return mFIFOQueue->readWord(context);
 }
 
-void MappedFIFOQueue_t::writeWord(u32 storageIndex, u32 value)
+void MappedFIFOQueue_t::writeWord(const Context_t& context, u32 storageIndex, u32 value)
 {
 	if (storageIndex != 0)
 		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
-	mFIFOQueue->writeWord(value);
+	mFIFOQueue->writeWord(context, value);
 }
 
-u64 MappedFIFOQueue_t::readDword(u32 storageIndex)
+u64 MappedFIFOQueue_t::readDword(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-void MappedFIFOQueue_t::writeDword(u32 storageIndex, u64 value)
+void MappedFIFOQueue_t::writeDword(const Context_t& context, u32 storageIndex, u64 value)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");
 }
 
-u128 MappedFIFOQueue_t::readQword(u32 storageIndex)
+u128 MappedFIFOQueue_t::readQword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex != 0)
 		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
-	return mFIFOQueue->readQword();
+	return mFIFOQueue->readQword(context);
 }
 
-void MappedFIFOQueue_t::writeQword(u32 storageIndex, u128 value)
+void MappedFIFOQueue_t::writeQword(const Context_t& context, u32 storageIndex, u128 value)
 {
 	if (storageIndex != 0)
 		throw std::runtime_error("Tried to access MappedFIFOQueue_t with non-zero index. Not allowed.");
-	mFIFOQueue->writeQword(value);
+	mFIFOQueue->writeQword(context, value);
 }

@@ -2,7 +2,9 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 #include "PS2Constants/PS2Constants.h"
+
 #include "PS2Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
 class VUInterpreter : public VMExecutionCoreComponent

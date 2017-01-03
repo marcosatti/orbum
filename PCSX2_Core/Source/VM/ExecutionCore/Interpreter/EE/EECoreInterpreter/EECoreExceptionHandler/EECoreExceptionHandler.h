@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
+
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 /*
 The exception handler provides 2 main points of functionality:

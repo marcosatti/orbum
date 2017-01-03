@@ -2,13 +2,13 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
-#include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
+#include "Common/Types/Registers/Register32_t.h"
 
 /*
 The DMAC D_CHCR register, aka channel control register.
 Needs a reference to a slice count variable that is reset when the STR bit is set to 1.
 */
-class EEDmacChannelRegister_CHCR_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -28,7 +28,7 @@ public:
 /*
 The DMAC D_MADR register, aka transfer address register.
 */
-class EEDmacChannelRegister_MADR_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_MADR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -48,14 +48,9 @@ public:
 /*
 The DMAC D_QWC register, aka quadword count register (holds remaining transfer qword count).
 */
-class EEDmacChannelRegister_QWC_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_QWC_t : public Register32_t
 {
 public:
-	struct Fields
-	{
-		static constexpr u8 QWC = 0;
-	};
-
 	EEDmacChannelRegister_QWC_t(const char * mnemonic);
 
 	/*
@@ -67,7 +62,7 @@ public:
 /*
 The DMAC D_TADR register, aka tag address register.
 */
-class EEDmacChannelRegister_TADR_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_TADR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -87,7 +82,7 @@ public:
 /*
 The DMAC D_ASR0/1 register, aka tag address save register.
 */
-class EEDmacChannelRegister_ASR_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_ASR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -102,14 +97,9 @@ public:
 /*
 The DMAC D_SADR register, aka SPR (scratchpad ram) transfer address register.
 */
-class EEDmacChannelRegister_SADR_t : public DebugBitfieldRegister32_t
+class EEDmacChannelRegister_SADR_t : public Register32_t
 {
 public:
-	struct Fields
-	{
-		static constexpr u8 ADDR = 0;
-	};
-
 	EEDmacChannelRegister_SADR_t(const char * mnemonic);
 
 	/*

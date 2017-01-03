@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
-#include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
-#include "PS2Constants/PS2Constants.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
+
+#include "PS2Constants/PS2Constants.h"
+
+#include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
@@ -53,7 +54,7 @@ private:
 	*/
 	u32 mChannelIndex;
 	std::shared_ptr<EEDmac_t> mDMAC;
-	std::shared_ptr<PhysicalMMU_t> mEEMMU;
+	std::shared_ptr<PhysicalMMU_t> mEEPhysicalMMU;
 	EEDmacChannel_t * mChannel;
 
 	

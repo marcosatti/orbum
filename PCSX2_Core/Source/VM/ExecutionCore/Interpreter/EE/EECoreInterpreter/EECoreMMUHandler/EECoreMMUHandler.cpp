@@ -1,19 +1,19 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-
-#include "VM/VMMain.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
+#include "Common/Util/MMUUtil/MMUUtil.h"
+
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
-#include "Common/Util/MMUUtil/MMUUtil.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
 
 EECoreMMUHandler::EECoreMMUHandler(VMMain * vmMain) : 
@@ -31,7 +31,7 @@ u8 EECoreMMUHandler::readByte(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return getResources()->EE->PhysicalMMU->readByte(PS2PhysicalAddress);
+		return getResources()->EE->PhysicalMMU->readByte(Context_t::EE, PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -40,14 +40,14 @@ void EECoreMMUHandler::writeByte(u32 PS2MemoryAddress, u8 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
-		getResources()->EE->PhysicalMMU->writeByte(PS2PhysicalAddress, value);	
+		getResources()->EE->PhysicalMMU->writeByte(Context_t::EE, PS2PhysicalAddress, value);
 }
 
 u16 EECoreMMUHandler::readHword(u32 PS2MemoryAddress) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return getResources()->EE->PhysicalMMU->readHword(PS2PhysicalAddress);
+		return getResources()->EE->PhysicalMMU->readHword(Context_t::EE, PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -56,14 +56,14 @@ void EECoreMMUHandler::writeHword(u32 PS2MemoryAddress, u16 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
-		getResources()->EE->PhysicalMMU->writeHword(PS2PhysicalAddress, value);
+		getResources()->EE->PhysicalMMU->writeHword(Context_t::EE, PS2PhysicalAddress, value);
 }
 
 u32 EECoreMMUHandler::readWord(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return getResources()->EE->PhysicalMMU->readWord(PS2PhysicalAddress);
+		return getResources()->EE->PhysicalMMU->readWord(Context_t::EE, PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -72,14 +72,14 @@ void EECoreMMUHandler::writeWord(u32 PS2MemoryAddress, u32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
-		getResources()->EE->PhysicalMMU->writeWord(PS2PhysicalAddress, value);
+		getResources()->EE->PhysicalMMU->writeWord(Context_t::EE, PS2PhysicalAddress, value);
 }
 
 u64 EECoreMMUHandler::readDword(u32 PS2MemoryAddress) 
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return getResources()->EE->PhysicalMMU->readDword(PS2PhysicalAddress);
+		return getResources()->EE->PhysicalMMU->readDword(Context_t::EE, PS2PhysicalAddress);
 	else
 		return 0;
 }
@@ -88,14 +88,14 @@ void EECoreMMUHandler::writeDword(u32 PS2MemoryAddress, u64 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 	if (!mHasExceptionOccurred)
-		getResources()->EE->PhysicalMMU->writeDword(PS2PhysicalAddress, value);
+		getResources()->EE->PhysicalMMU->writeDword(Context_t::EE, PS2PhysicalAddress, value);
 }
 
 u128 EECoreMMUHandler::readQword(u32 PS2VirtualAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2VirtualAddress, READ);
 	if (!mHasExceptionOccurred)
-		return getResources()->EE->PhysicalMMU->readQword(PS2PhysicalAddress);
+		return getResources()->EE->PhysicalMMU->readQword(Context_t::EE, PS2PhysicalAddress);
 	else
 		return u128(0, 0);
 }
@@ -104,7 +104,7 @@ void EECoreMMUHandler::writeQword(u32 PS2VirtualAddress, u128 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2VirtualAddress, WRITE);
 	if (!mHasExceptionOccurred)
-		getResources()->EE->PhysicalMMU->writeQword(PS2PhysicalAddress, value);
+		getResources()->EE->PhysicalMMU->writeQword(Context_t::EE, PS2PhysicalAddress, value);
 }
 
 bool EECoreMMUHandler::hasExceptionOccurred() const

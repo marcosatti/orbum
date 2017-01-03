@@ -133,7 +133,7 @@ VuUnitRegister_Clipping_t::VuUnitRegister_Clipping_t()
 
 void VuUnitRegister_Clipping_t::shiftJudgement()
 {
-	writeWord((readWord() << 6) & 0x00FFFFFF);
+	writeWord(Context_t::RAW, (readWord(Context_t::RAW) << 6) & 0x00FFFFFF);
 }
 
 VuUnitRegister_CMSAR_t::VuUnitRegister_CMSAR_t()

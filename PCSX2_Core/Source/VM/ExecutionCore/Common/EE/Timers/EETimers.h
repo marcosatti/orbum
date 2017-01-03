@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 #include "PS2Resources/Clock/Types/ClockSource_t.h"
 
 /*
 EETimers updates TIMER_0, TIMER_1, TIMER_2, TIMER_3 as defined in the EE Users Manual, starting on page 33.
+If interrupt conditions are met, sets the corresponding interrupt bit in the EE INTC.
 
 The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 or HBLNK clocks.
 */
-
 class EETimers : public VMExecutionCoreComponent
 {
 public:

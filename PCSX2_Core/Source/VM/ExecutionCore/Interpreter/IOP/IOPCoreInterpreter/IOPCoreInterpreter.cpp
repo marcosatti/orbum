@@ -1,20 +1,24 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
+#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Util/MathUtil/MathUtil.h"
+
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreExceptionHandler/IOPCoreExceptionHandler.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/Util/MathUtil/MathUtil.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -70,7 +74,8 @@ s64 IOPCoreInterpreter::executeInstruction()
 	auto& IOPCore = getResources()->IOP->IOPCore;
 
 	// Set the instruction holder to the instruction at the current PC.
-	const u32 instructionValue = mMMUHandler->readWord(IOPCore->R3000->PC->readWord()); // TODO: Add error checking for address bus error.
+	const u32 pcValue = IOPCore->R3000->PC->readWord(Context_t::IOP);
+	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
@@ -87,12 +92,12 @@ s64 IOPCoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			IOPCore->R3000->PC->readWord(), IOPCore->R3000->mIsInBranchDelay, 
+			IOPCore->R3000->PC->readWord(Context_t::IOP), IOPCore->R3000->mIsInBranchDelay, 
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
 	}
 
-	if (IOPCore->R3000->PC->readWord() == DEBUG_PC_BREAKPOINT)
+	if (IOPCore->R3000->PC->readWord(Context_t::IOP) == DEBUG_PC_BREAKPOINT)
 	{
 		logDebug("IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
@@ -106,6 +111,20 @@ s64 IOPCoreInterpreter::executeInstruction()
 
 	// Return the number of cycles the instruction took to complete.
 	return mInstructionInfo->mCycles;
+}
+
+bool IOPCoreInterpreter::checkCOP0Usable() const
+{
+	if (!getResources()->IOP->IOPCore->COP0->isCoprocessorUsable())
+	{
+		auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
+		COPExceptionInfo_t copExInfo = { 0 };
+		Exceptions->setException(IOPCoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		return false;
+	}
+
+	// Coprocessor is usable, proceed.
+	return true;
 }
 
 bool IOPCoreInterpreter::checkNoMMUError() const

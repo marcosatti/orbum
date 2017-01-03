@@ -9,9 +9,9 @@
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/Types/VPURegisters_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
-#include "Common/Types/Registers/WrapperR16Register32_t.h"
+#include "Common/Types/Registers/Wrapper/WrapperR16Register32_t.h"
 #include "Common/Types/Registers/PCRegister16_t.h"
-#include "Common/Types/Registers/WrapperF32Register32_t.h"
+#include "Common/Types/Registers/Wrapper/WrapperF32Register32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 
 VU_t::VU_t(const PS2Resources_t* PS2Resources) :

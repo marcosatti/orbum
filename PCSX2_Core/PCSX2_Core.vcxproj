@@ -330,27 +330,26 @@
   <ItemGroup>
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
+    <ClInclude Include="Source\Common\Types\Context_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
     <ClInclude Include="Source\Common\Interfaces\PhysicalMapped.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\DebugRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister8_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\PCRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\WrapperR16Register32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\WrapperF32Register32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantFPRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.h" />
@@ -391,7 +390,7 @@
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreR3000_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\LinkRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOP_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\ROMemory_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor0_t.h" />
@@ -467,7 +466,7 @@
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister128_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\Memory_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\Timers\EETimers.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimerRegisters_t.h" />
@@ -483,21 +482,19 @@
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\DebugRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\PCRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\WrapperR16Register32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\WrapperF32Register32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantFPRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
@@ -526,7 +523,7 @@
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreR3000_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\LinkRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOP_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ROMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSCoprocessor\MIPSCoprocessor0_t.cpp" />
@@ -644,7 +641,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister128_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\Memory_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\EE\Timers\EETimers.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimerRegisters_t.cpp" />

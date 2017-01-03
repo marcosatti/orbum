@@ -1,16 +1,17 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-
-#include "VM/VMMain.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/LinkRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
+
+#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/Registers/LinkRegister128_t.h"
 
 void EECoreInterpreter::BGEZAL()
 {
@@ -18,7 +19,7 @@ void EECoreInterpreter::BGEZAL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= 0)
 	{
@@ -33,7 +34,7 @@ void EECoreInterpreter::BGEZALL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= 0)
 	{
@@ -50,7 +51,7 @@ void EECoreInterpreter::BLTZAL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < 0)
 	{
@@ -65,7 +66,7 @@ void EECoreInterpreter::BLTZALL()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()];
 	auto offset = mInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < 0)
 	{
@@ -89,6 +90,6 @@ void EECoreInterpreter::JALR()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWord() + (Constants::SIZE_MIPS_INSTRUCTION * 2)));
-	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWord(0), 1);
+	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) + (Constants::SIZE_MIPS_INSTRUCTION * 2)));
+	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWord(Context_t::EE, 0), 1);
 }

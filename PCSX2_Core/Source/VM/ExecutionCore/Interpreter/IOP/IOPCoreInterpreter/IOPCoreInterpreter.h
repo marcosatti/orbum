@@ -4,6 +4,7 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
+
 #include "PS2Constants/PS2Constants.h"
 
 class PS2Resources_t;
@@ -63,12 +64,14 @@ private:
 
 	/*
 	Helper functions to check for: 
+	 - The usability conditions of COP0.
 	 - The condition that no MMUHandler error occured.
 	 - No over or underflow will occur for signed 32 bit integers.
 	Returns a bool indicating if the instruction should return early because of unavailablity.
 	Return early from instruction = true, Proceed with instruction = false.
 	They will automatically set the exception state as well.
 	*/
+	bool checkCOP0Usable() const;
 	bool checkNoMMUError() const;
 	bool checkNoOverOrUnderflow32(const s32 & x, const s32 & y) const;
 

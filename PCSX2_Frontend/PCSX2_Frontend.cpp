@@ -11,7 +11,8 @@ std::ofstream logFile;
 void log(const char * buffer)
 {
 	logFile << buffer;
-	printf(buffer);
+	logFile.flush();
+	fprintf(stderr, buffer);
 }
 
 int main()

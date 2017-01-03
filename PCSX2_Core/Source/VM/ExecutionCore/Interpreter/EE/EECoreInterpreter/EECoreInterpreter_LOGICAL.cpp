@@ -1,18 +1,15 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register128_t.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
-#include "Common/Types/Registers/Register128_t.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-
-/*
-Logical instruction family.
-*/
 
 void EECoreInterpreter::AND()
 {
@@ -22,7 +19,7 @@ void EECoreInterpreter::AND()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(0, source1Reg->readDword(0) & source2Reg->readDword(0));
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) & source2Reg->readDword(Context_t::EE, 0));
 }
 
 void EECoreInterpreter::ANDI()
@@ -33,7 +30,7 @@ void EECoreInterpreter::ANDI()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	u64 imm = static_cast<u64>(mInstruction.getIImmU());
 
-	destReg->writeDword(0, source1Reg->readDword(0) & imm);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) & imm);
 }
 
 void EECoreInterpreter::NOR()
@@ -44,7 +41,7 @@ void EECoreInterpreter::NOR()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(0, ~(source1Reg->readDword(0) | source2Reg->readDword(0)));
+	destReg->writeDword(Context_t::EE, 0, ~(source1Reg->readDword(Context_t::EE, 0) | source2Reg->readDword(Context_t::EE, 0)));
 }
 
 void EECoreInterpreter::OR()
@@ -55,7 +52,7 @@ void EECoreInterpreter::OR()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(0, source1Reg->readDword(0) | source2Reg->readDword(0));
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) | source2Reg->readDword(Context_t::EE, 0));
 }
 
 void EECoreInterpreter::ORI()
@@ -66,7 +63,7 @@ void EECoreInterpreter::ORI()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	s64 imm = static_cast<s64>(mInstruction.getIImmU());
 
-	destReg->writeDword(0, source1Reg->readDword(0) | imm);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) | imm);
 }
 
 void EECoreInterpreter::XOR()
@@ -77,7 +74,7 @@ void EECoreInterpreter::XOR()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(0, source1Reg->readDword(0) ^ source2Reg->readDword(0));
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) ^ source2Reg->readDword(Context_t::EE, 0));
 }
 
 void EECoreInterpreter::XORI()
@@ -88,7 +85,7 @@ void EECoreInterpreter::XORI()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRt()];
 	u64 imm = static_cast<u64>(mInstruction.getIImmU());
 
-	destReg->writeDword(0, source1Reg->readDword(0) ^ imm);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) ^ imm);
 }
 
 void EECoreInterpreter::PAND()
@@ -101,7 +98,7 @@ void EECoreInterpreter::PAND()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(i, source1Reg->readDword(i) & source2Reg->readDword(i));
+		destReg->writeDword(Context_t::EE, i, source1Reg->readDword(Context_t::EE, i) & source2Reg->readDword(Context_t::EE, i));
 	}
 }
 
@@ -115,7 +112,7 @@ void EECoreInterpreter::PNOR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(i, ~(source1Reg->readDword(i) | source2Reg->readDword(i)));
+		destReg->writeDword(Context_t::EE, i, ~(source1Reg->readDword(Context_t::EE, i) | source2Reg->readDword(Context_t::EE, i)));
 	}
 }
 
@@ -129,7 +126,7 @@ void EECoreInterpreter::POR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(i, source1Reg->readDword(i) | source2Reg->readDword(i));
+		destReg->writeDword(Context_t::EE, i, source1Reg->readDword(Context_t::EE, i) | source2Reg->readDword(Context_t::EE, i));
 	}
 }
 
@@ -143,6 +140,6 @@ void EECoreInterpreter::PXOR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(i, source1Reg->readDword(i) ^ source2Reg->readDword(i));
+		destReg->writeDword(Context_t::EE, i, source1Reg->readDword(Context_t::EE, i) ^ source2Reg->readDword(Context_t::EE, i));
 	}
 }

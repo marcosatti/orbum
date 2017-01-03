@@ -2,7 +2,7 @@
 
 #include "PS2Resources/IOP/CDVD/CDVD_t.h"
 #include "Common/Types/Registers/Register8_t.h"
-#include "Common/Types/Registers/ConstantRegister8_t.h"
+#include "Common/Types/Registers/Constant/ConstantRegister8_t.h"
 
 CDVD_t::CDVD_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),

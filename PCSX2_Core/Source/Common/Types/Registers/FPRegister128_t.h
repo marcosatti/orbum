@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Common/Global/Globals.h"
 #include <string>
+
+#include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 FPRegister128_t is a register type used for VU floating point operations. It is made up of 4 x 32-bit single precision floats, and not intented to be a 128-bit 'float' type.
@@ -26,34 +28,37 @@ public:
 	explicit FPRegister128_t();
 	explicit FPRegister128_t(const char * mnemonic);
 
-	virtual ~FPRegister128_t()
-	{
-	}
+	virtual ~FPRegister128_t();
 
+	/*
+	Read/write functions to access the register, with subclassed functionality. 
+	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
+	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
+	*/
+	virtual u32 readWord(const Context_t & context, u32 arrayIndex);
+	virtual void writeWord(const Context_t & context, u32 arrayIndex, u32 value);
+	virtual u64 readDword(const Context_t & context, u32 arrayIndex);
+	virtual void writeDword(const Context_t & context, u32 arrayIndex, u64 value);
+	virtual u128 readQword(const Context_t & context);
+	virtual void writeQword(const Context_t & context, u128 value);
+	virtual f32 readFloat(const Context_t & context, u32 arrayIndex);
+	virtual void writeFloat(const Context_t & context, u32 arrayIndex, f32 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+protected:
+	/*
+	Underlying storage for register.
+	*/
 	union
 	{
 		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
 		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
 		f32 F[Constants::NUMBER_WORDS_IN_QWORD];
 	};
-
-	/*
-	Functions to access the register value - you should use these functions instead of accessing them directly.
-	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
-	*/
-	virtual u32 readWord(u32 arrayIndex);
-	virtual void writeWord(u32 arrayIndex, u32 value);
-	virtual u64 readDword(u32 arrayIndex);
-	virtual void writeDword(u32 arrayIndex, u64 value);
-	virtual u128 readQword();
-	virtual void writeQword(u128 value);
-	virtual f32 readFloat(u32 arrayIndex);
-	virtual void writeFloat(u32 arrayIndex, f32 value);
-
-	/*
-	Gets the mnemonic of this register. Used for debug/logging.
-	*/
-	const char * getMnemonic() const;
 
 private:
 	/*

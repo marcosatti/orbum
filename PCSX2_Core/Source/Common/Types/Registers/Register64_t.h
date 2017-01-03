@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
-
+#include "Common/Types/Context_t.h"
 
 /*
 Register type and size definitions.
@@ -29,8 +29,35 @@ public:
 	explicit Register64_t();
 	explicit Register64_t(const char * mnemonic);
 
+#if defined(BUILD_DEBUG)
+	explicit Register64_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
+	bool mDebug;
+#endif
+
 	virtual ~Register64_t();
 
+	/*
+	Read/write functions to access the register, with subclassed functionality.
+	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
+	*/
+	virtual u8 readByte(const Context_t & context, u32 arrayIndex);
+	virtual void writeByte(const Context_t & context, u32 arrayIndex, u8 value);
+	virtual u16 readHword(const Context_t & context, u32 arrayIndex);
+	virtual void writeHword(const Context_t & context, u32 arrayIndex, u16 value);
+	virtual u32 readWord(const Context_t & context, u32 arrayIndex);
+	virtual void writeWord(const Context_t & context, u32 arrayIndex, u32 value);
+	virtual u64 readDword(const Context_t & context);
+	virtual void writeDword(const Context_t & context, u64 value);
+
+	/*
+	Gets the mnemonic of this register. Used for debug/logging.
+	*/
+	const char * getMnemonic() const;
+
+protected:
+	/*
+	Underlying storage for register.
+	*/
 	union
 	{
 		u64  UD;
@@ -38,21 +65,6 @@ public:
 		u16  UH[Constants::NUMBER_HWORDS_IN_DWORD];
 		u8   UB[Constants::NUMBER_BYTES_IN_DWORD];
 	};
-
-	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
-	virtual u8 readByte(u32 arrayIndex);
-	virtual void writeByte(u32 arrayIndex, u8 value);
-	virtual u16 readHword(u32 arrayIndex);
-	virtual void writeHword(u32 arrayIndex, u16 value);
-	virtual u32 readWord(u32 arrayIndex);
-	virtual void writeWord(u32 arrayIndex, u32 value);
-	virtual u64 readDword();
-	virtual void writeDword(u64 value);
-
-	/*
-	Gets the mnemonic of this register. Used for debug/logging.
-	*/
-	const char * getMnemonic() const;
 
 private:
 	/*

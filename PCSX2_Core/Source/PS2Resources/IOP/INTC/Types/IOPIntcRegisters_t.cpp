@@ -37,9 +37,14 @@ IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t() :
 {
 }
 
-u32 IOPIntcRegister_CTRL_t::readWord()
+u32 IOPIntcRegister_CTRL_t::readWord(const Context_t& context)
 {
-	auto temp = Register32_t::readWord();
-	writeWord(0);
+	auto temp = Register32_t::readWord(context);
+
+	if (context == Context_t::IOP)
+	{
+		writeWord(context, 0);
+	}
+
 	return temp;
 }

@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	DebugBitfieldRegister32_t(mnemonic)
+	BitfieldRegister32_t(mnemonic, true)
 {
 	registerField(Fields::DR, "DR", 0, 1, 0);
 	registerField(Fields::CO, "CO", 9, 1, 0);
@@ -12,7 +12,7 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 }
 
 IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic) :
-	DebugBitfieldRegister32_t(mnemonic)
+	BitfieldRegister32_t(mnemonic, true)
 {
 	registerField(Fields::BS, "BS", 0, 16, 0);
 	registerField(Fields::BA, "BA", 16, 16, 0);

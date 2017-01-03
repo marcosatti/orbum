@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 Register type and size definitions.
@@ -28,21 +29,33 @@ public:
 	explicit Register8_t();
 	explicit Register8_t(const char * mnemonic);
 
+#if defined(BUILD_DEBUG)
+	explicit Register8_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
+	bool mDebug;
+#endif
+
 	virtual ~Register8_t();
 
-	union
-	{
-		u8 UB;
-	};
-
-	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
-	virtual u8 readByte();
-	virtual void writeByte(u8 value);
+	/*
+	Read/write functions to access the register, with subclassed functionality. 
+	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
+	*/
+	virtual u8 readByte(const Context_t & context);
+	virtual void writeByte(const Context_t & context, u8 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.
 	*/
 	const char * getMnemonic() const;
+
+protected:
+	/*
+	Underlying storage for register.
+	*/
+	union
+	{
+		u8 UB;
+	};
 
 private:
 	/*

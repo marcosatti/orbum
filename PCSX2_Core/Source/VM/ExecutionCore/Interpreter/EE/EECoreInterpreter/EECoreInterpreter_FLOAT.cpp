@@ -1,21 +1,17 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/FPRegister32_t.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
-#include "Common/Types/Registers/FPRegister32_t.h"
-#include "Common/Util/FPUUtil/FPUUtil.h"
-
-/*
-Floating-Point instruction family.
-TODO: Check if a convert IEEE to PS2 float function call is needed on the values involved before doing anything - old PCSX2 seems to do this, but there should never be IEEE floats in the registers in the first place (ie: redundant).
-*/
 
 void EECoreInterpreter::ADD_S()
 {
@@ -31,11 +27,11 @@ void EECoreInterpreter::ADD_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() + source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) + source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::ADDA_S()
@@ -52,11 +48,11 @@ void EECoreInterpreter::ADDA_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() + source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) + source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MADD_S()
@@ -75,11 +71,11 @@ void EECoreInterpreter::MADD_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat(Context_t::EE) + (source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE)), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MADDA_S()
@@ -97,11 +93,11 @@ void EECoreInterpreter::MADDA_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat() + (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat(Context_t::EE) + (source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE)), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MUL_S()
@@ -118,11 +114,11 @@ void EECoreInterpreter::MUL_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() * source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MULA_S()
@@ -139,11 +135,11 @@ void EECoreInterpreter::MULA_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() * source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::DIV_S()
@@ -161,13 +157,13 @@ void EECoreInterpreter::DIV_S()
 	// Set flags when special conditions occur.
 	f32 result;
 	CSR->clearFlags();
-	if (source1Reg->readFloat() != 0 && source2Reg->readFloat() == 0)
+	if (source1Reg->readFloat(Context_t::EE) != 0 && source2Reg->readFloat(Context_t::EE) == 0)
 	{
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::D, 1);
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SD, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
-	else if (source1Reg->readFloat() == 0 && source2Reg->readFloat() == 0)
+	else if (source1Reg->readFloat(Context_t::EE) == 0 && source2Reg->readFloat(Context_t::EE) == 0)
 	{
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
@@ -177,11 +173,11 @@ void EECoreInterpreter::DIV_S()
 	{
 		// Calculate value and update flags.
 		FPUFlags_t flags;
-		result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() / source2Reg->readFloat(), flags);
+		result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) / source2Reg->readFloat(Context_t::EE), flags);
 		CSR->updateResultFlags(flags);
 	}
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MSUB_S()
@@ -200,11 +196,11 @@ void EECoreInterpreter::MSUB_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source3Reg->readFloat(Context_t::EE) - (source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE)), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MSUBA_S()
@@ -222,11 +218,11 @@ void EECoreInterpreter::MSUBA_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat() - (source1Reg->readFloat() * source2Reg->readFloat()), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(destReg->readFloat(Context_t::EE) - (source1Reg->readFloat(Context_t::EE) * source2Reg->readFloat(Context_t::EE)), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::SUB_S()
@@ -243,11 +239,11 @@ void EECoreInterpreter::SUB_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() - source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) - source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::SUBA_S()
@@ -264,10 +260,10 @@ void EECoreInterpreter::SUBA_S()
 
 	// Calculate value and update flags.
 	FPUFlags_t flags;
-	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat() - source2Reg->readFloat(), flags);
+	f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE) - source2Reg->readFloat(Context_t::EE), flags);
 	CSR->clearFlags();
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 

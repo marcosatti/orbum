@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
 /*
@@ -26,6 +26,7 @@ public:
 	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the host memory address, and then operates on the value.
 	This is the main access point that any PS2 reads or writes will come through. On error, read functions will return 0, and write functions will not perform the operation.
 	To see what error it is, use getErrorInfo() defined below.
+	The calls to the underlying storage are always done with an EE context parsed as the parameter.
 	TODO: Add in address error exceptions. These will occur when an unaligned access is tried. See for example the instruction LDL on page 72 of the EE Core Instruction manual.
 	TODO: Produce the proper exception info, such as the TLB index or OS page table address. Not properly done at the moment.
 	*/

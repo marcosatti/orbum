@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/DebugBitfieldRegister32_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
 
 /*
 The IOP DMAC D_CHCR register.
 Based off the PSX docs.
 */
-class IOPDmacChannelRegister_CHCR_t : public DebugBitfieldRegister32_t
+class IOPDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -25,7 +25,7 @@ public:
 The IOP DMAC D_BCR register.
 Based of the PSX docs.
 */
-class IOPDmacChannelRegister_BCR_t : public DebugBitfieldRegister32_t
+class IOPDmacChannelRegister_BCR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields

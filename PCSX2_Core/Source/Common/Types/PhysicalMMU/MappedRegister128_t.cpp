@@ -25,72 +25,72 @@ const char* MappedRegister128_t::getMnemonic() const
 	return mRegister128->getMnemonic();
 }
 
-u8 MappedRegister128_t::readByte(u32 storageIndex)
+u8 MappedRegister128_t::readByte(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	return mRegister128->readByte(storageIndex / 1);
+	return mRegister128->readByte(context, storageIndex / 1);
 }
 
-void MappedRegister128_t::writeByte(u32 storageIndex, u8 value)
+void MappedRegister128_t::writeByte(const Context_t& context, u32 storageIndex, u8 value)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	mRegister128->writeByte(storageIndex / 1, value);
+	mRegister128->writeByte(context, storageIndex / 1, value);
 }
 
-u16 MappedRegister128_t::readHword(u32 storageIndex)
+u16 MappedRegister128_t::readHword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	return mRegister128->readHword(storageIndex / Constants::NUMBER_BYTES_IN_HWORD);
+	return mRegister128->readHword(context, storageIndex / Constants::NUMBER_BYTES_IN_HWORD);
 }
 
-void MappedRegister128_t::writeHword(u32 storageIndex, u16 value)
+void MappedRegister128_t::writeHword(const Context_t& context, u32 storageIndex, u16 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	mRegister128->writeHword(storageIndex / Constants::NUMBER_BYTES_IN_HWORD, value);
+	mRegister128->writeHword(context, storageIndex / Constants::NUMBER_BYTES_IN_HWORD, value);
 }
 
-u32 MappedRegister128_t::readWord(u32 storageIndex)
+u32 MappedRegister128_t::readWord(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	return mRegister128->readWord(storageIndex / Constants::NUMBER_BYTES_IN_WORD);
+	return mRegister128->readWord(context, storageIndex / Constants::NUMBER_BYTES_IN_WORD);
 }
 
-void MappedRegister128_t::writeWord(u32 storageIndex, u32 value)
+void MappedRegister128_t::writeWord(const Context_t& context, u32 storageIndex, u32 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	mRegister128->writeWord(storageIndex / Constants::NUMBER_BYTES_IN_WORD, value);
+	mRegister128->writeWord(context, storageIndex / Constants::NUMBER_BYTES_IN_WORD, value);
 }
 
-u64 MappedRegister128_t::readDword(u32 storageIndex)
+u64 MappedRegister128_t::readDword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	return mRegister128->readDword(storageIndex / Constants::NUMBER_BYTES_IN_DWORD);
+	return mRegister128->readDword(context, storageIndex / Constants::NUMBER_BYTES_IN_DWORD);
 }
 
-void MappedRegister128_t::writeDword(u32 storageIndex, u64 value)
+void MappedRegister128_t::writeDword(const Context_t& context, u32 storageIndex, u64 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister128_t with unaligned index. Not allowed.");
-	mRegister128->writeDword(storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
+	mRegister128->writeDword(context, storageIndex / Constants::NUMBER_BYTES_IN_DWORD, value);
 }
 
-u128 MappedRegister128_t::readQword(u32 storageIndex)
+u128 MappedRegister128_t::readQword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	return mRegister128->readQword();
+	return mRegister128->readQword(context);
 }
 
-void MappedRegister128_t::writeQword(u32 storageIndex, u128 value)
+void MappedRegister128_t::writeQword(const Context_t& context, u32 storageIndex, u128 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access MappedFPRegister128_t with unaligned index. Not allowed.");
-	mRegister128->writeQword(value);
+	mRegister128->writeQword(context, value);
 }

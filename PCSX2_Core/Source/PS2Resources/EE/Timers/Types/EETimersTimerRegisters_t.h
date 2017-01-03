@@ -33,7 +33,7 @@ public:
 
 	EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
 
-	void writeWord(u32 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 
 private:
 	/*

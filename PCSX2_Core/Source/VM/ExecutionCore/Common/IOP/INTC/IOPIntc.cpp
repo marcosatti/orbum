@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+
 #include "VM/ExecutionCore/Common/IOP/INTC/IOPIntc.h"
-#include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/INTC/IOPIntc_t.h"
@@ -20,14 +22,14 @@ IOPIntc::IOPIntc(VMMain * vmMain) :
 s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// First check the master CTRL register.
-	const u32 I_CTRL = getResources()->IOP->INTC->CTRL->readWord();
-	if (I_CTRL > 0)
+	const u32 CTRL = getResources()->IOP->INTC->CTRL->readWord(Context_t::RAW);
+	if (CTRL > 0)
 	{
 		// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-		const u32 I_STAT = getResources()->IOP->INTC->STAT->readWord();
+		const u32 I_STAT = getResources()->IOP->INTC->STAT->readWord(Context_t::RAW);
 		if (I_STAT > 0)
 		{
-			const u32 I_MASK = getResources()->IOP->INTC->MASK->readWord();
+			const u32 I_MASK = getResources()->IOP->INTC->MASK->readWord(Context_t::RAW);
 			if ((I_STAT & I_MASK) > 0)
 			{
 				// Generate an INT0 signal/interrupt exception (the IOP Core exception handler will determine if it should be masked).

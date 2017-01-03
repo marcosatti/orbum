@@ -1,8 +1,14 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+
 #include "VM/ExecutionCore/Common/EE/DMAC/EEDmac.h"
+
 #include "PS2Constants/PS2Constants.h"
-#include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
@@ -13,9 +19,6 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 using ExType = EECoreException_t::ExType;
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
@@ -32,7 +35,7 @@ EEDmac::EEDmac(VMMain* vmMain) :
 {
 	// Set resource pointer variables.
 	mDMAC = getResources()->EE->DMAC;
-	mEEMMU = getResources()->EE->PhysicalMMU;
+	mEEPhysicalMMU = getResources()->EE->PhysicalMMU;
 }
 
 EEDmac::~EEDmac()
@@ -93,7 +96,7 @@ u32 EEDmac::transferData()
 	Direction_t direction = mChannel->getRuntimeDirection();
 
 	// Get the main memory or SPR address we are reading or writing from. 
-	// NOTE: The mask of 0x1FFFFFF0 comes from PCSX2, also in my own testing, the PS2 OS acceses illegal addresses, such as 0x3xxxxxxx.
+	// NOTE: The mask of 0x1FFFFFF0 comes from PCSX2, also in my own testing, the PS2 OS sets MADR to illegal addresses, such as 0x3xxxxxxx.
 	//       I can only assume that the DMAC hardware corrects this value. The resulting address will also be qword aligned and restricted to the 'system' memory region.
 	const bool SPRFlag = (mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
 	const u32 PhysicalAddressOffset = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR) & 0x1FFFFFF0;
@@ -105,7 +108,7 @@ u32 EEDmac::transferData()
 		// We are doing a mem->SPR or SPR->mem, use both MADR and SADR registers.
 		// NOTE: The mask of 0x3FF0 comes from PCSX2. I have not personally tested this, but assume it is required.
 		//       This mask restricts the address to the 16 kB address range and makes the address qword aligned.
-		const u32 SPRPhysicalAddressOffset = mChannel->SADR->getFieldValue(EEDmacChannelRegister_SADR_t::Fields::ADDR) & 0x3FF0;
+		const u32 SPRPhysicalAddressOffset = mChannel->SADR->readWord(Context_t::RAW) & 0x3FF0;
 
 		if (direction == Direction_t::FROM)
 		{
@@ -134,7 +137,7 @@ u32 EEDmac::transferData()
 			if (mChannel->mFIFOQueue->isEmpty())
 				return 0;
 
-			u128 packet = mChannel->mFIFOQueue->readQword();
+			u128 packet = mChannel->mFIFOQueue->readQword(Context_t::RAW);
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 		}
 		else if (direction == Direction_t::TO)
@@ -144,7 +147,7 @@ u32 EEDmac::transferData()
 				return 0;
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
-			mChannel->mFIFOQueue->writeQword(packet);
+			mChannel->mFIFOQueue->writeQword(Context_t::RAW, packet);
 		}
 
 		// Increment the MADR register by a qword, and decrement the QWC register by a qword.
@@ -173,7 +176,7 @@ void EEDmac::setStateFailedTransfer() const
 void EEDmac::executionStep_Normal()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
+	if (mChannel->QWC->readWord(Context_t::RAW) == 0)
 	{
 		setStateFailedTransfer();
 		return;
@@ -200,7 +203,7 @@ void EEDmac::executionStep_Normal()
 	}
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
+	if (mChannel->QWC->readWord(Context_t::RAW) == 0)
 	{
 		setStateSuspended();
 	}
@@ -209,7 +212,7 @@ void EEDmac::executionStep_Normal()
 void EEDmac::executionStep_Chain()
 {
 	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
-	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) > 0)
+	if (mChannel->QWC->readWord(Context_t::RAW) > 0)
 	{
 		// Check for drain stall control conditions (including if we are in "refs" tag), and skip cycle if the data is not ready.
 		if (mChannel->isChainInDrainStallControlTag() && isDrainStallControlOn() && isDrainStallControlWaiting())
@@ -232,7 +235,7 @@ void EEDmac::executionStep_Chain()
 		}
 
 		// If QWC is now 0, check for suspend conditions.
-		if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
+		if (mChannel->QWC->readWord(Context_t::RAW) == 0)
 		{
 			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed).
 			if (mChannel->isChainInInterruptTag())
@@ -284,7 +287,7 @@ void EEDmac::executionStep_Chain()
 void EEDmac::executionStep_Interleaved()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
+	if (mChannel->QWC->readWord(Context_t::RAW) == 0)
 	{
 		setStateFailedTransfer();
 		return;
@@ -316,7 +319,7 @@ void EEDmac::executionStep_Interleaved()
 	}
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (mChannel->QWC->getFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC) == 0)
+	if (mChannel->QWC->readWord(Context_t::RAW) == 0)
 	{
 		setStateSuspended();
 	}
@@ -437,18 +440,18 @@ u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess)
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		return mEEMMU->readQword(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
+		return mEEPhysicalMMU->readQword(Context_t::RAW, PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
 	else
-		return mEEMMU->readQword(physicalAddress);
+		return mEEPhysicalMMU->readQword(Context_t::RAW, physicalAddress);
 }
 
 void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data)
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		mEEMMU->writeQword(PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
+		mEEPhysicalMMU->writeQword(Context_t::RAW, PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
 	else
-		mEEMMU->writeQword(physicalAddress, data);
+		mEEPhysicalMMU->writeQword(Context_t::RAW, physicalAddress, data);
 }
 
 bool EEDmac::readChainSourceTag()
@@ -477,7 +480,7 @@ bool EEDmac::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
 		// Write the tag to the channel.
-		mChannel->mFIFOQueue->writeQword(data);
+		mChannel->mFIFOQueue->writeQword(Context_t::RAW, data);
 	}
 
 	return true;
@@ -490,7 +493,7 @@ bool EEDmac::readChainDestTag()
 		return false;
 
 	// Read tag from channel FIFO (always next to transfer data).
-	u128 data = mChannel->mFIFOQueue->readQword();
+	u128 data = mChannel->mFIFOQueue->readQword(Context_t::RAW);
 
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);
@@ -519,7 +522,7 @@ void EEDmac::INSTRUCTION_UNSUPPORTED()
 void EEDmac::SRC_CNT()
 {
 	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Copy TADR + 0x10 into MADR.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
@@ -533,7 +536,7 @@ void EEDmac::SRC_CNT()
 void EEDmac::SRC_NEXT()
 {
 	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Copy TADR + 0x10 into MADR.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
@@ -547,7 +550,7 @@ void EEDmac::SRC_NEXT()
 void EEDmac::SRC_REF()
 {
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Set MADR = tag.ADDR.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
@@ -562,7 +565,7 @@ void EEDmac::SRC_REFS()
 	// TODO: add in stall control.
 
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Set MADR = tag.ADDR.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
@@ -575,7 +578,7 @@ void EEDmac::SRC_REFS()
 void EEDmac::SRC_REFE()
 {
 	// Transfers QWC qwords from ADDR, and suspends after packet transfer.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 	mChannel->setChainExitStateTrue();
@@ -584,7 +587,7 @@ void EEDmac::SRC_REFE()
 void EEDmac::SRC_CALL()
 {
 	// Transfers QWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
 	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
@@ -608,7 +611,7 @@ void EEDmac::SRC_RET()
 		mChannel->popChainStack();
 
 	// In both cases, QWC following the tag is always performed.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
 }
@@ -616,7 +619,7 @@ void EEDmac::SRC_RET()
 void EEDmac::SRC_END()
 {
 	// Transfers QWC qwords after tag, and suspends after packet transfer.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
 	mChannel->setChainExitStateTrue();
@@ -625,7 +628,7 @@ void EEDmac::SRC_END()
 void EEDmac::DST_CNT()
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Set MADR to tag values.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
@@ -636,7 +639,7 @@ void EEDmac::DST_CNTS()
 {
 	// TODO: need to copy MADR to STADR during the transfer.
 	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Set MADR to tag values.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
@@ -646,7 +649,7 @@ void EEDmac::DST_CNTS()
 void EEDmac::DST_END()
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and suspends transfer after completing.
-	mChannel->QWC->setFieldValue(EEDmacChannelRegister_QWC_t::Fields::QWC, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(Context_t::RAW, mDMAtag.getQWC());
 
 	// Set MADR to tag values.
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());

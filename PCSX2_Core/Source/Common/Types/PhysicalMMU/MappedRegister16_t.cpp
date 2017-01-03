@@ -25,60 +25,60 @@ const char* MappedRegister16_t::getMnemonic() const
 	return mRegister16->getMnemonic();
 }
 
-u8 MappedRegister16_t::readByte(u32 storageIndex)
+u8 MappedRegister16_t::readByte(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	return mRegister16->readByte(storageIndex / 1);
+	return mRegister16->readByte(context, storageIndex / 1);
 }
 
-void MappedRegister16_t::writeByte(u32 storageIndex, u8 value)
+void MappedRegister16_t::writeByte(const Context_t& context, u32 storageIndex, u8 value)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	mRegister16->writeByte(storageIndex / 1, value);
+	mRegister16->writeByte(context, storageIndex / 1, value);
 }
 
-u16 MappedRegister16_t::readHword(u32 storageIndex)
+u16 MappedRegister16_t::readHword(const Context_t& context, u32 storageIndex)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	return mRegister16->readHword();
+	return mRegister16->readHword(context);
 }
 
-void MappedRegister16_t::writeHword(u32 storageIndex, u16 value)
+void MappedRegister16_t::writeHword(const Context_t& context, u32 storageIndex, u16 value)
 {
 	if (storageIndex % Constants::NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access MappedRegister16_t with unaligned index. Not allowed.");
-	mRegister16->writeHword(value);
+	mRegister16->writeHword(context, value);
 }
 
-u32 MappedRegister16_t::readWord(u32 storageIndex)
+u32 MappedRegister16_t::readWord(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister16_t::writeWord(u32 storageIndex, u32 value)
+void MappedRegister16_t::writeWord(const Context_t& context, u32 storageIndex, u32 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
 
-u64 MappedRegister16_t::readDword(u32 storageIndex)
+u64 MappedRegister16_t::readDword(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister16_t::writeDword(u32 storageIndex, u64 value)
+void MappedRegister16_t::writeDword(const Context_t& context, u32 storageIndex, u64 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
 
-u128 MappedRegister16_t::readQword(u32 storageIndex)
+u128 MappedRegister16_t::readQword(const Context_t& context, u32 storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister16_t::writeQword(u32 storageIndex, u128 value)
+void MappedRegister16_t::writeQword(const Context_t& context, u32 storageIndex, u128 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister16_t with larger than allowed size. Not allowed.");
 }

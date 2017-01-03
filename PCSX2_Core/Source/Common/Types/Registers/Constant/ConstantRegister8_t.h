@@ -15,6 +15,6 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByte(u8 value) override;
+	void writeByte(const Context_t& context, u8 value) override;
 };
 

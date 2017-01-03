@@ -294,7 +294,6 @@
     <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnits_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\WrapperF32Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\PCRegister16_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.h" />
@@ -302,25 +301,15 @@
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VuUnits_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\WrapperR16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Interfaces\VMExecutionCore.h" />
-    <ClInclude Include="Source\Common\Types\Registers\DebugRegister32_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantFPRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister8_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\ConstantRegister128_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Types\Memory\ConstantMemory_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
@@ -337,6 +326,16 @@
     </ClInclude>
     <ClInclude Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Context_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -517,32 +516,21 @@
     <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VIFcode_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VIF\Types\VifUnits_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\WrapperF32Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\PCRegister16_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\Types\VPURegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VuUnitRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VuUnits_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\WrapperR16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Interfaces\VMExecutionCore.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\DebugRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimer_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\DebugBitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimer_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantFPRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\ConstantRegister128_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Common\Types\Memory\ConstantMemory_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
@@ -557,6 +545,15 @@
     <ClCompile Include="Source\Common\Interfaces\PS2ResourcesSubcategory.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

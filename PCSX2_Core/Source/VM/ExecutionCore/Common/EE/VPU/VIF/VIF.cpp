@@ -1,14 +1,15 @@
 #include "stdafx.h"
 
+#include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
+
 #include "VM/ExecutionCore/Common/EE/VPU/VIF/VIF.h"
-#include "VM/VMMain.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VIF/VIF_t.h"
 #include "PS2Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
 #include "PS2Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
-#include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
 
 VIF::VIF(VMMain* vmMain, u32 vifUnitIndex) :
 	VMExecutionCoreComponent(vmMain),

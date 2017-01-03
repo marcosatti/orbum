@@ -1,7 +1,11 @@
 #include "stdafx.h"
 
+#include "Common/Types/Context_t.h"
+
 #include "VM/ExecutionCore/Common/EE/Timers/EETimers.h"
-#include "VM/VMMain.h"
+
+#include "PS2Constants/PS2Constants.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/Timers/EETimers_t.h"
@@ -10,7 +14,6 @@
 #include "PS2Resources/EE/INTC/EEIntc_t.h"
 #include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 #include "PS2Resources/GS/GS_t.h"
-#include "PS2Constants/PS2Constants.h"
 
 EETimers::EETimers(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain)
@@ -98,7 +101,7 @@ void EETimers::checkTimerInterrupt(const u32& timerNumber) const
 	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
 	if (timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
 	{
-		if (timer->COUNT->readWord() >= timer->COMP->readWord())
+		if (timer->COUNT->readWord(Context_t::RAW) >= timer->COMP->readWord(Context_t::RAW))
 		{
 			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
 		}
@@ -122,7 +125,7 @@ void EETimers::checkTimerZRET(const u32& timerNumber) const
 	if (timerRegister->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (timerRegister->COUNT->readWord() >= timerRegister->COMP->readWord())
+		if (timerRegister->COUNT->readWord(Context_t::RAW) >= timerRegister->COMP->readWord(Context_t::RAW))
 		{
 			// Set Count to 0.
 			timerRegister->COUNT->reset();

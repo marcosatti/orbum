@@ -25,52 +25,52 @@ const char* MappedMemory_t::getMnemonic() const
 	return mMemory->getMnemonic();
 }
 
-u8 MappedMemory_t::readByte(u32 storageIndex)
+u8 MappedMemory_t::readByte(const Context_t& context, u32 storageIndex)
 {
 	return mMemory->readByte(storageIndex);
 }
 
-void MappedMemory_t::writeByte(u32 storageIndex, u8 value)
+void MappedMemory_t::writeByte(const Context_t& context, u32 storageIndex, u8 value)
 {
 	mMemory->writeByte(storageIndex, value);
 }
 
-u16 MappedMemory_t::readHword(u32 storageIndex)
+u16 MappedMemory_t::readHword(const Context_t& context, u32 storageIndex)
 {
 	return mMemory->readHword(storageIndex);
 }
 
-void MappedMemory_t::writeHword(u32 storageIndex, u16 value)
+void MappedMemory_t::writeHword(const Context_t& context, u32 storageIndex, u16 value)
 {
 	mMemory->writeHword(storageIndex, value);
 }
 
-u32 MappedMemory_t::readWord(u32 storageIndex)
+u32 MappedMemory_t::readWord(const Context_t& context, u32 storageIndex)
 {
 	return mMemory->readWord(storageIndex);
 }
 
-void MappedMemory_t::writeWord(u32 storageIndex, u32 value)
+void MappedMemory_t::writeWord(const Context_t& context, u32 storageIndex, u32 value)
 {
 	mMemory->writeWord(storageIndex, value);
 }
 
-u64 MappedMemory_t::readDword(u32 storageIndex)
+u64 MappedMemory_t::readDword(const Context_t& context, u32 storageIndex)
 {
 	return mMemory->readDword(storageIndex);
 }
 
-void MappedMemory_t::writeDword(u32 storageIndex, u64 value)
+void MappedMemory_t::writeDword(const Context_t& context, u32 storageIndex, u64 value)
 {
 	mMemory->writeDword(storageIndex, value);
 }
 
-u128 MappedMemory_t::readQword(u32 storageIndex)
+u128 MappedMemory_t::readQword(const Context_t& context, u32 storageIndex)
 {
 	return mMemory->readQword(storageIndex);
 }
 
-void MappedMemory_t::writeQword(u32 storageIndex, u128 value)
+void MappedMemory_t::writeQword(const Context_t& context, u32 storageIndex, u128 value)
 {
 	mMemory->writeQword(storageIndex, value);
 }

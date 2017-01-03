@@ -3,19 +3,16 @@
 #include <bitset>
 
 #include "Common/Global/Globals.h"
-
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
+#include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
+
+#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-
-/*
-Shift instruction family.
-*/
 
 void EECoreInterpreter::DSRA()
 {
@@ -25,7 +22,7 @@ void EECoreInterpreter::DSRA()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	destReg->writeDword(0, static_cast<s64>(source1Reg->readDword(0)) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, static_cast<s64>(source1Reg->readDword(Context_t::EE, 0)) >> shamt);
 }
 
 void EECoreInterpreter::DSLL()
@@ -36,7 +33,7 @@ void EECoreInterpreter::DSLL()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	destReg->writeDword(0, source1Reg->readDword(0) << shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) << shamt);
 }
 
 void EECoreInterpreter::DSLL32()
@@ -47,7 +44,7 @@ void EECoreInterpreter::DSLL32()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
-	destReg->writeDword(0, source1Reg->readDword(0) << shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) << shamt);
 }
 
 void EECoreInterpreter::DSLLV()
@@ -57,9 +54,9 @@ void EECoreInterpreter::DSLLV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x3F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x3F;
 
-	destReg->writeDword(0, source1Reg->readDword(0) << shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) << shamt);
 }
 
 void EECoreInterpreter::DSRA32()
@@ -70,7 +67,7 @@ void EECoreInterpreter::DSRA32()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
-	destReg->writeDword(0, static_cast<s64>(source1Reg->readDword(0)) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, static_cast<s64>(source1Reg->readDword(Context_t::EE, 0)) >> shamt);
 }
 
 void EECoreInterpreter::DSRAV()
@@ -80,9 +77,9 @@ void EECoreInterpreter::DSRAV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x3F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x3F;
 
-	destReg->writeDword(0, static_cast<s64>(source1Reg->readDword(0)) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, static_cast<s64>(source1Reg->readDword(Context_t::EE, 0)) >> shamt);
 }
 
 void EECoreInterpreter::DSRL()
@@ -93,7 +90,7 @@ void EECoreInterpreter::DSRL()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	destReg->writeDword(0, source1Reg->readDword(0) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) >> shamt);
 }
 
 void EECoreInterpreter::DSRL32()
@@ -104,7 +101,7 @@ void EECoreInterpreter::DSRL32()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt() + 32;
 
-	destReg->writeDword(0, source1Reg->readDword(0) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) >> shamt);
 }
 
 void EECoreInterpreter::DSRLV()
@@ -114,9 +111,9 @@ void EECoreInterpreter::DSRLV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x3F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x3F;
 
-	destReg->writeDword(0, source1Reg->readDword(0) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0) >> shamt);
 }
 
 void EECoreInterpreter::SLL()
@@ -127,8 +124,8 @@ void EECoreInterpreter::SLL()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	s64 result = static_cast<s64>(source1Reg->readWord(0) << shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, 0) << shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::SLLV()
@@ -138,10 +135,10 @@ void EECoreInterpreter::SLLV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x1F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x1F;
 
-	s64 result = static_cast<s64>(source1Reg->readWord(0) << shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, 0) << shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::SRA()
@@ -152,8 +149,8 @@ void EECoreInterpreter::SRA()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(0)) >> shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(Context_t::EE, 0)) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::SRAV()
@@ -163,10 +160,10 @@ void EECoreInterpreter::SRAV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x1F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x1F;
 
-	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(0)) >> shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(Context_t::EE, 0)) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::SRL()
@@ -177,8 +174,8 @@ void EECoreInterpreter::SRL()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	s64 result = static_cast<s64>(source1Reg->readWord(0) >> shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, 0) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::SRLV()
@@ -188,10 +185,10 @@ void EECoreInterpreter::SRLV()
 	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(0) & 0x1F;
+	u8 shamt = source2Reg->readByte(Context_t::EE, 0) & 0x1F;
 
-	s64 result = static_cast<s64>(source1Reg->readWord(0) >> shamt);
-	destReg->writeDword(0, result);
+	s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, 0) >> shamt);
+	destReg->writeDword(Context_t::EE, 0, result);
 }
 
 void EECoreInterpreter::PSLLH()
@@ -204,7 +201,7 @@ void EECoreInterpreter::PSLLH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHword(i, source1Reg->readHword(i) << shamt);
+		destReg->writeHword(Context_t::EE, i, source1Reg->readHword(Context_t::EE, i) << shamt);
 	}
 }
 
@@ -218,9 +215,9 @@ void EECoreInterpreter::PSLLVW()
 	
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		u8 shamt = source2Reg->readWord(i) & 0x1F;
-		s64 result = static_cast<s64>(source1Reg->readWord(i) << shamt);
-		destReg->writeDword(i / 2, result);
+		u8 shamt = source2Reg->readWord(Context_t::EE, i) & 0x1F;
+		s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, i) << shamt);
+		destReg->writeDword(Context_t::EE, i / 2, result);
 	}
 }
 
@@ -234,7 +231,7 @@ void EECoreInterpreter::PSLLW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		destReg->writeWord(i, source1Reg->readWord(i) << shamt);
+		destReg->writeWord(Context_t::EE, i, source1Reg->readWord(Context_t::EE, i) << shamt);
 	}
 }
 
@@ -248,7 +245,7 @@ void EECoreInterpreter::PSRAH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHword(i, static_cast<s16>(source1Reg->readHword(i)) >> shamt);
+		destReg->writeHword(Context_t::EE, i, static_cast<s16>(source1Reg->readHword(Context_t::EE, i)) >> shamt);
 	}
 }
 
@@ -262,9 +259,9 @@ void EECoreInterpreter::PSRAVW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		u8 shamt = source2Reg->readWord(i) & 0x1F;
-		s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(i)) >> shamt);
-		destReg->writeDword(i / 2, result);
+		u8 shamt = source2Reg->readWord(Context_t::EE, i) & 0x1F;
+		s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(Context_t::EE, i)) >> shamt);
+		destReg->writeDword(Context_t::EE, i / 2, result);
 	}
 }
 
@@ -278,7 +275,7 @@ void EECoreInterpreter::PSRAW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		destReg->writeWord(i, static_cast<s32>(source1Reg->readWord(i)) >> shamt);
+		destReg->writeWord(Context_t::EE, i, static_cast<s32>(source1Reg->readWord(Context_t::EE, i)) >> shamt);
 	}
 }
 
@@ -292,7 +289,7 @@ void EECoreInterpreter::PSRLH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		destReg->writeHword(i, source1Reg->readHword(i) >> shamt);
+		destReg->writeHword(Context_t::EE, i, source1Reg->readHword(Context_t::EE, i) >> shamt);
 	}
 }
 
@@ -306,9 +303,9 @@ void EECoreInterpreter::PSRLVW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		u8 shamt = source2Reg->readWord(i) & 0x1F;
-		s64 result = static_cast<s64>(source1Reg->readWord(i) >> shamt);
-		destReg->writeDword(i / 2, result);
+		u8 shamt = source2Reg->readWord(Context_t::EE, i) & 0x1F;
+		s64 result = static_cast<s64>(source1Reg->readWord(Context_t::EE, i) >> shamt);
+		destReg->writeDword(Context_t::EE, i / 2, result);
 	}
 }
 
@@ -322,7 +319,7 @@ void EECoreInterpreter::PSRLW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		destReg->writeWord(i, source1Reg->readWord(i) >> shamt);
+		destReg->writeWord(Context_t::EE, i, source1Reg->readWord(Context_t::EE, i) >> shamt);
 	}
 }
 
@@ -336,15 +333,15 @@ void EECoreInterpreter::QFSRV()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 	auto& SAReg = getResources()->EE->EECore->R5900->SA;
 
-	u32 shamt = SAReg->readWord(); // From the docs it must be a multiple of bytes or halfwords, as you use the MTSAB or MTSAH instructions to write to the SA register.
+	u32 shamt = SAReg->readWord(Context_t::EE); // From the docs it must be a multiple of bytes or halfwords, as you use the MTSAB or MTSAH instructions to write to the SA register.
 
 	// Can use the STL class "bitset" to perform what we need... MUCH more cleaner than the old PCSX2 code.
 	// This forms our 256-bit 'type' from 4 x 64-bits.
 	std::bitset<256> result;
-	(result |= source1Reg->readDword(0)) <<= 64;
-	(result |= source1Reg->readDword(1)) <<= 64;
-	(result |= source2Reg->readDword(0)) <<= 64;
-	(result |= source2Reg->readDword(1));
+	(result |= source1Reg->readDword(Context_t::EE, 0)) <<= 64;
+	(result |= source1Reg->readDword(Context_t::EE, 1)) <<= 64;
+	(result |= source2Reg->readDword(Context_t::EE, 0)) <<= 64;
+	(result |= source2Reg->readDword(Context_t::EE, 1));
 
 	// Perform the right shift.
 	result >>= shamt;
@@ -358,6 +355,6 @@ void EECoreInterpreter::QFSRV()
 		temp64 = result >> (64 * i);
 		temp64 &= Constants::VALUE_U64_MAX;
 		u64 resultInt = temp64.to_ullong();
-		destReg->writeDword(i, resultInt);
+		destReg->writeDword(Context_t::EE, i, resultInt);
 	}
 }

@@ -3,6 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/ClrBitfieldRegister32_t.h"
 #include "Common/Types/Registers/RevBitfieldRegister32_t.h"
+#include "Common/Types/Registers/Register32_t.h"
 
 /*
 The IOP INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
@@ -56,7 +57,7 @@ public:
 
 /*
 The IOP INTC I_CTRL register.
-Functionality is largely unknown, however upon reading, the register value is set to 0.
+Functionality is largely unknown, however upon reading (through IOP), the register value is set to 0.
 Seems to be the master control for masking interrupts.
 See https://fossies.org/linux/audacious-plugins/src/psf/peops2/registers.h (line 249), and PCSX2's IopHwRead/Write.cpp.
 */
@@ -68,5 +69,5 @@ public:
 	/*
 	Returns the register value, and sets it to 0 after.
 	*/
-	u32 readWord() override;
+	u32 readWord(const Context_t& context) override;
 };

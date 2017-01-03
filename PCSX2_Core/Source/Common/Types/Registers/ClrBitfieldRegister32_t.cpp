@@ -12,7 +12,7 @@ ClrBitfieldRegister32_t::~ClrBitfieldRegister32_t()
 {
 }
 
-void ClrBitfieldRegister32_t::writeWord(u32 value)
+void ClrBitfieldRegister32_t::writeWord(const Context_t & context, u32 value)
 {
-	BitfieldRegister32_t::writeWord(readWord() & ~value);
+	BitfieldRegister32_t::writeWord(Context_t::RAW, readWord(Context_t::RAW) & ~value);
 }

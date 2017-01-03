@@ -3,18 +3,20 @@
 #include <cmath>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/Registers/FPRegister32_t.h"
+#include "Common/Util/FPUUtil/FPUUtil.h"
+#include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "Common/Types/Registers/Register128_t.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
-#include "Common/Types/Registers/FPRegister32_t.h"
-#include "Common/Util/FPUUtil/FPUUtil.h"
-#include "Common/Util/MathUtil/MathUtil.h"
 
 void EECoreInterpreter::PABSH()
 {
@@ -24,11 +26,11 @@ void EECoreInterpreter::PABSH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s16 source2Val = static_cast<s16>(source2Reg->readHword(i));
+		s16 source2Val = static_cast<s16>(source2Reg->readHword(Context_t::EE, i));
 		if (source2Val == Constants::VALUE_S16_MIN) // Need to account for when the value is at the minimum for s16, as the absolute value will not fit in an s16. In this case it is set to abs(S16_MIN) - 1 aka S16_MAX.
-			destReg->writeHword(i, Constants::VALUE_S16_MAX);
+			destReg->writeHword(Context_t::EE, i, Constants::VALUE_S16_MAX);
 		else
-			destReg->writeHword(i, std::abs(source2Val));
+			destReg->writeHword(Context_t::EE, i, std::abs(source2Val));
 	}
 }
 
@@ -40,11 +42,11 @@ void EECoreInterpreter::PABSW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s32 source2Val = static_cast<s32>(source2Reg->readWord(i));
+		s32 source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, i));
 		if (source2Val == Constants::VALUE_S32_MIN) // Need to account for when the value is at the minimum for s32, as the absolute value will not fit in an s32. In this case it is set to abs(S32_MIN) - 1 aka S32_MAX.
-			destReg->writeWord(i, Constants::VALUE_S32_MAX);
+			destReg->writeWord(Context_t::EE, i, Constants::VALUE_S32_MAX);
 		else
-			destReg->writeWord(i, std::abs(source2Val));
+			destReg->writeWord(Context_t::EE, i, std::abs(source2Val));
 	}
 }
 
@@ -56,9 +58,9 @@ void EECoreInterpreter::PLZCW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
-		u32 source1Val = source1Reg->readWord(i);
+		u32 source1Val = source1Reg->readWord(Context_t::EE, i);
 		u32 leadingBitsCount = MathUtil::countLeadingBits(source1Val) - 1; // Minus 1 as the PS2 spec requires this (exclude the sign bit in the count).
-		destReg->writeWord(i, leadingBitsCount);
+		destReg->writeWord(Context_t::EE, i, leadingBitsCount);
 	}
 }
 
@@ -73,7 +75,7 @@ void EECoreInterpreter::ABS_S()
 	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	CSR->clearFlags();
-	destReg->writeFloat(std::abs(source1Reg->readFloat())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
+	destReg->writeFloat(Context_t::EE, std::abs(source1Reg->readFloat(Context_t::EE))); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
 void EECoreInterpreter::NEG_S()
@@ -87,7 +89,7 @@ void EECoreInterpreter::NEG_S()
 	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
 	CSR->clearFlags();
-	destReg->writeFloat(-source1Reg->readFloat()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
+	destReg->writeFloat(Context_t::EE, -source1Reg->readFloat(Context_t::EE)); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
 void EECoreInterpreter::RSQRT_S()
@@ -101,8 +103,8 @@ void EECoreInterpreter::RSQRT_S()
 	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
-	f32 source1Val = source1Reg->readFloat();
-	f32 source2Val = source2Reg->readFloat();
+	f32 source1Val = source1Reg->readFloat(Context_t::EE);
+	f32 source2Val = source2Reg->readFloat(Context_t::EE);
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
@@ -129,7 +131,7 @@ void EECoreInterpreter::RSQRT_S()
 	result = FPUUtil::formatIEEEToPS2Float(result, flags);
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE, result);
 }
 
 void EECoreInterpreter::SQRT_S()
@@ -142,7 +144,7 @@ void EECoreInterpreter::SQRT_S()
 	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
 	auto& CSR = getResources()->EE->EECore->FPU->CSR;
 
-	f32 source2Val = source2Reg->readFloat();
+	f32 source2Val = source2Reg->readFloat(Context_t::EE);
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
@@ -159,7 +161,7 @@ void EECoreInterpreter::SQRT_S()
 	}
 	else
 	{
-		result = std::sqrtf(source2Reg->readFloat());
+		result = std::sqrtf(source2Reg->readFloat(Context_t::EE));
 	}
 
 	// Update flags.
@@ -167,6 +169,6 @@ void EECoreInterpreter::SQRT_S()
 	result = FPUUtil::formatIEEEToPS2Float(result, flags);
 	CSR->updateResultFlags(flags);
 
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE, result);
 }
 

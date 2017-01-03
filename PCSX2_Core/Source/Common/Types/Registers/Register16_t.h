@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 Register type and size definitions.
@@ -28,26 +29,36 @@ public:
 	explicit Register16_t();
 	explicit Register16_t(const char * mnemonic);
 
-	virtual ~Register16_t()
-	{
-	}
+#if defined(BUILD_DEBUG)
+	explicit Register16_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
+	bool mDebug;
+#endif
 
-	union 
-	{
-		u16  UH;
-		u8   UB[Constants::NUMBER_BYTES_IN_HWORD];
-	};
+	virtual ~Register16_t();
 
-	// Functions to access the register value - you should use these functions instead of accessing them directly, as subclassed registers can contain additional check code (for specialised registers).
-	virtual u8 readByte(u32 arrayIndex);
-	virtual void writeByte(u32 arrayIndex, u8 value);
-	virtual u16 readHword();
-	virtual void writeHword(u16 value);
+	/*
+	Read/write functions to access the register, with subclassed functionality.
+	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
+	*/
+	virtual u8 readByte(const Context_t & context, u32 arrayIndex);
+	virtual void writeByte(const Context_t & context, u32 arrayIndex, u8 value);
+	virtual u16 readHword(const Context_t & context);
+	virtual void writeHword(const Context_t & context, u16 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.
 	*/
 	const char * getMnemonic() const;
+
+protected:
+	/*
+	Underlying storage for register.
+	*/
+	union
+	{
+		u16  UH;
+		u8   UB[Constants::NUMBER_BYTES_IN_HWORD];
+	};
 
 private:
 	/*

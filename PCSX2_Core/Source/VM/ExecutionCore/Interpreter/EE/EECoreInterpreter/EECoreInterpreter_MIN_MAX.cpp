@@ -3,10 +3,12 @@
 #include <algorithm>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
+#include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/Registers/FPRegister32_t.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/VMMain.h"
-#include "Common/Types/Registers/Register128_t.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
@@ -15,11 +17,6 @@
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
-#include "Common/Types/Registers/FPRegister32_t.h"
-
-/*
-Min/Max instruction family.
-*/
 
 void EECoreInterpreter::PMAXH()
 {
@@ -31,10 +28,10 @@ void EECoreInterpreter::PMAXH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
-		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(Context_t::EE, i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(Context_t::EE, i));
 		s16 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
-		destReg->writeHword(i, result);
+		destReg->writeHword(Context_t::EE, i, result);
 	}
 }
 
@@ -48,10 +45,10 @@ void EECoreInterpreter::PMAXW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, i));
 		s32 result = std::max(source2Val, source1Val); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
-		destReg->writeWord(i, result);
+		destReg->writeWord(Context_t::EE, i, result);
 	}
 }
 
@@ -65,10 +62,10 @@ void EECoreInterpreter::PMINH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s16>(source1Reg->readHword(i));
-		auto source2Val = static_cast<s16>(source2Reg->readHword(i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(Context_t::EE, i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(Context_t::EE, i));
 		s16 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
-		destReg->writeHword(i, result);
+		destReg->writeHword(Context_t::EE, i, result);
 	}
 }
 
@@ -82,10 +79,10 @@ void EECoreInterpreter::PMINW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(Context_t::EE, i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(Context_t::EE, i));
 		s32 result = std::min(source1Val, source2Val); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
-		destReg->writeWord(i, result);
+		destReg->writeWord(Context_t::EE, i, result);
 	}
 }
 
@@ -106,10 +103,10 @@ void EECoreInterpreter::MAX_S()
 	auto& CSR = getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();
-	f32 source1Val = source1Reg->readFloat();
-	f32 source2Val = source2Reg->readFloat();
+	f32 source1Val = source1Reg->readFloat(Context_t::EE);
+	f32 source2Val = source2Reg->readFloat(Context_t::EE);
 	f32 result = (source1Val >= source2Val) ? source1Val : source2Val; // Dont have to check for valid float as should already be valid from before.
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 
 void EECoreInterpreter::MIN_S()
@@ -129,9 +126,9 @@ void EECoreInterpreter::MIN_S()
 	auto& CSR = getResources()->EE->EECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();
-	f32 source1Val = source1Reg->readFloat();
-	f32 source2Val = source2Reg->readFloat();
+	f32 source1Val = source1Reg->readFloat(Context_t::EE);
+	f32 source2Val = source2Reg->readFloat(Context_t::EE);
 	f32 result = (source1Val <= source2Val) ? source1Val : source2Val; // Dont have to check for valid float as should already be valid from before.
-	destReg->writeFloat(result);
+	destReg->writeFloat(Context_t::EE,result);
 }
 

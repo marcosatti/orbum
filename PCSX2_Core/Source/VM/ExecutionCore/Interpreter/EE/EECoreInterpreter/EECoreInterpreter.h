@@ -4,8 +4,10 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
-#include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
+
 #include "PS2Constants/PS2Constants.h"
+
+#include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
 
 class PS2Resources_t;
 class VMMain;
@@ -24,7 +26,6 @@ This is done in order to avoid reimplementing the same function twice.
 
 TODO: Finish documentation.
 */
-
 class EECoreInterpreter : public VMExecutionCoreComponent
 {
 public:
@@ -84,7 +85,7 @@ private:
 
 	/*
 	Helper functions to check:
-	 - The usability conditions of COP0, 1, 2 (VU0) of the EE Core
+	 - The usability conditions of COP0, 1, 2 (VU0).
 	 - The condition that no MMUHandler error occured.
 	 - No over or underflow will occur for signed 32/64 bit integers.
 	Returns a bool indicating if the instruction should return early because of unavailablity.

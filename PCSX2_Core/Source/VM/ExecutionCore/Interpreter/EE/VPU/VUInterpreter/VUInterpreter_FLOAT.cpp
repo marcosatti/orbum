@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-
-#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
-#include "VM/VMMain.h"
+
+#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
@@ -167,8 +168,8 @@ void VUInterpreter::SUB()
 	{
 		if (mInstruction.testDestField(i))
 		{
-			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(i) - source2Reg->readFloat(i), flags);
-			destReg->writeFloat(i, result);
+			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE, i) - source2Reg->readFloat(Context_t::EE, i), flags);
+			destReg->writeFloat(Context_t::EE, i, result);
 			MAC->updateVectorField(i, flags);
 		}
 		else

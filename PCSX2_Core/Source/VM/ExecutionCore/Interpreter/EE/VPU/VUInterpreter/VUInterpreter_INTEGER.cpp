@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-
-#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
-#include "VM/VMMain.h"
+
+#include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
@@ -19,7 +19,7 @@ void VUInterpreter::IADD()
 	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // IT.
 	auto& destReg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFd()]; // ID.
 
-	destReg->writeHword(source1Reg->readHword() + source2Reg->readHword());
+	destReg->writeHword(Context_t::EE, source1Reg->readHword(Context_t::EE) + source2Reg->readHword(Context_t::EE));
 }
 
 void VUInterpreter::IADDI()
