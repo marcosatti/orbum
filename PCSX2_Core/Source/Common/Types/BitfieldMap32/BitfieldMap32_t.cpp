@@ -57,7 +57,7 @@ void BitfieldMap32_t::initaliseField(const u8& fieldIndex)
 	setBitRange32(field.mFieldStartPosition, field.mFieldLength, field.mFieldValue);
 }
 
-void BitfieldMap32_t::syncMapFromMemory()
+void BitfieldMap32_t::syncMap()
 {
 	for (auto& field : mFieldMap)
 		field.mFieldValue = getBitRange32(field.mFieldStartPosition, field.mFieldLength);

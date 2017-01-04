@@ -22,6 +22,7 @@
 #include "PS2Resources/EE/Types/BootROM_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
+#include "PS2Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimer_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"

@@ -25,7 +25,7 @@ void EERegister_SIO_t::writeByte(u32 storageIndex, u8 value)
 			// Do not bother outputting the '\r' or '\n' characters, as this is done by the logging functions of the emulator.
 
 			// Output the message.
-			logDebug("(%s, %d) %s: %s", __FILENAME__, __LINE__, SIO_BUFFER_PREFIX, sioBuffer.c_str());
+			logDebug("%s: %s", SIO_BUFFER_PREFIX, sioBuffer.c_str());
 
 			// Reset the buffer.
 			sioBuffer.clear();

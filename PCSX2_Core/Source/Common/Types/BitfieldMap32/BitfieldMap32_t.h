@@ -72,7 +72,7 @@ public:
 	/*
 	If the underlying 32-bit value is changed directly, call this function to update and sync the bitfield map to reflect the same values.
 	*/
-	virtual void syncMapFromMemory();
+	virtual void syncMap();
 
 	/*
 	If the map bitfield values have been changed directly, call this function to update and sync the underlying 32-bit value.

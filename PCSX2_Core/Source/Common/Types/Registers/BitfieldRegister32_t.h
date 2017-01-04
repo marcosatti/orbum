@@ -6,8 +6,8 @@
 /*
 A 32-bit bitfield register, accessed mostly in the same way as a normal register.
 
-Sync'ing with the bitfield map is provided though the get/setRegisterValue() functions, from which you can extract bitfields easily.
-It is not automatically done as registers need to be accessed often and manipulated for a while before interfacing with other hardware.
+Sync'ing with the bitfield map is provided automatically with the write{Byte,Hword,Word} functions, from which you can extract bitfields easily (using getFieldValue()).
+Setting bitfields using setFieldValue() will also automatically sync.
 */
 class BitfieldRegister32_t : public Register32_t, public BitfieldMap32_t
 {
@@ -24,6 +24,8 @@ public:
 	*/
 	void logDebugAllFields();
 
+	u8 readByte(const Context_t& context, u32 arrayIndex) override;
+	u16 readHword(const Context_t& context, u32 arrayIndex) override;
 	u32 readWord(const Context_t& context) override;
 #endif
 
@@ -44,9 +46,10 @@ public:
 	void setBitRange32(u8 startPosition, u8 bitLength, u32 value) override;
 
 	/*
-	Override writeWord[U/S] to sync with the bitfield map. WriteWordS calls the unsigned version.
-	WriteWordU() can be overriden by sub classes to provide pre processing on the value.
+	Override write functions to sync with the bitfield map.
 	*/
+	void writeByte(const Context_t& context, u32 arrayIndex, u8 value) override;
+	void writeHword(const Context_t& context, u32 arrayIndex, u16 value) override;
 	void writeWord(const Context_t & context, u32 value) override;
 };
 

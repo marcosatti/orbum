@@ -93,15 +93,14 @@ public:
 	static constexpr u32 CHANNEL_ID = 4;
 };
 
-// TODO: Channel 5 has no information? Verify.
 /*
-Represents IOP DMAC channel 5 - unknown channel.
+Represents IOP DMAC channel 5 - PIO (parallel I/O?) channel.
 This channel inherits a base IOP DMAC channel.
 */
-class IOPDmacChannel_Channel5_t : public IOPDmacChannel_t
+class IOPDmacChannel_PIO_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_Channel5_t();
+	explicit IOPDmacChannel_PIO_t();
 
 	static constexpr u32 CHANNEL_ID = 5;
 };

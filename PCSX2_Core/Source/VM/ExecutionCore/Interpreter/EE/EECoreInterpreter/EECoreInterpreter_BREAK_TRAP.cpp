@@ -30,7 +30,7 @@ void EECoreInterpreter::SYSCALL()
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 	Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_SYSTEMCALL));
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_LOG_SYSCALLS
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v1 ($3), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v1, it is done so through

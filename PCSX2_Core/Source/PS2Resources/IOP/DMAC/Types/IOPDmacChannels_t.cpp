@@ -54,12 +54,12 @@ IOPDmacChannel_SPU2c1_t::IOPDmacChannel_SPU2c1_t() :
 	TADR = std::make_shared<Register32_t>("IOP CH_SPU2c1 TADR");
 }
 
-IOPDmacChannel_Channel5_t::IOPDmacChannel_Channel5_t() :
+IOPDmacChannel_PIO_t::IOPDmacChannel_PIO_t() :
 	IOPDmacChannel_t(CHANNEL_ID)
 {
-	MADR = std::make_shared<Register32_t>("IOP CH_Channel5 MADR", true);
-	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP CH_Channel5 BCR");
-	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP CH_Channel5 CHCR");
+	MADR = std::make_shared<Register32_t>("IOP CH_PIO MADR", true);
+	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP CH_PIO BCR");
+	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP CH_PIO CHCR");
 }
 
 IOPDmacChannel_OTClear_t::IOPDmacChannel_OTClear_t() :

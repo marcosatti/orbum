@@ -46,6 +46,26 @@ void BitfieldRegister32_t::logDebugAllFields()
 	}
 }
 
+u8 BitfieldRegister32_t::readByte(const Context_t& context, u32 arrayIndex)
+{
+	auto temp = Register32_t::readByte(context, arrayIndex);
+
+	if (mDebug)
+		logDebugAllFields();
+
+	return temp;
+}
+
+u16 BitfieldRegister32_t::readHword(const Context_t& context, u32 arrayIndex)
+{
+	auto temp = Register32_t::readHword(context, arrayIndex);
+
+	if (mDebug)
+		logDebugAllFields();
+
+	return temp;
+}
+
 u32 BitfieldRegister32_t::readWord(const Context_t& context)
 {
 	auto temp = Register32_t::readWord(context);
@@ -71,10 +91,32 @@ void BitfieldRegister32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 val
 	UW = MathUtil::insertMaskedValue32(UW, value, startPosition, bitLength);
 }
 
+void BitfieldRegister32_t::writeByte(const Context_t& context, u32 arrayIndex, u8 value)
+{
+	Register32_t::writeByte(context, arrayIndex, value);
+	BitfieldMap32_t::syncMap();
+
+#if defined(BUILD_DEBUG)
+	if (mDebug)
+		logDebugAllFields();
+#endif
+}
+
+void BitfieldRegister32_t::writeHword(const Context_t& context, u32 arrayIndex, u16 value)
+{
+	Register32_t::writeHword(context, arrayIndex, value);
+	BitfieldMap32_t::syncMap();
+
+#if defined(BUILD_DEBUG)
+	if (mDebug)
+		logDebugAllFields();
+#endif
+}
+
 void BitfieldRegister32_t::writeWord(const Context_t& context, u32 value)
 {
 	Register32_t::writeWord(context, value);
-	BitfieldMap32_t::syncMapFromMemory();
+	BitfieldMap32_t::syncMap();
 
 #if defined(BUILD_DEBUG)
 	if (mDebug)

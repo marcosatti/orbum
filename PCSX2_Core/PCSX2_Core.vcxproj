@@ -371,6 +371,7 @@
     <ClInclude Include="Source\PS2Resources\IOP\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.h" />
+    <ClInclude Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.h" />
@@ -515,6 +516,7 @@
     <ClCompile Include="Source\PS2Resources\IOP\CDVD\CDVD_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\IOP\DMAC\Types\IOPDmacRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\INTC\IOPIntc_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />

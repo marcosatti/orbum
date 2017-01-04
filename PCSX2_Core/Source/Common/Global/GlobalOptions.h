@@ -39,4 +39,15 @@ When debugging memory accesses (see DebugMemory_t), choose if to log values read
 */
 #if defined(BUILD_DEBUG)
  #define DEBUG_MEM_LOG_VALUE_AS_HEX 1
+#else
+ #define DEBUG_MEM_LOG_VALUE_AS_HEX 0
+#endif
+
+/*
+Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each one.
+*/
+#if defined(BUILD_DEBUG)
+#define DEBUG_LOG_SYSCALLS 0
+#else
+#define DEBUG_LOG_SYSCALLS 0
 #endif

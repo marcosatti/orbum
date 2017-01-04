@@ -35,7 +35,7 @@ public:
 private:
 #if DEBUG_LOG_SIO_MESSAGES
 	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
-	static constexpr char * SIO_BUFFER_PREFIX = "SIO Message";
+	static constexpr char * SIO_BUFFER_PREFIX = "EE SIO Message";
 	std::string sioBuffer;
 #endif
 };

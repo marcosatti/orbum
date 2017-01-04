@@ -30,7 +30,7 @@ void IOPCoreInterpreter::SYSCALL()
 	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 	Exceptions->setException(IOPCoreException_t(ExType::EX_SYSTEMCALL));
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_LOG_SYSCALLS
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v0 ($2), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v0, it is done so through
