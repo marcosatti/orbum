@@ -130,12 +130,8 @@ void EECoreInterpreter::MFIAB()
 
 void EECoreInterpreter::MFIABM()
 {
-	if(!getResources()->EE->EECore->COP0->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-	}
+	if (!checkCOP0Usable())
+		return;
 
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 	auto& sourceReg = getResources()->EE->EECore->COP0->IABM;

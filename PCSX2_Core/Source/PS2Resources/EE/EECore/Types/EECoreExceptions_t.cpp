@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
+
 #include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
@@ -8,7 +10,7 @@
 EECoreExceptions_t::EECoreExceptions_t(const std::shared_ptr<EECoreCOP0_t> & cop0) :
 	ExceptionOccurred(false),
 	Exception(),
-	COP0(cop0)
+	mCOP0(cop0)
 {
 }
 
@@ -24,48 +26,33 @@ const EECoreException_t& EECoreExceptions_t::getException() const
 	return Exception;
 }
 
-void EECoreExceptions_t::setException(const EECoreException_t& eeCoreException)
+void EECoreExceptions_t::setException(const EECoreException_t& exception)
 {
 	// Interrupt exceptions are only taken when conditions are correct.
 	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.
-	if (eeCoreException.mExType == EECoreException_t::ExType::EX_INTERRUPT)
+	// Determines if the exception should be raised at the end.
+	bool masked = mCOP0->Status->isExceptionsMasked();
+
+	// If its from an interrupt, need to check the interrupt source is not masked.
+	if (exception.mExType == ExType::EX_INTERRUPT
+		&& mCOP0->Status->isInterruptsMasked()
+		&& mCOP0->Status->isIRQMasked(exception.mIntExceptionInfo.mIRQLine))
 	{
-		// Check if the Status.IE and Status.EIE bit is set. Status.EXL and Status.ERL must also be 0.
-		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IE)
-			&& COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EIE)
-			&& !COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL)
-			&& !COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL))
-		{
-			// Now check if the Status.IM corresponding bit is set.
-			if (eeCoreException.mIntExceptionInfo.mInt0)
-			{
-				if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IM) & 0x1)
-				{
-					Exception = eeCoreException;
-					ExceptionOccurred = true;
-				}
-			}
-			else if (eeCoreException.mIntExceptionInfo.mInt1)
-			{
-				if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IM) & 0x2)
-				{
-					Exception = eeCoreException;
-					ExceptionOccurred = true;
-				}
-			}
-			else if (eeCoreException.mIntExceptionInfo.mTimerInt)
-			{
-				if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IM7))
-				{
-					Exception = eeCoreException;
-					ExceptionOccurred = true;
-				}
-			}
-		}
+		masked = true;
+	}
+
+	// TODO: need to add NMI checks here (always raised)?
+	// if (exception.mExType == of NMI type (ie: reset))
+	//     masked = false;
+
+	// Finally raise the exception if not masked.
+	if (!masked)
+	{
+		Exception = exception;
+		ExceptionOccurred = true;
 	}
 	else
 	{
-		Exception = eeCoreException;
-		ExceptionOccurred = true;
+		logDebug("EE Exception raised (%s), but was masked!", EECoreExceptionsTable::getExceptionInfo(exception.mExType)->mMnemonic);
 	}
 }

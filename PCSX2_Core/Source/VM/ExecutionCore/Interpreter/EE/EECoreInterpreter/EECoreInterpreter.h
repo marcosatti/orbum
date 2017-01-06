@@ -51,15 +51,27 @@ private:
 	u64 DEBUG_INSTRUCTION_SYNC = 0;
 #endif
 
-	// Component helper functions.
-	void checkBranchDelaySlot() const;
-	u32 executeInstruction();
-
 	/*
 	Checks the COP0.Count register against the COP0.Compare register.
 	If the Count value >= Compare value, an exception is generated.
 	*/
 	void checkCountTimerEvent() const;
+
+	/*
+	Checks the COP0.Cause register for any external interrupts that have been asserted (the IP bits).
+	An exception is generated when a interrupt has been asserted and is not masked.
+	*/
+	void checkExternalInterrupts() const;
+
+	/*
+	Checks the branch delay slot, and updates the PC if required.
+	*/
+	void checkBranchDelaySlot() const;
+
+	/*
+	Executes the instruction at the current PC and increments it.
+	*/
+	u32 executeInstruction();
 
 	/*
 	The EECore exception handler, which handles and processes the EECore->Exceptions state.

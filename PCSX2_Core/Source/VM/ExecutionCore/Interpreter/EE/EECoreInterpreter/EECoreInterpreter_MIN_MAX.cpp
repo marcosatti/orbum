@@ -90,12 +90,8 @@ void EECoreInterpreter::MAX_S()
 {
 	// Fd = MAX(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-	}
+	if (!checkCOP1Usable())
+		return;
 
 	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft
@@ -113,12 +109,8 @@ void EECoreInterpreter::MIN_S()
 {
 	// Fd = MIN(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-	}
+	if (!checkCOP1Usable())
+		return;
 
 	auto& source1Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRd()]; // Fs
 	auto& source2Reg = getResources()->EE->EECore->FPU->FPR[mInstruction.getRRt()]; // Ft

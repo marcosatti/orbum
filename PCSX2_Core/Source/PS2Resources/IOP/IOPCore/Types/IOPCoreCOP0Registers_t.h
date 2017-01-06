@@ -76,6 +76,24 @@ public:
 	*/
 	void pushExStack();
 	void popExStack();
+
+	/*
+	Returns if all exceptions are currently masked ( = NOT ENABLED).
+	TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
+	*/
+	bool isExceptionsMasked() const;
+
+	/*
+	Returns if all interrupts are currently masked ( = NOT ENABLED).
+	Does so by checking the master IEc bit.
+	*/
+	bool isInterruptsMasked() const;
+
+	/*
+	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
+	Does so by checking the IM[irq] bit.
+	*/
+	bool isIRQMasked(u8 irq) const;
 };
 
 /*
@@ -94,6 +112,17 @@ public:
 	};
 
 	explicit IOPCoreCOP0Register_Cause_t();
+
+	/*
+	Clears the Cause.IP bits (from bits 8 -> 15).
+	*/
+	void clearIP();
+
+	/*
+	Sets the given IP[irq] bit given.
+	The other IP bits are left unchanged (uses OR). Use the clearIP() function if you need to reset them all.
+	*/
+	void setIRQPending(u8 irq);
 };
 
 /*

@@ -20,7 +20,7 @@
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
-	mIOPException(nullptr), 
+	mIOPCoreException(nullptr), 
 	mExceptionProperties(nullptr)
 {
 }
@@ -28,10 +28,9 @@ IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) :
 void IOPCoreExceptionHandler::checkExceptionState()
 {
 	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
+
 	if (Exceptions->hasExceptionOccurred())
-	{
 		handleException(Exceptions->getException());
-	}
 }
 
 void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
@@ -44,7 +43,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	auto& PC = getResources()->IOP->IOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
-	mIOPException = &PS2Exception;
+	mIOPCoreException = &PS2Exception;
 	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
 
 #if 0 // defined(BUILD_DEBUG)
@@ -56,7 +55,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	(this->*EXCEPTION_HANDLERS[mExceptionProperties->mImplementationIndex])();
 
 	// If its a reset exception, set PC to reset vector and return.
-	if (mIOPException->mExType == ExType::EX_RESET)
+	if (mIOPCoreException->mExType == ExType::EX_RESET)
 	{
 		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 		return;
@@ -86,7 +85,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	}
 
 	// Select the vector to use (set vectorOffset).
-	if (mIOPException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD || mIOPException->mExType == ExType::EX_TLB_REFILL_STORE)
+	if (mIOPCoreException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD || mIOPCoreException->mExType == ExType::EX_TLB_REFILL_STORE)
 		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 	else
 		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
@@ -105,7 +104,15 @@ void IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	// Clear all previously set Cause.IP bits.
+	// TODO: In hardware, an interrupt is caused by assertion of a IRQ line which is then deasserted once the ISR has run (the ISR sets the peripheral registers etc which deasserts the line).
+	//       This would also clear the Cause.IP bit. In this emulator, a more simple approach is taken: when an interrupt exception is taken, thats when the Cause.IP bit gets set.
+	//       However it is not cleared upon the ISR finishing, instead when another interrupt is taken, thats when any previous IP bits are cleared and only the corresponding
+	//       interrupt source is set. If needed this can be properly implemented.
+	COP0->Cause->clearIP();
+
+	// Set the corresponding IRQ Cause.IP bit.
+	COP0->Cause->setIRQPending(mIOPCoreException->mIntExceptionInfo.mIRQLine);
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
@@ -172,7 +179,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, mIOPException->mCOPExceptionInfo.mCOPUnusable);
+	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, mIOPCoreException->mCOPExceptionInfo.mCOPUnusable);
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_OVERFLOW()

@@ -14,7 +14,7 @@ IOPCore_t::IOPCore_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
 	R3000(std::make_shared<IOPCoreR3000_t>()),
 	COP0(std::make_shared<IOPCoreCOP0_t>()),
-	Exceptions(std::make_shared<IOPCoreExceptions_t>()),
+	Exceptions(std::make_shared<IOPCoreExceptions_t>(COP0)),
 	ScratchpadMemory(std::make_shared<DebugMemory_t>(PS2Constants::IOP::IOPCore::ScratchpadMemory::SIZE_SCRATCHPAD_MEMORY, "IOP Core Scratchpad Memory"))
 {
 }

@@ -22,9 +22,7 @@ Any other signals unused must be set to 0 upon creation, as the exception handle
 */
 struct IntExceptionInfo_t
 {
-	u32 mInt1;     // INT1 signal from the DMAC.
-	u32 mInt0;     // INT0 signal from the INTC.
-	u32 mTimerInt; // Timer signal from the EE Core Timer (COP0.Count/Compare registers).
+	u8 mIRQLine;
 };
 
 /*
@@ -33,7 +31,7 @@ The single parameter is set to the number of the coprocessor which was accessed 
 */
 struct COPExceptionInfo_t
 {
-	u32 mCOPUnusable;
+	u8 mCOPUnusable;
 };
 
 /*

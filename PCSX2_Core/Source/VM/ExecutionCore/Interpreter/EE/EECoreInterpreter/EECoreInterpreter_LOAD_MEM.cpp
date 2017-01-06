@@ -284,12 +284,8 @@ void EECoreInterpreter::LQ()
 void EECoreInterpreter::LWC1()
 {
 	// Ft = MEM[UQ]. Address error or TLB error generated.
-	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
-	}
+	if (!checkCOP1Usable())
+		return;
 
 	auto& destReg = getResources()->EE->EECore->FPU->FPR[mInstruction.getIRt()]; // Ft
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"

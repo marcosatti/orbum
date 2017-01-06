@@ -45,12 +45,44 @@ void IOPCoreCOP0Register_Status_t::popExStack()
 	setFieldValue(Fields::IEp, getFieldValue(Fields::IEo));
 }
 
+bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const
+{
+	return false;
+}
+
+bool IOPCoreCOP0Register_Status_t::isInterruptsMasked() const
+{
+	if (getFieldValue(Fields::IEc) > 0)
+		return false;
+
+	return true;
+}
+
+bool IOPCoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
+{
+	if ((getFieldValue(Fields::IM) & (1 << irq)) > 0)
+		return false;
+	
+	return true;
+}
+
 IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()
 {
 	registerField(Fields::ExcCode, "ExcCode", 2, 5, 0);
 	registerField(Fields::IP, "IP", 8, 8, 0);
 	registerField(Fields::CE, "CE", 28, 2, 0);
 	registerField(Fields::BD, "BD", 31, 1, 0);
+}
+
+void IOPCoreCOP0Register_Cause_t::clearIP()
+{
+	setFieldValue(Fields::IP, 0);
+}
+
+void IOPCoreCOP0Register_Cause_t::setIRQPending(u8 irq)
+{
+	auto temp = getFieldValue(Fields::IP) | (1 << irq);
+	setFieldValue(Fields::IP, temp);
 }
 
 IOPCoreCOP0Register_PRId_t::IOPCoreCOP0Register_PRId_t()

@@ -34,7 +34,7 @@ s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 			{
 				// Generate an INT0 signal/interrupt exception (the IOP Core exception handler will determine if it should be masked).
 				auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-				IntExceptionInfo_t intInfo = { 1 };
+				IntExceptionInfo_t intInfo = { 2 };
 				Exceptions->setException(IOPCoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
 			}
 		}

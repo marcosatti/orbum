@@ -52,14 +52,16 @@ void EECoreInterpreter::initalise()
 
 s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
+	// Check for any external interrupts (check the COP0.Cause.IP bits).
+
 	// Check for any COP0.Count events.
 	checkCountTimerEvent();
 
-	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	mExceptionHandler->checkExceptionState();
-		
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	checkBranchDelaySlot();
+
+	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
+	mExceptionHandler->checkExceptionState();
 
 	// Perform instruction related activities (such as execute instruction, increment PC and update timers).
 	u32 cycles = executeInstruction();
@@ -92,18 +94,22 @@ void EECoreInterpreter::checkCountTimerEvent() const
 	auto& EECore = getResources()->EE->EECore;
 
 	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
-	// The docs specify that an interrupt is raised when the two values are equal, but this is impossible to get correct (due to how emulation works), 
-	//  so it is based on greater than or equal.
+	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
 	// TODO: check for errors.
-	if (EECore->COP0->Count->readWord(Context_t::EE) >= EECore->COP0->Compare->readWord(Context_t::EE))
+	if (EECore->COP0->Count->readWord(Context_t::EE) == EECore->COP0->Compare->readWord(Context_t::EE))
 	{
-		// Set the IP7 field of the COP0.Cause register.
-		EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 1);
-
 		// Set exception state.
-		IntExceptionInfo_t intEx = { 0, 0, 1 };
+		IntExceptionInfo_t intEx = { 7 };
 		EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
 	}
+}
+
+void EECoreInterpreter::checkExternalInterrupts() const
+{
+	auto& COP0 = getResources()->EE->EECore->COP0;
+
+	// Check the COP0.Cause.IP bits (bits 8 - 15) against the COP0.Status.IM bits.
+	// If the AND of the two compares to true, then an interrupt exception is raised.
 }
 
 u32 EECoreInterpreter::executeInstruction()

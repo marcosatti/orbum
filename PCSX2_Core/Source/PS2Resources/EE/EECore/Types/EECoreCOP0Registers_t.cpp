@@ -78,13 +78,13 @@ EECoreCOP0Register_Compare_t::EECoreCOP0Register_Compare_t(std::shared_ptr<EECor
 
 void EECoreCOP0Register_Compare_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
-	mCause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 0);
+	mCause->clearIP(); // TODO: Might need to implement just removing the IP[7] bit.
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 }
 
 void EECoreCOP0Register_Compare_t::writeWord(const Context_t & context, u32 value)
 {
-	mCause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, 0);
+	mCause->clearIP(); // TODO: Might need to implement just removing the IP[7] bit.
 	BitfieldRegister32_t::writeWord(context, value);
 }
 
@@ -94,9 +94,7 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()
 	registerField(Fields::EXL, "EXL", 1, 1, 0);
 	registerField(Fields::ERL, "ERL", 2, 1, 1);
 	registerField(Fields::KSU, "KSU", 3, 2, 0);
-	registerField(Fields::IM, "IM", 5, 5, 0);
-	registerField(Fields::BEM, "BEM", 12, 1, 0);
-	registerField(Fields::IM7, "IM7", 15, 1, 0);
+	registerField(Fields::IM, "IM", 8, 8, 0);
 	registerField(Fields::EIE, "EIE", 16, 1, 0);
 	registerField(Fields::EDI, "EDI", 17, 1, 0);
 	registerField(Fields::CH, "CH", 18, 1, 0);
@@ -105,16 +103,50 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
+bool EECoreCOP0Register_Status_t::isExceptionsMasked() const
+{
+	return false;
+}
+
+bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
+{
+	if ((getFieldValue(Fields::IE) > 0)
+		&& (getFieldValue(Fields::EIE) > 0))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool EECoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
+{
+	if ((getFieldValue(Fields::IM) & (1 << irq)) > 0)
+		return false;
+
+	return true;
+}
+
 EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
 {
 	registerField(Fields::ExcCode, "ExcCode", 2, 5, 0);
-	registerField(Fields::IP2, "IP2", 10, 1, 0);
-	registerField(Fields::IP3, "IP3", 11, 1, 0);
-	registerField(Fields::IP7, "IP7", 15, 1, 0);
+	registerField(Fields::IP, "IP", 8, 8, 0);
 	registerField(Fields::EXC2, "EXC2", 16, 3, 0);
 	registerField(Fields::CE, "CE", 28, 2, 0);
 	registerField(Fields::BD2, "BD2", 30, 1, 0);
 	registerField(Fields::BD, "BD", 31, 1, 0);
+}
+
+void EECoreCOP0Register_Cause_t::clearIP()
+{
+	u32 temp = readWord(Context_t::RAW) & 0xFFFF00FF;
+	writeWord(Context_t::RAW, temp);
+}
+
+void EECoreCOP0Register_Cause_t::setIRQPending(u8 irq)
+{
+	auto temp = getFieldValue(Fields::IP) | (1 << irq);
+	setFieldValue(Fields::IP, temp);
 }
 
 EECoreCOP0Register_PRId_t::EECoreCOP0Register_PRId_t()

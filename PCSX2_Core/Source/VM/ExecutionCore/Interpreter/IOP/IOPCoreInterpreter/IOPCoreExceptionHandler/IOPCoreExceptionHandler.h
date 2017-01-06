@@ -45,7 +45,7 @@ private:
 	/*
 	State variables, needed by functions below.
 	*/
-	const IOPCoreException_t * mIOPException;
+	const IOPCoreException_t * mIOPCoreException;
 	const ExceptionProperties_t * mExceptionProperties;
 
 	/*

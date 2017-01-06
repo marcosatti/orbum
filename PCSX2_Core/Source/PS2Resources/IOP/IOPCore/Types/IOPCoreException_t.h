@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 /*
-Parameters describe information needed for a TLB * exception to process.
+Parameters describe information needed for a TLB exception to process.
 These fields are not used for all TLB exception types, but are related to the TLB. Consult the IOPCoreExceptionHandler for which TLB exceptions access what fields.
 */
 struct TLBExceptionInfo_t
@@ -16,13 +16,12 @@ struct TLBExceptionInfo_t
 };
 
 /*
-Parameters describe information needed for a interrupt exception to process. Set the corresponding interrupt signal to 1.
-All three paramters describe the interrupt signal that was generated. If only one signal, eg: Int1 was raised, then only mInt1 needs to be 1.
-Any other signals unused must be set to 0 upon creation, as the exception handler sets them all at once.
+Parameters describe information needed for a interrupt exception to process. 
+Determine which interrupt line caused the exception.
 */
 struct IntExceptionInfo_t
 {
-	u8 mInt0;
+	u8 mIRQLine;
 };
 
 /*
@@ -31,7 +30,7 @@ The single parameter is set to the number of the coprocessor which was accessed 
 */
 struct COPExceptionInfo_t
 {
-	u32 mCOPUnusable;
+	u8 mCOPUnusable;
 };
 
 /*

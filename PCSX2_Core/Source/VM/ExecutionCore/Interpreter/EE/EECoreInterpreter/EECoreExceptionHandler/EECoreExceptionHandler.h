@@ -6,16 +6,15 @@
 
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
-/*
-The exception handler provides 2 main points of functionality:
- 1. Handles the exception state for the EE Core.
- 2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
-*/
-
 using ExceptionProperties_t = EECoreExceptionsTable::ExceptionProperties_t;
 
 class VMMain;
 
+/*
+The exception handler provides 2 main points of functionality:
+1. Handles the exception state for the EE Core.
+2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
+*/
 class EECoreExceptionHandler : public VMExecutionCoreComponent
 {
 public:
@@ -42,7 +41,7 @@ private:
 #endif
 
 	/*
-	State variables, needed by functions below.
+	Temp state variables, needed by functions below.
 	*/
 	const EECoreException_t * mEECoreException;
 	const ExceptionProperties_t * mExceptionProperties;

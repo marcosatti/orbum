@@ -11,10 +11,26 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t()
 	registerField(Fields::TMR0, "TMR0", 4, 1, 0);
 	registerField(Fields::TMR1, "TMR1", 5, 1, 0);
 	registerField(Fields::TMR2, "TMR2", 6, 1, 0);
-	registerField(Fields::PAD_MC, "PAD_MC", 7, 1, 0);
-	registerField(Fields::SIO, "SIO", 8, 1, 0);
+	registerField(Fields::SIO0, "SIO0", 7, 1, 0);
+	registerField(Fields::SIO1, "SIO1", 8, 1, 0);
 	registerField(Fields::SPU, "SPU", 9, 1, 0);
 	registerField(Fields::PIO, "PIO", 10, 1, 0);
+	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0);
+	registerField(Fields::DVD, "DVD", 12, 1, 0);
+	registerField(Fields::PCMCIA, "PCMCIA", 13, 1, 0);
+	registerField(Fields::TMR3, "TMR3", 14, 1, 0);
+	registerField(Fields::TMR4, "TMR4", 15, 1, 0);
+	registerField(Fields::TMR5, "TMR5", 16, 1, 0);
+	registerField(Fields::SIO2, "SIO2", 17, 1, 0);
+	registerField(Fields::HTR0, "HTR0", 18, 1, 0);
+	registerField(Fields::HTR1, "HTR1", 19, 1, 0);
+	registerField(Fields::HTR2, "HTR2", 20, 1, 0);
+	registerField(Fields::HTR3, "HTR3", 21, 1, 0);
+	registerField(Fields::USB, "USB", 22, 1, 0);
+	registerField(Fields::EXTR, "EXTR", 23, 1, 0);
+	registerField(Fields::FWRE, "FWRE", 24, 1, 0);
+	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
+
 }
 
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() 
@@ -26,10 +42,25 @@ IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t()
 	registerField(Fields::TMR0, "TMR0", 4, 1, 0);
 	registerField(Fields::TMR1, "TMR1", 5, 1, 0);
 	registerField(Fields::TMR2, "TMR2", 6, 1, 0);
-	registerField(Fields::PAD_MC, "PAD_MC", 7, 1, 0);
-	registerField(Fields::SIO, "SIO", 8, 1, 0);
+	registerField(Fields::SIO0, "SIO0", 7, 1, 0);
+	registerField(Fields::SIO1, "SIO1", 8, 1, 0);
 	registerField(Fields::SPU, "SPU", 9, 1, 0);
 	registerField(Fields::PIO, "PIO", 10, 1, 0);
+	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0);
+	registerField(Fields::DVD, "DVD", 12, 1, 0);
+	registerField(Fields::PCMCIA, "PCMCIA", 13, 1, 0);
+	registerField(Fields::TMR3, "TMR3", 14, 1, 0);
+	registerField(Fields::TMR4, "TMR4", 15, 1, 0);
+	registerField(Fields::TMR5, "TMR5", 16, 1, 0);
+	registerField(Fields::SIO2, "SIO2", 17, 1, 0);
+	registerField(Fields::HTR0, "HTR0", 18, 1, 0);
+	registerField(Fields::HTR1, "HTR1", 19, 1, 0);
+	registerField(Fields::HTR2, "HTR2", 20, 1, 0);
+	registerField(Fields::HTR3, "HTR3", 21, 1, 0);
+	registerField(Fields::USB, "USB", 22, 1, 0);
+	registerField(Fields::EXTR, "EXTR", 23, 1, 0);
+	registerField(Fields::FWRE, "FWRE", 24, 1, 0);
+	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
 }
 
 IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t() : 

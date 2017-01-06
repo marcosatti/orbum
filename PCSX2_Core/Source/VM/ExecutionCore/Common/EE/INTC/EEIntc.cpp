@@ -28,9 +28,9 @@ s64 EEIntc::executionStep(const ClockSource_t & clockSource)
 		const u32 I_MASK = getResources()->EE->INTC->MASK->readWord(Context_t::RAW);
 		if ((I_STAT & I_MASK) > 0)
 		{
-			// Generate an INT0 signal/interrupt exception (the EE Core exception handler will determine if it should be masked).
+			// Generate an INT0 (IP[3]) signal/interrupt exception (the EE Core exception handler will determine if it should be masked).
 			auto& Exceptions = getResources()->EE->EECore->Exceptions;
-			IntExceptionInfo_t intInfo = { 0, 1, 0 };
+			IntExceptionInfo_t intInfo = { 3 };
 			Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
 		}
 	}

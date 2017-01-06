@@ -375,9 +375,10 @@ bool EEDmac::isInterruptPending() const
 }
 
 void EEDmac::raiseInterrupt() const
-{
+{			
+	// Generate an INT1 (IP[2]) signal/interrupt exception (the EE Core exception handler will determine if it should be masked).
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
-	IntExceptionInfo_t intex = {1, 0, 0};
+	IntExceptionInfo_t intex = { 2 };
 	Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
 }
 

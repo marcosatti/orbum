@@ -28,10 +28,9 @@ EECoreExceptionHandler::EECoreExceptionHandler(VMMain * vmMain) :
 void EECoreExceptionHandler::checkExceptionState()
 {
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
+
 	if (Exceptions->hasExceptionOccurred())
-	{
 		handleException(Exceptions->getException());
-	}
 }
 
 void EECoreExceptionHandler::handleException(const EECoreException_t& PS2Exception)
@@ -203,7 +202,7 @@ void EECoreExceptionHandler::EX_HANDLER_RESET()
 	// Other funcionality in "operation", just in case the inital values are different.
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEV, 1);
-	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEM, 0);
+	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::IM, 0);
 
 	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, 0);
 
@@ -248,12 +247,15 @@ void EECoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 	
-	// The EE Core Users Manual page 99 mentions that if an interrupt signal is asserted and deasserted in a very short time, the Cause.IP[i] may not
-	//  be reliable to rely on for information. This may need investigation if the timing is critical to some games.
-	// TODO: check for timing issues.
-	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP2, mEECoreException->mIntExceptionInfo.mInt1);
-	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP3, mEECoreException->mIntExceptionInfo.mInt0);
-	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::IP7, mEECoreException->mIntExceptionInfo.mTimerInt);
+	// Clear all previously set Cause.IP bits.
+	// TODO: In hardware, an interrupt is caused by assertion of a IRQ line which is then deasserted once the ISR has run (the ISR sets the peripheral registers etc which deasserts the line).
+	//       This would also clear the Cause.IP bit. In this emulator, a more simple approach is taken: when an interrupt exception is taken, thats when the Cause.IP bit gets set.
+	//       However it is not cleared upon the ISR finishing, instead when another interrupt is taken, thats when any previous IP bits are cleared and only the corresponding
+	//       interrupt source is set. If needed this can be properly implemented.
+	COP0->Cause->clearIP();
+
+	// Set the corresponding IRQ Cause.IP bit.
+	COP0->Cause->setIRQPending(mEECoreException->mIntExceptionInfo.mIRQLine);
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()

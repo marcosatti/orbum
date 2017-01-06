@@ -243,11 +243,8 @@ Implements the bitfields specified in the docs. See EE Core Users Manual page 75
 Bitfield map (defined as constants in the class below):
 - Bits 0-1 (length 2): Constant 0.
 - Bits 2-6 (length 5): "ExcCode".
-- Bits 7-9 (length 3): Constant 0.
-- Bits 10 (length 1): "IP2".
-- Bits 11 (length 1): "IP3".
-- Bits 12-14 (length 3): Constant 0.
-- Bits 15 (length 1): "IP7".
+- Bits 7 (length 1): Constant 0.
+- Bits 8-15 (length 8): "IP". While not mentioned in the manual, this is a standard MIPS convention to use and is compatible (see eg PSX docs). Using this makes it easy to implement interrupt handling.
 - Bits 16-18 (length 3): "EXC2".
 - Bits 19-27 (length 9): Constant 0.
 - Bits 28-29 (length 2): "CE".
@@ -260,16 +257,26 @@ public:
 	struct Fields
 	{
 		static constexpr u8 ExcCode = 0;
-		static constexpr u8 IP2 = 1;
-		static constexpr u8 IP3 = 2;
-		static constexpr u8 IP7 = 3;
-		static constexpr u8 EXC2 = 4;
-		static constexpr u8 CE = 5;
-		static constexpr u8 BD2 = 6;
-		static constexpr u8 BD = 7;
+		static constexpr u8 IP = 1;
+		static constexpr u8 EXC2 = 2;
+		static constexpr u8 CE = 3;
+		static constexpr u8 BD2 = 4;
+		static constexpr u8 BD = 5;
 	};
 
 	explicit EECoreCOP0Register_Cause_t();
+
+	/*
+	Clears the Cause.IP bits (from bits 8 -> 15).
+	While not mentioned in the manual, this is a standard MIPS thing.
+	*/
+	void clearIP();
+
+	/*
+	Sets the given IP[irq] bit given.
+	The other IP bits are left unchanged (uses OR). Use the clearIP() function if you need to reset them all.
+	*/
+	void setIRQPending(u8 irq);
 };
 
 /*
@@ -306,11 +313,8 @@ Bitfield map (defined as constants in the class below):
 - Bits 1 (length 1): "EXL".
 - Bits 2 (length 1): "ERL".
 - Bits 3-4 (length 2): "KSU".
-- Bits 5-9 (length 5): Constant 0.
-- Bits 10-11 (length 2): "IM".
-- Bits 12 (length 1): "BEM".
-- Bits 13-14 (length 2): Constant 0.
-- Bits 15 (length 1): "IM7".
+- Bits 5-7 (length 3): Constant 0.
+- Bits 8-15 (length 8): "IM". While not mentioned in the manual, this is a standard MIPS convention to use and is compatible (see eg PSX docs). Using this makes it easy to implement interrupt handling. Note that BEM (bus error mask) behaves the same way as other interrupt sources.
 - Bits 16 (length 1): "EIE".
 - Bits 17 (length 1): "EDI".
 - Bits 18 (length 1): "CH".
@@ -330,17 +334,33 @@ public:
 		static constexpr u8 ERL = 2;
 		static constexpr u8 KSU = 3;
 		static constexpr u8 IM = 4;
-		static constexpr u8 BEM = 5;
-		static constexpr u8 IM7 = 6;
-		static constexpr u8 EIE = 7;
-		static constexpr u8 EDI = 8;
-		static constexpr u8 CH = 9;
-		static constexpr u8 BEV = 10;
-		static constexpr u8 DEV = 11;
-		static constexpr u8 CU = 12;
+		static constexpr u8 EIE = 5;
+		static constexpr u8 EDI = 6;
+		static constexpr u8 CH = 7;
+		static constexpr u8 BEV = 8;
+		static constexpr u8 DEV = 9;
+		static constexpr u8 CU = 10;
 	};
 
 	explicit EECoreCOP0Register_Status_t();
+
+	/*
+	Returns if all exceptions are currently masked ( = NOT ENABLED).
+	TODO: implement, currently returns false always. Need to check ERL and EXL bits? "in addition, when the ERL and EXL bits are 0".
+	*/
+	bool isExceptionsMasked() const;
+
+	/*
+	Returns if all interrupts are currently masked ( = NOT ENABLED).
+	Does so by checking the master EIE and IE bit.
+	*/
+	bool isInterruptsMasked() const;
+
+	/*
+	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED!).
+	Does so by checking the IM[irq] bit.
+	*/
+	bool isIRQMasked(u8 irq) const;
 };
 
 /*
