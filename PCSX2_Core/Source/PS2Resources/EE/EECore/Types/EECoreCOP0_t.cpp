@@ -2,7 +2,6 @@
 
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 
 EECoreCOP0_t::EECoreCOP0_t() :
 	Index(std::make_shared<EECoreCOP0Register_Index_t>()),
@@ -12,40 +11,40 @@ EECoreCOP0_t::EECoreCOP0_t() :
 	Context(std::make_shared<EECoreCOP0Register_Context_t>()),
 	PageMask(std::make_shared<EECoreCOP0Register_PageMask_t>()),
 	Wired(std::make_shared<EECoreCOP0Register_Wired_t>()),
-	Reserved7(std::make_shared<COP0RegisterReserved_t>()),
-	BadVAddr(std::make_shared<EECoreCOP0Register_BadVAddr_t>()),
+	Reserved7(std::make_shared<Register32_t>()),
+	BadVAddr(std::make_shared<Register32_t>()),
 	Count(std::make_shared<EECoreCOP0Register_Count_t>()),
 	EntryHi(std::make_shared<EECoreCOP0Register_EntryHi_t>()),
 	Cause(std::make_shared<EECoreCOP0Register_Cause_t>()),
-	Compare(std::make_shared<EECoreCOP0Register_Compare_t>(Cause)),
+	Compare(std::make_shared<Register32_t>()),
 	Status(std::make_shared<EECoreCOP0Register_Status_t>()),
-	EPC(std::make_shared<COP0RegisterEPC_t>()),
+	EPC(std::make_shared<Register32_t>()),
 	PRId(std::make_shared<EECoreCOP0Register_PRId_t>()),
 	Config(std::make_shared<EECoreCOP0Register_Config_t>()),
-	Reserved17(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved18(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved19(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved20(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved21(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved22(std::make_shared<COP0RegisterReserved_t>()),
+	Reserved17(std::make_shared<Register32_t>()),
+	Reserved18(std::make_shared<Register32_t>()),
+	Reserved19(std::make_shared<Register32_t>()),
+	Reserved20(std::make_shared<Register32_t>()),
+	Reserved21(std::make_shared<Register32_t>()),
+	Reserved22(std::make_shared<Register32_t>()),
 	BadPAddr(std::make_shared<EECoreCOP0Register_BadPAddr_t>()),
-	Reserved26(std::make_shared<COP0RegisterReserved_t>()),
-	Reserved27(std::make_shared<COP0RegisterReserved_t>()),
+	Reserved26(std::make_shared<Register32_t>()),
+	Reserved27(std::make_shared<Register32_t>()),
 	TagLo(std::make_shared<EECoreCOP0Register_TagLo_t>()),
 	TagHi(std::make_shared<EECoreCOP0Register_TagHi_t>()),
-	ErrorEPC(std::make_shared<EECoreCOP0Register_ErrorEPC_t>()),
-	Reserved31(std::make_shared<COP0RegisterReserved_t>()),
+	ErrorEPC(std::make_shared<Register32_t>()),
+	Reserved31(std::make_shared<Register32_t>()),
 	BPC(std::make_shared<EECoreCOP0Register_BPC_t>()),
-	IAB(std::make_shared<EECoreCOP0Register_IAB_t>()),
-	IABM(std::make_shared<EECoreCOP0Register_IABM_t>()),
-	DAB(std::make_shared<EECoreCOP0Register_DAB_t>()),
-	DABM(std::make_shared<EECoreCOP0Register_DABM_t>()),
-	DVB(std::make_shared<EECoreCOP0Register_DVB_t>()),
-	DVBM(std::make_shared<EECoreCOP0Register_DVBM_t>()),
+	IAB(std::make_shared<Register32_t>()),
+	IABM(std::make_shared<Register32_t>()),
+	DAB(std::make_shared<Register32_t>()),
+	DABM(std::make_shared<Register32_t>()),
+	DVB(std::make_shared<Register32_t>()),
+	DVBM(std::make_shared<Register32_t>()),
 	PCCR(std::make_shared<EECoreCOP0Register_PCCR_t>()),
 	PCR0(std::make_shared<EECoreCOP0Register_PCR0_t>()),
 	PCR1(std::make_shared<EECoreCOP0Register_PCR1_t>()),
-	CPR{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, Reserved7,
+	Registers{ Index, Random, EntryLo0, EntryLo1, Context, PageMask, Wired, Reserved7,
 		BadVAddr, Count, EntryHi, Compare, Status, Cause, EPC, PRId, Config, 
 		Reserved17, Reserved18, Reserved19, Reserved20, Reserved21, Reserved22, 
 		BadPAddr, BPC, PCCR, Reserved26, Reserved27, TagLo, TagHi, ErrorEPC, Reserved31 },
@@ -66,11 +65,11 @@ bool EECoreCOP0_t::isCoprocessorUsable() const
 
 void EECoreCOP0_t::initalise()
 {
-	for (auto& reg : CPR)
-	{
-		if (reg != nullptr)
-			reg->initaliseAllFields();
-	}
+	for (auto& reg : Registers)
+		if (reg != nullptr) reg->initalise();
+
+	for (auto& reg : PCRRegisters)
+		if (reg != nullptr) reg->initalise();
 }
 
 bool EECoreCOP0_t::isOperatingUserMode() const

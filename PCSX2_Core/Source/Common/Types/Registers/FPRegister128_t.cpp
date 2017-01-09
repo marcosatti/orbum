@@ -41,13 +41,12 @@ void FPRegister128_t::writeDword(const Context_t& context, u32 arrayIndex, u64 v
 
 u128 FPRegister128_t::readQword(const Context_t& context)
 {
-	return u128(UD[0], UD[1]);
+	return UQ;
 }
 
 void FPRegister128_t::writeQword(const Context_t& context, u128 value)
 {
-	UD[0] = value.lo;
-	UD[1] = value.hi;
+	UQ = value;
 }
 
 f32 FPRegister128_t::readFloat(const Context_t& context, u32 arrayIndex)
@@ -63,4 +62,9 @@ void FPRegister128_t::writeFloat(const Context_t& context, u32 arrayIndex, f32 v
 const char* FPRegister128_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
+}
+
+void FPRegister128_t::initalise()
+{
+	UQ = u128(0, 0);
 }

@@ -198,3 +198,8 @@ const char* Register128_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
+
+void Register128_t::initalise()
+{
+	UQ = u128(0, 0);
+}

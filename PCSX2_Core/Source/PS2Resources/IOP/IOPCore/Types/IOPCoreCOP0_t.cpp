@@ -1,27 +1,26 @@
 #include "stdafx.h"
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
 IOPCoreCOP0_t::IOPCoreCOP0_t() :
-	INDX(std::make_shared<COP0RegisterReserved_t>()),
-	RAND(std::make_shared<COP0RegisterReserved_t>()),
-	TLBL(std::make_shared<COP0RegisterReserved_t>()),
-	BPC(std::make_shared<COP0RegisterReserved_t>()),
+	INDX(std::make_shared<Register32_t>()),
+	RAND(std::make_shared<Register32_t>()),
+	TLBL(std::make_shared<Register32_t>()),
+	BPC(std::make_shared<Register32_t>()),
 	Context(std::make_shared<IOPCoreCOP0Register_Context_t>()),
-	BDA(std::make_shared<COP0RegisterReserved_t>()),
-	PIDMASK(std::make_shared<COP0RegisterReserved_t>()),
-	DCIC(std::make_shared<COP0RegisterReserved_t>()),
-	BADV(std::make_shared<COP0RegisterReserved_t>()),
-	BDAM(std::make_shared<COP0RegisterReserved_t>()),
-	TLBH(std::make_shared<COP0RegisterReserved_t>()),
-	BPCM(std::make_shared<COP0RegisterReserved_t>()),
+	BDA(std::make_shared<Register32_t>()),
+	PIDMASK(std::make_shared<Register32_t>()),
+	DCIC(std::make_shared<Register32_t>()),
+	BADV(std::make_shared<Register32_t>()),
+	BDAM(std::make_shared<Register32_t>()),
+	TLBH(std::make_shared<Register32_t>()),
+	BPCM(std::make_shared<Register32_t>()),
 	Status(std::make_shared<IOPCoreCOP0Register_Status_t>()),
 	Cause(std::make_shared<IOPCoreCOP0Register_Cause_t>()),
-	EPC(std::make_shared<COP0RegisterEPC_t>()),
+	EPC(std::make_shared<Register32_t>()),
 	PRId(std::make_shared<IOPCoreCOP0Register_PRId_t>()),
-	ERREG(std::make_shared<COP0RegisterReserved_t>()),
+	ERREG(std::make_shared<Register32_t>()),
 	Registers{ INDX, RAND, TLBL, BPC, Context, BDA, PIDMASK, DCIC, 
 			   BADV, BDAM, TLBH, BPCM, Status, Cause, EPC, PRId, 
 			   ERREG, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
@@ -41,12 +40,9 @@ bool IOPCoreCOP0_t::isCoprocessorUsable() const
 }
 
 void IOPCoreCOP0_t::initalise()
-{
+{	
 	for (auto& reg : Registers)
-	{
-		if (reg != nullptr)
-			reg->initaliseAllFields();
-	}
+		if (reg != nullptr) reg->initalise();
 }
 
 bool IOPCoreCOP0_t::isOperatingUserMode() const

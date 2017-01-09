@@ -68,7 +68,7 @@ void EECoreInterpreter::MFC0()
         return;
 
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& sourceReg = getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
+	auto& sourceReg = getResources()->EE->EECore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(sourceReg->readWord(Context_t::EE)));
 }
@@ -179,7 +179,7 @@ void EECoreInterpreter::MTC0()
         return;
 
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = getResources()->EE->EECore->COP0->CPR[mInstruction.getRRd()];
+	auto& destReg = getResources()->EE->EECore->COP0->Registers[mInstruction.getRRd()];
 
 	destReg->writeWord(Context_t::EE, sourceReg->readWord(Context_t::EE, 0));
 }

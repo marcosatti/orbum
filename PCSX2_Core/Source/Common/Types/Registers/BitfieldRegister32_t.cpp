@@ -123,3 +123,9 @@ void BitfieldRegister32_t::writeWord(const Context_t& context, u32 value)
 		logDebugAllFields();
 #endif
 }
+
+void BitfieldRegister32_t::initalise()
+{
+	Register32_t::initalise();
+	BitfieldMap32_t::initaliseAllFields();
+}

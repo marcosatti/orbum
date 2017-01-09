@@ -2,9 +2,9 @@
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
-#include "Common/Types/Registers/LinkRegister32_t.h"
+#include "Common/Types/Registers/MIPS/LinkRegister32_t.h"
 
 IOPCoreR3000_t::IOPCoreR3000_t() :
 	mIsInBranchDelay(false),

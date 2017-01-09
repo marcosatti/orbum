@@ -49,43 +49,15 @@ EECoreCOP0Register_Wired_t::EECoreCOP0Register_Wired_t()
 	registerField(Fields::Wired, "Wired", 0, 6, 0);
 }
 
-EECoreCOP0Register_BadVAddr_t::EECoreCOP0Register_BadVAddr_t()
-{
-	registerField(Fields::BadVAddr, "BadVAddr", 0, 32, 0);
-}
-
-EECoreCOP0Register_Count_t::EECoreCOP0Register_Count_t()
-{
-	registerField(Fields::Count, "Count", 0, 32, 0);
-}
-
 void EECoreCOP0Register_Count_t::increment(u32 value)
 {
-	setFieldValue(Fields::Count, getFieldValue(Fields::Count) + value);
+	writeWord(Context_t::RAW, readWord(Context_t::RAW) + value);
 }
 
 EECoreCOP0Register_EntryHi_t::EECoreCOP0Register_EntryHi_t()
 {
 	registerField(Fields::ASID, "ASID", 0, 8, 0);
 	registerField(Fields::VPN2, "VPN2", 13, 19, 0);
-}
-
-EECoreCOP0Register_Compare_t::EECoreCOP0Register_Compare_t(std::shared_ptr<EECoreCOP0Register_Cause_t> Cause) :
-	mCause(Cause)
-{
-	registerField(Fields::Compare, "Compare", 0, 32, 0);
-}
-
-void EECoreCOP0Register_Compare_t::setFieldValue(const u8& fieldIndex, const u32& value)
-{
-	mCause->clearIP(); // TODO: Might need to implement just removing the IP[7] bit.
-	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
-}
-
-void EECoreCOP0Register_Compare_t::writeWord(const Context_t & context, u32 value)
-{
-	mCause->clearIP(); // TODO: Might need to implement just removing the IP[7] bit.
-	BitfieldRegister32_t::writeWord(context, value);
 }
 
 EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()
@@ -110,21 +82,12 @@ bool EECoreCOP0Register_Status_t::isExceptionsMasked() const
 
 bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
 {
-	if ((getFieldValue(Fields::IE) > 0)
-		&& (getFieldValue(Fields::EIE) > 0))
-	{
-		return false;
-	}
-
-	return true;
+	return !((getFieldValue(Fields::IE) > 0) && (getFieldValue(Fields::EIE) > 0));
 }
 
 bool EECoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
 {
-	if ((getFieldValue(Fields::IM) & (1 << irq)) > 0)
-		return false;
-
-	return true;
+	return !((getFieldValue(Fields::IM) & (1 << irq)) > 0);
 }
 
 EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
@@ -195,36 +158,6 @@ EECoreCOP0Register_BPC_t::EECoreCOP0Register_BPC_t()
 	registerField(Fields::IAE, "IAE", 31, 1, 0);
 }
 
-EECoreCOP0Register_IAB_t::EECoreCOP0Register_IAB_t()
-{
-	registerField(Fields::IAB, "IAB", 0, 32, 0);
-}
-
-EECoreCOP0Register_IABM_t::EECoreCOP0Register_IABM_t()
-{
-	registerField(Fields::IABM, "IABM", 0, 32, 0);
-}
-
-EECoreCOP0Register_DAB_t::EECoreCOP0Register_DAB_t()
-{
-	registerField(Fields::DAB, "DAB", 0, 32, 0);
-}
-
-EECoreCOP0Register_DABM_t::EECoreCOP0Register_DABM_t()
-{
-	registerField(Fields::DABM, "DABM", 0, 32, 0);
-}
-
-EECoreCOP0Register_DVB_t::EECoreCOP0Register_DVB_t()
-{
-	registerField(Fields::DVB, "DVB", 0, 32, 0);
-}
-
-EECoreCOP0Register_DVBM_t::EECoreCOP0Register_DVBM_t()
-{
-	registerField(Fields::DVBM, "DVBM", 0, 32, 0);
-}
-
 EECoreCOP0Register_PCCR_t::EECoreCOP0Register_PCCR_t()
 {
 	registerField(Fields::EXL0, "EXL0", 1, 1, 0);
@@ -268,9 +201,4 @@ EECoreCOP0Register_TagHi_t::EECoreCOP0Register_TagHi_t()
 	registerField(Fields::V, "V", 5, 1, 0);
 	registerField(Fields::D, "D", 6, 1, 0);
 	registerField(Fields::PTagHi, "PTagHi", 12, 31, 0);
-}
-
-EECoreCOP0Register_ErrorEPC_t::EECoreCOP0Register_ErrorEPC_t()
-{
-	registerField(Fields::ErrorEPC, "ErrorEPC", 0, 32, 0);
 }

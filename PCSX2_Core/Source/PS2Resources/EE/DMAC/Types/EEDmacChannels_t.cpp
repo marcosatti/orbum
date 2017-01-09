@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+#include "Common/Types/Memory/ConstantMemory_t.h"
+
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 EEDmacChannel_t::EEDmacChannel_t(const u32& channelID) :
 	mChannelID(channelID),
@@ -45,12 +47,29 @@ const ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
 	return EEDmacChannelTable::getChannelInfo(mChannelID);
 }
 
-bool EEDmacChannel_t::isEnabled() const
+LogicalMode_t EEDmacChannel_t::getRuntimeLogicalMode() const
 {
-	if (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
-		return true;
-	
-	return false;
+	return static_cast<LogicalMode_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD));
+}
+
+Direction_t EEDmacChannel_t::getRuntimeDirection() const
+{
+	Direction_t direction = getChannelProperties()->Direction;
+	if (direction == Direction_t::BOTH)
+		direction = static_cast<Direction_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::DIR));
+
+	return direction;
+}
+
+void EEDmacChannel_t::resetChainExitState()
+{
+	mChainExitState = false;
+	mChainStackLevelState = 0;
+}
+
+void EEDmacChannel_t::setChainExitStateTrue()
+{
+	mChainExitState = true;
 }
 
 bool EEDmacChannel_t::isChainInDrainStallControlTag() const
@@ -76,10 +95,7 @@ bool EEDmacChannel_t::isChainInInterruptTag() const
 
 bool EEDmacChannel_t::isChainInExitTag() const
 {
-	if (mChainExitState)
-		return true;
-
-	return false;
+	return mChainExitState;
 }
 
 bool EEDmacChannel_t::isChainStackOverflowed() const
@@ -98,61 +114,6 @@ bool EEDmacChannel_t::isChainStackUnderflowed() const
 	return false;
 }
 
-bool EEDmacChannel_t::isInterleaveInSkipMode() const
-{
-	if (mInterleavedInSkipBlock)
-		return true;
-	
-	return false;
-}
-
-LogicalMode_t EEDmacChannel_t::getRuntimeLogicalMode() const
-{
-	return static_cast<LogicalMode_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD));
-}
-
-Direction_t EEDmacChannel_t::getRuntimeDirection() const
-{
-	Direction_t direction = getChannelProperties()->Direction;
-	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::DIR));
-
-	return direction;
-}
-
-u32 EEDmacChannel_t::getInterleavedCount() const
-{
-	return mInterleavedBlockCount;
-}
-
-void EEDmacChannel_t::setChainExitStateReset()
-{
-	mChainExitState = false;
-	mChainStackLevelState = 0;
-}
-
-void EEDmacChannel_t::setChainExitStateTrue()
-{
-	mChainExitState = true;
-}
-
-void EEDmacChannel_t::setInterleaveModeToggle()
-{
-	// Toggle mode and reset the count.
-	mInterleavedInSkipBlock = !mInterleavedInSkipBlock;
-	mInterleavedBlockCount = 0;
-}
-
-void EEDmacChannel_t::setInterleaveCountIncrement()
-{
-	mInterleavedBlockCount += 1;
-}
-
-void EEDmacChannel_t::setInterleaveSkipDataCycle() const
-{
-	MADR->increment();
-}
-
 void EEDmacChannel_t::pushChainStack()
 {
 	ASR[mChainStackLevelState]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR, TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
@@ -165,6 +126,28 @@ void EEDmacChannel_t::popChainStack()
 	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
 	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
 	mChainStackLevelState -= 1;
+}
+
+u32 EEDmacChannel_t::getInterleavedCount() const
+{
+	return mInterleavedBlockCount;
+}
+
+bool EEDmacChannel_t::isInterleaveInSkipMode() const
+{
+	return mInterleavedInSkipBlock;
+}
+
+void EEDmacChannel_t::toggleInterleaveMode()
+{
+	// Toggle mode and reset the count.
+	mInterleavedInSkipBlock = !mInterleavedInSkipBlock;
+	mInterleavedBlockCount = 0;
+}
+
+void EEDmacChannel_t::incrementInterleaveCount()
+{
+	mInterleavedBlockCount += 1;
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue) :

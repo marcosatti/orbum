@@ -14,6 +14,7 @@
 #include "VM/ExecutionCore/Common/EE/Timers/EETimers.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Common/IOP/INTC/IOPIntc.h"
+#include "VM/ExecutionCore/Common/IOP/DMAC/IOPDmac.h"
 
 
 Interpreter::Interpreter(VMMain * vmMain) :
@@ -28,12 +29,13 @@ Interpreter::Interpreter(VMMain * vmMain) :
 	mEETimers(std::make_shared<EETimers>(vmMain)),
 	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
 	mIOPIntc(std::make_shared<IOPIntc>(vmMain)),
-	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter },
+	mIOPDmac(std::make_shared<IOPDmac>(vmMain)),
+	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter, mIOPIntc, mIOPDmac },
 	mComponentsBUSCLK{ mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers },
 	mComponentsBUSCLK16{ mEETimers },
 	mComponentsBUSCLK256{ mEETimers },
 	mComponentsHBLNK{ mEETimers },
-	mComponentsIOP{ mIOPCoreInterpreter, mIOPIntc }
+	mComponentsIOP{ mIOPCoreInterpreter, mIOPIntc, mIOPDmac }
 {
 }
 

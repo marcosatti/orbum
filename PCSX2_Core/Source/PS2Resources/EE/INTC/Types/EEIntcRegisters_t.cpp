@@ -21,6 +21,14 @@ EEIntcRegister_STAT_t::EEIntcRegister_STAT_t()
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
+void EEIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == Context_t::EE)
+		BitfieldRegister32_t::writeWord(Context_t::RAW, readWord(Context_t::RAW) & ~value);
+	else
+		BitfieldRegister32_t::writeWord(context, value);
+}
+
 EEIntcRegister_MASK_t::EEIntcRegister_MASK_t() 
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
@@ -38,4 +46,12 @@ EEIntcRegister_MASK_t::EEIntcRegister_MASK_t()
 	registerField(Fields::TIM3, "TIM3", 12, 1, 0);
 	registerField(Fields::SFIFO, "SFIFO", 13, 1, 0);
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
+}
+
+void EEIntcRegister_MASK_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == Context_t::EE)
+		BitfieldRegister32_t::writeWord(Context_t::RAW, readWord(Context_t::RAW) ^ value);
+	else
+		BitfieldRegister32_t::writeWord(context, value);
 }

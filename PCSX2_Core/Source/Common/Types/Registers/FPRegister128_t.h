@@ -49,15 +49,21 @@ public:
 	*/
 	const char * getMnemonic() const;
 
+	/*
+	Initalise register (set back to default value).
+	*/
+	virtual void initalise();
+
 protected:
 	/*
 	Underlying storage for register.
 	*/
 	union
 	{
-		u64 UD[Constants::NUMBER_DWORDS_IN_QWORD];
-		u32 UW[Constants::NUMBER_WORDS_IN_QWORD];
-		f32 F[Constants::NUMBER_WORDS_IN_QWORD];
+		u128 UQ;
+		u64  UD[Constants::NUMBER_DWORDS_IN_QWORD];
+		u32  UW[Constants::NUMBER_WORDS_IN_QWORD];
+		f32  F[Constants::NUMBER_WORDS_IN_QWORD];
 	};
 
 private:

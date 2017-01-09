@@ -69,3 +69,8 @@ const char* Register8_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
+
+void Register8_t::initalise()
+{
+	UB = 0;
+}

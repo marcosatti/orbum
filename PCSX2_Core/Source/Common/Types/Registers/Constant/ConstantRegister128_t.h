@@ -21,5 +21,10 @@ public:
 	void writeWord(const Context_t& context, u32 arrayIndex, u32 value) override;
 	void writeDword(const Context_t& context, u32 arrayIndex, u64 value) override;
 	void writeQword(const Context_t& context, u128 value) override;
+
+	/*
+	Initalise register (set to do nothing).
+	*/
+	void initalise() override;
 };
 

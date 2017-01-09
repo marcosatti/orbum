@@ -134,3 +134,8 @@ const char* Register32_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
+
+void Register32_t::initalise()
+{
+	UW = 0;
+}

@@ -47,3 +47,8 @@ void WrapperF32Register32_t::writeWord(const Context_t& context, u32 value)
 {
 	mFPRegister32->writeWord(context, value);
 }
+
+void WrapperF32Register32_t::initalise()
+{
+	mFPRegister32->initalise();
+}

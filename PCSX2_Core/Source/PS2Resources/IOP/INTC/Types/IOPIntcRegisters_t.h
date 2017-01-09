@@ -1,15 +1,14 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/ClrBitfieldRegister32_t.h"
-#include "Common/Types/Registers/RevBitfieldRegister32_t.h"
+#include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
 /*
 The IOP INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 Bits are cleared by writing 1.
 */
-class IOPIntcRegister_STAT_t : public ClrBitfieldRegister32_t
+class IOPIntcRegister_STAT_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -49,7 +48,7 @@ public:
 The IOP INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
 Bits are reversed by writing 1.
 */
-class IOPIntcRegister_MASK_t : public RevBitfieldRegister32_t
+class IOPIntcRegister_MASK_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields

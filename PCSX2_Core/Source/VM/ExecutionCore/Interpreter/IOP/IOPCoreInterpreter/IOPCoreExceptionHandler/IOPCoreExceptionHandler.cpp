@@ -3,8 +3,7 @@
 #include <stdexcept>
 
 #include "Common/Types/Context_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h"
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreExceptionHandler/IOPCoreExceptionHandler.h"
@@ -74,13 +73,13 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
 		u32 pcValue = PC->readWord(Context_t::IOP) - Constants::SIZE_MIPS_INSTRUCTION * 2;
-		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+		COP0->EPC->writeWord(Context_t::RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
 	}
 	else
 	{
 		u32 pcValue = PC->readWord(Context_t::IOP) - Constants::SIZE_MIPS_INSTRUCTION;
-		COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+		COP0->EPC->writeWord(Context_t::RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}
 

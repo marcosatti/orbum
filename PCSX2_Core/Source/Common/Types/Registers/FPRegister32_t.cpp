@@ -4,13 +4,13 @@
 #include "Common/Types/Registers/FPRegister32_t.h"
 
 FPRegister32_t::FPRegister32_t() : 
-	F(0),
+	F(0.0f),
 	mMnemonic("")
 {
 }
 
 FPRegister32_t::FPRegister32_t(const char* mnemonic) :
-	F(0),
+	F(0.0f),
 	mMnemonic(mnemonic)
 {
 }
@@ -42,4 +42,9 @@ void FPRegister32_t::writeFloat(const Context_t& context, f32 value)
 const char* FPRegister32_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
+}
+
+void FPRegister32_t::initalise()
+{
+	F = 0.0f;
 }

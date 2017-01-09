@@ -30,6 +30,11 @@ public:
 	u32 readWord(const Context_t& context) override;
 	void writeWord(const Context_t& context, u32 value) override;
 
+	/*
+	Initalise register (initalise underlying register).
+	*/
+	void initalise() override;
+
 private:
 	/*
 	Reference to the underlying Register16_t that the above read/write calls translate to.

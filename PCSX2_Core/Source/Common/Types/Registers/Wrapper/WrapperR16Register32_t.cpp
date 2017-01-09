@@ -47,3 +47,8 @@ void WrapperR16Register32_t::writeWord(const Context_t& context, u32 value)
 {
 	mRegister16->writeHword(context, static_cast<u16>(value));
 }
+
+void WrapperR16Register32_t::initalise()
+{
+	mRegister16->initalise();
+}

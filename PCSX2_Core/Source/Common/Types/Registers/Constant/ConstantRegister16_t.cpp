@@ -17,3 +17,7 @@ void ConstantRegister16_t::writeHword(const Context_t& context, u16 value)
 {
 	// Do not write value (zero register).
 }
+
+void ConstantRegister16_t::initalise()
+{
+}

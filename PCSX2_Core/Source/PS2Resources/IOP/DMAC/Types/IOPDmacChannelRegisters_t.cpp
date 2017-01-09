@@ -16,8 +16,75 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 }
 
 IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, true),
+	mOriginalBS(0)
 {
 	registerField(Fields::BS, "BS", 0, 16, 0);
 	registerField(Fields::BA, "BA", 16, 16, 0);
+}
+
+void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t& context, u32 arrayIndex, u16 value)
+{
+	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
+
+	// Save the BS value for later.
+	mOriginalBS = getFieldValue(Fields::BS);
+}
+
+void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t& context, u32 value)
+{
+	BitfieldRegister32_t::writeWord(context, value);
+
+	// Save the BS value for later.
+	mOriginalBS = getFieldValue(Fields::BS);
+}
+
+void IOPDmacChannelRegister_BCR_t::decrement()
+{
+	u32 bsValue = getFieldValue(Fields::BS);
+	u32 baValue = getFieldValue(Fields::BA);
+
+	// Reset BS and decrement BA if end of block reached (BS == 0 and BA != 0).
+	// TODO: need to check for BA underflow?
+	if (((bsValue - 1) == 0)
+		&& (baValue != 0))
+	{
+		bsValue = mOriginalBS;
+		setFieldValue(Fields::BS, bsValue);
+		setFieldValue(Fields::BA, baValue - 1);
+	}
+	else
+	{
+		setFieldValue(Fields::BS, bsValue - 1);
+	}
+}
+
+IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char* mnemonic) :
+	Register32_t(mnemonic)
+{
+}
+
+void IOPDmacChannelRegister_MADR_t::increment()
+{
+	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x4);
+}
+
+void IOPDmacChannelRegister_MADR_t::decrement()
+{
+	writeWord(Context_t::RAW, readWord(Context_t::RAW) - 0x4);
+}
+
+IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
+	Register32_t(mnemonic, true)
+{
+}
+
+void IOPDmacChannelRegister_TADR_t::increment()
+{
+	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x4);
+}
+
+void IOPDmacChannelRegister_TADR_t::decrement()
+{
+	writeWord(Context_t::RAW, readWord(Context_t::RAW) - 0x4);
 }

@@ -16,4 +16,9 @@ public:
 	void writeDword(const Context_t& context, u32 arrayIndex, u64 value) override;
 	void writeQword(const Context_t& context, u128 value) override;
 	void writeFloat(const Context_t& context, u32 arrayIndex, f32 value) override;
+
+	/*
+	Initalise register (set to do nothing).
+	*/
+	void initalise() override;
 };

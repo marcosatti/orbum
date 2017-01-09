@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
 IOPDmacRegister_PCR_t::IOPDmacRegister_PCR_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic)
 {
 	registerField(Fields::PRI0, "PRI0", 0, 3, 0);
 	registerField(Fields::ENA0, "ENA0", 3, 1, 0);
@@ -22,7 +22,7 @@ IOPDmacRegister_PCR_t::IOPDmacRegister_PCR_t(const char* mnemonic) :
 }
 
 IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic)
 {
 	registerField(Fields::IRQFORCE, "IRQFORCE", 15, 1, 0);
 	registerField(Fields::IRQ0_EN, "IRQ0_EN", 16, 1, 0);
@@ -41,4 +41,44 @@ IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
 	registerField(Fields::IRQ5_FL, "IRQ5_FL", 29, 1, 0);
 	registerField(Fields::IRQ6_FL, "IRQ6_FL", 30, 1, 0);
 	registerField(Fields::IRQMASTER, "IRQMASTER", 31, 1, 0);
+}
+
+void IOPDmacRegister_ICR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+{
+	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
+
+	if (getFieldValue(Fields::IRQFORCE))
+		setFieldValue(Fields::IRQMASTER, 1);
+
+	if (getFieldValue(Fields::IRQENABLE))
+	{
+		auto EN = (readWord(Context_t::RAW) & 0x7F0000) >> 16;
+		auto FL = (readWord(Context_t::RAW) & 0x7F000000) >> 24;
+
+		if (EN & FL)
+			setFieldValue(Fields::IRQMASTER, 1);
+	}
+}
+
+void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
+{
+	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them.
+	u32 temp = value;
+	if (context == Context_t::IOP)
+		temp = (value & 0x80FFFFFF) | (~(value & 0x7F000000) & (readWord(Context_t::RAW) & 0x7F000000));
+		
+	BitfieldRegister32_t::writeWord(context, temp);
+
+	// Check the IRQ conditions.
+	if (getFieldValue(Fields::IRQFORCE))
+		setFieldValue(Fields::IRQMASTER, 1);
+
+	if (getFieldValue(Fields::IRQENABLE))
+	{
+		auto EN = (temp & 0x7F0000) >> 16;
+		auto FL = (temp & 0x7F000000) >> 24;
+
+		if (EN & FL)
+			setFieldValue(Fields::IRQMASTER, 1);
+	}
 }

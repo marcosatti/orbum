@@ -13,6 +13,7 @@ Common_t::Common_t(const PS2Resources_t* PS2Resources) :
 	FIFO_SIF0(std::make_shared<FIFOQueue_t>("FIFO: SIF0", 128 * 4)),
 	FIFO_SIF1(std::make_shared<FIFOQueue_t>("FIFO: SIF1", 128 * 4)),
 	FIFO_SIF2(std::make_shared<FIFOQueue_t>("FIFO: SIF2", 128 * 4)),
+	FIFO_DEBUG(std::make_shared<FIFOQueue_t>("FIFO: Debug", 128 * 128)),
 	MSCOM(std::make_shared<Register32_t>("SIF: MSCOM")),
 	SMCOM(std::make_shared<Register32_t>("SIF: SMCOM")),
 	MSFLG(std::make_shared<Register32_t>("SIF: MSFLG")),

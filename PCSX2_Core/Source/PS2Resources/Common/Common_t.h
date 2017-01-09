@@ -25,6 +25,7 @@ public:
 	std::shared_ptr<FIFOQueue_t> FIFO_SIF0;
 	std::shared_ptr<FIFOQueue_t> FIFO_SIF1;
 	std::shared_ptr<FIFOQueue_t> FIFO_SIF2;
+	std::shared_ptr<FIFOQueue_t> FIFO_DEBUG;
 
 	/*
 	The SIF resources (sub-system interface).

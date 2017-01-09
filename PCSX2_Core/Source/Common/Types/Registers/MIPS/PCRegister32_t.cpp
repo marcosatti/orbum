@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "PS2Constants/PS2Constants.h"
+
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 
 void PCRegister32_t::setPCValueRelative(const s32& relativeLocation)
 {

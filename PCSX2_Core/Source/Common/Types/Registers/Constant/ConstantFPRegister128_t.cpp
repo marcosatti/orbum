@@ -30,3 +30,7 @@ void ConstantFPRegister128_t::writeFloat(const Context_t& context, u32 arrayInde
 {
 	// Do not write value (constant register).
 }
+
+void ConstantFPRegister128_t::initalise()
+{
+}

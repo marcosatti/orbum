@@ -102,3 +102,8 @@ const char* Register16_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
+
+void Register16_t::initalise()
+{
+	UH = 0;
+}

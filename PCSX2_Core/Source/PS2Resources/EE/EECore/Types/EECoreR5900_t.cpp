@@ -6,8 +6,8 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister128_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/Registers/LinkRegister128_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/LinkRegister128_t.h"
 
 EECoreR5900_t::EECoreR5900_t() : 
 	mIsInBranchDelay(false),

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Types/Context_t.h"
-#include "Common/Types/Registers/LinkRegister32_t.h"
+#include "Common/Types/Registers/MIPS/LinkRegister32_t.h"
 #include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"

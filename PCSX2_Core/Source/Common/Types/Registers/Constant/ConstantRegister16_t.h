@@ -17,5 +17,10 @@ public:
 	*/
 	void writeByte(const Context_t& context, u32 arrayIndex, u8 value) override;
 	void writeHword(const Context_t& context, u16 value) override;
+
+	/*
+	Initalise register (set to do nothing).
+	*/
+	void initalise() override;
 };
 

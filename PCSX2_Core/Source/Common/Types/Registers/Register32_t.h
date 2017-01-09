@@ -52,6 +52,11 @@ public:
 	*/
 	const char * getMnemonic() const;
 
+	/*
+	Initalise register (set back to default value).
+	*/
+	virtual void initalise();
+
 protected:
 	/*
 	Underlying storage for register.

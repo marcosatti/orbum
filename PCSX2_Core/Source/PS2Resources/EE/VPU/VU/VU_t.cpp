@@ -10,7 +10,7 @@
 #include "PS2Resources/EE/VPU/Types/VPURegisters_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 #include "Common/Types/Registers/Wrapper/WrapperR16Register32_t.h"
-#include "Common/Types/Registers/PCRegister16_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister16_t.h"
 #include "Common/Types/Registers/Wrapper/WrapperF32Register32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 

@@ -147,9 +147,9 @@ void IOP_t::initIOPPhysicalMemoryMap() const
 		PhysicalMMU->mapObject(0x1F8010C4, DMAC->CHANNEL_SPU2c1->BCR);
 		PhysicalMMU->mapObject(0x1F8010C8, DMAC->CHANNEL_SPU2c1->CHCR);
 		PhysicalMMU->mapObject(0x1F8010CC, DMAC->CHANNEL_SPU2c1->TADR);
-		PhysicalMMU->mapObject(0x1F8010D0, DMAC->CHANNEL_5->MADR);
-		PhysicalMMU->mapObject(0x1F8010D4, DMAC->CHANNEL_5->BCR);
-		PhysicalMMU->mapObject(0x1F8010D8, DMAC->CHANNEL_5->CHCR);
+		PhysicalMMU->mapObject(0x1F8010D0, DMAC->CHANNEL_PIO->MADR);
+		PhysicalMMU->mapObject(0x1F8010D4, DMAC->CHANNEL_PIO->BCR);
+		PhysicalMMU->mapObject(0x1F8010D8, DMAC->CHANNEL_PIO->CHCR);
 		PhysicalMMU->mapObject(0x1F8010E0, DMAC->CHANNEL_OTClear->MADR);
 		PhysicalMMU->mapObject(0x1F8010E4, DMAC->CHANNEL_OTClear->BCR);
 		PhysicalMMU->mapObject(0x1F8010E8, DMAC->CHANNEL_OTClear->CHCR);

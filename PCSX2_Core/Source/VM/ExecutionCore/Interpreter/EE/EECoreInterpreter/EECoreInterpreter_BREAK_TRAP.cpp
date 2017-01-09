@@ -3,7 +3,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "Common/Tables/EECoreSyscallTable/EECoreSyscallTable.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
@@ -207,13 +206,13 @@ void EECoreInterpreter::ERET()
 	// ERET(). No exceptions.
 	if (getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1)
 	{
-		const u32 & pcValue = getResources()->EE->EECore->COP0->ErrorEPC->getFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC);
+		const u32 & pcValue = getResources()->EE->EECore->COP0->ErrorEPC->readWord(Context_t::EE);
 		getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
 		getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 0);
 	}
 	else
 	{
-		const u32 & pcValue = getResources()->EE->EECore->COP0->EPC->getFieldValue(COP0RegisterEPC_t::Fields::EPC);
+		const u32 & pcValue = getResources()->EE->EECore->COP0->EPC->readWord(Context_t::EE);
 		getResources()->EE->EECore->R5900->setBranchDelayPCTarget(pcValue, 0);
 		getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 0);
 	}

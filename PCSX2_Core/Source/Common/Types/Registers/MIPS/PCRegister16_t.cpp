@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/PCRegister16_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister16_t.h"
 
 void PCRegister16_t::setPCValueRelative(const s16 & relativeLocation)
 {

@@ -17,7 +17,7 @@ class PhysicalMMU_t;
 class EEDmacChannel_t;
 
 /*
-The EE DMAC sytem controls the execution of the EE DMAC and transfers through DMA.
+The EE DMAC system controls the execution of the EE DMAC and transfers through DMA.
 
 The EE DMAC is synced to the BUSCLK clock source, and at most transfers a qword (a 128-bit data unit) every tick on slice and burst channels.
 In a slice physical transfer mode, 8 qwords are transfered before the DMAC releases the bus to the CPU - it waits for a 'DMA request' command before continuing.
@@ -41,25 +41,22 @@ public:
 	~EEDmac();
 
 	/*
-	Check through the channels and initate data transfers. 
-	Slice channels transfer 8 qwords (128 bytes) before suspending transfer, where as burst channels transfer all data without suspending.
-	TODO: Currently it is assumed that the software uses the DMAC correctly (such as using correct chain mode for a channel). Need to add in checks?
+	Check through the channels and initate data transfers.
 	*/
 	s64 executionStep(const ClockSource_t & clockSource) override;
 
 private:
 	/*
-	Context variables set by executionStep() in each cycle. 
-	Used by all of the functions below.
+	Context variables used throughout EE DMAC processing.
 	*/
 	u32 mChannelIndex;
 	std::shared_ptr<EEDmac_t> mDMAC;
 	std::shared_ptr<PhysicalMMU_t> mEEPhysicalMMU;
 	EEDmacChannel_t * mChannel;
 
-	
-
-	// DMAC helper functions.
+	///////////////////////////
+	// DMAC Helper Functions //
+	///////////////////////////
 
 	/*
 	Do a normal logical mode transfer through the specified DMA channel.
@@ -77,11 +74,6 @@ private:
 	void executionStep_Interleaved();
 
 	/*
-	Returns if the DMAC is enabled.
-	*/
-	bool isDMACEnabled() const;
-
-	/*
 	Returns if there is an DMA transfer interrupt pending, indicating the EE Core should be interrupted.
 	*/
 	bool isInterruptPending() const;
@@ -94,45 +86,40 @@ private:
 	/*
 	Transfers data units (128-bits) between mem <-> channel.
 	Returns the number of data units transfered.
-	On no data available, returns 0.
-	TODO: for now, always attempts to transfer one unit (and returns 1 on success, 0 on "try again next cycle").
+	On the condition that the channel FIFO is empty (source) or full (drain), returns 0.
 	*/
-	u32 transferData();
+	u32 transferData() const;
 
 	/*
-	Sets the channel state for suspend conditions.
+	Sets the DMAC and channel state for suspend conditions.
 	*/
 	void setStateSuspended() const;
 
 	/*
-	Sets the channel state for failed transfer conditions.
+	Sets the DMAC and channel state for failed transfer conditions.
 	TODO: not yet implemented, throws runtime_error.
 	*/
 	void setStateFailedTransfer() const;
 
-
-
-
-
-	// Raw data transfer helper functions.
+	//////////////////////////////////////////
+	// Raw Memory Transfer Helper Functions //
+	//////////////////////////////////////////
 
 	/*
 	Reads a qword from memory using the address given.
 	SPRAccess controls if the read is through the EE main memory or the EE Core scratchpad.
 	*/
-	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess);
+	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
 
 	/*
 	Writes a qword to memory using the address given.
 	SPRAccess controls if the write is through the EE main memory or the EE Core scratchpad.
 	*/
-	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data);
+	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const;
 
-
-
-
-
-	// Stall control helper functions.
+	////////////////////////////////////
+	// Stall Control Helper Functions //
+	////////////////////////////////////
 
 	/*
 	Returns if source stall control checks should occur, by checking the channel direction and D_CTRL.STS.
@@ -160,13 +147,10 @@ private:
 	Sets the DMAC STAT.SISx bit to the current channel.
 	*/
 	void setDMACStallControlSIS() const;
-
-
-
-
-
-
-	// Chain mode helper functions.
+	
+	/////////////////////////////////
+	// Chain Mode Helper Functions //
+	/////////////////////////////////
 
 	/*
 	Temporary context variables, set by the chain mode functions.
@@ -230,10 +214,9 @@ private:
 		&EEDmac::DST_END,
 	};
 
-
-
-
-	// Interleaved mode helper functions.
+	///////////////////////////////////////
+	// Interleaved Mode Helper Functions //
+	///////////////////////////////////////
 
 	/*
 	Returns if the transfer or skip limit has been reached.

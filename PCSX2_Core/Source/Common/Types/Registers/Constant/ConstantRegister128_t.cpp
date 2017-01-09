@@ -33,3 +33,7 @@ void ConstantRegister128_t::writeQword(const Context_t& context, u128 value)
 {
 	// Do not write value (constant register).
 }
+
+void ConstantRegister128_t::initalise()
+{
+}

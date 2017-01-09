@@ -166,3 +166,8 @@ const char* Register64_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
 }
+
+void Register64_t::initalise()
+{
+	UD = 0;
+}

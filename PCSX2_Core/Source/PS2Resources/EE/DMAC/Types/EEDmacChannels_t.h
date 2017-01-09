@@ -4,7 +4,6 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
-#include "Common/Types/Memory/ConstantMemory_t.h"
 
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
@@ -17,6 +16,7 @@ class EEDmacChannelRegister_TADR_t;
 class EEDmacChannelRegister_ASR_t;
 class EEDmacChannelRegister_SADR_t;
 class FIFOQueue_t;
+class ConstantMemory_t;
 
 /*
 EEDmacChannels_t defines all of the channels available in the EE DMAC.
@@ -78,10 +78,33 @@ public:
 	*/
 	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
 
+	/////////////////////////////
+	// Common Helper Functions //
+	/////////////////////////////
+
 	/*
-	Returns if the channel is enabled for transfers, by checking the CHCR.STR bit.
+	Returns the channel runtime logical mode its operating in.
 	*/
-	bool isEnabled() const;
+	LogicalMode_t getRuntimeLogicalMode() const;
+
+	/*
+	Gets the runtime direction. Useful for channels where it can be either way.
+	*/
+	Direction_t getRuntimeDirection() const;
+
+	/////////////////////////////////
+	// Chain Mode Helper Functions //
+	/////////////////////////////////
+
+	/*
+	Resets the channel chain mode context variables, needed for next time the channel is activated.
+	*/
+	void resetChainExitState();
+
+	/*
+	Sets the channel chain mode exit state to true, indicating the channel should quit transfering after the current tag.
+	*/
+	void setChainExitStateTrue();
 
 	/*
 	Returns if we are in a tag instruction that requires drain stall control to be used ("refs" tag).
@@ -114,51 +137,6 @@ public:
 	bool isChainStackUnderflowed() const;
 
 	/*
-	Returns if the transfer should be skipped for the current cycle.
-	*/
-	bool isInterleaveInSkipMode() const;
-
-	/*
-	Returns the channel runtime logical mode its operating in.
-	*/
-	LogicalMode_t getRuntimeLogicalMode() const;
-
-	/*
-	Gets the runtime direction. Useful for channels where it can be either way.
-	*/
-	Direction_t getRuntimeDirection() const;
-
-	/*
-	Gets the interleaved block count.
-	*/
-	u32 getInterleavedCount() const;
-
-	/*
-	Resets the channel chain mode context variables, needed for next time the channel is activated.
-	*/
-	void setChainExitStateReset();
-
-	/*
-	Sets the channel chain mode exit state to true, indicating the channel should quit transfering after the current tag.
-	*/
-	void setChainExitStateTrue();
-
-	/*
-	Toggles the interleave mode (skip/transfer).
-	*/
-	void setInterleaveModeToggle();
-
-	/*
-	Increments the interleave mode count.
-	*/
-	void setInterleaveCountIncrement();
-
-	/*
-	Updates the channel to reflect skipped data (increments MADR).
-	*/
-	void setInterleaveSkipDataCycle() const;
-
-	/*
 	Pushes a chain level onto the stack, by setting the ASR register to the TADR register values and incrementing the stack level.
 	*/
 	void pushChainStack();
@@ -167,6 +145,30 @@ public:
 	Pops a chain level from the stack, by setting the TADR register to the ASR register values and decrementing the stack level.
 	*/
 	void popChainStack();
+
+	//////////////////////////////////////
+	// Interleave Mode Helper Functions //
+	//////////////////////////////////////
+
+	/*
+	Gets the interleaved block count.
+	*/
+	u32 getInterleavedCount() const;
+
+	/*
+	Returns if the transfer should be skipped for the current cycle.
+	*/
+	bool isInterleaveInSkipMode() const;
+
+	/*
+	Toggles the interleave mode (skip/transfer).
+	*/
+	void toggleInterleaveMode();
+
+	/*
+	Increments the interleave mode count.
+	*/
+	void incrementInterleaveCount();
 
 private:
 

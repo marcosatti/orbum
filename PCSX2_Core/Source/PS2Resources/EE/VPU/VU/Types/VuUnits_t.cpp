@@ -5,7 +5,7 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Types/Registers/Register16_t.h"
-#include "Common/Types/Registers/PCRegister16_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister16_t.h"
 #include "Common/Types/Memory/Memory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/Constant/ConstantFPRegister128_t.h"

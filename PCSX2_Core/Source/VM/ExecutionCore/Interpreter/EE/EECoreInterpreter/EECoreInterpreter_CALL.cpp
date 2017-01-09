@@ -2,8 +2,8 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/Registers/LinkRegister128_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/LinkRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"

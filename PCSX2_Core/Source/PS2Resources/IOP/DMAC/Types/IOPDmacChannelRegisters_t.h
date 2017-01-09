@@ -39,4 +39,54 @@ public:
 	};
 
 	IOPDmacChannelRegister_BCR_t(const char * mnemonic);
+
+	/*
+	Saves the written BS value to be used later (see below).
+	*/
+	void writeHword(const Context_t& context, u32 arrayIndex, u16 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
+
+	/*
+	Decrements the BS counter by 1. Should be called when a data unit has been transferred.
+	This will automatically update the BA (block amount) value when BS is equal to 0, 
+	 and then reset BS back to the original value.
+	*/
+	void decrement();
+
+private:
+	/*
+	Whenever the register is written to, the original BS value is stored here as a way
+	 to reset the BS value whenever the end of a block has been reache (see decrement()).
+	*/
+	u32 mOriginalBS;
+};
+
+/*
+The DMAC D_MADR register, aka transfer address register.
+*/
+class IOPDmacChannelRegister_MADR_t : public Register32_t
+{
+public:
+	IOPDmacChannelRegister_MADR_t(const char * mnemonic);
+
+	/*
+	Increments or decrements the register by 0x4, which is the size of 1 DMA transfer (used when one transfer has completed).
+	*/
+	void increment();
+	void decrement();
+};
+
+/*
+The DMAC D_MADR register, aka transfer address register.
+*/
+class IOPDmacChannelRegister_TADR_t : public Register32_t
+{
+public:
+	IOPDmacChannelRegister_TADR_t(const char * mnemonic);
+
+	/*
+	Increments or decrements the register by 0x4, which is the size of 1 DMA transfer (used when one transfer has completed).
+	*/
+	void increment();
+	void decrement();
 };

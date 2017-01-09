@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Types/Context_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"

@@ -45,7 +45,7 @@ EEDmac::~EEDmac()
 s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 {
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
-	if (isDMACEnabled())
+	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)
 	{
 		// Check for any pending/started DMA transfers and perform transfer if enabled.
 		for (mChannelIndex = 0; mChannelIndex < PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)
@@ -54,7 +54,7 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 			mChannel = &(*mDMAC->CHANNELS[mChannelIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
 
 			// Check if channel is enabled for transfer.
-			if (mChannel->isEnabled())
+			if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
 			{
 				switch (mChannel->getRuntimeLogicalMode())
 				{
@@ -90,7 +90,7 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 	return 1;
 }
 
-u32 EEDmac::transferData()
+u32 EEDmac::transferData() const
 {
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
 	Direction_t direction = mChannel->getRuntimeDirection();
@@ -172,7 +172,6 @@ void EEDmac::setStateFailedTransfer() const
 	throw std::runtime_error("failed transfer not implemented.");
 }
 
-
 void EEDmac::executionStep_Normal()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
@@ -246,7 +245,7 @@ void EEDmac::executionStep_Chain()
 			// Check if we need to exit based on tag instruction ("end", "ret", etc).
 			if (mChannel->isChainInExitTag())
 			{
-				mChannel->setChainExitStateReset();
+				mChannel->resetChainExitState();
 				setStateSuspended();
 			}
 		}
@@ -306,16 +305,16 @@ void EEDmac::executionStep_Interleaved()
 	else
 	{
 		// Skip data by incrementing the channel MADR.
-		mChannel->setInterleaveSkipDataCycle();
+		mChannel->MADR->increment();
 	}
 		
 	// Increment the interleaved count.
-	mChannel->setInterleaveCountIncrement();
+	mChannel->incrementInterleaveCount();
 
 	// Check the interleaved mode (transferring/skipping), and change mInterleavedSkipState if required, based on mInterleavedCountState.
 	if (isInterleaveLimitReached())
 	{
-		mChannel->setInterleaveModeToggle();
+		mChannel->toggleInterleaveMode();
 	}
 
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
@@ -325,52 +324,29 @@ void EEDmac::executionStep_Interleaved()
 	}
 }
 
-bool EEDmac::isDMACEnabled() const
-{
-	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)
-		return true;
-	else
-		return false;
-}
-
 bool EEDmac::isInterruptPending() const
 {
 	auto& D_STAT = mDMAC->STAT;
 
 	// Check channel interrupt status.
-	for (auto i = 0; i < PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; i++)
-	{
-		auto& cisKey = EEDmacRegister_STAT_t::Fields::CIS_KEYS[i];
-		auto& cimKey = EEDmacRegister_STAT_t::Fields::CIM_KEYS[i];
-
-		auto& cisValue = D_STAT->getFieldValue(cisKey);
-		auto& cimValue = D_STAT->getFieldValue(cimKey);
-
-		// Set EE Core interrupt if (CIS & CIM) is true.
-		if (cisValue & cimValue)
-		{
-			return true;
-		}
-	}
+	u32 cisValue = D_STAT->readWord(Context_t::RAW) & 0x3FF;
+	u32 cimValue = (D_STAT->readWord(Context_t::RAW) & 0x3FF0000) >> 16;
+	if (cisValue & cimValue)
+		return true;
 
 	// Check stall control interrupt status.
 	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::SIS) & D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::SIS))
-	{
 		return true;
-	}
 
 	// Check MFIFO interrupt status.
 	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::MEIS) & D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::MEIM))
-	{
 		return true;
-	}
 
 	// Check for BUSERR interrupt status.
 	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::BEIS))
-	{
 		return true;
-	}
 
+	// Else no interrupt condition occured.
 	return false;
 }
 
@@ -437,7 +413,7 @@ bool EEDmac::isDrainStallControlWaiting() const
 	return false;
 }
 
-u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess)
+u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess) const
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
@@ -446,7 +422,7 @@ u128 EEDmac::readDataMemory(u32 physicalAddress, bool SPRAccess)
 		return mEEPhysicalMMU->readQword(Context_t::RAW, physicalAddress);
 }
 
-void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data)
+void EEDmac::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) const
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)

@@ -3,8 +3,7 @@
 #include <stdexcept>
 
 #include "Common/Types/Context_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
@@ -89,13 +88,13 @@ void EECoreExceptionHandler::handleException_L1() const
 		{
 			// TODO: no idea if this code works, yet to encounter a branch delay exception.
 			u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
-			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getResources()->EE->EECore->COP0->EPC->writeWord(Context_t::EE, pcValue);
 			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
 		}
 		else
 		{
 			u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION;
-			getResources()->EE->EECore->COP0->EPC->setFieldValue(COP0RegisterEPC_t::Fields::EPC, pcValue);
+			getResources()->EE->EECore->COP0->EPC->writeWord(Context_t::EE, pcValue);
 			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
 		}
 
@@ -145,13 +144,13 @@ void EECoreExceptionHandler::handleException_L2() const
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
 		u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
-		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getResources()->EE->EECore->COP0->ErrorEPC->writeWord(Context_t::EE, pcValue);
 		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
 	}
 	else
 	{
 		u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION;
-		getResources()->EE->EECore->COP0->ErrorEPC->setFieldValue(EECoreCOP0Register_ErrorEPC_t::Fields::ErrorEPC, pcValue);
+		getResources()->EE->EECore->COP0->ErrorEPC->writeWord(Context_t::EE, pcValue);
 		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
 	}
 
@@ -262,7 +261,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
@@ -275,7 +274,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
@@ -289,7 +288,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
@@ -304,7 +303,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 	auto& COP0 = getResources()->EE->EECore->COP0;
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
@@ -318,7 +317,7 @@ void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
 	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
@@ -332,7 +331,7 @@ void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->writeWord(Context_t::EE, 0);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, 0);
 	COP0->EntryLo0->writeWord(Context_t::EE, 0);
@@ -343,7 +342,7 @@ void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
 
-	COP0->BadVAddr->setFieldValue(EECoreCOP0Register_BadVAddr_t::Fields::BadVAddr, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
+	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
 	COP0->Context->writeWord(Context_t::EE, 0);
 	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, 0);
 	COP0->EntryLo0->writeWord(Context_t::EE, 0);

@@ -31,6 +31,7 @@ class IOPDmac_t : public PS2ResourcesSubcategory
 {
 public:
 	explicit IOPDmac_t(const PS2Resources_t * PS2Resources);
+	void postResourcesInit() override;
 	
 	/*
 	IOP DMA Channels. 
@@ -41,7 +42,7 @@ public:
 	std::shared_ptr<IOPDmacChannel_GPU_t>      CHANNEL_GPU;
 	std::shared_ptr<IOPDmacChannel_CDROM_t>    CHANNEL_CDROM;
 	std::shared_ptr<IOPDmacChannel_SPU2c1_t>   CHANNEL_SPU2c1;
-	std::shared_ptr<IOPDmacChannel_PIO_t> CHANNEL_5;
+	std::shared_ptr<IOPDmacChannel_PIO_t>      CHANNEL_PIO;
 	std::shared_ptr<IOPDmacChannel_OTClear_t>  CHANNEL_OTClear;
 	std::shared_ptr<IOPDmacChannel_SPU2c2_t>   CHANNEL_SPU2c2;
 	std::shared_ptr<IOPDmacChannel_DEV9_t>     CHANNEL_DEV9;

@@ -2,7 +2,6 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/MIPSCoprocessor/COP0Registers_t.h"
 #include "Common/Util/MMUUtil/MMUUtil.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"

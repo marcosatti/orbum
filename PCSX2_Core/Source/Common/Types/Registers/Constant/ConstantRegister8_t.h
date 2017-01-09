@@ -16,5 +16,10 @@ public:
 	Overwritten write functions that discard any value.
 	*/
 	void writeByte(const Context_t& context, u8 value) override;
+
+	/*
+	Initalise register (set to do nothing).
+	*/
+	void initalise() override;
 };
 

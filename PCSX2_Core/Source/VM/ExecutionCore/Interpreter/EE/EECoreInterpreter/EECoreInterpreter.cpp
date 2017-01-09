@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/Types/Registers/PCRegister32_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 

@@ -184,7 +184,7 @@ public:
 
 		struct DMAC
 		{
-			static constexpr u32 NUMBER_DMAC_CHANNELS = 13;
+			static constexpr u32 NUMBER_DMAC_CHANNELS = 14;
 		};
 
 		struct Timers
