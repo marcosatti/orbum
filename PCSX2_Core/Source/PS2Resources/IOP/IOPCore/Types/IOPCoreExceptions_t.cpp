@@ -35,11 +35,10 @@ void IOPCoreExceptions_t::setException(const IOPCoreException_t& exception)
 	bool masked = mCOP0->Status->isExceptionsMasked();
 
 	// If its from an interrupt, need to check the interrupt source is not masked.
-	if (exception.mExType == ExType::EX_INTERRUPT 
-		&& mCOP0->Status->isInterruptsMasked()
-		&& mCOP0->Status->isIRQMasked(exception.mIntExceptionInfo.mIRQLine))
+	if (exception.mExType == ExType::EX_INTERRUPT)
 	{
-		masked = true;
+		if (mCOP0->Status->isInterruptsMasked() || mCOP0->Status->isIRQMasked(exception.mIntExceptionInfo.mIRQLine))
+			masked = true;
 	}
 	
 	// TODO: need to add NMI checks here (always raised)?
@@ -54,6 +53,6 @@ void IOPCoreExceptions_t::setException(const IOPCoreException_t& exception)
 	}
 	else
 	{
-		logDebug("IOP Exception raised (%s), but was masked!", IOPCoreExceptionsTable::getExceptionInfo(exception.mExType)->mMnemonic);
+		//logDebug("IOP Exception raised (%s), but was masked!", IOPCoreExceptionsTable::getExceptionInfo(exception.mExType)->mMnemonic);
 	}
 }

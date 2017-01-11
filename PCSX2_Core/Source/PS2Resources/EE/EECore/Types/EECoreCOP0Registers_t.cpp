@@ -82,7 +82,10 @@ bool EECoreCOP0Register_Status_t::isExceptionsMasked() const
 
 bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
 {
-	return !((getFieldValue(Fields::IE) > 0) && (getFieldValue(Fields::EIE) > 0));
+	return !((getFieldValue(Fields::ERL) == 0)
+		&& (getFieldValue(Fields::EXL) == 0)
+		&& (getFieldValue(Fields::IE) > 0) 
+		&& (getFieldValue(Fields::EIE) > 0));
 }
 
 bool EECoreCOP0Register_Status_t::isIRQMasked(u8 irq) const

@@ -73,6 +73,8 @@ public:
 	"c" refers to the current status.
 	"p" refers to the previous status.
 	"o" refers to the oldest status.
+
+	Clears the expunged bits to 0.
 	*/
 	void pushExStack();
 	void popExStack();

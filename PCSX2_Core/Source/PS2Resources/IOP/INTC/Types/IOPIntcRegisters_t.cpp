@@ -33,6 +33,11 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t()
 
 }
 
+void IOPIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
+{
+	BitfieldRegister32_t::writeWord(context, readWord(context) & value);
+}
+
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() 
 {
 	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);

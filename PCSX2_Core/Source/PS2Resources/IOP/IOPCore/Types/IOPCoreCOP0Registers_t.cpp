@@ -35,6 +35,8 @@ void IOPCoreCOP0Register_Status_t::pushExStack()
 	setFieldValue(Fields::IEo, getFieldValue(Fields::IEp));
 	setFieldValue(Fields::KUp, getFieldValue(Fields::KUc));
 	setFieldValue(Fields::IEp, getFieldValue(Fields::IEc));
+	setFieldValue(Fields::IEc, 0);
+	setFieldValue(Fields::KUc, 0);
 }
 
 void IOPCoreCOP0Register_Status_t::popExStack()
@@ -43,6 +45,8 @@ void IOPCoreCOP0Register_Status_t::popExStack()
 	setFieldValue(Fields::IEc, getFieldValue(Fields::IEp));
 	setFieldValue(Fields::KUp, getFieldValue(Fields::KUo));
 	setFieldValue(Fields::IEp, getFieldValue(Fields::IEo));
+	setFieldValue(Fields::IEo, 0);
+	setFieldValue(Fields::KUo, 0);
 }
 
 bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const
@@ -52,18 +56,12 @@ bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const
 
 bool IOPCoreCOP0Register_Status_t::isInterruptsMasked() const
 {
-	if (getFieldValue(Fields::IEc) > 0)
-		return false;
-
-	return true;
+	return !(getFieldValue(Fields::IEc) > 0);
 }
 
 bool IOPCoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
 {
-	if ((getFieldValue(Fields::IM) & (1 << irq)) > 0)
-		return false;
-	
-	return true;
+	return !((getFieldValue(Fields::IM) & (1 << irq)) > 0);
 }
 
 IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()

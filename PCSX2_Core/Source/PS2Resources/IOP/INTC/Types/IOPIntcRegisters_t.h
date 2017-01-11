@@ -6,7 +6,7 @@
 
 /*
 The IOP INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
-Bits are cleared by writing 1.
+When written to, AND's the previous value with the new value (see IopHwWrite.cpp in PCSX2).
 */
 class IOPIntcRegister_STAT_t : public BitfieldRegister32_t
 {
@@ -42,11 +42,15 @@ public:
 	};
 
 	IOPIntcRegister_STAT_t();
+
+	/*
+	AND's the new value with old value.
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
 };
 
 /*
 The IOP INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
-Bits are reversed by writing 1.
 */
 class IOPIntcRegister_MASK_t : public BitfieldRegister32_t
 {

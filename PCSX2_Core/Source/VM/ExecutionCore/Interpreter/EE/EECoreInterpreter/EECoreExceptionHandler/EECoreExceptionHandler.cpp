@@ -90,6 +90,7 @@ void EECoreExceptionHandler::handleException_L1() const
 			u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
 			getResources()->EE->EECore->COP0->EPC->writeWord(Context_t::EE, pcValue);
 			getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
+			getResources()->EE->EECore->R5900->mIsInBranchDelay = false; // Reset branch delay slot.
 		}
 		else
 		{
@@ -146,6 +147,7 @@ void EECoreExceptionHandler::handleException_L2() const
 		u32 pcValue = getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		getResources()->EE->EECore->COP0->ErrorEPC->writeWord(Context_t::EE, pcValue);
 		getResources()->EE->EECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
+		getResources()->EE->EECore->R5900->mIsInBranchDelay = false; // Reset branch delay slot.
 	}
 	else
 	{
