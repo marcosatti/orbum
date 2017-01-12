@@ -23,16 +23,9 @@ public:
 	explicit IOPCoreExceptionHandler(VMMain * vmMain);
 
 	/*
-	Check the exception state (PS2Resources->IOP->Exceptions), and make a call to handleException if one is set (and not masked).
-	*/
-	void checkExceptionState();
-
-	/*
 	Handles a given exception by:
 	1. Running the specific exception operation ("EX_HANDLER_*" defined below).
 	2. Running the general exception handler based on the exception properties defined.
-
-	This is made public as a direct way to reset the IOP state from the VM.
 	*/
 	void handleException(const IOPCoreException_t& PS2Exception);
 

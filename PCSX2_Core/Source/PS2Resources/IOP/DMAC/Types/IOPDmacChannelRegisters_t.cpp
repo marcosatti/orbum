@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::TD, "TD", 0, 1, 0);
 	registerField(Fields::MAS, "MAS", 1, 1, 0);
@@ -16,7 +16,7 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 }
 
 IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true),
+	BitfieldRegister32_t(mnemonic, false, true),
 	mOriginalBS(0)
 {
 	registerField(Fields::BS, "BS", 0, 16, 0);
@@ -75,7 +75,7 @@ void IOPDmacChannelRegister_MADR_t::decrement()
 }
 
 IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
-	Register32_t(mnemonic, true)
+	Register32_t(mnemonic, false, true)
 {
 }
 

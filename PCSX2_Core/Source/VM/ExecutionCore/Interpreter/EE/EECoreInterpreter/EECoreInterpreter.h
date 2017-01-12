@@ -43,11 +43,10 @@ public:
 	s64 executionStep(const ClockSource_t & clockSource) override;
 
 private:
-
 #if defined(BUILD_DEBUG)
-	// Debug loop counter 
+	// Debug loop counter.
 	u64 DEBUG_LOOP_COUNTER = 0;
-	// SYNC counter
+	// SYNC instruction counter.
 	u64 DEBUG_INSTRUCTION_SYNC = 0;
 #endif
 
@@ -55,23 +54,7 @@ private:
 	Checks the COP0.Count register against the COP0.Compare register.
 	If the Count value >= Compare value, an exception is generated.
 	*/
-	void checkCountTimerEvent() const;
-
-	/*
-	Checks the COP0.Cause register for any external interrupts that have been asserted (the IP bits).
-	An exception is generated when a interrupt has been asserted and is not masked.
-	*/
-	void checkExternalInterrupts() const;
-
-	/*
-	Checks the branch delay slot, and updates the PC if required.
-	*/
-	void checkBranchDelaySlot() const;
-
-	/*
-	Executes the instruction at the current PC and increments it.
-	*/
-	u32 executeInstruction();
+	void handleCountEvent() const;
 
 	/*
 	The EECore exception handler, which handles and processes the EECore->Exceptions state.

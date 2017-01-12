@@ -41,8 +41,9 @@ private:
 	u64 DEBUG_LOOP_COUNTER = 0;
 #endif
 
-	// Component helper functions.
-	void checkBranchDelaySlot() const;
+	/*
+	Executes the instruction at the current PC.
+	*/
 	s64 executeInstruction();
 
 	/*

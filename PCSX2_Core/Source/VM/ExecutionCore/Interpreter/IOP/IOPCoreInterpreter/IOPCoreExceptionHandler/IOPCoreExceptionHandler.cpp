@@ -4,6 +4,7 @@
 
 #include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h"
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreExceptionHandler/IOPCoreExceptionHandler.h"
@@ -14,7 +15,6 @@
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
@@ -24,14 +24,6 @@ IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) :
 {
 }
 
-void IOPCoreExceptionHandler::checkExceptionState()
-{
-	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-
-	if (Exceptions->hasExceptionOccurred())
-		handleException(Exceptions->getException());
-}
-
 void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
 {
 #if defined(BUILD_DEBUG)
@@ -39,7 +31,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 #endif
 
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
-	auto& R3000 = getResources()->IOP->IOPCore->R3000;
+	auto& BD = getResources()->IOP->IOPCore->R3000->BD;
 	auto& PC = getResources()->IOP->IOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
@@ -70,13 +62,12 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 
 	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
 	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-	if (getResources()->IOP->IOPCore->R3000->isInBranchDelaySlot())
+	if (BD->isInBranchDelay())
 	{
-		// TODO: no idea if this code works, yet to encounter a branch delay exception.
 		u32 pcValue = PC->readWord(Context_t::IOP) - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		COP0->EPC->writeWord(Context_t::RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
-		R3000->mIsInBranchDelay = false; // Reset branch delay slot.
+		BD->resetBranchDelay(); // Reset branch delay slot.
 	}
 	else
 	{

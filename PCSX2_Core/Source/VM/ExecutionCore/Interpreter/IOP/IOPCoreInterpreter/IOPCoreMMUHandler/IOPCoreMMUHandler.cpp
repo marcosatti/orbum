@@ -56,16 +56,35 @@ u32 IOPCoreMMUHandler::readWord(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-		return  getResources()->IOP->PhysicalMMU->readWord(Context_t::IOP,PS2PhysicalAddress);
+	{
+		auto value = getResources()->IOP->PhysicalMMU->readWord(Context_t::IOP, PS2PhysicalAddress);
+
+		if (PS2PhysicalAddress == 0x532C)
+		{
+			logDebug("IOP MMU: Read u32 @ 0x%08X, value = 0x%X", PS2PhysicalAddress, value);
+		}
+
+		return  value;
+	}
 	else
+	{
 		return 0;
+	}
 }
 
 void IOPCoreMMUHandler::writeWord(u32 PS2MemoryAddress, u32 value)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
+
 	if (!mHasExceptionOccurred && !mHasISCFailed)
-		 getResources()->IOP->PhysicalMMU->writeWord(Context_t::IOP, PS2PhysicalAddress, value);
+	{
+		if (PS2PhysicalAddress == 0x532C)
+		{
+			logDebug("IOP MMU: Write u32 @ 0x%08X, value = 0x%X", PS2PhysicalAddress, value);
+		}
+
+		getResources()->IOP->PhysicalMMU->writeWord(Context_t::IOP, PS2PhysicalAddress, value);
+	}
 }
 
 bool IOPCoreMMUHandler::hasExceptionOccurred() const

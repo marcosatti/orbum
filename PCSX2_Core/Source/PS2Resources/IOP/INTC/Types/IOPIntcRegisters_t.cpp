@@ -2,7 +2,8 @@
 
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t()
+IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t() :
+	BitfieldRegister32_t("IOP INTC: STAT", false, true)
 {
 	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
@@ -35,10 +36,15 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t()
 
 void IOPIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
 {
-	BitfieldRegister32_t::writeWord(context, readWord(context) & value);
+	// Preprocessing for IOP: AND with old value (acknowledge bits).
+	if (context == Context_t::IOP)
+		value = readWord(context) & value;
+
+	BitfieldRegister32_t::writeWord(context, value);
 }
 
-IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() 
+IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
+	BitfieldRegister32_t("IOP INTC: MASK", false, true)
 {
 	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
@@ -78,9 +84,7 @@ u32 IOPIntcRegister_CTRL_t::readWord(const Context_t& context)
 	auto temp = Register32_t::readWord(context);
 
 	if (context == Context_t::IOP)
-	{
 		writeWord(context, 0);
-	}
 
 	return temp;
 }

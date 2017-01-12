@@ -62,23 +62,25 @@ void IOPDmacRegister_ICR_t::setFieldValue(const u8& fieldIndex, const u32& value
 
 void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 {
-	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them.
-	u32 temp = value;
+	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	if (context == Context_t::IOP)
-		temp = (value & 0x80FFFFFF) | (~(value & 0x7F000000) & (readWord(Context_t::RAW) & 0x7F000000));
+		value = ((readWord(Context_t::RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 		
-	BitfieldRegister32_t::writeWord(context, temp);
+	BitfieldRegister32_t::writeWord(context, value);
 
-	// Check the IRQ conditions.
+	// Check the master IRQ conditions.
+	u32 master = 0;
 	if (getFieldValue(Fields::IRQFORCE))
-		setFieldValue(Fields::IRQMASTER, 1);
+		master = 1;
 
 	if (getFieldValue(Fields::IRQENABLE))
 	{
-		auto EN = (temp & 0x7F0000) >> 16;
-		auto FL = (temp & 0x7F000000) >> 24;
+		auto EN = (value & 0x7F0000) >> 16;
+		auto FL = (value & 0x7F000000) >> 24;
 
 		if (EN & FL)
-			setFieldValue(Fields::IRQMASTER, 1);
+			master = 1;
+			
 	}
+	setFieldValue(Fields::IRQMASTER, master);
 }

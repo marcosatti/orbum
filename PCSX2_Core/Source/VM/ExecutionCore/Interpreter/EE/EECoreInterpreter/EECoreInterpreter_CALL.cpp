@@ -3,6 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Types/Registers/MIPS/LinkRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 
@@ -24,7 +25,7 @@ void EECoreInterpreter::BGEZAL()
 	if (source1Val >= 0)
 	{
 		getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
+		getResources()->EE->EECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 	}
 }
 
@@ -39,7 +40,7 @@ void EECoreInterpreter::BGEZALL()
 	if (source1Val >= 0)
 	{
 		getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
+		getResources()->EE->EECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 	}
 	else
 		getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
@@ -56,7 +57,7 @@ void EECoreInterpreter::BLTZAL()
 	if (source1Val < 0)
 	{
 		getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
+		getResources()->EE->EECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 	}
 }
 
@@ -71,7 +72,7 @@ void EECoreInterpreter::BLTZALL()
 	if (source1Val < 0)
 	{
 		getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-		getResources()->EE->EECore->R5900->setBranchDelayPCIOffset(offset, 1);
+		getResources()->EE->EECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 	}
 	else
 		getResources()->EE->EECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
@@ -81,7 +82,7 @@ void EECoreInterpreter::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	getResources()->EE->EECore->R5900->LinkRegister->setLinkAddress();
-	getResources()->EE->EECore->R5900->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 1);
+	getResources()->EE->EECore->R5900->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
 void EECoreInterpreter::JALR()
@@ -91,5 +92,5 @@ void EECoreInterpreter::JALR()
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
 	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) + (Constants::SIZE_MIPS_INSTRUCTION * 2)));
-	getResources()->EE->EECore->R5900->setBranchDelayPCTarget(sourceReg->readWord(Context_t::EE, 0), 1);
+	getResources()->EE->EECore->R5900->BD->setBranchDelayPCAbsolute(sourceReg->readWord(Context_t::EE, 0), 2);
 }

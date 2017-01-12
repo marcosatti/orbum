@@ -16,8 +16,8 @@ public:
 	explicit BitfieldRegister32_t(const char * mnemonic);
 
 #if defined(BUILD_DEBUG)
-	explicit BitfieldRegister32_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
-	bool mDebug;
+	explicit BitfieldRegister32_t(const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
+	bool mDebugReads, mDebugWrites;
 
 	/*
 	Debug logs all bitfield mnemonics with values.

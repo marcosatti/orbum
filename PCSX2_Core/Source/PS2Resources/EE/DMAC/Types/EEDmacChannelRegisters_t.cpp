@@ -3,7 +3,7 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 
 EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::DIR, "DIR", 0, 1, 0);
 	registerField(Fields::MOD, "MOD", 2, 2, 0);
@@ -15,7 +15,7 @@ EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic
 }
 
 EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
@@ -27,7 +27,7 @@ void EEDmacChannelRegister_MADR_t::increment()
 }
 
 EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic) :
-	Register32_t(mnemonic, false)
+	Register32_t(mnemonic, false, true)
 {
 }
 
@@ -37,7 +37,7 @@ void EEDmacChannelRegister_QWC_t::decrement()
 }
 
 EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
@@ -49,14 +49,14 @@ void EEDmacChannelRegister_TADR_t::increment()
 }
 
 EEDmacChannelRegister_ASR_t::EEDmacChannelRegister_ASR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, true)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
 EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic) :
-	Register32_t(mnemonic, true)
+	Register32_t(mnemonic, true, true)
 {
 }
 

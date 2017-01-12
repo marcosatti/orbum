@@ -3,11 +3,11 @@
 #include <stdexcept>
 
 #include "Common/Types/Context_t.h"
+#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
-#include "VM/VMMain.h"
 
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/IOP/IOP_t.h"
@@ -91,9 +91,14 @@ void IOPCoreInterpreter::CTC0()
 
 void IOPCoreInterpreter::RFE()
 {
+	auto& IOPCore = getResources()->IOP->IOPCore;
+
 	// Pop the COP0.Status exception state.
-	auto& COP0 = getResources()->IOP->IOPCore->COP0;
-	COP0->Status->popExStack();
+	IOPCore->COP0->Status->popExStack();
+
+	// Make sure we flush the cpu pipeline (in emulator, this means flush branch delay).
+	// TODO: Not documented anywhere, however due to the way the emulator works, needed in order to prevent the EPC pointing to the current RFE instruction and entering an uninterruptable infinite loop.
+	IOPCore->R3000->BD->executeBranchDelayNow();
 }
 
 void IOPCoreInterpreter::RTPS()

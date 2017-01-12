@@ -4,7 +4,7 @@
 
 Register8_t::Register8_t() :
 #if defined(BUILD_DEBUG)
-	mDebug(false),
+	mDebugReads(false), mDebugWrites(false),
 #endif
 	UB(0),
 	mMnemonic("")
@@ -13,7 +13,7 @@ Register8_t::Register8_t() :
 
 Register8_t::Register8_t(const char* mnemonic) :
 #if defined(BUILD_DEBUG)
-	mDebug(false),
+	mDebugReads(false), mDebugWrites(false),
 #endif
 	UB(0),
 	mMnemonic(mnemonic)
@@ -21,8 +21,8 @@ Register8_t::Register8_t(const char* mnemonic) :
 }
 
 #if defined(BUILD_DEBUG)
-Register8_t::Register8_t(const char* mnemonic, bool debug) :
-	mDebug(debug),
+Register8_t::Register8_t(const char* mnemonic, bool debugReads, bool debugWrites) :
+	mDebugReads(debugReads), mDebugWrites(debugWrites),
 	UB(0),
 	mMnemonic(mnemonic)
 {
@@ -36,7 +36,7 @@ Register8_t::~Register8_t()
 u8 Register8_t::readByte(const Context_t& context)
 {
 #if defined(BUILD_DEBUG)
-	if (mDebug)
+	if (mDebugReads)
 	{
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 		logDebug("%s: %s Read u8, Value = 0x%X.", getContextStr(context), getMnemonic(), UB);
@@ -54,7 +54,7 @@ void Register8_t::writeByte(const Context_t& context, u8 value)
 	UB = value;
 
 #if defined(BUILD_DEBUG)
-	if (mDebug)
+	if (mDebugReads)
 	{
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
 		logDebug("%s: %s Write u8, Value = 0x%X.", getContextStr(context), getMnemonic(), UB);

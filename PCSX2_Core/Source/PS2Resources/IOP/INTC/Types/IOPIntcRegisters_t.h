@@ -44,7 +44,7 @@ public:
 	IOPIntcRegister_STAT_t();
 
 	/*
-	AND's the new value with old value.
+	AND's the new value with old value (IOP context only).
 	*/
 	void writeWord(const Context_t& context, u32 value) override;
 };

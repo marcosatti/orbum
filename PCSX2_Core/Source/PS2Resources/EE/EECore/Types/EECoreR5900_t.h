@@ -2,8 +2,6 @@
 
 #include <memory>
 
-#include "Common/Global/Globals.h"
-
 #include "PS2Constants/PS2Constants.h"
 
 class Register128_t;
@@ -11,6 +9,7 @@ class Register32_t;
 class ConstantRegister128_t;
 class LinkRegister128_t;
 class PCRegister32_t;
+class MIPSBranchDelay_t;
 
 /*
 The R5900 is the EE Core's CPU. 
@@ -22,29 +21,18 @@ class EECoreR5900_t
 public:
 	explicit EECoreR5900_t();
 
-	// CPU state implementations.
-
 	/*
-	The branch delay slot functionality. Use the provided functions to set a branch target (to trigger in a given number of cycles).
-	Cycles determines when the branch will be performed, and the PCTarget determines where the branch goes to.
-	Most of the time cycles will be equal to one, and rarely 0 by the ERET instruction.
-	See the EECoreInterpreter::checkBranchDelaySlot() for the logic that controls this.
-	*/
-	bool mIsInBranchDelay;
-	u8 mBranchDelayCycles;
-	u32 mBranchDelayPCTarget;
-	void setBranchDelayPCTarget(u32 pcTarget, u8 cycles);
-	void setBranchDelayPCJRegion(u32 JInstructionTarget, u8 cycles); // Convenience function for MIPS J Instruction types.
-	void setBranchDelayPCIOffset(s16 IInstructionOffset, u8 cycles); // Convenience function for MIPS I Instruction types.
-	const bool & isInBranchDelaySlot() const;
-
-	// Register implementations.
-
-	/*
-	The Program Counter (PC) register. See EE Core Users manual, pg 61.
-	Must be initalised before LinkRegister below due to dependency.
+	The 32-bit Program Counter (PC) register. See EE Core Users manual, pg 61.
+	Points to the current instruction virtual address.
+	Must be initalised before LinkRegister and BD below due to dependency.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;
+
+	/*
+	The branch delay slot functionality.
+	Depends on the PC register defined above.
+	*/
+	std::shared_ptr<MIPSBranchDelay_t> BD;
 
 	/*
 	The R5900 general purpose registers (GPR's) are 128-bit long.

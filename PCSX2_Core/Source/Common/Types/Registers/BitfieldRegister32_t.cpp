@@ -6,7 +6,7 @@
 
 BitfieldRegister32_t::BitfieldRegister32_t()
 #if defined(BUILD_DEBUG)
-	: mDebug(false)
+	: mDebugReads(false), mDebugWrites(false)
 #endif
 {
 }
@@ -14,7 +14,8 @@ BitfieldRegister32_t::BitfieldRegister32_t()
 BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic) :
 #if defined(BUILD_DEBUG)
 	Register32_t(mnemonic),
-	mDebug(false)
+	mDebugReads(false),
+	mDebugWrites(false)
 #else
 	Register32_t(mnemonic)
 #endif
@@ -22,9 +23,10 @@ BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic) :
 }
 
 #if defined(BUILD_DEBUG)
-BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debug) :
-	Register32_t(mnemonic, debug),
-	mDebug(debug)
+BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debugReads, bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites),
+	mDebugReads(debugReads), 
+	mDebugWrites(debugWrites)
 {
 }
 
@@ -50,7 +52,7 @@ u8 BitfieldRegister32_t::readByte(const Context_t& context, u32 arrayIndex)
 {
 	auto temp = Register32_t::readByte(context, arrayIndex);
 
-	if (mDebug)
+	if (mDebugReads)
 		logDebugAllFields();
 
 	return temp;
@@ -60,7 +62,7 @@ u16 BitfieldRegister32_t::readHword(const Context_t& context, u32 arrayIndex)
 {
 	auto temp = Register32_t::readHword(context, arrayIndex);
 
-	if (mDebug)
+	if (mDebugReads)
 		logDebugAllFields();
 
 	return temp;
@@ -70,7 +72,7 @@ u32 BitfieldRegister32_t::readWord(const Context_t& context)
 {
 	auto temp = Register32_t::readWord(context);
 
-	if (mDebug)
+	if (mDebugReads)
 		logDebugAllFields();
 
 	return temp;
@@ -97,7 +99,7 @@ void BitfieldRegister32_t::writeByte(const Context_t& context, u32 arrayIndex, u
 	BitfieldMap32_t::syncMap();
 
 #if defined(BUILD_DEBUG)
-	if (mDebug)
+	if (mDebugWrites)
 		logDebugAllFields();
 #endif
 }
@@ -108,7 +110,7 @@ void BitfieldRegister32_t::writeHword(const Context_t& context, u32 arrayIndex, 
 	BitfieldMap32_t::syncMap();
 
 #if defined(BUILD_DEBUG)
-	if (mDebug)
+	if (mDebugWrites)
 		logDebugAllFields();
 #endif
 }
@@ -119,7 +121,7 @@ void BitfieldRegister32_t::writeWord(const Context_t& context, u32 value)
 	BitfieldMap32_t::syncMap();
 
 #if defined(BUILD_DEBUG)
-	if (mDebug)
+	if (mDebugWrites)
 		logDebugAllFields();
 #endif
 }

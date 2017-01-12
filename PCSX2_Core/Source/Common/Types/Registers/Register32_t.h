@@ -30,8 +30,8 @@ public:
 	explicit Register32_t(const char * mnemonic);
 
 #if defined(BUILD_DEBUG)
-	explicit Register32_t(const char * mnemonic, bool debug); // Turn on/off debugging functionality.
-	bool mDebug;
+	explicit Register32_t(const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
+	bool mDebugReads, mDebugWrites;
 #endif
 
 	virtual ~Register32_t();

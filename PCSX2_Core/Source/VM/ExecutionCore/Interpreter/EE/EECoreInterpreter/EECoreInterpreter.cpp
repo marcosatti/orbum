@@ -4,6 +4,7 @@
 #include "Common/Types/Context_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -45,76 +46,19 @@ void EECoreInterpreter::initalise()
 {
 	// A PS2 reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
 	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
-	// After this is done, call VMMMain::Run() to begin execution.
-
 	mExceptionHandler->handleException(EECoreException_t(ExType::EX_RESET));
 }
 
 s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
-	// Check for any external interrupts (check the COP0.Cause.IP bits).
-
-	// Check for any COP0.Count events.
-	checkCountTimerEvent();
+	auto& EECore = getResources()->EE->EECore;
+	
+	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
+	if (EECore->Exceptions->hasExceptionOccurred())
+		mExceptionHandler->handleException(EECore->Exceptions->getException());
 
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
-	checkBranchDelaySlot();
-
-	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	mExceptionHandler->checkExceptionState();
-
-	// Perform instruction related activities (such as execute instruction, increment PC and update timers).
-	u32 cycles = executeInstruction();
-
-#if defined(BUILD_DEBUG)
-	// Debug increment loop counter.
-	DEBUG_LOOP_COUNTER++;
-#endif
-
-	return cycles;
-}
-
-void EECoreInterpreter::checkBranchDelaySlot() const
-{
-	auto& R5900 = getResources()->EE->EECore->R5900;
-	if (R5900->mIsInBranchDelay)
-	{
-		if (R5900->mBranchDelayCycles == 0)
-		{
-			R5900->PC->setPCValueAbsolute(R5900->mBranchDelayPCTarget);
-			R5900->mIsInBranchDelay = false;
-		}
-		else
-			R5900->mBranchDelayCycles--;
-	}
-}
-
-void EECoreInterpreter::checkCountTimerEvent() const
-{
-	auto& EECore = getResources()->EE->EECore;
-
-	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
-	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
-	// TODO: check for errors.
-	if (EECore->COP0->Count->readWord(Context_t::EE) == EECore->COP0->Compare->readWord(Context_t::EE))
-	{
-		// Set exception state.
-		IntExceptionInfo_t intEx = { 7 };
-		EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
-	}
-}
-
-void EECoreInterpreter::checkExternalInterrupts() const
-{
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	// Check the COP0.Cause.IP bits (bits 8 - 15) against the COP0.Status.IM bits.
-	// If the AND of the two compares to true, then an interrupt exception is raised.
-}
-
-u32 EECoreInterpreter::executeInstruction()
-{
-	auto& EECore = getResources()->EE->EECore;
+	EECore->R5900->BD->handleBranchDelay();
 
 	// Set the instruction holder to the instruction at the current PC.
 	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE);
@@ -134,9 +78,9 @@ u32 EECoreInterpreter::executeInstruction()
 			"PC = 0x%08X, BD = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			EECore->R5900->PC->readWordU(), EECore->R5900->mIsInBranchDelay, 
+			EECore->R5900->PC->readWordU(), EECore->R5900->mIsInBranchDelay,
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
-	
+
 	}
 
 	// Breakpoint.
@@ -149,14 +93,35 @@ u32 EECoreInterpreter::executeInstruction()
 	// Run the instruction, which is based on the implementation index.
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
-	// Update the COP0.Count register, which is meant to be incremented every CPU clock cycle (do it every instruction instead). See EE Core Users Manual page 70.
-	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
-	
 	// Increment PC.
 	EECore->R5900->PC->setPCValueNext();
 
+	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
+	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
+	handleCountEvent();
+
+#if defined(BUILD_DEBUG)
+	// Debug increment loop counter.
+	DEBUG_LOOP_COUNTER++;
+#endif
+
 	// Return the number of cycles completed.
 	return mInstructionInfo->mCycles;
+}
+
+void EECoreInterpreter::handleCountEvent() const
+{
+	auto& EECore = getResources()->EE->EECore;
+
+	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
+	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
+	// TODO: check for errors.
+	if (EECore->COP0->Count->readWord(Context_t::EE) == EECore->COP0->Compare->readWord(Context_t::EE))
+	{
+		// Set exception state.
+		IntExceptionInfo_t intEx = { 7 };
+		EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
+	}
 }
 
 bool EECoreInterpreter::checkCOP0Usable() const
