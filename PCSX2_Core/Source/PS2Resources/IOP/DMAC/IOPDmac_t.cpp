@@ -29,7 +29,9 @@ IOPDmac_t::IOPDmac_t(const PS2Resources_t* PS2Resources) :
 	PCR(std::make_shared<IOPDmacRegister_PCR_t>("IOP DMAC: PCR")),
 	ICR(std::make_shared<IOPDmacRegister_ICR_t>("IOP DMAC: ICR")),
 	PCR2(std::make_shared<IOPDmacRegister_PCR_t>("IOP DMAC: PCR2")),
-	ICR2(std::make_shared<IOPDmacRegister_ICR_t>("IOP DMAC: ICR2"))
+	ICR2(std::make_shared<IOPDmacRegister_ICR_t>("IOP DMAC: ICR2")),
+	PCRS{ PCR, PCR2 },
+	ICRS{ ICR, ICR2 }
 {
 }
 

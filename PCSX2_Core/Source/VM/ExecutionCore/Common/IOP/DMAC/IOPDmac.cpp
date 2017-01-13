@@ -103,44 +103,33 @@ void IOPDmac::executionStep_Normal()
 
 bool IOPDmac::isDMACChannelEnabled() const
 {
+	u32 pcrGroup = mChannelIndex / 7;
 	u32 pcrIndex = mChannelIndex % 7;
 
-	if (mChannelIndex < 8)
-		return (mDMAC->PCR->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
-	else
-		return (mDMAC->PCR2->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
+	return (mDMAC->PCRS[pcrGroup]->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
 }
 
 bool IOPDmac::isInterruptPending() const
 {
-	auto& ICR = mDMAC->ICR;
-	auto& ICR2 = mDMAC->ICR2;
-
-	// Check master IRQ bit, return true immediately.
-	// TODO: check this, PCSX2 does not handle this at all.
-	if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER) || ICR2->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER))
-		return true;
-
-	// Check if any channel has emitted an interrupt (check through ICR / ICR2 registers).
-	u32 icrEN = (ICR->readWord(Context_t::RAW) & 0x7F0000) >> 16;
-	u32 icrFL = (ICR->readWord(Context_t::RAW) & 0x7F000000) >> 24;
-	u32 icr2EN = (ICR2->readWord(Context_t::RAW) & 0x7F0000) >> 16;
-	u32 icr2FL = (ICR2->readWord(Context_t::RAW) & 0x7F000000) >> 24;
-	if (icrEN & icrFL)
+	for (auto& ICR : mDMAC->ICRS)
 	{
-		// If the DMA IRQ master enable bit is set (bit 23), also need to set the IRQ master flag.
-		if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQENABLE))
-			ICR->setFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER, 1);
+		// Check master IRQ bit, return true immediately.
+		// TODO: check this, PCSX2 does not handle this at all.
+		if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER))
+			return true;
 
-		return true;
-	}
-	if (icr2EN & icr2FL)
-	{
-		// If the DMA IRQ master enable bit is set (bit 23), also need to set the IRQ master flag.
-		if (ICR2->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQENABLE))
-			ICR2->setFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER, 1);
+		// Check if any channel has emitted an interrupt.
+		u32 icrValue = ICR->readWord(Context_t::RAW);
+		u32 icrEN = (icrValue & 0x7F0000) >> 16;
+		u32 icrFL = (icrValue & 0x7F000000) >> 24;
+		if (icrEN & icrFL)
+		{
+			// If the DMA IRQ master enable bit is set (bit 23), also need to set the IRQ master flag.
+			if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQENABLE))
+				ICR->setFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER, 1);
 
-		return true;
+			return true;
+		}
 	}
 
 	// No interrupt conditions happened.

@@ -328,18 +328,12 @@ bool EEDmac::isInterruptPending() const
 {
 	auto& D_STAT = mDMAC->STAT;
 
-	// Check channel interrupt status.
-	u32 cisValue = D_STAT->readWord(Context_t::RAW) & 0x3FF;
-	u32 cimValue = (D_STAT->readWord(Context_t::RAW) & 0x3FF0000) >> 16;
-	if (cisValue & cimValue)
-		return true;
-
-	// Check stall control interrupt status.
-	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::SIS) & D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::SIS))
-		return true;
-
-	// Check MFIFO interrupt status.
-	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::MEIS) & D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::MEIM))
+	// Check interrupt status (first half of register are stat bits, second half are mask bits, with the exception of the BEIS bit).
+	// See the formula listed at the end of page 65 of the EE Users Manual.
+	u32 regValue = D_STAT->readWord(Context_t::RAW);
+	u32 statValue = regValue & 0xFFFF;
+	u32 maskValue = (regValue & 0xFFFF0000) >> 16;
+	if (statValue & maskValue)
 		return true;
 
 	// Check for BUSERR interrupt status.

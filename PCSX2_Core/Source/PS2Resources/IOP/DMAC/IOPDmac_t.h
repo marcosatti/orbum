@@ -23,7 +23,6 @@ class IOPDmacChannel_toSIO2_t;
 class IOPDmacRegister_PCR_t; 
 class IOPDmacRegister_ICR_t;
 
-
 /*
 IOP DMAC resources.
 */
@@ -59,5 +58,7 @@ public:
 	std::shared_ptr<IOPDmacRegister_ICR_t> ICR;  // Register "ICR (Interrupt Control Register)"  @ 0x1F8010F4 -> 0x1F8010F7. Responsible for DMA channels 0 -> 6.
 	std::shared_ptr<IOPDmacRegister_PCR_t> PCR2; // Register "PCR2 (Primary Control Register)"   @ 0x1F801570 -> 0x1F801573. Responsible for DMA channels 7 -> 12.
 	std::shared_ptr<IOPDmacRegister_ICR_t> ICR2; // Register "ICR  (Interrupt Control Register)" @ 0x1F801574 -> 0x1F801577. Responsible for DMA channels 7 -> 12.
+	std::shared_ptr<IOPDmacRegister_PCR_t> PCRS[PS2Constants::IOP::DMAC::NUMBER_PCR_REGISTERS]; // Array of PCR registers needed for iterations.
+	std::shared_ptr<IOPDmacRegister_ICR_t> ICRS[PS2Constants::IOP::DMAC::NUMBER_ICR_REGISTERS]; // Array of PCR registers needed for iterations.
 };
 

@@ -69,6 +69,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 			pcValue, IOPCore->R3000->BD->isInBranchDelay(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 
+		getVM()->setStatus(VMMain::VMStatus::STOPPED);
 	}
 
 	if (pcValue == DEBUG_PC_BREAKPOINT)
