@@ -13,17 +13,12 @@ class VMMain;
 /*
 The exception handler provides 2 main points of functionality:
 1. Handles the exception state for the EE Core.
-2. Handles exceptions using the documentation provided in EE Core Users Manual chapter 4.
+2. Handles exceptions using the documentation provided in EE Core Users Manual Chapter 4.
 */
 class EECoreExceptionHandler : public VMExecutionCoreComponent
 {
 public:
 	explicit EECoreExceptionHandler(VMMain * vmMain);
-
-	/*
-	Check the exception state (PS2Resources->EE->EECore->Exceptions), and make a call to handleException if one is set (and not masked).
-	*/
-	void checkExceptionState();
 
 	/*
 	Handles a given exception by:
@@ -43,7 +38,7 @@ private:
 	/*
 	Temp state variables, needed by functions below.
 	*/
-	const EECoreException_t * mEECoreException;
+	EECoreException_t mEECoreException;
 	const ExceptionProperties_t * mExceptionProperties;
 
 	/*

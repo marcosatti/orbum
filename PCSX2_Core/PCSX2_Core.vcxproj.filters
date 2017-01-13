@@ -416,9 +416,6 @@
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreException_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions\Types</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreTLB_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\MMU</Filter>
@@ -435,7 +432,6 @@
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Types\EERegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VPU_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />

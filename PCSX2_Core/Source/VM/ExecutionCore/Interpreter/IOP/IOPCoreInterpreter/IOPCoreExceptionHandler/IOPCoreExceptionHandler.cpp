@@ -19,12 +19,12 @@
 
 IOPCoreExceptionHandler::IOPCoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
-	mIOPCoreException(nullptr), 
+	mIOPCoreException(IOPCoreException_t::EX_RESET), 
 	mExceptionProperties(nullptr)
 {
 }
 
-void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Exception)
+void IOPCoreExceptionHandler::handleException(const IOPCoreException_t & exception)
 {
 #if defined(BUILD_DEBUG)
 	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
@@ -35,8 +35,8 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	auto& PC = getResources()->IOP->IOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
-	mIOPCoreException = &PS2Exception;
-	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
+	mIOPCoreException = exception;
+	mExceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(exception);
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
@@ -47,7 +47,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	(this->*EXCEPTION_HANDLERS[mExceptionProperties->mImplementationIndex])();
 
 	// If its a reset exception, set PC to reset vector and return.
-	if (mIOPCoreException->mExType == ExType::EX_RESET)
+	if (mIOPCoreException == IOPCoreException_t::EX_RESET)
 	{
 		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 		return;
@@ -77,7 +77,7 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 	}
 
 	// Select the vector to use (set vectorOffset).
-	if (mIOPCoreException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD || mIOPCoreException->mExType == ExType::EX_TLB_REFILL_STORE)
+	if (mIOPCoreException == IOPCoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD || mIOPCoreException == IOPCoreException_t::EX_TLB_REFILL_STORE)
 		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 	else
 		vectorOffset = PS2Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
@@ -89,67 +89,57 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t& PS2Excep
 		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 	
 	// Push the exception state within the COP0.Status register (will cause IEc and KUc to switch to interrupts disabled and kernel mode respectively).
-	COP0->Status->pushExStack();
+	COP0->Status->pushExceptionStack();
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
-	auto& COP0 = getResources()->IOP->IOPCore->COP0;
-
-	// Clear all previously set Cause.IP bits.
-	// TODO: In hardware, an interrupt is caused by assertion of a IRQ line which is then deasserted once the ISR has run (the ISR sets the peripheral registers etc which deasserts the line).
-	//       This would also clear the Cause.IP bit. In this emulator, a more simple approach is taken: when an interrupt exception is taken, thats when the Cause.IP bit gets set.
-	//       However it is not cleared upon the ISR finishing, instead when another interrupt is taken, thats when any previous IP bits are cleared and only the corresponding
-	//       interrupt source is set. If needed this can be properly implemented.
-	COP0->Cause->clearIP();
-
-	// Set the corresponding IRQ Cause.IP bit.
-	COP0->Cause->setIRQPending(mIOPCoreException->mIntExceptionInfo.mIRQLine);
+	// No additional processing needed.
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	throw std::runtime_error("IOP TLB exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	throw std::runtime_error("IOP TLB exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	throw std::runtime_error("IOP TLB exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	throw std::runtime_error("IOP TLB exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
 	auto& COP0 = getResources()->IOP->IOPCore->COP0;
 
-	throw std::runtime_error("IOP exception handler function not implemented.");
+	throw std::runtime_error("IOP TLB exception handler function not implemented.");
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH()
 {
-	// TODO: Look at later, but since this is an external interrupt which is not a part of normal operation, will probably never have to be implemented.
+	// No additional processing needed.
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE()
 {
-	// TODO: Look at later, but since this is an external interrupt which is not a part of normal operation, will probably never have to be implemented.
+	// No additional processing needed.
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_SYSTEMCALL()
@@ -169,9 +159,7 @@ void IOPCoreExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION()
 
 void IOPCoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
-	auto& COP0 = getResources()->IOP->IOPCore->COP0;
-
-	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, mIOPCoreException->mCOPExceptionInfo.mCOPUnusable);
+	// No additional processing needed.
 }
 
 void IOPCoreExceptionHandler::EX_HANDLER_OVERFLOW()
@@ -185,9 +173,4 @@ void IOPCoreExceptionHandler::EX_HANDLER_RESET()
 
 	// Initalise all of the COP0 registers.
 	COP0->initalise();
-
-	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::SwC, 0);
-	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc, 0);
-	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::IEc, 0);
-	COP0->Status->setFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV, 1);
 }

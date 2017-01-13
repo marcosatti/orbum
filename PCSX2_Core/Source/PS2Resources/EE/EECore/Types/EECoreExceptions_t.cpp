@@ -28,30 +28,14 @@ const EECoreException_t& EECoreExceptions_t::getException() const
 
 void EECoreExceptions_t::setException(const EECoreException_t& exception)
 {
-	// Interrupt exceptions are only taken when conditions are correct.
-	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.
-	// Determines if the exception should be raised at the end.
-	bool masked = mCOP0->Status->isExceptionsMasked();
-
-	// If its from an interrupt, need to check the interrupt source is not masked.
-	if (exception.mExType == ExType::EX_INTERRUPT)
-	{
-		if (mCOP0->Status->isInterruptsMasked() || mCOP0->Status->isIRQMasked(exception.mIntExceptionInfo.mIRQLine))
-			masked = true;
-	}
-
-	// TODO: need to add NMI checks here (always raised)?
-	// if (exception.mExType == of NMI type (ie: reset))
-	//     masked = false;
-
-	// Finally raise the exception if not masked.
-	if (!masked)
+	// Raise the exception if not masked.
+	if (!mCOP0->Status->isExceptionsMasked())
 	{
 		Exception = exception;
 		ExceptionOccurred = true;
 	}
 	else
 	{
-		logDebug("EE Exception raised (%s), but was masked!", EECoreExceptionsTable::getExceptionInfo(exception.mExType)->mMnemonic);
+		logDebug("EE Exception raised (%s), but was masked!", EECoreExceptionsTable::getExceptionInfo(exception)->mMnemonic);
 	}
 }

@@ -51,10 +51,15 @@ private:
 #endif
 
 	/*
-	Checks the COP0.Count register against the COP0.Compare register.
-	If the Count value >= Compare value, an exception is generated.
+	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
 	*/
-	void handleCountEvent() const;
+	void handleInterruptCheck() const;
+
+	/*
+	Checks the COP0.Count register against the COP0.Compare register.
+	If the Count value == Compare value, an interrupt is generated.
+	*/
+	void handleCountEventCheck() const;
 
 	/*
 	The EECore exception handler, which handles and processes the EECore->Exceptions state.

@@ -4,8 +4,6 @@
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Constants/PS2Constants.h"
 
-using ExType = EECoreException_t::ExType;
-
 class EECoreExceptionsTable
 {
 public:
@@ -50,6 +48,6 @@ public:
 	/*
 	Returns the exception info above given the exception type.
 	*/
-	static const ExceptionProperties_t * getExceptionInfo(ExType exception);
+	static const ExceptionProperties_t * getExceptionInfo(const EECoreException_t & exception);
 };
 

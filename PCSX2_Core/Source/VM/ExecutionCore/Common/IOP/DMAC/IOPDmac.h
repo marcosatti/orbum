@@ -55,14 +55,9 @@ private:
 	bool isDMACChannelEnabled() const;
 
 	/*
-	Returns if there is an DMA transfer interrupt pending, indicating the IOP should be interrupted (through INTC).
+	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the IOP Core (through the INTC).
 	*/
-	bool isInterruptPending() const;
-
-	/*
-	Raises an interrupt request with the IOP INTC, by setting IRQ line 3.
-	*/
-	void raiseInterrupt() const;
+	void handleInterruptCheck() const;
 
 	/*
 	Transfers data units (32-bits) between mem <-> channel.

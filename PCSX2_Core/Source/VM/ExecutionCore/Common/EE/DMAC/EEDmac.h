@@ -74,14 +74,9 @@ private:
 	void executionStep_Interleaved();
 
 	/*
-	Returns if there is an DMA transfer interrupt pending, indicating the EE Core should be interrupted.
+	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the EE Core.
 	*/
-	bool isInterruptPending() const;
-
-	/*
-	Raises an interrupt request with the EE Core, by setting the exception context.
-	*/
-	void raiseInterrupt() const;
+	void handleInterruptCheck() const;
 
 	/*
 	Transfers data units (128-bits) between mem <-> channel.

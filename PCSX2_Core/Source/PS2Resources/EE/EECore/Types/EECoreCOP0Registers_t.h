@@ -232,15 +232,20 @@ public:
 
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
-	While not mentioned in the manual, this is a standard MIPS thing.
 	*/
 	void clearIP();
 
 	/*
 	Sets the given IP[irq] bit given.
-	The other IP bits are left unchanged (uses OR). Use the clearIP() function if you need to reset them all.
+	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQPending(u8 irq);
+	void setIRQLine(u8 irq);
+
+	/*
+	Clears the given IP[irq] bit given.
+	The other IP bits are left unchanged (uses ~AND).
+	*/
+	void clearIRQLine(u8 irq);
 };
 
 /*
@@ -294,12 +299,6 @@ public:
 	Does so by checking the master EIE and IE bit.
 	*/
 	bool isInterruptsMasked() const;
-
-	/*
-	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED!).
-	Does so by checking the IM[irq] bit.
-	*/
-	bool isIRQMasked(u8 irq) const;
 };
 
 /*

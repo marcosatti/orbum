@@ -12,15 +12,14 @@
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "PS2Resources/EE/DMAC/EEDmac_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/DMAtag_t.h"
 
-using ExType = EECoreException_t::ExType;
 using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using ChannelID_t = EEDmacChannelTable::ChannelID_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
@@ -82,8 +81,7 @@ s64 EEDmac::executionStep(const ClockSource_t& clockSource)
 		}
 
 		// Check for D_STAT interrupt bit status, send interrupt to EE Core (INT1 line) if not masked.
-		if (isInterruptPending())
-			raiseInterrupt();
+		handleInterruptCheck();
 	}
 
 	// DMAC has completed 1 cycle.
@@ -324,32 +322,29 @@ void EEDmac::executionStep_Interleaved()
 	}
 }
 
-bool EEDmac::isInterruptPending() const
+void EEDmac::handleInterruptCheck() const
 {
+	auto& COP0 = getResources()->EE->EECore->COP0;
 	auto& D_STAT = mDMAC->STAT;
 
-	// Check interrupt status (first half of register are stat bits, second half are mask bits, with the exception of the BEIS bit).
+	// Check interrupt status (first half of register are stat bits, second half are mask bits, with the exception of the BEIS bit done below).
 	// See the formula listed at the end of page 65 of the EE Users Manual.
+	bool interrupt = false;
 	u32 regValue = D_STAT->readWord(Context_t::RAW);
 	u32 statValue = regValue & 0xFFFF;
 	u32 maskValue = (regValue & 0xFFFF0000) >> 16;
 	if (statValue & maskValue)
-		return true;
+		interrupt = true;	
 
 	// Check for BUSERR interrupt status.
 	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::BEIS))
-		return true;
+		interrupt = true;
 
-	// Else no interrupt condition occured.
-	return false;
-}
-
-void EEDmac::raiseInterrupt() const
-{			
-	// Generate an INT1 (IP[2]) signal/interrupt exception (the EE Core exception handler will determine if it should be masked).
-	auto& Exceptions = getResources()->EE->EECore->Exceptions;
-	IntExceptionInfo_t intex = { 2 };
-	Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intex, nullptr));
+	// Set the interrupt line if there was a condition set, otherwise clear the interrupt line.
+	if (interrupt)
+		COP0->Cause->setIRQLine(2);
+	else
+		COP0->Cause->clearIRQLine(2);
 }
 
 bool EEDmac::isSourceStallControlOn() const

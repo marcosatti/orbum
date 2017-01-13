@@ -518,7 +518,6 @@
     <ClCompile Include="Source\PS2Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreR3000_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\MIPS\LinkRegister32_t.cpp" />
@@ -604,7 +603,6 @@
     <ClCompile Include="Source\PS2Resources\PS2Resources_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\BusErrMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ConstantMemory_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreException_t.cpp" />
     <ClCompile Include="Source\Common\Util\MMUUtil\MMUUtil.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreTLB_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0_t.cpp" />

@@ -68,16 +68,16 @@ public:
 	explicit IOPCoreCOP0Register_Status_t();
 
 	/*
-	Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level.
+	Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level (similar to a stack).
 	In the bitfield names for those bits,
 	"c" refers to the current status.
 	"p" refers to the previous status.
 	"o" refers to the oldest status.
 
-	Clears the expunged bits to 0.
+	When pushing, clears the expunged bits to 0 (poping contains old values).
 	*/
-	void pushExStack();
-	void popExStack();
+	void pushExceptionStack();
+	void popExceptionStack();
 
 	/*
 	Returns if all exceptions are currently masked ( = NOT ENABLED).
@@ -122,9 +122,15 @@ public:
 
 	/*
 	Sets the given IP[irq] bit given.
-	The other IP bits are left unchanged (uses OR). Use the clearIP() function if you need to reset them all.
+	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQPending(u8 irq);
+	void setIRQLine(u8 irq);
+
+	/*
+	Clears the given IP[irq] bit given.
+	The other IP bits are left unchanged (uses ~AND).
+	*/
+	void clearIRQLine(u8 irq);
 };
 
 /*

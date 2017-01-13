@@ -88,11 +88,6 @@ bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
 		&& (getFieldValue(Fields::EIE) > 0));
 }
 
-bool EECoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
-{
-	return !((getFieldValue(Fields::IM) & (1 << irq)) > 0);
-}
-
 EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
 {
 	registerField(Fields::ExcCode, "ExcCode", 2, 5, 0);
@@ -109,9 +104,15 @@ void EECoreCOP0Register_Cause_t::clearIP()
 	writeWord(Context_t::RAW, temp);
 }
 
-void EECoreCOP0Register_Cause_t::setIRQPending(u8 irq)
+void EECoreCOP0Register_Cause_t::setIRQLine(u8 irq)
 {
 	auto temp = getFieldValue(Fields::IP) | (1 << irq);
+	setFieldValue(Fields::IP, temp);
+}
+
+void EECoreCOP0Register_Cause_t::clearIRQLine(u8 irq)
+{
+	auto temp = (getFieldValue(Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
 	setFieldValue(Fields::IP, temp);
 }
 

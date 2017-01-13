@@ -56,20 +56,10 @@ u32 IOPCoreMMUHandler::readWord(u32 PS2MemoryAddress)
 {
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, READ);
 	if (!mHasExceptionOccurred)
-	{
-		auto value = getResources()->IOP->PhysicalMMU->readWord(Context_t::IOP, PS2PhysicalAddress);
-
-		if (PS2PhysicalAddress == 0x532C)
-		{
-			logDebug("IOP MMU: Read u32 @ 0x%08X, value = 0x%X", PS2PhysicalAddress, value);
-		}
-
-		return  value;
-	}
+		return getResources()->IOP->PhysicalMMU->readWord(Context_t::IOP, PS2PhysicalAddress);
 	else
-	{
 		return 0;
-	}
+
 }
 
 void IOPCoreMMUHandler::writeWord(u32 PS2MemoryAddress, u32 value)
@@ -77,14 +67,7 @@ void IOPCoreMMUHandler::writeWord(u32 PS2MemoryAddress, u32 value)
 	u32 PS2PhysicalAddress = getPS2PhysicalAddress(PS2MemoryAddress, WRITE);
 
 	if (!mHasExceptionOccurred && !mHasISCFailed)
-	{
-		if (PS2PhysicalAddress == 0x532C)
-		{
-			logDebug("IOP MMU: Write u32 @ 0x%08X, value = 0x%X", PS2PhysicalAddress, value);
-		}
-
 		getResources()->IOP->PhysicalMMU->writeWord(Context_t::IOP, PS2PhysicalAddress, value);
-	}
 }
 
 bool IOPCoreMMUHandler::hasExceptionOccurred() const
@@ -92,22 +75,10 @@ bool IOPCoreMMUHandler::hasExceptionOccurred() const
 	return mHasExceptionOccurred;
 }
 
-const IOPCoreException_t & IOPCoreMMUHandler::getExceptionInfo()
+const IOPCoreException_t & IOPCoreMMUHandler::getException()
 {
 	mHasExceptionOccurred = false;
-
-	// Create TLB exception info.
-	mExceptionInfo.mTLBExceptionInfo =
-	{
-		mPS2VirtualAddress,
-		getResources()->IOP->IOPCore->COP0->Context->getFieldValue(IOPCoreCOP0Register_Context_t::Fields::PTEBase),
-		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
-		0, // mTLBEntryInfo->mASID, 
-		0  // getResources()->IOP->TLB->getNewTLBIndex()
-	};
-
-	// Return the exception.
-	return mExceptionInfo;
+	return mException;
 }
 
 u32 IOPCoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType accessType)
@@ -121,6 +92,12 @@ u32 IOPCoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType a
 
 	// Perform the lookup.
 	getPS2PhysicalAddress_Stage1();
+
+	// If an exception occured, set COP0 context.
+	if (mHasExceptionOccurred)
+	{
+		throw std::runtime_error("IOP MMU error handling not implemented.");
+	}
 
 	return mPS2PhysicalAddress;
 }
@@ -143,11 +120,11 @@ void IOPCoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+				mException = IOPCoreException_t::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = IOPCoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
+				mException = IOPCoreException_t::EX_ADDRESS_ERROR_STORE;
 			else
-			throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = address error).");
+				throw std::runtime_error("IOPCoreMMUHandler: could not throw internal IOPCoreException_t error (type = address error).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;

@@ -4,7 +4,6 @@
 
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
-using ExType = EECoreException_t::ExType;
 class EECoreCOP0_t;
 
 /*
@@ -16,7 +15,7 @@ public:
 	explicit EECoreExceptions_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	/*
-	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.
+	TODO: Check thread safety (std::mutex?). Also, add in prioritisation through the setException() function.
 	The EE Core exception functionality.
 	Use setException() to indicate that an exception occurred. It will check that the appropriate COP0 bits are set before reflecting the exception.
 	If the exception is masked, it is silently discarded.

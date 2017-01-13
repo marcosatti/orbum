@@ -21,14 +21,14 @@ void IOPCoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
 	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t(ExType::EX_BREAK));
+	Exceptions->setException(IOPCoreException_t::EX_BREAK);
 }
 
 void IOPCoreInterpreter::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
 	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t(ExType::EX_SYSTEMCALL));
+	Exceptions->setException(IOPCoreException_t::EX_SYSTEMCALL);
 
 #if DEBUG_LOG_SYSCALLS
 	// Debug print the syscall mnemonic.
@@ -94,7 +94,7 @@ void IOPCoreInterpreter::RFE()
 	auto& IOPCore = getResources()->IOP->IOPCore;
 
 	// Pop the COP0.Status exception state.
-	IOPCore->COP0->Status->popExStack();
+	IOPCore->COP0->Status->popExceptionStack();
 
 	// Make sure we flush the cpu pipeline (in emulator, this means flush branch delay).
 	// TODO: Not documented anywhere, however due to the way the emulator works, needed in order to prevent the EPC pointing to the current RFE instruction and entering an uninterruptable infinite loop.

@@ -5,30 +5,24 @@
 
 #include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
-/*
-MMUHandler implements the PS2 virtual address -> PS2 physical address mappings (through a TLB), and interfaces with the Physical MMU (which is responsible for 
- converting a PS2 physical address -> host memory address).
-It handles any requests from reading or writing from a virtual address.
-
-Any request performed must be followed by a check for any errors (similar to how Linux ERRNO handling works). This is because the PS2's MMU may generate an exception,
- and the instruction must perform differently when an error is raised (it can not automatically enter the exception queue for this reason).
-*/
-
 class VMMain;
 struct EECoreTLBEntryInfo_t;
 
+/*
+EECoreMMUHandler implements the EE Core virtual address -> EE Core physical address mappings.
+This should only be used by the EE Core (instructions).
+Any request performed must be followed by a check for any errors. If an error occured, then the offending instruction must raise the exception.
+*/
 class EECoreMMUHandler : public VMExecutionCoreComponent
 {
 public:
 	explicit EECoreMMUHandler(VMMain * vmMain);
 
 	/*
-	Public functions for reading or writing to a PS2 virtual address. Performs the VA translation into the host memory address, and then operates on the value.
-	This is the main access point that any PS2 reads or writes will come through. On error, read functions will return 0, and write functions will not perform the operation.
-	To see what error it is, use getErrorInfo() defined below.
+	Public functions for reading or writing to a EE Core virtual address. Performs the VA translation into the host memory address, and then operates on the value.
+	On error, reads will return 0, writes will not happen, and the COP0 MMU context is set automatically.
 	The calls to the underlying storage are always done with an EE context parsed as the parameter.
 	TODO: Add in address error exceptions. These will occur when an unaligned access is tried. See for example the instruction LDL on page 72 of the EE Core Instruction manual.
-	TODO: Produce the proper exception info, such as the TLB index or OS page table address. Not properly done at the moment.
 	*/
 	u8 readByte(u32 PS2VirtualAddress);
 	void writeByte(u32 PS2VirtualAddress, u8 value);
@@ -42,28 +36,23 @@ public:
 	void writeQword(u32 PS2VirtualAddress, u128 value);
 
 	/*
-	Exception handling functionality. Because this is used within the EE Core instruction implementations, there needs to be a way for the exception to
-	 be thrown (queued) within the instruction body.
+	Exception handling functionality. Because this is used within the EE Core instructions, there needs to be a way for the exception to propogate.
 	An exception could be generated when reading or writing from/to a PS2 memory location.
-	A call should be made to hasExceptionOccurred() whenever the MMU is accessed. If that returns true, get the resulting EECoreException_t through getExceptionInfo(),
-	 from which you can queue it from. When the call to getExceptionInfo() is made, it will reset the exception state.
-	NOTE 1: getExceptionInfo() may contain data left over from a previous translation, but the exception generated will always have valid data attached to it.
-	NOTE 2: On error, no writes or reads will occur - see the description in the read/write functions above on what happens in this case.
-	TODO: Check for race condition between using the MMU and checking for error (could produce different error by the time it is called). Need a mutex?
+	A call should be made to hasExceptionOccurred() whenever the MMU is accessed. 
+	If that returns true, get the resulting exception through getExceptionInfo(), and queue it.
 	*/
 	bool hasExceptionOccurred() const;
-	const EECoreException_t & getExceptionInfo();
+	const EECoreException_t & getException();
 
 private:
 	/*
 	Exception handling state variables - see hasExceptionOccurred() above.
-	mHasExceptionOccured is set whenever an exception in the MMU occurs, with exception type of mExType.
 	*/
 	bool mHasExceptionOccurred;
-	EECoreException_t mExceptionInfo;
+	EECoreException_t mException;
 
 	/*
-	Physical Address lookup state variables - used by the 4 stage functions below to perform a lookup.
+	Physical Address lookup state variables - used by the stage functions below to perform a lookup.
 	*/
 	enum AccessType { READ, WRITE } mAccessType;
 	const EECoreTLBEntryInfo_t *mTLBEntryInfo;

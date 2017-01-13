@@ -9,10 +9,8 @@
 #include "PS2Resources/IOP/INTC/IOPIntc_t.h"
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
-
-using ExType = IOPCoreException_t::ExType;
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
 IOPIntc::IOPIntc(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain)
@@ -21,25 +19,27 @@ IOPIntc::IOPIntc(VMMain * vmMain) :
 
 s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 {
+	auto& COP0 = getResources()->IOP->IOPCore->COP0;
+	auto& CTRL = getResources()->IOP->INTC->CTRL;
+
 	// First check the master CTRL register.
-	const u32 CTRL = getResources()->IOP->INTC->CTRL->readWord(Context_t::RAW);
-	if (CTRL > 0)
+	bool interrupt = false;
+	if (CTRL->readWord(Context_t::RAW) > 0)
 	{
+		auto& STAT = getResources()->IOP->INTC->STAT;
+		auto& MASK = getResources()->IOP->INTC->MASK;
+
 		// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-		const u32 I_STAT = getResources()->IOP->INTC->STAT->readWord(Context_t::RAW);
-		if (I_STAT > 0)
-		{
-			const u32 I_MASK = getResources()->IOP->INTC->MASK->readWord(Context_t::RAW);
-			if ((I_STAT & I_MASK) > 0)
-			{
-				// Generate an INT0 signal/interrupt exception (the IOP Core exception handler will determine if it should be masked).
-				auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-				IntExceptionInfo_t intInfo = { 2 };
-				Exceptions->setException(IOPCoreException_t(ExType::EX_INTERRUPT, nullptr, &intInfo, nullptr));
-			}
-		}
+		if (STAT->readWord(Context_t::RAW) & MASK->readWord(Context_t::RAW))
+			interrupt = true;
 	}
-	
+
+	// Set IRQ line 2 on IOP Core if an interrupt occured.
+	if (interrupt)
+		COP0->Cause->setIRQLine(2);
+	else
+		COP0->Cause->clearIRQLine(2);
+
 	// INTC has completed 1 cycle.
 	return 1;
 }

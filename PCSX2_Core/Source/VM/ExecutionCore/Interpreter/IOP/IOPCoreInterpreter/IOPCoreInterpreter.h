@@ -42,9 +42,9 @@ private:
 #endif
 
 	/*
-	Executes the instruction at the current PC.
+	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
 	*/
-	s64 executeInstruction();
+	void handleInterruptCheck() const;
 
 	/*
 	The IOP exception handler, which handles and processes the IOPCore->Exceptions state.

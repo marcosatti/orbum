@@ -4,13 +4,10 @@
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
-using ExType = IOPCoreException_t::ExType;
-class PS2Resources_t;
 class IOPCoreCOP0_t;
 
 /*
 IOP Core exception state functionality.
-TODO: Finish implementing. Currently doesnt check the Status.IM bits etc.
 */
 class IOPCoreExceptions_t
 {
@@ -18,7 +15,7 @@ public:
 	explicit IOPCoreExceptions_t(const std::shared_ptr<IOPCoreCOP0_t> & cop0);
 
 	/*
-	TODO: Check thread safety (std::atomic?). Also, add in prioritisation through the setException() function.
+	TODO: Check thread safety (std::mutex). Also, add in prioritisation through the setException() function.
 	The IOP Core exception functionality.
 	Use setException() to indicate that an exception occurred.
 
@@ -37,7 +34,7 @@ private:
 	IOPCoreException_t Exception;
 
 	/*
-	Pointer to the EE Core COP0 coprocessor, needed for the Status register.
+	Pointer to the IOP Core COP0 coprocessor, needed for the Status register.
 	*/
 	const std::shared_ptr<IOPCoreCOP0_t> mCOP0;
 };

@@ -19,22 +19,22 @@
 
 EECoreExceptionHandler::EECoreExceptionHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain), 
-	mEECoreException(nullptr), 
+	mEECoreException(EECoreException_t::EX_RESET), 
 	mExceptionProperties(nullptr)
 {
 }
 
-void EECoreExceptionHandler::handleException(const EECoreException_t& PS2Exception)
+void EECoreExceptionHandler::handleException(const EECoreException_t & exception)
 {
 #if defined(BUILD_DEBUG)
 	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
 #endif
 
 	// Set the PS2Exception pointer.
-	mEECoreException = &PS2Exception;
+	mEECoreException = exception;
 
 	// Get the exception properties.
-	mExceptionProperties = EECoreExceptionsTable::getExceptionInfo(PS2Exception.mExType);
+	mExceptionProperties = EECoreExceptionsTable::getExceptionInfo(mEECoreException);
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
@@ -97,12 +97,12 @@ void EECoreExceptionHandler::handleException_L1() const
 		COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 1);
 
 		// Select the vector to use (set vectorOffset).
-		if (mEECoreException->mExType == ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
-			|| mEECoreException->mExType == ExType::EX_TLB_REFILL_STORE)
+		if (mEECoreException == EECoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
+			|| mEECoreException == EECoreException_t::EX_TLB_REFILL_STORE)
 		{
 			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
 		}
-		else if (mEECoreException->mExType == ExType::EX_INTERRUPT)
+		else if (mEECoreException == EECoreException_t::EX_INTERRUPT)
 		{
 			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT;
 		}
@@ -157,18 +157,18 @@ void EECoreExceptionHandler::handleException_L2() const
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
 
 	// Select vector to use and set PC to use it.
-	if (mEECoreException->mExType == ExType::EX_NMI 
-		|| mEECoreException->mExType == ExType::EX_RESET) 
+	if (mEECoreException == EECoreException_t::EX_NMI 
+		|| mEECoreException == EECoreException_t::EX_RESET) 
 	{
 		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 	}
 	else
 	{
-		if (mEECoreException->mExType == ExType::EX_PERFORMANCE_COUNTER)
+		if (mEECoreException == EECoreException_t::EX_PERFORMANCE_COUNTER)
 		{
 			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COUNTER;
 		}
-		else if (mEECoreException->mExType == ExType::EX_DEBUG)
+		else if (mEECoreException == EECoreException_t::EX_DEBUG)
 		{
 			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_DEBUG;
 		}
@@ -196,37 +196,12 @@ void EECoreExceptionHandler::EX_HANDLER_RESET()
 
 	// Initalise all of the COP0 registers.
 	COP0->initalise();
-	
-	// Other funcionality in "operation", just in case the inital values are different.
-	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
-	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEV, 1);
-	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::IM, 0);
-
-	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, 0);
-
-	COP0->Config->setFieldValue(EECoreCOP0Register_Config_t::Fields::DIE, 0);
-	COP0->Config->setFieldValue(EECoreCOP0Register_Config_t::Fields::ICE, 0);
-	COP0->Config->setFieldValue(EECoreCOP0Register_Config_t::Fields::DCE, 0);
-	COP0->Config->setFieldValue(EECoreCOP0Register_Config_t::Fields::NBE, 0);
-	COP0->Config->setFieldValue(EECoreCOP0Register_Config_t::Fields::BPE, 0);
-
-	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, 47);
-
-	COP0->Wired->setFieldValue(EECoreCOP0Register_Wired_t::Fields::Wired, 0);
-
-	// I think this is a typo. In manual it says CCR.CTE where it should be PCCR.CTE.
-	COP0->PCCR->setFieldValue(EECoreCOP0Register_PCCR_t::Fields::CTE, 0);
-
-	COP0->BPC->setFieldValue(EECoreCOP0Register_BPC_t::Fields::IAE, 0);
-	COP0->BPC->setFieldValue(EECoreCOP0Register_BPC_t::Fields::DRE, 0);
-	COP0->BPC->setFieldValue(EECoreCOP0Register_BPC_t::Fields::DWE, 0);
-
-	// TODO: Set cache flags (data and instruction caches) as described.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_NMI()
 {
 	auto& COP0 = getResources()->EE->EECore->COP0;
+
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
 	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEV, 1);
 }
@@ -243,118 +218,52 @@ void EECoreExceptionHandler::EX_HANDLER_DEBUG()
 
 void EECoreExceptionHandler::EX_HANDLER_INTERRUPT()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-	
-	// Clear all previously set Cause.IP bits.
-	// TODO: In hardware, an interrupt is caused by assertion of a IRQ line which is then deasserted once the ISR has run (the ISR sets the peripheral registers etc which deasserts the line).
-	//       This would also clear the Cause.IP bit. In this emulator, a more simple approach is taken: when an interrupt exception is taken, thats when the Cause.IP bit gets set.
-	//       However it is not cleared upon the ISR finishing, instead when another interrupt is taken, thats when any previous IP bits are cleared and only the corresponding
-	//       interrupt source is set. If needed this can be properly implemented.
-	COP0->Cause->clearIP();
-
-	// Set the corresponding IRQ Cause.IP bit.
-	COP0->Cause->setIRQPending(mEECoreException->mIntExceptionInfo.mIRQLine);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_MODIFIED()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
-	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_REFILL_STORE()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
-	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
-	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_TLB_INVALID_STORE()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase, mEECoreException->mTLBExceptionInfo.mPageTableAddress);
-	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress_HI_19);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mEECoreException->mTLBExceptionInfo.mASID);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
-	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, mEECoreException->mTLBExceptionInfo.mTLBIndex);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->writeWord(Context_t::EE, 0);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, 0);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_ADDRESS_ERROR_STORE()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->BadVAddr->writeWord(Context_t::EE, mEECoreException->mTLBExceptionInfo.mPS2VirtualAddress);
-	COP0->Context->writeWord(Context_t::EE, 0);
-	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, 0);
-	COP0->EntryLo0->writeWord(Context_t::EE, 0);
-	COP0->EntryLo1->writeWord(Context_t::EE, 0);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_BUS_ERROR_INSTRUCTION_FETCH()
 {
-	// TODO: Look at later, but since this is an external interrupt which is not a part of normal operation, will probably never have to be implemented.
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_BUS_ERROR_LOAD_STORE()
 {
-	// TODO: Look at later, but since this is an external interrupt which is not a part of normal operation, will probably never have to be implemented.
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_SYSTEMCALL()
@@ -374,9 +283,7 @@ void EECoreExceptionHandler::EX_HANDLER_RESERVED_INSTRUCTION()
 
 void EECoreExceptionHandler::EX_HANDLER_COPROCESSOR_UNUSABLE()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
-	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, mEECoreException->mCOPExceptionInfo.mCOPUnusable);
+	// No additional processing needed.
 }
 
 void EECoreExceptionHandler::EX_HANDLER_OVERFLOW()

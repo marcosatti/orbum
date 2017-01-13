@@ -7,16 +7,16 @@
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
-/*
-The exception handler provides 2 main points of functionality:
- 1. Handles the exception state for the IOP.
- 2. Handles exceptions using the documentation provided for the R3000 on the internet.
- See for example: http://mescal.imag.fr/membres/vania.marangozova-martin/TEACHING/NACHOS/NACHOS_DOC/mips.html#exception
-*/
-
 using ExceptionProperties_t = IOPCoreExceptionsTable::ExceptionProperties_t;
+
 class VMMain;
 
+/*
+The exception handler provides 2 main points of functionality:
+1. Handles the exception state for the IOP.
+2. Handles exceptions using the documentation provided for the R3000 on the internet.
+See for example: http://mescal.imag.fr/membres/vania.marangozova-martin/TEACHING/NACHOS/NACHOS_DOC/mips.html#exception
+*/
 class IOPCoreExceptionHandler : public VMExecutionCoreComponent
 {
 public:
@@ -38,7 +38,7 @@ private:
 	/*
 	State variables, needed by functions below.
 	*/
-	const IOPCoreException_t * mIOPCoreException;
+	IOPCoreException_t mIOPCoreException;
 	const ExceptionProperties_t * mExceptionProperties;
 
 	/*

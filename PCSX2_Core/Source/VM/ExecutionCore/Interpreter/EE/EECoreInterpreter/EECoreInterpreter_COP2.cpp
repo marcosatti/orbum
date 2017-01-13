@@ -76,7 +76,7 @@ void EECoreInterpreter::LQC2()
 	if (mMMUHandler->hasExceptionOccurred())
 	{
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(mMMUHandler->getExceptionInfo());
+		Exceptions->setException(mMMUHandler->getException());
 		return; // Return early, dont bother trying to load the second dword.
 	}
 	else

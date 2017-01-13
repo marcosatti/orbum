@@ -9,7 +9,8 @@ IOPCoreCOP0Register_Context_t::IOPCoreCOP0Register_Context_t()
 	registerField(Fields::PTEBase, "PTEBase", 21, 11, 0);
 }
 
-IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t()
+IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t() :
+	BitfieldRegister32_t("IOP COP0 Status")
 {
 	registerField(Fields::IEc, "IEc", 0, 1, 0);
 	registerField(Fields::KUc, "KUc", 1, 1, 0);
@@ -29,24 +30,18 @@ IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t()
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-void IOPCoreCOP0Register_Status_t::pushExStack()
+void IOPCoreCOP0Register_Status_t::pushExceptionStack()
 {
-	setFieldValue(Fields::KUo, getFieldValue(Fields::KUp));
-	setFieldValue(Fields::IEo, getFieldValue(Fields::IEp));
-	setFieldValue(Fields::KUp, getFieldValue(Fields::KUc));
-	setFieldValue(Fields::IEp, getFieldValue(Fields::IEc));
-	setFieldValue(Fields::IEc, 0);
-	setFieldValue(Fields::KUc, 0);
+	// New status = shift (KU|IP)(c|p) bits left by 2 then make (KU|IP)c bits = 0.
+	u32 statusValue = readWord(Context_t::RAW);
+	writeWord(Context_t::RAW, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
 }
 
-void IOPCoreCOP0Register_Status_t::popExStack()
+void IOPCoreCOP0Register_Status_t::popExceptionStack()
 {
-	setFieldValue(Fields::KUc, getFieldValue(Fields::KUp));
-	setFieldValue(Fields::IEc, getFieldValue(Fields::IEp));
-	setFieldValue(Fields::KUp, getFieldValue(Fields::KUo));
-	setFieldValue(Fields::IEp, getFieldValue(Fields::IEo));
-	setFieldValue(Fields::IEo, 0);
-	setFieldValue(Fields::KUo, 0);
+	// New status = shift (KU|IP)(p|o) bits right by 2. Leave old bits unchanged after.
+	u32 statusValue = readWord(Context_t::RAW);
+	writeWord(Context_t::RAW, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
 }
 
 bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const
@@ -77,9 +72,15 @@ void IOPCoreCOP0Register_Cause_t::clearIP()
 	setFieldValue(Fields::IP, 0);
 }
 
-void IOPCoreCOP0Register_Cause_t::setIRQPending(u8 irq)
+void IOPCoreCOP0Register_Cause_t::setIRQLine(u8 irq)
 {
 	auto temp = getFieldValue(Fields::IP) | (1 << irq);
+	setFieldValue(Fields::IP, temp);
+}
+
+void IOPCoreCOP0Register_Cause_t::clearIRQLine(u8 irq)
+{
+	auto temp = (getFieldValue(Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
 	setFieldValue(Fields::IP, temp);
 }
 

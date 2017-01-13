@@ -21,14 +21,14 @@ void EECoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
-	Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_BREAK));
+	Exceptions->setException(EECoreException_t::EX_BREAK);
 }
 
 void EECoreInterpreter::SYSCALL()
 {
 	// EXCEPTION(SYSCALL)
 	auto& Exceptions = getResources()->EE->EECore->Exceptions;
-	Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_SYSTEMCALL));
+	Exceptions->setException(EECoreException_t::EX_SYSTEMCALL);
 
 #if DEBUG_LOG_SYSCALLS
 	// Debug print the syscall mnemonic.
@@ -53,7 +53,7 @@ void EECoreInterpreter::TEQ()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val == source2Val)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TEQI()
@@ -66,7 +66,7 @@ void EECoreInterpreter::TEQI()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val == imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TGE()
@@ -80,7 +80,7 @@ void EECoreInterpreter::TGE()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= source2Val)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TGEI()
@@ -93,7 +93,7 @@ void EECoreInterpreter::TGEI()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TGEIU()
@@ -106,7 +106,7 @@ void EECoreInterpreter::TGEIU()
 	auto source1Val = static_cast<u64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TGEU()
@@ -120,7 +120,7 @@ void EECoreInterpreter::TGEU()
 	auto source2Val = static_cast<u64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val >= source2Val)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TLT()
@@ -134,7 +134,7 @@ void EECoreInterpreter::TLT()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < source2Val)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TLTI()
@@ -147,7 +147,7 @@ void EECoreInterpreter::TLTI()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val < imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TLTIU()
@@ -160,7 +160,7 @@ void EECoreInterpreter::TLTIU()
 	auto source1Val = static_cast<u64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Reg->readDword(Context_t::EE, 0) < imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TLTU()
@@ -171,7 +171,7 @@ void EECoreInterpreter::TLTU()
 	auto& source2Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
 
 	if (source1Reg->readDword(Context_t::EE, 0) < source2Reg->readDword(Context_t::EE, 0))
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TNE()
@@ -185,7 +185,7 @@ void EECoreInterpreter::TNE()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val != source2Val)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::TNEI()
@@ -198,7 +198,7 @@ void EECoreInterpreter::TNEI()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(Context_t::EE, 0));
 
 	if (source1Val != imm)
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_TRAP));
+		Exceptions->setException(EECoreException_t::EX_TRAP);
 }
 
 void EECoreInterpreter::ERET()

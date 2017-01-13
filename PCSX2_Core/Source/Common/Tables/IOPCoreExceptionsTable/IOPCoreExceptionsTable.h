@@ -6,8 +6,6 @@
 
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
-using ExType = IOPCoreException_t::ExType;
-
 class IOPCoreExceptionsTable
 {
 public:
@@ -45,6 +43,6 @@ public:
 	/*
 	Returns the exception info above given the exception type.
 	*/
-	static const ExceptionProperties_t * getExceptionInfo(ExType exception);
+	static const ExceptionProperties_t * getExceptionInfo(const IOPCoreException_t & exception);
 };
 

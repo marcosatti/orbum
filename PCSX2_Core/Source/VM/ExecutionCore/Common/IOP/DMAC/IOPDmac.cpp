@@ -79,8 +79,7 @@ s64 IOPDmac::executionStep(const ClockSource_t& clockSource)
 	}
 
 	// Check for D_ICR interrupt bit status, send interrupt to IOP INTC (IRQ 3) if not masked.
-	if (isInterruptPending())
-		raiseInterrupt();
+	handleInterruptCheck();
 	
 	return 1;
 }
@@ -109,14 +108,15 @@ bool IOPDmac::isDMACChannelEnabled() const
 	return (mDMAC->PCRS[pcrGroup]->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
 }
 
-bool IOPDmac::isInterruptPending() const
+void IOPDmac::handleInterruptCheck() const
 {
+	bool interrupt = false;
 	for (auto& ICR : mDMAC->ICRS)
 	{
 		// Check master IRQ bit, return true immediately.
 		// TODO: check this, PCSX2 does not handle this at all.
 		if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER))
-			return true;
+			interrupt = true;
 
 		// Check if any channel has emitted an interrupt.
 		u32 icrValue = ICR->readWord(Context_t::RAW);
@@ -128,18 +128,14 @@ bool IOPDmac::isInterruptPending() const
 			if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQENABLE))
 				ICR->setFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER, 1);
 
-			return true;
+			interrupt = true;
 		}
 	}
 
-	// No interrupt conditions happened.
-	return false;
-}
-
-void IOPDmac::raiseInterrupt() const
-{
-	// Set INTC.STAT.Bit3 = 1 (DMA interrupt).
-	mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
+	if (interrupt)
+		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
+	else 
+		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
 }
 
 u32 IOPDmac::transferData() const

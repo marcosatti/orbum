@@ -27,8 +27,6 @@
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-using ExType = EECoreException_t::ExType;
-
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMExecutionCoreComponent(vmMain),
 	mExceptionHandler(std::make_unique<EECoreExceptionHandler>(vmMain)),
@@ -46,12 +44,15 @@ void EECoreInterpreter::initalise()
 {
 	// A PS2 reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
 	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
-	mExceptionHandler->handleException(EECoreException_t(ExType::EX_RESET));
+	mExceptionHandler->handleException(EECoreException_t::EX_RESET);
 }
 
 s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	auto& EECore = getResources()->EE->EECore;
+
+	// Check if any external interrupts are pending and queue exception if there are.
+	handleInterruptCheck();
 	
 	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
 	if (EECore->Exceptions->hasExceptionOccurred())
@@ -98,7 +99,7 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
-	handleCountEvent();
+	handleCountEventCheck();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -109,19 +110,34 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	return mInstructionInfo->mCycles;
 }
 
-void EECoreInterpreter::handleCountEvent() const
+void EECoreInterpreter::handleInterruptCheck() const
 {
-	auto& EECore = getResources()->EE->EECore;
+	auto& COP0 = getResources()->EE->EECore->COP0;
+
+	// Interrupt exceptions are only taken when conditions are correct.
+	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.
+	if (!COP0->Status->isInterruptsMasked())
+	{
+		u32 ipCause = COP0->Cause->getFieldValue(EECoreCOP0Register_Cause_t::Fields::IP);
+		u32 imStatus = COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IM);
+		if (ipCause & imStatus)
+		{
+			auto& Exceptions = getResources()->EE->EECore->Exceptions;
+			Exceptions->setException(EECoreException_t::EX_INTERRUPT);
+		}
+	}
+}
+
+void EECoreInterpreter::handleCountEventCheck() const
+{
+	auto& COP0 = getResources()->EE->EECore->COP0;
 
 	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
 	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
-	// TODO: check for errors.
-	if (EECore->COP0->Count->readWord(Context_t::EE) == EECore->COP0->Compare->readWord(Context_t::EE))
-	{
-		// Set exception state.
-		IntExceptionInfo_t intEx = { 7 };
-		EECore->Exceptions->setException(EECoreException_t(ExType::EX_INTERRUPT, nullptr, &intEx, nullptr));
-	}
+	if (COP0->Count->readWord(Context_t::EE) == COP0->Compare->readWord(Context_t::EE))
+		COP0->Cause->setIRQLine(7);
+	else
+		COP0->Cause->clearIRQLine(7);
 }
 
 bool EECoreInterpreter::checkCOP0Usable() const
@@ -129,9 +145,10 @@ bool EECoreInterpreter::checkCOP0Usable() const
 	if (!getResources()->EE->EECore->COP0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
+		auto& COP0 = getResources()->EE->EECore->COP0;
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 0 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 0);
+		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
 		return false;
 	}
 
@@ -144,9 +161,10 @@ bool EECoreInterpreter::checkCOP1Usable() const
 	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
+		auto& COP0 = getResources()->EE->EECore->COP0;
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 1 };
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 1);
+		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
 		return false;
 	}
 
@@ -159,9 +177,10 @@ bool EECoreInterpreter::checkCOP2Usable() const
 	if (!getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
+		auto& COP0 = getResources()->EE->EECore->COP0;
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COPExceptionInfo_t copExInfo = { 2 };
-		Exceptions->setException(EECoreException_t(ExType::EX_COPROCESSOR_UNUSABLE, nullptr, nullptr, &copExInfo));
+		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 2);
+		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
 		return false;
 	}
 
@@ -175,7 +194,7 @@ bool EECoreInterpreter::checkNoMMUError() const
 	{
 		// Something went wrong in the MMU.
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(mMMUHandler->getExceptionInfo());
+		Exceptions->setException(mMMUHandler->getException());
 		return false;
 	}
 
@@ -189,7 +208,7 @@ bool EECoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) con
 	{
 		// Over/Under flow occured.
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		Exceptions->setException(EECoreException_t::EX_OVERFLOW);
 		return false;
 	}
 
@@ -203,7 +222,7 @@ bool EECoreInterpreter::checkNoOverOrUnderflow64(const s64& x, const s64& y) con
 	{
 		// Over/Under flow occured.
 		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(EECoreException_t(EECoreException_t::ExType::EX_OVERFLOW));
+		Exceptions->setException(EECoreException_t::EX_OVERFLOW);
 		return false;
 	}
 

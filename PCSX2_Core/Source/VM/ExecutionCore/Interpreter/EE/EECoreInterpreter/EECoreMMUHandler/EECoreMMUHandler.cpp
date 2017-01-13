@@ -18,6 +18,7 @@
 EECoreMMUHandler::EECoreMMUHandler(VMMain * vmMain) : 
 	VMExecutionCoreComponent(vmMain),
 	mHasExceptionOccurred(false), 
+	mException(EECoreException_t::EX_RESET),
 	mAccessType(READ),
 	mTLBEntryInfo(&EECoreTLB_t::EMPTY_TLB_ENTRY), 
 	mPS2VirtualAddress(0), 
@@ -111,22 +112,10 @@ bool EECoreMMUHandler::hasExceptionOccurred() const
 	return mHasExceptionOccurred;
 }
 
-const EECoreException_t & EECoreMMUHandler::getExceptionInfo()
+const EECoreException_t & EECoreMMUHandler::getException()
 {
 	mHasExceptionOccurred = false;
-
-	// Create TLB exception info.
-	mExceptionInfo.mTLBExceptionInfo =
-	{
-		mPS2VirtualAddress,
-		getResources()->EE->EECore->COP0->Context->getFieldValue(EECoreCOP0Register_Context_t::Fields::PTEBase),
-		MMUUtil::getVirtualAddressHI19(mPS2VirtualAddress), 
-		mTLBEntryInfo->mASID, 
-		getResources()->EE->EECore->TLB->getNewTLBIndex()
-	};
-
-	// Return the exception.
-	return mExceptionInfo;
+	return mException;
 }
 
 u32 EECoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType accessType)
@@ -137,6 +126,19 @@ u32 EECoreMMUHandler::getPS2PhysicalAddress(u32 PS2VirtualAddress, AccessType ac
 
 	// Perform the lookup.
 	getPS2PhysicalAddress_Stage1();
+
+	// If an exception occured, set COP0 context.
+	if (mHasExceptionOccurred)
+	{
+		auto& COP0 = getResources()->EE->EECore->COP0;
+		auto& TLB = getResources()->EE->EECore->TLB;
+
+		COP0->BadVAddr->writeWord(Context_t::EE, mPS2VirtualAddress);
+		COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, MMUUtil::getVirtualAddressHI19(mPS2PhysicalAddress));
+		COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, MMUUtil::getVirtualAddressHI19(mPS2PhysicalAddress));
+		COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, mTLBEntryInfo->mASID);
+		COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, TLB->getNewTLBIndex());
+	}
 
 	return mPS2PhysicalAddress;
 }
@@ -164,11 +166,11 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+				mException = EECoreException_t::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
+				mException = EECoreException_t::EX_ADDRESS_ERROR_STORE;
 			else
-			throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = address error).");
+				throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = address error).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;
@@ -188,11 +190,11 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage1()
 		{
 			// Throw address error if not within bounds.
 			if (mAccessType == READ)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
+				mException = EECoreException_t::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_ADDRESS_ERROR_STORE;
+				mException = EECoreException_t::EX_ADDRESS_ERROR_STORE;
 			else
-			throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = address error).");
+				throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = address error).");
 
 			// Update state and return.
 			mHasExceptionOccurred = true;
@@ -256,9 +258,9 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage2()
 	{
 		// A match was not found, throw a TLB miss PS2 exception.
 		if (mAccessType == READ)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+			mException = EECoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 		else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
+			mException = EECoreException_t::EX_TLB_REFILL_STORE;
 		else
 			throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = tlb refill).");
 		
@@ -277,9 +279,9 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage2()
 		{
 			// Generate TLB refill exception.
 			if (mAccessType == READ)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
+				mException = EECoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD;
 			else if (mAccessType == WRITE)
-				mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_REFILL_STORE;
+				mException = EECoreException_t::EX_TLB_REFILL_STORE;
 			else
 				throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = tlb refill).");
 
@@ -318,9 +320,9 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage3()
 	{
 		// Raise TLB invalid exception
 		if (mAccessType == READ)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
+			mException = EECoreException_t::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD;
 		else if (mAccessType == WRITE)
-			mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_INVALID_STORE;
+			mException = EECoreException_t::EX_TLB_INVALID_STORE;
 		else
 			throw std::runtime_error("EECoreMMUHandler: could not throw internal EECoreException_t error (type = tlb invalid).");
 
@@ -332,7 +334,7 @@ void EECoreMMUHandler::getPS2PhysicalAddress_Stage3()
 	// Check if entry is allowed writes (dirty flag) and raise TLB modified exception if writing occurs.
 	if (!mTLBEntryInfo->PhysicalInfo[mIndexEvenOdd].mD && mAccessType == WRITE)
 	{
-		mExceptionInfo.mExType = EECoreException_t::ExType::EX_TLB_MODIFIED;
+		mException = EECoreException_t::EX_TLB_MODIFIED;
 		// Update state and return.
 		mHasExceptionOccurred = true;
 		return;
