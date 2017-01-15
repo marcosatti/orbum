@@ -50,17 +50,20 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	IOPCore->R3000->BD->handleBranchDelay();
 
-	// Set the instruction holder to the instruction at the current PC.
-	const u32 pcValue = IOPCore->R3000->PC->readWord(Context_t::IOP);
+	// Increment PC.
+	IOPCore->R3000->PC->setPCValueNext();
+
+	// Set the instruction holder to the instruction at the previous PC.
+	const u32 pcValue = IOPCore->R3000->PC->readWord(Context_t::IOP) - Constants::SIZE_MIPS_INSTRUCTION;
 	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
-	// Get the instruction details
+	// Get the instruction details.
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x2890a0;
-	static u32 DEBUG_PC_BREAKPOINT = 0x0;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000; // 1b42ae
+	static u32 DEBUG_PC_BREAKPOINT = 0x416c;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -70,7 +73,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 			"PC = 0x%08X, BD = %d, IEc = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			pcValue, IOPCore->R3000->BD->isInBranchDelay(), IOPCore->COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::IEc),
+			pcValue, IOPCore->R3000->BD->isInBranchDelay(), !IOPCore->COP0->Status->isInterruptsMasked(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
@@ -82,9 +85,6 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 	// Run the instruction, which is based on the implementation index.
 	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
-
-	// Increment PC.
-	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.

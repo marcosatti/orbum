@@ -3,6 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
 #include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/EECoreSyscallTable/EECoreSyscallTable.h"
 
@@ -203,19 +204,18 @@ void EECoreInterpreter::TNEI()
 
 void EECoreInterpreter::ERET()
 {
-	// ERET is an outlier, where it does not cause a branch delay instruction to be executed. However, still use the BD->setBranchDelay* functions to trigger immediately next cycle.
-	// TODO: might need to just set PC directly... not sure how this plays out if an interrupt were to happen on the next cycle.
+	// ERET is an outlier, where it does not cause a branch delay instruction to be executed - set the PC directly.
 	// ERET(). No exceptions.
 	if (getResources()->EE->EECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) > 0)
 	{
-		const u32 & pcValue = getResources()->EE->EECore->COP0->ErrorEPC->readWord(Context_t::EE);
-		getResources()->EE->EECore->R5900->BD->setBranchDelayPCAbsolute(pcValue, 1);
+		const u32 pcValue = getResources()->EE->EECore->COP0->ErrorEPC->readWord(Context_t::EE);
+		getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(pcValue);
 		getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 0);
 	}
 	else
 	{
-		const u32 & pcValue = getResources()->EE->EECore->COP0->EPC->readWord(Context_t::EE);
-		getResources()->EE->EECore->R5900->BD->setBranchDelayPCAbsolute(pcValue, 1);
+		const u32 pcValue = getResources()->EE->EECore->COP0->EPC->readWord(Context_t::EE);
+		getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(pcValue);
 		getResources()->EE->EECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 0);
 	}
 }

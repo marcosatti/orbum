@@ -62,12 +62,13 @@ void IOPCoreExceptionHandler::handleException(const IOPCoreException_t & excepti
 
 	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
 	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+	// If we are in a branch delay slot, need to flush it (reset) so we dont jump after this exits.
 	if (BD->isInBranchDelay())
 	{
 		u32 pcValue = PC->readWord(Context_t::IOP) - Constants::SIZE_MIPS_INSTRUCTION * 2;
 		COP0->EPC->writeWord(Context_t::RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
-		BD->resetBranchDelay(); // Reset branch delay slot.
+		BD->resetBranchDelay(); 
 	}
 	else
 	{

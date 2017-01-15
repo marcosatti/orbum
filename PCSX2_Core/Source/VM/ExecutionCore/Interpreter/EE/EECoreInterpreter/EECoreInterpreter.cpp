@@ -61,31 +61,33 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	EECore->R5900->BD->handleBranchDelay();
 
-	// Set the instruction holder to the instruction at the current PC.
-	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE);
+	// Increment PC.
+	EECore->R5900->PC->setPCValueNext();
+
+	// Set the instruction holder to the instruction at the previous PC.
+	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION;;
 	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
 	mInstruction.setInstructionValue(instructionValue);
 
 	// Get the instruction details
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-#if 0 //defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x1445b25;
-	static u32 DEBUG_PC_BREAKPOINT = 0x80006c18;
+#if defined(BUILD_DEBUG)
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000fe4321;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
 		logDebug("EECore cycle = 0x%llX: "
-			"PC = 0x%08X, BD = %d, "
+			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			EECore->R5900->PC->readWordU(), EECore->R5900->mIsInBranchDelay,
+			pcValue, EECore->R5900->BD->isInBranchDelay(), !EECore->COP0->Status->isInterruptsMasked(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
-
 	}
 
 	// Breakpoint.
-	if (EECore->R5900->PC->readWordU() == DEBUG_PC_BREAKPOINT)
+	if (pcValue == DEBUG_PC_BREAKPOINT)
 	{
 		logDebug("EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
@@ -93,9 +95,6 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 	// Run the instruction, which is based on the implementation index.
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
-
-	// Increment PC.
-	EECore->R5900->PC->setPCValueNext();
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);

@@ -12,9 +12,10 @@ EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
 	registerField(Fields::RCYC, "RCYC", 8, 3, 0);
 }
 
-EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() 
+EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
+	BitfieldRegister32_t("EE DMAC STAT", false, true)
 {
-	registerField(Fields::CIS0, "CIS0""CIS0", 0, 1, 0);
+	registerField(Fields::CIS0, "CIS0", 0, 1, 0);
 	registerField(Fields::CIS1, "CIS1", 1, 1, 0);
 	registerField(Fields::CIS2, "CIS2", 2, 1, 0);
 	registerField(Fields::CIS3, "CIS3", 3, 1, 0);
@@ -43,14 +44,17 @@ EEDmacRegister_STAT_t::EEDmacRegister_STAT_t()
 
 void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 {
-	// For bits 0-15, they are cleared when 1 is written. For bits 16-31, they are reversed when 1 is written.
-	u32 clrBits = readWord(context) & 0xFFFF;
-	u32 clrBitsValue = value & 0xFFFF;
-	u32 revBits = readWord(context) & 0xFFFF0000;
-	u32 revBitsValue = value & 0xFFFF0000;
+	if (context == Context_t::EE)
+	{
+		// For bits 0-15 (stat bits), they are cleared when 1 is written. For bits 16-31 (mask bits), they are reversed when 1 is written.
+		u32 regValue = readWord(context);
 
-	BitfieldRegister32_t::writeWord(context, clrBits & (~clrBitsValue));
-	BitfieldRegister32_t::writeWord(context, revBits ^ revBitsValue);
+		u32 clrBits = (regValue & 0xFFFF) & (~(value & 0xFFFF));
+		u32 revBits = (regValue & 0xFFFF0000) ^ (value & 0xFFFF0000);
+		value = revBits | clrBits;
+	}
+
+	BitfieldRegister32_t::writeWord(context, value);
 }
 
 EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()

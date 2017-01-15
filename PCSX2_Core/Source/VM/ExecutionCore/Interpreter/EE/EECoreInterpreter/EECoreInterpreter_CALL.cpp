@@ -91,6 +91,6 @@ void EECoreInterpreter::JALR()
 	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) + (Constants::SIZE_MIPS_INSTRUCTION * 2)));
+	destReg->writeDword(Context_t::EE, 0, static_cast<u64>(getResources()->EE->EECore->R5900->PC->readWord(Context_t::EE) + Constants::SIZE_MIPS_INSTRUCTION));
 	getResources()->EE->EECore->R5900->BD->setBranchDelayPCAbsolute(sourceReg->readWord(Context_t::EE, 0), 2);
 }

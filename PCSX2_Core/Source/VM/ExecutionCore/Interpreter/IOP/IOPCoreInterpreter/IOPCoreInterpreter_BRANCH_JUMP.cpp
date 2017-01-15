@@ -128,7 +128,7 @@ void IOPCoreInterpreter::J()
 
 void IOPCoreInterpreter::JR()
 {
-	// JUMP_REGISTER(). Address error exception generated upon instruction load - but not in this instruction.
+	// JUMP_REGISTER().
 	auto& source1Reg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRs()];
 	getResources()->IOP->IOPCore->R3000->BD->setBranchDelayPCAbsolute(source1Reg->readWord(Context_t::IOP), 2);
 }
@@ -142,11 +142,11 @@ void IOPCoreInterpreter::JAL()
 
 void IOPCoreInterpreter::JALR()
 {
-	// JUMP_LINK_REGISTER(). Address error exception generated upon instruction load - but not in this instruction.
+	// JUMP_LINK_REGISTER().
 	auto& sourceReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRs()];
 	auto& destReg = getResources()->IOP->IOPCore->R3000->GPR[mInstruction.getRRd()];
 
-	destReg->writeWord(Context_t::IOP, static_cast<u32>(getResources()->IOP->IOPCore->R3000->PC->readWord(Context_t::IOP) + (Constants::SIZE_MIPS_INSTRUCTION * 2)));
+	destReg->writeWord(Context_t::IOP, static_cast<u32>(getResources()->IOP->IOPCore->R3000->PC->readWord(Context_t::IOP) + Constants::SIZE_MIPS_INSTRUCTION));
 	getResources()->IOP->IOPCore->R3000->BD->setBranchDelayPCAbsolute(sourceReg->readWord(Context_t::IOP), 2);
 }
 
