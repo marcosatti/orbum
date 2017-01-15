@@ -2,6 +2,10 @@
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
 
+class EECoreCOP0_t;
+class EEIntcRegister_STAT_t;
+class EEIntcRegister_MASK_t;
+
 /*
 Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any
 interrupts to send to the EE Core to process.
@@ -15,5 +19,13 @@ public:
 	explicit EEIntc(VMMain * vmMain);
 
 	s64 executionStep(const ClockSource_t & clockSource) override;
+
+private:
+	/*
+	Context resources needed.
+	*/
+	std::shared_ptr<EECoreCOP0_t> mEECOP0;
+	std::shared_ptr<EEIntcRegister_STAT_t> mSTAT;
+	std::shared_ptr<EEIntcRegister_MASK_t> mMASK;
 };
 

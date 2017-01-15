@@ -3,6 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
+#include "PS2Constants/PS2Constants.h"
+
 /*
 The EE INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 Bits are cleared by writing 1 (through EE context).
@@ -27,6 +29,11 @@ public:
 		static constexpr u8 TIM3 = 12;
 		static constexpr u8 SFIFO = 13;
 		static constexpr u8 VU0WD = 14;
+
+		/*
+		Timer keys array needed for iterations.
+		*/
+		static constexpr u8 TIM_KEYS[PS2Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 	};
 
 	EEIntcRegister_STAT_t();

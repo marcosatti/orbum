@@ -9,7 +9,7 @@ class EETimersTimerRegister_COUNT_t; // Forward Decl - see below.
 
 /*
 The Timer Mode register type. See EE Users Manual page 36.
-Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11, behaves like a XOR write).
+Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11).
 
 Needs a reference to the associated Count register as it will reset the value when CUE is set to 1.
 It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used.
@@ -33,7 +33,16 @@ public:
 
 	EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
 
+	/*
+	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
+	 will also reset the count register if CUE is 1 (both EE context only).
+	*/
 	void writeWord(const Context_t & context, u32 value) override;
+
+	/*
+	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.
+	*/
+	bool isGateHBLNKSpecial() const;
 
 private:
 	/*

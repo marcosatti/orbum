@@ -16,8 +16,15 @@
 #include "PS2Resources/GS/GS_t.h"
 
 EETimers::EETimers(VMMain * vmMain) :
-	VMExecutionCoreComponent(vmMain)
+	VMExecutionCoreComponent(vmMain), 
+	mTimerIndex(0), 
+	mTimer(nullptr),
+	mClockSource()
 {
+	// Set resource pointer variables.
+	mTimers = getResources()->EE->Timers;
+	mINTC = getResources()->EE->INTC;
+	mGS = getResources()->GS;
 }
 
 EETimers::~EETimers()
@@ -26,49 +33,56 @@ EETimers::~EETimers()
 
 s64 EETimers::executionStep(const ClockSource_t & clockSource)
 {
-	auto& Timers = getResources()->EE->Timers;
-	auto& GS = getResources()->GS;
-	const u8 * gateSources[] = { &GS->SIGNAL_HBLNK, &GS->SIGNAL_VBLNK };
+	// Set context.
+	mClockSource = clockSource;
 
 	// Update the timers which are set to count based on the type of event recieved.
-	for (auto i = 0; i < PS2Constants::EE::Timers::NUMBER_TIMERS; i++)
+	for (mTimerIndex = 0; mTimerIndex < PS2Constants::EE::Timers::NUMBER_TIMERS; mTimerIndex++)
 	{
-		// Do not count if not enabled.
-		if (!Timers->TIMERS[i]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CUE))
+		// Set context.
+		mTimer = &(*mTimers->TIMERS[mTimerIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
+
+		// Count only if enabled.
+		if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CUE) == 0)
 			continue;
 
 		// Check if the timer mode is equal to the clock source.
-		if (isTimerCLKSEqual(i, clockSource))
+		if (isTimerCLKSEqual())
 		{
 			// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
 			//  in which case count normally.
-			if (Timers->TIMERS[i]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATE) && !isTimerGateSpecialHBLNK(i))
+			if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATE) 
+				&& !mTimer->MODE->isGateHBLNKSpecial())
 			{
 				// Check if the timer needs to be reset.
-				checkTimerGateReset(i);
+				handleTimerGateReset();
 
 				// If the timer is using GATM = 0, need to check if the signal is low first.
-				if (Timers->TIMERS[i]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
+				if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
 				{
-					if (!gateSources[Timers->TIMERS[i]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS)])
-						Timers->TIMERS[i]->COUNT->increment(1);
+					throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
+
+					const u8 * gateSources[] = { &mGS->SIGNAL_HBLNK, &mGS->SIGNAL_VBLNK };
+					u32 index = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
+					if (!(*gateSources[index]))
+						mTimer->COUNT->increment(1);
 				}
 				else
 				{
-					Timers->TIMERS[i]->COUNT->increment(1);
+					mTimer->COUNT->increment(1);
 				}
 			}
 			else
 			{
 				// Count normally without gate.
-				Timers->TIMERS[i]->COUNT->increment(1);
+				mTimer->COUNT->increment(1);
 			}
 
 			// Check for interrupt conditions on the timer.
-			checkTimerInterrupt(i);
+			handleTimerInterrupt();
 
 			// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise interrupt may be missed).
-			checkTimerZRET(i);
+			handleTimerZRET();
 		}
 	}
 
@@ -76,86 +90,67 @@ s64 EETimers::executionStep(const ClockSource_t & clockSource)
 	return 1;
 }
 
-bool EETimers::isTimerCLKSEqual(const u32 & timerNumber, const ClockSource_t & clockSource) const
-{
-	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
-	
+bool EETimers::isTimerCLKSEqual() const
+{	
 	// Static array used to cast the CLKS into the correct emulator ClockSource_t type. See EE Users Manual page 36.
-	static const ClockSource_t emuCLKS[4] = { ClockSource_t::BUSCLK, ClockSource_t::BUSCLK16, ClockSource_t::BUSCLK256, ClockSource_t::HBLNK };
-	auto CLKS = emuCLKS[timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CLKS)];
+	const ClockSource_t emuCLKS[4] = { ClockSource_t::BUSCLK, ClockSource_t::BUSCLK16, ClockSource_t::BUSCLK256, ClockSource_t::HBLNK };
+	auto CLKS = emuCLKS[mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CLKS)];
+	return (CLKS == mClockSource);
+}
 
-	if (CLKS == clockSource)
-		return true;
+void EETimers::handleTimerInterrupt() const
+{
+
+	bool interrupt = false;
+
+	// Check for Compare-Interrupt.
+	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
+	{
+		if (mTimer->COUNT->readWord(Context_t::RAW) >= mTimer->COMP->readWord(Context_t::RAW))
+		{
+			interrupt = true;
+		}
+	}
+
+	// Check for Overflow-Interrupt.
+	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::OVFE))
+	{
+		if (mTimer->COUNT->isOverflowed())
+		{
+			interrupt = true;
+		}
+	}
+
+	// Assert interrupt bit if flag set, otherwise deassert.
+	if (interrupt)
+		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 1);
 	else
-		return false;
+		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 0);
 }
 
-void EETimers::checkTimerInterrupt(const u32& timerNumber) const
+void EETimers::handleTimerZRET() const
 {
-	auto& I_STAT = getResources()->EE->INTC->STAT; 
-	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
-
-	// Create a temp array of field keys needed for accessing the I_STAT register.
-	u8 timerKeys[] = { EEIntcRegister_STAT_t::Fields::TIM0, EEIntcRegister_STAT_t::Fields::TIM1, EEIntcRegister_STAT_t::Fields::TIM2, EEIntcRegister_STAT_t::Fields::TIM3 };
-
-	// Check for Compare-Interrupt, and write to the INTC I_STAT.TIM0 bit.
-	if (timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
-	{
-		if (timer->COUNT->readWord(Context_t::RAW) >= timer->COMP->readWord(Context_t::RAW))
-		{
-			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
-		}
-	}
-
-	// Check for Overflow-Interrupt, and write to the INTC I_STAT.TIM0 bit.
-	if (timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::OVFE))
-	{
-		if (timer->COUNT->isOverflowed())
-		{
-			I_STAT->setFieldValue(timerKeys[timerNumber], 1);
-		}
-	}
-}
-
-void EETimers::checkTimerZRET(const u32& timerNumber) const
-{
-	auto& timerRegister = getResources()->EE->Timers->TIMERS[timerNumber];
-
 	// Check for ZRET condition.
-	if (timerRegister->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
+	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (timerRegister->COUNT->readWord(Context_t::RAW) >= timerRegister->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(Context_t::RAW) >= mTimer->COMP->readWord(Context_t::RAW))
 		{
 			// Set Count to 0.
-			timerRegister->COUNT->reset();
+			mTimer->COUNT->reset();
 		}
 	}
 }
 
-bool EETimers::isTimerGateSpecialHBLNK(const u32& timerNumber) const
+void EETimers::handleTimerGateReset() const
 {
-	if (getResources()->EE->Timers->TIMERS[timerNumber]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CLKS) == 3 &&
-		getResources()->EE->Timers->TIMERS[timerNumber]->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS) == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+	throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
 
-void EETimers::checkTimerGateReset(const u32& timerNumber) const
-{
-	auto& timer = getResources()->EE->Timers->TIMERS[timerNumber];
-	auto& GS = getResources()->GS;
+	auto GATM = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM);
+	auto GATS = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
 
-	auto GATM = timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM);
-	auto GATS = timer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
-
-	const u8 * gateSources[] = { &GS->SIGNAL_HBLNK, &GS->SIGNAL_VBLNK };
-	const u8 * gateSourcesLast[] = { &GS->SIGNAL_HBLNK_LAST, &GS->SIGNAL_VBLNK_LAST };
+	const u8 * gateSources[] = { &mGS->SIGNAL_HBLNK, &mGS->SIGNAL_VBLNK };
+	const u8 * gateSourcesLast[] = { &mGS->SIGNAL_HBLNK_LAST, &mGS->SIGNAL_VBLNK_LAST };
 	auto& gateSource = gateSources[GATS];
 	auto& gateSourceLast = gateSourcesLast[GATS];
 
@@ -170,24 +165,21 @@ void EETimers::checkTimerGateReset(const u32& timerNumber) const
 	{
 		// Resets and starts counting at the gate signal’s rising edge.
 		if (gateSource && !gateSourceLast)
-			timer->COUNT->reset();
+			mTimer->COUNT->reset();
 		break;
 	}
 	case 2:
 	{
 		// Resets and starts counting at the gate signal’s falling edge.
 		if (!gateSource && gateSourceLast)
-			timer->COUNT->reset();
+			mTimer->COUNT->reset();
 		break;
 	}
 	case 3:
 	{
 		// Resets and starts counting at both edges of the gate signal.
-		if (gateSource && !gateSourceLast 
-			|| !gateSource && gateSourceLast)
-		{
-			timer->COUNT->reset();
-		}
+		if ((gateSource && !gateSourceLast) || (!gateSource && gateSourceLast))
+			mTimer->COUNT->reset();
 		break;
 	}
 	default:

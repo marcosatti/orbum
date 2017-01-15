@@ -5,6 +5,11 @@
 
 #include "PS2Resources/Clock/Types/ClockSource_t.h"
 
+class EEIntc_t;
+class EETimers_t;
+class GS_t;
+class EETimersTimer_t;
+
 /*
 EETimers updates TIMER_0, TIMER_1, TIMER_2, TIMER_3 as defined in the EE Users Manual, starting on page 33.
 If interrupt conditions are met, sets the corresponding interrupt bit in the EE INTC.
@@ -23,31 +28,35 @@ public:
 	s64 executionStep(const ClockSource_t & clockSource) override;
 
 private:
+	/*
+	Context resources needed.
+	*/
+	u32 mTimerIndex;
+	EETimersTimer_t * mTimer;
+	ClockSource_t mClockSource;
+	std::shared_ptr<EETimers_t> mTimers;
+	std::shared_ptr<EEIntc_t> mINTC;
+	std::shared_ptr<GS_t> mGS;
 
 	/*
-	Check if the clock source of the timer is equal to the type of TimerEvent_t, by looking at the Timer.Mode register (CLKS).
+	Returns if the clock source of the timer is equal to the type of TimerEvent_t, by looking at the Timer.Mode register (CLKS).
 	*/
-	bool isTimerCLKSEqual(const u32 & timerNumber, const ClockSource_t & clockSource) const;
+	bool isTimerCLKSEqual() const;
 
 	/*
 	Checks the timer status and count values for interrupt conditions.
 	*/
-	void checkTimerInterrupt(const u32 & timerNumber) const;
+	void handleTimerInterrupt() const;
 
 	/*
 	Check for the ZRET condition and reset counter if enabled/met.
 	*/
-	void checkTimerZRET(const u32 & timerNumber) const;
-
-	/*
-	Check if CLKS == H_BLNK && GATS == H_BLNK, in which case the gate function means nothing, and it should count as normal.
-	*/
-	bool isTimerGateSpecialHBLNK(const u32 & timerNumber) const;
+	void handleTimerZRET() const;
 
 	/*
 	Checks the previous gate condition and resets if required.
 	*/
-	void checkTimerGateReset(const u32 & timerNumber) const;
+	void handleTimerGateReset() const;
 
 	
 };

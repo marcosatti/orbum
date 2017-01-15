@@ -21,13 +21,25 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const std::shared_ptr
 void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
-	u32 originalValue = BitfieldRegister32_t::readWord(context);
-	u32 newValue = (~(value & 0xC00) & (originalValue & 0xC00)) | (value & ~0xC00);
-	BitfieldRegister32_t::writeWord(context, newValue);
+	if (context == Context_t::EE)
+	{
+		u32 regValue = readWord(context);
+		value = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
+	}
+	
+	BitfieldRegister32_t::writeWord(context, value);
 	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (getFieldValue(Fields::CUE))
-		mCount->reset();
+	if (context == Context_t::EE)
+	{
+		if (getFieldValue(Fields::CUE))
+			mCount->reset();
+	}
+}
+
+bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial() const
+{
+	return ((getFieldValue(Fields::CLKS) == 3) && (getFieldValue(Fields::GATS) == 0));
 }
 
 EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t() :

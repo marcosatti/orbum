@@ -47,12 +47,12 @@ public:
 
 private:
 	/*
-	Context variables used throughout EE DMAC processing.
+	Context resources needed.
 	*/
 	u32 mChannelIndex;
+	EEDmacChannel_t * mChannel;
 	std::shared_ptr<EEDmac_t> mDMAC;
 	std::shared_ptr<PhysicalMMU_t> mEEPhysicalMMU;
-	EEDmacChannel_t * mChannel;
 
 	///////////////////////////
 	// DMAC Helper Functions //
