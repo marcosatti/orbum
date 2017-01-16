@@ -121,11 +121,10 @@ void EETimers::handleTimerInterrupt() const
 		}
 	}
 
-	// Assert interrupt bit if flag set, otherwise deassert.
+	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
+	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
-		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 1);
-	else
-		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 0);
+		mINTC->STAT->raiseIRQLine(mTimerIndex + 9);
 }
 
 void EETimers::handleTimerZRET() const

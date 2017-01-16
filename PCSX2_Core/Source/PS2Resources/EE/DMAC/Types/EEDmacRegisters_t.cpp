@@ -13,7 +13,8 @@ EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
 }
 
 EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
-	BitfieldRegister32_t("EE DMAC STAT", false, true)
+	BitfieldRegister32_t("EE DMAC STAT", false, true),
+	mIsInterrupted(false)
 {
 	registerField(Fields::CIS0, "CIS0", 0, 1, 0);
 	registerField(Fields::CIS1, "CIS1", 1, 1, 0);
@@ -58,9 +59,9 @@ void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 	handleInterruptCheck();
 }
 
-void EEDmacRegister_STAT_t::setFieldValueInterrupt(const u8& fieldIndex, const u32& value)
+void EEDmacRegister_STAT_t::raiseIRQLine(const u8& irqLine)
 {
-	setFieldValue(fieldIndex, value);
+	setFieldValue(Fields::IRQ_KEYS[irqLine], 1);
 	handleInterruptCheck();
 }
 

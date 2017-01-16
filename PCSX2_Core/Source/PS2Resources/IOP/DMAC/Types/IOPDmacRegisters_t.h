@@ -71,20 +71,41 @@ public:
 		static constexpr u8 IRQ6_FL = 15;
 		static constexpr u8 IRQMASTER = 16;
 
-		static constexpr u8 FL_KEYS[PS2Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { IRQ0_FL, IRQ1_FL, IRQ2_FL, IRQ3_FL, IRQ4_FL, IRQ5_FL, IRQ6_FL };
+		/*
+		Array of IRQ line keys.
+		*/
+		static constexpr u8 IRQ_KEYS[PS2Constants::IOP::DMAC::NUMBER_ICR_IRQ_LINES] = { IRQ0_FL, IRQ1_FL, IRQ2_FL, IRQ3_FL, IRQ4_FL, IRQ5_FL, IRQ6_FL };
 	};
 
 	IOPDmacRegister_ICR_t(const char * mnemonic);
 
 	/*
 	(IOP context) Reset any FL bits written to.
-	Makes a call to updateMasterFlag() after to update the IRQMASTER flag.
+	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
-	void setFieldValueMaster(const u8& fieldIndex, const u32& value);
 	void writeWord(const Context_t& context, u32 value) override;
 
 	/*
-	Updates the IRQMASTER flag - if (EN AND FL) is set and IRQENABLE is set, or IRQFORCE is set, then IRQMASTER is set.
+	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).
 	*/
-	void updateMasterFlag();
+	void raiseIRQLine(const u8 & irqLine);
+
+	/*
+	Returns if there is a pending interrupt that should be raised.
+	*/
+	bool isInterrupted() const;
+
+private:
+	/*
+	Checks for interrupt conditions and sets the mIsInterrupted flag.
+	If the result of (FL & EN) > 0 or the IRQMASTER flag is set, then an interrupt should be raised.
+	Also updates the IRQMASTER flag.
+	Logic adapted from No$PSX docs and PCSX2.
+	*/
+	void handleInterruptCheck();
+
+	/*
+	See handleInterruptCheck() and isInterrupted() above.
+	*/
+	bool mIsInterrupted;
 };

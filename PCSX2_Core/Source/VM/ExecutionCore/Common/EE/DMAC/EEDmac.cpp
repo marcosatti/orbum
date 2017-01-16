@@ -159,7 +159,7 @@ u32 EEDmac::transferData() const
 void EEDmac::setStateSuspended() const
 {
 	// Emit the interrupt status bit.
-	mDMAC->STAT->setFieldValueInterrupt(EEDmacRegister_STAT_t::Fields::CIS_KEYS[mChannelIndex], 1);
+	mDMAC->STAT->raiseIRQLine(mChannelIndex);
 
 	// Change CHCR.STR to 0.
 	mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR, 0);
@@ -370,7 +370,8 @@ void EEDmac::setDMACStallControlSTADR() const
 
 void EEDmac::setDMACStallControlSIS() const
 {
-	mDMAC->STAT->setFieldValueInterrupt(EEDmacRegister_STAT_t::Fields::SIS, 1);
+	// SIS is on irq line 10.
+	mDMAC->STAT->raiseIRQLine(10);
 }
 
 bool EEDmac::isDrainStallControlWaiting() const

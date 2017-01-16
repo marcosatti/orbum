@@ -87,6 +87,12 @@ public:
 		{
 			static constexpr u32 NUMBER_DMAC_CHANNELS = 10;
 			static constexpr u32 NUMBER_CHAIN_INSTRUCTIONS = 8;
+			static constexpr u32 NUMBER_IRQ_LINES = 13;
+		};
+
+		struct INTC
+		{
+			static constexpr u32 NUMBER_IRQ_LINES = 15;
 		};
 
 		struct MainMemory
@@ -187,11 +193,17 @@ public:
 			static constexpr u32 NUMBER_DMAC_CHANNELS = 14;
 			static constexpr u32 NUMBER_PCR_REGISTERS = 2;
 			static constexpr u32 NUMBER_ICR_REGISTERS = 2;
+			static constexpr u32 NUMBER_ICR_IRQ_LINES = 7;
 		};
 
 		struct Timers
 		{
 			static constexpr u32 NUMBER_TIMERS = 6;
+		};
+
+		struct INTC
+		{
+			static constexpr u32 NUMBER_IRQ_LINES = 26;
 		};
 
 		struct IOPMemory

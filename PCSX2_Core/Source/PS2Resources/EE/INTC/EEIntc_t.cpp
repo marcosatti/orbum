@@ -8,8 +8,8 @@ EEIntc_t::EEIntc_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
 
 	// Registers
-	STAT(std::make_shared<EEIntcRegister_STAT_t>()),
 	MASK(std::make_shared<EEIntcRegister_MASK_t>()),
+	STAT(std::make_shared<EEIntcRegister_STAT_t>(MASK)),
 	MEMORY_F020(std::make_shared<ConstantMemory_t>(0xE0, "INTC: INTC_f020 (reserved)"))
 {
 }

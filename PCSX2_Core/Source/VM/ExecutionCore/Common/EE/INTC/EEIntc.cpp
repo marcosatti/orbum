@@ -22,8 +22,8 @@ EEIntc::EEIntc(VMMain * vmMain) :
 
 s64 EEIntc::executionStep(const ClockSource_t & clockSource)
 {
-	// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-	if (mSTAT->readWord(Context_t::RAW) & mMASK->readWord(Context_t::RAW))
+	// Check the interrupt status on the stat register.
+	if (mSTAT->isInterrupted())
 		mEECOP0->Cause->setIRQLine(3);
 	else
 		mEECOP0->Cause->clearIRQLine(3);

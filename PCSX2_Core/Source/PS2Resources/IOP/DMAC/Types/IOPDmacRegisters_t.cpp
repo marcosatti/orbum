@@ -43,14 +43,6 @@ IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
 	registerField(Fields::IRQMASTER, "IRQMASTER", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR_t::setFieldValueMaster(const u8& fieldIndex, const u32& value)
-{
-	setFieldValue(fieldIndex, value);
-
-	// Check the master IRQ conditions.
-	updateMasterFlag();
-}
-
 void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
@@ -58,28 +50,43 @@ void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 		value = ((readWord(Context_t::RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 		
 	BitfieldRegister32_t::writeWord(context, value);
-
-	// Check the master IRQ conditions.
-	updateMasterFlag();
+	handleInterruptCheck();
 }
 
-void IOPDmacRegister_ICR_t::updateMasterFlag()
+void IOPDmacRegister_ICR_t::raiseIRQLine(const u8& irqLine)
 {
-	u32 master = 0;
+	setFieldValue(Fields::IRQ_KEYS[irqLine], 1);
+	handleInterruptCheck();
+}
 
+bool IOPDmacRegister_ICR_t::isInterrupted() const
+{
+	return mIsInterrupted;
+}
+
+void IOPDmacRegister_ICR_t::handleInterruptCheck()
+{
+	mIsInterrupted = false;
+
+	// If IRQFORCE is set, then IRQ master is set.
 	if (getFieldValue(Fields::IRQFORCE))
-		master = 1;
+		setFieldValue(Fields::IRQMASTER, 1);
 
-	if (getFieldValue(Fields::IRQENABLE))
+	// Check master IRQ bit.
+	// TODO: check this, PCSX2 does not handle this at all.
+	if (getFieldValue(Fields::IRQMASTER))
+		mIsInterrupted = true;
+
+	// Check if any channel has emitted an interrupt.
+	u32 regValue = readWord(Context_t::RAW);
+	u32 icrEN = (regValue & 0x7F0000) >> 16;
+	u32 icrFL = (regValue & 0x7F000000) >> 24;
+	if (icrEN & icrFL)
 	{
-		u32 regValue = readWord(Context_t::RAW);
-		auto EN = (regValue & 0x7F0000) >> 16;
-		auto FL = (regValue & 0x7F000000) >> 24;
+		// Also set IRQ master if IRQENABLE is set.
+		if (getFieldValue(Fields::IRQENABLE))
+			setFieldValue(Fields::IRQMASTER, 1);
 
-		if (EN & FL)
-			master = 1;
-
+		mIsInterrupted = true;
 	}
-
-	setFieldValue(Fields::IRQMASTER, master);
 }

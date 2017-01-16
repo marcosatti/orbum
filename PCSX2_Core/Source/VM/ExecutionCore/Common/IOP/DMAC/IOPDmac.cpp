@@ -112,24 +112,14 @@ void IOPDmac::handleInterruptCheck() const
 {
 	bool interrupt = false;
 	for (auto& ICR : mDMAC->ICRS)
-	{
-		// Check master IRQ bit, return true immediately.
-		// TODO: check this, PCSX2 does not handle this at all.
-		if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER))
-			interrupt = true;
-
-		// Check if any channel has emitted an interrupt.
-		u32 icrValue = ICR->readWord(Context_t::RAW);
-		u32 icrEN = (icrValue & 0x7F0000) >> 16;
-		u32 icrFL = (icrValue & 0x7F000000) >> 24;
-		if (icrEN & icrFL)
-			interrupt = true;
-	}
+		interrupt |= ICR->isInterrupted();
 
 	if (interrupt)
-		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
-	else 
-		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
+	{
+		// DMAC connected to INTC IRQ line 3.
+		// TODO: Assuming edge triggered interrupt. Need to deassert line on no condition?
+		mINTC->STAT->raiseIRQLine(3);
+	}
 }
 
 u32 IOPDmac::transferData() const
@@ -180,9 +170,9 @@ void IOPDmac::setStateSuspended() const
 	// Emit interrupt stat bit.
 	u32 icrIndex = mChannelIndex % 7;
 	if (mChannelIndex < 8)
-		mDMAC->ICR->setFieldValueMaster(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
+		mDMAC->ICR->raiseIRQLine(icrIndex);
 	else
-		mDMAC->ICR2->setFieldValueMaster(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
+		mDMAC->ICR2->raiseIRQLine(icrIndex);
 }
 
 void IOPDmac::setStateFailedTransfer() const

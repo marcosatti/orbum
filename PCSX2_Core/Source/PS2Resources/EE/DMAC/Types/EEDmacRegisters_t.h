@@ -62,9 +62,10 @@ public:
 		static constexpr u8 SIM = 23;
 		static constexpr u8 MEIM = 24;
 
-		// Array of CIS and CIM keys needed for iterations.
-		static constexpr u8 CIS_KEYS[PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
-		static constexpr u8 CIM_KEYS[PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIM0, CIM1, CIM2, CIM3, CIM4, CIM5, CIM6, CIM7, CIM8, CIM9 };
+		/*
+		Array of IRQ line keys.
+		*/
+		static constexpr u8 IRQ_KEYS[PS2Constants::EE::DMAC::NUMBER_IRQ_LINES]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9, SIS, MEIS, BEIS };
 	};
 
 	EEDmacRegister_STAT_t();
@@ -78,9 +79,9 @@ public:
 	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
-	Writes the field and sets the internal flag if there should be an interrupt raised (caches result).
+	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).
 	*/
-	void setFieldValueInterrupt(const u8 & fieldIndex, const u32 & value);	
+	void raiseIRQLine(const u8 & irqLine);	
 
 	/*
 	Returns if there is a pending interrupt that should be raised.
