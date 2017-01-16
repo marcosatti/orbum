@@ -19,23 +19,6 @@ class FIFOQueue_t;
 class ConstantMemory_t;
 
 /*
-EEDmacChannels_t defines all of the channels available in the EE DMAC.
-These include (see EE Users Manual page 73):
-- VIF0
-- VIF1
-- GIF
-- fromIPU
-- toIPU
-- SIF0
-- SIF1
-- SIF2
-- fromSPR
-- toSPR
-
-They are subclassed from the base channel class - EEDmacChannel_t.
-*/
-
-/*
 A base type representing an EE DMAC channel.
 See EE Users Manual page 73 for the list of registers declared forming this type.
 
@@ -59,6 +42,7 @@ public:
 	See EE Users Manual page 73.
 
 	CHCR, MADR and QWC is always defined for each channel - they are initalised in this base class.
+	TADR, ASR0/1 and SADR are initalised by sub-classes when required.
 	*/
 	std::shared_ptr<EEDmacChannelRegister_CHCR_t> CHCR;
 	std::shared_ptr<EEDmacChannelRegister_MADR_t> MADR;
@@ -91,6 +75,16 @@ public:
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
 	Direction_t getRuntimeDirection() const;
+
+	/*
+	Additional processing on channel transfer begin if needed (ie: SIF channels).
+	*/
+	virtual void preTransfer();
+
+	/*
+	Additional processing on channel transfer exit if needed (ie: SIF channels).
+	*/
+	virtual void postTransfer();
 
 	/////////////////////////////////
 	// Chain Mode Helper Functions //

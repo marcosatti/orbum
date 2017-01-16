@@ -55,6 +55,39 @@ void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 	}
 
 	BitfieldRegister32_t::writeWord(context, value);
+	handleInterruptCheck();
+}
+
+void EEDmacRegister_STAT_t::setFieldValueInterrupt(const u8& fieldIndex, const u32& value)
+{
+	setFieldValue(fieldIndex, value);
+	handleInterruptCheck();
+}
+
+bool EEDmacRegister_STAT_t::isInterrupted() const
+{
+	return mIsInterrupted;
+}
+
+void EEDmacRegister_STAT_t::handleInterruptCheck()
+{
+	// Check for interrupt conditions.
+	// See the formula listed at the end of page 65 of the EE Users Manual.
+	bool interrupt = false;
+	u32 regValue = readWord(Context_t::RAW);
+
+	// Check for STAT & MASK > 0.
+	u32 statValue = regValue & 0xFFFF;
+	u32 maskValue = (regValue & 0xFFFF0000) >> 16;
+	if (statValue & maskValue)
+		interrupt = true;
+
+	// Check for BUSERR interrupt status.
+	if (getFieldValue(Fields::BEIS))
+		interrupt = true;
+
+	// Set the internal flag.
+	mIsInterrupted = interrupt;
 }
 
 EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()

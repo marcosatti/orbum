@@ -159,7 +159,7 @@ u32 EEDmac::transferData() const
 void EEDmac::setStateSuspended() const
 {
 	// Emit the interrupt status bit.
-	mDMAC->STAT->setFieldValue(EEDmacRegister_STAT_t::Fields::CIS_KEYS[mChannelIndex], 1);
+	mDMAC->STAT->setFieldValueInterrupt(EEDmacRegister_STAT_t::Fields::CIS_KEYS[mChannelIndex], 1);
 
 	// Change CHCR.STR to 0.
 	mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR, 0);
@@ -327,21 +327,8 @@ void EEDmac::handleInterruptCheck() const
 	auto& COP0 = getResources()->EE->EECore->COP0;
 	auto& D_STAT = mDMAC->STAT;
 
-	// Check interrupt status (first half of register are stat bits, second half are mask bits, with the exception of the BEIS bit done below).
-	// See the formula listed at the end of page 65 of the EE Users Manual.
-	bool interrupt = false;
-	u32 regValue = D_STAT->readWord(Context_t::RAW);
-	u32 statValue = regValue & 0xFFFF;
-	u32 maskValue = (regValue & 0xFFFF0000) >> 16;
-	if (statValue & maskValue)
-		interrupt = true;	
-
-	// Check for BUSERR interrupt status.
-	if (D_STAT->getFieldValue(EEDmacRegister_STAT_t::Fields::BEIS))
-		interrupt = true;
-
 	// Set the interrupt line if there was a condition set, otherwise clear the interrupt line.
-	if (interrupt)
+	if (D_STAT->isInterrupted())
 		COP0->Cause->setIRQLine(2);
 	else
 		COP0->Cause->clearIRQLine(2);
@@ -383,7 +370,7 @@ void EEDmac::setDMACStallControlSTADR() const
 
 void EEDmac::setDMACStallControlSIS() const
 {
-	mDMAC->STAT->setFieldValue(EEDmacRegister_STAT_t::Fields::SIS, 1);
+	mDMAC->STAT->setFieldValueInterrupt(EEDmacRegister_STAT_t::Fields::SIS, 1);
 }
 
 bool EEDmac::isDrainStallControlWaiting() const

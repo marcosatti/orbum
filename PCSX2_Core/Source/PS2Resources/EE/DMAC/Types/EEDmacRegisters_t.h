@@ -69,7 +69,35 @@ public:
 
 	EEDmacRegister_STAT_t();
 
+	/*
+	(EE context only.)
+	When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
+	When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
+	Sets the internal flag after, if an interrupt should be raised (caches result).
+	*/
 	void writeWord(const Context_t & context, u32 value) override;
+
+	/*
+	Writes the field and sets the internal flag if there should be an interrupt raised (caches result).
+	*/
+	void setFieldValueInterrupt(const u8 & fieldIndex, const u32 & value);	
+
+	/*
+	Returns if there is a pending interrupt that should be raised.
+	*/
+	bool isInterrupted() const;
+
+private:
+	/*
+	Checks for interrupt conditions and sets the mIsInterrupted flag.
+	See the formula listed at the end of page 65 of the EE Users Manual.
+	*/
+	void handleInterruptCheck();
+
+	/*
+	See handleInterruptCheck() and isInterrupted() above.
+	*/
+	bool mIsInterrupted;
 };
 
 /*

@@ -61,6 +61,14 @@ Direction_t EEDmacChannel_t::getRuntimeDirection() const
 	return direction;
 }
 
+void EEDmacChannel_t::preTransfer()
+{
+}
+
+void EEDmacChannel_t::postTransfer()
+{
+}
+
 void EEDmacChannel_t::resetChainExitState()
 {
 	mChainExitState = false;

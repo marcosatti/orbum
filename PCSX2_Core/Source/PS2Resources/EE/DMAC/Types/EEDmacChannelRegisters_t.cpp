@@ -23,7 +23,7 @@ EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic
 
 void EEDmacChannelRegister_MADR_t::increment()
 {
-	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
+	setFieldValue(Fields::ADDR, getFieldValue(Fields::ADDR) + 0x10);
 }
 
 EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic) :
@@ -45,7 +45,7 @@ EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic
 
 void EEDmacChannelRegister_TADR_t::increment()
 {
-	BitfieldMap32_t::setFieldValue(Fields::ADDR, BitfieldMap32_t::getFieldValue(Fields::ADDR) + 0x10);
+	setFieldValue(Fields::ADDR, getFieldValue(Fields::ADDR) + 0x10);
 }
 
 EEDmacChannelRegister_ASR_t::EEDmacChannelRegister_ASR_t(const char * mnemonic) :
