@@ -77,9 +77,14 @@ public:
 	IOPDmacRegister_ICR_t(const char * mnemonic);
 
 	/*
-	Firstly, reset any FL bits written to.
-	If (EN AND FL) is set and IRQENABLE is set, or IRQFORCE is set, then IRQMASTER is set.
+	(IOP context) Reset any FL bits written to.
+	Makes a call to updateMasterFlag() after to update the IRQMASTER flag.
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValueMaster(const u8& fieldIndex, const u32& value);
 	void writeWord(const Context_t& context, u32 value) override;
+
+	/*
+	Updates the IRQMASTER flag - if (EN AND FL) is set and IRQENABLE is set, or IRQFORCE is set, then IRQMASTER is set.
+	*/
+	void updateMasterFlag();
 };

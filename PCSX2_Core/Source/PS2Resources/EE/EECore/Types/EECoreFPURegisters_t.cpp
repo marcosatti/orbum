@@ -22,27 +22,31 @@ EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t()
 	registerField(Fields::C, "C", 23, 1, 0);
 }
 
-void EECoreFPURegister_CSR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void EECoreFPURegister_CSR_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
 {
 	// Check if the field index is for the non-sticky flags.
 	// TODO: relies on fact that sticky flag indexes are offset by -4.
 	if (fieldIndex >= Fields::U && fieldIndex <= Fields::I)
 	{
 		u32 oldStickyValue = getFieldValue(fieldIndex - 4);
-		BitfieldRegister32_t::setFieldValue(fieldIndex - 4, oldStickyValue | value);
+		setFieldValue(fieldIndex - 4, oldStickyValue | value);
+	}
+	else
+	{
+		throw std::runtime_error("CSR set field sticky was called with invalid field.");
 	}
 }
 
 void EECoreFPURegister_CSR_t::updateResultFlags(const FPUFlags_t & flags)
 {
-	setFieldValue(Fields::U, flags.UF ? 1 : 0);
-	setFieldValue(Fields::O, flags.OF ? 1 : 0);
+	setFieldValueSticky(Fields::U, flags.UF ? 1 : 0);
+	setFieldValueSticky(Fields::O, flags.OF ? 1 : 0);
 }
 
 void EECoreFPURegister_CSR_t::clearFlags()
 {
-	setFieldValue(Fields::U, 0);
-	setFieldValue(Fields::O, 0);
-	setFieldValue(Fields::D, 0);
-	setFieldValue(Fields::I, 0);
+	setFieldValueSticky(Fields::U, 0);
+	setFieldValueSticky(Fields::O, 0);
+	setFieldValueSticky(Fields::D, 0);
+	setFieldValueSticky(Fields::I, 0);
 }

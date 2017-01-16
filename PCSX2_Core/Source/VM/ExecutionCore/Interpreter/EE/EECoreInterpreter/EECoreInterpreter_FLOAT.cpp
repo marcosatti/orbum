@@ -159,14 +159,12 @@ void EECoreInterpreter::DIV_S()
 	CSR->clearFlags();
 	if (source1Reg->readFloat(Context_t::EE) != 0 && source2Reg->readFloat(Context_t::EE) == 0)
 	{
-		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::D, 1);
-		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SD, 1);
+		CSR->setFieldValueSticky(EECoreFPURegister_CSR_t::Fields::D, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source1Reg->readFloat(Context_t::EE) == 0 && source2Reg->readFloat(Context_t::EE) == 0)
 	{
-		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::I, 1);
-		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::SI, 1);
+		CSR->setFieldValueSticky(EECoreFPURegister_CSR_t::Fields::I, 1);
 		result = static_cast<f32>(PS2Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else

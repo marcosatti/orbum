@@ -81,10 +81,10 @@ public:
 	explicit EECoreFPURegister_CSR_t();
 
 	/*
-	Overriden set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).
+	Set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).
 	See EE Core Users Manual page 159.
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValueSticky(const u8& fieldIndex, const u32& value);
 
 	/*
 	Update or clears the U, O, (D, I) flags, which both should be done on each instruction that modifies this register.

@@ -37,7 +37,7 @@ public:
 	Overriden write functions to trigger the update of the sticky bit flags.
 	See VU Users Manual page 40.
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValueSticky(const u8& fieldIndex, const u32& value);
 
 	/*
 	Clear the non-sticky flags, which should be done on each instruction that modifies this register.
@@ -82,10 +82,10 @@ public:
 	VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status);
 
 	/*
-	Overriden set bit field function to trigger changes to the associated VU status register.
+	Set bit field function to trigger changes to the associated VU status register.
 	See VU Users Manual page 39.
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValueStatus(const u8& fieldIndex, const u32& value);
 
 	/*
 	Updates or clear all flags (Z, S, U, O) for the given vector field, of which at least one function should be run on each instruction that modifies this register.

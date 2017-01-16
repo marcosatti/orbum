@@ -123,13 +123,7 @@ void IOPDmac::handleInterruptCheck() const
 		u32 icrEN = (icrValue & 0x7F0000) >> 16;
 		u32 icrFL = (icrValue & 0x7F000000) >> 24;
 		if (icrEN & icrFL)
-		{
-			// If the DMA IRQ master enable bit is set (bit 23), also need to set the IRQ master flag.
-			if (ICR->getFieldValue(IOPDmacRegister_ICR_t::Fields::IRQENABLE))
-				ICR->setFieldValue(IOPDmacRegister_ICR_t::Fields::IRQMASTER, 1);
-
 			interrupt = true;
-		}
 	}
 
 	if (interrupt)
@@ -186,9 +180,9 @@ void IOPDmac::setStateSuspended() const
 	// Emit interrupt stat bit.
 	u32 icrIndex = mChannelIndex % 7;
 	if (mChannelIndex < 8)
-		mDMAC->ICR->setFieldValue(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
+		mDMAC->ICR->setFieldValueMaster(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
 	else
-		mDMAC->ICR2->setFieldValue(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
+		mDMAC->ICR2->setFieldValueMaster(IOPDmacRegister_ICR_t::Fields::FL_KEYS[icrIndex], 1);
 }
 
 void IOPDmac::setStateFailedTransfer() const

@@ -57,52 +57,41 @@ public:
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual void setFieldValue(const u8 & fieldIndex, const u32 & value);
+	inline void setFieldValue(const u8 & fieldIndex, const u32 & value);
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
 	*/
-	virtual void initaliseAllFields();
+	void initaliseAllFields();
 
 	/*
 	Initalise a specific field to its initial value defined in the BitfieldProperties_t.
 	*/
-	virtual void initaliseField(const u8 & fieldIndex);
+	void initaliseField(const u8 & fieldIndex);
 
 	/*
 	If the underlying 32-bit value is changed directly, call this function to update and sync the bitfield map to reflect the same values.
 	*/
-	virtual void syncMap();
+	void syncMapFromMemory();
 
 	/*
 	If the map bitfield values have been changed directly, call this function to update and sync the underlying 32-bit value.
 	*/
-	virtual void syncMemoryFromMap();
+	void syncMemoryFromMap();
 
 private:
-	// Friend the BitfieldRegister32_t class to access the field map directly (used in debug).
+	// Friend the BitfieldRegister32_t class to access the field maps directly (used in debug).
 	friend class BitfieldRegister32_t;
 
 	/*
-	Used internally for storing the information parsed though registerField().
-	This is used in the field map as well as the 'value' in the key-value pair.
-
-	Note: Due to how the map container works, we can't make the constant properties (everything except mFieldValue) 'const'.
-	*/
-	struct BitfieldProperties_t
-	{
-		std::string mFieldName;
-		u8 mFieldStartPosition;
-		u8 mFieldLength;
-		u32 mInitialFieldValue;
-		u32 mFieldValue; // Set to mInitialFieldValue when created, but can be changed.
-	};
-
-	/*
-	Map which stores all of the registered fields, along with their associated properties.
+	Arrays which stores all of the registered fields, along with their associated properties.
 	*/
 	static constexpr u8 FIELD_MAP_SIZE = 32;
-	BitfieldProperties_t mFieldMap[FIELD_MAP_SIZE];
+	u32 mFieldValues[FIELD_MAP_SIZE];
+	u8 mFieldStartPositions[FIELD_MAP_SIZE];
+	u8 mFieldLengths[FIELD_MAP_SIZE];
+	u32 mFieldInitialValues[FIELD_MAP_SIZE];
+	std::string mFieldMnemonics[FIELD_MAP_SIZE];
 };
 
 const u32 & BitfieldMap32_t::getFieldValue(const u8 & fieldIndex) const
@@ -112,5 +101,16 @@ const u32 & BitfieldMap32_t::getFieldValue(const u8 & fieldIndex) const
 		throw std::runtime_error("Invalid map index.");
 #endif
 
-	return mFieldMap[fieldIndex].mFieldValue;
+	return mFieldValues[fieldIndex];
+}
+
+void BitfieldMap32_t::setFieldValue(const u8& fieldIndex, const u32& value)
+{
+#if ERROR_ON_FIELD_INDEX_RANGE
+	if (!(fieldIndex < FIELD_MAP_SIZE))
+		throw std::runtime_error("Invalid map index.");
+#endif
+
+	mFieldValues[fieldIndex] = value;
+	setBitRange32(mFieldStartPositions[fieldIndex], mFieldLengths[fieldIndex], mFieldValues[fieldIndex]);
 }

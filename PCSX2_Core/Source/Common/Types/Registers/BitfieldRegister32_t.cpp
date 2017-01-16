@@ -33,15 +33,15 @@ BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debugReads
 
 void BitfieldRegister32_t::logDebugAllFields()
 {
-	for (auto &field : mFieldMap)
+	for (auto i = 0; i < FIELD_MAP_SIZE; i++)
 	{
 		// I'll assume that when an empty mnemonic is encountered, its because the rest of the fields arent defined.
 		// I'm also sorry in advance if anyone has to debug the debug function :) .
-		if (field.mFieldName.empty())
+		if (mFieldMnemonics[i].empty())
 			break;
 
 #if DEBUG_MEM_LOG_VALUE_AS_HEX
-		logDebug("\t%s = 0x%X.", field.mFieldName.c_str(), field.mFieldValue);
+		logDebug("\t%s = 0x%X.", mFieldMnemonics[i].c_str(), mFieldValues[i]);
 #else
 		logDebug("\t%s = %d.", field.mFieldName.c_str(), field.mFieldValue);
 #endif
@@ -96,7 +96,7 @@ void BitfieldRegister32_t::setBitRange32(u8 startPosition, u8 bitLength, u32 val
 void BitfieldRegister32_t::writeByte(const Context_t& context, u32 arrayIndex, u8 value)
 {
 	Register32_t::writeByte(context, arrayIndex, value);
-	BitfieldMap32_t::syncMap();
+	BitfieldMap32_t::syncMapFromMemory();
 
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
@@ -107,7 +107,7 @@ void BitfieldRegister32_t::writeByte(const Context_t& context, u32 arrayIndex, u
 void BitfieldRegister32_t::writeHword(const Context_t& context, u32 arrayIndex, u16 value)
 {
 	Register32_t::writeHword(context, arrayIndex, value);
-	BitfieldMap32_t::syncMap();
+	BitfieldMap32_t::syncMapFromMemory();
 
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
@@ -118,7 +118,7 @@ void BitfieldRegister32_t::writeHword(const Context_t& context, u32 arrayIndex, 
 void BitfieldRegister32_t::writeWord(const Context_t& context, u32 value)
 {
 	Register32_t::writeWord(context, value);
-	BitfieldMap32_t::syncMap();
+	BitfieldMap32_t::syncMapFromMemory();
 
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)

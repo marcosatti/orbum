@@ -43,21 +43,12 @@ IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
 	registerField(Fields::IRQMASTER, "IRQMASTER", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void IOPDmacRegister_ICR_t::setFieldValueMaster(const u8& fieldIndex, const u32& value)
 {
-	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
+	setFieldValue(fieldIndex, value);
 
-	if (getFieldValue(Fields::IRQFORCE))
-		setFieldValue(Fields::IRQMASTER, 1);
-
-	if (getFieldValue(Fields::IRQENABLE))
-	{
-		auto EN = (readWord(Context_t::RAW) & 0x7F0000) >> 16;
-		auto FL = (readWord(Context_t::RAW) & 0x7F000000) >> 24;
-
-		if (EN & FL)
-			setFieldValue(Fields::IRQMASTER, 1);
-	}
+	// Check the master IRQ conditions.
+	updateMasterFlag();
 }
 
 void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
@@ -69,18 +60,26 @@ void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 	BitfieldRegister32_t::writeWord(context, value);
 
 	// Check the master IRQ conditions.
+	updateMasterFlag();
+}
+
+void IOPDmacRegister_ICR_t::updateMasterFlag()
+{
 	u32 master = 0;
+
 	if (getFieldValue(Fields::IRQFORCE))
 		master = 1;
 
 	if (getFieldValue(Fields::IRQENABLE))
 	{
-		auto EN = (value & 0x7F0000) >> 16;
-		auto FL = (value & 0x7F000000) >> 24;
+		u32 regValue = readWord(Context_t::RAW);
+		auto EN = (regValue & 0x7F0000) >> 16;
+		auto FL = (regValue & 0x7F000000) >> 24;
 
 		if (EN & FL)
 			master = 1;
-			
+
 	}
+
 	setFieldValue(Fields::IRQMASTER, master);
 }

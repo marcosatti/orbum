@@ -18,7 +18,7 @@ VuUnitRegister_Status_t::VuUnitRegister_Status_t()
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VuUnitRegister_Status_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void VuUnitRegister_Status_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
 {
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 
@@ -33,12 +33,12 @@ void VuUnitRegister_Status_t::setFieldValue(const u8& fieldIndex, const u32& val
 
 void VuUnitRegister_Status_t::clearFlags()
 {
-	setFieldValue(Fields::Z, 0);
-	setFieldValue(Fields::S, 0);
-	setFieldValue(Fields::U, 0);
-	setFieldValue(Fields::O, 0);
-	setFieldValue(Fields::I, 0);
-	setFieldValue(Fields::D, 0);
+	setFieldValueSticky(Fields::Z, 0);
+	setFieldValueSticky(Fields::S, 0);
+	setFieldValueSticky(Fields::U, 0);
+	setFieldValueSticky(Fields::O, 0);
+	setFieldValueSticky(Fields::I, 0);
+	setFieldValueSticky(Fields::D, 0);
 }
 
 VuUnitRegister_MAC_t::VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status) :
@@ -62,19 +62,17 @@ VuUnitRegister_MAC_t::VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VuUnitRegister_MAC_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void VuUnitRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& value)
 {
-	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
+	setFieldValue(fieldIndex, value);
 
 	// Check which flag fieldIndex belongs to, and set the corresponding Status flag (OR with previous value).
 	// Only valid if fieldIndex falls in the Zw -> Ox range, which should always be true...
 	// TODO: relies on the fact that the MAC and Status registers have the same order of flags (ie: can use fieldIndex / 4).
-#if defined(BUILD_DEBUG)
 	if (fieldIndex >= Fields::Zw && fieldIndex <= Fields::Ox)
-		mStatus->setFieldValue(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
-#else
-	mStatus->setFieldValue(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
-#endif
+		mStatus->setFieldValueSticky(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
+	else
+		throw std::runtime_error("VU MAC register set flag stick index out of range.");
 }
 
 void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlags_t& flags)
@@ -85,10 +83,10 @@ void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlag
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Set the relevant flags (Z, S, U, O).
-	setFieldValue(FIELD_FLAGS_SET[0], flags.ZF ? 1 : 0);
-	setFieldValue(FIELD_FLAGS_SET[1], flags.SF ? 1 : 0);
-	setFieldValue(FIELD_FLAGS_SET[2], flags.UF ? 1 : 0);
-	setFieldValue(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
+	setFieldValueStatus(FIELD_FLAGS_SET[0], flags.ZF ? 1 : 0);
+	setFieldValueStatus(FIELD_FLAGS_SET[1], flags.SF ? 1 : 0);
+	setFieldValueStatus(FIELD_FLAGS_SET[2], flags.UF ? 1 : 0);
+	setFieldValueStatus(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
 }
 
 void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
@@ -100,7 +98,7 @@ void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
 
 	// Clear the relevant flags (O, U, S, Z).
 	for (auto i = 0; i < 4; i++)
-		setFieldValue(FIELD_FLAGS_SET[i], 0);
+		setFieldValueStatus(FIELD_FLAGS_SET[i], 0);
 }
 
 VuUnitRegister_Clipping_t::VuUnitRegister_Clipping_t()
