@@ -52,12 +52,12 @@ public:
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	inline const u32 & getFieldValue(const u8 & fieldIndex) const;
+	inline virtual const u32 & getFieldValue(const u8 & fieldIndex) const;
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	inline void setFieldValue(const u8 & fieldIndex, const u32 & value);
+	inline virtual void setFieldValue(const u8 & fieldIndex, const u32 & value);
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.

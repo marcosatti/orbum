@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Types/Registers/Register32_t.h"
@@ -106,5 +108,101 @@ public:
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
 	*/
 	void increment();
+};
+
+/*
+The SIF0 DMAC D_CHCR register, aka channel control register.
+SIF0 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
+*/
+class EEDmacChannelRegister_SIF0_CHCR_t : public EEDmacChannelRegister_CHCR_t
+{
+public:
+	EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+
+	/*
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
+	See PCSX2's "sif0.cpp".
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for starting a transfer, and ending a transfer.
+	*/
+	void handleSBUSUpdateStart() const;
+	void handleSBUSUpdateFinish() const;
+};
+
+/*
+The SIF1 DMAC D_CHCR register, aka channel control register.
+SIF1 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
+*/
+class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_CHCR_t
+{
+public:
+	EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+
+	/*
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
+	See PCSX2's "sif1.cpp".
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for starting a transfer, and ending a transfer.
+	*/
+	void handleSBUSUpdateStart() const;
+	void handleSBUSUpdateFinish() const;
+};
+
+/*
+The SIF2 DMAC D_CHCR register, aka channel control register.
+SIF2 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
+*/
+class EEDmacChannelRegister_SIF2_CHCR_t : public EEDmacChannelRegister_CHCR_t
+{
+public:
+	EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+
+	/*
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
+	See PCSX2's "sif2.cpp".
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for starting a transfer, and ending a transfer.
+	*/
+	void handleSBUSUpdateStart() const;
+	void handleSBUSUpdateFinish() const;
 };
 

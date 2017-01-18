@@ -61,14 +61,6 @@ Direction_t EEDmacChannel_t::getRuntimeDirection() const
 	return direction;
 }
 
-void EEDmacChannel_t::preTransfer()
-{
-}
-
-void EEDmacChannel_t::postTransfer()
-{
-}
-
 void EEDmacChannel_t::resetChainExitState()
 {
 	mChainExitState = false;
@@ -213,30 +205,30 @@ EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(std::shared_ptr<FIFOQueue_t>& fifoQ
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_toIPU TADR");
 }
 
-EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue) :
+EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C030(std::make_shared<ConstantMemory_t>(0x3D0, "EE DMAC SIF0 Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_SIF0 CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_SIF0_CHCR_t>("EE CH_SIF0 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF0 MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_SIF0 QWC");
 }
 
-EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue) :
+EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C440(std::make_shared<ConstantMemory_t>(0x3C0, "EE DMAC SIF1 Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_SIF1 CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_SIF1_CHCR_t>("EE CH_SIF1 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF1 MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_SIF1 QWC");
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_SIF1 TADR");
 }
 
-EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(std::shared_ptr<FIFOQueue_t>& fifoQueue) :
+EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C830(std::make_shared<ConstantMemory_t>(0x7D0, "EE DMAC SIF2 Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_SIF2 CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_SIF2_CHCR_t>("EE CH_SIF2 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF2 MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_SIF2 QWC");
 }

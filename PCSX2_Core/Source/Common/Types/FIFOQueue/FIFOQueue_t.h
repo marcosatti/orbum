@@ -16,27 +16,27 @@ class FIFOQueue_t
 public:
 	explicit FIFOQueue_t(const size_t & maxSize);
 	explicit FIFOQueue_t(const char * mnemonic, const size_t & maxSize);
-	~FIFOQueue_t();
+	virtual ~FIFOQueue_t();
 
 	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
 	*/
-	u32 readWord(const Context_t & context);
+	virtual u32 readWord(const Context_t & context);
 
 	/*
 	Read 128-bits of data out of the FIFO queue, and remove them (uses 4 x 32-bit reads stored in a u128).
 	*/
-	u128 readQword(const Context_t & context);
+	virtual u128 readQword(const Context_t & context);
 
 	/*
 	Writes 32-bits of data to the FIFO queue.
 	*/
-	void writeWord(const Context_t & context, const u32 & data);
+	virtual void writeWord(const Context_t & context, const u32 & data);
 
 	/*
 	Write 128-bits of data to the FIFO queue (splits the u128 into 4 x 32-bit).
 	*/
-	void writeQword(const Context_t & context, const u128 & data);
+	virtual void writeQword(const Context_t & context, const u128 & data);
 
 	/*
 	Returns if the FIFO queue has no data available.

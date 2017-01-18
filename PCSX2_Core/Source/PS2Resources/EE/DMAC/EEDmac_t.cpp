@@ -1,12 +1,14 @@
 #include "stdafx.h"
 
+#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Memory/ConstantMemory_t.h"
+
+#include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/DMAC/EEDmac_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
-#include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/Common/Common_t.h"
-#include "Common/Types/Memory/Memory_t.h"
-#include "Common/Types/Memory/ConstantMemory_t.h"
 
 EEDmac_t::EEDmac_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
@@ -49,11 +51,11 @@ void EEDmac_t::initChannels()
 	CHANNEL_VIF0 = std::make_shared<EEDmacChannel_VIF0_t>(getRoot()->Common->FIFO_VIF0);
 	CHANNEL_VIF1 = std::make_shared<EEDmacChannel_VIF1_t>(getRoot()->Common->FIFO_VIF1);
 	CHANNEL_GIF = std::make_shared<EEDmacChannel_GIF_t>(getRoot()->Common->FIFO_GIF);
-	CHANNEL_fromIPU = std::make_shared<EEDmacChannel_fromIPU_t>(getRoot()->Common->FIFO_IPU);
-	CHANNEL_toIPU = std::make_shared<EEDmacChannel_toIPU_t>(getRoot()->Common->FIFO_IPU);
-	CHANNEL_SIF0 = std::make_shared<EEDmacChannel_SIF0_t>(getRoot()->Common->FIFO_SIF0);
-	CHANNEL_SIF1 = std::make_shared<EEDmacChannel_SIF1_t>(getRoot()->Common->FIFO_SIF1);
-	CHANNEL_SIF2 = std::make_shared<EEDmacChannel_SIF2_t>(getRoot()->Common->FIFO_SIF2);
+	CHANNEL_fromIPU = std::make_shared<EEDmacChannel_fromIPU_t>(getRoot()->Common->FIFO_fromIPU);
+	CHANNEL_toIPU = std::make_shared<EEDmacChannel_toIPU_t>(getRoot()->Common->FIFO_toIPU);
+	CHANNEL_SIF0 = std::make_shared<EEDmacChannel_SIF0_t>(getRoot()->Common->FIFO_SIF0, getRoot()->EE->PhysicalMMU);
+	CHANNEL_SIF1 = std::make_shared<EEDmacChannel_SIF1_t>(getRoot()->Common->FIFO_SIF1, getRoot()->EE->PhysicalMMU);
+	CHANNEL_SIF2 = std::make_shared<EEDmacChannel_SIF2_t>(getRoot()->Common->FIFO_SIF2, getRoot()->EE->PhysicalMMU);
 	CHANNEL_fromSPR = std::make_shared<EEDmacChannel_fromSPR_t>();
 	CHANNEL_toSPR = std::make_shared<EEDmacChannel_toSPR_t>();
 

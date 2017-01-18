@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 
 EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic) :
@@ -63,4 +65,181 @@ EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic
 void EEDmacChannelRegister_SADR_t::increment()
 {
 	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x10);
+}
+
+EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_CHCR_t(mnemonic),
+	mSbusF240(sbusF240)
+{
+}
+
+void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+{
+	// Only bother if its for the STR bit.
+	if (fieldIndex == Fields::STR)
+	{
+		auto oldSTR = getFieldValue(Fields::STR);
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		auto newSTR = getFieldValue(Fields::STR);
+
+		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+		if (oldSTR ^ newSTR)
+		{
+			if (newSTR > 0)
+				handleSBUSUpdateStart(); // Starting.
+			else
+				handleSBUSUpdateFinish(); // Stopping.
+		}
+	}
+	else
+	{
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+	}
+}
+
+void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	auto oldSTR = getFieldValue(Fields::STR);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	auto newSTR = getFieldValue(Fields::STR);
+
+	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+	if (oldSTR ^ newSTR)
+	{
+		if (newSTR > 0)
+			handleSBUSUpdateStart(); // Starting.
+		else
+			handleSBUSUpdateFinish(); // Stopping.
+	}
+}
+
+void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x2000);
+}
+
+void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x20));
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x2000));
+}
+
+EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_CHCR_t(mnemonic),
+	mSbusF240(sbusF240)
+{
+}
+
+void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+{
+	// Only bother if its for the STR bit.
+	if (fieldIndex == Fields::STR)
+	{
+		auto oldSTR = getFieldValue(Fields::STR);
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		auto newSTR = getFieldValue(Fields::STR);
+
+		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+		if (oldSTR ^ newSTR)
+		{
+			if (newSTR > 0)
+				handleSBUSUpdateStart(); // Starting.
+			else
+				handleSBUSUpdateFinish(); // Stopping.
+		}
+	}
+	else
+	{
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+	}
+}
+
+void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	auto oldSTR = getFieldValue(Fields::STR);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	auto newSTR = getFieldValue(Fields::STR);
+
+	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+	if (oldSTR ^ newSTR)
+	{
+		if (newSTR > 0)
+			handleSBUSUpdateStart(); // Starting.
+		else
+			handleSBUSUpdateFinish(); // Stopping.
+	}
+}
+
+void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x4000);
+}
+
+void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x40));
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x4000));
+}
+
+EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_CHCR_t(mnemonic),
+	mSbusF240(sbusF240)
+{
+}
+
+void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+{
+	// Only bother if its for the STR bit.
+	if (fieldIndex == Fields::STR)
+	{
+		auto oldSTR = getFieldValue(Fields::STR);
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		auto newSTR = getFieldValue(Fields::STR);
+
+		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+		if (oldSTR ^ newSTR)
+		{
+			if (newSTR > 0)
+				handleSBUSUpdateStart(); // Starting.
+			else
+				handleSBUSUpdateFinish(); // Stopping.
+		}
+	}
+	else
+	{
+		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+	}
+}
+
+void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	auto oldSTR = getFieldValue(Fields::STR);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	auto newSTR = getFieldValue(Fields::STR);
+
+	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+	if (oldSTR ^ newSTR)
+	{
+		if (newSTR > 0)
+			handleSBUSUpdateStart(); // Starting.
+		else
+			handleSBUSUpdateFinish(); // Stopping.
+	}
+}
+
+void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x8000);
+}
+
+void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish() const
+{
+	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x80));
+	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x8000));
 }

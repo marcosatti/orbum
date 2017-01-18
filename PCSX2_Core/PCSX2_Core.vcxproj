@@ -348,6 +348,7 @@
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
+    <ClInclude Include="Source\PS2Resources\Common\Types\Sif2FIFOQueue_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.h" />
@@ -493,6 +494,7 @@
     <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\Common\Types\Sif2FIFOQueue_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />

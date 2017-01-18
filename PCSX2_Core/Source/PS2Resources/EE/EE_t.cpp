@@ -316,10 +316,10 @@ void EE_t::initEEPhysicalMemoryMap() const
 		PhysicalMMU->mapObject(0x1000F210, getRoot()->Common->SMCOM);
 		PhysicalMMU->mapObject(0x1000F220, getRoot()->Common->MSFLG);
 		PhysicalMMU->mapObject(0x1000F230, getRoot()->Common->SMFLG);
-		PhysicalMMU->mapObject(0x1000F240, getRoot()->Common->REGISTER_F240);
-		PhysicalMMU->mapObject(0x1000F250, getRoot()->Common->REGISTER_F250);
-		PhysicalMMU->mapObject(0x1000F260, getRoot()->Common->REGISTER_F260);
-		PhysicalMMU->mapObject(0x1000F300, getRoot()->Common->REGISTER_F300);
-		PhysicalMMU->mapObject(0x1000F380, getRoot()->Common->REGISTER_F380);
+		PhysicalMMU->mapObject(0x1000F240, getRoot()->Common->SBUS_REGISTER_F240);
+		PhysicalMMU->mapObject(0x1000F250, getRoot()->Common->SBUS_REGISTER_F250);
+		PhysicalMMU->mapObject(0x1000F260, getRoot()->Common->SBUS_REGISTER_F260);
+		PhysicalMMU->mapObject(0x1000F300, getRoot()->Common->SBUS_REGISTER_F300);
+		PhysicalMMU->mapObject(0x1000F380, getRoot()->Common->SBUS_REGISTER_F380);
 	}
 }

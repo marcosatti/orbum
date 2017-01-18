@@ -249,7 +249,7 @@ void IOP_t::initIOPPhysicalMemoryMap() const
 		PhysicalMMU->mapObject(0x1D000010, getRoot()->Common->SMCOM);
 		PhysicalMMU->mapObject(0x1D000020, getRoot()->Common->MSFLG);
 		PhysicalMMU->mapObject(0x1D000030, getRoot()->Common->SMFLG);
-		PhysicalMMU->mapObject(0x1D000040, getRoot()->Common->REGISTER_F240);
-		PhysicalMMU->mapObject(0x1D000060, getRoot()->Common->REGISTER_F260);
+		PhysicalMMU->mapObject(0x1D000040, getRoot()->Common->SBUS_REGISTER_F240);
+		PhysicalMMU->mapObject(0x1D000060, getRoot()->Common->SBUS_REGISTER_F260);
 	}
 }
