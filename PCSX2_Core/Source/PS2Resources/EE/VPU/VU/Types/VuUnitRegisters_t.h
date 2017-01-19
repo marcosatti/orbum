@@ -101,7 +101,7 @@ private:
 	A reference to the VU status flags register, which fields are changed when various MAC register write conditions occur.
 	See VU Users Manual page 39.
 	*/
-	const std::shared_ptr<VuUnitRegister_Status_t> mStatus;
+	std::shared_ptr<VuUnitRegister_Status_t> mStatus;
 };
 
 /*

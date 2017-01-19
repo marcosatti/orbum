@@ -72,7 +72,7 @@ public:
 		static constexpr u8 IRQ_KEYS[PS2Constants::EE::INTC::NUMBER_IRQ_LINES] = { GS, SBUS, VBON, VIF0, VIF1, VU0, VU1, IPU, TIM0, TIM1, TIM2, TIM3, SFIFO, VU0WD };
 	};
 
-	explicit EEIntcRegister_STAT_t(std::shared_ptr<EEIntcRegister_MASK_t> & mask);
+	explicit EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask);
 
 	/*
 	(EE context) Clears any bits written to.

@@ -15,7 +15,7 @@ Use the set* functions to set the branch location. They are tailored for MIPS br
 class MIPSBranchDelay_t
 {
 public:
-	explicit MIPSBranchDelay_t(std::shared_ptr<PCRegister32_t> & pcRegister32);
+	explicit MIPSBranchDelay_t(const std::shared_ptr<PCRegister32_t> & pcRegister32);
 
 	/*
 	Handles the updating of the branch delay slot.

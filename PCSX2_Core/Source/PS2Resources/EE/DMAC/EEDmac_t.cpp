@@ -9,6 +9,8 @@
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/Common/Common_t.h"
+#include "PS2Resources/Common/Types/SBUSRegisters_t.h"
+#include "PS2Resources/Common/Types/SBUSFIFOQueues_t.h"
 
 EEDmac_t::EEDmac_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
@@ -53,9 +55,9 @@ void EEDmac_t::initChannels()
 	CHANNEL_GIF = std::make_shared<EEDmacChannel_GIF_t>(getRoot()->Common->FIFO_GIF);
 	CHANNEL_fromIPU = std::make_shared<EEDmacChannel_fromIPU_t>(getRoot()->Common->FIFO_fromIPU);
 	CHANNEL_toIPU = std::make_shared<EEDmacChannel_toIPU_t>(getRoot()->Common->FIFO_toIPU);
-	CHANNEL_SIF0 = std::make_shared<EEDmacChannel_SIF0_t>(getRoot()->Common->FIFO_SIF0, getRoot()->EE->PhysicalMMU);
-	CHANNEL_SIF1 = std::make_shared<EEDmacChannel_SIF1_t>(getRoot()->Common->FIFO_SIF1, getRoot()->EE->PhysicalMMU);
-	CHANNEL_SIF2 = std::make_shared<EEDmacChannel_SIF2_t>(getRoot()->Common->FIFO_SIF2, getRoot()->EE->PhysicalMMU);
+	CHANNEL_SIF0 = std::make_shared<EEDmacChannel_SIF0_t>(getRoot()->Common->FIFO_SIF0, getRoot()->Common->SBUS_F240);
+	CHANNEL_SIF1 = std::make_shared<EEDmacChannel_SIF1_t>(getRoot()->Common->FIFO_SIF1, getRoot()->Common->SBUS_F240);
+	CHANNEL_SIF2 = std::make_shared<EEDmacChannel_SIF2_t>(getRoot()->Common->FIFO_SIF2, getRoot()->Common->SBUS_F240);
 	CHANNEL_fromSPR = std::make_shared<EEDmacChannel_fromSPR_t>();
 	CHANNEL_toSPR = std::make_shared<EEDmacChannel_toSPR_t>();
 

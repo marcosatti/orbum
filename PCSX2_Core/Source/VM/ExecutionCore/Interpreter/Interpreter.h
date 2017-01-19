@@ -49,30 +49,30 @@ public:
 	void executionStep() override;
 
 private:
-	const std::shared_ptr<VUInterpreter> mInterpreterVU0;
-	const std::shared_ptr<VUInterpreter> mInterpreterVU1;
-	const std::shared_ptr<VIF> mVIF0;
-	const std::shared_ptr<VIF> mVIF1;
-	const std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
-	const std::shared_ptr<EEDmac> mEEDmac;
-	const std::shared_ptr<EEIntc> mEEIntc;
-	const std::shared_ptr<EETimers> mEETimers;
-	const std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
-	const std::shared_ptr<IOPIntc> mIOPIntc;
-	const std::shared_ptr<IOPDmac> mIOPDmac;
+	std::shared_ptr<VUInterpreter> mInterpreterVU0;
+	std::shared_ptr<VUInterpreter> mInterpreterVU1;
+	std::shared_ptr<VIF> mVIF0;
+	std::shared_ptr<VIF> mVIF1;
+	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
+	std::shared_ptr<EEDmac> mEEDmac;
+	std::shared_ptr<EEIntc> mEEIntc;
+	std::shared_ptr<EETimers> mEETimers;
+	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
+	std::shared_ptr<IOPIntc> mIOPIntc;
+	std::shared_ptr<IOPDmac> mIOPDmac;
 
 	/*
 	Used to iterate through all components, for initalsation.
 	*/
-	const std::shared_ptr<VMExecutionCoreComponent> mComponents[9];
+	std::shared_ptr<VMExecutionCoreComponent> mComponents[9];
 
 	/*
 	Clock source component arrays, used to iterate through.
 	*/
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK[5];
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
-	const std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[3];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK[5];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[3];
 };
 

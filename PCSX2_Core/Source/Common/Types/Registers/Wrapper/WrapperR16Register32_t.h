@@ -39,5 +39,5 @@ private:
 	/*
 	Reference to the underlying Register16_t that the above read/write calls translate to.
 	*/
-	const std::shared_ptr<Register16_t> mRegister16;
+	std::shared_ptr<Register16_t> mRegister16;
 };

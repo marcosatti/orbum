@@ -67,7 +67,7 @@ void EEDmacChannelRegister_SADR_t::increment()
 	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x10);
 }
 
-EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannelRegister_CHCR_t(mnemonic),
 	mSbusF240(sbusF240)
 {
@@ -126,7 +126,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish() const
 	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x2000));
 }
 
-EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannelRegister_CHCR_t(mnemonic),
 	mSbusF240(sbusF240)
 {
@@ -185,7 +185,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish() const
 	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x4000));
 }
 
-EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannelRegister_CHCR_t(mnemonic),
 	mSbusF240(sbusF240)
 {
@@ -221,7 +221,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 	auto newSTR = getFieldValue(Fields::STR);
 
-	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
+	// Trigger update only if (stopped -> started) or (started -> stopped). We can use XOR to check this.
 	if (oldSTR ^ newSTR)
 	{
 		if (newSTR > 0)

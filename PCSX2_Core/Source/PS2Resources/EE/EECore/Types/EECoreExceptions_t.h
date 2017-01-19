@@ -37,5 +37,5 @@ private:
 	/*
 	Pointer to the EE Core COP0 coprocessor, needed for the Status register.
 	*/
-	const std::shared_ptr<EECoreCOP0_t> mCOP0;
+	std::shared_ptr<EECoreCOP0_t> mCOP0;
 };

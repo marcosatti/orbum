@@ -73,7 +73,7 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000fe4321;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0xfe4321;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -121,6 +121,11 @@ void EECoreInterpreter::handleInterruptCheck() const
 		u32 imStatus = COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::IM);
 		if (ipCause & imStatus)
 		{
+#if defined(BUILD_DEBUG)
+			auto& IOPCore = getResources()->EE->EECore;
+			logDebug("IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
+				DEBUG_LOOP_COUNTER, IOPCore->R5900->PC->readWord(Context_t::IOP), IOPCore->R5900->BD->isInBranchDelay());
+#endif
 			auto& Exceptions = getResources()->EE->EECore->Exceptions;
 			Exceptions->setException(EECoreException_t::EX_INTERRUPT);
 		}

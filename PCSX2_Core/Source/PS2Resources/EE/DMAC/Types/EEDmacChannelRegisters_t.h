@@ -119,7 +119,7 @@ TODO: Look into properly RE'ing the SBUS.
 class EEDmacChannelRegister_SIF0_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
@@ -151,7 +151,7 @@ TODO: Look into properly RE'ing the SBUS.
 class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
@@ -183,7 +183,7 @@ TODO: Look into properly RE'ing the SBUS.
 class EEDmacChannelRegister_SIF2_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.

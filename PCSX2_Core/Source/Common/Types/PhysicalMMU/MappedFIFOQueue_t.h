@@ -41,5 +41,5 @@ private:
 	/*
 	The underlying FIFO queue this class maps to.
 	*/
-	const std::shared_ptr<FIFOQueue_t> mFIFOQueue;
+	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
 };

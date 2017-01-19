@@ -106,7 +106,7 @@ public:
 		static constexpr u8 IRQ_KEYS[PS2Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLNK, GPU, CDROM, DMA, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
 	};
 
-	explicit IOPIntcRegister_STAT_t(std::shared_ptr<IOPIntcRegister_MASK_t> & mask);
+	explicit IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask);
 
 	/*
 	AND's the new value with old value (IOP context only).

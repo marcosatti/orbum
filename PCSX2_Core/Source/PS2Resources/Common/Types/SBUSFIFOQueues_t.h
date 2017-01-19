@@ -5,16 +5,15 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
-class Register32_t;
+class SBUSRegister_F300_t;
 
 /*
 A custom FIFO for the SIF2 DMA interface to trigger updates to the Common->SBUS_REGISTER_F300 (magic values).
 */
-class Sif2FIFOQueue_t : public FIFOQueue_t
+class SBUSFIFOQueue_SIF2_t : public FIFOQueue_t
 {
 public:
-	explicit Sif2FIFOQueue_t(const size_t & maxSize, std::shared_ptr<Register32_t> & sbusF300);
-	explicit Sif2FIFOQueue_t(const char * mnemonic, const size_t & maxSize, std::shared_ptr<Register32_t> & sbusF300);
+	explicit SBUSFIFOQueue_SIF2_t(const size_t & maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300);
 
 	/*
 	Trigger updates to the SBUS_F300 register (magic values).
@@ -27,9 +26,9 @@ public:
 
 private:
 	/*
-	Reference to the SBUS_REGISTER_F300 register.
+	Reference to the SBUS_F300 register.
 	*/
-	std::shared_ptr<Register32_t> mSbusF300;
+	std::shared_ptr<SBUSRegister_F300_t> mSBUSF300;
 
 	/*
 	Logic for updating the SBUS_F300 register.

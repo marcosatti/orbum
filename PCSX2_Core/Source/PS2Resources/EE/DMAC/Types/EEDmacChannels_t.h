@@ -30,7 +30,7 @@ Not all of the registers are implemented in this base class for each channel.
 class EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_t(const u32 & channelID, std::shared_ptr<FIFOQueue_t> & fifoQueue); // Default constructor for most channels.
+	explicit EEDmacChannel_t(const u32 & channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue); // Default constructor for most channels.
 	explicit EEDmacChannel_t(const u32 & channelID); // Provided for the to/fromSPR channels where a FIFO queue is not used (set to nullptr).
 	
 	/*
@@ -188,7 +188,7 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF0_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_VIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
+	explicit EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 0;
 
@@ -208,7 +208,7 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF1_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_VIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
+	explicit EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 1;
 
@@ -228,7 +228,7 @@ The SADR register is left undefined.
 class EEDmacChannel_GIF_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_GIF_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
+	explicit EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 2;
 
@@ -248,7 +248,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_fromIPU_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_fromIPU_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
+	explicit EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 3;
 
@@ -268,7 +268,7 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_toIPU_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_toIPU_t(std::shared_ptr<FIFOQueue_t>& fifoQueue);
+	explicit EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr u32 CHANNEL_ID = 4;
 
@@ -288,7 +288,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF0_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF0_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240);
+	explicit EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr u32 CHANNEL_ID = 5;
 
@@ -308,7 +308,7 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF1_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF1_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240);
+	explicit EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr u32 CHANNEL_ID = 6;
 
@@ -328,7 +328,7 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF2_t : public EEDmacChannel_t
 {
 public:
-	explicit EEDmacChannel_SIF2_t(std::shared_ptr<FIFOQueue_t>& fifoQueue, std::shared_ptr<Register32_t> & sbusF240);
+	explicit EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr u32 CHANNEL_ID = 7;
 

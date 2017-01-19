@@ -35,5 +35,5 @@ private:
 	/*
 	Reference to the underlying FPRegister32_t that the above read/write calls translate to.
 	*/
-	const std::shared_ptr<FPRegister32_t> mFPRegister32;
+	std::shared_ptr<FPRegister32_t> mFPRegister32;
 };

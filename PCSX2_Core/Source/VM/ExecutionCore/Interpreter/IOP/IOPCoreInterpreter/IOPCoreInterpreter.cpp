@@ -62,7 +62,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x28e000; // 1b42ae
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000028e000; // 1b42ae
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 

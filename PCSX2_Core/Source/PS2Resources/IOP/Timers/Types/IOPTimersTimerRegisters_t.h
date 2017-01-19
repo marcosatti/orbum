@@ -24,7 +24,7 @@ private:
 	/*
 	// TODO: fill in.
 	*/
-	const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> mCount;
+	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> mCount;
 };
 
 /*

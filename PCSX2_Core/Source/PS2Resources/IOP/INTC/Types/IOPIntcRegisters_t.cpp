@@ -2,7 +2,7 @@
 
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
+IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
 	BitfieldRegister32_t("IOP INTC: STAT", false, true),
 	mMask(mask),
 	mIsInterrupted(false)

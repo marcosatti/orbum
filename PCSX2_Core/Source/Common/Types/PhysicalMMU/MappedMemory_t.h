@@ -45,5 +45,5 @@ private:
 	/*
 	The underlying memory this class maps to.
 	*/
-	const std::shared_ptr<Memory_t> mMemory;
+	std::shared_ptr<Memory_t> mMemory;
 };

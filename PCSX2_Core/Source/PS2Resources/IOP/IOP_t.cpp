@@ -3,21 +3,19 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "PS2Constants/PS2Constants.h"
-#include "PS2Resources/IOP/IOP_t.h"
-#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
-#include "PS2Resources/IOP/DMAC/IOPDmac_t.h"
-#include "PS2Resources/IOP/INTC/IOPIntc_t.h"
-#include "PS2Resources/IOP/CDVD/CDVD_t.h"
-#include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 #include "Common/Types/Memory/Memory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Memory/DebugMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister8_t.h"
+#include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
+
+#include "PS2Constants/PS2Constants.h"
 
 #include "PS2Resources/PS2Resources_t.h"
+#include "PS2Resources/Common/Common_t.h"
+#include "PS2Resources/Common/Types/SBUSRegisters_t.h"
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/Types/BootROM_t.h"
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
@@ -26,7 +24,12 @@
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimer_t.h"
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "PS2Resources/Common/Common_t.h"
+#include "PS2Resources/IOP/IOP_t.h"
+#include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
+#include "PS2Resources/IOP/DMAC/IOPDmac_t.h"
+#include "PS2Resources/IOP/INTC/IOPIntc_t.h"
+#include "PS2Resources/IOP/CDVD/CDVD_t.h"
+#include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 
 IOP_t::IOP_t(const PS2Resources_t* PS2Resources) :
 	PS2ResourcesSubcategory(PS2Resources),
@@ -245,11 +248,11 @@ void IOP_t::initIOPPhysicalMemoryMap() const
 
 	// SIF Registers
 	{
-		PhysicalMMU->mapObject(0x1D000000, getRoot()->Common->MSCOM);
-		PhysicalMMU->mapObject(0x1D000010, getRoot()->Common->SMCOM);
-		PhysicalMMU->mapObject(0x1D000020, getRoot()->Common->MSFLG);
-		PhysicalMMU->mapObject(0x1D000030, getRoot()->Common->SMFLG);
-		PhysicalMMU->mapObject(0x1D000040, getRoot()->Common->SBUS_REGISTER_F240);
-		PhysicalMMU->mapObject(0x1D000060, getRoot()->Common->SBUS_REGISTER_F260);
+		PhysicalMMU->mapObject(0x1D000000, getRoot()->Common->SBUS_MSCOM);
+		PhysicalMMU->mapObject(0x1D000010, getRoot()->Common->SBUS_SMCOM);
+		PhysicalMMU->mapObject(0x1D000020, getRoot()->Common->SBUS_MSFLG);
+		PhysicalMMU->mapObject(0x1D000030, getRoot()->Common->SBUS_SMFLG);
+		PhysicalMMU->mapObject(0x1D000040, getRoot()->Common->SBUS_F240);
+		PhysicalMMU->mapObject(0x1D000060, getRoot()->Common->SBUS_F260);
 	}
 }

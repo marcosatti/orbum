@@ -47,5 +47,5 @@ private:
 	/*
 	The underlying register this class maps to.
 	*/
-	const std::shared_ptr<FPRegister32_t> mFPRegister32;
+	std::shared_ptr<FPRegister32_t> mFPRegister32;
 };

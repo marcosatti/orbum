@@ -7,6 +7,7 @@
 #include "Common/Types/Memory/ROMemory_t.h"
 #include "Common/Types/Memory/ConstantMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/Types/EERegisters_t.h"
@@ -28,6 +29,7 @@
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 #include "PS2Resources/Common/Common_t.h"
+#include "PS2Resources/Common/Types/SBUSRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "PS2Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
@@ -189,8 +191,8 @@ void EE_t::initEEPhysicalMemoryMap() const
 		PhysicalMMU->mapObject(0x10004000, getRoot()->Common->FIFO_VIF0);
 		PhysicalMMU->mapObject(0x10005000, getRoot()->Common->FIFO_VIF1);
 		PhysicalMMU->mapObject(0x10006000, getRoot()->Common->FIFO_GIF);
-		PhysicalMMU->mapObject(0x10007000, getRoot()->Common->FIFO_IPU); // Meant to be read only...
-		PhysicalMMU->mapObject(0x10007010, getRoot()->Common->FIFO_IPU); // Meant to be write only...
+		PhysicalMMU->mapObject(0x10007000, getRoot()->Common->FIFO_fromIPU);
+		PhysicalMMU->mapObject(0x10007010, getRoot()->Common->FIFO_toIPU);
 
 		// DMAC registers.
 		PhysicalMMU->mapObject(0x10008000, DMAC->CHANNEL_VIF0->CHCR);
@@ -312,14 +314,14 @@ void EE_t::initEEPhysicalMemoryMap() const
 
 	// SIF Registers.
 	{
-		PhysicalMMU->mapObject(0x1000F200, getRoot()->Common->MSCOM);
-		PhysicalMMU->mapObject(0x1000F210, getRoot()->Common->SMCOM);
-		PhysicalMMU->mapObject(0x1000F220, getRoot()->Common->MSFLG);
-		PhysicalMMU->mapObject(0x1000F230, getRoot()->Common->SMFLG);
-		PhysicalMMU->mapObject(0x1000F240, getRoot()->Common->SBUS_REGISTER_F240);
-		PhysicalMMU->mapObject(0x1000F250, getRoot()->Common->SBUS_REGISTER_F250);
-		PhysicalMMU->mapObject(0x1000F260, getRoot()->Common->SBUS_REGISTER_F260);
-		PhysicalMMU->mapObject(0x1000F300, getRoot()->Common->SBUS_REGISTER_F300);
-		PhysicalMMU->mapObject(0x1000F380, getRoot()->Common->SBUS_REGISTER_F380);
+		PhysicalMMU->mapObject(0x1000F200, getRoot()->Common->SBUS_MSCOM);
+		PhysicalMMU->mapObject(0x1000F210, getRoot()->Common->SBUS_SMCOM);
+		PhysicalMMU->mapObject(0x1000F220, getRoot()->Common->SBUS_MSFLG);
+		PhysicalMMU->mapObject(0x1000F230, getRoot()->Common->SBUS_SMFLG);
+		PhysicalMMU->mapObject(0x1000F240, getRoot()->Common->SBUS_F240);
+		PhysicalMMU->mapObject(0x1000F250, getRoot()->Common->SBUS_F250);
+		PhysicalMMU->mapObject(0x1000F260, getRoot()->Common->SBUS_F260);
+		PhysicalMMU->mapObject(0x1000F300, getRoot()->Common->SBUS_F300);
+		PhysicalMMU->mapObject(0x1000F380, getRoot()->Common->SBUS_F380);
 	}
 }

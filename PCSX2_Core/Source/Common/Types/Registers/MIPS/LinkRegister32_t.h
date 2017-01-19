@@ -20,6 +20,6 @@ private:
 	/*
 	A reference to the associated PC register, which will be read when setLinkAddress() is called.
 	*/
-	const std::shared_ptr<PCRegister32_t> mPCRegister;
+	std::shared_ptr<PCRegister32_t> mPCRegister;
 };
 

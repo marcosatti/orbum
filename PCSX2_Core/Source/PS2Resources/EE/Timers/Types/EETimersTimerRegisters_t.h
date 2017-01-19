@@ -48,7 +48,7 @@ private:
 	/*
 	A reference to the associated Count register, which is reset when the CUE flag is set to 1.
 	*/
-	const std::shared_ptr<EETimersTimerRegister_COUNT_t> mCount;
+	std::shared_ptr<EETimersTimerRegister_COUNT_t> mCount;
 };
 
 /*

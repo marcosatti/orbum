@@ -81,7 +81,7 @@ private:
 	/*
 	The VU interpreter reference, used to call any COP2 instructions prefixed with V* as the mnemonic.
 	*/
-	const std::shared_ptr<VUInterpreter> mVU0Interpreter;
+	std::shared_ptr<VUInterpreter> mVU0Interpreter;
 
 	/*
 	Helper functions to check:

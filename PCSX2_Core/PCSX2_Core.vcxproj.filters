@@ -335,7 +335,8 @@
     <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\DMAC\IOPDmac.h" />
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.h" />
-    <ClInclude Include="Source\PS2Resources\Common\Types\SIF2FIFOQueue_t.h" />
+    <ClInclude Include="Source\PS2Resources\Common\Types\SBUSRegisters_t.h" />
+    <ClInclude Include="Source\PS2Resources\Common\Types\SBUSFIFOQueues_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -551,7 +552,8 @@
     <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\DMAC\IOPDmac.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\Common\Types\Sif2FIFOQueue_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
+    <ClCompile Include="Source\PS2Resources\Common\Types\SBUSRegisters_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

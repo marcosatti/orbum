@@ -3,7 +3,7 @@
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 
-MIPSBranchDelay_t::MIPSBranchDelay_t(std::shared_ptr<PCRegister32_t>& pcRegister32) :
+MIPSBranchDelay_t::MIPSBranchDelay_t(const std::shared_ptr<PCRegister32_t>& pcRegister32) :
 	mPCRegister32(pcRegister32), 
 	mBranchDelayCycles(0), 
 	mBranchDelayPC(0)

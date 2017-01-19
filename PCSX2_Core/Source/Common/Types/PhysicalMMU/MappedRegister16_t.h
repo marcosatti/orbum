@@ -46,5 +46,5 @@ private:
 	/*
 	The underlying register this class maps to.
 	*/
-	const std::shared_ptr<Register16_t> mRegister16;
+	std::shared_ptr<Register16_t> mRegister16;
 };

@@ -37,7 +37,7 @@ private:
 	/*
 	Pointer to the PS2 Resources object hierarchy. Initalised from the VM.
 	*/
-	const std::shared_ptr<PS2Resources_t> mPS2Resources;
+	std::shared_ptr<PS2Resources_t> mPS2Resources;
 };
 
 const std::shared_ptr<PS2Resources_t> & VMBaseComponent::getResources() const

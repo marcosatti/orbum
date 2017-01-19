@@ -2,7 +2,7 @@
 
 #include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
+EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
 	BitfieldRegister32_t("EE INTC STAT", false, false),
 	mMask(mask),
 	mIsInterrupted(false)
