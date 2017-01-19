@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
 IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
-	BitfieldRegister32_t("IOP INTC: STAT", false, true),
+	BitfieldRegister32_t("IOP INTC: STAT", false, false),
 	mMask(mask),
 	mIsInterrupted(false)
 {
@@ -64,7 +64,7 @@ void IOPIntcRegister_STAT_t::handleInterruptCheck()
 }
 
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
-	BitfieldRegister32_t("IOP INTC: MASK", false, true)
+	BitfieldRegister32_t("IOP INTC: MASK", false, false)
 {
 	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);

@@ -10,7 +10,7 @@
 #include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/Timers/EETimers_t.h"
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
-#include "PS2Resources/EE/Timers/Types/EETimersTimer_t.h"
+#include "PS2Resources/EE/Timers/Types/EETimersTimers_t.h"
 #include "PS2Resources/EE/INTC/EEIntc_t.h"
 #include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 #include "PS2Resources/GS/GS_t.h"

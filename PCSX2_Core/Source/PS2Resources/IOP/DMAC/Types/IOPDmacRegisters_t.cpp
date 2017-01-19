@@ -3,7 +3,7 @@
 #include "PS2Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
 IOPDmacRegister_PCR_t::IOPDmacRegister_PCR_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, true)
+	BitfieldRegister32_t(mnemonic, false, false)
 {
 	registerField(Fields::PRI0, "PRI0", 0, 3, 0);
 	registerField(Fields::ENA0, "ENA0", 3, 1, 0);
@@ -22,7 +22,7 @@ IOPDmacRegister_PCR_t::IOPDmacRegister_PCR_t(const char* mnemonic) :
 }
 
 IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, true)
+	BitfieldRegister32_t(mnemonic, false, false)
 {
 	registerField(Fields::IRQFORCE, "IRQFORCE", 15, 1, 0);
 	registerField(Fields::IRQ0_EN, "IRQ0_EN", 16, 1, 0);

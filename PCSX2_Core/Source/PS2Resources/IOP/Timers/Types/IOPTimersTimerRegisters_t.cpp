@@ -3,12 +3,8 @@
 #include "PS2Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "PS2Resources/IOP/Timers/IOPTimers_t.h"
 
-IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
-	mCount(count)
-{
-}
-
-IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t() :
+IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnemonic) :
+	Register32_t(mnemonic, false, true),
 	mIsOverflowed(false)
 {
 }
@@ -37,4 +33,21 @@ bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 void IOPTimersTimerRegister_COUNT_t::reset()
 {
 	writeWord(Context_t::RAW, 0);
+}
+
+IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
+	BitfieldRegister32_t(mnemonic, false, true),
+	mCount(count)
+{
+	registerField(Fields::SyncEnable, "SyncEnable", 0, 1, 0);
+	registerField(Fields::SyncMode, "SyncMode", 1, 2, 0);
+	registerField(Fields::ResetMode, "ResetMode", 3, 1, 0);
+	registerField(Fields::IrqOnTarget, "IrqOnTarget", 4, 1, 0);
+	registerField(Fields::IrqOnOF, "IrqOnOF", 5, 1, 0);
+	registerField(Fields::IrqRepeat, "IrqRepeat", 6, 1, 0);
+	registerField(Fields::IrqToggle, "IrqToggle", 7, 1, 0);
+	registerField(Fields::ClockSrc, "ClockSrc", 8, 2, 0);
+	registerField(Fields::IrqRequest, "IrqRequest", 10, 1, 0);
+	registerField(Fields::ReachTarget, "ReachTarget", 11, 1, 0);
+	registerField(Fields::ReachOF, "ReachOF", 12, 1, 0);
 }

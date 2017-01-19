@@ -5,6 +5,10 @@
 #include "Common/Interfaces/PS2ResourcesSubcategory.h"
 #include "PS2Constants/PS2Constants.h"
 
+class EETimersTimer_TIM0_t;
+class EETimersTimer_TIM1_t;
+class EETimersTimer_TIM2_t;
+class EETimersTimer_TIM3_t;
 class EETimersTimer_t;
 
 /*
@@ -21,10 +25,10 @@ public:
 	See EE Users Manual page 33 onwards.
 	Also provided is an array used in iterations.
 	*/
-	std::shared_ptr<EETimersTimer_t> TIMER_0;
-	std::shared_ptr<EETimersTimer_t> TIMER_1;
-	std::shared_ptr<EETimersTimer_t> TIMER_2;
-	std::shared_ptr<EETimersTimer_t> TIMER_3;
+	std::shared_ptr<EETimersTimer_TIM0_t> TIMER_0;
+	std::shared_ptr<EETimersTimer_TIM1_t> TIMER_1;
+	std::shared_ptr<EETimersTimer_TIM2_t> TIMER_2;
+	std::shared_ptr<EETimersTimer_TIM3_t> TIMER_3;
 	std::shared_ptr<EETimersTimer_t> TIMERS[PS2Constants::EE::Timers::NUMBER_TIMERS];
 
 };

@@ -13,7 +13,7 @@ EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
 }
 
 EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
-	BitfieldRegister32_t("EE DMAC STAT", false, true),
+	BitfieldRegister32_t("EE DMAC STAT", false, false),
 	mIsInterrupted(false)
 {
 	registerField(Fields::CIS0, "CIS0", 0, 1, 0);

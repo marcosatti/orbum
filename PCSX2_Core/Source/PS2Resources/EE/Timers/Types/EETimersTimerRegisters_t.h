@@ -5,7 +5,27 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
-class EETimersTimerRegister_COUNT_t; // Forward Decl - see below.
+/*
+The Timer Count register type. See EE Users Manual page 37.
+Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens (an internal flag is set).
+Can also reset the counter.
+It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
+*/
+class EETimersTimerRegister_COUNT_t : public Register32_t
+{
+public:
+	EETimersTimerRegister_COUNT_t(const char * mnemonic);
+
+	void increment(u16 value);
+	bool isOverflowed();
+	void reset();
+
+private:
+	/*
+	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
+	*/
+	bool mIsOverflowed;
+};
 
 /*
 The Timer Mode register type. See EE Users Manual page 36.
@@ -31,7 +51,7 @@ public:
 		static constexpr u8 OVFF = 9;
 	};
 
-	EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
+	EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
 
 	/*
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
@@ -51,24 +71,3 @@ private:
 	std::shared_ptr<EETimersTimerRegister_COUNT_t> mCount;
 };
 
-/*
-The Timer Count register type. See EE Users Manual page 37.
-Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens (an internal flag is set).
-Can also reset the counter.
-It is assumed that although it is implemented as a 32-bit register-type, the upper 16-bits are not used (but are used to check for overflow).
-*/
-class EETimersTimerRegister_COUNT_t : public Register32_t
-{
-public:
-	EETimersTimerRegister_COUNT_t();
-
-	void increment(u16 value);
-	bool isOverflowed();
-	void reset();
-
-private:
-	/*
-	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
-	*/
-	bool mIsOverflowed;
-};

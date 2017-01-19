@@ -5,28 +5,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 
-class IOPTimersTimerRegister_COUNT_t; // Forward Decl - see below.
-
-/*
-The Timer Mode register type.
-*/
-class IOPTimersTimerRegister_MODE_t : public BitfieldRegister32_t
-{
-public:
-	struct Fields
-	{
-		// TODO: fill in.
-	};
-
-	IOPTimersTimerRegister_MODE_t(const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
-
-private:
-	/*
-	// TODO: fill in.
-	*/
-	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> mCount;
-};
-
 /*
 The Timer Count register type.
 Provides the increment function, which also wraps the u32 value around once overflow (> u16) happens (an internal flag is set).
@@ -36,7 +14,7 @@ It is assumed that although it is implemented as a 32-bit register-type, the upp
 class IOPTimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	IOPTimersTimerRegister_COUNT_t();
+	IOPTimersTimerRegister_COUNT_t(const char * mnemonic);
 
 	void increment(u16 value);
 	bool isOverflowed();
@@ -47,4 +25,34 @@ private:
 	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
 	*/
 	bool mIsOverflowed;
+};
+
+/*
+The Timer Mode register type.
+*/
+class IOPTimersTimerRegister_MODE_t : public BitfieldRegister32_t
+{
+public:
+	struct Fields
+	{
+		static constexpr u8 SyncEnable = 0;
+		static constexpr u8 SyncMode = 1;
+		static constexpr u8 ResetMode = 2;
+		static constexpr u8 IrqOnTarget = 3;
+		static constexpr u8 IrqOnOF = 4;
+		static constexpr u8 IrqRepeat = 5;
+		static constexpr u8 IrqToggle = 6;
+		static constexpr u8 ClockSrc = 7;
+		static constexpr u8 IrqRequest = 8;
+		static constexpr u8 ReachTarget = 9;
+		static constexpr u8 ReachOF = 10;
+	};
+
+	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
+
+private:
+	/*
+	A reference to the associated Count register, which is reset on certain conditions.
+	*/
+	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> mCount;
 };

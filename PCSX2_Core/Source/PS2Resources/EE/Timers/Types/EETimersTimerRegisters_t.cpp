@@ -3,7 +3,38 @@
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 #include "PS2Resources/EE/Timers/EETimers_t.h"
 
-EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
+EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemonic) :
+	mIsOverflowed(false)
+{
+}
+
+void EETimersTimerRegister_COUNT_t::increment(u16 value)
+{
+	u32 temp = readWord(Context_t::RAW) + value;
+
+	if (temp > Constants::VALUE_U16_MAX)
+	{
+		// Set overflow flag and wrap value around.
+		mIsOverflowed = true;
+		temp = temp % Constants::VALUE_U16_MAX;
+	}
+
+	writeWord(Context_t::RAW, temp);
+}
+
+bool EETimersTimerRegister_COUNT_t::isOverflowed()
+{
+	bool temp = mIsOverflowed;
+	mIsOverflowed = false;
+	return temp;
+}
+
+void EETimersTimerRegister_COUNT_t::reset()
+{
+	writeWord(Context_t::RAW, 0);
+}
+
+EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
 	mCount(count)
 {
 	registerField(Fields::CLKS, "CLKS", 0, 2, 0);
@@ -40,35 +71,4 @@ void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 valu
 bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial() const
 {
 	return ((getFieldValue(Fields::CLKS) == 3) && (getFieldValue(Fields::GATS) == 0));
-}
-
-EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t() :
-	mIsOverflowed(false)
-{
-}
-
-void EETimersTimerRegister_COUNT_t::increment(u16 value)
-{
-	u32 temp = readWord(Context_t::RAW) + value;
-
-	if (temp > Constants::VALUE_U16_MAX)
-	{
-		// Set overflow flag and wrap value around.
-		mIsOverflowed = true;
-		temp = temp % Constants::VALUE_U16_MAX;
-	}
-
-	writeWord(Context_t::RAW, temp);
-}
-
-bool EETimersTimerRegister_COUNT_t::isOverflowed()
-{
-	bool temp = mIsOverflowed;
-	mIsOverflowed = false;
-	return temp;
-}
-
-void EETimersTimerRegister_COUNT_t::reset()
-{
-	writeWord(Context_t::RAW, 0);
 }

@@ -20,7 +20,7 @@
 #include "PS2Resources/EE/GIF/GIF_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 
-#include "PS2Resources/EE/Timers/Types/EETimersTimer_t.h"
+#include "PS2Resources/EE/Timers/Types/EETimersTimers_t.h"
 #include "PS2Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VIF/VIF_t.h"
