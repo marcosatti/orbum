@@ -66,10 +66,7 @@ public:
 		static constexpr u8 SFIFO = 13;
 		static constexpr u8 VU0WD = 14;
 
-		/*
-		Array of IRQ line keys.
-		*/
-		static constexpr u8 IRQ_KEYS[PS2Constants::EE::INTC::NUMBER_IRQ_LINES] = { GS, SBUS, VBON, VIF0, VIF1, VU0, VU1, IPU, TIM0, TIM1, TIM2, TIM3, SFIFO, VU0WD };
+		static constexpr u8 TIM_KEYS[PS2Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 	};
 
 	explicit EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask);
@@ -79,31 +76,4 @@ public:
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
 	void writeWord(const Context_t& context, u32 value) override;
-
-	/*
-	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).
-	*/
-	void raiseIRQLine(const u8 & irqLine);
-
-	/*
-	Returns if there is a pending interrupt that should be raised.
-	*/
-	bool isInterrupted() const;
-
-private:
-	/*
-	Reference to the associated mask register, needed for checking interrupt status.
-	*/
-	std::shared_ptr<EEIntcRegister_MASK_t> mMask;
-
-	/*
-	Checks for interrupt conditions and sets the mIsInterrupted flag.
-	See the formula listed at page 28 of the EE Users Manual.
-	*/
-	void handleInterruptCheck();
-
-	/*
-	See handleInterruptCheck() and isInterrupted() above.
-	*/
-	bool mIsInterrupted;
 };

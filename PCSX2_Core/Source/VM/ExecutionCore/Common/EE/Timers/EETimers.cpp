@@ -81,7 +81,7 @@ s64 EETimers::executionStep(const ClockSource_t & clockSource)
 			// Check for interrupt conditions on the timer.
 			handleTimerInterrupt();
 
-			// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise interrupt may be missed).
+			// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise this may cause interrupt to be missed).
 			handleTimerZRET();
 		}
 	}
@@ -100,13 +100,12 @@ bool EETimers::isTimerCLKSEqual() const
 
 void EETimers::handleTimerInterrupt() const
 {
-
 	bool interrupt = false;
 
 	// Check for Compare-Interrupt.
 	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
 	{
-		if (mTimer->COUNT->readWord(Context_t::RAW) >= mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
 		{
 			interrupt = true;
 		}
@@ -124,7 +123,7 @@ void EETimers::handleTimerInterrupt() const
 	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
 	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
-		mINTC->STAT->raiseIRQLine(mTimerIndex + 9);
+		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 1);
 }
 
 void EETimers::handleTimerZRET() const
@@ -133,7 +132,7 @@ void EETimers::handleTimerZRET() const
 	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (mTimer->COUNT->readWord(Context_t::RAW) >= mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
 		{
 			// Set Count to 0.
 			mTimer->COUNT->reset();

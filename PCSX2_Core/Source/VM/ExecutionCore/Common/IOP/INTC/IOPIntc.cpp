@@ -17,6 +17,7 @@ IOPIntc::IOPIntc(VMMain * vmMain) :
 {
 	mIOPCOP0 = getResources()->IOP->IOPCore->COP0;
 	mSTAT = getResources()->IOP->INTC->STAT;
+	mMASK = getResources()->IOP->INTC->MASK;
 	mCTRL = getResources()->IOP->INTC->CTRL;
 }
 
@@ -25,7 +26,10 @@ s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;
 	if (mCTRL->readWord(Context_t::RAW) > 0)
-		interrupt = mSTAT->isInterrupted();
+	{
+		if (mSTAT->readWord(Context_t::RAW) & mMASK->readWord(Context_t::RAW))
+			interrupt = true;
+	}
 
 	// Set IRQ line 2 on IOP Core if an interrupt occured.
 	if (interrupt)

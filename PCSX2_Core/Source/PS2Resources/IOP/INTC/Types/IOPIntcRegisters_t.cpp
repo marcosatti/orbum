@@ -3,9 +3,7 @@
 #include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
 IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
-	BitfieldRegister32_t("IOP INTC: STAT", false, false),
-	mMask(mask),
-	mIsInterrupted(false)
+	BitfieldRegister32_t("IOP INTC: STAT", false, false)
 {
 	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
@@ -43,24 +41,6 @@ void IOPIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
 		value = readWord(context) & value;
 
 	BitfieldRegister32_t::writeWord(context, value);
-	handleInterruptCheck();
-}
-
-void IOPIntcRegister_STAT_t::raiseIRQLine(const u8& irqLine)
-{
-	setFieldValue(Fields::IRQ_KEYS[irqLine], 1);
-	handleInterruptCheck();
-}
-
-bool IOPIntcRegister_STAT_t::isInterrupted() const
-{
-	return mIsInterrupted;
-}
-
-void IOPIntcRegister_STAT_t::handleInterruptCheck()
-{
-	// If any of the I_STAT with logical AND I_MASK bits are 1, then an interrupt may be generated.
-	mIsInterrupted = (readWord(Context_t::RAW) & mMask->readWord(Context_t::RAW)) > 0;
 }
 
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :

@@ -337,6 +337,7 @@
     <ClInclude Include="Source\PS2Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimers_t.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\Timers\IOPTimers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -554,6 +555,7 @@
     <ClCompile Include="Source\PS2Resources\Common\Types\SBUSRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\Timers\IOPTimers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

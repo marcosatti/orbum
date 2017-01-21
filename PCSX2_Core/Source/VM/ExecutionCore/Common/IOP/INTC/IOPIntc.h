@@ -4,6 +4,7 @@
 
 class IOPCoreCOP0_t;
 class IOPIntcRegister_STAT_t;
+class IOPIntcRegister_MASK_t;
 class IOPIntcRegister_CTRL_t;
 
 /*
@@ -25,6 +26,7 @@ private:
 	*/
 	std::shared_ptr<IOPCoreCOP0_t> mIOPCOP0;
 	std::shared_ptr<IOPIntcRegister_STAT_t> mSTAT;
+	std::shared_ptr<IOPIntcRegister_MASK_t> mMASK;
 	std::shared_ptr<IOPIntcRegister_CTRL_t> mCTRL;
 };
 

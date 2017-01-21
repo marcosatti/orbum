@@ -73,7 +73,7 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0xfe4321;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000fe4321;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{

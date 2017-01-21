@@ -30,6 +30,7 @@ class EETimers;
 class IOPCoreInterpreter;
 class IOPIntc;
 class IOPDmac;
+class IOPTimers;
 
 class Interpreter : public VMExecutionCore
 {
@@ -60,11 +61,12 @@ private:
 	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
 	std::shared_ptr<IOPIntc> mIOPIntc;
 	std::shared_ptr<IOPDmac> mIOPDmac;
+	std::shared_ptr<IOPTimers> mIOPTimers;
 
 	/*
 	Used to iterate through all components, for initalsation.
 	*/
-	std::shared_ptr<VMExecutionCoreComponent> mComponents[9];
+	std::shared_ptr<VMExecutionCoreComponent> mComponents[10];
 
 	/*
 	Clock source component arrays, used to iterate through.
@@ -73,6 +75,6 @@ private:
 	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
 	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
 	std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[3];
+	std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[4];
 };
 

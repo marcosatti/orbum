@@ -3,9 +3,7 @@
 #include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
 EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
-	BitfieldRegister32_t("EE INTC STAT", false, false),
-	mMask(mask),
-	mIsInterrupted(false)
+	BitfieldRegister32_t("EE INTC STAT", false, false)
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
 	registerField(Fields::SBUS, "SBUS", 1, 1, 0);
@@ -30,23 +28,6 @@ void EEIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
 		value = readWord(Context_t::RAW) & (~value);
 		
 	BitfieldRegister32_t::writeWord(context, value);
-	handleInterruptCheck();
-}
-
-void EEIntcRegister_STAT_t::raiseIRQLine(const u8& irqLine)
-{
-	setFieldValue(Fields::IRQ_KEYS[irqLine], 1);
-	handleInterruptCheck();
-}
-
-bool EEIntcRegister_STAT_t::isInterrupted() const
-{
-	return mIsInterrupted;
-}
-
-void EEIntcRegister_STAT_t::handleInterruptCheck()
-{
-	mIsInterrupted = (readWord(Context_t::RAW) & mMask->readWord(Context_t::RAW)) > 0;
 }
 
 EEIntcRegister_MASK_t::EEIntcRegister_MASK_t() 

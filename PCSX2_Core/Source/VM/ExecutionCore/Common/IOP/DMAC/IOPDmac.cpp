@@ -110,15 +110,15 @@ bool IOPDmac::isDMACChannelEnabled() const
 
 void IOPDmac::handleInterruptCheck() const
 {
-	bool interrupt = false;
 	for (auto& ICR : mDMAC->ICRS)
-		interrupt |= ICR->isInterrupted();
-
-	if (interrupt)
 	{
-		// DMAC connected to INTC IRQ line 3.
-		// TODO: Assuming edge triggered interrupt. Need to deassert line on no condition?
-		mINTC->STAT->raiseIRQLine(3);
+		if (ICR->isInterrupted())
+		{
+			// DMAC connected to INTC IRQ line 3.
+			// TODO: Assuming edge triggered interrupt. Need to deassert line on no condition?
+			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
+			break;
+		}
 	}
 }
 

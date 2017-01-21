@@ -384,6 +384,7 @@
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\DMAC\IOPDmac.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.h" />
+    <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\Timers\IOPTimers.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.h" />
     <ClInclude Include="Source\VM\Types\VMOptions_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.h" />
@@ -543,6 +544,7 @@
     <ClCompile Include="Source\VM\ExecutionCore\Common\EE\VPU\VIF\VIF.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\DMAC\IOPDmac.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\INTC\IOPIntc.cpp" />
+    <ClCompile Include="Source\VM\ExecutionCore\Common\IOP\Timers\IOPTimers.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_COP2.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\VPU\VUInterpreter\VUInterpreter_CONVERT.cpp" />

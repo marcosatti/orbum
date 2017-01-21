@@ -21,6 +21,8 @@
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
+#include "PS2Resources/IOP/INTC/IOPIntc_t.h"
+#include "PS2Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
 IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 	VMExecutionCoreComponent(vmMain),
@@ -62,7 +64,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000028e000; // 1b42ae
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x1b5a00;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
@@ -110,6 +112,10 @@ void IOPCoreInterpreter::handleInterruptCheck() const
 			auto& IOPCore = getResources()->IOP->IOPCore;
 			logDebug("IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
 				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(Context_t::IOP), IOPCore->R3000->BD->isInBranchDelay());
+			logDebug("Printing IOP INTC STAT register fields...");
+			getResources()->IOP->INTC->STAT->logDebugAllFields();
+			logDebug("Printing IOP INTC MASK register fields...");
+			getResources()->IOP->INTC->MASK->logDebugAllFields();
 #endif
 			auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
 			Exceptions->setException(IOPCoreException_t::EX_INTERRUPT);

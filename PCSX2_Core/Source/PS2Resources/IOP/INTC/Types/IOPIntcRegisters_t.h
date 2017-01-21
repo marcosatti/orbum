@@ -100,10 +100,7 @@ public:
 		static constexpr u8 FWRE = 24;
 		static constexpr u8 FDMA = 25;
 
-		/*
-		Array of IRQ line keys.
-		*/
-		static constexpr u8 IRQ_KEYS[PS2Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLNK, GPU, CDROM, DMA, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
+		static constexpr u8 TMR_KEYS[PS2Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 	};
 
 	explicit IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask);
@@ -113,31 +110,4 @@ public:
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
 	void writeWord(const Context_t& context, u32 value) override;
-
-	/*
-	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).
-	*/
-	void raiseIRQLine(const u8 & irqLine);
-
-	/*
-	Returns if there is a pending interrupt that should be raised.
-	*/
-	bool isInterrupted() const;
-
-private:
-	/*
-	Reference to the associated mask register, needed for checking interrupt status.
-	*/
-	std::shared_ptr<IOPIntcRegister_MASK_t> mMask;
-
-	/*
-	Checks for interrupt conditions and sets the mIsInterrupted flag.
-	Formula taken from No$PSX docs http://problemkaputt.de/psx-spx.htm.
-	*/
-	void handleInterruptCheck();
-
-	/*
-	See handleInterruptCheck() and isInterrupted() above.
-	*/
-	bool mIsInterrupted;
 };

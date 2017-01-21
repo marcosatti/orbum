@@ -11,7 +11,12 @@ enum class ClockSource_t
 	BUSCLK16  = 2,
 	BUSCLK256 = 3,
 	HBLNK     = 4,
-	IOP       = 5,
+	IOPCLK    = 5,
+	IOPCLK8   = 6,
+	IOPCLK16  = 7,
+	IOPCLK256 = 8,
+	PIXEL     = 9,  // aka DOTCLOCK?
+	VBLNK     = 10,
 
 	NUM_SOURCES // Provided to create arrays.
 };

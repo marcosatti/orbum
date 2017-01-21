@@ -15,7 +15,7 @@
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 #include "VM/ExecutionCore/Common/IOP/INTC/IOPIntc.h"
 #include "VM/ExecutionCore/Common/IOP/DMAC/IOPDmac.h"
-
+#include "VM/ExecutionCore/Common/IOP/Timers/IOPTimers.h"
 
 Interpreter::Interpreter(VMMain * vmMain) :
 	VMExecutionCore(vmMain),
@@ -30,12 +30,13 @@ Interpreter::Interpreter(VMMain * vmMain) :
 	mIOPCoreInterpreter(std::make_shared<IOPCoreInterpreter>(vmMain)),
 	mIOPIntc(std::make_shared<IOPIntc>(vmMain)),
 	mIOPDmac(std::make_shared<IOPDmac>(vmMain)),
-	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter, mIOPIntc, mIOPDmac },
+	mIOPTimers(std::make_shared<IOPTimers>(vmMain)),
+	mComponents{ mInterpreterVU0, mInterpreterVU1, mEECoreInterpreter, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter, mIOPIntc, mIOPDmac, mIOPTimers },
 	mComponentsBUSCLK{ mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers },
 	mComponentsBUSCLK16{ mEETimers },
 	mComponentsBUSCLK256{ mEETimers },
 	mComponentsHBLNK{ mEETimers },
-	mComponentsIOP{ mIOPCoreInterpreter, mIOPIntc, mIOPDmac }
+	mComponentsIOP{ mIOPCoreInterpreter, mIOPIntc, mIOPDmac, mIOPTimers }
 {
 }
 
@@ -102,11 +103,11 @@ void Interpreter::executionStep()
 	// Process IOP components.
 	for (auto& component : mComponentsIOP)
 	{
-		component->produceTicks(ClockSource_t::IOP, PS2CLKTicks);
-		while (component->isTicked(ClockSource_t::IOP))
+		component->produceTicks(ClockSource_t::IOPCLK, PS2CLKTicks);
+		while (component->isTicked(ClockSource_t::IOPCLK))
 		{
-			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::IOP);
-			component->consumeTicks(ClockSource_t::IOP, componentClockSourceTicks);
+			s64 componentClockSourceTicks = component->executionStep(ClockSource_t::IOPCLK);
+			component->consumeTicks(ClockSource_t::IOPCLK, componentClockSourceTicks);
 		}
 	}
 }
