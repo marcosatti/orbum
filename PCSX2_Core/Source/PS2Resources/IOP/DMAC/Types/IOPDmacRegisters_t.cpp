@@ -22,7 +22,8 @@ IOPDmacRegister_PCR_t::IOPDmacRegister_PCR_t(const char* mnemonic) :
 }
 
 IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+	BitfieldRegister32_t(mnemonic, false, false),
+	mIsInterrupted(false)
 {
 	registerField(Fields::IRQFORCE, "IRQFORCE", 15, 1, 0);
 	registerField(Fields::IRQ0_EN, "IRQ0_EN", 16, 1, 0);

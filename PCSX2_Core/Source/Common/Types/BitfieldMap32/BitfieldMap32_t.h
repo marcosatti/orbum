@@ -80,8 +80,10 @@ public:
 	void syncMemoryFromMap();
 
 private:
-	// Friend the BitfieldRegister32_t class to access the field maps directly (used in debug).
+	// Friend classes to access the field maps directly (used in debug).
 	friend class BitfieldRegister32_t;
+	friend class EECoreInterpreter;
+	friend class IOPCoreInterpreter;
 
 	/*
 	Arrays which stores all of the registered fields, along with their associated properties.

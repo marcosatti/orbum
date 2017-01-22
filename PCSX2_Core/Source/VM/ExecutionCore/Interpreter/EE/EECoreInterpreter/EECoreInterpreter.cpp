@@ -26,6 +26,8 @@
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "PS2Resources/EE/INTC/EEIntc_t.h"
+#include "PS2Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMExecutionCoreComponent(vmMain),
@@ -51,29 +53,23 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
 	auto& EECore = getResources()->EE->EECore;
 
-	// Check if any external interrupts are pending and queue exception if there are.
-	handleInterruptCheck();
-	
-	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	if (EECore->Exceptions->hasExceptionOccurred())
-		mExceptionHandler->handleException(EECore->Exceptions->getException());
-
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	EECore->R5900->BD->handleBranchDelay();
+
+	// Check if any external interrupts are pending and queue exception if there are.
+	handleInterruptCheck();
+
+	// Set the instruction holder to the instruction at the current PC, and get instruction details.
+	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE);
+	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
+	mInstruction.setInstructionValue(instructionValue);
+	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 	// Increment PC.
 	EECore->R5900->PC->setPCValueNext();
 
-	// Set the instruction holder to the instruction at the previous PC.
-	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE) - Constants::SIZE_MIPS_INSTRUCTION;;
-	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
-	mInstruction.setInstructionValue(instructionValue);
-
-	// Get the instruction details
-	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
-
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000fe4321;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x48c3461;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -95,6 +91,10 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 
 	// Run the instruction, which is based on the implementation index.
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
+
+	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
+	if (EECore->Exceptions->hasExceptionOccurred())
+		mExceptionHandler->handleException(EECore->Exceptions->getException());
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
 	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
@@ -122,12 +122,21 @@ void EECoreInterpreter::handleInterruptCheck() const
 		if (ipCause & imStatus)
 		{
 #if defined(BUILD_DEBUG)
-			auto& IOPCore = getResources()->EE->EECore;
-			logDebug("IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
-				DEBUG_LOOP_COUNTER, IOPCore->R5900->PC->readWord(Context_t::IOP), IOPCore->R5900->BD->isInBranchDelay());
+			auto& EECore = getResources()->EE->EECore;
+			auto& STAT = getResources()->EE->INTC->STAT;
+			auto& MASK = getResources()->EE->INTC->MASK;
+			logDebug("EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
+				DEBUG_LOOP_COUNTER, EECore->R5900->PC->readWord(Context_t::EE), EECore->R5900->BD->isInBranchDelay());
+			logDebug("Printing list of interrupt sources...");
+			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
+			{
+				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
+					logDebug(STAT->mFieldMnemonics[irqField].c_str());
+			}
 #endif
-			auto& Exceptions = getResources()->EE->EECore->Exceptions;
-			Exceptions->setException(EECoreException_t::EX_INTERRUPT);
+			// Handle the interrupt immediately.
+			EECore->R5900->PC->setPCValueNext();
+			mExceptionHandler->handleException(EECoreException_t::EX_INTERRUPT);
 		}
 	}
 }
