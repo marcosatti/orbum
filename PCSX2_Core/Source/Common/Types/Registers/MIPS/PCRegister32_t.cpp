@@ -4,12 +4,12 @@
 
 void PCRegister32_t::setPCValueRelative(const s32& relativeLocation)
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) + relativeLocation);
+	writeWord(RAW, readWord(RAW) + relativeLocation);
 }
 
 void PCRegister32_t::setPCValueAbsolute(const u32& absoluteLocation)
 {
-	writeWord(Context_t::RAW, absoluteLocation);
+	writeWord(RAW, absoluteLocation);
 }
 
 void PCRegister32_t::setPCValueNext(const u32 instructionSize)

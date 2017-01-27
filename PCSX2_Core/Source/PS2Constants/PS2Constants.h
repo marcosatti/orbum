@@ -20,16 +20,6 @@ public:
 	{
 		struct EECore
 		{
-			struct Exceptions
-			{
-				// Number of exceptions that can be raised, see EE Core Users Manual page 94.
-				static constexpr u32 NUMBER_EXCEPTIONS = 20;
-
-				// Exception prorities - see EE Core Users Manual page 93.
-				// 0 = Highest priority, ordered ascending.
-				// TODO: add in.
-			};
-
 			struct ScratchpadMemory
 			{
 				// Scratchpad memory.
@@ -41,6 +31,9 @@ public:
 			{
 				static constexpr u32 NUMBER_GP_REGISTERS = 32;
 				static constexpr u32 NUMBER_SYSCALLS = 256; // TODO: get real value.
+				
+				// Number of exceptions that can be raised, see EE Core Users Manual page 94.
+				static constexpr u32 NUMBER_EXCEPTIONS = 20;
 			};
 
 			struct COP0

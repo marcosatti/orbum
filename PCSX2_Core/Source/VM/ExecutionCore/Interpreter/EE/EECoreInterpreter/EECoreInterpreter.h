@@ -3,17 +3,19 @@
 #include <memory>
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+#include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 
-#include "PS2Constants/PS2Constants.h"
-
 #include "PS2Resources/EE/EECore/Types/EECoreInstruction_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 
-class PS2Resources_t;
+using ExceptionProperties_t = EECoreExceptionsTable::ExceptionProperties_t;
+
 class VMMain;
-class EECoreMMUHandler;
-class EECoreExceptionHandler;
 class VUInterpreter;
+class EECore_t;
+class VuUnit_VU0_t;
+class PhysicalMMU_t;
 
 /*
 The EE Core interpreter.
@@ -43,33 +45,37 @@ public:
 	s64 executionStep(const ClockSource_t & clockSource) override;
 
 private:
+
+	//////////////////////////
+	// Common Functionality //
+	//////////////////////////
+
+	/*
+	Resources.
+	*/
+	std::shared_ptr<EECore_t> mEECore;
+	std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
+	std::shared_ptr<VuUnit_VU0_t> mVU0;
+
 #if defined(BUILD_DEBUG)
 	// Debug loop counter.
 	u64 DEBUG_LOOP_COUNTER = 0;
+#endif
+
+	///////////////////////////////
+	// Instruction Functionality //
+	///////////////////////////////
+
+#if defined(BUILD_DEBUG)
 	// SYNC instruction counter.
 	u64 DEBUG_INSTRUCTION_SYNC = 0;
 #endif
-
-	/*
-	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
-	*/
-	void handleInterruptCheck() const;
 
 	/*
 	Checks the COP0.Count register against the COP0.Compare register.
 	If the Count value == Compare value, an interrupt is generated.
 	*/
 	void handleCountEventCheck() const;
-
-	/*
-	The EECore exception handler, which handles and processes the EECore->Exceptions state.
-	*/
-	const std::unique_ptr<EECoreExceptionHandler> mExceptionHandler;
-
-	/*
-	The EECore MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
-	*/
-	const std::unique_ptr<EECoreMMUHandler> mMMUHandler;
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
@@ -86,26 +92,24 @@ private:
 	/*
 	Helper functions to check:
 	 - The usability conditions of COP0, 1, 2 (VU0).
-	 - The condition that no MMUHandler error occured.
 	 - No over or underflow will occur for signed 32/64 bit integers.
 	Returns a bool indicating if the instruction should return early because of unavailablity.
-	Return early from instruction = true, Proceed with instruction = false.
+	Return early from instruction = true, proceed with instruction = false.
 	They will automatically set the exception state as well.
 	*/
-	bool checkCOP0Usable() const;
-	bool checkCOP1Usable() const;
-	bool checkCOP2Usable() const;
-	bool checkNoMMUError() const;
-	bool checkNoOverOrUnderflow32(const s32 & x, const s32 & y) const;
-	bool checkNoOverOrUnderflow64(const s64 & x, const s64 & y) const;
+	bool handleCOP0Usable();
+	bool handleCOP1Usable();
+	bool handleCOP2Usable();
+	bool handleOverOrUnderflow32(const s32 & x, const s32 & y);
+	bool handleOverOrUnderflow64(const s64 & x, const s64 & y);
 
 	// EECore Instruction functions. The instructions are organised according to the EE Overview Manual starting from page 26 (which also means separate cpp files per category).
-	// Note 1: there is no pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
+	// Note 1: there is no true pipeline concept in PCSX2 - instructions that are meant for pipeline 1 (marked with "1" at the end of the mnemonic) are treated like normal instructions.
 	// Note 2: Dots in mnemonics & function names are represented by the underscore character.
 
 	/*
 	Unknown instruction function - does nothing when executed. Used for any instructions with implementation index 0 (ie: reserved, unknown or otherwise).
-	If the BUILD_DEBUG macro is enabled, can be used to debug an unknown opcode by logging a message.
+	On a debug build, can be used to debug an unknown opcode by logging a message.
 	*/
 	void INSTRUCTION_UNKNOWN();
 
@@ -1002,4 +1006,66 @@ private:
 		&EECoreInterpreter::VISWR,
 		&EECoreInterpreter::VRXOR
 	};
+
+	/////////////////////////////
+	// Exception Functionality //
+	/////////////////////////////
+
+	/*
+	Handles a given exception by running the general exception handler (level 1 or 2) based on the exception properties defined.
+	*/
+	void handleException(const EECoreException_t & exception);
+
+	/*
+	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
+	*/
+	void handleInterruptCheck();
+
+#if defined(BUILD_DEBUG)
+	// Debug for counting the number of exceptions handled.
+	u64 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
+#endif
+
+	/*
+	Temp state variables.
+	*/
+	EECoreException_t mException;
+	const ExceptionProperties_t * mExceptionProperties;
+
+	/*
+	The level 1 or level 2 exception handler, which is called by the base handleException() function.
+	They have been adapted from the code in the EE Core Users Manual page 91 & 92.
+	*/
+	void handleException_L1() const;
+	void handleException_L2() const;
+
+	///////////////////////
+	// MMU Functionality //
+	///////////////////////
+
+	/*
+	Internal types used within/to access MMU.
+	*/
+	enum MMUError_t { ADDRESS, TLB_REFILL, TLB_INVALID, TLB_MODIFIED };
+	enum MMUAccess_t { READ, WRITE };
+
+	/*
+	Converts a given MMUError_t and MMUAccess_t to an EECoreException_t and handles it (through handleException()).
+	Also sets the required COP0 TLB information.
+	Called internally from getPhysicalAddress().
+	*/
+	void handleMMUError(const u32 & virtualAddress, const MMUAccess_t & access, const MMUError_t & error, const s32 & tlbEntryIndex);
+
+	/*
+	Performs a lookup from the given virtual address and access type.
+	Returns if an error occured, indicating if the instruction that called should return early (error = true, no error = false).
+	The physical address calculated is stored in physicalAddress.
+	
+	There are 4 associated stages (see diagram on EE Core Users Manual page 122):
+	Stage 1 tests the operating context of the CPU and checks if the address is invalid.
+	Stage 2 performs a TLB lookup and checks the ASID and G bits.
+	Stage 3 tests the valid and dirty flags, and determines if the VPN is for the even or odd PFN.
+	Stage 4 calculates the final physical address.
+	*/
+	bool getPhysicalAddress(const u32 & virtualAddress, const MMUAccess_t & access, u32 & physicalAddress);
 };

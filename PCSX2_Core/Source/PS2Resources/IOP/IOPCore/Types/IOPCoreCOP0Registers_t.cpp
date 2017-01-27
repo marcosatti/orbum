@@ -33,15 +33,15 @@ IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t() :
 void IOPCoreCOP0Register_Status_t::pushExceptionStack()
 {
 	// New status = shift (KU|IP)(c|p) bits left by 2 then make (KU|IP)c bits = 0.
-	u32 statusValue = readWord(Context_t::RAW);
-	writeWord(Context_t::RAW, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
+	u32 statusValue = readWord(RAW);
+	writeWord(RAW, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
 }
 
 void IOPCoreCOP0Register_Status_t::popExceptionStack()
 {
 	// New status = shift (KU|IP)(p|o) bits right by 2. Leave old bits unchanged after.
-	u32 statusValue = readWord(Context_t::RAW);
-	writeWord(Context_t::RAW, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
+	u32 statusValue = readWord(RAW);
+	writeWord(RAW, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
 }
 
 bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const

@@ -7,38 +7,32 @@
 #include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
 #include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/IOP/IOPCoreInterpreter/IOPCoreMMUHandler/IOPCoreMMUHandler.h"
 
-#include "PS2Resources/PS2Resources_t.h"
-#include "PS2Resources/IOP/IOP_t.h"
 #include "PS2Resources/IOP/IOPCore/IOPCore_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "PS2Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreExceptions_t.h"
 
 void IOPCoreInterpreter::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
-	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t::EX_BREAK);
+	handleException(IOPCoreException_t::EX_BREAK);
 }
 
 void IOPCoreInterpreter::SYSCALL()
 {
-	// EXCEPTION(SYSCALL)
-	auto& Exceptions = getResources()->IOP->IOPCore->Exceptions;
-	Exceptions->setException(IOPCoreException_t::EX_SYSTEMCALL);
-
 #if DEBUG_LOG_SYSCALLS
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v0 ($2), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v0, it is done so through
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
-	u8 index = getResources()->IOP->IOPCore->R3000->GPR[2]->readByte(Context_t::IOP, 0);
+	u8 index = mIOPCore->R3000->GPR[2]->readByte(IOP, 0);
 	logDebug("IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
 #endif
+
+	// EXCEPTION(SYSCALL)
+	handleException(IOPCoreException_t::EX_SYSTEMCALL);
 }
 
 void IOPCoreInterpreter::TLBP()
@@ -91,14 +85,12 @@ void IOPCoreInterpreter::CTC0()
 
 void IOPCoreInterpreter::RFE()
 {
-	auto& IOPCore = getResources()->IOP->IOPCore;
-
 	// Pop the COP0.Status exception state.
-	IOPCore->COP0->Status->popExceptionStack();
+	mIOPCore->COP0->Status->popExceptionStack();
 
 	// Make sure we flush the cpu pipeline (in emulator, this means flush branch delay).
 	// TODO: Not documented anywhere, however due to the way the emulator works, needed in order to prevent the EPC pointing to the current RFE instruction and entering an uninterruptable infinite loop.
-	IOPCore->R3000->BD->executeBranchDelayNow();
+	mIOPCore->R3000->BD->executeBranchDelayNow();
 }
 
 void IOPCoreInterpreter::RTPS()

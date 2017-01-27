@@ -10,7 +10,7 @@ EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemon
 
 void EETimersTimerRegister_COUNT_t::increment(u16 value)
 {
-	u32 temp = readWord(Context_t::RAW) + value;
+	u32 temp = readWord(RAW) + value;
 
 	if (temp > Constants::VALUE_U16_MAX)
 	{
@@ -19,7 +19,7 @@ void EETimersTimerRegister_COUNT_t::increment(u16 value)
 		temp = temp % Constants::VALUE_U16_MAX;
 	}
 
-	writeWord(Context_t::RAW, temp);
+	writeWord(RAW, temp);
 }
 
 bool EETimersTimerRegister_COUNT_t::isOverflowed()
@@ -31,7 +31,7 @@ bool EETimersTimerRegister_COUNT_t::isOverflowed()
 
 void EETimersTimerRegister_COUNT_t::reset()
 {
-	writeWord(Context_t::RAW, 0);
+	writeWord(RAW, 0);
 }
 
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
@@ -52,7 +52,7 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
-	if (context == Context_t::EE)
+	if (context == EE)
 	{
 		u32 regValue = readWord(context);
 		value = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
@@ -61,7 +61,7 @@ void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 valu
 	BitfieldRegister32_t::writeWord(context, value);
 	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (context == Context_t::EE)
+	if (context == EE)
 	{
 		if (getFieldValue(Fields::CUE))
 			mCount->reset();

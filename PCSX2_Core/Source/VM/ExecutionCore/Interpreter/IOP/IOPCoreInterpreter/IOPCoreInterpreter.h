@@ -7,10 +7,11 @@
 
 #include "PS2Constants/PS2Constants.h"
 
-class PS2Resources_t;
+#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
+
 class VMMain;
-class IOPCoreMMUHandler;
-class IOPCoreExceptionHandler;
+class IOPCore_t;
+class PhysicalMMU_t;
 struct MIPSInstructionInfo_t;
 
 /*
@@ -22,7 +23,7 @@ No official documentation, but there is resources available on the internet docu
 class IOPCoreInterpreter : public VMExecutionCoreComponent
 {
 public:
-	explicit IOPCoreInterpreter(VMMain* vmMain);
+	explicit IOPCoreInterpreter(VMMain * vmMain);
 
 	/*
 	Initalisation.
@@ -36,25 +37,24 @@ public:
 
 private:
 
+	//////////////////////////
+	// Common Functionality //
+	//////////////////////////
+
+	/*
+	Resources.
+	*/
+	std::shared_ptr<IOPCore_t> mIOPCore;
+	std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
+
 #if defined(BUILD_DEBUG)
 	// Debug loop counter 
 	u64 DEBUG_LOOP_COUNTER = 0;
 #endif
 
-	/*
-	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
-	*/
-	void handleInterruptCheck() const;
-
-	/*
-	The IOP exception handler, which handles and processes the IOPCore->Exceptions state.
-	*/
-	const std::unique_ptr<IOPCoreExceptionHandler> mExceptionHandler;
-
-	/*
-	The IOP MMU handler. Translates PS2 virutal addresses into PS2 physical addresses, using a TLB.
-	*/
-	const std::unique_ptr<IOPCoreMMUHandler> mMMUHandler;
+	///////////////////////////////
+	// Instruction Functionality //
+	///////////////////////////////
 
 	/*
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
@@ -66,15 +66,13 @@ private:
 	/*
 	Helper functions to check for: 
 	 - The usability conditions of COP0.
-	 - The condition that no MMUHandler error occured.
 	 - No over or underflow will occur for signed 32 bit integers.
 	Returns a bool indicating if the instruction should return early because of unavailablity.
-	Return early from instruction = true, Proceed with instruction = false.
+	Return early from instruction = true, proceed with instruction = false.
 	They will automatically set the exception state as well.
 	*/
-	bool checkCOP0Usable() const;
-	bool checkNoMMUError() const;
-	bool checkNoOverOrUnderflow32(const s32 & x, const s32 & y) const;
+	bool handleCOP0Usable();
+	bool handleOverOrUnderflow32(const s32 & x, const s32 & y);
 
 	// IOP Instruction funtionality.
 
@@ -301,5 +299,44 @@ private:
 		&IOPCoreInterpreter::MTC2,
 		&IOPCoreInterpreter::CTC2,
 	};
+
+	/////////////////////////////
+	// Exception Functionality //
+	/////////////////////////////
+
+	/*
+	Handles a given exception by running the general exception handler based on the exception properties defined.
+	*/
+	void handleException(const IOPCoreException_t & exception);
+
+	/*
+	Checks if any of the interrupt lines have an IRQ pending, and raises an interrupt exception.
+	*/
+	void handleInterruptCheck();
+
+#if defined(BUILD_DEBUG)
+	// Debug for counting the number of exceptions handled.
+	u64 DEBUG_HANDLED_EXCEPTION_COUNT = 0;
+#endif
+
+	///////////////////////
+	// MMU Functionality //
+	///////////////////////
+
+	/*
+	Internal types used within/to access MMU.
+	*/
+	enum MMUAccess_t { READ, WRITE };
+
+	/*
+	Performs a lookup from the given virtual address and access type.
+	Returns if an error occured, indicating if the instruction that called should return early (error = true, no error = false).
+	The physical address calculated is stored in physicalAddress.
+
+	The IOP Core has no TLB - all virtual addresses are directly converted to physical addresses based on kernel segments.
+	Currently if the CPU is not in a kernel context or an MMU error occurs, a runtime_error exception will be thrown.
+	TODO: investigate into user mode. I think the original PSX had no TLB...
+	*/
+	bool getPhysicalAddress(const u32 & virtualAddress, const MMUAccess_t & access, u32 & physicalAddress);
 };
 

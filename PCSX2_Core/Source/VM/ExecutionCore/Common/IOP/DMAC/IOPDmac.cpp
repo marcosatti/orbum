@@ -128,7 +128,7 @@ u32 IOPDmac::transferData() const
 	Direction_t direction = static_cast<Direction_t>(mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::TD));
 
 	// Get the main memory address.
-	const u32 PhysicalAddressOffset = mChannel->MADR->readWord(Context_t::RAW);
+	const u32 PhysicalAddressOffset = mChannel->MADR->readWord(RAW);
 
 	// Transfer data to or from the FIFO queue.
 	if (direction == Direction_t::FROM)
@@ -137,7 +137,7 @@ u32 IOPDmac::transferData() const
 		if (mChannel->mFIFOQueue->isEmpty())
 			return 0;
 
-		u32 packet = mChannel->mFIFOQueue->readWord(Context_t::RAW);
+		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
 		writeDataMemory(PhysicalAddressOffset, packet);
 	}
 	else if (direction == Direction_t::TO)
@@ -147,7 +147,7 @@ u32 IOPDmac::transferData() const
 			return 0;
 
 		u32 packet = readDataMemory(PhysicalAddressOffset);
-		mChannel->mFIFOQueue->writeWord(Context_t::RAW, packet);
+		mChannel->mFIFOQueue->writeWord(RAW, packet);
 	}
 
 	// Increment or decrement (depending on CHCR.MAS) the MADR register by a word.
@@ -182,10 +182,10 @@ void IOPDmac::setStateFailedTransfer() const
 
 u32 IOPDmac::readDataMemory(u32 PhysicalAddressOffset) const
 {
-	return mIOPPhysicalMMU->readWord(Context_t::RAW, PhysicalAddressOffset);
+	return mIOPPhysicalMMU->readWord(RAW, PhysicalAddressOffset);
 }
 
 void IOPDmac::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
 {
-	mIOPPhysicalMMU->writeWord(Context_t::RAW, PhysicalAddressOffset, data);
+	mIOPPhysicalMMU->writeWord(RAW, PhysicalAddressOffset, data);
 }

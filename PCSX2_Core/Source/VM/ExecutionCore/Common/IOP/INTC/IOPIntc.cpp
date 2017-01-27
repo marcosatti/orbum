@@ -25,9 +25,9 @@ s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;
-	if (mCTRL->readWord(Context_t::RAW) > 0)
+	if (mCTRL->readWord(RAW) > 0)
 	{
-		if (mSTAT->readWord(Context_t::RAW) & mMASK->readWord(Context_t::RAW))
+		if (mSTAT->readWord(RAW) & mMASK->readWord(RAW))
 			interrupt = true;
 	}
 

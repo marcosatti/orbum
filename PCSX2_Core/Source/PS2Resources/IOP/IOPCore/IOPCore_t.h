@@ -6,7 +6,6 @@
 
 class IOPCoreR3000_t;
 class IOPCoreCOP0_t;
-class IOPCoreExceptions_t;
 class Memory_t;
 
 class IOPCore_t : public PS2ResourcesSubcategory
@@ -23,11 +22,6 @@ public:
 	COP0 coprocessor.
 	*/
 	std::shared_ptr<IOPCoreCOP0_t> COP0;
-
-	/*
-	Exception/Interrupt State.
-	*/
-	std::shared_ptr<IOPCoreExceptions_t> Exceptions;
 
 	/*
 	Scratchpad memory (1KB). Allocated at 0x1F800000.

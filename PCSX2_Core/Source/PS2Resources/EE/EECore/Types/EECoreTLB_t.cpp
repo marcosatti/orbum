@@ -4,7 +4,7 @@
 
 #include "PS2Constants/PS2Constants.h"
 #include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 
 EECoreTLB_t::EECoreTLB_t() : 
 	mTLBEntries{ 0 }
@@ -23,7 +23,7 @@ s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 	{
 		// Even though in a real tlb entry the VPN2 field uses bits 77-95 (length 19), we have stored it in a separate u32 type (ie: from bits 0-18).
 		// For the MSB 7 bits (for a page size of 16MB), we need to mask out bits 12-18 (length 7), in order to make a comparison.
-		const EECoreTLBEntryInfo_t & tlbEntry = mTLBEntries[i];
+		const EECoreTLBEntry_t & tlbEntry = mTLBEntries[i];
 		u32 tlbMaskedVPN2 = (tlbEntry.mVPN2 & PS2Constants::EE::EECore::MMU::MASK_VPN2_FIELD_16MB) >> 12;
 		if (searchVPN2 == tlbMaskedVPN2)
 		{
@@ -50,13 +50,17 @@ s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 	return -1;
 }
 
-const EECoreTLBEntryInfo_t & EECoreTLB_t::getTLBEntry(s32 index) const
+const EECoreTLBEntry_t & EECoreTLB_t::getTLBEntry(s32 index) const
 {
 	return mTLBEntries[index];
 }
 
 s32 EECoreTLB_t::getNewTLBIndex()
 {
+#if defined(BUILD_DEBUG)
+	logDebug("Warning: getNewTLBIndex() called, but not properly implemented.");
+#endif 
+
 	for (auto i = 0; i < PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)
 	{
 		auto tlbEntry = mTLBEntries[i];
@@ -65,11 +69,11 @@ s32 EECoreTLB_t::getNewTLBIndex()
 	}
 
 	// No empty spot was found, so return the first index.
-	// TODO: Create a better algorithm for determining which index to use. See old PCSX2.
+	// TODO: Create a better algorithm for determining which index to use. See old PCSX2?
 	return 0;
 }
 
-void EECoreTLB_t::setTLBEntry(const EECoreTLBEntryInfo_t& entry, const s32& index)
+void EECoreTLB_t::setTLBEntry(const EECoreTLBEntry_t& entry, const s32& index)
 {
 	mTLBEntries[index] = entry;
 }

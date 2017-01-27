@@ -105,7 +105,7 @@ void EETimers::handleTimerInterrupt() const
 	// Check for Compare-Interrupt.
 	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
 	{
-		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
 		{
 			interrupt = true;
 		}
@@ -132,7 +132,7 @@ void EETimers::handleTimerZRET() const
 	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
 		{
 			// Set Count to 0.
 			mTimer->COUNT->reset();

@@ -51,7 +51,7 @@ EECoreCOP0Register_Wired_t::EECoreCOP0Register_Wired_t()
 
 void EECoreCOP0Register_Count_t::increment(u32 value)
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) + value);
+	writeWord(RAW, readWord(RAW) + value);
 }
 
 EECoreCOP0Register_EntryHi_t::EECoreCOP0Register_EntryHi_t()
@@ -75,11 +75,6 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-bool EECoreCOP0Register_Status_t::isExceptionsMasked() const
-{
-	return false;
-}
-
 bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
 {
 	return !((getFieldValue(Fields::ERL) == 0)
@@ -100,8 +95,8 @@ EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
 
 void EECoreCOP0Register_Cause_t::clearIP()
 {
-	u32 temp = readWord(Context_t::RAW) & 0xFFFF00FF;
-	writeWord(Context_t::RAW, temp);
+	u32 temp = readWord(RAW) & 0xFFFF00FF;
+	writeWord(RAW, temp);
 }
 
 void EECoreCOP0Register_Cause_t::setIRQLine(u8 irq)

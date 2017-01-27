@@ -2,27 +2,28 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Context_t.h"
+#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
+#include "Common/Util/MMUUtil/MMUUtil.h"
 
 #include "VM/VMMain.h"
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreExceptionHandler/EECoreExceptionHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/EE/EE_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreFPU_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLB_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 #include "PS2Resources/EE/VPU/VPU_t.h"
 #include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
@@ -31,11 +32,14 @@
 
 EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMExecutionCoreComponent(vmMain),
-	mExceptionHandler(std::make_unique<EECoreExceptionHandler>(vmMain)),
-	mMMUHandler(std::make_unique<EECoreMMUHandler>(vmMain)),
 	mInstructionInfo(nullptr),
-	mVU0Interpreter(vuInterpreter)
+	mVU0Interpreter(vuInterpreter), 
+	mException(), 
+	mExceptionProperties(nullptr) 
 {
+	mEECore = getResources()->EE->EECore;
+	mPhysicalMMU = getResources()->EE->PhysicalMMU;
+	mVU0 = getResources()->EE->VPU->VU->VU0;
 }
 
 EECoreInterpreter::~EECoreInterpreter()
@@ -44,29 +48,25 @@ EECoreInterpreter::~EECoreInterpreter()
 
 void EECoreInterpreter::initalise()
 {
-	// A PS2 reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
-	// This means we can raise a Reset exception (to handle) and it will be equivilant to setting everything manually!
-	mExceptionHandler->handleException(EECoreException_t::EX_RESET);
+	// An EE Core reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
+	handleException(EECoreException_t::EX_RESET);
 }
 
 s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 {
-	auto& EECore = getResources()->EE->EECore;
-
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
-	EECore->R5900->BD->handleBranchDelay();
-
-	// Check if any external interrupts are pending and queue exception if there are.
-	handleInterruptCheck();
+	mEECore->R5900->BD->handleBranchDelay();
 
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
-	const u32 pcValue = EECore->R5900->PC->readWord(Context_t::EE);
-	const u32 instructionValue = mMMUHandler->readWord(pcValue); // TODO: Add error checking for address bus error.
+	const u32 pcAddress = mEECore->R5900->PC->readWord(EE);
+	u32 physicalAddress;
+	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
+	const u32 instructionValue = mPhysicalMMU->readWord(EE, physicalAddress); 
 	mInstruction.setInstructionValue(instructionValue);
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 	// Increment PC.
-	EECore->R5900->PC->setPCValueNext();
+	mEECore->R5900->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x48c3461;
@@ -78,12 +78,12 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			pcValue, EECore->R5900->BD->isInBranchDelay(), !EECore->COP0->Status->isInterruptsMasked(),
+			pcAddress, mEECore->R5900->BD->isInBranchDelay(), !mEECore->COP0->Status->isInterruptsMasked(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
 	// Breakpoint.
-	if (pcValue == DEBUG_PC_BREAKPOINT)
+	if (pcAddress == DEBUG_PC_BREAKPOINT)
 	{
 		logDebug("EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
@@ -92,13 +92,12 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	// Run the instruction, which is based on the implementation index.
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
-	// Check the exception queue to see if any are queued up - handle them first before executing an instruction (since the PC will change). 
-	if (EECore->Exceptions->hasExceptionOccurred())
-		mExceptionHandler->handleException(EECore->Exceptions->getException());
-
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
-	EECore->COP0->Count->increment(mInstructionInfo->mCycles);
+	mEECore->COP0->Count->increment(mInstructionInfo->mCycles);
 	handleCountEventCheck();
+
+	// Check if any external interrupts are pending and queue exception if there are.
+	handleInterruptCheck();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -109,9 +108,9 @@ s64 EECoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	return mInstructionInfo->mCycles;
 }
 
-void EECoreInterpreter::handleInterruptCheck() const
+void EECoreInterpreter::handleInterruptCheck()
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
+	auto& COP0 = mEECore->COP0;
 
 	// Interrupt exceptions are only taken when conditions are correct.
 	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.
@@ -122,125 +121,104 @@ void EECoreInterpreter::handleInterruptCheck() const
 		if (ipCause & imStatus)
 		{
 #if defined(BUILD_DEBUG)
-			auto& EECore = getResources()->EE->EECore;
+			
 			auto& STAT = getResources()->EE->INTC->STAT;
 			auto& MASK = getResources()->EE->INTC->MASK;
 			logDebug("EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
-				DEBUG_LOOP_COUNTER, EECore->R5900->PC->readWord(Context_t::EE), EECore->R5900->BD->isInBranchDelay());
+				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->BD->isInBranchDelay());
 			logDebug("Printing list of interrupt sources...");
 			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
 			{
 				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
 					logDebug(STAT->mFieldMnemonics[irqField].c_str());
 			}
+			if ((ipCause & imStatus) & 0x4) // DMAC
+				logDebug("DMAC");
 #endif
 			// Handle the interrupt immediately.
-			EECore->R5900->PC->setPCValueNext();
-			mExceptionHandler->handleException(EECoreException_t::EX_INTERRUPT);
+			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.
+			mEECore->R5900->PC->setPCValueNext(); 
+			handleException(EECoreException_t::EX_INTERRUPT);
 		}
 	}
 }
 
 void EECoreInterpreter::handleCountEventCheck() const
 {
-	auto& COP0 = getResources()->EE->EECore->COP0;
-
 	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
 	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
-	if (COP0->Count->readWord(Context_t::EE) == COP0->Compare->readWord(Context_t::EE))
-		COP0->Cause->setIRQLine(7);
+	if (mEECore->COP0->Count->readWord(EE) == mEECore->COP0->Compare->readWord(EE))
+		mEECore->COP0->Cause->setIRQLine(7);
 	else
-		COP0->Cause->clearIRQLine(7);
+		mEECore->COP0->Cause->clearIRQLine(7);
 }
 
-bool EECoreInterpreter::checkCOP0Usable() const
+bool EECoreInterpreter::handleCOP0Usable()
 {
-	if (!getResources()->EE->EECore->COP0->isCoprocessorUsable())
+	if (!mEECore->COP0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& COP0 = getResources()->EE->EECore->COP0;
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 0);
-		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
-		return false;
+		mEECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 0);
+		handleException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
+		return true;
 	}
 
 	// Coprocessor is usable, proceed.
-	return true;
+	return false;
 }
 
-bool EECoreInterpreter::checkCOP1Usable() const
+bool EECoreInterpreter::handleCOP1Usable()
 {
-	if (!getResources()->EE->EECore->FPU->isCoprocessorUsable())
+	if (!mEECore->FPU->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& COP0 = getResources()->EE->EECore->COP0;
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 1);
-		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
-		return false;
+		mEECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 1);
+		handleException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
+		return true;
 	}
 
 	// Coprocessor is usable, proceed.
-	return true;
+	return false;
 }
 
-bool EECoreInterpreter::checkCOP2Usable() const
+bool EECoreInterpreter::handleCOP2Usable()
 {
-	if (!getResources()->EE->VPU->VU->VU0->isCoprocessorUsable())
+	if (!mVU0->isCoprocessorUsable())
 	{
 		// Coprocessor was not usable. Raise an exception.
-		auto& COP0 = getResources()->EE->EECore->COP0;
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 2);
-		Exceptions->setException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
-		return false;
+		mEECore->COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::CE, 2);
+		handleException(EECoreException_t::EX_COPROCESSOR_UNUSABLE);
+		return true;
 	}
 
 	// Coprocessor is usable, proceed.
-	return true;
+	return false;
 }
 
-bool EECoreInterpreter::checkNoMMUError() const
-{
-	if (mMMUHandler->hasExceptionOccurred())
-	{
-		// Something went wrong in the MMU.
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(mMMUHandler->getException());
-		return false;
-	}
-
-	// MMU was ok.
-	return true;
-}
-
-bool EECoreInterpreter::checkNoOverOrUnderflow32(const s32& x, const s32& y) const
+bool EECoreInterpreter::handleOverOrUnderflow32(const s32& x, const s32& y)
 {
 	if (MathUtil::testOverOrUnderflow32(x, y))
 	{
 		// Over/Under flow occured.
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(EECoreException_t::EX_OVERFLOW);
-		return false;
+		handleException(EECoreException_t::EX_OVERFLOW);
+		return true;
 	}
 
 	// No error occured.
-	return true;
+	return false;
 }
 
-bool EECoreInterpreter::checkNoOverOrUnderflow64(const s64& x, const s64& y) const
+bool EECoreInterpreter::handleOverOrUnderflow64(const s64& x, const s64& y)
 {
 	if (MathUtil::testOverOrUnderflow64(x, y))
 	{
 		// Over/Under flow occured.
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(EECoreException_t::EX_OVERFLOW);
-		return false;
+		handleException(EECoreException_t::EX_OVERFLOW);
+		return true;
 	}
 
 	// No error occured.
-	return true;
+	return false;
 }
 
 void EECoreInterpreter::INSTRUCTION_UNKNOWN()
@@ -252,4 +230,358 @@ void EECoreInterpreter::INSTRUCTION_UNKNOWN()
 #endif
 }
 
+void EECoreInterpreter::handleException(const EECoreException_t& exception)
+{
+	auto& COP0 = mEECore->COP0;
 
+#if defined(BUILD_DEBUG)
+	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
+#endif
+
+	// Set the PS2Exception pointer.
+	mException = exception;
+
+	// Get the exception properties.
+	mExceptionProperties = EECoreExceptionsTable::getExceptionInfo(mException);
+
+#if 0 // defined(BUILD_DEBUG)
+	// Debug print exception type.
+	logDebug("EECore ExceptionHandler called! Type = %s", mExceptionProperties->mMnemonic);
+#endif
+
+	// For Reset and NMI's, need some additional processing before calling the general handlers.
+	if (mException == EECoreException_t::EX_RESET)
+	{
+		COP0->initalise();
+	}
+	else if (mException == EECoreException_t::EX_NMI)
+	{
+		COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
+		COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::BEV, 1);
+	}
+
+	// Call the Level 1 or Level 2 exception handler based on the exception, or throw runtime_error if exception type/properties does not exist.
+	switch (mExceptionProperties->mLevel)
+	{
+	case 1:
+		handleException_L1(); break;
+	case 2:
+		handleException_L2(); break;
+	default:
+		throw std::runtime_error("Exception parsed contained an unknown exception type.");
+	}
+}
+
+void EECoreInterpreter::handleException_L1() const
+{
+	// Exception level 1 handler code. Adapted from EE Core Users Manual page 91.
+	auto& COP0 = mEECore->COP0;
+	auto& PC = mEECore->R5900->PC;
+	auto& BD = mEECore->R5900->BD;
+
+	// Vector offset value, used to set final vector address.
+	u32 vectorOffset = 0x0;
+
+	// Set Cause.ExeCode value.
+	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
+
+	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
+	if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1)
+	{
+		vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
+	}
+	// Normal exception processing.
+	else
+	{
+		// Set EPC and Cause.BD fields.
+		// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+		if (BD->isInBranchDelay())
+		{
+			u32 pcValue = PC->readWord(EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
+			COP0->EPC->writeWord(EE, pcValue);
+			COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
+			BD->resetBranchDelay(); // Reset branch delay slot.
+		}
+		else
+		{
+			u32 pcValue = PC->readWord(EE) - Constants::SIZE_MIPS_INSTRUCTION;
+			COP0->EPC->writeWord(EE, pcValue);
+			COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
+		}
+
+		// Set to kernel mode and disable interrupts.
+		COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 1);
+
+		// Select the vector to use (set vectorOffset).
+		if (mException == EECoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD
+			|| mException == EECoreException_t::EX_TLB_REFILL_STORE)
+		{
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
+		}
+		else if (mException == EECoreException_t::EX_INTERRUPT)
+		{
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT;
+		}
+		else
+		{
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
+		}
+
+		// Select vector base to use and set PC to use the specified vector.
+		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
+		{
+			PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+		}
+		else
+		{
+			PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+		}
+	}
+}
+
+void EECoreInterpreter::handleException_L2() const
+{
+	// Exception level 2 handler code. Adapted from EE Core Users Manual page 92.
+	auto& COP0 = mEECore->COP0;
+	auto& PC = mEECore->R5900->PC;
+	auto& BD = mEECore->R5900->BD;
+
+	// Vector offset value, used to set final vector address.
+	u32 vectorOffset = 0x0;
+
+	// Set Cause.EXC2 value.
+	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, mExceptionProperties->mExeCode);
+
+	// Set EPC and Cause.BD fields.
+	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+	if (BD->isInBranchDelay())
+	{
+		// TODO: no idea if this code works, yet to encounter a branch delay exception.
+		u32 pcValue = PC->readWord(EE) - Constants::SIZE_MIPS_INSTRUCTION * 2;
+		COP0->ErrorEPC->writeWord(EE, pcValue);
+		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
+		BD->resetBranchDelay(); // Reset branch delay slot.
+	}
+	else
+	{
+		u32 pcValue = PC->readWord(EE) - Constants::SIZE_MIPS_INSTRUCTION;
+		COP0->ErrorEPC->writeWord(EE, pcValue);
+		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 0);
+	}
+
+	// Set to kernel mode and disable interrupts.
+	COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 1);
+
+	// Select vector to use and set PC to use it.
+	if (mException == EECoreException_t::EX_NMI
+		|| mException == EECoreException_t::EX_RESET)
+	{
+		PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
+	}
+	else
+	{
+		if (mException == EECoreException_t::EX_PERFORMANCE_COUNTER)
+		{
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COUNTER;
+		}
+		else if (mException == EECoreException_t::EX_DEBUG)
+		{
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_DEBUG;
+		}
+		else
+		{
+			// Use V_TLB_REFIL (offset 0x00000000) (should get optimised out).
+			vectorOffset = PS2Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL;
+		}
+
+		// Select vector base to use and set PC to use the specified vector.
+		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::DEV) == 1)
+		{
+			PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+		}
+		else
+		{
+			PC->setPCValueAbsolute(PS2Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+		}
+	}
+}
+
+void EECoreInterpreter::handleMMUError(const u32& virtualAddress, const MMUAccess_t& access, const MMUError_t& error, const s32 & tlbEntryIndex)
+{
+	auto& COP0 = mEECore->COP0;
+	auto& TLB = mEECore->TLB;
+	EECoreException_t exception;
+
+	// Set COP0 information. TODO: check if correct.
+	COP0->BadVAddr->writeWord(EE, virtualAddress);
+	COP0->Context->setFieldValue(EECoreCOP0Register_Context_t::Fields::BadVPN2, MMUUtil::getVirtualAddressHI19(virtualAddress));
+	COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, MMUUtil::getVirtualAddressHI19(virtualAddress));
+	COP0->Random->setFieldValue(EECoreCOP0Register_Random_t::Fields::Random, TLB->getNewTLBIndex());
+
+	if (tlbEntryIndex > 0) 
+		COP0->EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, TLB->getTLBEntry(tlbEntryIndex).mASID); // Set only if tlb entry index valid.
+
+	// Find the right EECoreException_t to process...
+	if (access == READ)
+	{
+		switch (error)
+		{
+		case ADDRESS:
+			exception = EECoreException_t::EX_ADDRESS_ERROR_INSTRUCTION_FETCH_LOAD; break;
+		case TLB_REFILL:
+			exception = EECoreException_t::EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD; break;
+		case TLB_INVALID:
+			exception = EECoreException_t::EX_TLB_INVALID_INSTRUCTION_FETCH_LOAD; break;
+		case TLB_MODIFIED:
+			exception = EECoreException_t::EX_TLB_MODIFIED; break;
+		}
+	}
+	else
+	{
+		switch (error)
+		{
+		case ADDRESS:
+			exception = EECoreException_t::EX_ADDRESS_ERROR_STORE; break;
+		case TLB_REFILL:
+			exception = EECoreException_t::EX_TLB_REFILL_STORE; break;
+		case TLB_INVALID:
+			exception = EECoreException_t::EX_TLB_INVALID_STORE; break;
+		case TLB_MODIFIED:
+			exception = EECoreException_t::EX_TLB_MODIFIED; break;
+		}
+	}
+
+	// Pass exception to handler.
+	handleException(exception);
+}
+
+bool EECoreInterpreter::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
+{
+	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
+	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
+	//  but I'm confident this is what it meant (I also dont see another way to do it).
+	// TODO: try to reduce the spaghetti code-ness of this... however the lookup process is complicated and error propogation is needed, so may not be able to do much.
+	auto& COP0 = mEECore->COP0;
+	auto& TLB = mEECore->TLB;
+
+	// Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
+	// Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.
+	if (COP0->isOperatingUserMode())
+	{
+		// Operating in user mode.
+		if (!(virtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_USER_UPPER_BOUND))
+		{
+			handleMMUError(virtualAddress, access, ADDRESS, -1);
+			return true;
+		}
+	}
+	else if (COP0->isOperatingSupervisorMode())
+	{
+		// Operating in supervisor mode.
+		if (!((virtualAddress >= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_LOWER_BOUND_2 && virtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_1)
+			|| (virtualAddress <= PS2Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_2)))
+		{
+			handleMMUError(virtualAddress, access, ADDRESS, -1);
+			return true;
+		}
+	}
+
+	// Stage 2 - perform TLB lookup and perform checks.
+	// If we are operating in kernel mode, then SOME addreses are unmapped, and we do not need to perform a TLB lookup.
+	if (COP0->isOperatingKernelMode())
+	{
+		// Test for kseg0
+		if (virtualAddress >= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtualAddress <= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
+		{
+			// We are in kseg0, so to get the physical address we just minus the kseg0 base address of 0x80000000.
+			// We also do not test for the Config.K0 status, as we do not involve caches unless it is an explicit request.
+			physicalAddress = (virtualAddress - PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2);
+			return false;
+		}
+
+		// Test for kseg1
+		if (virtualAddress >= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3 && virtualAddress <= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_3)
+		{
+			// We are in kseg1, so to get the physical address we just minus the kseg1 base address of 0xA0000000.
+			physicalAddress = (virtualAddress - PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3);
+			return false;
+		}
+
+		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
+		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1) 
+		{
+			if (virtualAddress <= PS2Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
+			{
+				// We are in kuseg unmapped region, so just return the VA.
+				physicalAddress = virtualAddress;
+				return false;
+			}
+		}
+	}
+
+	// Check if its in the TLB and get the information.
+	s32 tlbIndex = TLB->findTLBIndex(virtualAddress);
+	if (tlbIndex == -1)
+	{
+		handleMMUError(virtualAddress, access, TLB_REFILL, tlbIndex);
+		return true;
+	}
+	auto& TLBEntry = TLB->getTLBEntry(tlbIndex);
+
+	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
+	// TODO: Check if ASID checking is correct.
+	if (TLBEntry.mG == 0)
+	{
+		// Not a global page map, need to make sure ASID's are the same.
+		if (COP0->EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID) != TLBEntry.mASID)
+		{
+			handleMMUError(virtualAddress, access, TLB_REFILL, tlbIndex);
+			return true;
+		}
+	}
+
+	// Stage 3 - Assess if the page is valid and it is marked dirty. Also check for the scratchpad ram access.
+	// Check if accessing scratchpad.
+	if (TLBEntry.mS)
+	{
+		// As mentioned in the TLB implementation (see the class EECoreTLB_t), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
+		// This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
+		u32 offset16KB = virtualAddress & Constants::MASK_16KB;
+		physicalAddress = PS2Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + offset16KB;
+		return false;
+	}
+
+	// Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
+	// This is done by checking the LSB of the VPN from the original address accessed.
+	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN. Note that this mask is always equal to or greater than 4KB.
+	u32 indexEvenOddMask = ((TLBEntry.mMask << 12) | 0xFFF) + 1;
+	u8 TLBEvenOddIndex = (virtualAddress & indexEvenOddMask) ? 1 : 0;
+
+	// Check if the entry is valid (V bit)
+	if (!TLBEntry.PhysicalInfo[TLBEvenOddIndex].mV)
+	{
+		handleMMUError(virtualAddress, access, TLB_INVALID, tlbIndex);
+		return true;
+	}
+
+	// Check if entry is allowed writes (dirty flag) and raise TLB modified exception if writing occurs.
+	if (!TLBEntry.PhysicalInfo[TLBEvenOddIndex].mD && access == WRITE)
+	{
+		handleMMUError(virtualAddress, access, TLB_MODIFIED, tlbIndex);
+		return true;
+	}
+
+	// Stage 4 - calculate final physical address from TLB entry.
+	// Cache access?
+	// TODO: Maybe we actually dont need this in the emulator as the C flag only describes the cache method, not a location. The location is still refering to main memory.
+	/*
+	if (tlbEntry.PhysicalInfo[mIndexEvenOdd].mC > 0)
+	{
+	}
+	*/
+
+	// We are accessing main memory - combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
+	u32 offsetMask = (TLBEntry.mMask << 12) | 0xFFF;
+	physicalAddress = ((TLBEntry.PhysicalInfo[TLBEvenOddIndex].mPFN << 12) | (virtualAddress & offsetMask));
+	return false;
+}

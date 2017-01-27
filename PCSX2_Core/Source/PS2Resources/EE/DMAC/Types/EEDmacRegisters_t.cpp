@@ -45,7 +45,7 @@ EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
 
 void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 {
-	if (context == Context_t::EE)
+	if (context == EE)
 	{
 		// For bits 0-15 (stat bits), they are cleared when 1 is written. For bits 16-31 (mask bits), they are reversed when 1 is written.
 		u32 regValue = readWord(context);
@@ -75,7 +75,7 @@ void EEDmacRegister_STAT_t::handleInterruptCheck()
 	// Check for interrupt conditions.
 	// See the formula listed at the end of page 65 of the EE Users Manual.
 	bool interrupt = false;
-	u32 regValue = readWord(Context_t::RAW);
+	u32 regValue = readWord(RAW);
 
 	// Check for STAT & MASK > 0.
 	u32 statValue = regValue & 0xFFFF;

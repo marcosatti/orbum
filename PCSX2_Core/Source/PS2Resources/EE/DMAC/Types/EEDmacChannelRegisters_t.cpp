@@ -35,7 +35,7 @@ EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic) 
 
 void EEDmacChannelRegister_QWC_t::decrement()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) - 1);
+	writeWord(RAW, readWord(RAW) - 1);
 }
 
 EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic) :
@@ -64,7 +64,7 @@ EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic
 
 void EEDmacChannelRegister_SADR_t::increment()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x10);
+	writeWord(RAW, readWord(RAW) + 0x10);
 }
 
 EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -116,14 +116,14 @@ void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 
 void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x2000);
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x2000);
 }
 
 void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x20));
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x2000));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x20));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x2000));
 }
 
 EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -175,14 +175,14 @@ void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 
 void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x4000);
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x4000);
 }
 
 void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x40));
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x4000));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x40));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x4000));
 }
 
 EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -234,12 +234,12 @@ void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 
 void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) | 0x8000);
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x8000);
 }
 
 void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x80));
-	mSbusF240->writeWord(Context_t::RAW, mSbusF240->readWord(Context_t::RAW) & (~0x8000));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x80));
+	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x8000));
 }

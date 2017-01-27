@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "PS2Constants/PS2Constants.h"
-#include "PS2Resources/EE/EECore/Types/EECoreTLBEntryInfo_t.h"
+#include "PS2Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 
 class EECoreTLB_t
 {
@@ -21,12 +21,12 @@ public:
 	/*
 	Gets the TLB entry at the specified index - use findTLBIndex() to make sure it exists first.
 	*/
-	const EECoreTLBEntryInfo_t & getTLBEntry(s32 index) const;
+	const EECoreTLBEntry_t & getTLBEntry(s32 index) const;
 
 	/*
 	Copies the TLB entry info to the specified index.
 	*/
-	void setTLBEntry(const EECoreTLBEntryInfo_t & entry, const s32 & index);
+	void setTLBEntry(const EECoreTLBEntry_t & entry, const s32 & index);
 
 	/*
 	Gets an index to a new TLB entry position.
@@ -39,13 +39,13 @@ public:
 	/*
 	A zeroed-TLB entry, pointed to by the MMUHandler initially.
 	*/
-	static constexpr EECoreTLBEntryInfo_t EMPTY_TLB_ENTRY = {0};
+	static constexpr EECoreTLBEntry_t EMPTY_TLB_ENTRY = {0};
 
 private:
 	/*
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	EECoreTLBEntryInfo_t mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
+	EECoreTLBEntry_t mTLBEntries[PS2Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
 };
 

@@ -40,7 +40,7 @@ void SBUSFIFOQueue_SIF2_t::writeQword(const Context_t& context, const u128& data
 void SBUSFIFOQueue_SIF2_t::handleSBUSUpdate() const
 {
 	if (getCurrentSize() == 0)
-		mSBUSF300->writeWord(Context_t::RAW, mSBUSF300->readWord(Context_t::RAW) | 0x04000000);
+		mSBUSF300->writeWord(RAW, mSBUSF300->readWord(RAW) | 0x04000000);
 	else
-		mSBUSF300->writeWord(Context_t::RAW, mSBUSF300->readWord(Context_t::RAW) & (~0x04000000));
+		mSBUSF300->writeWord(RAW, mSBUSF300->readWord(RAW) & (~0x04000000));
 }

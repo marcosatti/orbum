@@ -168,8 +168,8 @@ void VUInterpreter::SUB()
 	{
 		if (mInstruction.testDestField(i))
 		{
-			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(Context_t::EE, i) - source2Reg->readFloat(Context_t::EE, i), flags);
-			destReg->writeFloat(Context_t::EE, i, result);
+			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(EE, i) - source2Reg->readFloat(EE, i), flags);
+			destReg->writeFloat(EE, i, result);
 			MAC->updateVectorField(i, flags);
 		}
 		else

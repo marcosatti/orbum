@@ -289,12 +289,6 @@ public:
 	explicit EECoreCOP0Register_Status_t();
 
 	/*
-	Returns if all exceptions are currently masked ( = NOT ENABLED).
-	TODO: implement, currently returns false always. Need to check ERL and EXL bits? "in addition, when the ERL and EXL bits are 0".
-	*/
-	bool isExceptionsMasked() const;
-
-	/*
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master EIE and IE bit.
 	*/

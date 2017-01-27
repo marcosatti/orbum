@@ -13,7 +13,7 @@ IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnem
 
 void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
 {
-	u32 temp = readWord(Context_t::RAW);
+	u32 temp = readWord(RAW);
 
 	// Test for 16/32-bit mode.
 	if (!mWordMode)
@@ -41,7 +41,7 @@ void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
 		}
 	}
 	
-	writeWord(Context_t::RAW, temp);
+	writeWord(RAW, temp);
 }
 
 bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
@@ -53,7 +53,7 @@ bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 
 void IOPTimersTimerRegister_COUNT_t::reset()
 {
-	writeWord(Context_t::RAW, 0);
+	writeWord(RAW, 0);
 }
 
 IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const u8 & timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
@@ -81,7 +81,7 @@ void IOPTimersTimerRegister_MODE_t::writeHword(const Context_t& context, u32 arr
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
-	if (context != Context_t::RAW)
+	if (context != RAW)
 	{
 		mCount->reset();
 		handleClockSourceUpdate();
@@ -92,7 +92,7 @@ void IOPTimersTimerRegister_MODE_t::writeWord(const Context_t& context, u32 valu
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
-	if (context != Context_t::RAW)
+	if (context != RAW)
 	{
 		mCount->reset();
 		handleClockSourceUpdate();

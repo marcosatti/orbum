@@ -3,13 +3,13 @@
 #include "Common/Global/Globals.h"
 
 /*
-TLB entry information. Used as the backbone of storing information in the EECore TLB.
+EE Core TLB entry. Used as the backbone of storing information in the EECore TLB.
 A TLB entry is heavily related to the COP0 registers Entry{Hi, Lo0, Lo1}, PageMask and others.
 See EE Core Users Manual page 120 - 123 about the TLB.
 
 For the internal struct array below, index 0 corresponds to the Even infomation, and index 1 correponds to the Odd information.
 */
-struct EECoreTLBEntryInfo_t
+struct EECoreTLBEntry_t
 {
 	u32 mMask;
 	u32 mVPN2;

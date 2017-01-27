@@ -7,22 +7,16 @@
 #include "Common/Types/Registers/Register32_t.h"
 
 #include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/ExecutionCore/Interpreter/EE/EECoreInterpreter/EECoreMMUHandler/EECoreMMUHandler.h"
 #include "VM/ExecutionCore/Interpreter/EE/VPU/VUInterpreter/VUInterpreter.h"
 
-#include "PS2Resources/PS2Resources_t.h"
-#include "PS2Resources/EE/EE_t.h"
 #include "PS2Resources/EE/EECore/EECore_t.h"
 #include "PS2Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "PS2Resources/EE/EECore/Types/EECoreExceptions_t.h"
-#include "PS2Resources/EE/VPU/VPU_t.h"
-#include "PS2Resources/EE/VPU/VU/VU_t.h"
 #include "PS2Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
 void EECoreInterpreter::QMFC2()
 {
 	// GPR = VU0.VF. Coprocessor unusable exception.
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Check for the interlock bit.
@@ -31,17 +25,17 @@ void EECoreInterpreter::QMFC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
+	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mVU0->VF[mInstruction.getRRd()];
 
-	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0));
-	destReg->writeDword(Context_t::EE, 1, source1Reg->readDword(Context_t::EE, 1));
+	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
 void EECoreInterpreter::QMTC2()
 {
 	// VU0.VF = GPR. Coprocessor unusable exception.
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Check for the interlock bit.
@@ -50,72 +44,16 @@ void EECoreInterpreter::QMTC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getRRd()];
-	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mVU0->VF[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeDword(Context_t::EE, 0, source1Reg->readDword(Context_t::EE, 0));
-	destReg->writeDword(Context_t::EE, 1, source1Reg->readDword(Context_t::EE, 1));
-}
-
-void EECoreInterpreter::LQC2()
-{
-	// VU0.VF = GPR. Coprocessor unusable exception.
-	if (!checkCOP2Usable())
-        return;
-
-	auto& destReg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getIRt()];
-	auto& sourceReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
-
-	u32 PS2VirtualAddress = (sourceReg->readWord(Context_t::EE, 0) + imm) & (~static_cast<u32>(0xF)); // Strip the last 4 bits, as the access must be aligned (the documentation says to do this).
-	u64 value;
-	// TODO: Im not sure if this is correct for big-endian.
-
-	value = mMMUHandler->readDword(PS2VirtualAddress);
-	// Check for MMU error (1).
-	if (mMMUHandler->hasExceptionOccurred())
-	{
-		auto& Exceptions = getResources()->EE->EECore->Exceptions;
-		Exceptions->setException(mMMUHandler->getException());
-		return; // Return early, dont bother trying to load the second dword.
-	}
-	else
-		destReg->writeDword(Context_t::EE, 0, value); // Get first 8 bytes (bytes 0 -> 7).
-
-	value = mMMUHandler->readDword(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD);
-	// Check for MMU error (2).
-	if (!checkNoMMUError())
-        return;
-	else
-		destReg->writeDword(Context_t::EE, 1, value); // Get second 8 bytes (bytes 8 -> 15).
-}
-
-void EECoreInterpreter::SQC2()
-{
-	// VU0.VF = GPR. Coprocessor unusable exception.
-	if (!checkCOP2Usable())
-        return;
-
-	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = getResources()->EE->VPU->VU->VU0->VF[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
-
-	u32 PS2VirtualAddress = source1Reg->readWord(Context_t::EE, 0) + imm;
-
-	mMMUHandler->writeDword(PS2VirtualAddress, source2Reg->readDword(Context_t::EE, 0));
-	// Check for MMU error.
-	if (!checkNoMMUError())
-        return;
-
-	mMMUHandler->writeDword(PS2VirtualAddress + Constants::NUMBER_BYTES_IN_DWORD, source2Reg->readDword(Context_t::EE, 1));
-	// Check for MMU error.
-	if (!checkNoMMUError())
-        return;
+	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
 void EECoreInterpreter::CFC2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Check for the interlock bit.
@@ -124,15 +62,15 @@ void EECoreInterpreter::CFC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
+	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mVU0->CCR[mInstruction.getRRd()];
 
-	destReg->writeDword(Context_t::EE, 0, static_cast<s64>(source1Reg->readWord(Context_t::EE)));
+	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readWord(EE)));
 }
 
 void EECoreInterpreter::CTC2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Check for the interlock bit.
@@ -141,15 +79,15 @@ void EECoreInterpreter::CTC2()
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = getResources()->EE->VPU->VU->VU0->CCR[mInstruction.getRRd()];
-	auto& source1Reg = getResources()->EE->EECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mVU0->CCR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
 
-	destReg->writeWord(Context_t::EE, static_cast<u32>(source1Reg->readWord(Context_t::EE, 0)));
+	destReg->writeWord(EE, static_cast<u32>(source1Reg->readWord(EE, 0)));
 }
 
 void EECoreInterpreter::BC2F()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// TODO: Implement.
@@ -162,7 +100,7 @@ void EECoreInterpreter::BC2F()
 
 void EECoreInterpreter::BC2FL()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// TODO: Implement.
@@ -175,7 +113,7 @@ void EECoreInterpreter::BC2FL()
 
 void EECoreInterpreter::BC2T()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// TODO: Implement.
@@ -188,7 +126,7 @@ void EECoreInterpreter::BC2T()
 
 void EECoreInterpreter::BC2TL()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// TODO: Implement.
@@ -201,7 +139,7 @@ void EECoreInterpreter::BC2TL()
 
 void EECoreInterpreter::VCALLMS()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
 		return;
 
 	// TODO: Implement.
@@ -214,7 +152,7 @@ void EECoreInterpreter::VCALLMS()
 
 void EECoreInterpreter::VCALLMSR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
 		return;
 
 	// TODO: Implement.
@@ -227,7 +165,7 @@ void EECoreInterpreter::VCALLMSR()
 
 void EECoreInterpreter::VABS()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -236,7 +174,7 @@ void EECoreInterpreter::VABS()
 
 void EECoreInterpreter::VADD()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -245,7 +183,7 @@ void EECoreInterpreter::VADD()
 
 void EECoreInterpreter::VADDi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -254,7 +192,7 @@ void EECoreInterpreter::VADDi()
 
 void EECoreInterpreter::VADDq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -263,7 +201,7 @@ void EECoreInterpreter::VADDq()
 
 void EECoreInterpreter::VADDbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -272,7 +210,7 @@ void EECoreInterpreter::VADDbc_0()
 
 void EECoreInterpreter::VADDbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -281,7 +219,7 @@ void EECoreInterpreter::VADDbc_1()
 
 void EECoreInterpreter::VADDbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -290,7 +228,7 @@ void EECoreInterpreter::VADDbc_2()
 
 void EECoreInterpreter::VADDbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -299,7 +237,7 @@ void EECoreInterpreter::VADDbc_3()
 
 void EECoreInterpreter::VADDA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -308,7 +246,7 @@ void EECoreInterpreter::VADDA()
 
 void EECoreInterpreter::VADDAi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -317,7 +255,7 @@ void EECoreInterpreter::VADDAi()
 
 void EECoreInterpreter::VADDAq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -326,7 +264,7 @@ void EECoreInterpreter::VADDAq()
 
 void EECoreInterpreter::VADDAbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -335,7 +273,7 @@ void EECoreInterpreter::VADDAbc_0()
 
 void EECoreInterpreter::VADDAbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -344,7 +282,7 @@ void EECoreInterpreter::VADDAbc_1()
 
 void EECoreInterpreter::VADDAbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -353,7 +291,7 @@ void EECoreInterpreter::VADDAbc_2()
 
 void EECoreInterpreter::VADDAbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -362,7 +300,7 @@ void EECoreInterpreter::VADDAbc_3()
 
 void EECoreInterpreter::VSUB()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -371,7 +309,7 @@ void EECoreInterpreter::VSUB()
 
 void EECoreInterpreter::VSUBi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -380,7 +318,7 @@ void EECoreInterpreter::VSUBi()
 
 void EECoreInterpreter::VSUBq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -389,7 +327,7 @@ void EECoreInterpreter::VSUBq()
 
 void EECoreInterpreter::VSUBbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -398,7 +336,7 @@ void EECoreInterpreter::VSUBbc_0()
 
 void EECoreInterpreter::VSUBbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -407,7 +345,7 @@ void EECoreInterpreter::VSUBbc_1()
 
 void EECoreInterpreter::VSUBbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -416,7 +354,7 @@ void EECoreInterpreter::VSUBbc_2()
 
 void EECoreInterpreter::VSUBbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -425,7 +363,7 @@ void EECoreInterpreter::VSUBbc_3()
 
 void EECoreInterpreter::VSUBA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -434,7 +372,7 @@ void EECoreInterpreter::VSUBA()
 
 void EECoreInterpreter::VSUBAi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -443,7 +381,7 @@ void EECoreInterpreter::VSUBAi()
 
 void EECoreInterpreter::VSUBAq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -452,7 +390,7 @@ void EECoreInterpreter::VSUBAq()
 
 void EECoreInterpreter::VSUBAbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -461,7 +399,7 @@ void EECoreInterpreter::VSUBAbc_0()
 
 void EECoreInterpreter::VSUBAbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -470,7 +408,7 @@ void EECoreInterpreter::VSUBAbc_1()
 
 void EECoreInterpreter::VSUBAbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -479,7 +417,7 @@ void EECoreInterpreter::VSUBAbc_2()
 
 void EECoreInterpreter::VSUBAbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -488,7 +426,7 @@ void EECoreInterpreter::VSUBAbc_3()
 
 void EECoreInterpreter::VMUL()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -497,7 +435,7 @@ void EECoreInterpreter::VMUL()
 
 void EECoreInterpreter::VMULi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -506,7 +444,7 @@ void EECoreInterpreter::VMULi()
 
 void EECoreInterpreter::VMULq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -515,7 +453,7 @@ void EECoreInterpreter::VMULq()
 
 void EECoreInterpreter::VMULbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -524,7 +462,7 @@ void EECoreInterpreter::VMULbc_0()
 
 void EECoreInterpreter::VMULbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -533,7 +471,7 @@ void EECoreInterpreter::VMULbc_1()
 
 void EECoreInterpreter::VMULbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -542,7 +480,7 @@ void EECoreInterpreter::VMULbc_2()
 
 void EECoreInterpreter::VMULbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -551,7 +489,7 @@ void EECoreInterpreter::VMULbc_3()
 
 void EECoreInterpreter::VMULA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -560,7 +498,7 @@ void EECoreInterpreter::VMULA()
 
 void EECoreInterpreter::VMULAi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -569,7 +507,7 @@ void EECoreInterpreter::VMULAi()
 
 void EECoreInterpreter::VMULAq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -578,7 +516,7 @@ void EECoreInterpreter::VMULAq()
 
 void EECoreInterpreter::VMULAbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -587,7 +525,7 @@ void EECoreInterpreter::VMULAbc_0()
 
 void EECoreInterpreter::VMULAbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -596,7 +534,7 @@ void EECoreInterpreter::VMULAbc_1()
 
 void EECoreInterpreter::VMULAbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -605,7 +543,7 @@ void EECoreInterpreter::VMULAbc_2()
 
 void EECoreInterpreter::VMULAbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -614,7 +552,7 @@ void EECoreInterpreter::VMULAbc_3()
 
 void EECoreInterpreter::VMADD()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -623,7 +561,7 @@ void EECoreInterpreter::VMADD()
 
 void EECoreInterpreter::VMADDi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -632,7 +570,7 @@ void EECoreInterpreter::VMADDi()
 
 void EECoreInterpreter::VMADDq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -641,7 +579,7 @@ void EECoreInterpreter::VMADDq()
 
 void EECoreInterpreter::VMADDbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -650,7 +588,7 @@ void EECoreInterpreter::VMADDbc_0()
 
 void EECoreInterpreter::VMADDbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -659,7 +597,7 @@ void EECoreInterpreter::VMADDbc_1()
 
 void EECoreInterpreter::VMADDbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -668,7 +606,7 @@ void EECoreInterpreter::VMADDbc_2()
 
 void EECoreInterpreter::VMADDbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -677,7 +615,7 @@ void EECoreInterpreter::VMADDbc_3()
 
 void EECoreInterpreter::VMADDA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -686,7 +624,7 @@ void EECoreInterpreter::VMADDA()
 
 void EECoreInterpreter::VMADDAi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -695,7 +633,7 @@ void EECoreInterpreter::VMADDAi()
 
 void EECoreInterpreter::VMADDAq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -704,7 +642,7 @@ void EECoreInterpreter::VMADDAq()
 
 void EECoreInterpreter::VMADDAbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -713,7 +651,7 @@ void EECoreInterpreter::VMADDAbc_0()
 
 void EECoreInterpreter::VMADDAbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -722,7 +660,7 @@ void EECoreInterpreter::VMADDAbc_1()
 
 void EECoreInterpreter::VMADDAbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -731,7 +669,7 @@ void EECoreInterpreter::VMADDAbc_2()
 
 void EECoreInterpreter::VMADDAbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -740,7 +678,7 @@ void EECoreInterpreter::VMADDAbc_3()
 
 void EECoreInterpreter::VMSUB()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -749,7 +687,7 @@ void EECoreInterpreter::VMSUB()
 
 void EECoreInterpreter::VMSUBi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -758,7 +696,7 @@ void EECoreInterpreter::VMSUBi()
 
 void EECoreInterpreter::VMSUBq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -767,7 +705,7 @@ void EECoreInterpreter::VMSUBq()
 
 void EECoreInterpreter::VMSUBbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -776,7 +714,7 @@ void EECoreInterpreter::VMSUBbc_0()
 
 void EECoreInterpreter::VMSUBbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -785,7 +723,7 @@ void EECoreInterpreter::VMSUBbc_1()
 
 void EECoreInterpreter::VMSUBbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -794,7 +732,7 @@ void EECoreInterpreter::VMSUBbc_2()
 
 void EECoreInterpreter::VMSUBbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -803,7 +741,7 @@ void EECoreInterpreter::VMSUBbc_3()
 
 void EECoreInterpreter::VMSUBA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -812,7 +750,7 @@ void EECoreInterpreter::VMSUBA()
 
 void EECoreInterpreter::VMSUBAi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -821,7 +759,7 @@ void EECoreInterpreter::VMSUBAi()
 
 void EECoreInterpreter::VMSUBAq()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -830,7 +768,7 @@ void EECoreInterpreter::VMSUBAq()
 
 void EECoreInterpreter::VMSUBAbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -839,7 +777,7 @@ void EECoreInterpreter::VMSUBAbc_0()
 
 void EECoreInterpreter::VMSUBAbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -848,7 +786,7 @@ void EECoreInterpreter::VMSUBAbc_1()
 
 void EECoreInterpreter::VMSUBAbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -857,7 +795,7 @@ void EECoreInterpreter::VMSUBAbc_2()
 
 void EECoreInterpreter::VMSUBAbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -866,7 +804,7 @@ void EECoreInterpreter::VMSUBAbc_3()
 
 void EECoreInterpreter::VMAX()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -875,7 +813,7 @@ void EECoreInterpreter::VMAX()
 
 void EECoreInterpreter::VMAXi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -884,7 +822,7 @@ void EECoreInterpreter::VMAXi()
 
 void EECoreInterpreter::VMAXbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -893,7 +831,7 @@ void EECoreInterpreter::VMAXbc_0()
 
 void EECoreInterpreter::VMAXbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -902,7 +840,7 @@ void EECoreInterpreter::VMAXbc_1()
 
 void EECoreInterpreter::VMAXbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -911,7 +849,7 @@ void EECoreInterpreter::VMAXbc_2()
 
 void EECoreInterpreter::VMAXbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -920,7 +858,7 @@ void EECoreInterpreter::VMAXbc_3()
 
 void EECoreInterpreter::VMINI()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -929,7 +867,7 @@ void EECoreInterpreter::VMINI()
 
 void EECoreInterpreter::VMINIi()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -938,7 +876,7 @@ void EECoreInterpreter::VMINIi()
 
 void EECoreInterpreter::VMINIbc_0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -947,7 +885,7 @@ void EECoreInterpreter::VMINIbc_0()
 
 void EECoreInterpreter::VMINIbc_1()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -956,7 +894,7 @@ void EECoreInterpreter::VMINIbc_1()
 
 void EECoreInterpreter::VMINIbc_2()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -965,7 +903,7 @@ void EECoreInterpreter::VMINIbc_2()
 
 void EECoreInterpreter::VMINIbc_3()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -974,7 +912,7 @@ void EECoreInterpreter::VMINIbc_3()
 
 void EECoreInterpreter::VOPMULA()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -983,7 +921,7 @@ void EECoreInterpreter::VOPMULA()
 
 void EECoreInterpreter::VOPMSUB()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -992,7 +930,7 @@ void EECoreInterpreter::VOPMSUB()
 
 void EECoreInterpreter::VNOP()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1001,7 +939,7 @@ void EECoreInterpreter::VNOP()
 
 void EECoreInterpreter::VFTOI0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1010,7 +948,7 @@ void EECoreInterpreter::VFTOI0()
 
 void EECoreInterpreter::VFTOI4()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1019,7 +957,7 @@ void EECoreInterpreter::VFTOI4()
 
 void EECoreInterpreter::VFTOI12()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1028,7 +966,7 @@ void EECoreInterpreter::VFTOI12()
 
 void EECoreInterpreter::VFTOI15()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1037,7 +975,7 @@ void EECoreInterpreter::VFTOI15()
 
 void EECoreInterpreter::VITOF0()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1046,7 +984,7 @@ void EECoreInterpreter::VITOF0()
 
 void EECoreInterpreter::VITOF4()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1055,7 +993,7 @@ void EECoreInterpreter::VITOF4()
 
 void EECoreInterpreter::VITOF12()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1064,7 +1002,7 @@ void EECoreInterpreter::VITOF12()
 
 void EECoreInterpreter::VITOF15()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1073,7 +1011,7 @@ void EECoreInterpreter::VITOF15()
 
 void EECoreInterpreter::VCLIP()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1082,7 +1020,7 @@ void EECoreInterpreter::VCLIP()
 
 void EECoreInterpreter::VDIV()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1091,7 +1029,7 @@ void EECoreInterpreter::VDIV()
 
 void EECoreInterpreter::VSQRT()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1100,7 +1038,7 @@ void EECoreInterpreter::VSQRT()
 
 void EECoreInterpreter::VRSQRT()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1109,7 +1047,7 @@ void EECoreInterpreter::VRSQRT()
 
 void EECoreInterpreter::VIADD()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1118,7 +1056,7 @@ void EECoreInterpreter::VIADD()
 
 void EECoreInterpreter::VIADDI()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1127,7 +1065,7 @@ void EECoreInterpreter::VIADDI()
 
 void EECoreInterpreter::VIAND()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1136,7 +1074,7 @@ void EECoreInterpreter::VIAND()
 
 void EECoreInterpreter::VIOR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1145,7 +1083,7 @@ void EECoreInterpreter::VIOR()
 
 void EECoreInterpreter::VISUB()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1154,7 +1092,7 @@ void EECoreInterpreter::VISUB()
 
 void EECoreInterpreter::VMOVE()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1163,7 +1101,7 @@ void EECoreInterpreter::VMOVE()
 
 void EECoreInterpreter::VMFIR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1172,7 +1110,7 @@ void EECoreInterpreter::VMFIR()
 
 void EECoreInterpreter::VMTIR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1181,7 +1119,7 @@ void EECoreInterpreter::VMTIR()
 
 void EECoreInterpreter::VMR32()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1190,7 +1128,7 @@ void EECoreInterpreter::VMR32()
 
 void EECoreInterpreter::VLQD()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1199,7 +1137,7 @@ void EECoreInterpreter::VLQD()
 
 void EECoreInterpreter::VLQI()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1208,7 +1146,7 @@ void EECoreInterpreter::VLQI()
 
 void EECoreInterpreter::VSQD()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1217,7 +1155,7 @@ void EECoreInterpreter::VSQD()
 
 void EECoreInterpreter::VSQI()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1226,7 +1164,7 @@ void EECoreInterpreter::VSQI()
 
 void EECoreInterpreter::VILWR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1235,7 +1173,7 @@ void EECoreInterpreter::VILWR()
 
 void EECoreInterpreter::VISWR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1245,7 +1183,7 @@ void EECoreInterpreter::VISWR()
 
 void EECoreInterpreter::VRINIT()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1254,7 +1192,7 @@ void EECoreInterpreter::VRINIT()
 
 void EECoreInterpreter::VRGET()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1263,7 +1201,7 @@ void EECoreInterpreter::VRGET()
 
 void EECoreInterpreter::VRNEXT()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1272,7 +1210,7 @@ void EECoreInterpreter::VRNEXT()
 
 void EECoreInterpreter::VRXOR()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
@@ -1281,9 +1219,10 @@ void EECoreInterpreter::VRXOR()
 
 void EECoreInterpreter::VWAITQ()
 {
-	if (!checkCOP2Usable())
+	if (handleCOP2Usable())
         return;
 
 	// Delegate to the VU0 system.
 	mVU0Interpreter->WAITQ();
 }
+

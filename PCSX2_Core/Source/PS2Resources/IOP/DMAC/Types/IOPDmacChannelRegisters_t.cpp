@@ -66,12 +66,12 @@ IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char* mnemoni
 
 void IOPDmacChannelRegister_MADR_t::increment()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x4);
+	writeWord(RAW, readWord(RAW) + 0x4);
 }
 
 void IOPDmacChannelRegister_MADR_t::decrement()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) - 0x4);
+	writeWord(RAW, readWord(RAW) - 0x4);
 }
 
 IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
@@ -81,10 +81,10 @@ IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemoni
 
 void IOPDmacChannelRegister_TADR_t::increment()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) + 0x4);
+	writeWord(RAW, readWord(RAW) + 0x4);
 }
 
 void IOPDmacChannelRegister_TADR_t::decrement()
 {
-	writeWord(Context_t::RAW, readWord(Context_t::RAW) - 0x4);
+	writeWord(RAW, readWord(RAW) - 0x4);
 }

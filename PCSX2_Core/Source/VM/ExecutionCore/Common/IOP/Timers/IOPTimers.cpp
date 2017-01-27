@@ -74,7 +74,7 @@ void IOPTimers::handleTimerInterrupt() const
 	// Check for Compare-Interrupt.
 	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqOnTarget))
 	{
-		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
 		{
 			interrupt = true;
 		}
@@ -140,7 +140,7 @@ void IOPTimers::handleTimerTarget() const
 	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)
 	{
 		// Check for Count >= Compare.
-		if (mTimer->COUNT->readWord(Context_t::RAW) == mTimer->COMP->readWord(Context_t::RAW))
+		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
 		{
 			// Set Count to 0.
 			mTimer->COUNT->reset();

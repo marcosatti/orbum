@@ -47,7 +47,7 @@ void MIPSBranchDelay_t::setBranchDelayPCJRegion(const u32& JInstructionTarget, c
 	mBranchDelayCycles = cycles;
 
 	// New PC = (Current PC)[bits 31-28] | (JInstructionTarget << 2). See for example the instruction JAL for more info.
-	mBranchDelayPC = (mPCRegister32->readWord(Context_t::RAW) & 0xF0000000) | (JInstructionTarget << 2);
+	mBranchDelayPC = (mPCRegister32->readWord(RAW) & 0xF0000000) | (JInstructionTarget << 2);
 }
 
 void MIPSBranchDelay_t::setBranchDelayPCIOffset(const s16& IInstructionOffset, const u8& cycles)
@@ -55,7 +55,7 @@ void MIPSBranchDelay_t::setBranchDelayPCIOffset(const s16& IInstructionOffset, c
 	mBranchDelayCycles = cycles;
 
 	// New PC = Current PC + IInstructionOffset. See for example the instruction BGEZALL for more info.
-	mBranchDelayPC = mPCRegister32->readWord(Context_t::RAW) + (IInstructionOffset << 2); 
+	mBranchDelayPC = mPCRegister32->readWord(RAW) + (IInstructionOffset << 2); 
 }
 
 bool MIPSBranchDelay_t::isInBranchDelay() const

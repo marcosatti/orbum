@@ -24,8 +24,8 @@ EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegiste
 
 void EEIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
 {
-	if (context == Context_t::EE)
-		value = readWord(Context_t::RAW) & (~value);
+	if (context == EE)
+		value = readWord(RAW) & (~value);
 		
 	BitfieldRegister32_t::writeWord(context, value);
 }
@@ -51,8 +51,8 @@ EEIntcRegister_MASK_t::EEIntcRegister_MASK_t()
 
 void EEIntcRegister_MASK_t::writeWord(const Context_t& context, u32 value)
 {
-	if (context == Context_t::EE)
-		BitfieldRegister32_t::writeWord(Context_t::RAW, readWord(Context_t::RAW) ^ value);
+	if (context == EE)
+		BitfieldRegister32_t::writeWord(RAW, readWord(RAW) ^ value);
 	else
 		BitfieldRegister32_t::writeWord(context, value);
 }

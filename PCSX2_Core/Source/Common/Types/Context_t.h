@@ -3,7 +3,7 @@
 /*
 Currently used by memory mapped I/O (registers) to allow for different functionality based on what component accessed it.
 */
-enum class Context_t
+enum Context_t
 {
 	RAW, // Use for raw access (ie: within VM system logic code if needed).
 	EE,

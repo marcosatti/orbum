@@ -220,13 +220,9 @@
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreException_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions\Types</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreExceptions_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLB_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\MMU</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLBEntryInfo_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreFPU_t.h">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP1</Filter>
     </ClInclude>
@@ -241,23 +237,14 @@
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimerRegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\Types\EERegisters_t.h" />
     <ClInclude Include="Source\PS2Resources\EE\VPU\VPU_t.h" />
-    <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreException_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreR3000_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\DMAC\EEDmac.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreExceptionHandler\EECoreExceptionHandler.h">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.h">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
-    </ClInclude>
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter.h">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.h" />
-    <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreInterpreter.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\INTC\EEIntc.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\EE\Timers\EETimers.h" />
@@ -338,6 +325,7 @@
     <ClInclude Include="Source\PS2Resources\EE\Timers\Types\EETimersTimers_t.h" />
     <ClInclude Include="Source\PS2Resources\IOP\Timers\Types\IOPTimersTimers_t.h" />
     <ClInclude Include="Source\VM\ExecutionCore\Common\IOP\Timers\IOPTimers.h" />
+    <ClInclude Include="Source\PS2Resources\EE\EECore\Types\EECoreTLBEntry_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Common\Global\GlobalLog.cpp">
@@ -419,7 +407,6 @@
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreCOP0_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\COP0</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\EECore\Types\EECoreTLB_t.cpp">
       <Filter>Source\Common\PS2 Resources\EE\EECore\MMU</Filter>
     </ClCompile>
@@ -435,17 +422,10 @@
     <ClCompile Include="Source\PS2Resources\EE\Timers\Types\EETimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\Types\EERegisters_t.cpp" />
     <ClCompile Include="Source\PS2Resources\EE\VPU\VPU_t.cpp" />
-    <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreExceptions_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\PS2Resources\IOP\IOPCore\Types\IOPCoreR3000_t.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Common\EE\DMAC\EEDmac.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreExceptionHandler\EECoreExceptionHandler.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\ExceptionHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreMMUHandler\EECoreMMUHandler.cpp">
-      <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore\MMUHandler</Filter>
-    </ClCompile>
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter.cpp">
       <Filter>Source\VM\ExecutionCore\Interpreter\InterpreterEECore</Filter>
     </ClCompile>
@@ -468,8 +448,6 @@
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_SHIFT.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\EE\EECoreInterpreter\EECoreInterpreter_STORE_MEM.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreExceptionHandler\IOPCoreExceptionHandler.cpp" />
-    <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreMMUHandler\IOPCoreMMUHandler.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreInterpreter.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreInterpreter_ALU.cpp" />
     <ClCompile Include="Source\VM\ExecutionCore\Interpreter\IOP\IOPCoreInterpreter\IOPCoreInterpreter_BRANCH_JUMP.cpp" />

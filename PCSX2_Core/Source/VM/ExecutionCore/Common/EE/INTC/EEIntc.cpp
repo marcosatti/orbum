@@ -23,7 +23,7 @@ EEIntc::EEIntc(VMMain * vmMain) :
 s64 EEIntc::executionStep(const ClockSource_t & clockSource)
 {
 	// Check the interrupt status on the stat register.
-	if (mSTAT->readWord(Context_t::RAW) & mMASK->readWord(Context_t::RAW))
+	if (mSTAT->readWord(RAW) & mMASK->readWord(RAW))
 		mEECOP0->Cause->setIRQLine(3);
 	else
 		mEECOP0->Cause->clearIRQLine(3);

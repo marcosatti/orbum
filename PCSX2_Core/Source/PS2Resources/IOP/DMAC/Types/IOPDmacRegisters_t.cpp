@@ -47,8 +47,8 @@ IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
 void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
-	if (context == Context_t::IOP)
-		value = ((readWord(Context_t::RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
+	if (context == IOP)
+		value = ((readWord(RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 		
 	BitfieldRegister32_t::writeWord(context, value);
 	handleInterruptCheck();
@@ -79,7 +79,7 @@ void IOPDmacRegister_ICR_t::handleInterruptCheck()
 		mIsInterrupted = true;
 
 	// Check if any channel has emitted an interrupt.
-	u32 regValue = readWord(Context_t::RAW);
+	u32 regValue = readWord(RAW);
 	u32 icrEN = (regValue & 0x7F0000) >> 16;
 	u32 icrFL = (regValue & 0x7F000000) >> 24;
 	if (icrEN & icrFL)

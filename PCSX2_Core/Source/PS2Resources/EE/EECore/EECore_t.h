@@ -16,7 +16,6 @@ class EECoreR5900_t;
 class EECoreCOP0_t;
 class EECoreFPU_t;
 class Memory_t;
-class EECoreExceptions_t;
 class EECoreTLB_t;
 
 class EECore_t : public PS2ResourcesSubcategory
@@ -43,11 +42,6 @@ public:
 	Scratchpad memory.
 	*/
 	std::shared_ptr<Memory_t> ScratchpadMemory;
-
-	/*
-	Exception/Interrupt State.
-	*/
-	std::shared_ptr<EECoreExceptions_t> Exceptions;
 
 	/*
 	TLB state.
