@@ -25,13 +25,16 @@ EETimers::EETimers(VMMain * vmMain) :
 	mTimers = getResources()->EE->Timers;
 	mINTC = getResources()->EE->INTC;
 	mGS = getResources()->GS;
+	addClockSource(ClockSource_t::EEBus);
+	addClockSource(ClockSource_t::EEBus16);
+	addClockSource(ClockSource_t::EEBus256);
 }
 
 EETimers::~EETimers()
 {
 }
 
-s64 EETimers::executionStep(const ClockSource_t & clockSource)
+double EETimers::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Set context.
 	mClockSource = clockSource;
@@ -93,7 +96,7 @@ s64 EETimers::executionStep(const ClockSource_t & clockSource)
 bool EETimers::isTimerCLKSEqual() const
 {	
 	// Static array used to cast the CLKS into the correct emulator ClockSource_t type. See EE Users Manual page 36.
-	const ClockSource_t emuCLKS[4] = { ClockSource_t::BUSCLK, ClockSource_t::BUSCLK16, ClockSource_t::BUSCLK256, ClockSource_t::HBLNK };
+	static const ClockSource_t emuCLKS[4] = { ClockSource_t::EEBus, ClockSource_t::EEBus16, ClockSource_t::EEBus256, ClockSource_t::HBLNK };
 	auto CLKS = emuCLKS[mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CLKS)];
 	return (CLKS == mClockSource);
 }

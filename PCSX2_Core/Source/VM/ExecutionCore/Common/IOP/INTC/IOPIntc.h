@@ -18,7 +18,7 @@ class IOPIntc : public VMExecutionCoreComponent
 public:
 	explicit IOPIntc(VMMain * vmMain);
 
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 	/*

@@ -1,49 +1,50 @@
 #include "stdafx.h"
 
 #include "Common/Interfaces/VMExecutionCoreComponent.h"
+
 #include "VM/VMMain.h"
+
+#include "PS2Constants/PS2Constants.h"
+
 #include "PS2Resources/PS2Resources_t.h"
 #include "PS2Resources/Clock/Clock_t.h"
 
 VMExecutionCoreComponent::VMExecutionCoreComponent(VMMain * vmMain):
 	VMBaseComponent(vmMain), 
-	mClockTicks{0}
+	mClockState{}
 {
+	mClock = getResources()->Clock;
 }
 
 VMExecutionCoreComponent::~VMExecutionCoreComponent()
 {
 }
 
-s64 VMExecutionCoreComponent::executionStep(const ClockSource_t & clockSource)
-{
-	// Throws runtime error by default (valid for reactive components).
-	// Must be overriden for proactive components.
-	throw std::runtime_error("executionStep() called for a reactive component. Not allowed.");
-}
-
 void VMExecutionCoreComponent::initalise()
 {
 }
 
-void VMExecutionCoreComponent::produceTicks(const ClockSource_t& clockSource, const s64 & PS2CLKTicks)
+void VMExecutionCoreComponent::produceTicks(const double& EECoreTicks)
 {
-	mClockTicks[static_cast<u32>(clockSource)] += PS2CLKTicks;
+	for (auto& i : mClockState)
+		i.mTicksAvailable += EECoreTicks;
 }
 
-
-bool VMExecutionCoreComponent::isTicked(const ClockSource_t & clockSource) const
+void VMExecutionCoreComponent::executeBlock()
 {
-	auto& ratio = getResources()->Clock->getClockRatio(clockSource);
+	for (auto& i : mClockState)
+	{
+		auto ratio = PS2Constants::EE::EECore::EECORE_CLK_SPEED / mClock->getClockRatio(i.mSource);
 
-	if (mClockTicks[static_cast<u32>(clockSource)] >= ratio)
-		return true;
-	else
-		return false;
+		while (i.mTicksAvailable > ratio)
+		{
+			auto ticks = executionStep(i.mSource, i.mTicksAvailable);
+			i.mTicksAvailable -= ticks * ratio;
+		}
+	}
 }
 
-void VMExecutionCoreComponent::consumeTicks(const ClockSource_t & clockSource, const s64 & clockSourceTicks)
+void VMExecutionCoreComponent::addClockSource(const ClockSource_t& source)
 {
-	auto& ratio = getResources()->Clock->getClockRatio(clockSource);
-	mClockTicks[static_cast<u32>(clockSource)] -= clockSourceTicks * ratio;
+	mClockState.push_back({ source, 0.0 });
 }

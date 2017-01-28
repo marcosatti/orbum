@@ -26,7 +26,7 @@ public:
 	/*
 	Check through the channels and initate data transfers.
 	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 	/*

@@ -28,13 +28,14 @@ IOPDmac::IOPDmac(VMMain* vmMain) :
 	mDMAC = getResources()->IOP->DMAC;
 	mINTC = getResources()->IOP->INTC;
 	mIOPPhysicalMMU = getResources()->IOP->PhysicalMMU;
+	addClockSource(ClockSource_t::IOPBus);
 }
 
 IOPDmac::~IOPDmac()
 {
 }
 
-s64 IOPDmac::executionStep(const ClockSource_t& clockSource)
+double IOPDmac::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
 	for (mChannelIndex = 0; mChannelIndex < PS2Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)

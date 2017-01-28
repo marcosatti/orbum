@@ -69,6 +69,7 @@ public:
 			};
 
 			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 388;
+			static constexpr double EECORE_CLK_SPEED = 294912000.0; // 294.912 MHz.
 		};
 
 		struct Timers
@@ -136,10 +137,9 @@ public:
 			};
 		};
 
-		// Ratios of PS2CLK (EE Core speed) divided by other clock source within EE. The PS2CLK runs at ~294 MHz.
-		static constexpr u32 RATIO_PS2CLK_BUSCLK = 2;      // BUSCLK runs at ~147 MHz.
-		static constexpr u32 RATIO_PS2CLK_BUSCLK16 = 32;   // BUSCLK16 = BUSCLK / 16.
-		static constexpr u32 RATIO_PS2CLK_BUSCLK256 = 512; // BUSCLK256 = BUSCLK / 256
+		static constexpr double EEBUS_CLK_SPEED = 147456000.0; // 147.456 MHz (half of EECore speed).
+		static constexpr double EEBUS16_CLK_SPEED = (147456000.0 / 16);
+		static constexpr double EEBUS256_CLK_SPEED = (147456000.0 / 256);
 	};
 
 	struct IOP
@@ -179,6 +179,7 @@ public:
 			};
 
 			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
+			static constexpr double IOPCORE_CLK_SPEED = 37500000.0; // 37.5 MHz.
 		};
 
 		struct DMAC
@@ -213,12 +214,15 @@ public:
 			static constexpr size_t SIZE_PARALLEL_PORT = 0x00010000;
 		};
 
-		static constexpr u32 RATIO_PS2CLK_IOP = 8; // IOP (R3000) runs at ~36 MHz.
+		static constexpr double IOPBUS_CLK_SPEED = 37500000.0; // 37.5 MHz (same as IOPCore speed).
+		static constexpr double IOPBUS8_CLK_SPEED = (37500000.0 / 8);
+		static constexpr double IOPBUS16_CLK_SPEED = (37500000.0 / 16);
+		static constexpr double IOPBUS256_CLK_SPEED = (37500000.0 / 256);
 	};
 
 	struct GS
 	{
-		// Note: Ratio of PS2CLK / HBLNK is defined at runtime (set by GS). See PS2Resources_t::Clock_t::RATIO_PS2CLK_HBLNK.
+		static constexpr double HBLNK_CLK_SPEED = 59.94; // NTSC.
 	};
 
 	struct MIPS

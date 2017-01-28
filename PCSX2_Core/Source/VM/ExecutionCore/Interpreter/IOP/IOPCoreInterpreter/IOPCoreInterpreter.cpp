@@ -28,6 +28,7 @@ IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
 {
 	mIOPCore = getResources()->IOP->IOPCore;
 	mPhysicalMMU = getResources()->IOP->PhysicalMMU;
+	addClockSource(ClockSource_t::IOPCore);
 }
 
 void IOPCoreInterpreter::initalise()
@@ -36,7 +37,7 @@ void IOPCoreInterpreter::initalise()
 	handleException(IOPCoreException_t::EX_RESET);
 }
 
-s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
+double IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	auto& IOPCore = getResources()->IOP->IOPCore;
 
@@ -55,7 +56,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000; // 0x1b5aff;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x0;// 0x10000000000; // 0x1b5aff;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0; // 0x2dc8;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
@@ -88,7 +89,7 @@ s64 IOPCoreInterpreter::executionStep(const ClockSource_t & clockSource)
 #endif
 
 	// Return the number of cycles the instruction took to complete.
-	return mInstructionInfo->mCycles;
+	return static_cast<double>(mInstructionInfo->mCycles);
 }
 
 void IOPCoreInterpreter::handleInterruptCheck()

@@ -42,7 +42,7 @@ public:
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable);
 
 private:
 

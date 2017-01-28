@@ -18,9 +18,10 @@ EEIntc::EEIntc(VMMain * vmMain) :
 	mEECOP0 = getResources()->EE->EECore->COP0;
 	mSTAT = getResources()->EE->INTC->STAT;
 	mMASK = getResources()->EE->INTC->MASK;
+	addClockSource(ClockSource_t::EEBus);
 }
 
-s64 EEIntc::executionStep(const ClockSource_t & clockSource)
+double EEIntc::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Check the interrupt status on the stat register.
 	if (mSTAT->readWord(RAW) & mMASK->readWord(RAW))

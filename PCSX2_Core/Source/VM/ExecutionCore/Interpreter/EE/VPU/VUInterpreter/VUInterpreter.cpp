@@ -6,14 +6,15 @@ VUInterpreter::VUInterpreter(VMMain* vmMain, u32 vuUnitIndex) :
 	VMExecutionCoreComponent(vmMain),
 	mVUUnitIndex(vuUnitIndex)
 {
+	addClockSource(ClockSource_t::EEBus);
 }
 
 VUInterpreter::~VUInterpreter()
 {
 }
 
-s64 VUInterpreter::executionStep(const ClockSource_t& clockSource)
+double VUInterpreter::executionStep(const ClockSource_t& clockSource, const double& ticksAvailable)
 {
 	// TODO: Implement.
-	return 1;
+	return static_cast<double>(1);
 }

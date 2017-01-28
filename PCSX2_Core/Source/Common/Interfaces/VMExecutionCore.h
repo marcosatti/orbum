@@ -24,10 +24,7 @@ public:
 	*/
 	virtual void initalise() = 0;
 
-	/*
-	Executes a VM "cycle", which will update the state of all of the PS2 systems.
-	*/
-	virtual void executionStep() = 0;
+	virtual void execute() = 0;
 
 };
 

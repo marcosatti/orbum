@@ -21,13 +21,17 @@ IOPTimers::IOPTimers(VMMain* vmMain) :
 	// Set resource pointer variables.
 	mTimers = getResources()->IOP->Timers;
 	mINTC = getResources()->IOP->INTC;
+	addClockSource(ClockSource_t::IOPBus);
+	addClockSource(ClockSource_t::IOPBus8);
+	addClockSource(ClockSource_t::IOPBus16);
+	addClockSource(ClockSource_t::IOPBus256);
 }
 
 IOPTimers::~IOPTimers()
 {
 }
 
-s64 IOPTimers::executionStep(const ClockSource_t& clockSource)
+double IOPTimers::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Set context.
 	mClockSource = clockSource;

@@ -35,13 +35,14 @@ EEDmac::EEDmac(VMMain* vmMain) :
 	// Set resource pointer variables.
 	mDMAC = getResources()->EE->DMAC;
 	mEEPhysicalMMU = getResources()->EE->PhysicalMMU;
+	addClockSource(ClockSource_t::EEBus);
 }
 
 EEDmac::~EEDmac()
 {
 }
 
-s64 EEDmac::executionStep(const ClockSource_t& clockSource)
+double EEDmac::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)

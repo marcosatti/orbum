@@ -28,7 +28,7 @@ void VMMain::Reset()
 	// Initiaise ROMs.
 	initaliseROMs();
 
-	// Initalise the execution core class.
+	// Initalise the execution core object.
 	initaliseExecutionCore();
 
 	// Initalise the execution core & components.
@@ -39,12 +39,8 @@ void VMMain::Run()
 {
 	// Set to running.
 	mStatus = VMStatus::RUNNING;
-
-	// Run the VM.
-	while (mStatus == VMStatus::RUNNING)
-	{
-		mExecutionCore->executionStep();
-	}
+	
+	mExecutionCore->execute();
 }
 
 void VMMain::Stop()

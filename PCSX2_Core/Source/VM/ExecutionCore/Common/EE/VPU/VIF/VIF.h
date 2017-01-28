@@ -23,7 +23,7 @@ public:
 	/*
 	Check the FIFO queue and process data if available.
 	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 

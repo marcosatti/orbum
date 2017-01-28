@@ -16,7 +16,7 @@ public:
 	/*
 	TODO: implement.
 	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 	// The EE Core delegates the COP2 instructions with the V* prefix to the VUInterpreter system, to avoid writing duplicate code.

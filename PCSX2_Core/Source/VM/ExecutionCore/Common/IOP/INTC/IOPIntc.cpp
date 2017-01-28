@@ -19,9 +19,10 @@ IOPIntc::IOPIntc(VMMain * vmMain) :
 	mSTAT = getResources()->IOP->INTC->STAT;
 	mMASK = getResources()->IOP->INTC->MASK;
 	mCTRL = getResources()->IOP->INTC->CTRL;
+	addClockSource(ClockSource_t::IOPBus);
 }
 
-s64 IOPIntc::executionStep(const ClockSource_t & clockSource)
+double IOPIntc::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;

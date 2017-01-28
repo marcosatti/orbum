@@ -18,7 +18,7 @@ class EEIntc : public VMExecutionCoreComponent
 public:
 	explicit EEIntc(VMMain * vmMain);
 
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 	/*

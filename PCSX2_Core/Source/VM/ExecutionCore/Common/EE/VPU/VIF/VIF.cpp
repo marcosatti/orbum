@@ -22,7 +22,7 @@ VIF::~VIF()
 {
 }
 
-s64 VIF::executionStep(const ClockSource_t& clockSource)
+double VIF::executionStep(const ClockSource_t & clockSource, const double & ticksAvailable)
 {
 	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 

@@ -2,6 +2,7 @@
 
 #include <cstdarg>
 #include <cstdio>
+#include <mutex>
 
 #include "GlobalMacros.h"
 #include "GlobalLog.h"
@@ -15,6 +16,8 @@ void(*logDelegate)(const char * buffer);
 #if defined(BUILD_DEBUG)
 void logDebug(const char * format, ...)
 {
+	static std::mutex mutex;
+	mutex.lock();
 	const size_t buffer_sz = 1024;
 	size_t count = 0;
 
@@ -29,6 +32,7 @@ void logDebug(const char * format, ...)
 	snprintf(buffer + count, buffer_sz - count, "\n");
 
 	logDelegate(buffer);
+	mutex.unlock();
 }
 #endif
 

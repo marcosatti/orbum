@@ -59,7 +59,7 @@ void IOPTimersTimerRegister_COUNT_t::reset()
 IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const u8 & timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
 	BitfieldRegister32_t(mnemonic, false, false),
 	mTimerIndex(timerIndex),
-	mClockSource(ClockSource_t::IOPCLK),
+	mClockSource(ClockSource_t::IOPBus),
 	mCount(count)
 {
 	registerField(Fields::SyncEnable, "SyncEnable", 0, 1, 0);
@@ -123,7 +123,7 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
 		{
 			if (getFieldValue(Fields::ClockSrc) == 0)
 			{
-				mClockSource = ClockSource_t::IOPCLK;
+				mClockSource = ClockSource_t::IOPBus;
 			}
 			else
 			{
@@ -142,7 +142,7 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
 		{
 			if (getFieldValue(Fields::ClockSrc) == 0)
 			{
-				mClockSource = ClockSource_t::IOPCLK;
+				mClockSource = ClockSource_t::IOPBus;
 			}
 			else
 			{

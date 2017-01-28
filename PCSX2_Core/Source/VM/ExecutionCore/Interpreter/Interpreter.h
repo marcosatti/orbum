@@ -47,7 +47,7 @@ public:
 	Always runs the EE Core.
 	For the other components, first checks if they should be run and then controls their timing.
 	*/
-	void executionStep() override;
+	void execute() override;
 
 private:
 	std::shared_ptr<VUInterpreter> mInterpreterVU0;
@@ -66,15 +66,6 @@ private:
 	/*
 	Used to iterate through all components, for initalsation.
 	*/
-	std::shared_ptr<VMExecutionCoreComponent> mComponents[10];
-
-	/*
-	Clock source component arrays, used to iterate through.
-	*/
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK[5];
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK16[1];
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsBUSCLK256[1];
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsHBLNK[1];
-	std::shared_ptr<VMExecutionCoreComponent> mComponentsIOP[4];
+	std::vector<std::shared_ptr<VMExecutionCoreComponent>> mComponents;
 };
 

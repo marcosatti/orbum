@@ -23,7 +23,7 @@ public:
 	/*
 	Updates the timers with the specified clock source type.
 	*/
-	s64 executionStep(const ClockSource_t & clockSource) override;
+	double executionStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
 
 private:
 	/*
