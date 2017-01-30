@@ -32,15 +32,25 @@ void VMExecutionCoreComponent::produceTicks(const double& EECoreTicks)
 
 void VMExecutionCoreComponent::executeBlock()
 {
-	for (auto& i : mClockState)
-	{
-		auto ratio = PS2Constants::EE::EECore::EECORE_CLK_SPEED / mClock->getClockRatio(i.mSource);
+	run = false;
+	std::unique_lock<std::mutex> lock(mSyncMutex);
 
-		while (i.mTicksAvailable > ratio)
+	while (getVM()->getStatus() == VMMain::RUNNING)
+	{
+		mSyncCV.wait(lock, [this]() { return run; }); // Mutex is unlocked during wait, relocked upon notify.
+
+		for (auto& i : mClockState)
 		{
-			auto ticks = executionStep(i.mSource, i.mTicksAvailable);
-			i.mTicksAvailable -= ticks * ratio;
+			auto ratio = PS2Constants::EE::EECore::EECORE_CLK_SPEED / mClock->getClockSpeed(i.mSource);
+
+			while (i.mTicksAvailable > ratio)
+			{
+				auto ticks = executionStep(i.mSource, i.mTicksAvailable);
+				i.mTicksAvailable -= ticks * ratio;
+			}
 		}
+
+		run = false;
 	}
 }
 

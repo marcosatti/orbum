@@ -51,17 +51,39 @@ void Interpreter::execute()
 {
 	std::vector<std::thread> threads;
 
+	for (auto& component : mComponents)
+	{
+		threads.push_back(std::thread(&VMExecutionCoreComponent::executeBlock, &(*component)));
+	}
+
 	while (getVM()->getStatus() == VMMain::RUNNING)
 	{
-		threads.clear();
-
+		// Aquire all mutex locks first (common sync point).
 		for (auto& component : mComponents)
-			component->produceTicks(1000);
+		{
+			component->mSyncMutex.lock();
+		}
 
+		// Produce ticks for all components.
 		for (auto& component : mComponents)
-			threads.push_back(std::thread(&VMExecutionCoreComponent::executeBlock, &(*component)));
+		{
+			component->produceTicks(1000.0);
+			component->run = true;
+		}
 
-		for (auto& t : threads)
-			t.join();
+		// Unlock the mutexes.
+		for (auto& component : mComponents)
+		{
+			component->mSyncMutex.unlock();
+		}
+
+		// Notify them.
+		for (auto& component : mComponents)
+		{
+			component->mSyncCV.notify_all();
+		}
 	}
+
+	for (auto& t : threads)
+		t.join();
 }

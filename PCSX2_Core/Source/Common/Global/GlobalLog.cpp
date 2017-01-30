@@ -17,7 +17,7 @@ void(*logDelegate)(const char * buffer);
 void logDebug(const char * format, ...)
 {
 	static std::mutex mutex;
-	mutex.lock();
+	
 	const size_t buffer_sz = 1024;
 	size_t count = 0;
 
@@ -31,6 +31,7 @@ void logDebug(const char * format, ...)
 
 	snprintf(buffer + count, buffer_sz - count, "\n");
 
+	mutex.lock();
 	logDelegate(buffer);
 	mutex.unlock();
 }

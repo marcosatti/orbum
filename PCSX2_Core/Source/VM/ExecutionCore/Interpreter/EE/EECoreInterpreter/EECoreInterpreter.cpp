@@ -70,7 +70,7 @@ double EECoreInterpreter::executionStep(const ClockSource_t & clockSource, const
 	mEECore->R5900->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x0; // 0x48c3461;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000000; // 0x48c3461;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
