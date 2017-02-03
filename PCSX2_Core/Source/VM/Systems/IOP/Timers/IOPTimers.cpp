@@ -12,7 +12,7 @@
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPTimers::IOPTimers(VMMain* vmMain) :
+IOPTimers::IOPTimers(VM* vmMain) :
 	VMSystem_t(vmMain, System_t::IOPTimers),
 	mTimerIndex(0),
 	mTimer(nullptr),

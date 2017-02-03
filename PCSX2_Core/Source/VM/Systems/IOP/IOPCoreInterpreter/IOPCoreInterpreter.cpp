@@ -9,7 +9,7 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-#include "VM/VMMain.h"
+#include "VM/VM.h"
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 
 #include "Resources/Resources_t.h"
@@ -23,7 +23,7 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include <Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h>
 
-IOPCoreInterpreter::IOPCoreInterpreter(VMMain * vmMain) :
+IOPCoreInterpreter::IOPCoreInterpreter(VM * vmMain) :
 	VMSystem_t(vmMain, System_t::IOPCore),
 	mInstructionInfo(nullptr)
 {
@@ -67,7 +67,7 @@ double IOPCoreInterpreter::executeStep(const ClockSource_t & clockSource, const 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		getVM()->log(Debug, "IOPCore cycle 0x%llX: "
+		log(Debug, "IOPCore cycle 0x%llX: "
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
@@ -77,7 +77,7 @@ double IOPCoreInterpreter::executeStep(const ClockSource_t & clockSource, const 
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT)
 	{
-		getVM()->log(Debug, "IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
+		log(Debug, "IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
 #endif
 
@@ -111,13 +111,13 @@ void IOPCoreInterpreter::handleInterruptCheck()
 			auto& IOPCore = getResources()->IOP->IOPCore;
 			auto& STAT = getResources()->IOP->INTC->STAT;
 			auto& MASK = getResources()->IOP->INTC->MASK;
-			getVM()->log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
+			log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
 				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(IOP), IOPCore->R3000->BD->isInBranchDelay());
-			getVM()->log(Debug, "Printing list of interrupt sources...");
+			log(Debug, "Printing list of interrupt sources...");
 			for (auto& irqField : IOPIntcRegister_STAT_t::Fields::IRQ_KEYS)
 			{
 				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
-					getVM()->log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
+					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
 			}
 #endif
 			// Handle the interrupt immediately.
@@ -160,7 +160,7 @@ void IOPCoreInterpreter::INSTRUCTION_UNKNOWN()
 {
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 instruction encountered! (Lookup: %s -> %s)",
+	log(Debug, "(%s, %d) Unknown R3000 instruction encountered! (Lookup: %s -> %s)",
 		__FILENAME__, __LINE__, mInstructionInfo->mBaseClass, mInstructionInfo->mMnemonic);
 #endif
 }
@@ -180,7 +180,7 @@ void IOPCoreInterpreter::handleException(const IOPCoreException_t & exception)
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
-	getVM()->log(Debug, "IOPCore ExceptionHandler called! Type = %s", exceptionProperties->mMnemonic);
+	log(Debug, "IOPCore ExceptionHandler called! Type = %s", exceptionProperties->mMnemonic);
 #endif
 
 	// If its a reset exception, initalise COP0 registers and set PC to reset vector then return.

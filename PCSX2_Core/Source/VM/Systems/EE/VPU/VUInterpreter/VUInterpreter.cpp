@@ -2,7 +2,7 @@
 
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
 
-VUInterpreter::VUInterpreter(VMMain* vmMain, u32 vuUnitIndex) :
+VUInterpreter::VUInterpreter(VM* vmMain, u32 vuUnitIndex) :
 	VMSystem_t(vmMain, vuUnitIndex == 0 ? System_t::VU0 : System_t::VU1),
 	mVUUnitIndex(vuUnitIndex)
 {

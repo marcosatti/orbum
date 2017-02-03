@@ -5,7 +5,6 @@
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/EECoreSyscallTable/EECoreSyscallTable.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
@@ -30,7 +29,7 @@ void EECoreInterpreter::SYSCALL()
 	// If the 16-bit 'syscall number' above has the sign bit set (negative), the EE OS will first make it unsigned then call the handler with the (i) prefix... TODO: not sure what the differnece is.
 	// The EE OS only defines handlers for syscall numbers 0 -> 127 (128 total). 
 	u8 index = mEECore->R5900->GPR[3]->readByte(EE, 0);
-	getVM()->log(Debug, "EECore Syscall, number %d (%s).", index, EECoreSyscallTable::getSyscallMnemonic(index));
+	log(Debug, "EECore Syscall, number %d (%s).", index, EECoreSyscallTable::getSyscallMnemonic(index));
 #endif
 
 	// EXCEPTION(SYSCALL)

@@ -84,7 +84,7 @@ void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped_t> & physical
 		// Check that there is no existing map data - log a warning if there is.
 #if defined(BUILD_DEBUG)
 		if (mPageTable[absDirectoryIndex][absPageIndex] != nullptr)
-			getVM()->log(Debug, "(%s, %d) Warning! Physical MMU mapped storage object \"%s\" @ 0x%08X overwritten with object \"%s\". Please fix!",
+			log(Debug, "(%s, %d) Warning! Physical MMU mapped storage object \"%s\" @ 0x%08X overwritten with object \"%s\". Please fix!",
 				__FILENAME__, __LINE__,
 				mPageTable[absDirectoryIndex][absPageIndex]->getMnemonic(),
 				physicalMapped->getMappedPhysicalAddress(),

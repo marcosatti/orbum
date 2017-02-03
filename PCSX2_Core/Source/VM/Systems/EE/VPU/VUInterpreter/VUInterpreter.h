@@ -9,7 +9,7 @@
 class VUInterpreter : public VMSystem_t
 {
 public:
-	explicit VUInterpreter(VMMain * vmMain, u32 vuUnitIndex);
+	explicit VUInterpreter(VM * vmMain, u32 vuUnitIndex);
 	virtual ~VUInterpreter();
 
 	/*

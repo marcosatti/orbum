@@ -24,7 +24,7 @@ void EERegister_SIO_t::writeByte(const Context& context, size_t storageIndex, u8
 			// Do not bother outputting the '\r' or '\n' characters, as this is done by the logging functions of the emulator.
 
 			// Output the message.
-			getVM()->log(Debug, "%s: %s", SIO_BUFFER_PREFIX, sioBuffer.c_str());
+			log(Debug, "%s: %s", SIO_BUFFER_PREFIX, sioBuffer.c_str());
 
 			// Reset the buffer.
 			sioBuffer.clear();

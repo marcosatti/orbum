@@ -4,7 +4,6 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
 
 #include "Resources/Resources_t.h"
@@ -18,7 +17,7 @@ void VUInterpreter::ABS()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ABS: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ABS: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ABS: Not implemented.");
 #endif
@@ -28,7 +27,7 @@ void VUInterpreter::ADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADD: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADD: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADD: Not implemented.");
 #endif
@@ -38,7 +37,7 @@ void VUInterpreter::ADDi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDi: Not implemented.");
 #endif
@@ -48,7 +47,7 @@ void VUInterpreter::ADDq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDq: Not implemented.");
 #endif
@@ -58,7 +57,7 @@ void VUInterpreter::ADDbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDbc: Not implemented.");
 #endif
@@ -92,7 +91,7 @@ void VUInterpreter::ADDA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDA: Not implemented.");
 #endif
@@ -102,7 +101,7 @@ void VUInterpreter::ADDAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDAi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDAi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDAi: Not implemented.");
 #endif
@@ -112,7 +111,7 @@ void VUInterpreter::ADDAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDAq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDAq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDAq: Not implemented.");
 #endif
@@ -122,7 +121,7 @@ void VUInterpreter::ADDAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ADDAbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ADDAbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ADDAbc: Not implemented.");
 #endif
@@ -181,7 +180,7 @@ void VUInterpreter::SUBi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBi: Not implemented.");
 #endif
@@ -191,7 +190,7 @@ void VUInterpreter::SUBq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBq: Not implemented.");
 #endif
@@ -201,7 +200,7 @@ void VUInterpreter::SUBbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBbc: Not implemented.");
 #endif
@@ -235,7 +234,7 @@ void VUInterpreter::SUBA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBA: Not implemented.");
 #endif
@@ -245,7 +244,7 @@ void VUInterpreter::SUBAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBAi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBAi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBAi: Not implemented.");
 #endif
@@ -255,7 +254,7 @@ void VUInterpreter::SUBAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBAq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBAq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBAq: Not implemented.");
 #endif
@@ -265,7 +264,7 @@ void VUInterpreter::SUBAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SUBAbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SUBAbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SUBAbc: Not implemented.");
 #endif
@@ -299,7 +298,7 @@ void VUInterpreter::MUL()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MUL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MUL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MUL: Not implemented.");
 #endif
@@ -309,7 +308,7 @@ void VUInterpreter::MULi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULi: Not implemented.");
 #endif
@@ -319,7 +318,7 @@ void VUInterpreter::MULq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULq: Not implemented.");
 #endif
@@ -329,7 +328,7 @@ void VUInterpreter::MULbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULbc: Not implemented.");
 #endif
@@ -363,7 +362,7 @@ void VUInterpreter::MULA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULA: Not implemented.");
 #endif
@@ -373,7 +372,7 @@ void VUInterpreter::MULAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULAi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULAi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULAi: Not implemented.");
 #endif
@@ -383,7 +382,7 @@ void VUInterpreter::MULAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULAq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULAq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULAq: Not implemented.");
 #endif
@@ -393,7 +392,7 @@ void VUInterpreter::MULAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MULAbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MULAbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MULAbc: Not implemented.");
 #endif
@@ -427,7 +426,7 @@ void VUInterpreter::MADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADD: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADD: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADD: Not implemented.");
 #endif
@@ -437,7 +436,7 @@ void VUInterpreter::MADDi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDi: Not implemented.");
 #endif
@@ -447,7 +446,7 @@ void VUInterpreter::MADDq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDq: Not implemented.");
 #endif
@@ -457,7 +456,7 @@ void VUInterpreter::MADDbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDbc: Not implemented.");
 #endif
@@ -491,7 +490,7 @@ void VUInterpreter::MADDA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDA: Not implemented.");
 #endif
@@ -501,7 +500,7 @@ void VUInterpreter::MADDAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDAi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDAi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDAi: Not implemented.");
 #endif
@@ -511,7 +510,7 @@ void VUInterpreter::MADDAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDAq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDAq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDAq: Not implemented.");
 #endif
@@ -521,7 +520,7 @@ void VUInterpreter::MADDAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MADDAbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MADDAbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MADDAbc: Not implemented.");
 #endif
@@ -555,7 +554,7 @@ void VUInterpreter::MSUB()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUB: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUB: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUB: Not implemented.");
 #endif
@@ -565,7 +564,7 @@ void VUInterpreter::MSUBi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBi: Not implemented.");
 #endif
@@ -575,7 +574,7 @@ void VUInterpreter::MSUBq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBq: Not implemented.");
 #endif
@@ -585,7 +584,7 @@ void VUInterpreter::MSUBbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBbc: Not implemented.");
 #endif
@@ -619,7 +618,7 @@ void VUInterpreter::MSUBA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBA: Not implemented.");
 #endif
@@ -629,7 +628,7 @@ void VUInterpreter::MSUBAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBAi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBAi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBAi: Not implemented.");
 #endif
@@ -639,7 +638,7 @@ void VUInterpreter::MSUBAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBAq: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBAq: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBAq: Not implemented.");
 #endif
@@ -649,7 +648,7 @@ void VUInterpreter::MSUBAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MSUBAbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MSUBAbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MSUBAbc: Not implemented.");
 #endif
@@ -683,7 +682,7 @@ void VUInterpreter::MAX()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MAX: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MAX: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MAX: Not implemented.");
 #endif
@@ -693,7 +692,7 @@ void VUInterpreter::MAXi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MAXi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MAXi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MAXi: Not implemented.");
 #endif
@@ -703,7 +702,7 @@ void VUInterpreter::MAXbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MAXbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MAXbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MAXbc: Not implemented.");
 #endif
@@ -737,7 +736,7 @@ void VUInterpreter::MINI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MINI: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MINI: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MINI: Not implemented.");
 #endif
@@ -747,7 +746,7 @@ void VUInterpreter::MINIi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MINIi: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MINIi: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MINIi: Not implemented.");
 #endif
@@ -757,7 +756,7 @@ void VUInterpreter::MINIbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MINIbc: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MINIbc: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MINIbc: Not implemented.");
 #endif
@@ -791,7 +790,7 @@ void VUInterpreter::OPMULA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) OPMULA: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) OPMULA: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("OPMULA: Not implemented.");
 #endif
@@ -801,7 +800,7 @@ void VUInterpreter::OPMSUB()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) OPMSUB: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) OPMSUB: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("OPMSUB: Not implemented.");
 #endif
@@ -811,7 +810,7 @@ void VUInterpreter::DIV()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) DIV: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) DIV: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("DIV: Not implemented.");
 #endif
@@ -821,7 +820,7 @@ void VUInterpreter::SQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SQRT: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SQRT: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SQRT: Not implemented.");
 #endif
@@ -831,7 +830,7 @@ void VUInterpreter::RSQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) RSQRT: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) RSQRT: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("RSQRT: Not implemented.");
 #endif

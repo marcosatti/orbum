@@ -18,7 +18,7 @@ The IOP Timers are dynamic and can be updated on the IOP system clock, pixel clo
 class IOPTimers : public VMSystem_t
 {
 public:
-	explicit IOPTimers(VMMain * vmMain);
+	explicit IOPTimers(VM * vmMain);
 	virtual ~IOPTimers();
 
 	/*

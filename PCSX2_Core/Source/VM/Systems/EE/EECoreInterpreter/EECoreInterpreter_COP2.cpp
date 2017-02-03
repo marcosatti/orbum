@@ -5,7 +5,6 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
 
@@ -92,7 +91,7 @@ void EECoreInterpreter::BC2F()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2F: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2F: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2F: Not implemented.");
 #endif
@@ -105,7 +104,7 @@ void EECoreInterpreter::BC2FL()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2FL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2FL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2FL: Not implemented.");
 #endif
@@ -118,7 +117,7 @@ void EECoreInterpreter::BC2T()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2T: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2T: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2T: Not implemented.");
 #endif
@@ -131,7 +130,7 @@ void EECoreInterpreter::BC2TL()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2TL: Not implemented.");
 #endif
@@ -144,7 +143,7 @@ void EECoreInterpreter::VCALLMS()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2TL: Not implemented.");
 #endif
@@ -157,7 +156,7 @@ void EECoreInterpreter::VCALLMSR()
 
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC2TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC2TL: Not implemented.");
 #endif

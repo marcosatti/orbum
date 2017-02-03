@@ -14,7 +14,7 @@ See https://en.wikipedia.org/wiki/PlayStation_technical_specifications and https
 class IOPIntc : public VMSystem_t
 {
 public:
-	explicit IOPIntc(VMMain * vmMain);
+	explicit IOPIntc(VM * vmMain);
 	virtual ~IOPIntc();
 
 	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;

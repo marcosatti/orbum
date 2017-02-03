@@ -123,9 +123,6 @@
     <ClInclude Include="Source\Common\Util\MathUtil\MathUtil.h">
       <Filter>Source\Common\Util\MathUtil</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\VMMain.h">
-      <Filter>Source\VM</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.h">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
     </ClInclude>
@@ -303,7 +300,10 @@
     <ClInclude Include="Source\Resources\Clock\Types\SystemClockState_t.h" />
     <ClInclude Include="Source\Resources\Clock\Types\System_t.h" />
     <ClInclude Include="Source\VM\Types\VMSystem_t.h" />
-    <ClInclude Include="Source\VM\Types\LogLevel_t.h" />
+    <ClInclude Include="Source\Common\Global\Log.h" />
+    <ClInclude Include="Source\VM\VM.h">
+      <Filter>Source\VM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -311,9 +311,6 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Util\MathUtil\MathUtil.cpp">
       <Filter>Source\Common\Util\MathUtil</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VM\VMMain.cpp">
-      <Filter>Source\VM</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Tables\EECoreInstructionTable\EECoreInstructionTable.cpp">
       <Filter>Source\Common\Util\EECoreInstructionUtil</Filter>
@@ -495,6 +492,10 @@
     <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_OTHERS.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_t.cpp" />
+    <ClCompile Include="Source\Common\Global\Log.cpp" />
+    <ClCompile Include="Source\VM\VM.cpp">
+      <Filter>Source\VM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

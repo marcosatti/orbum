@@ -40,9 +40,9 @@ u8 Register16_t::readByte(const Context& context, size_t arrayIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Read u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #endif
 	}
 #endif
@@ -58,9 +58,9 @@ void Register16_t::writeByte(const Context& context, size_t arrayIndex, u8 value
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Write u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #endif
 	}
 #endif
@@ -72,9 +72,9 @@ u16 Register16_t::readHword(const Context& context)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u16, Value = 0x%X.", getContextStr(context), getMnemonic(), UH);
+		log(Debug, "%s: %s Read u16, Value = 0x%X.", getContextStr(context), getMnemonic(), UH);
 #else
-		getVM()->log(Debug, "%s: %s Read u16, Value = %d.", getContextStr(context), getMnemonic(), UH);
+		log(Debug, "%s: %s Read u16, Value = %d.", getContextStr(context), getMnemonic(), UH);
 #endif
 	}
 #endif
@@ -90,9 +90,9 @@ void Register16_t::writeHword(const Context& context, u16 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u16, Value = 0x%X.", getContextStr(context), getMnemonic(), UH);
+		log(Debug, "%s: %s Write u16, Value = 0x%X.", getContextStr(context), getMnemonic(), UH);
 #else
-		getVM()->log(Debug, "%s: %s Write u16, Value = %d.", getContextStr(context), getMnemonic(), UH);
+		log(Debug, "%s: %s Write u16, Value = %d.", getContextStr(context), getMnemonic(), UH);
 #endif
 	}
 #endif

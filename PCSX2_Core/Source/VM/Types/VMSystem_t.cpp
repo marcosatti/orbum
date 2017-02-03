@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "VM/VMMain.h"
+#include "VM/VM.h"
 #include "VM/Types/VMSystem_t.h"
 
-VMSystem_t::VMSystem_t(VMMain* vmMain, const System_t& system) :
+VMSystem_t::VMSystem_t(VM* vmMain, const System_t& system) :
 	mThreadRun(false),
 	mVMMain(vmMain),
 	mResources(vmMain->getResources()),
@@ -15,7 +15,7 @@ VMSystem_t::~VMSystem_t()
 {
 }
 
-VMMain* VMSystem_t::getVM() const
+VM* VMSystem_t::getVM() const
 {
 	return mVMMain;
 }
@@ -44,22 +44,28 @@ void VMSystem_t::produceTicks(const ClockSource_t& source, const double& ticks) 
 
 void VMSystem_t::executeTicks()
 {
+	// Run through all the different clock sources attached to this system.
+	for (auto& state : mClockStates)
+	{
+		while (state.mTicksAvailable > 0.0)
+		{
+			state.mTicksAvailable -= executeStep(state.mClockSource, state.mTicksAvailable);
+		}
+	}
+}
+
+void VMSystem_t::threadLoop()
+{
 	mThreadRun = false;
 	std::unique_lock<std::mutex> lock(mThreadMutex);
 
-	while (getVM()->getStatus() == VMMain::Running)
+	while (getVM()->getStatus() == VM::Running)
 	{
 		// Wait for control thread to say run - mutex is auto unlocked during wait, relocked upon notify.
 		mThreadSync.wait(lock, [this]() { return mThreadRun; });
 
-		// Run through all the different clock sources attached to this system.
-		for (auto& state : mClockStates)
-		{
-			while (state.mTicksAvailable > 0.0)
-			{
-				state.mTicksAvailable -= executeStep(state.mClockSource, state.mTicksAvailable);
-			}
-		}
+		// Execute ticks.
+		executeTicks();
 
 		// Finished, wait for control thread again.
 		mThreadRun = false;

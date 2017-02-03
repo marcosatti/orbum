@@ -9,7 +9,7 @@
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
-class VMMain;
+class VM;
 class IOPCore_t;
 class PhysicalMMU_t;
 struct MIPSInstructionInfo_t;
@@ -23,7 +23,7 @@ No official documentation, but there is resources available on the internet docu
 class IOPCoreInterpreter : public VMSystem_t
 {
 public:
-	explicit IOPCoreInterpreter(VMMain * vmMain);
+	explicit IOPCoreInterpreter(VM * vmMain);
 	virtual ~IOPCoreInterpreter();
 
 	/*

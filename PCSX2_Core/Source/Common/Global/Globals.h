@@ -15,3 +15,4 @@ Globals.h is to be included with every file (except for the files that this incl
 #include "Common/Global/Constants.h"
 #include "Common/Global/CompileOptions.h"
 #include "Common/Global/Context.h"
+#include "Common/Global/Log.h"

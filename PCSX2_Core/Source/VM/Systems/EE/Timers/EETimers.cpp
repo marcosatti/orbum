@@ -15,7 +15,7 @@
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 #include "Resources/GS/GS_t.h"
 
-EETimers::EETimers(VMMain * vmMain) :
+EETimers::EETimers(VM * vmMain) :
 	VMSystem_t(vmMain, System_t::EETimers), 
 	mTimerIndex(0), 
 	mTimer(nullptr),

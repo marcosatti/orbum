@@ -12,7 +12,7 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPIntc::IOPIntc(VMMain * vmMain) : 
+IOPIntc::IOPIntc(VM * vmMain) : 
 	VMSystem_t(vmMain, System_t::IOPIntc)
 {
 	mIOPCOP0 = getResources()->IOP->IOPCore->COP0;

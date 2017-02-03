@@ -2,7 +2,6 @@
 
 #include "Common/Global/Globals.h"
 
-#include "Common/Global/Globals.h"
 #include "Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 
@@ -58,7 +57,7 @@ const EECoreTLBEntry_t & EECoreTLB_t::getTLBEntry(s32 index) const
 s32 EECoreTLB_t::getNewTLBIndex()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "Warning: getNewTLBIndex() called, but not properly implemented.");
+	log(Debug, "Warning: getNewTLBIndex() called, but not properly implemented.");
 #endif 
 
 	for (auto i = 0; i < Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES; i++)

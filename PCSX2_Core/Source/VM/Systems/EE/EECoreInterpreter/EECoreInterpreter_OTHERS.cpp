@@ -2,7 +2,6 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
@@ -15,7 +14,7 @@ void EECoreInterpreter::SYNC_STYPE()
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
 #if defined(BUILD_DEBUG)
-	// getVM()->log(Debug, "SYNC_STYPE: Not implemented.");
+	// log(Debug, "SYNC_STYPE: Not implemented.");
 	DEBUG_INSTRUCTION_SYNC++;
 #else
 	throw std::runtime_error("SYNC_STYPE: Not implemented.");
@@ -26,7 +25,7 @@ void EECoreInterpreter::PREF()
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
 #if defined(BUILD_DEBUG)
-	// getVM()->log(Debug, "(%s, %d) PREF: Not implemented.", __FILENAME__, __LINE__);
+	// log(Debug, "(%s, %d) PREF: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("PREF: Not implemented.");
 #endif
@@ -63,7 +62,7 @@ void EECoreInterpreter::EI()
 void EECoreInterpreter::CACHE()
 {
 #if defined(BUILD_DEBUG)
-	// getVM()->log(Debug, "(%s, %d) CACHE: Not implemented.", __FILENAME__, __LINE__);
+	// log(Debug, "(%s, %d) CACHE: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("CACHE: Not implemented.");
 #endif

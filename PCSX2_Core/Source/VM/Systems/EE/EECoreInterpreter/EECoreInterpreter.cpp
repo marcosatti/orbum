@@ -8,7 +8,7 @@
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-#include "VM/VMMain.h"
+#include "VM/VM.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
 
@@ -28,7 +28,7 @@
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EECoreInterpreter::EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
+EECoreInterpreter::EECoreInterpreter(VM * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
 	VMSystem_t(vmMain, System_t::EECore),
 	mInstructionInfo(nullptr),
 	mVU0Interpreter(vuInterpreter), 
@@ -72,7 +72,7 @@ double EECoreInterpreter::executeStep(const ClockSource_t & clockSource, const d
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
-		getVM()->log(Debug, "EECore cycle = 0x%llX: "
+		log(Debug, "EECore cycle = 0x%llX: "
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
@@ -83,7 +83,7 @@ double EECoreInterpreter::executeStep(const ClockSource_t & clockSource, const d
 	// Breakpoint.
 	if (pcAddress == DEBUG_PC_BREAKPOINT)
 	{
-		getVM()->log(Debug, "EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
+		log(Debug, "EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
 #endif
 
@@ -122,16 +122,16 @@ void EECoreInterpreter::handleInterruptCheck()
 			
 			auto& STAT = getResources()->EE->INTC->STAT;
 			auto& MASK = getResources()->EE->INTC->MASK;
-			getVM()->log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
+			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
 				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->BD->isInBranchDelay());
-			getVM()->log(Debug, "Printing list of interrupt sources...");
+			log(Debug, "Printing list of interrupt sources...");
 			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
 			{
 				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
-					getVM()->log(Debug, STAT->mFields[irqField].mMnemonic);
+					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
 			}
 			if ((ipCause & imStatus) & 0x4) // DMAC
-				getVM()->log(Debug, "DMAC");
+				log(Debug, "DMAC");
 #endif
 			// Handle the interrupt immediately.
 			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.
@@ -223,7 +223,7 @@ void EECoreInterpreter::INSTRUCTION_UNKNOWN()
 {
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R5900 instruction encountered! (Lookup: %s -> %s)",
+	log(Debug, "(%s, %d) Unknown R5900 instruction encountered! (Lookup: %s -> %s)",
 		__FILENAME__, __LINE__, mInstructionInfo->mBaseClass, mInstructionInfo->mMnemonic);
 #endif
 }
@@ -244,7 +244,7 @@ void EECoreInterpreter::handleException(const EECoreException_t& exception)
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.
-	getVM()->log(Debug, "EECore ExceptionHandler called! Type = %s", mExceptionProperties->mMnemonic);
+	log(Debug, "EECore ExceptionHandler called! Type = %s", mExceptionProperties->mMnemonic);
 #endif
 
 	// For Reset and NMI's, need some additional processing before calling the general handlers.

@@ -6,7 +6,6 @@
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
@@ -29,7 +28,7 @@ void IOPCoreInterpreter::SYSCALL()
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
 	u8 index = mIOPCore->R3000->GPR[2]->readByte(IOP, 0);
-	getVM()->log(Debug, "IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
+	log(Debug, "IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
 #endif
 
 	// EXCEPTION(SYSCALL)
@@ -59,28 +58,28 @@ void IOPCoreInterpreter::TLBWR()
 void IOPCoreInterpreter::LWC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::SWC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CFC0()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CTC0()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
@@ -97,174 +96,174 @@ void IOPCoreInterpreter::RFE()
 void IOPCoreInterpreter::RTPS()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCLIP()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::OP()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::DPCS()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::INTPL()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::MVMVA()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCDS()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CDP()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCDT()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCCS()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CC()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCS()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::NCT()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::SQR()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::DCPL()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::DPCT()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::AVSZ3()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::AVSZ4()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::RTPT()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::GPF()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::GPL()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::MFC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CFC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::MTC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
 void IOPCoreInterpreter::CTC2()
 {
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
+	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }

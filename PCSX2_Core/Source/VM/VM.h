@@ -9,7 +9,7 @@
 class Resources_t;
 class VUInterpreter;
 class VIF;
-class VMMain;
+class VM;
 class EECoreInterpreter;
 class EEDmac;
 class EEIntc;
@@ -23,7 +23,7 @@ class IOPTimers;
 Entry point into all PCSX2 core emulation.
 This is the VM manager for the PS2's execution. All user interface & host OS functionality will eventually come through here.
 */
-class VMMain
+class VM
 {
 public:
 	enum VMStatus
@@ -33,8 +33,8 @@ public:
 		Stopped
 	};
 
-	explicit VMMain(const VMOptions & vmOptions);
-	~VMMain();
+	explicit VM(const VMOptions & vmOptions);
+	~VM();
 	
 	void reset();
 	void reset(const VMOptions & options);
@@ -47,11 +47,6 @@ public:
 	const VMStatus & getStatus() const;
 	void setStatus(const VMStatus & status);
 	const std::shared_ptr<Resources_t> & getResources() const;
-
-	/*
-	Logging.
-	*/
-	void log(const LogLevel_t & level, const char * format, ...) const;
 
 private:
 	/*

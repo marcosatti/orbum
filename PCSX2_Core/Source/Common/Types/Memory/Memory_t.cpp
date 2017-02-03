@@ -20,7 +20,7 @@ Memory_t::Memory_t(const size_t& size) :
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
-		getVM()->log(Debug, "(%s, %d) Memory allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mStorage, mStorageSize);
+		log(Debug, "(%s, %d) Memory allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mStorage, mStorageSize);
 #endif
 }
 
@@ -38,7 +38,7 @@ Memory_t::Memory_t(const size_t & size, const char * mnemonic) :
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
-		getVM()->log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
+		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
 #endif
 }
 
@@ -55,7 +55,7 @@ Memory_t::Memory_t(const size_t& size, const char* mnemonic, bool debugReads, bo
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
-		getVM()->log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
+		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
 #endif
 }
 #endif
@@ -76,9 +76,9 @@ u8 Memory_t::readByte(const Context& context, size_t storageIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u8 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Read u8 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -98,9 +98,9 @@ void Memory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u8 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -116,9 +116,9 @@ u16 Memory_t::readHword(const Context& context, size_t storageIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Read u16 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -138,9 +138,9 @@ void Memory_t::writeHword(const Context& context, size_t storageIndex, u16 value
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Write u16 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -156,9 +156,9 @@ u32 Memory_t::readWord(const Context& context, size_t storageIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Read u32 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -178,9 +178,9 @@ void Memory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -196,9 +196,9 @@ u64 Memory_t::readDword(const Context& context, size_t storageIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Read u64 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -218,9 +218,9 @@ void Memory_t::writeDword(const Context& context, size_t storageIndex, u64 value
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #else
-		getVM()->log(Debug, "%s: %s Write u64 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif
@@ -237,9 +237,9 @@ u128 Memory_t::readQword(const Context& context, size_t storageIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
-		getVM()->log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #endif
 	}
 #endif
@@ -261,9 +261,9 @@ void Memory_t::writeQword(const Context& context, size_t storageIndex, u128 valu
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
-		getVM()->log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getContextStr(context), getMnemonic(), storageIndex, *hostMemoryAddress);
 #endif
 	}
 #endif

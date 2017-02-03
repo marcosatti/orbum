@@ -5,7 +5,6 @@
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
 
 #include "Resources/Resources_t.h"
@@ -18,7 +17,7 @@ void VUInterpreter::MOVE()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MOVE: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MOVE: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MOVE: Not implemented.");
 #endif
@@ -28,7 +27,7 @@ void VUInterpreter::MFIR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MFIR: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MFIR: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MFIR: Not implemented.");
 #endif
@@ -38,7 +37,7 @@ void VUInterpreter::MTIR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MTIR: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MTIR: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MTIR: Not implemented.");
 #endif
@@ -48,7 +47,7 @@ void VUInterpreter::MR32()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MR32: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MR32: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MR32: Not implemented.");
 #endif
@@ -58,7 +57,7 @@ void VUInterpreter::LQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) LQ: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) LQ: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("LQ: Not implemented.");
 #endif
@@ -68,7 +67,7 @@ void VUInterpreter::LQD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) LQD: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) LQD: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("LQD: Not implemented.");
 #endif
@@ -78,7 +77,7 @@ void VUInterpreter::LQI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) LQI: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) LQI: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("LQI: Not implemented.");
 #endif
@@ -88,7 +87,7 @@ void VUInterpreter::SQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SQ: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SQ: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SQ: Not implemented.");
 #endif
@@ -98,7 +97,7 @@ void VUInterpreter::SQD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) SQD: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) SQD: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("SQD: Not implemented.");
 #endif
@@ -128,7 +127,7 @@ void VUInterpreter::ILW()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ILW: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ILW: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ILW: Not implemented.");
 #endif
@@ -138,7 +137,7 @@ void VUInterpreter::ISW()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ISW: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ISW: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ISW: Not implemented.");
 #endif
@@ -148,7 +147,7 @@ void VUInterpreter::ILWR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) ILWR: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) ILWR: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("ILWR: Not implemented.");
 #endif
@@ -175,7 +174,7 @@ void VUInterpreter::LOI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) LOI: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) LOI: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("LOI: Not implemented.");
 #endif
@@ -185,7 +184,7 @@ void VUInterpreter::MFP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) MFP: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) MFP: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("MFP: Not implemented.");
 #endif

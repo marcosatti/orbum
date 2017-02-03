@@ -24,7 +24,7 @@ using Direction_t = EEDmacChannelTable::Direction_t;
 using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
 using ChainMode_t = EEDmacChannelTable::ChainMode_t;
 
-EEDmac::EEDmac(VMMain* vmMain) :
+EEDmac::EEDmac(VM* vmMain) :
 	VMSystem_t(vmMain, System_t::EEDmac),
 	mChannelIndex(0),
 	mChannel(nullptr),

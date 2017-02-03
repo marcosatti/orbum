@@ -5,7 +5,6 @@
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 
-#include "VM/VMMain.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
@@ -189,7 +188,7 @@ void EECoreInterpreter::BC0F()
 	// if (CPCOND0 == false)
 		// branch; 
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC0F: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC0F: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0F: Not implemented.");
 #endif
@@ -207,7 +206,7 @@ void EECoreInterpreter::BC0FL()
 	// if (CPCOND0 == false)
 		// branch likely; 
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC0FL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC0FL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0FL: Not implemented.");
 #endif
@@ -225,7 +224,7 @@ void EECoreInterpreter::BC0T()
 	// if (CPCOND0 == true)
 	// branch; 
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC0T: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC0T: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0T: Not implemented.");
 #endif
@@ -243,7 +242,7 @@ void EECoreInterpreter::BC0TL()
 	// if (CPCOND0 == true)
 	// branch likely; 
 #if defined(BUILD_DEBUG)
-	getVM()->log(Debug, "(%s, %d) BC0TL: Not implemented.", __FILENAME__, __LINE__);
+	log(Debug, "(%s, %d) BC0TL: Not implemented.", __FILENAME__, __LINE__);
 #else
 	throw std::runtime_error("BC0TL: Not implemented.");
 #endif

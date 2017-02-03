@@ -16,7 +16,7 @@ For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the
 class VIF : public VMSystem_t
 {
 public:
-	explicit VIF(VMMain * vmMain, u32 vifUnitIndex);
+	explicit VIF(VM * vmMain, u32 vifUnitIndex);
 	virtual ~VIF();
 
 	/*

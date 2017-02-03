@@ -11,7 +11,7 @@
 #include "Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
 #include "Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 
-VIF::VIF(VMMain* vmMain, u32 vifUnitIndex) :
+VIF::VIF(VM* vmMain, u32 vifUnitIndex) :
 	VMSystem_t(vmMain, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
 	mVIFUnitIndex(vifUnitIndex),
 	mDMAPacket()

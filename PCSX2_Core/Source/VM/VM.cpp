@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
 #include <memory>
-#include <cstdarg>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROMemory_t.h"
 
-#include "VM/VMMain.h"
+#include "VM/VM.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
 #include "VM/Systems/EE/DMAC/EEDmac.h"
 #include "VM/Systems/EE/Timers/EETimers.h"
@@ -21,16 +20,19 @@
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
 
-VMMain::VMMain(const VMOptions & vmOptions) : 
+VM::VM(const VMOptions & vmOptions) : 
 	mVMOptions(vmOptions),
-	mStatus(Stopped)
+	mStatus(Stopped),
+	mSystemThreadsInitalised(false)
 {
 	// Initialise everything.
 	reset();
 }
 
-void VMMain::reset()
+void VM::reset()
 {
+	// Initalise logging.
+	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
 	log(Info, "VM reset started...");
 
 	// Initalise resources.
@@ -90,7 +92,7 @@ void VMMain::reset()
 
 		// Initalise threads.
 		for (auto& component : mSystems)
-			mSystemThreads.push_back(std::thread(&VMSystem_t::executeTicks, &(*component)));
+			mSystemThreads.push_back(std::thread(&VMSystem_t::threadLoop, &(*component)));
 
 		// Detach threads.
 		for (auto& thread : mSystemThreads)
@@ -108,13 +110,13 @@ void VMMain::reset()
 	log(Info, "VM reset done.");
 }
 
-void VMMain::reset(const VMOptions& options)
+void VM::reset(const VMOptions& options)
 {
 	mVMOptions = options;
 	reset();
 }
 
-void VMMain::run()
+void VM::run()
 {
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS && mSystemThreadsInitalised)
 	{
@@ -128,7 +130,7 @@ void VMMain::run()
 		// Produce ticks for all components.
 		for (auto& system : mSystems)
 		{
-			system->produceTicks(ClockSource_t::EECore, 10000.0);
+			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_MT / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
 			system->mThreadRun = true;
 		}
 
@@ -150,13 +152,13 @@ void VMMain::run()
 		// Run through each of the systems separately.
 		for (auto& system : mSystems)
 		{
-			system->produceTicks(ClockSource_t::EECore, 10000.0);
+			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_ST / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
 			system->executeTicks();
 		}
 	}
 }
 
-void VMMain::stop()
+void VM::stop()
 {
 	// Set to stopped.
 	mStatus = Stopped;
@@ -167,35 +169,21 @@ void VMMain::stop()
 	log(Info, "VM stopped ok.");
 }
 
-VMMain::~VMMain()
+VM::~VM()
 {
 }
 
-const VMMain::VMStatus& VMMain::getStatus() const
+const VM::VMStatus& VM::getStatus() const
 {
 	return mStatus;
 }
 
-void VMMain::setStatus(const VMStatus& status)
+void VM::setStatus(const VMStatus& status)
 {
 	mStatus = status;
 }
 
-const std::shared_ptr<Resources_t> & VMMain::getResources() const
+const std::shared_ptr<Resources_t> & VM::getResources() const
 {
 	return mResources;
-}
-
-void VMMain::log(const LogLevel_t& level, const char* format, ...) const
-{
-	// Construct message.
-	va_list args;
-	va_start(args, format);
-	const size_t buffer_sz = 1024;
-	char buffer[buffer_sz];
-	vsnprintf(buffer, buffer_sz, format, args);
-	va_end(args);
-
-	// Call the frontend to log the message.
-	mVMOptions.LOG_FUNCPTR(level, buffer);
 }

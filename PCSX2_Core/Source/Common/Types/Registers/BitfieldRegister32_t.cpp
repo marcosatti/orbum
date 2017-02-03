@@ -55,9 +55,9 @@ void BitfieldRegister32_t::logDebugAllFields() const
 			break;
 
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "\t%s = 0x%X.", mFields[i].mMnemonic.c_str(), mFields[i].mValue);
+		log(Debug, "\t%s = 0x%X.", mFields[i].mMnemonic.c_str(), mFields[i].mValue);
 #else
-		getVM()->log(Debug, "\t%s = %d.", mFields[i].mMnemonic, mFields[i].mValue);
+		log(Debug, "\t%s = %d.", mFields[i].mMnemonic, mFields[i].mValue);
 #endif
 	}
 }

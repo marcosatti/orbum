@@ -323,6 +323,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Common\Global\Log.h" />
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
@@ -386,7 +387,6 @@
     <ClInclude Include="Source\VM\Systems\IOP\INTC\IOPIntc.h" />
     <ClInclude Include="Source\VM\Systems\IOP\Timers\IOPTimers.h" />
     <ClInclude Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter.h" />
-    <ClInclude Include="Source\VM\Types\LogLevel_t.h" />
     <ClInclude Include="Source\VM\Types\VMOptions.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreException_t.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
@@ -445,7 +445,7 @@
     <ClInclude Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.h" />
     <ClInclude Include="Source\VM\Types\VMSystem_t.h" />
-    <ClInclude Include="Source\VM\VMMain.h" />
+    <ClInclude Include="Source\VM\VM.h" />
     <ClInclude Include="Source\Resources\EE\EECore\Types\EECoreException_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register32_t.h" />
     <ClInclude Include="Source\Resources\EE\EECore\Types\EECoreR5900_t.h" />
@@ -458,6 +458,7 @@
     <ClInclude Include="Source\Resources\EE\Timers\EETimers_t.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Common\Global\Log.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.cpp" />
@@ -599,7 +600,7 @@
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_t.cpp" />
-    <ClCompile Include="Source\VM\VMMain.cpp" />
+    <ClCompile Include="Source\VM\VM.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

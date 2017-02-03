@@ -12,7 +12,7 @@
 
 using ExceptionProperties_t = EECoreExceptionsTable::ExceptionProperties_t;
 
-class VMMain;
+class VM;
 class VUInterpreter;
 class EECore_t;
 class VuUnit_VU0_t;
@@ -32,7 +32,7 @@ TODO: Finish documentation.
 class EECoreInterpreter : public VMSystem_t
 {
 public:
-	explicit EECoreInterpreter(VMMain * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter);
+	explicit EECoreInterpreter(VM * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter);
 	virtual ~EECoreInterpreter();
 
 	/*

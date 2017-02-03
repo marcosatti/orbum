@@ -40,9 +40,9 @@ u8 Register64_t::readByte(const Context& context, size_t arrayIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Read u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #endif
 	}
 #endif
@@ -58,9 +58,9 @@ void Register64_t::writeByte(const Context& context, size_t arrayIndex, u8 value
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Write u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UB[arrayIndex]);
 #endif
 }
 #endif
@@ -72,9 +72,9 @@ u16 Register64_t::readHword(const Context& context, size_t arrayIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u16[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Read u16[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Read u16[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Read u16[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
 #endif
 	}
 #endif
@@ -90,9 +90,9 @@ void Register64_t::writeHword(const Context& context, size_t arrayIndex, u16 val
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u16[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Write u16[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Write u16[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Write u16[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UH[arrayIndex]);
 #endif
 	}
 #endif
@@ -104,9 +104,9 @@ u32 Register64_t::readWord(const Context& context, size_t arrayIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u32[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
+		log(Debug, "%s: %s Read u32[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Read u32[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
+		log(Debug, "%s: %s Read u32[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
 #endif
 	}
 #endif
@@ -122,9 +122,9 @@ void Register64_t::writeWord(const Context& context, size_t arrayIndex, u32 valu
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u32[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
+		log(Debug, "%s: %s Write u32[%d], Value = 0x%X.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
 #else
-		getVM()->log(Debug, "%s: %s Write u32[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
+		log(Debug, "%s: %s Write u32[%d], Value = %d.", getContextStr(context), getMnemonic(), arrayIndex, UW[arrayIndex]);
 #endif
 	}
 #endif
@@ -136,9 +136,9 @@ u64 Register64_t::readDword(const Context& context)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Read u64, Value = 0x%X.", getContextStr(context), getMnemonic(), UD);
+		log(Debug, "%s: %s Read u64, Value = 0x%X.", getContextStr(context), getMnemonic(), UD);
 #else
-		getVM()->log(Debug, "%s: %s Read u64, Value = %d.", getContextStr(context), getMnemonic(), UD);
+		log(Debug, "%s: %s Read u64, Value = %d.", getContextStr(context), getMnemonic(), UD);
 #endif
 	}
 #endif
@@ -154,9 +154,9 @@ void Register64_t::writeDword(const Context& context, u64 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		getVM()->log(Debug, "%s: %s Write u64, Value = 0x%X.", getContextStr(context), getMnemonic(), UD);
+		log(Debug, "%s: %s Write u64, Value = 0x%X.", getContextStr(context), getMnemonic(), UD);
 #else
-		getVM()->log(Debug, "%s: %s Write u64, Value = %d.", getContextStr(context), getMnemonic(), UD);
+		log(Debug, "%s: %s Write u64, Value = %d.", getContextStr(context), getMnemonic(), UD);
 #endif
 	}
 #endif

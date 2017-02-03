@@ -19,7 +19,7 @@ TODO: finish documentation.
 class IOPDmac : public VMSystem_t
 {
 public:
-	explicit IOPDmac(VMMain * vmMain);
+	explicit IOPDmac(VM * vmMain);
 	virtual ~IOPDmac();
 
 	/*

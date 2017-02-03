@@ -2,17 +2,38 @@
 //
 
 #include "stdafx.h"
-#include "VM/VMMain.h"
-#include "VM/Types/VMOptions.h"
+
+#include <iostream>
 #include <fstream>
+#include <mutex>
+
+#include "Common/Global/Log.h"
+#include "VM/VM.h"
+#include "VM/Types/VMOptions.h"
 
 std::ofstream logFile;
 
-void log(const char * buffer)
+void log(const LogLevel_t level, const std::string message)
 {
-	logFile << buffer;
+	static std::mutex mtx;
+	std::lock_guard<std::mutex> lock(mtx);
+
+	std::string prefix;
+	switch (level)
+	{
+	case Debug:
+		prefix = "[Debug] "; break;
+	case Info:
+		prefix = "[Info] "; break;
+	case Warning:
+		prefix = "[Warning] "; break;
+	}
+
+	logFile << prefix << message << std::endl;
+	std::cout << prefix << message << std::endl;
+
 	logFile.flush();
-	fprintf(stderr, buffer);
+	std::cout.flush();
 }
 
 int main()
@@ -22,12 +43,30 @@ int main()
 	VMOptions vmOptions = 
 	{
 		log,
-		"C:\\Shared\\scph10000.bin"
+		"C:\\Shared\\scph10000.bin",
+		"",
+		"",
+		"",
+		10,
+		10,
+		true,
+		1.0,
+		1.0, //0.5,
+		1.0,
+		1.0, //0.5,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0,
+		1.0, //0.5, 
+		1.0,
+		1.0, //0.5,
 	};
 
 	try 
 	{
-		VMMain vm(vmOptions);
+		VM vm(vmOptions);
 
 		while (true)
 			vm.run();
@@ -36,7 +75,7 @@ int main()
 	{
 		std::string msg("EXCEPTION: ");
 		msg += ex.what();
-		log(msg.c_str());
+		log(Debug, msg.c_str());
 	}
 
 	logFile.close();
