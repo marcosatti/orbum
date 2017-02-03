@@ -3,8 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROMemory_t.h"
 
-ROMemory_t::ROMemory_t(const size_t& size, const char* mnemonic) :
-	Memory_t(size, mnemonic)
+ROMemory_t::ROMemory_t(const size_t& size) :
+	Memory_t(size)
 {
 }
 
@@ -12,37 +12,27 @@ ROMemory_t::~ROMemory_t()
 {
 }
 
-void ROMemory_t::writeByte(u32 storageIndex, u8 value)
+void ROMemory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
 {
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
+	// Do not write (read only).
 }
 
-void ROMemory_t::writeHword(u32 storageIndex, u16 value)
+void ROMemory_t::writeHword(const Context& context, size_t storageIndex, u16 value)
 {
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
+	// Do not write (read only).
 }
 
-void ROMemory_t::writeWord(u32 storageIndex, u32 value)
+void ROMemory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
 {
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
+	// Do not write (read only).
 }
 
-void ROMemory_t::writeDword(u32 storageIndex, u64 value)
+void ROMemory_t::writeDword(const Context& context, size_t storageIndex, u64 value)
 {
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, Value = %d).", getMnemonic(), storageIndex, value);
-#endif
+	// Do not write (read only).
 }
 
-void ROMemory_t::writeQword(u32 storageIndex, u128 value)
+void ROMemory_t::writeQword(const Context& context, size_t storageIndex, u128 value)
 {
-#if DEBUG_LOG_RO_MM_WRITES
-	logDebug("%s: Tried to perform a write to a RO mapped memory object - discarded! (Offset = 0x%08X, ValueLSB = %d, ValueMSB = %d).", getMnemonic(), storageIndex, value.lo, value.hi);
-#endif
+	// Do not write (read only).
 }

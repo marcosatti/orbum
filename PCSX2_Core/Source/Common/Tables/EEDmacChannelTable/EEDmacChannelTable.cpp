@@ -2,7 +2,7 @@
 
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
-const EEDmacChannelTable::ChannelProperties_t* EEDmacChannelTable::getChannelInfo(u32 index)
+const EEDmacChannelTable::ChannelProperties_t* EEDmacChannelTable::getChannelInfo(const u32 & index)
 {
 	return &ChannelProperties[index];
 }

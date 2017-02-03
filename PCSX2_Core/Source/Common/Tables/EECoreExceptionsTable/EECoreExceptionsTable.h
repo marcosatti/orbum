@@ -2,9 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "PS2Constants/PS2Constants.h"
-
-#include "PS2Resources/EE/EECore/Types/EECoreException_t.h"
+#include "Resources/EE/EECore/Types/EECoreException_t.h"
 
 /*
 Contains static properties for the EE Core exception types.
@@ -24,7 +22,7 @@ public:
 		u8	         mLevel;
 		u8	         mExeCode;
 	};
-	static constexpr ExceptionProperties_t ExceptionProperties[PS2Constants::EE::EECore::R5900::NUMBER_EXCEPTIONS] =
+	static constexpr ExceptionProperties_t ExceptionProperties[Constants::EE::EECore::R5900::NUMBER_EXCEPTIONS] =
 	{
 		{ "EX_RESET",                                2, 0  },
 		{ "EX_NMI",                                  2, 1  },

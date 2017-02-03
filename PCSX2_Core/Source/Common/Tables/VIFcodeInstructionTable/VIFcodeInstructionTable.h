@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "Common/Global/Globals.h"
 
 class VIFcode_t;

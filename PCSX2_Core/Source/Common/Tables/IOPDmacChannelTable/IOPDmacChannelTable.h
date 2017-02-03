@@ -1,7 +1,10 @@
 #pragma once
 
-#include "PS2Constants/PS2Constants.h"
+#include "Common/Global/Globals.h"
 
+/*
+Contains static channel properties for the IOP DMAC channels.
+*/
 class IOPDmacChannelTable
 {
 public:
@@ -44,7 +47,7 @@ public:
 		const char *   Mnemonic;
 		ChannelID_t    ChannelID;
 	};
-	static constexpr ChannelProperties_t ChannelProperties[PS2Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] =
+	static constexpr ChannelProperties_t ChannelProperties[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] =
 	{
 		{ "fromMDEC", ChannelID_t::fromMDEC },
 		{ "toMDEC",   ChannelID_t::toMDEC   },

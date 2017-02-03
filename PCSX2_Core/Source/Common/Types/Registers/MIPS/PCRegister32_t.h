@@ -24,6 +24,6 @@ public:
 	/*
 	Increments the PC by a default size of 4 bytes (equal to the size of a MIPS instruction).
 	*/
-	void setPCValueNext(const u32 instructionSize = Constants::SIZE_MIPS_INSTRUCTION);
+	void setPCValueNext(const u32 instructionSize = Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 };
 

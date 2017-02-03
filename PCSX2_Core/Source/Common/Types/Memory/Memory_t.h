@@ -17,21 +17,27 @@ class Memory_t
 public:
 	explicit Memory_t(const size_t & size);
 	explicit Memory_t(const size_t & size, const char * mnemonic);
+
+#if defined(BUILD_DEBUG)
+	explicit Memory_t(const size_t & size, const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
+	bool mDebugReads, mDebugWrites;
+#endif
+
 	virtual ~Memory_t();
 
 	/*
 	Read or write a value of a given type, to the specified byte index (storageIndex).
 	*/
-	virtual u8 readByte(u32 storageIndex);
-	virtual void writeByte(u32 storageIndex, u8 value);
-	virtual u16 readHword(u32 storageIndex);
-	virtual void writeHword(u32 storageIndex, u16 value);
-	virtual u32 readWord(u32 storageIndex);
-	virtual void writeWord(u32 storageIndex, u32 value);
-	virtual u64 readDword(u32 storageIndex);
-	virtual void writeDword(u32 storageIndex, u64 value);
-	virtual u128 readQword(u32 storageIndex);
-	virtual void writeQword(u32 storageIndex, u128 value);
+	virtual u8 readByte(const Context & context, size_t storageIndex);
+	virtual void writeByte(const Context & context, size_t storageIndex, u8 value);
+	virtual u16 readHword(const Context & context, size_t storageIndex);
+	virtual void writeHword(const Context & context, size_t storageIndex, u16 value);
+	virtual u32 readWord(const Context & context, size_t storageIndex);
+	virtual void writeWord(const Context & context, size_t storageIndex, u32 value);
+	virtual u64 readDword(const Context & context, size_t storageIndex);
+	virtual void writeDword(const Context & context, size_t storageIndex, u64 value);
+	virtual u128 readQword(const Context & context, size_t storageIndex);
+	virtual void writeQword(const Context & context, size_t storageIndex, u128 value);
 
 	/*
 	Gets the storage length.
@@ -48,6 +54,11 @@ public:
 	Get the storage mnemonic, used for debug.
 	*/
 	virtual const char * getMnemonic() const;
+
+	/*
+	Read in a raw file to the memory (byte copy).
+	*/
+	void readFile(const std::string & fileStr, const size_t & fileOffset, const size_t & fileLength, const size_t & storageOffset) const;
 
 private:
 	size_t mStorageSize;

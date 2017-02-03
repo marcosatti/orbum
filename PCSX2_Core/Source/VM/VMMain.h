@@ -1,83 +1,87 @@
 #pragma once
 
 #include <memory>
-#include <string>
+#include <thread>
 
-#include "Types/VMOptions_t.h"
+#include "VM/Types/VMOptions.h"
+#include "VM/Types/VMSystem_t.h"
 
-class VMExecutionCore;
-class PS2Resources_t;
+class Resources_t;
+class VUInterpreter;
+class VIF;
+class VMMain;
+class EECoreInterpreter;
+class EEDmac;
+class EEIntc;
+class EETimers;
+class IOPCoreInterpreter;
+class IOPIntc;
+class IOPDmac;
+class IOPTimers;
 
 /*
 Entry point into all PCSX2 core emulation.
-This virtual machine (VM) acts as a hypervisor (manager) for the PS2's execution. All user interface & host OS functionality will eventually come through here.
+This is the VM manager for the PS2's execution. All user interface & host OS functionality will eventually come through here.
 */
 class VMMain
 {
 public:
-	// Lifecycle status type
 	enum VMStatus
 	{
-		CREATED,
-		INITIALISED,
-		RUNNING,
-		EXCEPTION,
-		STOPPED,
-		DESTROYED
+		Running,
+		Exception,
+		Stopped
 	};
 
-	/*
-	Lifecycle functions
-	*/
-	// Create
-	explicit VMMain(const VMOptions_t & vmOptions);
-	
-	// Initialise
-	void Reset();
-
-	// Run
-	void Run();
-
-	// Stop
-	void Stop();
-
-	// Destroy
+	explicit VMMain(const VMOptions & vmOptions);
 	~VMMain();
+	
+	void reset();
+	void reset(const VMOptions & options);
+	void run();
+	void stop();
 
 	/*
-	VMMain state functions.
+	VM state functions.
 	*/
 	const VMStatus & getStatus() const;
 	void setStatus(const VMStatus & status);
-	const std::shared_ptr<PS2Resources_t> & getResources() const;
-	
+	const std::shared_ptr<Resources_t> & getResources() const;
+
 	/*
-	Misc helper functions.
+	Logging.
 	*/
+	void log(const LogLevel_t & level, const char * format, ...) const;
 
 private:
 	/*
-	VM State variables.
+	VM state resources.
 	*/
-	VMOptions_t mVMOptions;
+	VMOptions mVMOptions;
 	VMStatus mStatus;
-	std::shared_ptr<PS2Resources_t> mPS2Resources;
-	std::unique_ptr<VMExecutionCore> mExecutionCore;
-
-	// Initalisation (called through reset()).
-	/*
-	Initalisation for the PS2 resources.
-	*/
-	void initaliseResources();
+	std::shared_ptr<Resources_t> mResources;
 
 	/*
-	Initalise the execution core (interpreter or recompiler).
+	PS2 systems / components.
 	*/
-	void initaliseExecutionCore();
+	std::shared_ptr<VUInterpreter> mInterpreterVU0;
+	std::shared_ptr<VUInterpreter> mInterpreterVU1;
+	std::shared_ptr<VIF> mVIF0;
+	std::shared_ptr<VIF> mVIF1;
+	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
+	std::shared_ptr<EEDmac> mEEDmac;
+	std::shared_ptr<EEIntc> mEEIntc;
+	std::shared_ptr<EETimers> mEETimers;
+	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
+	std::shared_ptr<IOPIntc> mIOPIntc;
+	std::shared_ptr<IOPDmac> mIOPDmac;
+	std::shared_ptr<IOPTimers> mIOPTimers;
+	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
 
 	/*
-	Load the bios into the BootROM resource
+	Threading resources.
 	*/
-	void initaliseROMs() const;
+	std::vector<std::thread> mSystemThreads;
+	bool mSystemThreadsInitalised;
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "PS2Constants/PS2Constants.h"
 
 /*
 Lists the IOPCore's OS list of syscalls available (mnemonics).
@@ -10,7 +9,7 @@ class IOPCoreSyscallTable
 {
 public:
 	static constexpr char * UNKNOWN = "Unknown (not in table)";
-	static constexpr char * SYSCALL_MNEMONICS[PS2Constants::IOP::IOPCore::R3000::NUMBER_SYSCALLS] =
+	static constexpr char * SYSCALL_MNEMONICS[Constants::IOP::IOPCore::R3000::NUMBER_SYSCALLS] =
 	{
 		"Unknown", // 000.
 		"CpuDisableIntr", // 001.

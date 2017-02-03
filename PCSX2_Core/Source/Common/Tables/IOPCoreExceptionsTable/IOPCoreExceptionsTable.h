@@ -2,9 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "PS2Constants/PS2Constants.h"
-
-#include "PS2Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
+#include "Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 
 class IOPCoreExceptionsTable
 {
@@ -20,7 +18,7 @@ public:
 		const char * mMnemonic;
 		u8	         mExeCode;
 	};
-	static constexpr ExceptionProperties_t ExceptionProperties[PS2Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS] =
+	static constexpr ExceptionProperties_t ExceptionProperties[Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS] =
 	{
 		{ "EX_INTERRUPT",                            0   },
 		{ "EX_TLB_MODIFIED",                         1   },

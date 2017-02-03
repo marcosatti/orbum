@@ -3,7 +3,6 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/Types/Registers/Register32_t.h"
 
 MIPSInstruction_t::MIPSInstruction_t(u32 instructionValue) :
 	mInstructionValue(instructionValue)

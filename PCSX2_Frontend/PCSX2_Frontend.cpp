@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "VM/VMMain.h"
-#include "VM/Types/VMOptions_t.h"
+#include "VM/Types/VMOptions.h"
 #include <fstream>
 
 std::ofstream logFile;
@@ -19,17 +19,18 @@ int main()
 {
 	logFile.open("C:\\Shared\\PCSX2_Rewrite.txt");
 
-	VMOptions_t vmOptions = 
+	VMOptions vmOptions = 
 	{
 		log,
-		"C:\\Shared\\scph10000.bin",
-		ExecutionCore_t::Interpreter
+		"C:\\Shared\\scph10000.bin"
 	};
 
 	try 
 	{
 		VMMain vm(vmOptions);
-		vm.Run();
+
+		while (true)
+			vm.run();
 	}
 	catch (std::exception ex)
 	{

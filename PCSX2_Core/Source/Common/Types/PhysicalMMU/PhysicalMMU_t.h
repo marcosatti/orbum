@@ -3,9 +3,8 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Context_t.h"
 
-class PhysicalMapped;
+class PhysicalMapped_t;
 class Memory_t;
 class Register8_t;
 class Register16_t;
@@ -60,7 +59,7 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB max addre
 class PhysicalMMU_t
 {
 public:
-	explicit PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 & directorySizeBytes, const u32 & pageSizeBytes);
+	explicit PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const size_t & directorySizeBytes, const size_t & pageSizeBytes);
 	~PhysicalMMU_t();
 
 	/*
@@ -72,7 +71,7 @@ public:
 	
 	Convenience mapping functions have been provided that maps the object with the appropriate wrapper class (makes it compatible with the PhysicalMapped interface).
 	*/
-	void mapObject(const std::shared_ptr<PhysicalMapped> & physicalMapped);
+	void mapObject(const std::shared_ptr<PhysicalMapped_t> & physicalMapped);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
@@ -88,32 +87,32 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeByte(const Context_t & context, u32 PS2PhysicalAddress, u8 value) const;
-	u16 readHword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeHword(const Context_t & context, u32 PS2PhysicalAddress, u16 value) const;
-	u32 readWord(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeWord(const Context_t & context, u32 PS2PhysicalAddress, u32 value) const;
-	u64 readDword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeDword(const Context_t & context, u32 PS2PhysicalAddress, u64 value) const;
-	u128 readQword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeQword(const Context_t & context, u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(const Context & context, u32 PS2PhysicalAddress) const;
+	void writeByte(const Context & context, u32 PS2PhysicalAddress, u8 value) const;
+	u16 readHword(const Context & context, u32 PS2PhysicalAddress) const;
+	void writeHword(const Context & context, u32 PS2PhysicalAddress, u16 value) const;
+	u32 readWord(const Context & context, u32 PS2PhysicalAddress) const;
+	void writeWord(const Context & context, u32 PS2PhysicalAddress, u32 value) const;
+	u64 readDword(const Context & context, u32 PS2PhysicalAddress) const;
+	void writeDword(const Context & context, u32 PS2PhysicalAddress, u64 value) const;
+	u128 readQword(const Context & context, u32 PS2PhysicalAddress) const;
+	void writeQword(const Context & context, u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*
 	Internal parameters calculated in the constructor.
 	*/
-	const size_t MAX_ADDRESSABLE_SIZE_BYTES; // Needs to be of type size_t as 4GB (which is the max supported size) does not fit into u32.
-	const u32 DIRECTORY_SIZE_BYTES;
-	const u32 PAGE_SIZE_BYTES;
-	const u32 DIRECTORY_ENTRIES;
-	const u32 PAGE_ENTRIES;
-	const u32 OFFSET_BITS;
-	const u32 OFFSET_MASK;
-	const u32 DIRECTORY_BITS;
-	const u32 DIRECTORY_MASK;
-	const u32 PAGE_BITS;
-	const u32 PAGE_MASK;
+	const size_t MAX_ADDRESSABLE_SIZE_BYTES;
+	const size_t DIRECTORY_SIZE_BYTES;
+	const size_t PAGE_SIZE_BYTES;
+	const size_t DIRECTORY_ENTRIES;
+	const size_t PAGE_ENTRIES;
+	const size_t OFFSET_BITS;
+	const size_t OFFSET_MASK;
+	const size_t DIRECTORY_BITS;
+	const size_t DIRECTORY_MASK;
+	const size_t PAGE_BITS;
+	const size_t PAGE_MASK;
 
 	/*
 	The page table which holds all of the page table entries, mapping the addresses.
@@ -121,12 +120,12 @@ private:
 	The individual pages are only allocated on access, thereby saving memory.
 	(An array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
 	*/
-	std::shared_ptr<PhysicalMapped>** mPageTable;
+	std::shared_ptr<PhysicalMapped_t>** mPageTable;
 
 	/*
 	Translates the given PS2 physical address to the stored memory object by using the page table. The returned object can then be used to read or write to an address.
 	*/
-	std::shared_ptr<PhysicalMapped> & getMappedMemory(u32 baseVDN, u32 baseVPN) const;
+	std::shared_ptr<PhysicalMapped_t> & getMappedMemory(size_t baseVDN, size_t baseVPN) const;
 
 	/*
 	Helper functions for mapObject & others to 
@@ -135,23 +134,23 @@ private:
 	 - The absolute page (if they were layed out end to end).
 	 - Allocate a new directory of pages if it doesnt exist.
 	*/
-	u32 getDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
-	u32 getDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const;
-	u32 getAbsPageFromDirAndPageOffset(u32 absDirectoryIndex, u32 pageOffset) const;
-	void allocDirectory(u32 directoryIndex) const;
+	size_t getDirectoryFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
+	size_t getDirPageFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
+	size_t getAbsPageFromDirAndPageOffset(size_t absDirectoryIndex, size_t pageOffset) const;
+	void allocDirectory(size_t directoryIndex) const;
 
 	/*
 	Gets the VDN (virtual directory number) from a given PS2 physical address.
 	*/
-	u32 getVDN(u32 PS2MemoryAddress) const;
+	size_t getVDN(u32 PS2MemoryAddress) const;
 
 	/*
 	Gets the VPN (virtual page number) from a given PS2 physical address.
 	*/
-	u32 getVPN(u32 PS2MemoryAddress) const;
+	size_t getVPN(u32 PS2MemoryAddress) const;
 
 	/*
 	Gets the offset from a given PS2 physical address.
 	*/
-	u32 getOffset(u32 PS2MemoryAddress) const;
+	size_t getOffset(u32 PS2MemoryAddress) const;
 };

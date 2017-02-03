@@ -7,7 +7,7 @@
 #include "Common/Global/Globals.h"
 
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Interfaces/PhysicalMapped.h"
+#include "Common/Types/PhysicalMMU/PhysicalMapped_t.h"
 #include "Common/Types/PhysicalMMU/MappedMemory_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister8_t.h"
 #include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
@@ -18,7 +18,7 @@
 #include "Common/Types/PhysicalMMU/MappedFPRegister128_t.h"
 #include "Common/Types/PhysicalMMU/MappedFIFOQueue_t.h"
 
-PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 & directorySizeBytes, const u32 & pageSizeBytes) :
+PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const size_t & directorySizeBytes, const size_t & pageSizeBytes) :
 	MAX_ADDRESSABLE_SIZE_BYTES(maxAddressableSizeBytes),
 	DIRECTORY_SIZE_BYTES(directorySizeBytes),
 	PAGE_SIZE_BYTES(pageSizeBytes),
@@ -32,7 +32,7 @@ PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const u32 &
 	PAGE_MASK(PAGE_ENTRIES - 1)
 {
 	// Allocate the page table (directories).
-	mPageTable = new std::shared_ptr<PhysicalMapped>*[DIRECTORY_ENTRIES];
+	mPageTable = new std::shared_ptr<PhysicalMapped_t>*[DIRECTORY_ENTRIES];
 
 	// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
 	// Sets all of the directory to nullptr's.
@@ -49,30 +49,30 @@ PhysicalMMU_t::~PhysicalMMU_t()
 	delete[] mPageTable;
 }
 
-void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped> & physicalMapped)
+void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped_t> & physicalMapped)
 {
 	// Do not do anything for getSize equal to 0.
 	if (physicalMapped->getSize() == 0) 
 		return;
 
 	// Get the base virtual directory number (VDN) and virtual page number (VPN).
-	u32 baseVDN = getVDN(physicalMapped->getMappedPhysicalAddress());
-	u32 baseVPN = getVPN(physicalMapped->getMappedPhysicalAddress());
+	auto baseVDN = getVDN(physicalMapped->getMappedPhysicalAddress());
+	auto baseVPN = getVPN(physicalMapped->getMappedPhysicalAddress());
 
 	// Work out how many pages the memory block occupies. If it is not evenly divisible, need to add on an extra page to account for the extra length.
 	// Thank you to Ian Nelson for the round up solution: http://stackoverflow.com/questions/17944/how-to-round-up-the-result-of-integer-division, very good.
 	size_t pagesCount = (physicalMapped->getSize() + PAGE_SIZE_BYTES - 1) / PAGE_SIZE_BYTES;
 
 	// Get absolute linear page position that we start mapping memory from.
-	u32 absPageStartIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto absPageStartIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 	
 	// Set the base page index of the storage object, so it can calculate the byte(s) it needs to access later on when its used.
 	physicalMapped->setAbsMappedPageIndex(absPageStartIndex);
 
 	// Iterate through the pages to set the host addresses.
-	u32 absDirectoryIndex;
-	u32 absPageIndex;
-	for (u32 i = 0; i < pagesCount; i++)
+	size_t absDirectoryIndex;
+	size_t absPageIndex;
+	for (size_t i = 0; i < pagesCount; i++)
 	{
 		// Get absolute directory and page index.
 		absDirectoryIndex = getDirectoryFromPageOffset(absPageStartIndex, i);
@@ -84,7 +84,7 @@ void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped> & physicalMa
 		// Check that there is no existing map data - log a warning if there is.
 #if defined(BUILD_DEBUG)
 		if (mPageTable[absDirectoryIndex][absPageIndex] != nullptr)
-			logDebug("(%s, %d) Warning! Physical MMU mapped storage object \"%s\" @ 0x%08X overwritten with object \"%s\". Please fix!",
+			getVM()->log(Debug, "(%s, %d) Warning! Physical MMU mapped storage object \"%s\" @ 0x%08X overwritten with object \"%s\". Please fix!",
 				__FILENAME__, __LINE__,
 				mPageTable[absDirectoryIndex][absPageIndex]->getMnemonic(),
 				physicalMapped->getMappedPhysicalAddress(),
@@ -141,66 +141,66 @@ void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<
 	mapObject(std::make_shared<MappedFIFOQueue_t>(physicalAddress, fifoQueue));
 }
 
-u32 PhysicalMMU_t::getVDN(u32 PS2PhysicalAddress) const
+size_t PhysicalMMU_t::getVDN(u32 PS2PhysicalAddress) const
 {
 	return (PS2PhysicalAddress >> (OFFSET_BITS + PAGE_BITS)) & DIRECTORY_MASK;
 }
 
-u32 PhysicalMMU_t::getVPN(u32 PS2PhysicalAddress) const
+size_t PhysicalMMU_t::getVPN(u32 PS2PhysicalAddress) const
 {
 	return (PS2PhysicalAddress >> OFFSET_BITS) & PAGE_MASK;
 }
 
-u32 PhysicalMMU_t::getOffset(u32 PS2PhysicalAddress) const
+size_t PhysicalMMU_t::getOffset(u32 PS2PhysicalAddress) const
 {
 	return PS2PhysicalAddress & OFFSET_MASK;
 }
 
-u32 PhysicalMMU_t::getDirectoryFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+size_t PhysicalMMU_t::getDirectoryFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const
 {
 	return (absPageIndexStart + pageOffset) / PAGE_ENTRIES;
 }
 
-u32 PhysicalMMU_t::getDirPageFromPageOffset(u32 absPageIndexStart, u32 pageOffset) const
+size_t PhysicalMMU_t::getDirPageFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const
 {
 	return (absPageIndexStart + pageOffset) % PAGE_ENTRIES;
 }
 
-u32 PhysicalMMU_t::getAbsPageFromDirAndPageOffset(u32 absDirectoryIndex, u32 pageOffset) const
+size_t PhysicalMMU_t::getAbsPageFromDirAndPageOffset(size_t absDirectoryIndex, size_t pageOffset) const
 {
 	return absDirectoryIndex * PAGE_ENTRIES + pageOffset;
 }
 
-void PhysicalMMU_t::allocDirectory(u32 directoryIndex) const
+void PhysicalMMU_t::allocDirectory(size_t directoryIndex) const
 {
 	// Allocate VDN only if empty and set to null initially.
 	if (mPageTable[directoryIndex] == nullptr) {
-		mPageTable[directoryIndex] = new std::shared_ptr<PhysicalMapped>[PAGE_ENTRIES];
+		mPageTable[directoryIndex] = new std::shared_ptr<PhysicalMapped_t>[PAGE_ENTRIES];
 		// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
 		memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
 	}
 }
 
-std::shared_ptr<PhysicalMapped> & PhysicalMMU_t::getMappedMemory(u32 baseVDN, u32 baseVPN) const
+std::shared_ptr<PhysicalMapped_t> & PhysicalMMU_t::getMappedMemory(size_t baseVDN, size_t baseVPN) const
 {
 	// Lookup the page in the page table to get the memory object (aka page frame number (PFN)).
 	// If the directory or memory object comes back as nullptr, throw a runtime exception.
-	std::shared_ptr<PhysicalMapped>* tableDirectory = mPageTable[baseVDN];
+	std::shared_ptr<PhysicalMapped_t>* tableDirectory = mPageTable[baseVDN];
 #if defined(BUILD_DEBUG)
 	if (tableDirectory == nullptr)
 	{
 		char message[1000];
-		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", (baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS)), baseVDN, baseVPN);
+		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %zX, VPN = %zX.", static_cast<u32>((baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS))), baseVDN, baseVPN);
 		throw std::runtime_error(message);
 	}
 #endif
 
-	std::shared_ptr<PhysicalMapped> & mappedMemory = tableDirectory[baseVPN];
+	std::shared_ptr<PhysicalMapped_t> & mappedMemory = tableDirectory[baseVPN];
 #if defined(BUILD_DEBUG)
 	if (mappedMemory == nullptr)
 	{
 		char message[1000];
-		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null PFN. Check input for error, or maybe it has not been mapped in the first place. VDN = %X, VPN = %X.", (baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS)), baseVDN, baseVPN);
+		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null PFN. Check input for error, or maybe it has not been mapped in the first place. VDN = %zX, VPN = %zX.", static_cast<u32>((baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS))), baseVDN, baseVPN);
 		throw std::runtime_error(message);
 	}
 #endif
@@ -209,161 +209,161 @@ std::shared_ptr<PhysicalMapped> & PhysicalMMU_t::getMappedMemory(u32 baseVDN, u3
 	return mappedMemory;
 }
 
-u8 PhysicalMMU_t::readByte(const Context_t& context, u32 PS2PhysicalAddress) const
+u8 PhysicalMMU_t::readByte(const Context& context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
 	return mappedMemory->readByte(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeByte(const Context_t& context, u32 PS2PhysicalAddress, u8 value) const
+void PhysicalMMU_t::writeByte(const Context& context, u32 PS2PhysicalAddress, u8 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
 	mappedMemory->writeByte(context, storageIndex, value);
 }
 
-u16 PhysicalMMU_t::readHword(const Context_t& context, u32 PS2PhysicalAddress) const
+u16 PhysicalMMU_t::readHword(const Context& context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
 	return mappedMemory->readHword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeHword(const Context_t& context, u32 PS2PhysicalAddress, u16 value) const
+void PhysicalMMU_t::writeHword(const Context& context, u32 PS2PhysicalAddress, u16 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
 	mappedMemory->writeHword(context, storageIndex, value);
 }
 
-u32 PhysicalMMU_t::readWord(const Context_t& context, u32 PS2PhysicalAddress) const
+u32 PhysicalMMU_t::readWord(const Context& context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
 	return mappedMemory->readWord(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeWord(const Context_t& context, u32 PS2PhysicalAddress, u32 value) const
+void PhysicalMMU_t::writeWord(const Context& context, u32 PS2PhysicalAddress, u32 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
 	mappedMemory->writeWord(context, storageIndex, value);
 }
 
-u64 PhysicalMMU_t::readDword(const Context_t& context, u32 PS2PhysicalAddress) const
+u64 PhysicalMMU_t::readDword(const Context& context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
 	return mappedMemory->readDword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeDword(const Context_t& context, u32 PS2PhysicalAddress, u64 value) const
+void PhysicalMMU_t::writeDword(const Context& context, u32 PS2PhysicalAddress, u64 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
 	mappedMemory->writeDword(context, storageIndex, value);
 }
 
-u128 PhysicalMMU_t::readQword(const Context_t& context, u32 PS2PhysicalAddress) const
+u128 PhysicalMMU_t::readQword(const Context& context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the read on the storage object at the specified index.
 	return mappedMemory->readQword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeQword(const Context_t& context, u32 PS2PhysicalAddress, u128 value) const
+void PhysicalMMU_t::writeQword(const Context& context, u32 PS2PhysicalAddress, u128 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
-	const u32 baseVDN = getVDN(PS2PhysicalAddress);
-	const u32 baseVPN = getVPN(PS2PhysicalAddress);
-	const u32 pageOffset = getOffset(PS2PhysicalAddress);
-	const u32 absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
+	auto baseVDN = getVDN(PS2PhysicalAddress);
+	auto baseVPN = getVPN(PS2PhysicalAddress);
+	auto pageOffset = getOffset(PS2PhysicalAddress);
+	auto absPageIndex = getAbsPageFromDirAndPageOffset(baseVDN, baseVPN);
 
 	// Get host storage object and calculate the storage index to access.
-	const std::shared_ptr<PhysicalMapped> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
-	const u32 storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
+	const std::shared_ptr<PhysicalMapped_t> & mappedMemory = getMappedMemory(baseVDN, baseVPN);
+	size_t storageIndex = (absPageIndex - mappedMemory->getAbsMappedPageIndex()) * PAGE_SIZE_BYTES + pageOffset;
 
 	// Perform the write on the storage object at the specified index.
 	mappedMemory->writeQword(context, storageIndex, value);
