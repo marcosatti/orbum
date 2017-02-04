@@ -118,9 +118,12 @@ void VM::reset(const VMOptions& options)
 
 void VM::run()
 {
-	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS && mSystemThreadsInitalised)
+	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
 	{
 		// Running in multithreaded mode.
+		if (!mSystemThreadsInitalised)
+			throw std::runtime_error("VM MT mode was not setup before running!");
+
 		// Aquire all mutex locks first (common sync point).
 		for (auto& system : mSystems)
 		{
@@ -130,7 +133,7 @@ void VM::run()
 		// Produce ticks for all components.
 		for (auto& system : mSystems)
 		{
-			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_MT / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
+			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_PER_RUN / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
 			system->mThreadRun = true;
 		}
 
@@ -152,7 +155,7 @@ void VM::run()
 		// Run through each of the systems separately.
 		for (auto& system : mSystems)
 		{
-			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_ST / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
+			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_PER_RUN / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
 			system->executeTicks();
 		}
 	}
@@ -163,7 +166,7 @@ void VM::stop()
 	// Set to stopped.
 	mStatus = Stopped;
 
-	// Set thread state to not initalised.
+	// Set system threads state to not initalised.
 	mSystemThreadsInitalised = false;
 
 	log(Info, "VM stopped ok.");
