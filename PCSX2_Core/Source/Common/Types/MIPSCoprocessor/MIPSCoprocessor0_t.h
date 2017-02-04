@@ -9,7 +9,6 @@ COP0 is used widely in MIPS systems, as the system control registers.
 The MFC0, MTC0 MIPS instructions move data to and from these registers, by specifying an array index from 0 -> 31.
 It is up to the user to define the array contents.
 */
-
 class MIPSCoprocessor0_t : public MIPSCoprocessor_t
 {
 public:

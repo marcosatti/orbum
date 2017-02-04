@@ -6,7 +6,7 @@
 
 const char * EECoreSyscallTable::getSyscallMnemonic(const u32& syscallNumber)
 {
-	if (!(syscallNumber < PS2Constants::EE::EECore::R5900::NUMBER_SYSCALLS))
+	if (!(syscallNumber < Constants::EE::EECore::R5900::NUMBER_SYSCALLS))
 		return UNKNOWN;
 
 	return SYSCALL_MNEMONICS[syscallNumber];

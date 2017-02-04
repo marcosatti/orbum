@@ -7,7 +7,6 @@ A MIPS instruction helper class which is used to hold any valid MIPS instruction
 Convenience functions are provided for I, J and R instruction types, which are prefixed with 'get'.
 getOpcode() is common to all instruction types, and you can use this to determine which instruction type you have.
 */
-
 class MIPSInstruction_t {
 public:
 	/*

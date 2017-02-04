@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "Common/Util/FPUUtil/FPUUtil.h"
-#include "PS2Constants/PS2Constants.h"
+#include "Common/Global/Globals.h"
 
 f32 FPUUtil::formatIEEEToPS2Float(const f32 & value, FPUFlags_t & flags)
 {
@@ -26,19 +26,19 @@ f32 FPUUtil::formatIEEEToPS2Float(const f32 & value, FPUFlags_t & flags)
 	{
 		// Set OF flag, clamp to +/- Fmax.
 		flags.OF = true;
-		return static_cast<f32>(flags.SF ? PS2Constants::EE::EECore::FPU::FMAX_NEG : PS2Constants::EE::EECore::FPU::FMAX_POS);
+		return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::FMAX_NEG : Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	case FP_NAN:
 	{
 		// Set OF flag, clamp to +/- Fmax.
 		flags.OF = true;
-		return static_cast<f32>(flags.SF ? PS2Constants::EE::EECore::FPU::FMAX_NEG : PS2Constants::EE::EECore::FPU::FMAX_POS);
+		return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::FMAX_NEG : Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	case FP_SUBNORMAL:
 	{
 		// Set UF flag, round to +/- 0.
 		flags.UF = true;
-		return static_cast<f32>(flags.SF ? PS2Constants::EE::EECore::FPU::ZERO_NEG : PS2Constants::EE::EECore::FPU::ZERO_POS);
+		return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::ZERO_NEG : Constants::EE::EECore::FPU::ZERO_POS);
 	}
 	case FP_ZERO:
 	{

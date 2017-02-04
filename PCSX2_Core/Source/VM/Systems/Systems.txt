@@ -1,0 +1,15 @@
+The systems folder contains system logic for all of the PS2 components.
+The systems implemented in here are:
+- EE
+  -- EECoreInterpreter
+  -- DMAC
+  -- INTC
+  -- Timers
+  - VPU
+    -- VUInterpreter
+    -- VIF
+- IOP
+  -- IOPCoreInterpreter
+  -- DMAC
+  -- INTC
+  -- Timers

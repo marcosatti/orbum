@@ -12,10 +12,10 @@ class ConstantFPRegister128_t : public FPRegister128_t
 public:
 	ConstantFPRegister128_t(const f32 f0 = 0.0f, const f32 f1 = 0.0f, const f32 f2 = 0.0f, const f32 f3 = 1.0f);
 
-	void writeWord(const Context_t& context, u32 arrayIndex, u32 value) override;
-	void writeDword(const Context_t& context, u32 arrayIndex, u64 value) override;
-	void writeQword(const Context_t& context, u128 value) override;
-	void writeFloat(const Context_t& context, u32 arrayIndex, f32 value) override;
+	void writeWord(const Context& context, size_t arrayIndex, u32 value) override;
+	void writeDword(const Context& context, size_t arrayIndex, u64 value) override;
+	void writeQword(const Context& context, u128 value) override;
+	void writeFloat(const Context& context, size_t arrayIndex, f32 value) override;
 
 	/*
 	Initalise register (set to do nothing).

@@ -3,7 +3,7 @@
 
 #include <Common/Global/Globals.h>
 #include <Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h>
-#include <PS2Resources/EE/EECore/Types/EECoreInstruction_t.h>
+#include <Resources/EE/EECore/Types/EECoreInstruction_t.h>
 
 TEST(R5900Instruction_Test_Raw, RType)
 {

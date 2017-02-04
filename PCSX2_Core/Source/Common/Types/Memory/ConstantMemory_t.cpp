@@ -4,7 +4,14 @@
 
 #include "Common/Types/Memory/ConstantMemory_t.h"
 
-ConstantMemory_t::ConstantMemory_t(const size_t & size, const char * mnemonic, const u64 D) :
+ConstantMemory_t::ConstantMemory_t(const size_t & size, const u64 D) :
+	Memory_t(0),
+	mSize(size),
+	mConstantValue(D)
+{
+}
+
+ConstantMemory_t::ConstantMemory_t(const size_t& size, const char* mnemonic, const u64 D) :
 	Memory_t(0, mnemonic),
 	mSize(size),
 	mConstantValue(D)
@@ -15,48 +22,48 @@ ConstantMemory_t::~ConstantMemory_t()
 {
 }
 
-u8 ConstantMemory_t::readByte(u32 storageIndex)
+u8 ConstantMemory_t::readByte(const Context& context, size_t storageIndex)
 {
 	return static_cast<u8>(mConstantValue);
 }
 
-void ConstantMemory_t::writeByte(u32 storageIndex, u8 value)
+void ConstantMemory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
 {
 }
 
-u16 ConstantMemory_t::readHword(u32 storageIndex)
+u16 ConstantMemory_t::readHword(const Context& context, size_t storageIndex)
 {
 	return static_cast<u16>(mConstantValue);
 }
 
-void ConstantMemory_t::writeHword(u32 storageIndex, u16 value)
+void ConstantMemory_t::writeHword(const Context& context, size_t storageIndex, u16 value)
 {
 }
 
-u32 ConstantMemory_t::readWord(u32 storageIndex)
+u32 ConstantMemory_t::readWord(const Context& context, size_t storageIndex)
 {
 	return static_cast<u32>(mConstantValue);
 }
 
-void ConstantMemory_t::writeWord(u32 storageIndex, u32 value)
+void ConstantMemory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
 {
 }
 
-u64 ConstantMemory_t::readDword(u32 storageIndex)
+u64 ConstantMemory_t::readDword(const Context& context, size_t storageIndex)
 {
 	return static_cast<u64>(mConstantValue);
 }
 
-void ConstantMemory_t::writeDword(u32 storageIndex, u64 value)
+void ConstantMemory_t::writeDword(const Context& context, size_t storageIndex, u64 value)
 {
 }
 
-u128 ConstantMemory_t::readQword(u32 storageIndex)
+u128 ConstantMemory_t::readQword(const Context& context, size_t storageIndex)
 {
 	return u128(mConstantValue, mConstantValue);
 }
 
-void ConstantMemory_t::writeQword(u32 storageIndex, u128 value)
+void ConstantMemory_t::writeQword(const Context& context, size_t storageIndex, u128 value)
 {
 }
 

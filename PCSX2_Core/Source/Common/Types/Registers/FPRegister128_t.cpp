@@ -19,42 +19,42 @@ FPRegister128_t::~FPRegister128_t()
 {
 }
 
-u32 FPRegister128_t::readWord(const Context_t& context, u32 arrayIndex)
+u32 FPRegister128_t::readWord(const Context& context, size_t arrayIndex)
 {
 	return UW[arrayIndex];
 }
 
-void FPRegister128_t::writeWord(const Context_t& context, u32 arrayIndex, u32 value)
+void FPRegister128_t::writeWord(const Context& context, size_t arrayIndex, u32 value)
 {
 	UW[arrayIndex] = value;
 }
 
-u64 FPRegister128_t::readDword(const Context_t& context, u32 arrayIndex)
+u64 FPRegister128_t::readDword(const Context& context, size_t arrayIndex)
 {
 	return UD[arrayIndex];
 }
 
-void FPRegister128_t::writeDword(const Context_t& context, u32 arrayIndex, u64 value)
+void FPRegister128_t::writeDword(const Context& context, size_t arrayIndex, u64 value)
 {
 	UD[arrayIndex] = value;
 }
 
-u128 FPRegister128_t::readQword(const Context_t& context)
+u128 FPRegister128_t::readQword(const Context& context)
 {
 	return UQ;
 }
 
-void FPRegister128_t::writeQword(const Context_t& context, u128 value)
+void FPRegister128_t::writeQword(const Context& context, u128 value)
 {
 	UQ = value;
 }
 
-f32 FPRegister128_t::readFloat(const Context_t& context, u32 arrayIndex)
+f32 FPRegister128_t::readFloat(const Context& context, size_t arrayIndex)
 {
 	return F[arrayIndex];
 }
 
-void FPRegister128_t::writeFloat(const Context_t& context, u32 arrayIndex, f32 value)
+void FPRegister128_t::writeFloat(const Context& context, size_t arrayIndex, f32 value)
 {
 	F[arrayIndex] = value;
 }

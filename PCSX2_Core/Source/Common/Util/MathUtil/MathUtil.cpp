@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
+#include <climits>
+
 #include "Common/Global/Globals.h"
 #include "Common/Util/MathUtil/MathUtil.h"
-#include <climits>
 
 u32 MathUtil::countLeadingBits(s32 value)
 {
@@ -134,4 +135,9 @@ bool MathUtil::testOverOrUnderflow64(s64 x, s64 y)
 	}
 
 	return false;
+}
+
+u32 MathUtil::getHI19(u32 value)
+{
+	return (value & 0xFFFFE000) >> 19;
 }

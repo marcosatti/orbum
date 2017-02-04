@@ -9,7 +9,6 @@ Used when converting an IEEE754 spec float to a PS2 spec float, to signify if:
 
 See FPUUtil::formatIEEEToPS2Float() where this is filled in and used.
 */
-
 struct FPUFlags_t
 {
 	bool ZF;

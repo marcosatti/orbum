@@ -1,7 +1,10 @@
 #pragma once
 
-#include "PS2Constants/PS2Constants.h"
+#include "Common/Global/Globals.h"
 
+/*
+Contains static channel properties for the EE DMAC channels.
+*/
 class EEDmacChannelTable
 {
 public:
@@ -56,7 +59,7 @@ public:
 		PhysicalMode_t PhysicalMode;
 		ChainMode_t    ChainMode;
 	};
-	static constexpr ChannelProperties_t ChannelProperties[PS2Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
+	static constexpr ChannelProperties_t ChannelProperties[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
 	{
 		{ "VIF0",    ChannelID_t::VIF0,    Direction_t::TO,   PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
 		{ "VIF1",    ChannelID_t::VIF1,    Direction_t::BOTH, PhysicalMode_t::SLICE, ChainMode_t::SOURCE },
@@ -73,7 +76,7 @@ public:
 	/*
 	Returns the channel properties given the index.
 	*/
-	static const ChannelProperties_t * getChannelInfo(u32 index);
+	static const ChannelProperties_t * getChannelInfo(const u32 & index);
 
 	/*
 	Converts the D_CTRL.STS and STD fields to the proper channel id's.

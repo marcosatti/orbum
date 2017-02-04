@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Common/Global/Globals.h"
 
 class MathUtil
@@ -52,4 +53,9 @@ public:
 	static bool testOverflow64(s64 x, s64 y);
 	static bool testUnderflow64(s64 x, s64 y);
 	static bool testOverOrUnderflow64(s64 x, s64 y);
+
+	/*
+	Gets the high 19 bits of the 32-bit value parsed, stored at the LSB's of the returned u32.
+	*/
+	static u32 getHI19(u32 value);
 };

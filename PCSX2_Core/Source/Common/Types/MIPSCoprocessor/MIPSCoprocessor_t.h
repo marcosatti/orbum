@@ -4,7 +4,6 @@
 Represents a MIPS co-processor base class.
 Functions listed here are common to all co-processors.
 */
-
 class MIPSCoprocessor_t
 {
 public:

@@ -14,28 +14,29 @@ The parsed size is not allocated (always set to 0 in the underlying Memory_t).
 class ConstantMemory_t : public Memory_t
 {
 public:
+	ConstantMemory_t(const size_t & size, const u64 D = 0);
 	ConstantMemory_t(const size_t & size, const char * mnemonic, const u64 D = 0);
 	~ConstantMemory_t();
 
-	u8 readByte(u32 storageIndex) override;
-	void writeByte(u32 storageIndex, u8 value) override;
-	u16 readHword(u32 storageIndex) override;
-	void writeHword(u32 storageIndex, u16 value) override;
-	u32 readWord(u32 storageIndex) override;
-	void writeWord(u32 storageIndex, u32 value) override;
-	u64 readDword(u32 storageIndex) override;
-	void writeDword(u32 storageIndex, u64 value) override;
-	u128 readQword(u32 storageIndex) override;
-	void writeQword(u32 storageIndex, u128 value) override;
+	u8 readByte(const Context& context, size_t storageIndex) override;
+	void writeByte(const Context& context, size_t storageIndex, u8 value) override;
+	u16 readHword(const Context& context, size_t storageIndex) override;
+	void writeHword(const Context& context, size_t storageIndex, u16 value) override;
+	u32 readWord(const Context& context, size_t storageIndex) override;
+	void writeWord(const Context& context, size_t storageIndex, u32 value) override;
+	u64 readDword(const Context& context, size_t storageIndex) override;
+	void writeDword(const Context& context, size_t storageIndex, u64 value) override;
+	u128 readQword(const Context& context, size_t storageIndex) override;
+	void writeQword(const Context& context, size_t storageIndex, u128 value) override;
 
 	/*
-	Needed by the Physical MMU handler in order to map it. Instead of the normal MappedMemory_t::getSize(), return the size set
-	when the object is created.
+	Needed by the Physical MMU handler in order to map it. 
+	Instead of the normal Memory_t::getSize(), return the size set when the object is created.
 	*/
 	size_t getSize() override;
 
 private:
-	const size_t mSize; // Provided for debug only.
+	const size_t mSize;
 	const u64 mConstantValue; // Set at creation, returned in the read function calls.
 };
 
