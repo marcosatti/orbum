@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 class EECoreCOP0_t;
 class EEIntc_t;
@@ -12,13 +12,15 @@ interrupts to send to the EE Core to process.
 Note that the maximum time resolution that this can run at is limited to BUSCLK - the reason for this being that all interrupt sources run
 at BUSCLK or less. Therefore it should be included with the BUSCLK events in the main emulation loop.
 */
-class EEIntc : public VMSystem_t
+class EEIntc_s : public VMSystem_s
 {
 public:
-	explicit EEIntc(VM * vmMain);
-	virtual ~EEIntc();
+	explicit EEIntc_s(VM * vmMain);
+	virtual ~EEIntc_s();
 
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	void run(const double & time) override;
+
+	int step(const ClockEvent_t& event) override;
 
 private:
 	/*

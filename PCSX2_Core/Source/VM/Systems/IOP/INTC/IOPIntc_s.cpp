@@ -2,7 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/IOP/INTC/IOPIntc.h"
+#include "VM/VM.h"
+#include "VM/Systems/IOP/INTC/IOPIntc_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -12,18 +13,42 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPIntc::IOPIntc(VM * vmMain) : 
-	VMSystem_t(vmMain, System_t::IOPIntc)
+IOPIntc_s::IOPIntc_s(VM * vmMain) : 
+	VMSystem_s(vmMain)
 {
-	mIOPCOP0 = getResources()->IOP->IOPCore->COP0;
-	mINTC = getResources()->IOP->INTC;
+	mIOPCOP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-IOPIntc::~IOPIntc()
+IOPIntc_s::~IOPIntc_s()
 {
 }
 
-double IOPIntc::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+void IOPIntc_s::run(const double& time)
+{
+	// Create VM tick event.
+	ClockEvent_t vmClockEvent =
+	{
+		ClockSource_t::EEBusClock,
+		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
+	};
+	mClockEventQueue.push(vmClockEvent);
+
+	// Run through events.
+	while (!mClockEventQueue.empty())
+	{
+		auto event = mClockEventQueue.front();
+		mClockEventQueue.pop();
+
+		while (event.mNumberTicks >= 1)
+		{
+			auto ticks = step(event);
+			event.mNumberTicks -= ticks;
+		}
+	}
+}
+
+int IOPIntc_s::step(const ClockEvent_t& event)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;

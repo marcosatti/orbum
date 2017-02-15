@@ -2,9 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/Timers/EETimers.h"
-
-#include "Common/Global/Globals.h"
+#include "VM/VM.h"
+#include "VM/Systems/EE/Timers/EETimers_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -15,27 +14,47 @@
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 #include "Resources/GS/GS_t.h"
 
-EETimers::EETimers(VM * vmMain) :
-	VMSystem_t(vmMain, System_t::EETimers), 
+EETimers_s::EETimers_s(VM * vmMain) :
+	VMSystem_s(vmMain),
 	mTimerIndex(0), 
-	mTimer(nullptr),
-	mClockSource()
+	mTimer(nullptr)
 {
 	// Set resource pointer variables.
-	mTimers = getResources()->EE->Timers;
-	mINTC = getResources()->EE->INTC;
-	mGS = getResources()->GS;
+	mTimers = getVM()->getResources()->EE->Timers;
+	mINTC = getVM()->getResources()->EE->INTC;
+	mGS = getVM()->getResources()->GS;
 }
 
-EETimers::~EETimers()
+EETimers_s::~EETimers_s()
 {
 }
 
-double EETimers::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+void EETimers_s::run(const double& time)
 {
-	// Set context.
-	mClockSource = clockSource;
+	// Create VM tick event.
+	ClockEvent_t vmClockEvent =
+	{
+		ClockSource_t::EEBusClock,
+		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
+	};
+	mClockEventQueue.push(vmClockEvent);
 
+	// Run through events.
+	while (!mClockEventQueue.empty())
+	{
+		auto event = mClockEventQueue.front();
+		mClockEventQueue.pop();
+
+		while (event.mNumberTicks >= 1)
+		{
+			auto ticks = step(event);
+			event.mNumberTicks -= ticks;
+		}
+	}
+}
+
+int EETimers_s::step(const ClockEvent_t& event)
+{
 	// Update the timers which are set to count based on the type of event recieved.
 	for (mTimerIndex = 0; mTimerIndex < Constants::EE::Timers::NUMBER_TIMERS; mTimerIndex++)
 	{
@@ -47,7 +66,7 @@ double EETimers::executeStep(const ClockSource_t & clockSource, const double & t
 			continue;
 
 		// Check if the timer mode is equal to the clock source.
-		if (isTimerCLKSEqual())
+		if (event.mClockSource == mTimer->MODE->getClockSource())
 		{
 			// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
 			//  in which case count normally.
@@ -90,15 +109,7 @@ double EETimers::executeStep(const ClockSource_t & clockSource, const double & t
 	return 1;
 }
 
-bool EETimers::isTimerCLKSEqual() const
-{	
-	// Static array used to cast the CLKS into the correct emulator ClockSource_t type. See EE Users Manual page 36.
-	static const ClockSource_t emuCLKS[4] = { ClockSource_t::EEBus, ClockSource_t::EEBus16, ClockSource_t::EEBus256, ClockSource_t::HBLNK };
-	auto CLKS = emuCLKS[mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CLKS)];
-	return (CLKS == mClockSource);
-}
-
-void EETimers::handleTimerInterrupt() const
+void EETimers_s::handleTimerInterrupt() const
 {
 	bool interrupt = false;
 
@@ -126,7 +137,7 @@ void EETimers::handleTimerInterrupt() const
 		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 1);
 }
 
-void EETimers::handleTimerZRET() const
+void EETimers_s::handleTimerZRET() const
 {
 	// Check for ZRET condition.
 	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
@@ -140,7 +151,7 @@ void EETimers::handleTimerZRET() const
 	}
 }
 
-void EETimers::handleTimerGateReset() const
+void EETimers_s::handleTimerGateReset() const
 {
 	throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
 

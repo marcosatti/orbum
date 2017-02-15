@@ -3,7 +3,7 @@
 /*
 Represents a list of systems included in the PS2.
 */
-enum class System_t
+enum System
 {
 	EECore,
 	EEDmac,
@@ -20,7 +20,6 @@ enum class System_t
 	IOPTimers,
 	IOPIntc,
 	CDVD,
-	GS,
-
-	NUMBER_SYSTEMS
+	GSCore,
+	PCRTC
 };

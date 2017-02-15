@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreCOP0_t.h"
@@ -10,7 +10,7 @@
 #include "Resources/EE/EECore/Types/EECoreTLB_t.h"
 #include "Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 
-void EECoreInterpreter::SYNC_STYPE()
+void EECoreInterpreter_s::SYNC_STYPE()
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
 #if defined(BUILD_DEBUG)
@@ -21,7 +21,7 @@ void EECoreInterpreter::SYNC_STYPE()
 #endif
 }
 
-void EECoreInterpreter::PREF()
+void EECoreInterpreter_s::PREF()
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
 #if defined(BUILD_DEBUG)
@@ -31,7 +31,7 @@ void EECoreInterpreter::PREF()
 #endif
 }
 
-void EECoreInterpreter::DI()
+void EECoreInterpreter_s::DI()
 {
 	// Disable Interrupts. No Exceptions.
 	auto& statusReg = mEECore->COP0->Status;
@@ -45,7 +45,7 @@ void EECoreInterpreter::DI()
 	}
 }
 
-void EECoreInterpreter::EI()
+void EECoreInterpreter_s::EI()
 {
 	// Enable Interrupts. No Exceptions.
 	auto& statusReg = mEECore->COP0->Status;
@@ -59,7 +59,7 @@ void EECoreInterpreter::EI()
 	}
 }
 
-void EECoreInterpreter::CACHE()
+void EECoreInterpreter_s::CACHE()
 {
 #if defined(BUILD_DEBUG)
 	// log(Debug, "(%s, %d) CACHE: Not implemented.", __FILENAME__, __LINE__);
@@ -68,7 +68,7 @@ void EECoreInterpreter::CACHE()
 #endif
 }
 
-void EECoreInterpreter::TLBP()
+void EECoreInterpreter_s::TLBP()
 {
 	// PROBE_TLB(index). Coprocessor unusable exception.
 	if (handleCOP0Usable())
@@ -98,7 +98,7 @@ void EECoreInterpreter::TLBP()
 	}
 }
 
-void EECoreInterpreter::TLBR()
+void EECoreInterpreter_s::TLBR()
 {
 	// COP0{PageMask, EntryHi/Lo} = GET_TLB(index). Coprocessor unusable exception.
 	if (handleCOP0Usable())
@@ -136,7 +136,7 @@ void EECoreInterpreter::TLBR()
 	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::G, tlbEntry.mG);
 }
 
-void EECoreInterpreter::TLBWI()
+void EECoreInterpreter_s::TLBWI()
 {
 	// TLB[Index] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
 	if (handleCOP0Usable())
@@ -178,7 +178,7 @@ void EECoreInterpreter::TLBWI()
 	MMU->setTLBEntry(tlbEntry, Index->getFieldValue(EECoreCOP0Register_Index_t::Fields::Index));
 }
 
-void EECoreInterpreter::TLBWR()
+void EECoreInterpreter_s::TLBWR()
 {
 	// TLB[random] = COP0{PageMask, EntryHi/Lo}. Coprocessor unusable exception.
 	if (handleCOP0Usable())

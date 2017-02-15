@@ -2,25 +2,27 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 #include "Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
-class VUInterpreter : public VMSystem_t
+class VUInterpreter_s : public VMSystem_s
 {
 public:
-	explicit VUInterpreter(VM * vmMain, u32 vuUnitIndex);
-	virtual ~VUInterpreter();
+	explicit VUInterpreter_s(VM * vmMain, u32 vuUnitIndex);
+	virtual ~VUInterpreter_s();
+
+	void run(const double & time) override;
 
 	/*
 	TODO: implement.
 	*/
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockEvent_t& event) override;
 
 private:
 	// The EE Core delegates the COP2 instructions with the V* prefix to the VUInterpreter system, to avoid writing duplicate code.
 	// Need to allow it access to the individual instruction functions below.
-	friend class EECoreInterpreter;
+	friend class EECoreInterpreter_s;
 
 	/*
 	Context of which VU this system is processing.
@@ -230,7 +232,7 @@ private:
 	
 	As mentioned above, the 'bc' class instructions are split up into the individual fields for x, y, z, w (0, 1, 2, 3) and listed instead of a generic bc-type instruction.
 	*/
-	void(VUInterpreter::* VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTRUCTIONS])() =
+	void(VUInterpreter_s::* VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTRUCTIONS])() =
 	{
 	};
 };

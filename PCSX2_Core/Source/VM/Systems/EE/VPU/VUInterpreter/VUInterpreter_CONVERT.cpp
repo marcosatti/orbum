@@ -2,9 +2,9 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-void VUInterpreter::FTOI0()
+void VUInterpreter_s::FTOI0()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void VUInterpreter::FTOI0()
 #endif
 }
 
-void VUInterpreter::FTOI4()
+void VUInterpreter_s::FTOI4()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void VUInterpreter::FTOI4()
 #endif
 }
 
-void VUInterpreter::FTOI12()
+void VUInterpreter_s::FTOI12()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void VUInterpreter::FTOI12()
 #endif
 }
 
-void VUInterpreter::FTOI15()
+void VUInterpreter_s::FTOI15()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void VUInterpreter::FTOI15()
 #endif
 }
 
-void VUInterpreter::ITOF0()
+void VUInterpreter_s::ITOF0()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void VUInterpreter::ITOF0()
 #endif
 }
 
-void VUInterpreter::ITOF4()
+void VUInterpreter_s::ITOF4()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void VUInterpreter::ITOF4()
 #endif
 }
 
-void VUInterpreter::ITOF12()
+void VUInterpreter_s::ITOF12()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void VUInterpreter::ITOF12()
 #endif
 }
 
-void VUInterpreter::ITOF15()
+void VUInterpreter_s::ITOF15()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

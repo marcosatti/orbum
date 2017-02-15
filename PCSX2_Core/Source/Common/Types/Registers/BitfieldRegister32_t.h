@@ -72,8 +72,8 @@ private:
 	/*
 	Arrays which stores all of the registered fields, along with their associated properties.
 	*/
-	friend class EECoreInterpreter;
-	friend class IOPCoreInterpreter;
+	friend class EECoreInterpreter_s;
+	friend class IOPCoreInterpreter_s;
 	static constexpr u8 FIELD_MAP_SIZE = 32;
 	struct
 	{

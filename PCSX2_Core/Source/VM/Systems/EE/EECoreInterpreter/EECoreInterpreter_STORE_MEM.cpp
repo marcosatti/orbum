@@ -6,14 +6,14 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-void EECoreInterpreter::SB()
+void EECoreInterpreter_s::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
@@ -28,7 +28,7 @@ void EECoreInterpreter::SB()
 	mPhysicalMMU->writeByte(EE, physicalAddress, source2Reg->readByte(EE, 0));
 }
 
-void EECoreInterpreter::SD()
+void EECoreInterpreter_s::SD()
 {
 	// MEM[UD] = Rt. Address error or TLB error generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
@@ -43,7 +43,7 @@ void EECoreInterpreter::SD()
 	mPhysicalMMU->writeDword(EE, physicalAddress, source2Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::SDL()
+void EECoreInterpreter_s::SDL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[UD]. Address error or TLB error generated.
@@ -78,7 +78,7 @@ void EECoreInterpreter::SDL()
 	mPhysicalMMU->writeDword(EE, physicalAddress, (alignedValue & keepMask) | MSBValue); // Calculate the new desination memory value and write to it.
 }
 
-void EECoreInterpreter::SDR()
+void EECoreInterpreter_s::SDR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[UD]. Address error or TLB error generated.
@@ -113,7 +113,7 @@ void EECoreInterpreter::SDR()
 	mPhysicalMMU->writeDword(EE, physicalAddress, (alignedValue & keepMask) | LSBValue); // Calculate the new desination memory value and write to it.
 }
 
-void EECoreInterpreter::SH()
+void EECoreInterpreter_s::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
@@ -128,7 +128,7 @@ void EECoreInterpreter::SH()
 	mPhysicalMMU->writeHword(EE, physicalAddress, source2Reg->readHword(EE, 0));
 }
 
-void EECoreInterpreter::SW()
+void EECoreInterpreter_s::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
@@ -143,7 +143,7 @@ void EECoreInterpreter::SW()
 	mPhysicalMMU->writeWord(EE, physicalAddress, source2Reg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::SWL()
+void EECoreInterpreter_s::SWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
@@ -178,7 +178,7 @@ void EECoreInterpreter::SWL()
 	mPhysicalMMU->writeWord(EE, physicalAddress, (alignedValue & keepMask) | MSBValue); // Calculate the new desination memory value and write to it.
 }
 
-void EECoreInterpreter::SWR()
+void EECoreInterpreter_s::SWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
@@ -213,7 +213,7 @@ void EECoreInterpreter::SWR()
 	mPhysicalMMU->writeWord(EE, physicalAddress, (alignedValue & keepMask) | LSBValue); // Calculate the new desination memory value and write to it.
 }
 
-void EECoreInterpreter::SQ()
+void EECoreInterpreter_s::SQ()
 {
 	// MEM[UQ] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
@@ -228,7 +228,7 @@ void EECoreInterpreter::SQ()
 	mPhysicalMMU->writeQword(EE, physicalAddress, source2Reg->readQword(EE));
 }
 
-void EECoreInterpreter::SWC1()
+void EECoreInterpreter_s::SWC1()
 {
 	// MEM[UW] = Ft. Address error or TLB error generated.
 	if (handleCOP1Usable())
@@ -246,7 +246,7 @@ void EECoreInterpreter::SWC1()
 	mPhysicalMMU->writeWord(EE, physicalAddress, source2Reg->readWord(EE));
 }
 
-void EECoreInterpreter::SQC2()
+void EECoreInterpreter_s::SQC2()
 {
 	// VU0.VF = GPR. Coprocessor unusable exception.
 	if (handleCOP2Usable())

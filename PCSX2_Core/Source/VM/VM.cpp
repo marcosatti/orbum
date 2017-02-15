@@ -6,16 +6,18 @@
 #include "Common/Types/Memory/ROMemory_t.h"
 
 #include "VM/VM.h"
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/Systems/EE/DMAC/EEDmac.h"
-#include "VM/Systems/EE/Timers/EETimers.h"
-#include "VM/Systems/EE/INTC/EEIntc.h"
-#include "VM/Systems/EE/VPU/VIF/VIF.h"
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
-#include "VM/Systems/IOP/DMAC/IOPDmac.h"
-#include "VM/Systems/IOP/Timers/IOPTimers.h"
-#include "VM/Systems/IOP/INTC/IOPIntc.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
+#include "VM/Systems/EE/DMAC/EEDmac_s.h"
+#include "VM/Systems/EE/Timers/EETimers_s.h"
+#include "VM/Systems/EE/INTC/EEIntc_s.h"
+#include "VM/Systems/EE/VPU/VIF/VIF_s.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
+#include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
+#include "VM/Systems/IOP/Timers/IOPTimers_s.h"
+#include "VM/Systems/IOP/INTC/IOPIntc_s.h"
+#include "VM/Systems/GS/GSCore/GSCore_s.h"
+#include "VM/Systems/GS/PCRTC/PCRTC_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -31,6 +33,9 @@ VM::VM(const VMOptions & vmOptions) :
 
 void VM::reset()
 {
+	// Set to running.
+	mStatus = Running;
+
 	// Initalise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
 	log(Info, "VM reset started...");
@@ -38,61 +43,53 @@ void VM::reset()
 	// Initalise resources.
 	mResources = std::make_shared<Resources_t>();
 
-	// Set system speed bias's.
-	mResources->Clock->setSystemSpeedBias(System_t::EECore,    mVMOptions.EE_CORE_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::EEDmac,    mVMOptions.EE_DMAC_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::EETimers,  mVMOptions.EE_TIMERS_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::EEIntc,    mVMOptions.EE_INTC_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::VIF0,      mVMOptions.VIF0_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::VU0,       mVMOptions.VU0_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::VIF1,      mVMOptions.VIF1_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::VU1,       mVMOptions.VU1_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::IOPCore,   mVMOptions.IOP_CORE_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::IOPDmac,   mVMOptions.IOP_DMAC_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::IOPTimers, mVMOptions.IOP_TIMERS_BIAS);
-	mResources->Clock->setSystemSpeedBias(System_t::IOPIntc,   mVMOptions.IOP_INTC_BIAS);
-
 	log(Info, "VM resources initalised.");
 
 	// Initalise Roms.
-	getResources()->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH, 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
+	mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH, 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
 	// ROM1.
 	// ROM2.
 	// EROM.
 
 	log(Info, "VM roms initalised.");
 
-	// Set to running.
-	mStatus = Running;
-
 	// Create components.
-	mInterpreterVU0 = std::make_shared<VUInterpreter>(this, 0);
-	mInterpreterVU1 = std::make_shared<VUInterpreter>(this, 1);
-	mVIF0 = std::make_shared<VIF>(this, 0);
-	mVIF1 = std::make_shared<VIF>(this, 1);
-	mEECoreInterpreter = std::make_shared<EECoreInterpreter>(this, mInterpreterVU0);
-	mEEDmac = std::make_shared<EEDmac>(this);
-	mEEIntc = std::make_shared<EEIntc>(this);
-	mEETimers = std::make_shared<EETimers>(this);
-	mIOPCoreInterpreter = std::make_shared<IOPCoreInterpreter>(this);
-	mIOPIntc = std::make_shared<IOPIntc>(this);
-	mIOPDmac = std::make_shared<IOPDmac>(this);
-	mIOPTimers = std::make_shared<IOPTimers>(this);
-	mSystems = { mEECoreInterpreter, mInterpreterVU0, mInterpreterVU1, mEEDmac, mEEIntc, mEETimers, mIOPCoreInterpreter, mIOPIntc, mIOPDmac, mIOPTimers };
+	auto vu0temp = std::make_shared<VUInterpreter_s>(this, 0);
+	mSystems =
+	{
+		{VU0, vu0temp},
+		{VU1, std::make_shared<VUInterpreter_s>(this, 1)},
+		{VIF0, std::make_shared<VIF_s>(this, 0)},
+		{VIF1, std::make_shared<VIF_s>(this, 1)},
+		{EECore, std::make_shared<EECoreInterpreter_s>(this, vu0temp)},
+		{EEDmac, std::make_shared<EEDmac_s>(this)},
+		{EEIntc, std::make_shared<EEIntc_s>(this)},
+		{EETimers, std::make_shared<EETimers_s>(this)},
+		{IOPCore, std::make_shared<IOPCoreInterpreter_s>(this)},
+		{IOPIntc, std::make_shared<IOPIntc_s>(this)},
+		{IOPDmac, std::make_shared<IOPDmac_s>(this)},
+		{IOPTimers, std::make_shared<IOPTimers_s>(this)},
+		{GSCore, std::make_shared<GSCore_s>(this)},
+		{PCRTC, std::make_shared<PCRTC_s>(this)}
+	};
 
 	// Initalise components.
 	for (auto& system : mSystems)
-		system->initalise();
+		system.second->initalise();
+
+	log(Info, "VM systems initalised.");
 
 	// Use multithreaded systems if enabled.
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
 	{
+		throw std::runtime_error("VM MT mode needs reworking.");
+		/*
 		// Clear any existing threads... could be dangerous since we have detached them... TODO: look into this.
 		mSystemThreads.empty();
 
 		// Initalise threads.
 		for (auto& component : mSystems)
-			mSystemThreads.push_back(std::thread(&VMSystem_t::threadLoop, &(*component)));
+			mSystemThreads.push_back(std::thread(&VMSystem_s::threadLoop, &(*component)));
 
 		// Detach threads.
 		for (auto& thread : mSystemThreads)
@@ -100,13 +97,13 @@ void VM::reset()
 
 		// Set threaded state to initalised.
 		mSystemThreadsInitalised = true;
+		*/
 	}
 	else
 	{
 		mSystemThreadsInitalised = false;
 	}
 
-	log(Info, "VM systems initalised.");
 	log(Info, "VM reset done.");
 }
 
@@ -120,6 +117,8 @@ void VM::run()
 {
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
 	{
+		throw std::runtime_error("VM MT mode needs reworking.");
+		/*
 		// Running in multithreaded mode.
 		if (!mSystemThreadsInitalised)
 			throw std::runtime_error("VM MT mode was not setup before running!");
@@ -148,6 +147,7 @@ void VM::run()
 		{
 			system->mThreadSync.notify_all();
 		}
+		*/
 	}
 	else
 	{
@@ -155,8 +155,7 @@ void VM::run()
 		// Run through each of the systems separately.
 		for (auto& system : mSystems)
 		{
-			system->produceTicks(ClockSource_t::EECore, mVMOptions.TIME_SLICE_PER_RUN / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED);
-			system->executeTicks();
+			system.second->run(mVMOptions.TIME_SLICE_PER_RUN  * mVMOptions.SYSTEM_BIASES[system.first]);
 		}
 	}
 }
@@ -189,4 +188,9 @@ void VM::setStatus(const VMStatus& status)
 const std::shared_ptr<Resources_t> & VM::getResources() const
 {
 	return mResources;
+}
+
+const std::shared_ptr<VMSystem_s> & VM::getSystem(const System & system)
+{
+	return mSystems[system];
 }

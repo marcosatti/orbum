@@ -6,14 +6,14 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-void EECoreInterpreter::PMAXH()
+void EECoreInterpreter_s::PMAXH()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
@@ -30,7 +30,7 @@ void EECoreInterpreter::PMAXH()
 	}
 }
 
-void EECoreInterpreter::PMAXW()
+void EECoreInterpreter_s::PMAXW()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
@@ -47,7 +47,7 @@ void EECoreInterpreter::PMAXW()
 	}
 }
 
-void EECoreInterpreter::PMINH()
+void EECoreInterpreter_s::PMINH()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
@@ -64,7 +64,7 @@ void EECoreInterpreter::PMINH()
 	}
 }
 
-void EECoreInterpreter::PMINW()
+void EECoreInterpreter_s::PMINW()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
@@ -81,7 +81,7 @@ void EECoreInterpreter::PMINW()
 	}
 }
 
-void EECoreInterpreter::MAX_S()
+void EECoreInterpreter_s::MAX_S()
 {
 	// Fd = MAX(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
@@ -100,7 +100,7 @@ void EECoreInterpreter::MAX_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MIN_S()
+void EECoreInterpreter_s::MIN_S()
 {
 	// Fd = MIN(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.

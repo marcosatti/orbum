@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 
-void IOPCoreInterpreter::ADD()
+void IOPCoreInterpreter_s::ADD()
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -26,7 +26,7 @@ void IOPCoreInterpreter::ADD()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::ADDI()
+void IOPCoreInterpreter_s::ADDI()
 {
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -43,7 +43,7 @@ void IOPCoreInterpreter::ADDI()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::ADDIU()
+void IOPCoreInterpreter_s::ADDIU()
 {
 	// Rt = Rs + Imm (signed).
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -57,7 +57,7 @@ void IOPCoreInterpreter::ADDIU()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::ADDU()
+void IOPCoreInterpreter_s::ADDU()
 {
 	// Rd = Rs + Rt
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -72,7 +72,7 @@ void IOPCoreInterpreter::ADDU()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::SUB()
+void IOPCoreInterpreter_s::SUB()
 {
 	// Rd = Rs - Rt (Exception on Integer Overflow).
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -90,7 +90,7 @@ void IOPCoreInterpreter::SUB()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::SUBU()
+void IOPCoreInterpreter_s::SUBU()
 {
 	// Rd = Rs - Rt
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -105,7 +105,7 @@ void IOPCoreInterpreter::SUBU()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::DIV()
+void IOPCoreInterpreter_s::DIV()
 {
 	// (LO, HI) = SignExtend<s32>(Rs[SW] / Rt[SW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
@@ -143,7 +143,7 @@ void IOPCoreInterpreter::DIV()
 	}
 }
 
-void IOPCoreInterpreter::DIVU()
+void IOPCoreInterpreter_s::DIVU()
 {
 	// (LO, HI) = SignExtend<u32>(Rs[UW] / Rt[UW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -174,7 +174,7 @@ void IOPCoreInterpreter::DIVU()
 	}
 }
 
-void IOPCoreInterpreter::MULT()
+void IOPCoreInterpreter_s::MULT()
 {
 	// (Rd, LO, HI) = SignExtend<s32>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -194,7 +194,7 @@ void IOPCoreInterpreter::MULT()
 	HI->writeWord(IOP, static_cast<s32>((result >> 32) & 0xFFFFFFFF));
 }
 
-void IOPCoreInterpreter::MULTU()
+void IOPCoreInterpreter_s::MULTU()
 {
 	// (LO, HI) = Rs[UW] * Rt[UW]
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -214,7 +214,7 @@ void IOPCoreInterpreter::MULTU()
 	HI->writeWord(IOP, static_cast<u32>((result >> 32) & 0xFFFFFFFF));
 }
 
-void IOPCoreInterpreter::SLL()
+void IOPCoreInterpreter_s::SLL()
 {
 	// Rd = SignExtend<s32>(Rt << shamt(0->31)). Logical shift.
 	// No Exceptions generated.
@@ -225,7 +225,7 @@ void IOPCoreInterpreter::SLL()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) << shamt);
 }
 
-void IOPCoreInterpreter::SLLV()
+void IOPCoreInterpreter_s::SLLV()
 {
 	// Rd = SignExtend<s32>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
@@ -237,7 +237,7 @@ void IOPCoreInterpreter::SLLV()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) << shamt);
 }
 
-void IOPCoreInterpreter::SRA()
+void IOPCoreInterpreter_s::SRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
@@ -248,7 +248,7 @@ void IOPCoreInterpreter::SRA()
 	destReg->writeWord(IOP, static_cast<s32>(source1Reg->readWord(IOP)) >> shamt);
 }
 
-void IOPCoreInterpreter::SRAV()
+void IOPCoreInterpreter_s::SRAV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Arithmetic shift.
 	// No Exceptions generated.
@@ -260,7 +260,7 @@ void IOPCoreInterpreter::SRAV()
 	destReg->writeWord(IOP, static_cast<s32>(source1Reg->readWord(IOP)) >> shamt);
 }
 
-void IOPCoreInterpreter::SRL()
+void IOPCoreInterpreter_s::SRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
@@ -271,7 +271,7 @@ void IOPCoreInterpreter::SRL()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) >> shamt);
 }
 
-void IOPCoreInterpreter::SRLV()
+void IOPCoreInterpreter_s::SRLV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Logical shift.
 	// No Exceptions generated.
@@ -283,7 +283,7 @@ void IOPCoreInterpreter::SRLV()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) >> shamt);
 }
 
-void IOPCoreInterpreter::AND()
+void IOPCoreInterpreter_s::AND()
 {
 	// Rd = Rt AND Rs.
 	// No Exceptions generated.
@@ -294,7 +294,7 @@ void IOPCoreInterpreter::AND()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) & source2Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::ANDI()
+void IOPCoreInterpreter_s::ANDI()
 {
 	// Rd = Rt AND Extended<u32>(Imm).
 	// No Exceptions generated.
@@ -305,7 +305,7 @@ void IOPCoreInterpreter::ANDI()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) & imm);
 }
 
-void IOPCoreInterpreter::NOR()
+void IOPCoreInterpreter_s::NOR()
 {
 	// Rd = NOT (Rt OR Rs).
 	// No Exceptions generated.
@@ -316,7 +316,7 @@ void IOPCoreInterpreter::NOR()
 	destReg->writeWord(IOP, ~(source1Reg->readWord(IOP) | source2Reg->readWord(IOP)));
 }
 
-void IOPCoreInterpreter::OR()
+void IOPCoreInterpreter_s::OR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
@@ -327,7 +327,7 @@ void IOPCoreInterpreter::OR()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) | source2Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::ORI()
+void IOPCoreInterpreter_s::ORI()
 {
 	// Rd = Rt AND Extended<u32>(Imm).
 	// No Exceptions generated.
@@ -338,7 +338,7 @@ void IOPCoreInterpreter::ORI()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) | imm);
 }
 
-void IOPCoreInterpreter::XOR()
+void IOPCoreInterpreter_s::XOR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
@@ -349,7 +349,7 @@ void IOPCoreInterpreter::XOR()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) ^ source2Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::XORI()
+void IOPCoreInterpreter_s::XORI()
 {
 	// Rd = Rt XOR Extended<u32>(Imm).
 	// No Exceptions generated.
@@ -360,7 +360,7 @@ void IOPCoreInterpreter::XORI()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP) ^ imm);
 }
 
-void IOPCoreInterpreter::SLT()
+void IOPCoreInterpreter_s::SLT()
 {
 	// Rd = SignExtended<s32>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
@@ -376,7 +376,7 @@ void IOPCoreInterpreter::SLT()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::SLTI()
+void IOPCoreInterpreter_s::SLTI()
 {
 	// Rd = SignExtended<s32>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
@@ -391,7 +391,7 @@ void IOPCoreInterpreter::SLTI()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::SLTIU()
+void IOPCoreInterpreter_s::SLTIU()
 {
 	// Rd = SignExtended<u32>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
@@ -406,7 +406,7 @@ void IOPCoreInterpreter::SLTIU()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::SLTU()
+void IOPCoreInterpreter_s::SLTU()
 {
 	// Rd = SignExtended<u32>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.

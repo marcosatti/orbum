@@ -6,12 +6,12 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 
-void IOPCoreInterpreter::BEQ()
+void IOPCoreInterpreter_s::BEQ()
 {
 	// BRANCH(Rs == Rt). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -25,7 +25,7 @@ void IOPCoreInterpreter::BEQ()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::BGEZ()
+void IOPCoreInterpreter_s::BGEZ()
 {
 	// BRANCH(Rs >= 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -37,7 +37,7 @@ void IOPCoreInterpreter::BGEZ()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::BGEZAL()
+void IOPCoreInterpreter_s::BGEZAL()
 {
 	// BRANCH_LINK(Rs >= 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -52,7 +52,7 @@ void IOPCoreInterpreter::BGEZAL()
 	}
 }
 
-void IOPCoreInterpreter::BGTZ()
+void IOPCoreInterpreter_s::BGTZ()
 {
 	// BRANCH(Rs > 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -64,7 +64,7 @@ void IOPCoreInterpreter::BGTZ()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::BLEZ()
+void IOPCoreInterpreter_s::BLEZ()
 {
 	// BRANCH(Rs <= 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -76,7 +76,7 @@ void IOPCoreInterpreter::BLEZ()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::BLTZ()
+void IOPCoreInterpreter_s::BLTZ()
 {
 	// BRANCH(Rs < 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -88,7 +88,7 @@ void IOPCoreInterpreter::BLTZ()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::BLTZAL()
+void IOPCoreInterpreter_s::BLTZAL()
 {
 	// BRANCH_LINK(Rs < 0). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()];
@@ -103,7 +103,7 @@ void IOPCoreInterpreter::BLTZAL()
 	}
 }
 
-void IOPCoreInterpreter::BNE()
+void IOPCoreInterpreter_s::BNE()
 {
 	// BRANCH(Rs != Rt). No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -117,27 +117,27 @@ void IOPCoreInterpreter::BNE()
 		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void IOPCoreInterpreter::J()
+void IOPCoreInterpreter_s::J()
 {
 	// JUMP(). No Exceptions.
 	mIOPCore->R3000->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
-void IOPCoreInterpreter::JR()
+void IOPCoreInterpreter_s::JR()
 {
 	// JUMP_REGISTER().
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRs()];
 	mIOPCore->R3000->BD->setBranchDelayPCAbsolute(source1Reg->readWord(IOP), 2);
 }
 
-void IOPCoreInterpreter::JAL()
+void IOPCoreInterpreter_s::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	mIOPCore->R3000->LinkRegister->setLinkAddress();
 	mIOPCore->R3000->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
-void IOPCoreInterpreter::JALR()
+void IOPCoreInterpreter_s::JALR()
 {
 	// JUMP_LINK_REGISTER().
 	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getRRs()];

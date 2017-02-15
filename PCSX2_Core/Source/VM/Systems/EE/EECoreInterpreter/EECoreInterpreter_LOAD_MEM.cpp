@@ -6,14 +6,14 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-void EECoreInterpreter::LB()
+void EECoreInterpreter_s::LB()
 {
 	// Rd = MEM[SB]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -29,7 +29,7 @@ void EECoreInterpreter::LB()
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 
-void EECoreInterpreter::LBU()
+void EECoreInterpreter_s::LBU()
 {
 	// Rd = MEM[UB]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -45,7 +45,7 @@ void EECoreInterpreter::LBU()
 	destReg->writeDword(EE, 0, static_cast<u64>(value));
 }
 
-void EECoreInterpreter::LD()
+void EECoreInterpreter_s::LD()
 {
 	// Rd = MEM[UD]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -61,7 +61,7 @@ void EECoreInterpreter::LD()
 	destReg->writeDword(EE, 0, value);
 }
 
-void EECoreInterpreter::LDL()
+void EECoreInterpreter_s::LDL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UD] = Rd. Address error or TLB error generated.
@@ -91,7 +91,7 @@ void EECoreInterpreter::LDL()
 	destReg->writeDword(EE, 0, (destReg->readDword(EE, 0) & keepMask) | MSBValue); // Calculate the new desination register value and write to it.
 }
 
-void EECoreInterpreter::LDR()
+void EECoreInterpreter_s::LDR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[UD]. Address error or TLB error generated.
@@ -120,7 +120,7 @@ void EECoreInterpreter::LDR()
 	destReg->writeDword(EE, 0, (destReg->readDword(EE, 0) & keepMask) | LSBValue); // Calculate the new desination register value and write to it.
 }
 
-void EECoreInterpreter::LH()
+void EECoreInterpreter_s::LH()
 {
 	// Rd = MEM[SH]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -136,7 +136,7 @@ void EECoreInterpreter::LH()
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 
-void EECoreInterpreter::LHU()
+void EECoreInterpreter_s::LHU()
 {
 	// Rd = MEM[UH]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -152,7 +152,7 @@ void EECoreInterpreter::LHU()
 	destReg->writeDword(EE, 0, static_cast<u64>(value));
 }
 
-void EECoreInterpreter::LUI()
+void EECoreInterpreter_s::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -163,7 +163,7 @@ void EECoreInterpreter::LUI()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::LW()
+void EECoreInterpreter_s::LW()
 {
 	// Rd = MEM[SW]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -179,7 +179,7 @@ void EECoreInterpreter::LW()
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 
-void EECoreInterpreter::LWL()
+void EECoreInterpreter_s::LWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
@@ -208,7 +208,7 @@ void EECoreInterpreter::LWL()
 	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>((destReg->readWord(EE, 0) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
 }
 
-void EECoreInterpreter::LWR()
+void EECoreInterpreter_s::LWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
@@ -237,7 +237,7 @@ void EECoreInterpreter::LWR()
 	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>((destReg->readWord(EE, 0) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
 }
 
-void EECoreInterpreter::LWU()
+void EECoreInterpreter_s::LWU()
 {
 	// Rd = MEM[UW]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -253,7 +253,7 @@ void EECoreInterpreter::LWU()
 	destReg->writeDword(EE, 0, static_cast<u64>(value));
 }
 
-void EECoreInterpreter::LQ()
+void EECoreInterpreter_s::LQ()
 {
 	// Rd = MEM[UQ]. Address error or TLB error generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -269,7 +269,7 @@ void EECoreInterpreter::LQ()
 	destReg->writeQword(EE, value);
 }
 
-void EECoreInterpreter::LWC1()
+void EECoreInterpreter_s::LWC1()
 {
 	// Ft = MEM[UQ]. Address error or TLB error generated.
 	if (handleCOP1Usable())
@@ -288,7 +288,7 @@ void EECoreInterpreter::LWC1()
 	destReg->writeWord(EE, value);
 }
 
-void EECoreInterpreter::LQC2()
+void EECoreInterpreter_s::LQC2()
 {
 	// VU0.VF = GPR. Coprocessor unusable exception.
 	if (handleCOP2Usable())

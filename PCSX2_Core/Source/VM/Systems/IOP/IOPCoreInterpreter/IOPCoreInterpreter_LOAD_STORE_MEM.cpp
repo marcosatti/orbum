@@ -4,12 +4,12 @@
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 
-void IOPCoreInterpreter::LB()
+void IOPCoreInterpreter_s::LB()
 {
 	// Rd = MEM[SB]. Address error or TLB error generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -25,7 +25,7 @@ void IOPCoreInterpreter::LB()
 	destReg->writeWord(IOP, static_cast<s32>(value));
 }
 
-void IOPCoreInterpreter::LBU()
+void IOPCoreInterpreter_s::LBU()
 {
 	// Rd = MEM[UB]. Address error or TLB error generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -41,7 +41,7 @@ void IOPCoreInterpreter::LBU()
 	destReg->writeWord(IOP, static_cast<u32>(value));
 }
 
-void IOPCoreInterpreter::LH()
+void IOPCoreInterpreter_s::LH()
 {
 	// Rd = MEM[SH]. Address error or TLB error generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -57,7 +57,7 @@ void IOPCoreInterpreter::LH()
 	destReg->writeWord(IOP, static_cast<s32>(value));
 }
 
-void IOPCoreInterpreter::LHU()
+void IOPCoreInterpreter_s::LHU()
 {
 	// Rd = MEM[UH]. Address error or TLB error generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -73,7 +73,7 @@ void IOPCoreInterpreter::LHU()
 	destReg->writeWord(IOP, static_cast<u32>(value));
 }
 
-void IOPCoreInterpreter::LUI()
+void IOPCoreInterpreter_s::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -84,7 +84,7 @@ void IOPCoreInterpreter::LUI()
 	destReg->writeWord(IOP, result);
 }
 
-void IOPCoreInterpreter::LW()
+void IOPCoreInterpreter_s::LW()
 {
 	// Rd = MEM[SW]. Address error or TLB error generated.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
@@ -100,7 +100,7 @@ void IOPCoreInterpreter::LW()
 	destReg->writeWord(IOP, static_cast<s32>(value));
 }
 
-void IOPCoreInterpreter::LWL()
+void IOPCoreInterpreter_s::LWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
@@ -129,7 +129,7 @@ void IOPCoreInterpreter::LWL()
 	destReg->writeWord(IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(IOP) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
 }
 
-void IOPCoreInterpreter::LWR()
+void IOPCoreInterpreter_s::LWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
@@ -158,7 +158,7 @@ void IOPCoreInterpreter::LWR()
 	destReg->writeWord(IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(IOP) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
 }
 
-void IOPCoreInterpreter::SB()
+void IOPCoreInterpreter_s::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
@@ -173,7 +173,7 @@ void IOPCoreInterpreter::SB()
 	mPhysicalMMU->writeByte(IOP, physicalAddress, source2Reg->readByte(IOP, 0));
 }
 
-void IOPCoreInterpreter::SH()
+void IOPCoreInterpreter_s::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
@@ -188,7 +188,7 @@ void IOPCoreInterpreter::SH()
 	mPhysicalMMU->writeHword(IOP, physicalAddress, source2Reg->readHword(IOP, 0));
 }
 
-void IOPCoreInterpreter::SW()
+void IOPCoreInterpreter_s::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
@@ -203,7 +203,7 @@ void IOPCoreInterpreter::SW()
 	mPhysicalMMU->writeWord(IOP, physicalAddress, source2Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::SWL()
+void IOPCoreInterpreter_s::SWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
@@ -238,7 +238,7 @@ void IOPCoreInterpreter::SWL()
 	mPhysicalMMU->writeWord(IOP, physicalAddress, (alignedValue & keepMask) | MSBValue); // Calculate the new desination memory value and write to it.
 }
 
-void IOPCoreInterpreter::SWR()
+void IOPCoreInterpreter_s::SWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.

@@ -5,7 +5,7 @@
 IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
 	BitfieldRegister32_t("IOP INTC: STAT", false, false)
 {
-	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
+	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
 	registerField(Fields::CDROM, "CDROM", 2, 1, 0);
 	registerField(Fields::DMA, "DMA", 3, 1, 0);
@@ -16,7 +16,7 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegi
 	registerField(Fields::SIO1, "SIO1", 8, 1, 0);
 	registerField(Fields::SPU, "SPU", 9, 1, 0);
 	registerField(Fields::PIO, "PIO", 10, 1, 0);
-	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0);
+	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0); // End of VBLANK?
 	registerField(Fields::DVD, "DVD", 12, 1, 0);
 	registerField(Fields::PCMCIA, "PCMCIA", 13, 1, 0);
 	registerField(Fields::TMR3, "TMR3", 14, 1, 0);
@@ -46,7 +46,7 @@ void IOPIntcRegister_STAT_t::writeWord(const Context& context, u32 value)
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
 	BitfieldRegister32_t("IOP INTC: MASK", false, false)
 {
-	registerField(Fields::VBLNK, "VBLNK", 0, 1, 0);
+	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
 	registerField(Fields::CDROM, "CDROM", 2, 1, 0);
 	registerField(Fields::DMA, "DMA", 3, 1, 0);
@@ -57,7 +57,7 @@ IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
 	registerField(Fields::SIO1, "SIO1", 8, 1, 0);
 	registerField(Fields::SPU, "SPU", 9, 1, 0);
 	registerField(Fields::PIO, "PIO", 10, 1, 0);
-	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0);
+	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0); // End of VBLANK?
 	registerField(Fields::DVD, "DVD", 12, 1, 0);
 	registerField(Fields::PCMCIA, "PCMCIA", 13, 1, 0);
 	registerField(Fields::TMR3, "TMR3", 14, 1, 0);

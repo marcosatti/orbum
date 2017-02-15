@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 class IOPDmac_t;
 class IOPIntc_t;
@@ -16,16 +16,18 @@ It operates using 32-bit data units.
 Logic adapted from PCSX2 and PSX docs: http://problemkaputt.de/psx-spx.htm.
 TODO: finish documentation.
 */
-class IOPDmac : public VMSystem_t
+class IOPDmac_s : public VMSystem_s
 {
 public:
-	explicit IOPDmac(VM * vmMain);
-	virtual ~IOPDmac();
+	explicit IOPDmac_s(VM * vmMain);
+	virtual ~IOPDmac_s();
+
+	void run(const double & time) override;
 
 	/*
 	Check through the channels and initate data transfers.
 	*/
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockEvent_t& event) override;
 
 private:
 	/*

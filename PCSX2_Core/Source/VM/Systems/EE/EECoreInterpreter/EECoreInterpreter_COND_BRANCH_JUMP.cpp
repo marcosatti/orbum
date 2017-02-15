@@ -5,14 +5,14 @@
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-void EECoreInterpreter::BEQ()
+void EECoreInterpreter_s::BEQ()
 {
 	// BRANCH(Rs == Rt). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -26,7 +26,7 @@ void EECoreInterpreter::BEQ()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BEQL()
+void EECoreInterpreter_s::BEQL()
 {
 	// BRANCH_LIKELY(Rs == Rt). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -42,7 +42,7 @@ void EECoreInterpreter::BEQL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BGEZ()
+void EECoreInterpreter_s::BGEZ()
 {
 	// BRANCH(Rs >= 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -54,7 +54,7 @@ void EECoreInterpreter::BGEZ()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BGEZL()
+void EECoreInterpreter_s::BGEZL()
 {
 	// BRANCH(Rs >= 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -68,7 +68,7 @@ void EECoreInterpreter::BGEZL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BGTZ()
+void EECoreInterpreter_s::BGTZ()
 {
 	// BRANCH(Rs > 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -80,7 +80,7 @@ void EECoreInterpreter::BGTZ()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BGTZL()
+void EECoreInterpreter_s::BGTZL()
 {
 	// BRANCH(Rs > 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -94,7 +94,7 @@ void EECoreInterpreter::BGTZL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BLEZ()
+void EECoreInterpreter_s::BLEZ()
 {
 	// BRANCH(Rs <= 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -106,7 +106,7 @@ void EECoreInterpreter::BLEZ()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BLEZL()
+void EECoreInterpreter_s::BLEZL()
 {
 	// BRANCH(Rs <= 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -120,7 +120,7 @@ void EECoreInterpreter::BLEZL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BLTZ()
+void EECoreInterpreter_s::BLTZ()
 {
 	// BRANCH(Rs < 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -132,7 +132,7 @@ void EECoreInterpreter::BLTZ()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BLTZL()
+void EECoreInterpreter_s::BLTZL()
 {
 	// BRANCH(Rs < 0). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -146,7 +146,7 @@ void EECoreInterpreter::BLTZL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BNE()
+void EECoreInterpreter_s::BNE()
 {
 	// BRANCH(Rs != Rt). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -160,7 +160,7 @@ void EECoreInterpreter::BNE()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BNEL()
+void EECoreInterpreter_s::BNEL()
 {
 	// BRANCH(Rs != Rt). No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -176,7 +176,7 @@ void EECoreInterpreter::BNEL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BC0F()
+void EECoreInterpreter_s::BC0F()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
@@ -194,7 +194,7 @@ void EECoreInterpreter::BC0F()
 #endif
 }
 
-void EECoreInterpreter::BC0FL()
+void EECoreInterpreter_s::BC0FL()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
@@ -212,7 +212,7 @@ void EECoreInterpreter::BC0FL()
 #endif
 }
 
-void EECoreInterpreter::BC0T()
+void EECoreInterpreter_s::BC0T()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
@@ -230,7 +230,7 @@ void EECoreInterpreter::BC0T()
 #endif
 }
 
-void EECoreInterpreter::BC0TL()
+void EECoreInterpreter_s::BC0TL()
 {
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
@@ -248,7 +248,7 @@ void EECoreInterpreter::BC0TL()
 #endif
 }
 
-void EECoreInterpreter::BC1F()
+void EECoreInterpreter_s::BC1F()
 {
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
 	if (handleCOP1Usable())
@@ -260,7 +260,7 @@ void EECoreInterpreter::BC1F()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BC1FL()
+void EECoreInterpreter_s::BC1FL()
 {
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
 	if (handleCOP1Usable())
@@ -274,7 +274,7 @@ void EECoreInterpreter::BC1FL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::BC1T()
+void EECoreInterpreter_s::BC1T()
 {
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
 	if (handleCOP1Usable())
@@ -286,7 +286,7 @@ void EECoreInterpreter::BC1T()
 		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
 }
 
-void EECoreInterpreter::BC1TL()
+void EECoreInterpreter_s::BC1TL()
 {
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
 	if (handleCOP1Usable())
@@ -300,13 +300,13 @@ void EECoreInterpreter::BC1TL()
 		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void EECoreInterpreter::J()
+void EECoreInterpreter_s::J()
 {
 	// JUMP(). No Exceptions.
 	mEECore->R5900->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
-void EECoreInterpreter::JR()
+void EECoreInterpreter_s::JR()
 {
 	// JUMP(). Address error exception generated upon instruction load - but not in this instruction.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];

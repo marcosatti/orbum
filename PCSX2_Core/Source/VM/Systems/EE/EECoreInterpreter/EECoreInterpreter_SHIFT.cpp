@@ -6,12 +6,12 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::DSRA()
+void EECoreInterpreter_s::DSRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
@@ -22,7 +22,7 @@ void EECoreInterpreter::DSRA()
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
 }
 
-void EECoreInterpreter::DSLL()
+void EECoreInterpreter_s::DSLL()
 {
 	// Rd = Rt << shamt(0->31). Logical shift.
 	// No Exceptions generated.
@@ -33,7 +33,7 @@ void EECoreInterpreter::DSLL()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
 }
 
-void EECoreInterpreter::DSLL32()
+void EECoreInterpreter_s::DSLL32()
 {
 	// Rd = Rt << shamt(32->63). Logical shift.
 	// No Exceptions generated.
@@ -44,7 +44,7 @@ void EECoreInterpreter::DSLL32()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
 }
 
-void EECoreInterpreter::DSLLV()
+void EECoreInterpreter_s::DSLLV()
 {
 	// Rd = Rt << Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
@@ -56,7 +56,7 @@ void EECoreInterpreter::DSLLV()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
 }
 
-void EECoreInterpreter::DSRA32()
+void EECoreInterpreter_s::DSRA32()
 {
 	// Rd = Rt >> shamt(32->61). Arithmetic shift.
 	// No Exceptions generated.
@@ -67,7 +67,7 @@ void EECoreInterpreter::DSRA32()
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
 }
 
-void EECoreInterpreter::DSRAV()
+void EECoreInterpreter_s::DSRAV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Arithmetic shift.
 	// No Exceptions generated.
@@ -79,7 +79,7 @@ void EECoreInterpreter::DSRAV()
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
 }
 
-void EECoreInterpreter::DSRL()
+void EECoreInterpreter_s::DSRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
@@ -90,7 +90,7 @@ void EECoreInterpreter::DSRL()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
 }
 
-void EECoreInterpreter::DSRL32()
+void EECoreInterpreter_s::DSRL32()
 {
 	// Rd = Rt >> shamt(32->63). Logical shift.
 	// No Exceptions generated.
@@ -101,7 +101,7 @@ void EECoreInterpreter::DSRL32()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
 }
 
-void EECoreInterpreter::DSRLV()
+void EECoreInterpreter_s::DSRLV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
@@ -113,7 +113,7 @@ void EECoreInterpreter::DSRLV()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
 }
 
-void EECoreInterpreter::SLL()
+void EECoreInterpreter_s::SLL()
 {
 	// Rd = SignExtend<s64>(Rt << shamt(0->31)). Logical shift.
 	// No Exceptions generated.
@@ -125,7 +125,7 @@ void EECoreInterpreter::SLL()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SLLV()
+void EECoreInterpreter_s::SLLV()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
@@ -138,7 +138,7 @@ void EECoreInterpreter::SLLV()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SRA()
+void EECoreInterpreter_s::SRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
@@ -150,7 +150,7 @@ void EECoreInterpreter::SRA()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SRAV()
+void EECoreInterpreter_s::SRAV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Arithmetic shift.
 	// No Exceptions generated.
@@ -163,7 +163,7 @@ void EECoreInterpreter::SRAV()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SRL()
+void EECoreInterpreter_s::SRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
@@ -175,7 +175,7 @@ void EECoreInterpreter::SRL()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SRLV()
+void EECoreInterpreter_s::SRLV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Logical shift.
 	// No Exceptions generated.
@@ -188,7 +188,7 @@ void EECoreInterpreter::SRLV()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::PSLLH()
+void EECoreInterpreter_s::PSLLH()
 {
 	// Rd = Rt << shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
@@ -202,7 +202,7 @@ void EECoreInterpreter::PSLLH()
 	}
 }
 
-void EECoreInterpreter::PSLLVW()
+void EECoreInterpreter_s::PSLLVW()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
@@ -218,7 +218,7 @@ void EECoreInterpreter::PSLLVW()
 	}
 }
 
-void EECoreInterpreter::PSLLW()
+void EECoreInterpreter_s::PSLLW()
 {
 	// Rd = Rt << shamt. Logical shift.
 	// No Exceptions generated.
@@ -232,7 +232,7 @@ void EECoreInterpreter::PSLLW()
 	}
 }
 
-void EECoreInterpreter::PSRAH()
+void EECoreInterpreter_s::PSRAH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Arithmetic shift.
 	// No Exceptions generated.
@@ -246,7 +246,7 @@ void EECoreInterpreter::PSRAH()
 	}
 }
 
-void EECoreInterpreter::PSRAVW()
+void EECoreInterpreter_s::PSRAVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Arithmetic shift.
 	// No Exceptions generated.
@@ -262,7 +262,7 @@ void EECoreInterpreter::PSRAVW()
 	}
 }
 
-void EECoreInterpreter::PSRAW()
+void EECoreInterpreter_s::PSRAW()
 {
 	// Rd = Rt >> shamt. Arithmetic shift.
 	// No Exceptions generated.
@@ -276,7 +276,7 @@ void EECoreInterpreter::PSRAW()
 	}
 }
 
-void EECoreInterpreter::PSRLH()
+void EECoreInterpreter_s::PSRLH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
@@ -290,7 +290,7 @@ void EECoreInterpreter::PSRLH()
 	}
 }
 
-void EECoreInterpreter::PSRLVW()
+void EECoreInterpreter_s::PSRLVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
@@ -306,7 +306,7 @@ void EECoreInterpreter::PSRLVW()
 	}
 }
 
-void EECoreInterpreter::PSRLW()
+void EECoreInterpreter_s::PSRLW()
 {
 	// Rd = Rt >> shamt. Logical shift.
 	// No Exceptions generated.
@@ -320,7 +320,7 @@ void EECoreInterpreter::PSRLW()
 	}
 }
 
-void EECoreInterpreter::QFSRV()
+void EECoreInterpreter_s::QFSRV()
 {
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.

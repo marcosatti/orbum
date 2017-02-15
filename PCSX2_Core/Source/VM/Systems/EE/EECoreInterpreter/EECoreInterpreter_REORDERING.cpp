@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::PCPYH()
+void EECoreInterpreter_s::PCPYH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -27,7 +27,7 @@ void EECoreInterpreter::PCPYH()
 	}
 }
 
-void EECoreInterpreter::PCPYLD()
+void EECoreInterpreter_s::PCPYLD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -44,7 +44,7 @@ void EECoreInterpreter::PCPYLD()
 	}
 }
 
-void EECoreInterpreter::PCPYUD()
+void EECoreInterpreter_s::PCPYUD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -61,7 +61,7 @@ void EECoreInterpreter::PCPYUD()
 	}
 }
 
-void EECoreInterpreter::PEXCH()
+void EECoreInterpreter_s::PEXCH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -84,7 +84,7 @@ void EECoreInterpreter::PEXCH()
 	}
 }
 
-void EECoreInterpreter::PEXCW()
+void EECoreInterpreter_s::PEXCW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -104,7 +104,7 @@ void EECoreInterpreter::PEXCW()
 	}
 }
 
-void EECoreInterpreter::PEXEH()
+void EECoreInterpreter_s::PEXEH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -127,7 +127,7 @@ void EECoreInterpreter::PEXEH()
 	}
 }
 
-void EECoreInterpreter::PEXEW()
+void EECoreInterpreter_s::PEXEW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -147,7 +147,7 @@ void EECoreInterpreter::PEXEW()
 	}
 }
 
-void EECoreInterpreter::PEXTLB()
+void EECoreInterpreter_s::PEXTLB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -161,7 +161,7 @@ void EECoreInterpreter::PEXTLB()
 	}
 }
 
-void EECoreInterpreter::PEXTLH()
+void EECoreInterpreter_s::PEXTLH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -175,7 +175,7 @@ void EECoreInterpreter::PEXTLH()
 	}
 }
 
-void EECoreInterpreter::PEXTLW()
+void EECoreInterpreter_s::PEXTLW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -189,7 +189,7 @@ void EECoreInterpreter::PEXTLW()
 	}
 }
 
-void EECoreInterpreter::PEXTUB()
+void EECoreInterpreter_s::PEXTUB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -203,7 +203,7 @@ void EECoreInterpreter::PEXTUB()
 	}
 }
 
-void EECoreInterpreter::PEXTUH()
+void EECoreInterpreter_s::PEXTUH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -217,7 +217,7 @@ void EECoreInterpreter::PEXTUH()
 	}
 }
 
-void EECoreInterpreter::PEXTUW()
+void EECoreInterpreter_s::PEXTUW()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -231,7 +231,7 @@ void EECoreInterpreter::PEXTUW()
 	}
 }
 
-void EECoreInterpreter::PINTEH()
+void EECoreInterpreter_s::PINTEH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -245,7 +245,7 @@ void EECoreInterpreter::PINTEH()
 	}
 }
 
-void EECoreInterpreter::PINTH()
+void EECoreInterpreter_s::PINTH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -263,7 +263,7 @@ void EECoreInterpreter::PINTH()
 		destReg->writeHword(EE, (i - 1) * 2 + 1, source1Reg->readHword(EE, (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
 }
 
-void EECoreInterpreter::PPACB()
+void EECoreInterpreter_s::PPACB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -282,7 +282,7 @@ void EECoreInterpreter::PPACB()
 		destReg->writeByte(EE, i / 2 + (Constants::NUMBER_BYTES_IN_QWORD / 2), source1Reg->readByte(EE, i));
 }
 
-void EECoreInterpreter::PPACH()
+void EECoreInterpreter_s::PPACH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -301,7 +301,7 @@ void EECoreInterpreter::PPACH()
 		destReg->writeHword(EE, i / 2 + (Constants::NUMBER_HWORDS_IN_QWORD / 2), source1Reg->readHword(EE, i));
 }
 
-void EECoreInterpreter::PPACW()
+void EECoreInterpreter_s::PPACW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -320,7 +320,7 @@ void EECoreInterpreter::PPACW()
 		destReg->writeWord(EE, i / 2 + (Constants::NUMBER_WORDS_IN_QWORD / 2), source1Reg->readWord(EE, i));
 }
 
-void EECoreInterpreter::PREVH()
+void EECoreInterpreter_s::PREVH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -334,7 +334,7 @@ void EECoreInterpreter::PREVH()
 	}
 }
 
-void EECoreInterpreter::PROT3W()
+void EECoreInterpreter_s::PROT3W()
 {
 	// Rd = COPY_W(Rt), No exceptions. Bit of a weird one...
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];

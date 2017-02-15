@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::AND()
+void EECoreInterpreter_s::AND()
 {
 	// Rd = Rt AND Rs.
 	// No Exceptions generated.
@@ -19,7 +19,7 @@ void EECoreInterpreter::AND()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) & source2Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::ANDI()
+void EECoreInterpreter_s::ANDI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
@@ -30,7 +30,7 @@ void EECoreInterpreter::ANDI()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) & imm);
 }
 
-void EECoreInterpreter::NOR()
+void EECoreInterpreter_s::NOR()
 {
 	// Rd = NOT (Rt OR Rs).
 	// No Exceptions generated.
@@ -41,7 +41,7 @@ void EECoreInterpreter::NOR()
 	destReg->writeDword(EE, 0, ~(source1Reg->readDword(EE, 0) | source2Reg->readDword(EE, 0)));
 }
 
-void EECoreInterpreter::OR()
+void EECoreInterpreter_s::OR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
@@ -52,7 +52,7 @@ void EECoreInterpreter::OR()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) | source2Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::ORI()
+void EECoreInterpreter_s::ORI()
 {
 	// Rd = Rt AND Extended<u64>(Imm).
 	// No Exceptions generated.
@@ -63,7 +63,7 @@ void EECoreInterpreter::ORI()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) | imm);
 }
 
-void EECoreInterpreter::XOR()
+void EECoreInterpreter_s::XOR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
@@ -74,7 +74,7 @@ void EECoreInterpreter::XOR()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) ^ source2Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::XORI()
+void EECoreInterpreter_s::XORI()
 {
 	// Rd = Rt XOR Extended<u64>(Imm).
 	// No Exceptions generated.
@@ -85,7 +85,7 @@ void EECoreInterpreter::XORI()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) ^ imm);
 }
 
-void EECoreInterpreter::PAND()
+void EECoreInterpreter_s::PAND()
 {
 	// Rd = Rt AND Rs.
 	// No Exceptions generated.
@@ -99,7 +99,7 @@ void EECoreInterpreter::PAND()
 	}
 }
 
-void EECoreInterpreter::PNOR()
+void EECoreInterpreter_s::PNOR()
 {
 	// Rd = NOT (Rt OR Rs).
 	// No Exceptions generated.
@@ -113,7 +113,7 @@ void EECoreInterpreter::PNOR()
 	}
 }
 
-void EECoreInterpreter::POR()
+void EECoreInterpreter_s::POR()
 {
 	// Rd = Rt OR Rs.
 	// No Exceptions generated.
@@ -127,7 +127,7 @@ void EECoreInterpreter::POR()
 	}
 }
 
-void EECoreInterpreter::PXOR()
+void EECoreInterpreter_s::PXOR()
 {
 	// Rd = Rt XOR Rs.
 	// No Exceptions generated.

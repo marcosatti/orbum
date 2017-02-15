@@ -5,7 +5,7 @@
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Tables/EECoreSyscallTable/EECoreSyscallTable.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
@@ -13,13 +13,13 @@
 #include "Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "Resources/EE/EECore/Types/EECoreException_t.h"
 
-void EECoreInterpreter::BREAK()
+void EECoreInterpreter_s::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
 	handleException(EECoreException_t::EX_BREAK);
 }
 
-void EECoreInterpreter::SYSCALL()
+void EECoreInterpreter_s::SYSCALL()
 {
 #if DEBUG_SYSCALL_LOG
 	// Debug print the syscall mnemonic.
@@ -36,7 +36,7 @@ void EECoreInterpreter::SYSCALL()
 	handleException(EECoreException_t::EX_SYSTEMCALL);
 }
 
-void EECoreInterpreter::TEQ()
+void EECoreInterpreter_s::TEQ()
 {
 	// TRAP_EXCEPTION(Rs == Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -49,7 +49,7 @@ void EECoreInterpreter::TEQ()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TEQI()
+void EECoreInterpreter_s::TEQI()
 {
 	// TRAP_EXCEPTION(Rs == imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -61,7 +61,7 @@ void EECoreInterpreter::TEQI()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TGE()
+void EECoreInterpreter_s::TGE()
 {
 	// TRAP_EXCEPTION(Rs >= Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -74,7 +74,7 @@ void EECoreInterpreter::TGE()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TGEI()
+void EECoreInterpreter_s::TGEI()
 {
 	// TRAP_EXCEPTION(Rs >= imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -86,7 +86,7 @@ void EECoreInterpreter::TGEI()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TGEIU()
+void EECoreInterpreter_s::TGEIU()
 {
 	// TRAP_EXCEPTION(Rs >= imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -98,7 +98,7 @@ void EECoreInterpreter::TGEIU()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TGEU()
+void EECoreInterpreter_s::TGEU()
 {
 	// TRAP_EXCEPTION(Rs >= Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -111,7 +111,7 @@ void EECoreInterpreter::TGEU()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TLT()
+void EECoreInterpreter_s::TLT()
 {
 	// TRAP_EXCEPTION(Rs < Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -124,7 +124,7 @@ void EECoreInterpreter::TLT()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TLTI()
+void EECoreInterpreter_s::TLTI()
 {
 	// TRAP_EXCEPTION(Rs < imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -136,7 +136,7 @@ void EECoreInterpreter::TLTI()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TLTIU()
+void EECoreInterpreter_s::TLTIU()
 {
 	// TRAP_EXCEPTION(Rs < imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -148,7 +148,7 @@ void EECoreInterpreter::TLTIU()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TLTU()
+void EECoreInterpreter_s::TLTU()
 {
 	// TRAP_EXCEPTION(Rs < Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -158,7 +158,7 @@ void EECoreInterpreter::TLTU()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TNE()
+void EECoreInterpreter_s::TNE()
 {
 	// TRAP_EXCEPTION(Rs != Rt).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -171,7 +171,7 @@ void EECoreInterpreter::TNE()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::TNEI()
+void EECoreInterpreter_s::TNEI()
 {
 	// TRAP_EXCEPTION(Rs != imm).
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
@@ -183,7 +183,7 @@ void EECoreInterpreter::TNEI()
 		handleException(EECoreException_t::EX_TRAP);
 }
 
-void EECoreInterpreter::ERET()
+void EECoreInterpreter_s::ERET()
 {
 	// ERET is an outlier, where it does not cause a branch delay instruction to be executed - set the PC directly.
 	// ERET(). No exceptions.

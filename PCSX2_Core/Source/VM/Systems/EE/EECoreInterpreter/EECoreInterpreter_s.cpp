@@ -9,8 +9,8 @@
 #include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VM.h"
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -28,29 +28,53 @@
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EECoreInterpreter::EECoreInterpreter(VM * vmMain, const std::shared_ptr<VUInterpreter> & vuInterpreter) :
-	VMSystem_t(vmMain, System_t::EECore),
+EECoreInterpreter_s::EECoreInterpreter_s(VM * vmMain, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
+	VMSystem_s(vmMain),
 	mInstructionInfo(nullptr),
 	mVU0Interpreter(vuInterpreter), 
 	mException(), 
 	mExceptionProperties(nullptr) 
 {
-	mEECore = getResources()->EE->EECore;
-	mPhysicalMMU = getResources()->EE->PhysicalMMU;
-	mVU0 = getResources()->EE->VPU->VU->VU0;
+	mEECore = getVM()->getResources()->EE->EECore;
+	mPhysicalMMU = getVM()->getResources()->EE->PhysicalMMU;
+	mVU0 = getVM()->getResources()->EE->VPU->VU->VU0;
 }
 
-EECoreInterpreter::~EECoreInterpreter()
+EECoreInterpreter_s::~EECoreInterpreter_s()
 {
 }
 
-void EECoreInterpreter::initalise()
+void EECoreInterpreter_s::initalise()
 {
 	// An EE Core reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
 	handleException(EECoreException_t::EX_RESET);
 }
 
-double EECoreInterpreter::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+void EECoreInterpreter_s::run(const double& time)
+{
+	// Create VM tick event.
+	ClockEvent_t vmClockEvent =
+	{
+		ClockSource_t::EEBusClock,
+		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
+	};
+	mClockEventQueue.push(vmClockEvent);
+
+	// Run through events.
+	while (!mClockEventQueue.empty())
+	{
+		auto event = mClockEventQueue.front();
+		mClockEventQueue.pop();
+
+		while (event.mNumberTicks >= 1)
+		{
+			auto ticks = step(event);
+			event.mNumberTicks -= ticks;
+		}
+	}
+}
+
+int EECoreInterpreter_s::step(const ClockEvent_t& event)
 {
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	mEECore->R5900->BD->handleBranchDelay();
@@ -67,7 +91,7 @@ double EECoreInterpreter::executeStep(const ClockSource_t & clockSource, const d
 	mEECore->R5900->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000; // 0x48c3461;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x15000000; //0x1437463;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -103,10 +127,10 @@ double EECoreInterpreter::executeStep(const ClockSource_t & clockSource, const d
 #endif
 
 	// Return the number of cycles completed.
-	return static_cast<double>(mInstructionInfo->mCycles);
+	return mInstructionInfo->mCycles;
 }
 
-void EECoreInterpreter::handleInterruptCheck()
+void EECoreInterpreter_s::handleInterruptCheck()
 {
 	auto& COP0 = mEECore->COP0;
 
@@ -120,12 +144,12 @@ void EECoreInterpreter::handleInterruptCheck()
 		{
 #if defined(BUILD_DEBUG)
 			
-			auto& STAT = getResources()->EE->INTC->STAT;
-			auto& MASK = getResources()->EE->INTC->MASK;
+			auto& STAT = getVM()->getResources()->EE->INTC->STAT;
+			auto& MASK = getVM()->getResources()->EE->INTC->MASK;
 			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
 				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->BD->isInBranchDelay());
 			log(Debug, "Printing list of interrupt sources...");
-			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
+			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS) // INTC
 			{
 				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
 					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
@@ -141,7 +165,7 @@ void EECoreInterpreter::handleInterruptCheck()
 	}
 }
 
-void EECoreInterpreter::handleCountEventCheck() const
+void EECoreInterpreter_s::handleCountEventCheck() const
 {
 	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
 	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
@@ -151,7 +175,7 @@ void EECoreInterpreter::handleCountEventCheck() const
 		mEECore->COP0->Cause->clearIRQLine(7);
 }
 
-bool EECoreInterpreter::handleCOP0Usable()
+bool EECoreInterpreter_s::handleCOP0Usable()
 {
 	if (!mEECore->COP0->isCoprocessorUsable())
 	{
@@ -165,7 +189,7 @@ bool EECoreInterpreter::handleCOP0Usable()
 	return false;
 }
 
-bool EECoreInterpreter::handleCOP1Usable()
+bool EECoreInterpreter_s::handleCOP1Usable()
 {
 	if (!mEECore->FPU->isCoprocessorUsable())
 	{
@@ -179,7 +203,7 @@ bool EECoreInterpreter::handleCOP1Usable()
 	return false;
 }
 
-bool EECoreInterpreter::handleCOP2Usable()
+bool EECoreInterpreter_s::handleCOP2Usable()
 {
 	if (!mVU0->isCoprocessorUsable())
 	{
@@ -193,7 +217,7 @@ bool EECoreInterpreter::handleCOP2Usable()
 	return false;
 }
 
-bool EECoreInterpreter::handleOverOrUnderflow32(const s32& x, const s32& y)
+bool EECoreInterpreter_s::handleOverOrUnderflow32(const s32& x, const s32& y)
 {
 	if (MathUtil::testOverOrUnderflow32(x, y))
 	{
@@ -206,7 +230,7 @@ bool EECoreInterpreter::handleOverOrUnderflow32(const s32& x, const s32& y)
 	return false;
 }
 
-bool EECoreInterpreter::handleOverOrUnderflow64(const s64& x, const s64& y)
+bool EECoreInterpreter_s::handleOverOrUnderflow64(const s64& x, const s64& y)
 {
 	if (MathUtil::testOverOrUnderflow64(x, y))
 	{
@@ -219,7 +243,7 @@ bool EECoreInterpreter::handleOverOrUnderflow64(const s64& x, const s64& y)
 	return false;
 }
 
-void EECoreInterpreter::INSTRUCTION_UNKNOWN()
+void EECoreInterpreter_s::INSTRUCTION_UNKNOWN()
 {
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
@@ -228,7 +252,7 @@ void EECoreInterpreter::INSTRUCTION_UNKNOWN()
 #endif
 }
 
-void EECoreInterpreter::handleException(const EECoreException_t& exception)
+void EECoreInterpreter_s::handleException(const EECoreException_t& exception)
 {
 	auto& COP0 = mEECore->COP0;
 
@@ -270,7 +294,7 @@ void EECoreInterpreter::handleException(const EECoreException_t& exception)
 	}
 }
 
-void EECoreInterpreter::handleException_L1() const
+void EECoreInterpreter_s::handleException_L1() const
 {
 	// Exception level 1 handler code. Adapted from EE Core Users Manual page 91.
 	auto& COP0 = mEECore->COP0;
@@ -337,7 +361,7 @@ void EECoreInterpreter::handleException_L1() const
 	}
 }
 
-void EECoreInterpreter::handleException_L2() const
+void EECoreInterpreter_s::handleException_L2() const
 {
 	// Exception level 2 handler code. Adapted from EE Core Users Manual page 92.
 	auto& COP0 = mEECore->COP0;
@@ -404,7 +428,7 @@ void EECoreInterpreter::handleException_L2() const
 	}
 }
 
-void EECoreInterpreter::handleMMUError(const u32& virtualAddress, const MMUAccess_t& access, const MMUError_t& error, const s32 & tlbEntryIndex)
+void EECoreInterpreter_s::handleMMUError(const u32& virtualAddress, const MMUAccess_t& access, const MMUError_t& error, const s32 & tlbEntryIndex)
 {
 	auto& COP0 = mEECore->COP0;
 	auto& TLB = mEECore->TLB;
@@ -453,7 +477,7 @@ void EECoreInterpreter::handleMMUError(const u32& virtualAddress, const MMUAcces
 	handleException(exception);
 }
 
-bool EECoreInterpreter::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
+bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
 {
 	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 

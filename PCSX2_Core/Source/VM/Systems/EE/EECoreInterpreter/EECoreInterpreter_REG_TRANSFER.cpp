@@ -6,13 +6,13 @@
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 
-void EECoreInterpreter::MFHI()
+void EECoreInterpreter_s::MFHI()
 {
 	// Rd = HI. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -21,7 +21,7 @@ void EECoreInterpreter::MFHI()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MFLO()
+void EECoreInterpreter_s::MFLO()
 {
 	// Rd = LO. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -30,7 +30,7 @@ void EECoreInterpreter::MFLO()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MOVN()
+void EECoreInterpreter_s::MOVN()
 {
 	// Rd = Rs, if Rt =/= 0. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -41,7 +41,7 @@ void EECoreInterpreter::MOVN()
 		destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MOVZ()
+void EECoreInterpreter_s::MOVZ()
 {
 	// Rd = Rs, if Rt == 0. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -52,7 +52,7 @@ void EECoreInterpreter::MOVZ()
 		destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MTHI()
+void EECoreInterpreter_s::MTHI()
 {
 	// HI = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -61,7 +61,7 @@ void EECoreInterpreter::MTHI()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MTLO()
+void EECoreInterpreter_s::MTLO()
 {
 	// LO = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -70,7 +70,7 @@ void EECoreInterpreter::MTLO()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MFHI1()
+void EECoreInterpreter_s::MFHI1()
 {
 	// Rd = HI1. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -79,7 +79,7 @@ void EECoreInterpreter::MFHI1()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::MFLO1()
+void EECoreInterpreter_s::MFLO1()
 {
 	// Rd = LO1. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -88,7 +88,7 @@ void EECoreInterpreter::MFLO1()
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::MTHI1()
+void EECoreInterpreter_s::MTHI1()
 {
 	// HI1 = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -97,7 +97,7 @@ void EECoreInterpreter::MTHI1()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::MTLO1()
+void EECoreInterpreter_s::MTLO1()
 {
 	// LO1 = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -106,7 +106,7 @@ void EECoreInterpreter::MTLO1()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 0));
 }
 
-void EECoreInterpreter::PMFHI()
+void EECoreInterpreter_s::PMFHI()
 {
 	// Rd = HI. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -116,7 +116,7 @@ void EECoreInterpreter::PMFHI()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::PMFHL()
+void EECoreInterpreter_s::PMFHL()
 {
 	switch (mInstruction.getRShamt())
 	{
@@ -148,7 +148,7 @@ void EECoreInterpreter::PMFHL()
 	}
 }
 
-void EECoreInterpreter::PMFHL_LH()
+void EECoreInterpreter_s::PMFHL_LH()
 {
 	// Rd = (HI, LO). No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -167,7 +167,7 @@ void EECoreInterpreter::PMFHL_LH()
 	}
 }
 
-void EECoreInterpreter::PMFHL_LW()
+void EECoreInterpreter_s::PMFHL_LW()
 {
 	// Rd = (HI, LO). No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -186,7 +186,7 @@ void EECoreInterpreter::PMFHL_LW()
 	}
 }
 
-void EECoreInterpreter::PMFHL_SH()
+void EECoreInterpreter_s::PMFHL_SH()
 {
 	// Rd = (HI, LO). No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -208,7 +208,7 @@ void EECoreInterpreter::PMFHL_SH()
 	}
 }
 
-void EECoreInterpreter::PMFHL_SLW()
+void EECoreInterpreter_s::PMFHL_SLW()
 {
 	// Rd = (HI, LO). No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -228,7 +228,7 @@ void EECoreInterpreter::PMFHL_SLW()
 	destReg->writeDword(EE, 1, result);
 }
 
-void EECoreInterpreter::PMFHL_UW()
+void EECoreInterpreter_s::PMFHL_UW()
 {
 	// Rd = (HI, LO). No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -247,7 +247,7 @@ void EECoreInterpreter::PMFHL_UW()
 	}
 }
 
-void EECoreInterpreter::PMFLO()
+void EECoreInterpreter_s::PMFLO()
 {
 	// Rd = LO. No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -257,7 +257,7 @@ void EECoreInterpreter::PMFLO()
 	destReg->writeDword(EE, 1, source2Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::PMTHI()
+void EECoreInterpreter_s::PMTHI()
 {
 	// HI = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -267,7 +267,7 @@ void EECoreInterpreter::PMTHI()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::PMTHL_LW()
+void EECoreInterpreter_s::PMTHL_LW()
 {
 	// (HI, LO) = Rs. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -283,7 +283,7 @@ void EECoreInterpreter::PMTHL_LW()
 	}
 }
 
-void EECoreInterpreter::PMTLO()
+void EECoreInterpreter_s::PMTLO()
 {
 	// LO = Rd. No exceptions.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -293,7 +293,7 @@ void EECoreInterpreter::PMTLO()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::MFC1()
+void EECoreInterpreter_s::MFC1()
 {
 	// Rt = COP1_FPR[Fs]. Exception on FPU unusable.
 	if (handleCOP1Usable())
@@ -319,7 +319,7 @@ void EECoreInterpreter::MFC1()
 	}
 }
 
-void EECoreInterpreter::MOV_S()
+void EECoreInterpreter_s::MOV_S()
 {
 	// Fd = Fs. Exception on FPU unusable.
 	if (handleCOP1Usable())
@@ -331,7 +331,7 @@ void EECoreInterpreter::MOV_S()
 	destReg->writeFloat(EE,source1Reg->readFloat(EE));
 }
 
-void EECoreInterpreter::MTC1()
+void EECoreInterpreter_s::MTC1()
 {
 	// COP1_FPR[Fs] = Rt. Exception on FPU unusable.
 	if (handleCOP1Usable())

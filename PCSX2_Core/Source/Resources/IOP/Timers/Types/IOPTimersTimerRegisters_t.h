@@ -19,7 +19,7 @@ public:
 	IOPTimersTimerRegister_COUNT_t(const char * mnemonic, const bool & wordMode);
 
 	/*
-	Increments the timer by the amount specified while also updating the overflow status.
+	Increments the timer by the amount specified (prescalling when required) while also updating the overflow status.
 	*/
 	void increment(u16 value);
 
@@ -29,9 +29,14 @@ public:
 	bool isOverflowed();
 
 	/*
-	Resets the count to 0.
+	Resets the count to 0, and sets the prescale.
 	*/
 	void reset();
+
+	/*
+	Sets the prescale (ie: needs x amount before 1 is added to the count).
+	*/
+	void setPrescale(const int & prescale);
 
 private:
 	/*
@@ -43,6 +48,12 @@ private:
 	Used to determine if the count register is in 16 or 32-bit mode.
 	*/
 	bool mWordMode;
+
+	/*
+	Prescale functionality.
+	*/
+	int mPrescale;
+	int mPrescaleCount;
 };
 
 /*
@@ -73,12 +84,17 @@ public:
 	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const u8 & timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
 
 	/*
-	When written to, will cache the correct emulator clock source that the system logic should use.
-	Use getClockSource() to get the emulator clock source.
-	Also resets the count register.
+	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.
+	Also resets the count register on write.
 	*/
 	void writeHword(const Context& context, size_t arrayIndex, u16 value) override;
 	void writeWord(const Context& context, u32 value) override;
+
+
+	/*
+	Returns if the timer is "enabled" by returning if either of the interrupt bits have been set (otherwise the timer is useless).
+	*/
+	bool isEnabled() const;
 
 	/*
 	Returns the cached emulator clock source.
@@ -95,6 +111,11 @@ private:
 	Sets the internal clock source based on the register state.
 	*/
 	void handleClockSourceUpdate();
+
+	/*
+	Holds the result of if the timer is enabled, based on the interrupt bits set.
+	*/
+	bool mIsEnabled;
 
 	/*
 	Contains the emulation clock source updated through handleClockSourceUpdate().

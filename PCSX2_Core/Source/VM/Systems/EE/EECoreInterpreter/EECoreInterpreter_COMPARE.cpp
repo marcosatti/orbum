@@ -4,14 +4,14 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/FPRegister32_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-void EECoreInterpreter::SLT()
+void EECoreInterpreter_s::SLT()
 {
 	// Rd = SignExtended<s64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
@@ -27,7 +27,7 @@ void EECoreInterpreter::SLT()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SLTI()
+void EECoreInterpreter_s::SLTI()
 {
 	// Rd = SignExtended<s64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
@@ -42,7 +42,7 @@ void EECoreInterpreter::SLTI()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SLTIU()
+void EECoreInterpreter_s::SLTIU()
 {
 	// Rd = SignExtended<u64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
@@ -57,7 +57,7 @@ void EECoreInterpreter::SLTIU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SLTU()
+void EECoreInterpreter_s::SLTU()
 {
 	// Rd = SignExtended<u64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
@@ -73,7 +73,7 @@ void EECoreInterpreter::SLTU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::PCEQB()
+void EECoreInterpreter_s::PCEQB()
 {
 	// Rd = SignExtended<u8>((Rs == Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
@@ -90,7 +90,7 @@ void EECoreInterpreter::PCEQB()
 	}
 }
 
-void EECoreInterpreter::PCEQH()
+void EECoreInterpreter_s::PCEQH()
 {
 	// Rd = SignExtended<u16>((Rs == Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
@@ -107,7 +107,7 @@ void EECoreInterpreter::PCEQH()
 	}
 }
 
-void EECoreInterpreter::PCEQW()
+void EECoreInterpreter_s::PCEQW()
 {
 	// Rd = SignExtended<u32>((Rs == Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
@@ -124,7 +124,7 @@ void EECoreInterpreter::PCEQW()
 	}
 }
 
-void EECoreInterpreter::PCGTB()
+void EECoreInterpreter_s::PCGTB()
 {
 	// Rd = SignExtended<u8>((Rs > Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
@@ -141,7 +141,7 @@ void EECoreInterpreter::PCGTB()
 	}
 }
 
-void EECoreInterpreter::PCGTH()
+void EECoreInterpreter_s::PCGTH()
 {
 	// Rd = SignExtended<u16>((Rs > Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
@@ -158,7 +158,7 @@ void EECoreInterpreter::PCGTH()
 	}
 }
 
-void EECoreInterpreter::PCGTW()
+void EECoreInterpreter_s::PCGTW()
 {
 	// Rd = SignExtended<u32>((Rs > Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
@@ -175,7 +175,7 @@ void EECoreInterpreter::PCGTW()
 	}
 }
 
-void EECoreInterpreter::C_EQ_S()
+void EECoreInterpreter_s::C_EQ_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
@@ -195,7 +195,7 @@ void EECoreInterpreter::C_EQ_S()
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::C, 0);
 }
 
-void EECoreInterpreter::C_F_S()
+void EECoreInterpreter_s::C_F_S()
 {
 	// TODO: Whats the point of this instruction? Docs say something about a comparison but it always sets the C field to 0 regardless...
 	// (FCR[31] or CSR, C field) = 0
@@ -208,7 +208,7 @@ void EECoreInterpreter::C_F_S()
 	CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::C, 0);
 }
 
-void EECoreInterpreter::C_LE_S()
+void EECoreInterpreter_s::C_LE_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
@@ -228,7 +228,7 @@ void EECoreInterpreter::C_LE_S()
 		CSR->setFieldValue(EECoreFPURegister_CSR_t::Fields::C, 0);
 }
 
-void EECoreInterpreter::C_LT_S()
+void EECoreInterpreter_s::C_LT_S()
 {
 	// (FCR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.

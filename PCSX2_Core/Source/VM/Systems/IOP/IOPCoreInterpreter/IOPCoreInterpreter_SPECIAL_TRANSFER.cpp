@@ -3,13 +3,13 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 
-void IOPCoreInterpreter::MFC0()
+void IOPCoreInterpreter_s::MFC0()
 {
 	if (handleCOP0Usable())
 		return;
@@ -20,7 +20,7 @@ void IOPCoreInterpreter::MFC0()
 	destReg->writeWord(IOP, static_cast<u32>(sourceReg->readWord(IOP)));
 }
 
-void IOPCoreInterpreter::MTC0()
+void IOPCoreInterpreter_s::MTC0()
 {
 	if (handleCOP0Usable())
 		return;
@@ -31,7 +31,7 @@ void IOPCoreInterpreter::MTC0()
 	destReg->writeWord(IOP, sourceReg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::MFHI()
+void IOPCoreInterpreter_s::MFHI()
 {
 	// Rd = HI. No exceptions.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -40,7 +40,7 @@ void IOPCoreInterpreter::MFHI()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::MFLO()
+void IOPCoreInterpreter_s::MFLO()
 {
 	// Rd = LO. No exceptions.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -49,7 +49,7 @@ void IOPCoreInterpreter::MFLO()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::MTHI()
+void IOPCoreInterpreter_s::MTHI()
 {
 	// HI = Rd. No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
@@ -58,7 +58,7 @@ void IOPCoreInterpreter::MTHI()
 	destReg->writeWord(IOP, source1Reg->readWord(IOP));
 }
 
-void IOPCoreInterpreter::MTLO()
+void IOPCoreInterpreter_s::MTLO()
 {
 	// LO = Rd. No exceptions.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRd()];

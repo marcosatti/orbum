@@ -2,13 +2,13 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-void VUInterpreter::NOP()
+void VUInterpreter_s::NOP()
 {
 }
 
-void VUInterpreter::CLIP()
+void VUInterpreter_s::CLIP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -18,7 +18,7 @@ void VUInterpreter::CLIP()
 #endif
 }
 
-void VUInterpreter::RINIT()
+void VUInterpreter_s::RINIT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -28,7 +28,7 @@ void VUInterpreter::RINIT()
 #endif
 }
 
-void VUInterpreter::RGET()
+void VUInterpreter_s::RGET()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -38,7 +38,7 @@ void VUInterpreter::RGET()
 #endif
 }
 
-void VUInterpreter::RNEXT()
+void VUInterpreter_s::RNEXT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -48,7 +48,7 @@ void VUInterpreter::RNEXT()
 #endif
 }
 
-void VUInterpreter::RXOR()
+void VUInterpreter_s::RXOR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -58,7 +58,7 @@ void VUInterpreter::RXOR()
 #endif
 }
 
-void VUInterpreter::WAITQ()
+void VUInterpreter_s::WAITQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -68,7 +68,7 @@ void VUInterpreter::WAITQ()
 #endif
 }
 
-void VUInterpreter::IBEQ()
+void VUInterpreter_s::IBEQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -78,7 +78,7 @@ void VUInterpreter::IBEQ()
 #endif
 }
 
-void VUInterpreter::IBGEZ()
+void VUInterpreter_s::IBGEZ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -88,7 +88,7 @@ void VUInterpreter::IBGEZ()
 #endif
 }
 
-void VUInterpreter::IBGTZ()
+void VUInterpreter_s::IBGTZ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -98,7 +98,7 @@ void VUInterpreter::IBGTZ()
 #endif
 }
 
-void VUInterpreter::IBLEZ()
+void VUInterpreter_s::IBLEZ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -108,7 +108,7 @@ void VUInterpreter::IBLEZ()
 #endif
 }
 
-void VUInterpreter::IBLTZ()
+void VUInterpreter_s::IBLTZ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -118,7 +118,7 @@ void VUInterpreter::IBLTZ()
 #endif
 }
 
-void VUInterpreter::IBNE()
+void VUInterpreter_s::IBNE()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -128,7 +128,7 @@ void VUInterpreter::IBNE()
 #endif
 }
 
-void VUInterpreter::B()
+void VUInterpreter_s::B()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -138,7 +138,7 @@ void VUInterpreter::B()
 #endif
 }
 
-void VUInterpreter::BAL()
+void VUInterpreter_s::BAL()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -148,7 +148,7 @@ void VUInterpreter::BAL()
 #endif
 }
 
-void VUInterpreter::JR()
+void VUInterpreter_s::JR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -158,7 +158,7 @@ void VUInterpreter::JR()
 #endif
 }
 
-void VUInterpreter::JALR()
+void VUInterpreter_s::JALR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -168,7 +168,7 @@ void VUInterpreter::JALR()
 #endif
 }
 
-void VUInterpreter::WAITP()
+void VUInterpreter_s::WAITP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -178,7 +178,7 @@ void VUInterpreter::WAITP()
 #endif
 }
 
-void VUInterpreter::XGKICK()
+void VUInterpreter_s::XGKICK()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -188,7 +188,7 @@ void VUInterpreter::XGKICK()
 #endif
 }
 
-void VUInterpreter::XTOP()
+void VUInterpreter_s::XTOP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -198,7 +198,7 @@ void VUInterpreter::XTOP()
 #endif
 }
 
-void VUInterpreter::XITOP()
+void VUInterpreter_s::XITOP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

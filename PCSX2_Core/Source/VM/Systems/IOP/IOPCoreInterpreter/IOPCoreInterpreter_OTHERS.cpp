@@ -6,20 +6,20 @@
 #include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-void IOPCoreInterpreter::BREAK()
+void IOPCoreInterpreter_s::BREAK()
 {
 	// EXCEPTION(BREAKPOINT)
 	handleException(IOPCoreException_t::EX_BREAK);
 }
 
-void IOPCoreInterpreter::SYSCALL()
+void IOPCoreInterpreter_s::SYSCALL()
 {
 #if DEBUG_SYSCALL_LOG
 	// Debug print the syscall mnemonic.
@@ -35,55 +35,55 @@ void IOPCoreInterpreter::SYSCALL()
 	handleException(IOPCoreException_t::EX_SYSTEMCALL);
 }
 
-void IOPCoreInterpreter::TLBP()
+void IOPCoreInterpreter_s::TLBP()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPCoreInterpreter::TLBR()
+void IOPCoreInterpreter_s::TLBR()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPCoreInterpreter::TLBWI()
+void IOPCoreInterpreter_s::TLBWI()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPCoreInterpreter::TLBWR()
+void IOPCoreInterpreter_s::TLBWR()
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void IOPCoreInterpreter::LWC2()
+void IOPCoreInterpreter_s::LWC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::SWC2()
+void IOPCoreInterpreter_s::SWC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CFC0()
+void IOPCoreInterpreter_s::CFC0()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CTC0()
+void IOPCoreInterpreter_s::CTC0()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::RFE()
+void IOPCoreInterpreter_s::RFE()
 {
 	// Pop the COP0.Status exception state.
 	mIOPCore->COP0->Status->popExceptionStack();
@@ -93,175 +93,175 @@ void IOPCoreInterpreter::RFE()
 	mIOPCore->R3000->BD->executeBranchDelayNow();
 }
 
-void IOPCoreInterpreter::RTPS()
+void IOPCoreInterpreter_s::RTPS()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCLIP()
+void IOPCoreInterpreter_s::NCLIP()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::OP()
+void IOPCoreInterpreter_s::OP()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::DPCS()
+void IOPCoreInterpreter_s::DPCS()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::INTPL()
+void IOPCoreInterpreter_s::INTPL()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::MVMVA()
+void IOPCoreInterpreter_s::MVMVA()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCDS()
+void IOPCoreInterpreter_s::NCDS()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CDP()
+void IOPCoreInterpreter_s::CDP()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCDT()
+void IOPCoreInterpreter_s::NCDT()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCCS()
+void IOPCoreInterpreter_s::NCCS()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CC()
+void IOPCoreInterpreter_s::CC()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCS()
+void IOPCoreInterpreter_s::NCS()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::NCT()
+void IOPCoreInterpreter_s::NCT()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::SQR()
+void IOPCoreInterpreter_s::SQR()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::DCPL()
+void IOPCoreInterpreter_s::DCPL()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::DPCT()
+void IOPCoreInterpreter_s::DPCT()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::AVSZ3()
+void IOPCoreInterpreter_s::AVSZ3()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::AVSZ4()
+void IOPCoreInterpreter_s::AVSZ4()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::RTPT()
+void IOPCoreInterpreter_s::RTPT()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::GPF()
+void IOPCoreInterpreter_s::GPF()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::GPL()
+void IOPCoreInterpreter_s::GPL()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::MFC2()
+void IOPCoreInterpreter_s::MFC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CFC2()
+void IOPCoreInterpreter_s::CFC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::MTC2()
+void IOPCoreInterpreter_s::MTC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);
 #endif
 }
 
-void IOPCoreInterpreter::CTC2()
+void IOPCoreInterpreter_s::CTC2()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 opcode encountered (%s)!", __FILENAME__, __LINE__, __FUNCTION__);

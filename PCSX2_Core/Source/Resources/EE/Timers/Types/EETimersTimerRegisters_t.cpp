@@ -4,22 +4,29 @@
 #include "Resources/EE/Timers/EETimers_t.h"
 
 EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemonic) :
-	mIsOverflowed(false)
+	mIsOverflowed(false),
+	mPrescale(1),
+	mPrescaleCount(0)
 {
 }
 
 void EETimersTimerRegister_COUNT_t::increment(u16 value)
 {
-	u32 temp = readWord(RAW) + value;
-
-	if (temp > Constants::VALUE_U16_MAX)
+	mPrescaleCount += value;
+	while (mPrescaleCount >= mPrescale)
 	{
-		// Set overflow flag and wrap value around.
-		mIsOverflowed = true;
-		temp = temp % Constants::VALUE_U16_MAX;
-	}
+		u32 temp = readWord(RAW) + value;
 
-	writeWord(RAW, temp);
+		if (temp > Constants::VALUE_U16_MAX)
+		{
+			// Set overflow flag and wrap value around.
+			mIsOverflowed = true;
+			temp = temp % Constants::VALUE_U16_MAX;
+		}
+
+		writeWord(RAW, temp);
+		mPrescaleCount -= mPrescale;
+	}
 }
 
 bool EETimersTimerRegister_COUNT_t::isOverflowed()
@@ -32,6 +39,17 @@ bool EETimersTimerRegister_COUNT_t::isOverflowed()
 void EETimersTimerRegister_COUNT_t::reset()
 {
 	writeWord(RAW, 0);
+}
+
+void EETimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
+{
+	// Prescale can only be 1 (no prescale) or above.
+	if (prescale > 0)
+		mPrescale = prescale;
+	else
+		mPrescale = 1;
+
+	mPrescaleCount = 0;
 }
 
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
@@ -71,4 +89,27 @@ void EETimersTimerRegister_MODE_t::writeWord(const Context & context, u32 value)
 bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial() const
 {
 	return ((getFieldValue(Fields::CLKS) == 3) && (getFieldValue(Fields::GATS) == 0));
+}
+
+ClockSource_t EETimersTimerRegister_MODE_t::getClockSource() const
+{
+	return mClockSource;
+}
+
+void EETimersTimerRegister_MODE_t::handleClockSourceUpdate()
+{
+	if (getFieldValue(Fields::CLKS) == 0x3)
+	{
+		mClockSource = ClockSource_t::HBlank;
+	}
+	else
+	{
+		mClockSource = ClockSource_t::EEBusClock;
+
+		// Set prescale.
+		if (getFieldValue(Fields::CLKS) == 0x1)
+			mCount->setPrescale(16);
+		else if (getFieldValue(Fields::CLKS) == 0x2)
+			mCount->setPrescale(256);
+	}
 }
