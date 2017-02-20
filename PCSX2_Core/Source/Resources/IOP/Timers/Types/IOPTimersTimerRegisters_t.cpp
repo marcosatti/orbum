@@ -95,7 +95,7 @@ IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemon
 	registerField(Fields::Prescale1, "Prescale1", 13, 2, 0);
 }
 
-void IOPTimersTimerRegister_MODE_t::writeHword(const Context& context, size_t arrayIndex, u16 value)
+void IOPTimersTimerRegister_MODE_t::writeHword(const Context_t& context, size_t arrayIndex, u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
@@ -109,7 +109,7 @@ void IOPTimersTimerRegister_MODE_t::writeHword(const Context& context, size_t ar
 	}
 }
 
-void IOPTimersTimerRegister_MODE_t::writeWord(const Context& context, u32 value)
+void IOPTimersTimerRegister_MODE_t::writeWord(const Context_t& context, u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 

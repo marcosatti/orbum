@@ -36,15 +36,13 @@ TODO: Speedups can be done here:
 class EEDmac_s : public VMSystem_s
 {
 public:
-	explicit EEDmac_s(VM * vmMain);
+	explicit EEDmac_s(VM * vm);
 	virtual ~EEDmac_s();
-
-	void run(const double & time) override;
 
 	/*
 	Check through the channels and initate data transfers.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

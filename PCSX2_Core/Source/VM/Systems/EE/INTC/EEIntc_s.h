@@ -15,12 +15,10 @@ at BUSCLK or less. Therefore it should be included with the BUSCLK events in the
 class EEIntc_s : public VMSystem_s
 {
 public:
-	explicit EEIntc_s(VM * vmMain);
+	explicit EEIntc_s(VM * vm);
 	virtual ~EEIntc_s();
 
-	void run(const double & time) override;
-
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

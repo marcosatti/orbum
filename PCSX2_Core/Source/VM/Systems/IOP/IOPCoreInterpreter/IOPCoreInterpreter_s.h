@@ -23,7 +23,7 @@ No official documentation, but there is resources available on the internet docu
 class IOPCoreInterpreter_s : public VMSystem_s
 {
 public:
-	explicit IOPCoreInterpreter_s(VM * vmMain);
+	explicit IOPCoreInterpreter_s(VM * vm);
 	virtual ~IOPCoreInterpreter_s();
 
 	/*
@@ -31,12 +31,10 @@ public:
 	*/
 	void initalise() override;
 
-	void run(const double & time) override;
-
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 

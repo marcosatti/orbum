@@ -5,13 +5,8 @@
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 
-#include "VM/VM.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
 void VUInterpreter_s::MOVE()
@@ -107,9 +102,9 @@ void VUInterpreter_s::SQD()
 void VUInterpreter_s::SQI()
 {
 	// MEM(Ft) = Fs
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()];
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Mem Addr.
-	auto& Mem = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // Mem Addr.
+	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
@@ -157,9 +152,9 @@ void VUInterpreter_s::ILWR()
 void VUInterpreter_s::ISWR()
 {
 	// MEM(Fs) = Ft.
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Data.
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // Mem Addr.
-	auto& Mem = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+	auto& source1Reg = mVuUnit->VI[mInstruction.getFt()]; // Data.
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFs()]; // Mem Addr.
+	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;

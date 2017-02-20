@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 FPRegister128_t is a register type used for VU floating point operations. It is made up of 4 x 32-bit single precision floats, and not intented to be a 128-bit 'float' type.
@@ -34,14 +35,14 @@ public:
 	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
 	*/
-	virtual u32 readWord(const Context & context, size_t arrayIndex);
-	virtual void writeWord(const Context & context, size_t arrayIndex, u32 value);
-	virtual u64 readDword(const Context & context, size_t arrayIndex);
-	virtual void writeDword(const Context & context, size_t arrayIndex, u64 value);
-	virtual u128 readQword(const Context & context);
-	virtual void writeQword(const Context & context, u128 value);
-	virtual f32 readFloat(const Context & context, size_t arrayIndex);
-	virtual void writeFloat(const Context & context, size_t arrayIndex, f32 value);
+	virtual u32 readWord(const Context_t & context, size_t arrayIndex);
+	virtual void writeWord(const Context_t & context, size_t arrayIndex, u32 value);
+	virtual u64 readDword(const Context_t & context, size_t arrayIndex);
+	virtual void writeDword(const Context_t & context, size_t arrayIndex, u64 value);
+	virtual u128 readQword(const Context_t & context);
+	virtual void writeQword(const Context_t & context, u128 value);
+	virtual f32 readFloat(const Context_t & context, size_t arrayIndex);
+	virtual void writeFloat(const Context_t & context, size_t arrayIndex, f32 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.

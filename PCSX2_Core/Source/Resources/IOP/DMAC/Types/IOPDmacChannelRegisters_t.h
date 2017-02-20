@@ -43,8 +43,8 @@ public:
 	/*
 	Saves the written BS value to be used later (see below).
 	*/
-	void writeHword(const Context& context, size_t arrayIndex, u16 value) override;
-	void writeWord(const Context & context, u32 value) override;
+	void writeHword(const Context_t& context, size_t arrayIndex, u16 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
 	Decrements the BS counter by 1. Should be called when a data unit has been transferred.

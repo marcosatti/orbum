@@ -18,15 +18,13 @@ The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 
 class EETimers_s : public VMSystem_s
 {
 public:
-	explicit EETimers_s(VM * vmMain);
+	explicit EETimers_s(VM * vm);
 	virtual ~EETimers_s();
-
-	void run(const double & time) override;
 
 	/*
 	Updates the timers with the specified clock source type.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

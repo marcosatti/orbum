@@ -20,8 +20,8 @@
 using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
-IOPDmac_s::IOPDmac_s(VM* vmMain) :
-	VMSystem_s(vmMain),
+IOPDmac_s::IOPDmac_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPDmac),
 	mChannelIndex(0),
 	mChannel(nullptr)
 {
@@ -35,31 +35,7 @@ IOPDmac_s::~IOPDmac_s()
 {
 }
 
-void IOPDmac_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int IOPDmac_s::step(const ClockEvent_t& event)
+int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
 	for (mChannelIndex = 0; mChannelIndex < Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)

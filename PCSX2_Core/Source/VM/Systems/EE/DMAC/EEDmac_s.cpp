@@ -25,8 +25,8 @@ using Direction_t = EEDmacChannelTable::Direction_t;
 using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
 using ChainMode_t = EEDmacChannelTable::ChainMode_t;
 
-EEDmac_s::EEDmac_s(VM* vmMain) :
-	VMSystem_s(vmMain),
+EEDmac_s::EEDmac_s(VM * vm) :
+	VMSystem_s(vm, System_t::EEDmac),
 	mChannelIndex(0),
 	mChannel(nullptr),
 	mDMAtag()
@@ -40,31 +40,7 @@ EEDmac_s::~EEDmac_s()
 {
 }
 
-void EEDmac_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int EEDmac_s::step(const ClockEvent_t& event)
+int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)

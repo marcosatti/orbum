@@ -6,28 +6,49 @@
 
 #include "Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
+class VuUnit_t;
+
+/*
+The VU0/1 interpreter.
+*/
 class VUInterpreter_s : public VMSystem_s
 {
 public:
-	explicit VUInterpreter_s(VM * vmMain, u32 vuUnitIndex);
+	explicit VUInterpreter_s(VM * vm, u32 vuUnitIndex);
 	virtual ~VUInterpreter_s();
-
-	void run(const double & time) override;
 
 	/*
 	TODO: implement.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	// The EE Core delegates the COP2 instructions with the V* prefix to the VUInterpreter system, to avoid writing duplicate code.
 	// Need to allow it access to the individual instruction functions below.
 	friend class EECoreInterpreter_s;
 
+	//////////////////////////
+	// Common Functionality //
+	//////////////////////////
+
+	/*
+	Resources.
+	*/
+	std::shared_ptr<VuUnit_t> mVuUnit;
+
+#if defined(BUILD_DEBUG)
+	// Debug loop counter.
+	u64 DEBUG_LOOP_COUNTER = 0;
+#endif
+
 	/*
 	Context of which VU this system is processing.
 	*/
 	const u32 mVUUnitIndex;
+
+	///////////////////////////////
+	// Instruction Functionality //
+	///////////////////////////////
 
 	/*
 	Temporary holder for the current instruction, while the operation to perform is being determined.

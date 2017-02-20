@@ -22,7 +22,7 @@ EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegiste
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
-void EEIntcRegister_STAT_t::writeWord(const Context& context, u32 value)
+void EEIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
 {
 	if (context == EE)
 		value = readWord(RAW) & (~value);
@@ -49,7 +49,7 @@ EEIntcRegister_MASK_t::EEIntcRegister_MASK_t()
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
-void EEIntcRegister_MASK_t::writeWord(const Context& context, u32 value)
+void EEIntcRegister_MASK_t::writeWord(const Context_t& context, u32 value)
 {
 	if (context == EE)
 		BitfieldRegister32_t::writeWord(RAW, readWord(RAW) ^ value);

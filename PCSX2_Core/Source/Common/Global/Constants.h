@@ -316,7 +316,7 @@ struct Constants
 			static constexpr double GSCORE_CLK_SPEED = 150000000.0; // 150 MHz.
 		};
 
-		struct PCRTC
+		struct CRTC
 		{
 			struct NTSC
 			{

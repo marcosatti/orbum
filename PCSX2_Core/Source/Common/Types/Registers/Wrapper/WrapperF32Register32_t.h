@@ -19,12 +19,12 @@ public:
 
 	~WrapperF32Register32_t();
 
-	u8 readByte(const Context& context, size_t arrayIndex) override;
-	void writeByte(const Context& context, size_t arrayIndex, u8 value) override;
-	u16 readHword(const Context& context, size_t arrayIndex) override;
-	void writeHword(const Context& context, size_t arrayIndex, u16 value) override;
-	u32 readWord(const Context& context) override;
-	void writeWord(const Context& context, u32 value) override;
+	u8 readByte(const Context_t& context, size_t arrayIndex) override;
+	void writeByte(const Context_t& context, size_t arrayIndex, u8 value) override;
+	u16 readHword(const Context_t& context, size_t arrayIndex) override;
+	void writeHword(const Context_t& context, size_t arrayIndex, u16 value) override;
+	u32 readWord(const Context_t& context) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 	/*
 	Initalise register (initalise underlying register).

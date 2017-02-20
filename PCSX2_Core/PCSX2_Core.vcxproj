@@ -327,7 +327,8 @@
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
-    <ClInclude Include="Source\Common\Global\Context.h" />
+    <ClInclude Include="Source\Common\Types\Context_t.h" />
+    <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
@@ -348,11 +349,10 @@
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
-    <ClInclude Include="Source\Resources\GS\PCRTC\PCRTC_t.h" />
-    <ClInclude Include="Source\Resources\Clock\Types\ClockSource_t.h" />
-    <ClInclude Include="Source\VM\Systems\GS\PCRTC\PCRTC_s.h" />
-    <ClInclude Include="Source\VM\Types\ClockEvent_t.h" />
-    <ClInclude Include="Source\VM\Types\System.h" />
+    <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
+    <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
+    <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
+    <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\IOPDmac_t.h" />
@@ -486,7 +486,7 @@
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\GS\PCRTC\PCRTC_t.cpp" />
+    <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
@@ -530,7 +530,7 @@
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />
-    <ClCompile Include="Source\VM\Systems\GS\PCRTC\PCRTC_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.cpp" />

@@ -66,7 +66,7 @@ Memory_t::~Memory_t()
 	delete[] mStorage;
 }
 
-u8 Memory_t::readByte(const Context& context, size_t storageIndex)
+u8 Memory_t::readByte(const Context_t& context, size_t storageIndex)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -86,7 +86,7 @@ u8 Memory_t::readByte(const Context& context, size_t storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
+void Memory_t::writeByte(const Context_t& context, size_t storageIndex, u8 value)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mStorage[storageIndex]);
@@ -106,7 +106,7 @@ void Memory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
 #endif
 }
 
-u16 Memory_t::readHword(const Context& context, size_t storageIndex)
+u16 Memory_t::readHword(const Context_t& context, size_t storageIndex)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -126,7 +126,7 @@ u16 Memory_t::readHword(const Context& context, size_t storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeHword(const Context& context, size_t storageIndex, u16 value)
+void Memory_t::writeHword(const Context_t& context, size_t storageIndex, u16 value)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mStorage[storageIndex]);
@@ -146,7 +146,7 @@ void Memory_t::writeHword(const Context& context, size_t storageIndex, u16 value
 #endif
 }
 
-u32 Memory_t::readWord(const Context& context, size_t storageIndex)
+u32 Memory_t::readWord(const Context_t& context, size_t storageIndex)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -166,7 +166,7 @@ u32 Memory_t::readWord(const Context& context, size_t storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
+void Memory_t::writeWord(const Context_t& context, size_t storageIndex, u32 value)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mStorage[storageIndex]);
@@ -186,7 +186,7 @@ void Memory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
 #endif
 }
 
-u64 Memory_t::readDword(const Context& context, size_t storageIndex)
+u64 Memory_t::readDword(const Context_t& context, size_t storageIndex)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -206,7 +206,7 @@ u64 Memory_t::readDword(const Context& context, size_t storageIndex)
 	return *hostMemoryAddress;
 }
 
-void Memory_t::writeDword(const Context& context, size_t storageIndex, u64 value)
+void Memory_t::writeDword(const Context_t& context, size_t storageIndex, u64 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -226,7 +226,7 @@ void Memory_t::writeDword(const Context& context, size_t storageIndex, u64 value
 #endif
 }
 
-u128 Memory_t::readQword(const Context& context, size_t storageIndex)
+u128 Memory_t::readQword(const Context_t& context, size_t storageIndex)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);
@@ -247,7 +247,7 @@ u128 Memory_t::readQword(const Context& context, size_t storageIndex)
 	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
 }
 
-void Memory_t::writeQword(const Context& context, size_t storageIndex, u128 value)
+void Memory_t::writeQword(const Context_t& context, size_t storageIndex, u128 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mStorage[storageIndex]);

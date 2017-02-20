@@ -44,7 +44,7 @@ IOPDmacRegister_ICR_t::IOPDmacRegister_ICR_t(const char* mnemonic) :
 	registerField(Fields::IRQMASTER, "IRQMASTER", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR_t::writeWord(const Context& context, u32 value)
+void IOPDmacRegister_ICR_t::writeWord(const Context_t& context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	if (context == IOP)

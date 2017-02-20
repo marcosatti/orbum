@@ -53,7 +53,8 @@ void EETimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
 }
 
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
-	mCount(count)
+	mCount(count),
+	mClockSource(ClockSource_t::EEBusClock)
 {
 	registerField(Fields::CLKS, "CLKS", 0, 2, 0);
 	registerField(Fields::GATE, "GATE", 2, 1, 0);
@@ -67,7 +68,7 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_MODE_t::writeWord(const Context & context, u32 value)
+void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	if (context == EE)
@@ -100,7 +101,7 @@ void EETimersTimerRegister_MODE_t::handleClockSourceUpdate()
 {
 	if (getFieldValue(Fields::CLKS) == 0x3)
 	{
-		mClockSource = ClockSource_t::HBlank;
+		mClockSource = ClockSource_t::HBlankClock;
 	}
 	else
 	{

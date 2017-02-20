@@ -4,8 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
-
-#include "Resources/Clock/Types/ClockSource_t.h"
+#include "Common/Types/ClockSource_t.h"
 
 /*
 The Timer Count register type.
@@ -87,8 +86,8 @@ public:
 	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.
 	Also resets the count register on write.
 	*/
-	void writeHword(const Context& context, size_t arrayIndex, u16 value) override;
-	void writeWord(const Context& context, u32 value) override;
+	void writeHword(const Context_t& context, size_t arrayIndex, u16 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 
 	/*

@@ -14,8 +14,8 @@
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 #include "Resources/GS/GS_t.h"
 
-EETimers_s::EETimers_s(VM * vmMain) :
-	VMSystem_s(vmMain),
+EETimers_s::EETimers_s(VM * vm) :
+	VMSystem_s(vm, System_t::EETimers),
 	mTimerIndex(0), 
 	mTimer(nullptr)
 {
@@ -29,31 +29,7 @@ EETimers_s::~EETimers_s()
 {
 }
 
-void EETimers_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int EETimers_s::step(const ClockEvent_t& event)
+int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Update the timers which are set to count based on the type of event recieved.
 	for (mTimerIndex = 0; mTimerIndex < Constants::EE::Timers::NUMBER_TIMERS; mTimerIndex++)
@@ -66,7 +42,7 @@ int EETimers_s::step(const ClockEvent_t& event)
 			continue;
 
 		// Check if the timer mode is equal to the clock source.
-		if (event.mClockSource == mTimer->MODE->getClockSource())
+		if (clockSource == mTimer->MODE->getClockSource())
 		{
 			// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
 			//  in which case count normally.

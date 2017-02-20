@@ -4,13 +4,8 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 
-#include "VM/VM.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 
@@ -155,11 +150,11 @@ void VUInterpreter_s::ADDAbc_3()
 void VUInterpreter_s::SUB()
 {
 	// Fd = Fs - Ft.
-	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFd()];
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()]; 
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFt()]; 
-	auto& MAC = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MAC;
-	auto& Status = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->Status;
+	auto& destReg = mVuUnit->VF[mInstruction.getFd()];
+	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VF[mInstruction.getFt()];
+	auto& MAC = mVuUnit->MAC;
+	auto& Status = mVuUnit->Status;
 
 	Status->clearFlags();
 

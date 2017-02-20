@@ -14,12 +14,10 @@ See https://en.wikipedia.org/wiki/PlayStation_technical_specifications and https
 class IOPIntc_s : public VMSystem_s
 {
 public:
-	explicit IOPIntc_s(VM * vmMain);
+	explicit IOPIntc_s(VM * vm);
 	virtual ~IOPIntc_s();
 
-	void run(const double & time) override;
-
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

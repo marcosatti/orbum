@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <thread>
-#include <map>
+#include <vector>
+
+#include "Common/Types/EnumMap_t.h"
 
 #include "VM/Types/VMOptions.h"
 #include "VM/Types/VMSystem_s.h"
@@ -10,7 +12,6 @@
 class Resources_t;
 class VUInterpreter_s;
 class VIF_s;
-class VM;
 class EECoreInterpreter_s;
 class EEDmac_s;
 class EEIntc_s;
@@ -48,7 +49,6 @@ public:
 	const VMStatus & getStatus() const;
 	void setStatus(const VMStatus & status);
 	const std::shared_ptr<Resources_t> & getResources() const;
-	const std::shared_ptr<VMSystem_s> & getSystem(const System & system);
 
 private:
 	/*
@@ -61,7 +61,7 @@ private:
 	/*
 	PS2 systems / components.
 	*/
-	std::map<System, std::shared_ptr<VMSystem_s>> mSystems;
+	EnumMap_t<System_t, std::shared_ptr<VMSystem_s>> mSystems;
 
 	/*
 	Threading resources.

@@ -4,8 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
-
-#include "Resources/Clock/Types/ClockSource_t.h"
+#include "Common/Types/ClockSource_t.h"
 
 /*
 The Timer Count register type. See EE Users Manual page 37.
@@ -66,7 +65,7 @@ public:
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
 	 will also reset the count register if CUE is 1 (both EE context only).
 	*/
-	void writeWord(const Context & context, u32 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
 	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.

@@ -1,42 +1,26 @@
 #include "stdafx.h"
 
+#include "VM/VM.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-VUInterpreter_s::VUInterpreter_s(VM* vmMain, u32 vuUnitIndex) :
-	VMSystem_s(vmMain),
+#include "Resources/Resources_t.h"
+#include "Resources/EE/EE_t.h"
+#include "Resources/EE/VPU/VPU_t.h"
+#include "Resources/EE/VPU/VU/VU_t.h"
+#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
+
+VUInterpreter_s::VUInterpreter_s(VM * vm, u32 vuUnitIndex) :
+	VMSystem_s(vm, vuUnitIndex == 0 ? System_t::VU0 : System_t::VU1),
 	mVUUnitIndex(vuUnitIndex)
 {
+	mVuUnit = getVM()->getResources()->EE->VPU->VU->VU_UNITS[vuUnitIndex];
 }
 
 VUInterpreter_s::~VUInterpreter_s()
 {
 }
 
-void VUInterpreter_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int VUInterpreter_s::step(const ClockEvent_t& event)
+int VUInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// TODO: Implement.
 	return 1;

@@ -4,21 +4,16 @@
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 
-#include "VM/VM.h"
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
 void VUInterpreter_s::IADD()
 {
 	// ID = IS + IT.
-	auto& source1Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // IS.
-	auto& source2Reg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // IT.
-	auto& destReg = getVM()->getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFd()]; // ID.
+	auto& source1Reg = mVuUnit->VI[mInstruction.getFs()]; // IS.
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // IT.
+	auto& destReg = mVuUnit->VI[mInstruction.getFd()]; // ID.
 
 	destReg->writeHword(EE, source1Reg->readHword(EE) + source2Reg->readHword(EE));
 }

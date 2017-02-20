@@ -3,10 +3,13 @@
 #include "VM/VM.h"
 #include "VM/Types/VMSystem_s.h"
 
-VMSystem_s::VMSystem_s(VM * vmMain) :
+#include "Resources/Resources_t.h"
+#include "Resources/Clock/Clock_t.h"
+
+VMSystem_s::VMSystem_s(VM * vm, const System_t system) :
 	mThreadRun(false),
-	mVM(vmMain),
-	mClockEventQueue()
+	mVM(vm),
+	mSystem(system)
 {
 }
 
@@ -23,10 +26,23 @@ void VMSystem_s::initalise()
 {
 }
 
+void VMSystem_s::run()
+{
+	auto& Clock = getVM()->getResources()->Clock;
+	for (const auto& clockState : Clock->getSystemClockTicks(mSystem))
+	{
+		int ticks = static_cast<int>(clockState.second);
+		if (ticks > 0)
+		{
+			Clock->subSystemClockTicks(mSystem, clockState.first, ticks);
+			while (ticks > 0)
+				ticks -= step(clockState.first, ticks);
+		}
+	}
+}
+
 void VMSystem_s::threadLoop()
 {
-	throw std::runtime_error("VM MT mode needs reworking.");
-	/*
 	mThreadRun = false;
 	std::unique_lock<std::mutex> lock(mThreadMutex);
 
@@ -36,10 +52,9 @@ void VMSystem_s::threadLoop()
 		mThreadSync.wait(lock, [this]() { return mThreadRun; });
 
 		// Execute ticks.
-		executeTicks();
+		run();
 
 		// Finished, wait for control thread again.
 		mThreadRun = false;
 	}
-	*/
 }

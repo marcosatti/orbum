@@ -16,15 +16,13 @@ For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the
 class VIF_s : public VMSystem_s
 {
 public:
-	explicit VIF_s(VM * vmMain, u32 vifUnitIndex);
+	explicit VIF_s(VM * vm, u32 vifUnitIndex);
 	virtual ~VIF_s();
-
-	void run(const double & time) override;
 
 	/*
 	Check the FIFO queue and process data if available.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 

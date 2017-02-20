@@ -20,7 +20,7 @@ public:
 	/*
 	Returns the register value, and sets it to 0 after (IOP context only).
 	*/
-	u32 readWord(const Context& context) override;
+	u32 readWord(const Context_t& context) override;
 };
 
 /*
@@ -110,5 +110,5 @@ public:
 	AND's the new value with old value (IOP context only).
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 };

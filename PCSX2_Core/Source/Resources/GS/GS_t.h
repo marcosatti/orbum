@@ -2,7 +2,7 @@
 
 #include <memory>
 
-class PCRTC_t;
+class CRTC_t;
 class Register64_t;
 class ConstantMemory_t;
 
@@ -17,7 +17,7 @@ public:
 	/*
 	PCRTC resources.
 	*/
-	std::shared_ptr<PCRTC_t> PCRTC;
+	std::shared_ptr<CRTC_t> CRTC;
 
 	/*
 	GS privileged registers, defined on page 26 onwards of the EE Users Manual. All start from PS2 physical address 0x12000000 to 0x14000000.

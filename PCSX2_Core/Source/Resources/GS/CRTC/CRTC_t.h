@@ -4,15 +4,13 @@
 
 #include "Common/Global/Globals.h"
 
-struct VideoTimingInfo_t;
-
 /*
-PCRTC resources.
+CRTC resources.
 */
-class PCRTC_t
+class CRTC_t
 {
 public:
-	explicit PCRTC_t();
+	explicit CRTC_t();
 
 };
 

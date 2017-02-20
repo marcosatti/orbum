@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 A simple storage object which is constructed to the size specified, and optional name (mnemonic) which is used for debugging/logging.
@@ -28,16 +29,16 @@ public:
 	/*
 	Read or write a value of a given type, to the specified byte index (storageIndex).
 	*/
-	virtual u8 readByte(const Context & context, size_t storageIndex);
-	virtual void writeByte(const Context & context, size_t storageIndex, u8 value);
-	virtual u16 readHword(const Context & context, size_t storageIndex);
-	virtual void writeHword(const Context & context, size_t storageIndex, u16 value);
-	virtual u32 readWord(const Context & context, size_t storageIndex);
-	virtual void writeWord(const Context & context, size_t storageIndex, u32 value);
-	virtual u64 readDword(const Context & context, size_t storageIndex);
-	virtual void writeDword(const Context & context, size_t storageIndex, u64 value);
-	virtual u128 readQword(const Context & context, size_t storageIndex);
-	virtual void writeQword(const Context & context, size_t storageIndex, u128 value);
+	virtual u8 readByte(const Context_t & context, size_t storageIndex);
+	virtual void writeByte(const Context_t & context, size_t storageIndex, u8 value);
+	virtual u16 readHword(const Context_t & context, size_t storageIndex);
+	virtual void writeHword(const Context_t & context, size_t storageIndex, u16 value);
+	virtual u32 readWord(const Context_t & context, size_t storageIndex);
+	virtual void writeWord(const Context_t & context, size_t storageIndex, u32 value);
+	virtual u64 readDword(const Context_t & context, size_t storageIndex);
+	virtual void writeDword(const Context_t & context, size_t storageIndex, u64 value);
+	virtual u128 readQword(const Context_t & context, size_t storageIndex);
+	virtual void writeQword(const Context_t & context, size_t storageIndex, u128 value);
 
 	/*
 	Gets the storage length.

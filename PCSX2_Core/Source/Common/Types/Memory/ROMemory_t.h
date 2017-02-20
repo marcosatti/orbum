@@ -15,9 +15,9 @@ public:
 	/*
 	All writes are discarded - this is a silent discard!
 	*/
-	void writeByte(const Context& context, size_t storageIndex, u8 value) override;
-	void writeHword(const Context& context, size_t storageIndex, u16 value) override;
-	void writeWord(const Context& context, size_t storageIndex, u32 value) override;
-	void writeDword(const Context& context, size_t storageIndex, u64 value) override;
-	void writeQword(const Context& context, size_t storageIndex, u128 value) override;
+	void writeByte(const Context_t& context, size_t storageIndex, u8 value) override;
+	void writeHword(const Context_t& context, size_t storageIndex, u16 value) override;
+	void writeWord(const Context_t& context, size_t storageIndex, u32 value) override;
+	void writeDword(const Context_t& context, size_t storageIndex, u64 value) override;
+	void writeQword(const Context_t& context, size_t storageIndex, u128 value) override;
 };

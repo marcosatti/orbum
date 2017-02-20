@@ -283,12 +283,10 @@
       <Filter>Source\Common\PS2 Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\VM\Types\VMOptions.h" />
-    <ClInclude Include="Source\Common\Global\Context.h" />
     <ClInclude Include="Source\Common\Global\Log.h" />
     <ClInclude Include="Source\VM\VM.h">
       <Filter>Source\VM</Filter>
     </ClInclude>
-    <ClInclude Include="Source\VM\Types\System.h" />
     <ClInclude Include="Source\VM\Types\VMSystem_s.h" />
     <ClInclude Include="Source\VM\Systems\EE\DMAC\EEDmac_s.h" />
     <ClInclude Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.h">
@@ -302,11 +300,13 @@
     <ClInclude Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.h" />
     <ClInclude Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_s.h" />
     <ClInclude Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.h" />
-    <ClInclude Include="Source\VM\Types\ClockEvent_t.h" />
-    <ClInclude Include="Source\VM\Systems\GS\PCRTC\PCRTC_s.h" />
     <ClInclude Include="Source\VM\Systems\GS\GSCore\GSCore_s.h" />
-    <ClInclude Include="Source\Resources\GS\PCRTC\PCRTC_t.h" />
-    <ClInclude Include="Source\Resources\Clock\Types\ClockSource_t.h" />
+    <ClInclude Include="Source\Common\Types\System_t.h" />
+    <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
+    <ClInclude Include="Source\Common\Types\Context_t.h" />
+    <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
+    <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
+    <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -500,9 +500,9 @@
     <ClCompile Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
-    <ClCompile Include="Source\VM\Systems\GS\PCRTC\PCRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
-    <ClCompile Include="Source\Resources\GS\PCRTC\PCRTC_t.cpp" />
+    <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

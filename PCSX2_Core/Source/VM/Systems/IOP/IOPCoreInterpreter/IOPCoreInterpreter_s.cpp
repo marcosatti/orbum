@@ -23,8 +23,8 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include <Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h>
 
-IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vmMain) :
-	VMSystem_s(vmMain),
+IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPCore),
 	mInstructionInfo(nullptr)
 {
 	mIOPCore = getVM()->getResources()->IOP->IOPCore;
@@ -41,31 +41,7 @@ void IOPCoreInterpreter_s::initalise()
 	handleException(IOPCoreException_t::EX_RESET);
 }
 
-void IOPCoreInterpreter_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::IOPCoreClock,
-		time / 1.0e6 * Constants::IOP::IOPCore::IOPCORE_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int IOPCoreInterpreter_s::step(const ClockEvent_t& event)
+int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
 
@@ -84,7 +60,7 @@ int IOPCoreInterpreter_s::step(const ClockEvent_t& event)
 	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x1b8415; // 0x1b5aff;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000000; //0x1b8415; // 0x1b5aff;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0; // 0x2dc8;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 

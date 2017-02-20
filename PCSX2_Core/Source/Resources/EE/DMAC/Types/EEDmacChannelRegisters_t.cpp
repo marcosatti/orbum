@@ -95,7 +95,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context& context, u32 value)
+void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
@@ -154,7 +154,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context& context, u32 value)
+void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
@@ -213,7 +213,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context& context, u32 value)
+void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);

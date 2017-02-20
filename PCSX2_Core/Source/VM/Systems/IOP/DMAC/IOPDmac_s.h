@@ -19,15 +19,13 @@ TODO: finish documentation.
 class IOPDmac_s : public VMSystem_s
 {
 public:
-	explicit IOPDmac_s(VM * vmMain);
+	explicit IOPDmac_s(VM * vm);
 	virtual ~IOPDmac_s();
-
-	void run(const double & time) override;
 
 	/*
 	Check through the channels and initate data transfers.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

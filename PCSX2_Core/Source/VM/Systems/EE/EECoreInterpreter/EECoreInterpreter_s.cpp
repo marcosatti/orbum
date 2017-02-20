@@ -28,8 +28,8 @@
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EECoreInterpreter_s::EECoreInterpreter_s(VM * vmMain, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
-	VMSystem_s(vmMain),
+EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
+	VMSystem_s(vm, System_t::EECore),
 	mInstructionInfo(nullptr),
 	mVU0Interpreter(vuInterpreter), 
 	mException(), 
@@ -50,31 +50,7 @@ void EECoreInterpreter_s::initalise()
 	handleException(EECoreException_t::EX_RESET);
 }
 
-void EECoreInterpreter_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int EECoreInterpreter_s::step(const ClockEvent_t& event)
+int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	mEECore->R5900->BD->handleBranchDelay();

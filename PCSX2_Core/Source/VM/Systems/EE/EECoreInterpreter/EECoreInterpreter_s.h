@@ -19,10 +19,7 @@ class VuUnit_VU0_t;
 class PhysicalMMU_t;
 
 /*
-The EE Core interpreter.
-
-This also acts as the control for synchronisation across components, as this is the fastest clocked device in the PS2 (294 MHz).
-Each time executionStep() is run, PS2Resources->Clock->updateClocks() is also run, which updates other clock sources such as the BUSCLK.
+The EE Core interpreter. Implements the EE Core including the R5900, COP0, FPU (COP1), etc.
 
 Needs a reference to the VU0 interpreter, which is called upon when any of the COP2 instructions starting with V* mnemonics are called.
 This is done in order to avoid reimplementing the same function twice.
@@ -32,7 +29,7 @@ TODO: Finish documentation.
 class EECoreInterpreter_s : public VMSystem_s
 {
 public:
-	explicit EECoreInterpreter_s(VM * vmMain, const std::shared_ptr<VUInterpreter_s> & vuInterpreter);
+	explicit EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter);
 	virtual ~EECoreInterpreter_s();
 
 	/*
@@ -40,12 +37,10 @@ public:
 	*/
 	void initalise() override;
 
-	void run(const double & time) override;
-
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
 	*/
-	int step(const ClockEvent_t& event) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 

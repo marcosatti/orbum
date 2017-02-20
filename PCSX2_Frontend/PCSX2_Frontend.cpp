@@ -53,12 +53,7 @@ int main()
 		"",
 		10,
 		MTmode,
-		{   
-			{EECore, 1.0},    {EEDmac, 1.0},  {EETimers, 1.0}, {EEIntc, 1.0}, 
-			{GIF, 1.0},       {IPU, 1.0},     {VIF0, 1.0},     {VU0, 1.0},   
-			{VIF1, 1.0},      {VU1, 1.0},     {IOPCore, 1.0},  {IOPDmac, 1.0},
-			{IOPTimers, 1.0}, {IOPIntc, 1.0}, {CDVD, 1.0},     {GSCore, 1.0},  {PCRTC, 1.0}
-		}
+		{ }
 	};
 
 	try 

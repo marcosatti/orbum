@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 /*
 Register type and size definitions.
@@ -39,10 +40,10 @@ public:
 	Read/write functions to access the register, with subclassed functionality.
 	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	*/
-	virtual u8 readByte(const Context & context, size_t arrayIndex);
-	virtual void writeByte(const Context & context, size_t arrayIndex, u8 value);
-	virtual u16 readHword(const Context & context);
-	virtual void writeHword(const Context & context, u16 value);
+	virtual u8 readByte(const Context_t & context, size_t arrayIndex);
+	virtual void writeByte(const Context_t & context, size_t arrayIndex, u8 value);
+	virtual u16 readHword(const Context_t & context);
+	virtual void writeHword(const Context_t & context, u16 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <queue>
 #include <mutex>
 
-#include "VM/Types/ClockEvent_t.h"
+#include "Common/Types/System_t.h"
+#include "Common/Types/ClockSource_t.h"
 
 class VM;
+class Clock_t;
 
 /*
 Base class for a VM system component.
@@ -13,7 +14,7 @@ Base class for a VM system component.
 class VMSystem_s
 {
 public:
-	explicit VMSystem_s(VM * vmMain);
+	explicit VMSystem_s(VM * vm, const System_t system);
 	virtual ~VMSystem_s();
 
 	/*
@@ -27,16 +28,14 @@ public:
 	virtual void initalise();
 
 	/*
-	Adds VM time that is available to be consumed by the system.
+	Runs the system logic for each clock source event by looping through the step function.
 	*/
-	virtual void run(const double & time) = 0;
+	void run();
 
 	/*
-	Runs the system logic for the given clock source.
+	Steps the system logic for the given clock source.
 	*/
-	virtual int step(const ClockEvent_t & event) = 0;
-
-	std::queue<ClockEvent_t> mClockEventQueue;
+	virtual int step(const ClockSource_t clockSource, const int ticksAvailable) = 0;
 
 	/*
 	Threading resources.
@@ -52,4 +51,5 @@ private:
 	VM resources.
 	*/
 	VM * mVM;
+	System_t mSystem;
 };

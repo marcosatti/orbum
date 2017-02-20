@@ -13,8 +13,8 @@
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPTimers_s::IOPTimers_s(VM* vmMain) :
-	VMSystem_s(vmMain),
+IOPTimers_s::IOPTimers_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPTimers),
 	mTimerIndex(0),
 	mTimer(nullptr)
 {
@@ -27,31 +27,7 @@ IOPTimers_s::~IOPTimers_s()
 {
 }
 
-void IOPTimers_s::run(const double& time)
-{
-	// Create VM tick event.
-	ClockEvent_t vmClockEvent =
-	{
-		ClockSource_t::EEBusClock,
-		time / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED
-	};
-	mClockEventQueue.push(vmClockEvent);
-
-	// Run through events.
-	while (!mClockEventQueue.empty())
-	{
-		auto event = mClockEventQueue.front();
-		mClockEventQueue.pop();
-
-		while (event.mNumberTicks >= 1)
-		{
-			auto ticks = step(event);
-			event.mNumberTicks -= ticks;
-		}
-	}
-}
-
-int IOPTimers_s::step(const ClockEvent_t& event)
+int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Update the timers which are set to count based on the type of event recieved.
 	for (mTimerIndex = 0; mTimerIndex < Constants::IOP::Timers::NUMBER_TIMERS; mTimerIndex++)
@@ -66,7 +42,7 @@ int IOPTimers_s::step(const ClockEvent_t& event)
 			continue;
 
 		// Check if the timer mode is equal to the clock source.
-		if (event.mClockSource == mTimer->MODE->getClockSource())
+		if (clockSource == mTimer->MODE->getClockSource())
 		{
 			// Next check for the gate function.
 			if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
