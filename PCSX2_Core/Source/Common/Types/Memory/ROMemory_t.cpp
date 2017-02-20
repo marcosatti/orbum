@@ -12,27 +12,27 @@ ROMemory_t::~ROMemory_t()
 {
 }
 
-void ROMemory_t::writeByte(const Context& context, size_t storageIndex, u8 value)
+void ROMemory_t::writeByte(const Context_t& context, size_t storageIndex, u8 value)
 {
 	// Do not write (read only).
 }
 
-void ROMemory_t::writeHword(const Context& context, size_t storageIndex, u16 value)
+void ROMemory_t::writeHword(const Context_t& context, size_t storageIndex, u16 value)
 {
 	// Do not write (read only).
 }
 
-void ROMemory_t::writeWord(const Context& context, size_t storageIndex, u32 value)
+void ROMemory_t::writeWord(const Context_t& context, size_t storageIndex, u32 value)
 {
 	// Do not write (read only).
 }
 
-void ROMemory_t::writeDword(const Context& context, size_t storageIndex, u64 value)
+void ROMemory_t::writeDword(const Context_t& context, size_t storageIndex, u64 value)
 {
 	// Do not write (read only).
 }
 
-void ROMemory_t::writeQword(const Context& context, size_t storageIndex, u128 value)
+void ROMemory_t::writeQword(const Context_t& context, size_t storageIndex, u128 value)
 {
 	// Do not write (read only).
 }

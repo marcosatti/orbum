@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::DIV()
+void EECoreInterpreter_s::DIV()
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
@@ -46,13 +46,13 @@ void EECoreInterpreter::DIV()
 	}
 }
 
-void EECoreInterpreter::DIV1()
+void EECoreInterpreter_s::DIV1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIV();
 }
 
-void EECoreInterpreter::DIVU()
+void EECoreInterpreter_s::DIVU()
 {
 	// (LO, HI) = SignExtend<u64>(Rs[UW] / Rt[UW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -83,13 +83,13 @@ void EECoreInterpreter::DIVU()
 	}
 }
 
-void EECoreInterpreter::DIVU1()
+void EECoreInterpreter_s::DIVU1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIVU();
 }
 
-void EECoreInterpreter::MULT()
+void EECoreInterpreter_s::MULT()
 {
 	// (Rd, LO, HI) = SignExtend<s64>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -109,13 +109,13 @@ void EECoreInterpreter::MULT()
 	HI->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(result >> 32)));
 }
 
-void EECoreInterpreter::MULT1()
+void EECoreInterpreter_s::MULT1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MULT();
 }
 
-void EECoreInterpreter::MULTU()
+void EECoreInterpreter_s::MULTU()
 {
 	// (LO, HI) = Rs[UW] * Rt[UW]
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
@@ -135,13 +135,13 @@ void EECoreInterpreter::MULTU()
 	HI->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result >> 32)));
 }
 
-void EECoreInterpreter::MULTU1()
+void EECoreInterpreter_s::MULTU1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MULTU();
 }
 
-void EECoreInterpreter::PDIVBW()
+void EECoreInterpreter_s::PDIVBW()
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SH,0]) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
@@ -183,7 +183,7 @@ void EECoreInterpreter::PDIVBW()
 	}
 }
 
-void EECoreInterpreter::PDIVUW()
+void EECoreInterpreter_s::PDIVUW()
 {
 	// (LO, HI)(0,1) = SignExtend<u64>(Rs[UW](0,2) / Rt[UW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -217,7 +217,7 @@ void EECoreInterpreter::PDIVUW()
 	}
 }
 
-void EECoreInterpreter::PDIVW()
+void EECoreInterpreter_s::PDIVW()
 {
 	// (LO, HI)(0,1) = SignExtend<s64>(Rs[SW](0,2) / Rt[SW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
@@ -258,7 +258,7 @@ void EECoreInterpreter::PDIVW()
 	}
 }
 
-void EECoreInterpreter::PMULTH()
+void EECoreInterpreter_s::PMULTH()
 {
 	// (LO, HI, Rd) = SignExtend<s32>(Rs[SH] * Rt[SH]) (varying indexes - see EE Core Instruction Manual page 246).
 	// No Exceptions generated.
@@ -284,7 +284,7 @@ void EECoreInterpreter::PMULTH()
 	}
 }
 
-void EECoreInterpreter::PMULTUW()
+void EECoreInterpreter_s::PMULTUW()
 {
 	// (LO, HI, Rd) = SignExtend<u64>(Rs[UW] * Rt[UW]) (varying indexes - see EE Core Instruction Manual page 248).
 	// No Exceptions generated.
@@ -306,7 +306,7 @@ void EECoreInterpreter::PMULTUW()
 	}
 }
 
-void EECoreInterpreter::PMULTW()
+void EECoreInterpreter_s::PMULTW()
 {
 	// (LO, HI, Rd) = SignExtend<s64>(Rs[SW] * Rt[SW]) (varying indexes - see EE Core Instruction Manual page 250).
 	// No Exceptions generated.

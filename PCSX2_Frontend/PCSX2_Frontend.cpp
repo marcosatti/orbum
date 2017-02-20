@@ -12,11 +12,15 @@
 #include "VM/Types/VMOptions.h"
 
 std::ofstream logFile;
+bool MTmode = false;
 
 void log(const LogLevel_t level, const std::string message)
 {
-	static std::mutex mtx;
-	std::lock_guard<std::mutex> lock(mtx);
+	if (MTmode)
+	{
+		static std::mutex mtx;
+		std::lock_guard<std::mutex> lock(mtx);
+	}
 
 	std::string prefix;
 	switch (level)
@@ -47,20 +51,9 @@ int main()
 		"",
 		"",
 		"",
-		50,
-		true,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0,
-		1.0, 
-		1.0,
-		1.0,
+		10,
+		MTmode,
+		{ }
 	};
 
 	try 

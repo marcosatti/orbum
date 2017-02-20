@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::ADD()
+void EECoreInterpreter_s::ADD()
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -26,7 +26,7 @@ void EECoreInterpreter::ADD()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::ADDI()
+void EECoreInterpreter_s::ADDI()
 {
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -43,7 +43,7 @@ void EECoreInterpreter::ADDI()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::ADDIU()
+void EECoreInterpreter_s::ADDIU()
 {
 	// Rt = Rs + Imm (signed).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -56,7 +56,7 @@ void EECoreInterpreter::ADDIU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::ADDU()
+void EECoreInterpreter_s::ADDU()
 {
 	// Rd = Rs + Rt
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -70,7 +70,7 @@ void EECoreInterpreter::ADDU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DADD()
+void EECoreInterpreter_s::DADD()
 {
 	// Rd = Rs + Rt (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -88,7 +88,7 @@ void EECoreInterpreter::DADD()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DADDI()
+void EECoreInterpreter_s::DADDI()
 {
 	// Rt = Rs + Imm (signed) (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -105,7 +105,7 @@ void EECoreInterpreter::DADDI()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DADDIU()
+void EECoreInterpreter_s::DADDIU()
 {
 	// Rt = Rs + Imm (signed).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
@@ -118,7 +118,7 @@ void EECoreInterpreter::DADDIU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DADDU()
+void EECoreInterpreter_s::DADDU()
 {
 	// Rd = Rs + Rt
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -132,7 +132,7 @@ void EECoreInterpreter::DADDU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DSUB()
+void EECoreInterpreter_s::DSUB()
 {
 	// Rd = Rs - Rt (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -150,7 +150,7 @@ void EECoreInterpreter::DSUB()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::DSUBU()
+void EECoreInterpreter_s::DSUBU()
 {
 	// Rd = Rs - Rt
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -164,7 +164,7 @@ void EECoreInterpreter::DSUBU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SUB()
+void EECoreInterpreter_s::SUB()
 {
 	// Rd = Rs - Rt (Exception on Integer Overflow).
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -182,7 +182,7 @@ void EECoreInterpreter::SUB()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::SUBU()
+void EECoreInterpreter_s::SUBU()
 {
 	// Rd = Rs - Rt
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -196,7 +196,7 @@ void EECoreInterpreter::SUBU()
 	destReg->writeDword(EE, 0, result);
 }
 
-void EECoreInterpreter::PADDB()
+void EECoreInterpreter_s::PADDB()
 {
 	// Parallel Rd[SB] = Rs[SB] + Rt[SB]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -212,7 +212,7 @@ void EECoreInterpreter::PADDB()
 	}
 }
 
-void EECoreInterpreter::PADDH()
+void EECoreInterpreter_s::PADDH()
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -228,7 +228,7 @@ void EECoreInterpreter::PADDH()
 	}
 }
 
-void EECoreInterpreter::PADDSB()
+void EECoreInterpreter_s::PADDSB()
 {
 	// Parallel Rd[SB] = Rs[SB] + Rt[SB] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -250,7 +250,7 @@ void EECoreInterpreter::PADDSB()
 	}
 }
 
-void EECoreInterpreter::PADDSH()
+void EECoreInterpreter_s::PADDSH()
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -272,7 +272,7 @@ void EECoreInterpreter::PADDSH()
 	}
 }
 
-void EECoreInterpreter::PADDSW()
+void EECoreInterpreter_s::PADDSW()
 {
 	// Parallel Rd[SW] = Rs[SW] + Rt[SW] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -294,7 +294,7 @@ void EECoreInterpreter::PADDSW()
 	}
 }
 
-void EECoreInterpreter::PADDUB()
+void EECoreInterpreter_s::PADDUB()
 {
 	// Parallel Rd[UB] = Rs[UB] + Rt[UB]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -314,7 +314,7 @@ void EECoreInterpreter::PADDUB()
 	}
 }
 
-void EECoreInterpreter::PADDUH()
+void EECoreInterpreter_s::PADDUH()
 {
 	// Parallel Rd[UH] = Rs[UH] + Rt[UH]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -334,7 +334,7 @@ void EECoreInterpreter::PADDUH()
 	}
 }
 
-void EECoreInterpreter::PADDUW()
+void EECoreInterpreter_s::PADDUW()
 {
 	// Parallel Rd[UW] = Rs[UW] + Rt[UW] 
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -354,7 +354,7 @@ void EECoreInterpreter::PADDUW()
 	}
 }
 
-void EECoreInterpreter::PADDW()
+void EECoreInterpreter_s::PADDW()
 {
 	// Parallel Rd[SW] = Rs[SW] + Rt[SW]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -370,7 +370,7 @@ void EECoreInterpreter::PADDW()
 	}
 }
 
-void EECoreInterpreter::PADSBH()
+void EECoreInterpreter_s::PADSBH()
 {
 	// Parallel Rd[SH] = Rs[SH] -/+ Rt[SH] (minus for lower hwords, plus for higher hwords)
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -393,7 +393,7 @@ void EECoreInterpreter::PADSBH()
 	}
 }
 
-void EECoreInterpreter::PSUBB()
+void EECoreInterpreter_s::PSUBB()
 {
 	// Parallel Rd[SB] = Rs[SB] - Rt[SB]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -409,7 +409,7 @@ void EECoreInterpreter::PSUBB()
 	}
 }
 
-void EECoreInterpreter::PSUBH()
+void EECoreInterpreter_s::PSUBH()
 {
 	// Parallel Rd[SH] = Rs[SH] - Rt[SH]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -425,7 +425,7 @@ void EECoreInterpreter::PSUBH()
 	}
 }
 
-void EECoreInterpreter::PSUBSB()
+void EECoreInterpreter_s::PSUBSB()
 {
 	// Parallel Rd[SB] = Rs[SB] - Rt[SB] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -447,7 +447,7 @@ void EECoreInterpreter::PSUBSB()
 	}
 }
 
-void EECoreInterpreter::PSUBSH()
+void EECoreInterpreter_s::PSUBSH()
 {
 	// Parallel Rd[SH] = Rs[SH] + Rt[SH] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -469,7 +469,7 @@ void EECoreInterpreter::PSUBSH()
 	}
 }
 
-void EECoreInterpreter::PSUBSW()
+void EECoreInterpreter_s::PSUBSW()
 {
 	// Parallel Rd[SW] = Rs[SW] - Rt[SW] Saturated
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -491,7 +491,7 @@ void EECoreInterpreter::PSUBSW()
 	}
 }
 
-void EECoreInterpreter::PSUBUB()
+void EECoreInterpreter_s::PSUBUB()
 {
 	// Parallel Rd[UB] = Rs[UB] - Rt[UB]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -511,7 +511,7 @@ void EECoreInterpreter::PSUBUB()
 	}
 }
 
-void EECoreInterpreter::PSUBUH()
+void EECoreInterpreter_s::PSUBUH()
 {
 	// Parallel Rd[UH] = Rs[UH] - Rt[UH]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -531,7 +531,7 @@ void EECoreInterpreter::PSUBUH()
 	}
 }
 
-void EECoreInterpreter::PSUBUW()
+void EECoreInterpreter_s::PSUBUW()
 {
 	// Parallel Rd[UW] = Rs[UW] - Rt[UW] 
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -551,7 +551,7 @@ void EECoreInterpreter::PSUBUW()
 	}
 }
 
-void EECoreInterpreter::PSUBW()
+void EECoreInterpreter_s::PSUBW()
 {
 	// Parallel Rd[SW] = Rs[SW] - Rt[SW]
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];

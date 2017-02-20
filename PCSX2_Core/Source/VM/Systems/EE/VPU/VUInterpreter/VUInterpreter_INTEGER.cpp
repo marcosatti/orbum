@@ -4,25 +4,21 @@
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-void VUInterpreter::IADD()
+void VUInterpreter_s::IADD()
 {
 	// ID = IS + IT.
-	auto& source1Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // IS.
-	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // IT.
-	auto& destReg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFd()]; // ID.
+	auto& source1Reg = mVuUnit->VI[mInstruction.getFs()]; // IS.
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // IT.
+	auto& destReg = mVuUnit->VI[mInstruction.getFd()]; // ID.
 
 	destReg->writeHword(EE, source1Reg->readHword(EE) + source2Reg->readHword(EE));
 }
 
-void VUInterpreter::IADDI()
+void VUInterpreter_s::IADDI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -32,7 +28,7 @@ void VUInterpreter::IADDI()
 #endif
 }
 
-void VUInterpreter::IADDIU()
+void VUInterpreter_s::IADDIU()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -42,7 +38,7 @@ void VUInterpreter::IADDIU()
 #endif
 }
 
-void VUInterpreter::IAND()
+void VUInterpreter_s::IAND()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -52,7 +48,7 @@ void VUInterpreter::IAND()
 #endif
 }
 
-void VUInterpreter::IOR()
+void VUInterpreter_s::IOR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -62,7 +58,7 @@ void VUInterpreter::IOR()
 #endif
 }
 
-void VUInterpreter::ISUB()
+void VUInterpreter_s::ISUB()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -72,7 +68,7 @@ void VUInterpreter::ISUB()
 #endif
 }
 
-void VUInterpreter::ISUBIU()
+void VUInterpreter_s::ISUBIU()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

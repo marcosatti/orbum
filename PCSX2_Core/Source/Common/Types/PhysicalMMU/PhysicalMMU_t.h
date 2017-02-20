@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Context_t.h"
 
 class PhysicalMapped_t;
 class Memory_t;
@@ -87,16 +88,16 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(const Context & context, u32 PS2PhysicalAddress) const;
-	void writeByte(const Context & context, u32 PS2PhysicalAddress, u8 value) const;
-	u16 readHword(const Context & context, u32 PS2PhysicalAddress) const;
-	void writeHword(const Context & context, u32 PS2PhysicalAddress, u16 value) const;
-	u32 readWord(const Context & context, u32 PS2PhysicalAddress) const;
-	void writeWord(const Context & context, u32 PS2PhysicalAddress, u32 value) const;
-	u64 readDword(const Context & context, u32 PS2PhysicalAddress) const;
-	void writeDword(const Context & context, u32 PS2PhysicalAddress, u64 value) const;
-	u128 readQword(const Context & context, u32 PS2PhysicalAddress) const;
-	void writeQword(const Context & context, u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeByte(const Context_t & context, u32 PS2PhysicalAddress, u8 value) const;
+	u16 readHword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeHword(const Context_t & context, u32 PS2PhysicalAddress, u16 value) const;
+	u32 readWord(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeWord(const Context_t & context, u32 PS2PhysicalAddress, u32 value) const;
+	u64 readDword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeDword(const Context_t & context, u32 PS2PhysicalAddress, u64 value) const;
+	u128 readQword(const Context_t & context, u32 PS2PhysicalAddress) const;
+	void writeQword(const Context_t & context, u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*

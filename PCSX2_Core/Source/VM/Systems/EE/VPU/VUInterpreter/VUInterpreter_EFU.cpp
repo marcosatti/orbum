@@ -2,9 +2,9 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-void VUInterpreter::ESADD()
+void VUInterpreter_s::ESADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void VUInterpreter::ESADD()
 #endif
 }
 
-void VUInterpreter::ERSADD()
+void VUInterpreter_s::ERSADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void VUInterpreter::ERSADD()
 #endif
 }
 
-void VUInterpreter::ELENG()
+void VUInterpreter_s::ELENG()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void VUInterpreter::ELENG()
 #endif
 }
 
-void VUInterpreter::ERLENG()
+void VUInterpreter_s::ERLENG()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void VUInterpreter::ERLENG()
 #endif
 }
 
-void VUInterpreter::EATANxy()
+void VUInterpreter_s::EATANxy()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void VUInterpreter::EATANxy()
 #endif
 }
 
-void VUInterpreter::EATANxz()
+void VUInterpreter_s::EATANxz()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void VUInterpreter::EATANxz()
 #endif
 }
 
-void VUInterpreter::ESUM()
+void VUInterpreter_s::ESUM()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void VUInterpreter::ESUM()
 #endif
 }
 
-void VUInterpreter::ERCPR()
+void VUInterpreter_s::ERCPR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -84,7 +84,7 @@ void VUInterpreter::ERCPR()
 #endif
 }
 
-void VUInterpreter::ESQRT()
+void VUInterpreter_s::ESQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -94,7 +94,7 @@ void VUInterpreter::ESQRT()
 #endif
 }
 
-void VUInterpreter::ERSQRT()
+void VUInterpreter_s::ERSQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -104,7 +104,7 @@ void VUInterpreter::ERSQRT()
 #endif
 }
 
-void VUInterpreter::ESIN()
+void VUInterpreter_s::ESIN()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -114,7 +114,7 @@ void VUInterpreter::ESIN()
 #endif
 }
 
-void VUInterpreter::EATAN()
+void VUInterpreter_s::EATAN()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -124,7 +124,7 @@ void VUInterpreter::EATAN()
 #endif
 }
 
-void VUInterpreter::EEXP()
+void VUInterpreter_s::EEXP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

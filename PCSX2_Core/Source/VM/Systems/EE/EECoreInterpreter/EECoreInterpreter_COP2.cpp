@@ -5,14 +5,14 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-void EECoreInterpreter::QMFC2()
+void EECoreInterpreter_s::QMFC2()
 {
 	// GPR = VU0.VF. Coprocessor unusable exception.
 	if (handleCOP2Usable())
@@ -31,7 +31,7 @@ void EECoreInterpreter::QMFC2()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::QMTC2()
+void EECoreInterpreter_s::QMTC2()
 {
 	// VU0.VF = GPR. Coprocessor unusable exception.
 	if (handleCOP2Usable())
@@ -50,7 +50,7 @@ void EECoreInterpreter::QMTC2()
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
 }
 
-void EECoreInterpreter::CFC2()
+void EECoreInterpreter_s::CFC2()
 {
 	if (handleCOP2Usable())
         return;
@@ -67,7 +67,7 @@ void EECoreInterpreter::CFC2()
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readWord(EE)));
 }
 
-void EECoreInterpreter::CTC2()
+void EECoreInterpreter_s::CTC2()
 {
 	if (handleCOP2Usable())
         return;
@@ -84,7 +84,7 @@ void EECoreInterpreter::CTC2()
 	destReg->writeWord(EE, static_cast<u32>(source1Reg->readWord(EE, 0)));
 }
 
-void EECoreInterpreter::BC2F()
+void EECoreInterpreter_s::BC2F()
 {
 	if (handleCOP2Usable())
         return;
@@ -97,7 +97,7 @@ void EECoreInterpreter::BC2F()
 #endif
 }
 
-void EECoreInterpreter::BC2FL()
+void EECoreInterpreter_s::BC2FL()
 {
 	if (handleCOP2Usable())
         return;
@@ -110,7 +110,7 @@ void EECoreInterpreter::BC2FL()
 #endif
 }
 
-void EECoreInterpreter::BC2T()
+void EECoreInterpreter_s::BC2T()
 {
 	if (handleCOP2Usable())
         return;
@@ -123,7 +123,7 @@ void EECoreInterpreter::BC2T()
 #endif
 }
 
-void EECoreInterpreter::BC2TL()
+void EECoreInterpreter_s::BC2TL()
 {
 	if (handleCOP2Usable())
         return;
@@ -136,7 +136,7 @@ void EECoreInterpreter::BC2TL()
 #endif
 }
 
-void EECoreInterpreter::VCALLMS()
+void EECoreInterpreter_s::VCALLMS()
 {
 	if (handleCOP2Usable())
 		return;
@@ -149,7 +149,7 @@ void EECoreInterpreter::VCALLMS()
 #endif
 }
 
-void EECoreInterpreter::VCALLMSR()
+void EECoreInterpreter_s::VCALLMSR()
 {
 	if (handleCOP2Usable())
 		return;
@@ -162,7 +162,7 @@ void EECoreInterpreter::VCALLMSR()
 #endif
 }
 
-void EECoreInterpreter::VABS()
+void EECoreInterpreter_s::VABS()
 {
 	if (handleCOP2Usable())
         return;
@@ -171,7 +171,7 @@ void EECoreInterpreter::VABS()
 	mVU0Interpreter->ABS();
 }
 
-void EECoreInterpreter::VADD()
+void EECoreInterpreter_s::VADD()
 {
 	if (handleCOP2Usable())
         return;
@@ -180,7 +180,7 @@ void EECoreInterpreter::VADD()
 	mVU0Interpreter->ADD();
 }
 
-void EECoreInterpreter::VADDi()
+void EECoreInterpreter_s::VADDi()
 {
 	if (handleCOP2Usable())
         return;
@@ -189,7 +189,7 @@ void EECoreInterpreter::VADDi()
 	mVU0Interpreter->ADDi();
 }
 
-void EECoreInterpreter::VADDq()
+void EECoreInterpreter_s::VADDq()
 {
 	if (handleCOP2Usable())
         return;
@@ -198,7 +198,7 @@ void EECoreInterpreter::VADDq()
 	mVU0Interpreter->ADDq();
 }
 
-void EECoreInterpreter::VADDbc_0()
+void EECoreInterpreter_s::VADDbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -207,7 +207,7 @@ void EECoreInterpreter::VADDbc_0()
 	mVU0Interpreter->ADDbc_0();
 }
 
-void EECoreInterpreter::VADDbc_1()
+void EECoreInterpreter_s::VADDbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -216,7 +216,7 @@ void EECoreInterpreter::VADDbc_1()
 	mVU0Interpreter->ADDbc_1();
 }
 
-void EECoreInterpreter::VADDbc_2()
+void EECoreInterpreter_s::VADDbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -225,7 +225,7 @@ void EECoreInterpreter::VADDbc_2()
 	mVU0Interpreter->ADDbc_2();
 }
 
-void EECoreInterpreter::VADDbc_3()
+void EECoreInterpreter_s::VADDbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -234,7 +234,7 @@ void EECoreInterpreter::VADDbc_3()
 	mVU0Interpreter->ADDbc_3();
 }
 
-void EECoreInterpreter::VADDA()
+void EECoreInterpreter_s::VADDA()
 {
 	if (handleCOP2Usable())
         return;
@@ -243,7 +243,7 @@ void EECoreInterpreter::VADDA()
 	mVU0Interpreter->ADDA();
 }
 
-void EECoreInterpreter::VADDAi()
+void EECoreInterpreter_s::VADDAi()
 {
 	if (handleCOP2Usable())
         return;
@@ -252,7 +252,7 @@ void EECoreInterpreter::VADDAi()
 	mVU0Interpreter->ADDAi();
 }
 
-void EECoreInterpreter::VADDAq()
+void EECoreInterpreter_s::VADDAq()
 {
 	if (handleCOP2Usable())
         return;
@@ -261,7 +261,7 @@ void EECoreInterpreter::VADDAq()
 	mVU0Interpreter->ADDAq();
 }
 
-void EECoreInterpreter::VADDAbc_0()
+void EECoreInterpreter_s::VADDAbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -270,7 +270,7 @@ void EECoreInterpreter::VADDAbc_0()
 	mVU0Interpreter->ADDAbc_0();
 }
 
-void EECoreInterpreter::VADDAbc_1()
+void EECoreInterpreter_s::VADDAbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -279,7 +279,7 @@ void EECoreInterpreter::VADDAbc_1()
 	mVU0Interpreter->ADDAbc_1();
 }
 
-void EECoreInterpreter::VADDAbc_2()
+void EECoreInterpreter_s::VADDAbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -288,7 +288,7 @@ void EECoreInterpreter::VADDAbc_2()
 	mVU0Interpreter->ADDAbc_2();
 }
 
-void EECoreInterpreter::VADDAbc_3()
+void EECoreInterpreter_s::VADDAbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -297,7 +297,7 @@ void EECoreInterpreter::VADDAbc_3()
 	mVU0Interpreter->ADDAbc_3();
 }
 
-void EECoreInterpreter::VSUB()
+void EECoreInterpreter_s::VSUB()
 {
 	if (handleCOP2Usable())
         return;
@@ -306,7 +306,7 @@ void EECoreInterpreter::VSUB()
 	mVU0Interpreter->SUB();
 }
 
-void EECoreInterpreter::VSUBi()
+void EECoreInterpreter_s::VSUBi()
 {
 	if (handleCOP2Usable())
         return;
@@ -315,7 +315,7 @@ void EECoreInterpreter::VSUBi()
 	mVU0Interpreter->SUBi();
 }
 
-void EECoreInterpreter::VSUBq()
+void EECoreInterpreter_s::VSUBq()
 {
 	if (handleCOP2Usable())
         return;
@@ -324,7 +324,7 @@ void EECoreInterpreter::VSUBq()
 	mVU0Interpreter->SUBq();
 }
 
-void EECoreInterpreter::VSUBbc_0()
+void EECoreInterpreter_s::VSUBbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -333,7 +333,7 @@ void EECoreInterpreter::VSUBbc_0()
 	mVU0Interpreter->SUBbc_0();
 }
 
-void EECoreInterpreter::VSUBbc_1()
+void EECoreInterpreter_s::VSUBbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -342,7 +342,7 @@ void EECoreInterpreter::VSUBbc_1()
 	mVU0Interpreter->SUBbc_1();
 }
 
-void EECoreInterpreter::VSUBbc_2()
+void EECoreInterpreter_s::VSUBbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -351,7 +351,7 @@ void EECoreInterpreter::VSUBbc_2()
 	mVU0Interpreter->SUBbc_2();
 }
 
-void EECoreInterpreter::VSUBbc_3()
+void EECoreInterpreter_s::VSUBbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -360,7 +360,7 @@ void EECoreInterpreter::VSUBbc_3()
 	mVU0Interpreter->SUBbc_3();
 }
 
-void EECoreInterpreter::VSUBA()
+void EECoreInterpreter_s::VSUBA()
 {
 	if (handleCOP2Usable())
         return;
@@ -369,7 +369,7 @@ void EECoreInterpreter::VSUBA()
 	mVU0Interpreter->SUBA();
 }
 
-void EECoreInterpreter::VSUBAi()
+void EECoreInterpreter_s::VSUBAi()
 {
 	if (handleCOP2Usable())
         return;
@@ -378,7 +378,7 @@ void EECoreInterpreter::VSUBAi()
 	mVU0Interpreter->SUBAi();
 }
 
-void EECoreInterpreter::VSUBAq()
+void EECoreInterpreter_s::VSUBAq()
 {
 	if (handleCOP2Usable())
         return;
@@ -387,7 +387,7 @@ void EECoreInterpreter::VSUBAq()
 	mVU0Interpreter->SUBAq();
 }
 
-void EECoreInterpreter::VSUBAbc_0()
+void EECoreInterpreter_s::VSUBAbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -396,7 +396,7 @@ void EECoreInterpreter::VSUBAbc_0()
 	mVU0Interpreter->SUBAbc_0();
 }
 
-void EECoreInterpreter::VSUBAbc_1()
+void EECoreInterpreter_s::VSUBAbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -405,7 +405,7 @@ void EECoreInterpreter::VSUBAbc_1()
 	mVU0Interpreter->SUBAbc_1();
 }
 
-void EECoreInterpreter::VSUBAbc_2()
+void EECoreInterpreter_s::VSUBAbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -414,7 +414,7 @@ void EECoreInterpreter::VSUBAbc_2()
 	mVU0Interpreter->SUBAbc_2();
 }
 
-void EECoreInterpreter::VSUBAbc_3()
+void EECoreInterpreter_s::VSUBAbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -423,7 +423,7 @@ void EECoreInterpreter::VSUBAbc_3()
 	mVU0Interpreter->SUBAbc_3();
 }
 
-void EECoreInterpreter::VMUL()
+void EECoreInterpreter_s::VMUL()
 {
 	if (handleCOP2Usable())
         return;
@@ -432,7 +432,7 @@ void EECoreInterpreter::VMUL()
 	mVU0Interpreter->MUL();
 }
 
-void EECoreInterpreter::VMULi()
+void EECoreInterpreter_s::VMULi()
 {
 	if (handleCOP2Usable())
         return;
@@ -441,7 +441,7 @@ void EECoreInterpreter::VMULi()
 	mVU0Interpreter->MULi();
 }
 
-void EECoreInterpreter::VMULq()
+void EECoreInterpreter_s::VMULq()
 {
 	if (handleCOP2Usable())
         return;
@@ -450,7 +450,7 @@ void EECoreInterpreter::VMULq()
 	mVU0Interpreter->MULq();
 }
 
-void EECoreInterpreter::VMULbc_0()
+void EECoreInterpreter_s::VMULbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -459,7 +459,7 @@ void EECoreInterpreter::VMULbc_0()
 	mVU0Interpreter->MULbc_0();
 }
 
-void EECoreInterpreter::VMULbc_1()
+void EECoreInterpreter_s::VMULbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -468,7 +468,7 @@ void EECoreInterpreter::VMULbc_1()
 	mVU0Interpreter->MULbc_1();
 }
 
-void EECoreInterpreter::VMULbc_2()
+void EECoreInterpreter_s::VMULbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -477,7 +477,7 @@ void EECoreInterpreter::VMULbc_2()
 	mVU0Interpreter->MULbc_2();
 }
 
-void EECoreInterpreter::VMULbc_3()
+void EECoreInterpreter_s::VMULbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -486,7 +486,7 @@ void EECoreInterpreter::VMULbc_3()
 	mVU0Interpreter->MULbc_3();
 }
 
-void EECoreInterpreter::VMULA()
+void EECoreInterpreter_s::VMULA()
 {
 	if (handleCOP2Usable())
         return;
@@ -495,7 +495,7 @@ void EECoreInterpreter::VMULA()
 	mVU0Interpreter->MULA();
 }
 
-void EECoreInterpreter::VMULAi()
+void EECoreInterpreter_s::VMULAi()
 {
 	if (handleCOP2Usable())
         return;
@@ -504,7 +504,7 @@ void EECoreInterpreter::VMULAi()
 	mVU0Interpreter->MULAi();
 }
 
-void EECoreInterpreter::VMULAq()
+void EECoreInterpreter_s::VMULAq()
 {
 	if (handleCOP2Usable())
         return;
@@ -513,7 +513,7 @@ void EECoreInterpreter::VMULAq()
 	mVU0Interpreter->MULAq();
 }
 
-void EECoreInterpreter::VMULAbc_0()
+void EECoreInterpreter_s::VMULAbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -522,7 +522,7 @@ void EECoreInterpreter::VMULAbc_0()
 	mVU0Interpreter->MULAbc_0();
 }
 
-void EECoreInterpreter::VMULAbc_1()
+void EECoreInterpreter_s::VMULAbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -531,7 +531,7 @@ void EECoreInterpreter::VMULAbc_1()
 	mVU0Interpreter->MULAbc_1();
 }
 
-void EECoreInterpreter::VMULAbc_2()
+void EECoreInterpreter_s::VMULAbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -540,7 +540,7 @@ void EECoreInterpreter::VMULAbc_2()
 	mVU0Interpreter->MULAbc_2();
 }
 
-void EECoreInterpreter::VMULAbc_3()
+void EECoreInterpreter_s::VMULAbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -549,7 +549,7 @@ void EECoreInterpreter::VMULAbc_3()
 	mVU0Interpreter->MULAbc_3();
 }
 
-void EECoreInterpreter::VMADD()
+void EECoreInterpreter_s::VMADD()
 {
 	if (handleCOP2Usable())
         return;
@@ -558,7 +558,7 @@ void EECoreInterpreter::VMADD()
 	mVU0Interpreter->MADD();
 }
 
-void EECoreInterpreter::VMADDi()
+void EECoreInterpreter_s::VMADDi()
 {
 	if (handleCOP2Usable())
         return;
@@ -567,7 +567,7 @@ void EECoreInterpreter::VMADDi()
 	mVU0Interpreter->MADDi();
 }
 
-void EECoreInterpreter::VMADDq()
+void EECoreInterpreter_s::VMADDq()
 {
 	if (handleCOP2Usable())
         return;
@@ -576,7 +576,7 @@ void EECoreInterpreter::VMADDq()
 	mVU0Interpreter->MADDq();
 }
 
-void EECoreInterpreter::VMADDbc_0()
+void EECoreInterpreter_s::VMADDbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -585,7 +585,7 @@ void EECoreInterpreter::VMADDbc_0()
 	mVU0Interpreter->MADDbc_0();
 }
 
-void EECoreInterpreter::VMADDbc_1()
+void EECoreInterpreter_s::VMADDbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -594,7 +594,7 @@ void EECoreInterpreter::VMADDbc_1()
 	mVU0Interpreter->MADDbc_1();
 }
 
-void EECoreInterpreter::VMADDbc_2()
+void EECoreInterpreter_s::VMADDbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -603,7 +603,7 @@ void EECoreInterpreter::VMADDbc_2()
 	mVU0Interpreter->MADDbc_2();
 }
 
-void EECoreInterpreter::VMADDbc_3()
+void EECoreInterpreter_s::VMADDbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -612,7 +612,7 @@ void EECoreInterpreter::VMADDbc_3()
 	mVU0Interpreter->MADDbc_3();
 }
 
-void EECoreInterpreter::VMADDA()
+void EECoreInterpreter_s::VMADDA()
 {
 	if (handleCOP2Usable())
         return;
@@ -621,7 +621,7 @@ void EECoreInterpreter::VMADDA()
 	mVU0Interpreter->MADDA();
 }
 
-void EECoreInterpreter::VMADDAi()
+void EECoreInterpreter_s::VMADDAi()
 {
 	if (handleCOP2Usable())
         return;
@@ -630,7 +630,7 @@ void EECoreInterpreter::VMADDAi()
 	mVU0Interpreter->MADDAi();
 }
 
-void EECoreInterpreter::VMADDAq()
+void EECoreInterpreter_s::VMADDAq()
 {
 	if (handleCOP2Usable())
         return;
@@ -639,7 +639,7 @@ void EECoreInterpreter::VMADDAq()
 	mVU0Interpreter->MADDAq();
 }
 
-void EECoreInterpreter::VMADDAbc_0()
+void EECoreInterpreter_s::VMADDAbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -648,7 +648,7 @@ void EECoreInterpreter::VMADDAbc_0()
 	mVU0Interpreter->MADDAbc_0();
 }
 
-void EECoreInterpreter::VMADDAbc_1()
+void EECoreInterpreter_s::VMADDAbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -657,7 +657,7 @@ void EECoreInterpreter::VMADDAbc_1()
 	mVU0Interpreter->MADDAbc_1();
 }
 
-void EECoreInterpreter::VMADDAbc_2()
+void EECoreInterpreter_s::VMADDAbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -666,7 +666,7 @@ void EECoreInterpreter::VMADDAbc_2()
 	mVU0Interpreter->MADDAbc_2();
 }
 
-void EECoreInterpreter::VMADDAbc_3()
+void EECoreInterpreter_s::VMADDAbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -675,7 +675,7 @@ void EECoreInterpreter::VMADDAbc_3()
 	mVU0Interpreter->MADDAbc_3();
 }
 
-void EECoreInterpreter::VMSUB()
+void EECoreInterpreter_s::VMSUB()
 {
 	if (handleCOP2Usable())
         return;
@@ -684,7 +684,7 @@ void EECoreInterpreter::VMSUB()
 	mVU0Interpreter->MSUB();
 }
 
-void EECoreInterpreter::VMSUBi()
+void EECoreInterpreter_s::VMSUBi()
 {
 	if (handleCOP2Usable())
         return;
@@ -693,7 +693,7 @@ void EECoreInterpreter::VMSUBi()
 	mVU0Interpreter->MSUBi();
 }
 
-void EECoreInterpreter::VMSUBq()
+void EECoreInterpreter_s::VMSUBq()
 {
 	if (handleCOP2Usable())
         return;
@@ -702,7 +702,7 @@ void EECoreInterpreter::VMSUBq()
 	mVU0Interpreter->MSUBq();
 }
 
-void EECoreInterpreter::VMSUBbc_0()
+void EECoreInterpreter_s::VMSUBbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -711,7 +711,7 @@ void EECoreInterpreter::VMSUBbc_0()
 	mVU0Interpreter->MSUBbc_0();
 }
 
-void EECoreInterpreter::VMSUBbc_1()
+void EECoreInterpreter_s::VMSUBbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -720,7 +720,7 @@ void EECoreInterpreter::VMSUBbc_1()
 	mVU0Interpreter->MSUBbc_1();
 }
 
-void EECoreInterpreter::VMSUBbc_2()
+void EECoreInterpreter_s::VMSUBbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -729,7 +729,7 @@ void EECoreInterpreter::VMSUBbc_2()
 	mVU0Interpreter->MSUBbc_2();
 }
 
-void EECoreInterpreter::VMSUBbc_3()
+void EECoreInterpreter_s::VMSUBbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -738,7 +738,7 @@ void EECoreInterpreter::VMSUBbc_3()
 	mVU0Interpreter->MSUBbc_3();
 }
 
-void EECoreInterpreter::VMSUBA()
+void EECoreInterpreter_s::VMSUBA()
 {
 	if (handleCOP2Usable())
         return;
@@ -747,7 +747,7 @@ void EECoreInterpreter::VMSUBA()
 	mVU0Interpreter->MSUBA();
 }
 
-void EECoreInterpreter::VMSUBAi()
+void EECoreInterpreter_s::VMSUBAi()
 {
 	if (handleCOP2Usable())
         return;
@@ -756,7 +756,7 @@ void EECoreInterpreter::VMSUBAi()
 	mVU0Interpreter->MSUBAi();
 }
 
-void EECoreInterpreter::VMSUBAq()
+void EECoreInterpreter_s::VMSUBAq()
 {
 	if (handleCOP2Usable())
         return;
@@ -765,7 +765,7 @@ void EECoreInterpreter::VMSUBAq()
 	mVU0Interpreter->MSUBAq();
 }
 
-void EECoreInterpreter::VMSUBAbc_0()
+void EECoreInterpreter_s::VMSUBAbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -774,7 +774,7 @@ void EECoreInterpreter::VMSUBAbc_0()
 	mVU0Interpreter->MSUBAbc_0();
 }
 
-void EECoreInterpreter::VMSUBAbc_1()
+void EECoreInterpreter_s::VMSUBAbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -783,7 +783,7 @@ void EECoreInterpreter::VMSUBAbc_1()
 	mVU0Interpreter->MSUBAbc_1();
 }
 
-void EECoreInterpreter::VMSUBAbc_2()
+void EECoreInterpreter_s::VMSUBAbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -792,7 +792,7 @@ void EECoreInterpreter::VMSUBAbc_2()
 	mVU0Interpreter->MSUBAbc_2();
 }
 
-void EECoreInterpreter::VMSUBAbc_3()
+void EECoreInterpreter_s::VMSUBAbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -801,7 +801,7 @@ void EECoreInterpreter::VMSUBAbc_3()
 	mVU0Interpreter->MSUBAbc_3();
 }
 
-void EECoreInterpreter::VMAX()
+void EECoreInterpreter_s::VMAX()
 {
 	if (handleCOP2Usable())
         return;
@@ -810,7 +810,7 @@ void EECoreInterpreter::VMAX()
 	mVU0Interpreter->MAX();
 }
 
-void EECoreInterpreter::VMAXi()
+void EECoreInterpreter_s::VMAXi()
 {
 	if (handleCOP2Usable())
         return;
@@ -819,7 +819,7 @@ void EECoreInterpreter::VMAXi()
 	mVU0Interpreter->MAXi();
 }
 
-void EECoreInterpreter::VMAXbc_0()
+void EECoreInterpreter_s::VMAXbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -828,7 +828,7 @@ void EECoreInterpreter::VMAXbc_0()
 	mVU0Interpreter->MAXbc_0();
 }
 
-void EECoreInterpreter::VMAXbc_1()
+void EECoreInterpreter_s::VMAXbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -837,7 +837,7 @@ void EECoreInterpreter::VMAXbc_1()
 	mVU0Interpreter->MAXbc_1();
 }
 
-void EECoreInterpreter::VMAXbc_2()
+void EECoreInterpreter_s::VMAXbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -846,7 +846,7 @@ void EECoreInterpreter::VMAXbc_2()
 	mVU0Interpreter->MAXbc_2();
 }
 
-void EECoreInterpreter::VMAXbc_3()
+void EECoreInterpreter_s::VMAXbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -855,7 +855,7 @@ void EECoreInterpreter::VMAXbc_3()
 	mVU0Interpreter->MAXbc_3();
 }
 
-void EECoreInterpreter::VMINI()
+void EECoreInterpreter_s::VMINI()
 {
 	if (handleCOP2Usable())
         return;
@@ -864,7 +864,7 @@ void EECoreInterpreter::VMINI()
 	mVU0Interpreter->MINI();
 }
 
-void EECoreInterpreter::VMINIi()
+void EECoreInterpreter_s::VMINIi()
 {
 	if (handleCOP2Usable())
         return;
@@ -873,7 +873,7 @@ void EECoreInterpreter::VMINIi()
 	mVU0Interpreter->MINIi();
 }
 
-void EECoreInterpreter::VMINIbc_0()
+void EECoreInterpreter_s::VMINIbc_0()
 {
 	if (handleCOP2Usable())
         return;
@@ -882,7 +882,7 @@ void EECoreInterpreter::VMINIbc_0()
 	mVU0Interpreter->MINIbc_0();
 }
 
-void EECoreInterpreter::VMINIbc_1()
+void EECoreInterpreter_s::VMINIbc_1()
 {
 	if (handleCOP2Usable())
         return;
@@ -891,7 +891,7 @@ void EECoreInterpreter::VMINIbc_1()
 	mVU0Interpreter->MINIbc_1();
 }
 
-void EECoreInterpreter::VMINIbc_2()
+void EECoreInterpreter_s::VMINIbc_2()
 {
 	if (handleCOP2Usable())
         return;
@@ -900,7 +900,7 @@ void EECoreInterpreter::VMINIbc_2()
 	mVU0Interpreter->MINIbc_2();
 }
 
-void EECoreInterpreter::VMINIbc_3()
+void EECoreInterpreter_s::VMINIbc_3()
 {
 	if (handleCOP2Usable())
         return;
@@ -909,7 +909,7 @@ void EECoreInterpreter::VMINIbc_3()
 	mVU0Interpreter->MINIbc_3();
 }
 
-void EECoreInterpreter::VOPMULA()
+void EECoreInterpreter_s::VOPMULA()
 {
 	if (handleCOP2Usable())
         return;
@@ -918,7 +918,7 @@ void EECoreInterpreter::VOPMULA()
 	mVU0Interpreter->OPMULA();
 }
 
-void EECoreInterpreter::VOPMSUB()
+void EECoreInterpreter_s::VOPMSUB()
 {
 	if (handleCOP2Usable())
         return;
@@ -927,7 +927,7 @@ void EECoreInterpreter::VOPMSUB()
 	mVU0Interpreter->OPMSUB();
 }
 
-void EECoreInterpreter::VNOP()
+void EECoreInterpreter_s::VNOP()
 {
 	if (handleCOP2Usable())
         return;
@@ -936,7 +936,7 @@ void EECoreInterpreter::VNOP()
 	mVU0Interpreter->NOP();
 }
 
-void EECoreInterpreter::VFTOI0()
+void EECoreInterpreter_s::VFTOI0()
 {
 	if (handleCOP2Usable())
         return;
@@ -945,7 +945,7 @@ void EECoreInterpreter::VFTOI0()
 	mVU0Interpreter->FTOI0();
 }
 
-void EECoreInterpreter::VFTOI4()
+void EECoreInterpreter_s::VFTOI4()
 {
 	if (handleCOP2Usable())
         return;
@@ -954,7 +954,7 @@ void EECoreInterpreter::VFTOI4()
 	mVU0Interpreter->FTOI4();
 }
 
-void EECoreInterpreter::VFTOI12()
+void EECoreInterpreter_s::VFTOI12()
 {
 	if (handleCOP2Usable())
         return;
@@ -963,7 +963,7 @@ void EECoreInterpreter::VFTOI12()
 	mVU0Interpreter->FTOI12();
 }
 
-void EECoreInterpreter::VFTOI15()
+void EECoreInterpreter_s::VFTOI15()
 {
 	if (handleCOP2Usable())
         return;
@@ -972,7 +972,7 @@ void EECoreInterpreter::VFTOI15()
 	mVU0Interpreter->FTOI15();
 }
 
-void EECoreInterpreter::VITOF0()
+void EECoreInterpreter_s::VITOF0()
 {
 	if (handleCOP2Usable())
         return;
@@ -981,7 +981,7 @@ void EECoreInterpreter::VITOF0()
 	mVU0Interpreter->ITOF0();
 }
 
-void EECoreInterpreter::VITOF4()
+void EECoreInterpreter_s::VITOF4()
 {
 	if (handleCOP2Usable())
         return;
@@ -990,7 +990,7 @@ void EECoreInterpreter::VITOF4()
 	mVU0Interpreter->ITOF4();
 }
 
-void EECoreInterpreter::VITOF12()
+void EECoreInterpreter_s::VITOF12()
 {
 	if (handleCOP2Usable())
         return;
@@ -999,7 +999,7 @@ void EECoreInterpreter::VITOF12()
 	mVU0Interpreter->ITOF12();
 }
 
-void EECoreInterpreter::VITOF15()
+void EECoreInterpreter_s::VITOF15()
 {
 	if (handleCOP2Usable())
         return;
@@ -1008,7 +1008,7 @@ void EECoreInterpreter::VITOF15()
 	mVU0Interpreter->ITOF15();
 }
 
-void EECoreInterpreter::VCLIP()
+void EECoreInterpreter_s::VCLIP()
 {
 	if (handleCOP2Usable())
         return;
@@ -1017,7 +1017,7 @@ void EECoreInterpreter::VCLIP()
 	mVU0Interpreter->CLIP();
 }
 
-void EECoreInterpreter::VDIV()
+void EECoreInterpreter_s::VDIV()
 {
 	if (handleCOP2Usable())
         return;
@@ -1026,7 +1026,7 @@ void EECoreInterpreter::VDIV()
 	mVU0Interpreter->DIV();
 }
 
-void EECoreInterpreter::VSQRT()
+void EECoreInterpreter_s::VSQRT()
 {
 	if (handleCOP2Usable())
         return;
@@ -1035,7 +1035,7 @@ void EECoreInterpreter::VSQRT()
 	mVU0Interpreter->SQRT();
 }
 
-void EECoreInterpreter::VRSQRT()
+void EECoreInterpreter_s::VRSQRT()
 {
 	if (handleCOP2Usable())
         return;
@@ -1044,7 +1044,7 @@ void EECoreInterpreter::VRSQRT()
 	mVU0Interpreter->RSQRT();
 }
 
-void EECoreInterpreter::VIADD()
+void EECoreInterpreter_s::VIADD()
 {
 	if (handleCOP2Usable())
         return;
@@ -1053,7 +1053,7 @@ void EECoreInterpreter::VIADD()
 	mVU0Interpreter->IADD();
 }
 
-void EECoreInterpreter::VIADDI()
+void EECoreInterpreter_s::VIADDI()
 {
 	if (handleCOP2Usable())
         return;
@@ -1062,7 +1062,7 @@ void EECoreInterpreter::VIADDI()
 	mVU0Interpreter->IADDI();
 }
 
-void EECoreInterpreter::VIAND()
+void EECoreInterpreter_s::VIAND()
 {
 	if (handleCOP2Usable())
         return;
@@ -1071,7 +1071,7 @@ void EECoreInterpreter::VIAND()
 	mVU0Interpreter->IAND();
 }
 
-void EECoreInterpreter::VIOR()
+void EECoreInterpreter_s::VIOR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1080,7 +1080,7 @@ void EECoreInterpreter::VIOR()
 	mVU0Interpreter->IOR();
 }
 
-void EECoreInterpreter::VISUB()
+void EECoreInterpreter_s::VISUB()
 {
 	if (handleCOP2Usable())
         return;
@@ -1089,7 +1089,7 @@ void EECoreInterpreter::VISUB()
 	mVU0Interpreter->ISUB();
 }
 
-void EECoreInterpreter::VMOVE()
+void EECoreInterpreter_s::VMOVE()
 {
 	if (handleCOP2Usable())
         return;
@@ -1098,7 +1098,7 @@ void EECoreInterpreter::VMOVE()
 	mVU0Interpreter->MOVE();
 }
 
-void EECoreInterpreter::VMFIR()
+void EECoreInterpreter_s::VMFIR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1107,7 +1107,7 @@ void EECoreInterpreter::VMFIR()
 	mVU0Interpreter->MFIR();
 }
 
-void EECoreInterpreter::VMTIR()
+void EECoreInterpreter_s::VMTIR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1116,7 +1116,7 @@ void EECoreInterpreter::VMTIR()
 	mVU0Interpreter->MTIR();
 }
 
-void EECoreInterpreter::VMR32()
+void EECoreInterpreter_s::VMR32()
 {
 	if (handleCOP2Usable())
         return;
@@ -1125,7 +1125,7 @@ void EECoreInterpreter::VMR32()
 	mVU0Interpreter->MR32();
 }
 
-void EECoreInterpreter::VLQD()
+void EECoreInterpreter_s::VLQD()
 {
 	if (handleCOP2Usable())
         return;
@@ -1134,7 +1134,7 @@ void EECoreInterpreter::VLQD()
 	mVU0Interpreter->LQD();
 }
 
-void EECoreInterpreter::VLQI()
+void EECoreInterpreter_s::VLQI()
 {
 	if (handleCOP2Usable())
         return;
@@ -1143,7 +1143,7 @@ void EECoreInterpreter::VLQI()
 	mVU0Interpreter->LQI();
 }
 
-void EECoreInterpreter::VSQD()
+void EECoreInterpreter_s::VSQD()
 {
 	if (handleCOP2Usable())
         return;
@@ -1152,7 +1152,7 @@ void EECoreInterpreter::VSQD()
 	mVU0Interpreter->SQD();
 }
 
-void EECoreInterpreter::VSQI()
+void EECoreInterpreter_s::VSQI()
 {
 	if (handleCOP2Usable())
         return;
@@ -1161,7 +1161,7 @@ void EECoreInterpreter::VSQI()
 	mVU0Interpreter->SQI();
 }
 
-void EECoreInterpreter::VILWR()
+void EECoreInterpreter_s::VILWR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1170,7 +1170,7 @@ void EECoreInterpreter::VILWR()
 	mVU0Interpreter->ILWR();
 }
 
-void EECoreInterpreter::VISWR()
+void EECoreInterpreter_s::VISWR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1180,7 +1180,7 @@ void EECoreInterpreter::VISWR()
 	mVU0Interpreter->ISWR();
 }
 
-void EECoreInterpreter::VRINIT()
+void EECoreInterpreter_s::VRINIT()
 {
 	if (handleCOP2Usable())
         return;
@@ -1189,7 +1189,7 @@ void EECoreInterpreter::VRINIT()
 	mVU0Interpreter->RINIT();
 }
 
-void EECoreInterpreter::VRGET()
+void EECoreInterpreter_s::VRGET()
 {
 	if (handleCOP2Usable())
         return;
@@ -1198,7 +1198,7 @@ void EECoreInterpreter::VRGET()
 	mVU0Interpreter->RGET();
 }
 
-void EECoreInterpreter::VRNEXT()
+void EECoreInterpreter_s::VRNEXT()
 {
 	if (handleCOP2Usable())
         return;
@@ -1207,7 +1207,7 @@ void EECoreInterpreter::VRNEXT()
 	mVU0Interpreter->RNEXT();
 }
 
-void EECoreInterpreter::VRXOR()
+void EECoreInterpreter_s::VRXOR()
 {
 	if (handleCOP2Usable())
         return;
@@ -1216,7 +1216,7 @@ void EECoreInterpreter::VRXOR()
 	mVU0Interpreter->RXOR();
 }
 
-void EECoreInterpreter::VWAITQ()
+void EECoreInterpreter_s::VWAITQ()
 {
 	if (handleCOP2Usable())
         return;

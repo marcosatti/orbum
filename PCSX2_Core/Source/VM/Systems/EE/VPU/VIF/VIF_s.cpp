@@ -2,7 +2,8 @@
 
 #include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
 
-#include "VM/Systems/EE/VPU/VIF/VIF.h"
+#include "VM/VM.h"
+#include "VM/Systems/EE/VPU/VIF/VIF_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -11,20 +12,22 @@
 #include "Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
 #include "Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
 
-VIF::VIF(VM* vmMain, u32 vifUnitIndex) :
-	VMSystem_t(vmMain, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
+VIF_s::VIF_s(VM * vm, u32 vifUnitIndex) :
+	VMSystem_s(vm, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
 	mVIFUnitIndex(vifUnitIndex),
 	mDMAPacket()
 {
 }
 
-VIF::~VIF()
+VIF_s::~VIF_s()
 {
 }
 
-double VIF::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	return 1; // not yet completed.
+
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 
 	// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
 	if (isVIFStalled())
@@ -63,9 +66,9 @@ double VIF::executeStep(const ClockSource_t & clockSource, const double & ticksA
 	return 1;
 }
 
-bool VIF::isVIFStalled() const
+bool VIF_s::isVIFStalled() const
 {
-	auto& VIF = getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 	auto& STAT = VIF->STAT;
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 
@@ -83,144 +86,144 @@ bool VIF::isVIFStalled() const
 	return false;
 }
 
-bool VIF::checkIncomingDMAPacket()
+bool VIF_s::checkIncomingDMAPacket()
 {
 	throw std::runtime_error("Not implemented.");
 }
 
-void VIF::INSTRUCTION_UNSUPPORTED()
+void VIF_s::INSTRUCTION_UNSUPPORTED()
 {
 	throw std::runtime_error("VIFcode CMD field was invalid! Please fix.");
 }
 
-void VIF::NOP()
+void VIF_s::NOP()
 {
 }
 
-void VIF::STCYCL()
+void VIF_s::STCYCL()
 {
 }
 
-void VIF::OFFSET()
+void VIF_s::OFFSET()
 {
 }
 
-void VIF::BASE()
+void VIF_s::BASE()
 {
 }
 
-void VIF::ITOP()
+void VIF_s::ITOP()
 {
 }
 
-void VIF::STMOD()
+void VIF_s::STMOD()
 {
 }
 
-void VIF::MSKPATH3()
+void VIF_s::MSKPATH3()
 {
 }
 
-void VIF::MARK()
+void VIF_s::MARK()
 {
 }
 
-void VIF::FLUSHE()
+void VIF_s::FLUSHE()
 {
 }
 
-void VIF::FLUSH()
+void VIF_s::FLUSH()
 {
 }
 
-void VIF::FLUSHA()
+void VIF_s::FLUSHA()
 {
 }
 
-void VIF::MSCAL()
+void VIF_s::MSCAL()
 {
 }
 
-void VIF::MSCNT()
+void VIF_s::MSCNT()
 {
 }
 
-void VIF::MSCALF()
+void VIF_s::MSCALF()
 {
 }
 
-void VIF::STMASK()
+void VIF_s::STMASK()
 {
 }
 
-void VIF::STROW()
+void VIF_s::STROW()
 {
 }
 
-void VIF::STCOL()
+void VIF_s::STCOL()
 {
 }
 
-void VIF::MPG()
+void VIF_s::MPG()
 {
 }
 
-void VIF::DIRECT()
+void VIF_s::DIRECT()
 {
 }
 
-void VIF::DIRECTHL()
+void VIF_s::DIRECTHL()
 {
 }
 
-void VIF::UNPACK_S_32()
+void VIF_s::UNPACK_S_32()
 {
 }
 
-void VIF::UNPACK_S_16()
+void VIF_s::UNPACK_S_16()
 {
 }
 
-void VIF::UNPACK_S_8()
+void VIF_s::UNPACK_S_8()
 {
 }
 
-void VIF::UNPACK_V2_32()
+void VIF_s::UNPACK_V2_32()
 {
 }
 
-void VIF::UNPACK_V2_16()
+void VIF_s::UNPACK_V2_16()
 {
 }
 
-void VIF::UNPACK_V2_8()
+void VIF_s::UNPACK_V2_8()
 {
 }
 
-void VIF::UNPACK_V3_32()
+void VIF_s::UNPACK_V3_32()
 {
 }
 
-void VIF::UNPACK_V3_16()
+void VIF_s::UNPACK_V3_16()
 {
 }
 
-void VIF::UNPACK_V3_8()
+void VIF_s::UNPACK_V3_8()
 {
 }
 
-void VIF::UNPACK_V4_32()
+void VIF_s::UNPACK_V4_32()
 {
 }
 
-void VIF::UNPACK_V4_16()
+void VIF_s::UNPACK_V4_16()
 {
 }
 
-void VIF::UNPACK_V4_8()
+void VIF_s::UNPACK_V4_8()
 {
 }
 
-void VIF::UNPACK_V4_5()
+void VIF_s::UNPACK_V4_5()
 {
 }

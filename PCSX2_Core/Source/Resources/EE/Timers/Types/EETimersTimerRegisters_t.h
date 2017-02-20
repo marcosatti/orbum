@@ -4,6 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/ClockSource_t.h"
 
 /*
 The Timer Count register type. See EE Users Manual page 37.
@@ -19,12 +20,19 @@ public:
 	void increment(u16 value);
 	bool isOverflowed();
 	void reset();
+	void setPrescale(const int & prescale);
 
 private:
 	/*
 	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
 	*/
 	bool mIsOverflowed;
+
+	/*
+	Prescale functionality.
+	*/
+	int mPrescale;
+	int mPrescaleCount;
 };
 
 /*
@@ -57,17 +65,33 @@ public:
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
 	 will also reset the count register if CUE is 1 (both EE context only).
 	*/
-	void writeWord(const Context & context, u32 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
 	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.
 	*/
 	bool isGateHBLNKSpecial() const;
 
+	/*
+	Returns the cached emulator clock source.
+	*/
+	ClockSource_t getClockSource() const;
+
 private:
 	/*
 	A reference to the associated Count register, which is reset when the CUE flag is set to 1.
 	*/
 	std::shared_ptr<EETimersTimerRegister_COUNT_t> mCount;
+
+	/*
+	Sets the internal clock source based on the register state.
+	*/
+	void handleClockSourceUpdate();
+
+	/*
+	Contains the emulation clock source updated through handleClockSourceUpdate().
+	Retrieve through getClockSource().
+	*/
+	ClockSource_t mClockSource;
 };
 

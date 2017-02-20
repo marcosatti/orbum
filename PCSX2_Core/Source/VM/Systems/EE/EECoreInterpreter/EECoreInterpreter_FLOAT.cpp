@@ -4,13 +4,13 @@
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-void EECoreInterpreter::ADD_S()
+void EECoreInterpreter_s::ADD_S()
 {
 	// Fd = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -31,7 +31,7 @@ void EECoreInterpreter::ADD_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::ADDA_S()
+void EECoreInterpreter_s::ADDA_S()
 {
 	// ACC = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -52,7 +52,7 @@ void EECoreInterpreter::ADDA_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MADD_S()
+void EECoreInterpreter_s::MADD_S()
 {
 	// Fd = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -75,7 +75,7 @@ void EECoreInterpreter::MADD_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MADDA_S()
+void EECoreInterpreter_s::MADDA_S()
 {
 	// ACC = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -97,7 +97,7 @@ void EECoreInterpreter::MADDA_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MUL_S()
+void EECoreInterpreter_s::MUL_S()
 {
 	// Fd = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -118,7 +118,7 @@ void EECoreInterpreter::MUL_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MULA_S()
+void EECoreInterpreter_s::MULA_S()
 {
 	// ACC = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -139,7 +139,7 @@ void EECoreInterpreter::MULA_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::DIV_S()
+void EECoreInterpreter_s::DIV_S()
 {
 	// Fd = Fs / Ft (Exception on FPU unusable).
 	// TODO: Check if status bits need to be set.
@@ -175,7 +175,7 @@ void EECoreInterpreter::DIV_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MSUB_S()
+void EECoreInterpreter_s::MSUB_S()
 {
 	// Fd = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -198,7 +198,7 @@ void EECoreInterpreter::MSUB_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::MSUBA_S()
+void EECoreInterpreter_s::MSUBA_S()
 {
 	// ACC = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -220,7 +220,7 @@ void EECoreInterpreter::MSUBA_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::SUB_S()
+void EECoreInterpreter_s::SUB_S()
 {
 	// Fd = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
@@ -241,7 +241,7 @@ void EECoreInterpreter::SUB_S()
 	destReg->writeFloat(EE,result);
 }
 
-void EECoreInterpreter::SUBA_S()
+void EECoreInterpreter_s::SUBA_S()
 {
 	// ACC = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).

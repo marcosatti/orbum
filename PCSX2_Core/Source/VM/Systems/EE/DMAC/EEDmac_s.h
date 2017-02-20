@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 #include "Resources/EE/DMAC/Types/DMAtag_t.h"
 
@@ -33,16 +33,16 @@ TODO: Speedups can be done here:
  - Dont need to transfer 1-qword at a time.
  - Dont need to turn on cycle stealing if requested? Kind of redundant in an emulator.
 */
-class EEDmac : public VMSystem_t
+class EEDmac_s : public VMSystem_s
 {
 public:
-	explicit EEDmac(VM * vmMain);
-	virtual ~EEDmac();
+	explicit EEDmac_s(VM * vm);
+	virtual ~EEDmac_s();
 
 	/*
 	Check through the channels and initate data transfers.
 	*/
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*
@@ -185,27 +185,27 @@ private:
 	Static arrays needed to call the appropriate DMAtag handler function.
 	There is one for source and destination chain modes. See page 60 and 61 of EE Users Manual for the list of applicable DMAtag instructions.
 	*/
-	void(EEDmac::* SRC_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
+	void(EEDmac_s::* SRC_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac::SRC_REFE,
-		&EEDmac::SRC_CNT,
-		&EEDmac::SRC_NEXT,
-		&EEDmac::SRC_REF,
-		&EEDmac::SRC_REFS,
-		&EEDmac::SRC_CALL,
-		&EEDmac::SRC_RET,
-		&EEDmac::SRC_END
+		&EEDmac_s::SRC_REFE,
+		&EEDmac_s::SRC_CNT,
+		&EEDmac_s::SRC_NEXT,
+		&EEDmac_s::SRC_REF,
+		&EEDmac_s::SRC_REFS,
+		&EEDmac_s::SRC_CALL,
+		&EEDmac_s::SRC_RET,
+		&EEDmac_s::SRC_END
 	};
-	void(EEDmac::* DST_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
+	void(EEDmac_s::* DST_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac::DST_CNTS,
-		&EEDmac::DST_CNT,
-		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::INSTRUCTION_UNSUPPORTED,
-		&EEDmac::DST_END,
+		&EEDmac_s::DST_CNTS,
+		&EEDmac_s::DST_CNT,
+		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
+		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
+		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
+		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
+		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
+		&EEDmac_s::DST_END,
 	};
 
 	///////////////////////////////////////

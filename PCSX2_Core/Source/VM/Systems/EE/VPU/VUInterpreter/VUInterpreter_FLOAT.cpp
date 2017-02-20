@@ -4,16 +4,12 @@
 #include "Common/Types/Registers/FPRegister128_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
 
-void VUInterpreter::ABS()
+void VUInterpreter_s::ABS()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -23,7 +19,7 @@ void VUInterpreter::ABS()
 #endif
 }
 
-void VUInterpreter::ADD()
+void VUInterpreter_s::ADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -33,7 +29,7 @@ void VUInterpreter::ADD()
 #endif
 }
 
-void VUInterpreter::ADDi()
+void VUInterpreter_s::ADDi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -43,7 +39,7 @@ void VUInterpreter::ADDi()
 #endif
 }
 
-void VUInterpreter::ADDq()
+void VUInterpreter_s::ADDq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -53,7 +49,7 @@ void VUInterpreter::ADDq()
 #endif
 }
 
-void VUInterpreter::ADDbc(const u8 & idx)
+void VUInterpreter_s::ADDbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -63,31 +59,31 @@ void VUInterpreter::ADDbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::ADDbc_0()
+void VUInterpreter_s::ADDbc_0()
 {
 	// Call base function.
 	ADDbc(0);
 }
 
-void VUInterpreter::ADDbc_1()
+void VUInterpreter_s::ADDbc_1()
 {
 	// Call base function.
 	ADDbc(1);
 }
 
-void VUInterpreter::ADDbc_2()
+void VUInterpreter_s::ADDbc_2()
 {
 	// Call base function.
 	ADDbc(2);
 }
 
-void VUInterpreter::ADDbc_3()
+void VUInterpreter_s::ADDbc_3()
 {
 	// Call base function.
 	ADDbc(3);
 }
 
-void VUInterpreter::ADDA()
+void VUInterpreter_s::ADDA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -97,7 +93,7 @@ void VUInterpreter::ADDA()
 #endif
 }
 
-void VUInterpreter::ADDAi()
+void VUInterpreter_s::ADDAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -107,7 +103,7 @@ void VUInterpreter::ADDAi()
 #endif
 }
 
-void VUInterpreter::ADDAq()
+void VUInterpreter_s::ADDAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -117,7 +113,7 @@ void VUInterpreter::ADDAq()
 #endif
 }
 
-void VUInterpreter::ADDAbc(const u8 & idx)
+void VUInterpreter_s::ADDAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -127,38 +123,38 @@ void VUInterpreter::ADDAbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::ADDAbc_0()
+void VUInterpreter_s::ADDAbc_0()
 {
 	// Call base function.
 	ADDAbc(0);
 }
 
-void VUInterpreter::ADDAbc_1()
+void VUInterpreter_s::ADDAbc_1()
 {
 	// Call base function.
 	ADDAbc(1);
 }
 
-void VUInterpreter::ADDAbc_2()
+void VUInterpreter_s::ADDAbc_2()
 {
 	// Call base function.
 	ADDAbc(2);
 }
 
-void VUInterpreter::ADDAbc_3()
+void VUInterpreter_s::ADDAbc_3()
 {
 	// Call base function.
 	ADDAbc(3);
 }
 
-void VUInterpreter::SUB()
+void VUInterpreter_s::SUB()
 {
 	// Fd = Fs - Ft.
-	auto& destReg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFd()];
-	auto& source1Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()]; 
-	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFt()]; 
-	auto& MAC = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MAC;
-	auto& Status = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->Status;
+	auto& destReg = mVuUnit->VF[mInstruction.getFd()];
+	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VF[mInstruction.getFt()];
+	auto& MAC = mVuUnit->MAC;
+	auto& Status = mVuUnit->Status;
 
 	Status->clearFlags();
 
@@ -176,7 +172,7 @@ void VUInterpreter::SUB()
 	}
 }
 
-void VUInterpreter::SUBi()
+void VUInterpreter_s::SUBi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -186,7 +182,7 @@ void VUInterpreter::SUBi()
 #endif
 }
 
-void VUInterpreter::SUBq()
+void VUInterpreter_s::SUBq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -196,7 +192,7 @@ void VUInterpreter::SUBq()
 #endif
 }
 
-void VUInterpreter::SUBbc(const u8 & idx)
+void VUInterpreter_s::SUBbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -206,31 +202,31 @@ void VUInterpreter::SUBbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::SUBbc_0()
+void VUInterpreter_s::SUBbc_0()
 {
 	// Call base function.
 	SUBbc(0);
 }
 
-void VUInterpreter::SUBbc_1()
+void VUInterpreter_s::SUBbc_1()
 {
 	// Call base function.
 	SUBbc(1);
 }
 
-void VUInterpreter::SUBbc_2()
+void VUInterpreter_s::SUBbc_2()
 {
 	// Call base function.
 	SUBbc(2);
 }
 
-void VUInterpreter::SUBbc_3()
+void VUInterpreter_s::SUBbc_3()
 {
 	// Call base function.
 	SUBbc(3);
 }
 
-void VUInterpreter::SUBA()
+void VUInterpreter_s::SUBA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -240,7 +236,7 @@ void VUInterpreter::SUBA()
 #endif
 }
 
-void VUInterpreter::SUBAi()
+void VUInterpreter_s::SUBAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -250,7 +246,7 @@ void VUInterpreter::SUBAi()
 #endif
 }
 
-void VUInterpreter::SUBAq()
+void VUInterpreter_s::SUBAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -260,7 +256,7 @@ void VUInterpreter::SUBAq()
 #endif
 }
 
-void VUInterpreter::SUBAbc(const u8 & idx)
+void VUInterpreter_s::SUBAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -270,31 +266,31 @@ void VUInterpreter::SUBAbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::SUBAbc_0()
+void VUInterpreter_s::SUBAbc_0()
 {
 	// Call base function.
 	SUBAbc(0);
 }
 
-void VUInterpreter::SUBAbc_1()
+void VUInterpreter_s::SUBAbc_1()
 {
 	// Call base function.
 	SUBAbc(1);
 }
 
-void VUInterpreter::SUBAbc_2()
+void VUInterpreter_s::SUBAbc_2()
 {
 	// Call base function.
 	SUBAbc(2);
 }
 
-void VUInterpreter::SUBAbc_3()
+void VUInterpreter_s::SUBAbc_3()
 {
 	// Call base function.
 	SUBAbc(3);
 }
 
-void VUInterpreter::MUL()
+void VUInterpreter_s::MUL()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -304,7 +300,7 @@ void VUInterpreter::MUL()
 #endif
 }
 
-void VUInterpreter::MULi()
+void VUInterpreter_s::MULi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -314,7 +310,7 @@ void VUInterpreter::MULi()
 #endif
 }
 
-void VUInterpreter::MULq()
+void VUInterpreter_s::MULq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -324,7 +320,7 @@ void VUInterpreter::MULq()
 #endif
 }
 
-void VUInterpreter::MULbc(const u8 & idx)
+void VUInterpreter_s::MULbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -334,31 +330,31 @@ void VUInterpreter::MULbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MULbc_0()
+void VUInterpreter_s::MULbc_0()
 {
 	// Call base function.
 	MULbc(0);
 }
 
-void VUInterpreter::MULbc_1()
+void VUInterpreter_s::MULbc_1()
 {
 	// Call base function.
 	MULbc(1);
 }
 
-void VUInterpreter::MULbc_2()
+void VUInterpreter_s::MULbc_2()
 {
 	// Call base function.
 	MULbc(2);
 }
 
-void VUInterpreter::MULbc_3()
+void VUInterpreter_s::MULbc_3()
 {
 	// Call base function.
 	MULbc(3);
 }
 
-void VUInterpreter::MULA()
+void VUInterpreter_s::MULA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -368,7 +364,7 @@ void VUInterpreter::MULA()
 #endif
 }
 
-void VUInterpreter::MULAi()
+void VUInterpreter_s::MULAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -378,7 +374,7 @@ void VUInterpreter::MULAi()
 #endif
 }
 
-void VUInterpreter::MULAq()
+void VUInterpreter_s::MULAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -388,7 +384,7 @@ void VUInterpreter::MULAq()
 #endif
 }
 
-void VUInterpreter::MULAbc(const u8 & idx)
+void VUInterpreter_s::MULAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -398,31 +394,31 @@ void VUInterpreter::MULAbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MULAbc_0()
+void VUInterpreter_s::MULAbc_0()
 {
 	// Call base function.
 	MULAbc(0);
 }
 
-void VUInterpreter::MULAbc_1()
+void VUInterpreter_s::MULAbc_1()
 {
 	// Call base function.
 	MULAbc(1);
 }
 
-void VUInterpreter::MULAbc_2()
+void VUInterpreter_s::MULAbc_2()
 {
 	// Call base function.
 	MULAbc(2);
 }
 
-void VUInterpreter::MULAbc_3()
+void VUInterpreter_s::MULAbc_3()
 {
 	// Call base function.
 	MULAbc(3);
 }
 
-void VUInterpreter::MADD()
+void VUInterpreter_s::MADD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -432,7 +428,7 @@ void VUInterpreter::MADD()
 #endif
 }
 
-void VUInterpreter::MADDi()
+void VUInterpreter_s::MADDi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -442,7 +438,7 @@ void VUInterpreter::MADDi()
 #endif
 }
 
-void VUInterpreter::MADDq()
+void VUInterpreter_s::MADDq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -452,7 +448,7 @@ void VUInterpreter::MADDq()
 #endif
 }
 
-void VUInterpreter::MADDbc(const u8 & idx)
+void VUInterpreter_s::MADDbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -462,31 +458,31 @@ void VUInterpreter::MADDbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MADDbc_0()
+void VUInterpreter_s::MADDbc_0()
 {
 	// Call base function.
 	MADDbc(0);
 }
 
-void VUInterpreter::MADDbc_1()
+void VUInterpreter_s::MADDbc_1()
 {
 	// Call base function.
 	MADDbc(1);
 }
 
-void VUInterpreter::MADDbc_2()
+void VUInterpreter_s::MADDbc_2()
 {
 	// Call base function.
 	MADDbc(2);
 }
 
-void VUInterpreter::MADDbc_3()
+void VUInterpreter_s::MADDbc_3()
 {
 	// Call base function.
 	MADDbc(3);
 }
 
-void VUInterpreter::MADDA()
+void VUInterpreter_s::MADDA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -496,7 +492,7 @@ void VUInterpreter::MADDA()
 #endif
 }
 
-void VUInterpreter::MADDAi()
+void VUInterpreter_s::MADDAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -506,7 +502,7 @@ void VUInterpreter::MADDAi()
 #endif
 }
 
-void VUInterpreter::MADDAq()
+void VUInterpreter_s::MADDAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -516,7 +512,7 @@ void VUInterpreter::MADDAq()
 #endif
 }
 
-void VUInterpreter::MADDAbc(const u8 & idx)
+void VUInterpreter_s::MADDAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -526,31 +522,31 @@ void VUInterpreter::MADDAbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MADDAbc_0()
+void VUInterpreter_s::MADDAbc_0()
 {
 	// Call base function.
 	MADDAbc(0);
 }
 
-void VUInterpreter::MADDAbc_1()
+void VUInterpreter_s::MADDAbc_1()
 {
 	// Call base function.
 	MADDAbc(1);
 }
 
-void VUInterpreter::MADDAbc_2()
+void VUInterpreter_s::MADDAbc_2()
 {
 	// Call base function.
 	MADDAbc(2);
 }
 
-void VUInterpreter::MADDAbc_3()
+void VUInterpreter_s::MADDAbc_3()
 {
 	// Call base function.
 	MADDAbc(3);
 }
 
-void VUInterpreter::MSUB()
+void VUInterpreter_s::MSUB()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -560,7 +556,7 @@ void VUInterpreter::MSUB()
 #endif
 }
 
-void VUInterpreter::MSUBi()
+void VUInterpreter_s::MSUBi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -570,7 +566,7 @@ void VUInterpreter::MSUBi()
 #endif
 }
 
-void VUInterpreter::MSUBq()
+void VUInterpreter_s::MSUBq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -580,7 +576,7 @@ void VUInterpreter::MSUBq()
 #endif
 }
 
-void VUInterpreter::MSUBbc(const u8 & idx)
+void VUInterpreter_s::MSUBbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -590,31 +586,31 @@ void VUInterpreter::MSUBbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MSUBbc_0()
+void VUInterpreter_s::MSUBbc_0()
 {
 	// Call base function.
 	MSUBbc(0);
 }
 
-void VUInterpreter::MSUBbc_1()
+void VUInterpreter_s::MSUBbc_1()
 {
 	// Call base function.
 	MSUBbc(1);
 }
 
-void VUInterpreter::MSUBbc_2()
+void VUInterpreter_s::MSUBbc_2()
 {
 	// Call base function.
 	MSUBbc(2);
 }
 
-void VUInterpreter::MSUBbc_3()
+void VUInterpreter_s::MSUBbc_3()
 {
 	// Call base function.
 	MSUBbc(3);
 }
 
-void VUInterpreter::MSUBA()
+void VUInterpreter_s::MSUBA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -624,7 +620,7 @@ void VUInterpreter::MSUBA()
 #endif
 }
 
-void VUInterpreter::MSUBAi()
+void VUInterpreter_s::MSUBAi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -634,7 +630,7 @@ void VUInterpreter::MSUBAi()
 #endif
 }
 
-void VUInterpreter::MSUBAq()
+void VUInterpreter_s::MSUBAq()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -644,7 +640,7 @@ void VUInterpreter::MSUBAq()
 #endif
 }
 
-void VUInterpreter::MSUBAbc(const u8 & idx)
+void VUInterpreter_s::MSUBAbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -654,31 +650,31 @@ void VUInterpreter::MSUBAbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MSUBAbc_0()
+void VUInterpreter_s::MSUBAbc_0()
 {
 	// Call base function.
 	MSUBAbc(0);
 }
 
-void VUInterpreter::MSUBAbc_1()
+void VUInterpreter_s::MSUBAbc_1()
 {
 	// Call base function.
 	MSUBAbc(1);
 }
 
-void VUInterpreter::MSUBAbc_2()
+void VUInterpreter_s::MSUBAbc_2()
 {
 	// Call base function.
 	MSUBAbc(2);
 }
 
-void VUInterpreter::MSUBAbc_3()
+void VUInterpreter_s::MSUBAbc_3()
 {
 	// Call base function.
 	MSUBAbc(3);
 }
 
-void VUInterpreter::MAX()
+void VUInterpreter_s::MAX()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -688,7 +684,7 @@ void VUInterpreter::MAX()
 #endif
 }
 
-void VUInterpreter::MAXi()
+void VUInterpreter_s::MAXi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -698,7 +694,7 @@ void VUInterpreter::MAXi()
 #endif
 }
 
-void VUInterpreter::MAXbc(const u8 & idx)
+void VUInterpreter_s::MAXbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -708,31 +704,31 @@ void VUInterpreter::MAXbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MAXbc_0()
+void VUInterpreter_s::MAXbc_0()
 {
 	// Call base function.
 	MAXbc(0);
 }
 
-void VUInterpreter::MAXbc_1()
+void VUInterpreter_s::MAXbc_1()
 {
 	// Call base function.
 	MAXbc(1);
 }
 
-void VUInterpreter::MAXbc_2()
+void VUInterpreter_s::MAXbc_2()
 {
 	// Call base function.
 	MAXbc(2);
 }
 
-void VUInterpreter::MAXbc_3()
+void VUInterpreter_s::MAXbc_3()
 {
 	// Call base function.
 	MAXbc(3);
 }
 
-void VUInterpreter::MINI()
+void VUInterpreter_s::MINI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -742,7 +738,7 @@ void VUInterpreter::MINI()
 #endif
 }
 
-void VUInterpreter::MINIi()
+void VUInterpreter_s::MINIi()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -752,7 +748,7 @@ void VUInterpreter::MINIi()
 #endif
 }
 
-void VUInterpreter::MINIbc(const u8 & idx)
+void VUInterpreter_s::MINIbc(const u8 & idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -762,31 +758,31 @@ void VUInterpreter::MINIbc(const u8 & idx)
 #endif
 }
 
-void VUInterpreter::MINIbc_0()
+void VUInterpreter_s::MINIbc_0()
 {
 	// Call base function.
 	MINIbc(0);
 }
 
-void VUInterpreter::MINIbc_1()
+void VUInterpreter_s::MINIbc_1()
 {
 	// Call base function.
 	MINIbc(1);
 }
 
-void VUInterpreter::MINIbc_2()
+void VUInterpreter_s::MINIbc_2()
 {
 	// Call base function.
 	MINIbc(2);
 }
 
-void VUInterpreter::MINIbc_3()
+void VUInterpreter_s::MINIbc_3()
 {
 	// Call base function.
 	MINIbc(3);
 }
 
-void VUInterpreter::OPMULA()
+void VUInterpreter_s::OPMULA()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -796,7 +792,7 @@ void VUInterpreter::OPMULA()
 #endif
 }
 
-void VUInterpreter::OPMSUB()
+void VUInterpreter_s::OPMSUB()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -806,7 +802,7 @@ void VUInterpreter::OPMSUB()
 #endif
 }
 
-void VUInterpreter::DIV()
+void VUInterpreter_s::DIV()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -816,7 +812,7 @@ void VUInterpreter::DIV()
 #endif
 }
 
-void VUInterpreter::SQRT()
+void VUInterpreter_s::SQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -826,7 +822,7 @@ void VUInterpreter::SQRT()
 #endif
 }
 
-void VUInterpreter::RSQRT()
+void VUInterpreter_s::RSQRT()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

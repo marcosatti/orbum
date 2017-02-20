@@ -75,7 +75,7 @@ public:
 	When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
-	void writeWord(const Context & context, u32 value) override;
+	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
 	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).

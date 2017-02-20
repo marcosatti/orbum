@@ -10,9 +10,25 @@ PADDRESS = Physical base address.
 VADDRESS = Virtual base address.
 OADDRESS = Offset from physical/virtual address.
 SIZE = Size in bytes.
+CLK_SPEED = Speed in Hz;
+REFRESH_RATE = Speed in Hz.
 */
 struct Constants
 {
+	// From Microsoft: https://msdn.microsoft.com/en-AU/library/296az74e.aspx.
+	static constexpr u8  VALUE_U8_MAX = 255;
+	static constexpr s8  VALUE_S8_MAX = 127;
+	static constexpr s8  VALUE_S8_MIN = -128;
+	static constexpr u16 VALUE_U16_MAX = 65535;
+	static constexpr s16 VALUE_S16_MAX = 32767;
+	static constexpr s16 VALUE_S16_MIN = -32768;
+	static constexpr u32 VALUE_U32_MAX = 4294967295;
+	static constexpr s32 VALUE_S32_MAX = 2147483647;
+	static constexpr s32 VALUE_S32_MIN = -2147483647 - 1; // Can't use -2147483648, as it results in compiler error C4146 (too big) on VS, so use this workaround. Thanks: http://stackoverflow.com/questions/29355956/how-can-i-fix-error-code-c4146-unary-minus-operator-applied-to-unsigned-type-re.
+	static constexpr u64 VALUE_U64_MAX = 18446744073709551615;
+	static constexpr s64 VALUE_S64_MAX = 9223372036854775807;
+	static constexpr s64 VALUE_S64_MIN = -9223372036854775807 - 1; // Same reason as above.
+
 	static constexpr size_t SIZE_4GB   = 0x100000000;
 	static constexpr size_t SIZE_512MB = 0x20000000;
 	static constexpr size_t SIZE_32MB  = 0x2000000;
@@ -35,29 +51,12 @@ struct Constants
 	static constexpr u32 NUMBER_HWORDS_IN_QWORD = 8;
 	static constexpr u32 NUMBER_WORDS_IN_QWORD = 4;
 	static constexpr u32 NUMBER_DWORDS_IN_QWORD = 2;
-
 	static constexpr u32 NUMBER_BYTES_IN_DWORD = 8;
 	static constexpr u32 NUMBER_HWORDS_IN_DWORD = 4;
 	static constexpr u32 NUMBER_WORDS_IN_DWORD = 2;
-
 	static constexpr u32 NUMBER_BYTES_IN_WORD = 4;
 	static constexpr u32 NUMBER_HWORDS_IN_WORD = 2;
-
 	static constexpr u32 NUMBER_BYTES_IN_HWORD = 2;
-
-	// From Microsoft: https://msdn.microsoft.com/en-AU/library/296az74e.aspx.
-	static constexpr u8  VALUE_U8_MAX = 255;
-	static constexpr s8  VALUE_S8_MAX = 127;
-	static constexpr s8  VALUE_S8_MIN = -128;
-	static constexpr u16 VALUE_U16_MAX = 65535;
-	static constexpr s16 VALUE_S16_MAX = 32767;
-	static constexpr s16 VALUE_S16_MIN = -32768;
-	static constexpr u32 VALUE_U32_MAX = 4294967295;
-	static constexpr s32 VALUE_S32_MAX = 2147483647;
-	static constexpr s32 VALUE_S32_MIN = -2147483647 - 1; // Can't use -2147483648, as it results in compiler error C4146 (too big) on VS, so use this workaround. Thanks: http://stackoverflow.com/questions/29355956/how-can-i-fix-error-code-c4146-unary-minus-operator-applied-to-unsigned-type-re.
-	static constexpr u64 VALUE_U64_MAX = 18446744073709551615;
-	static constexpr s64 VALUE_S64_MAX = 9223372036854775807;
-	static constexpr s64 VALUE_S64_MIN = -9223372036854775807 - 1; // Same reason as above.
 
 	struct MIPS
 	{
@@ -227,12 +226,11 @@ struct Constants
 				static constexpr u32 NUMBER_VU_UNITS = 2;
 				static constexpr u32 NUMBER_VU0_CCR_REGISTERS = 32;
 				static constexpr u32 NUMBER_VU_INSTRUCTIONS = 164;
+				static constexpr double VU_CLK_SPEED = 147456000.0; // 147.456 MHz.
 			};
 		};
 
-		static constexpr double EEBUS_CLK_SPEED = 147456000.0; // 147.456 MHz (half of EECore speed).
-		static constexpr double EEBUS16_CLK_SPEED = (147456000.0 / 16);
-		static constexpr double EEBUS256_CLK_SPEED = (147456000.0 / 256);
+		static constexpr double EEBUS_CLK_SPEED = 150000000.0; // 150 MHz.
 	};
 
 	struct IOP
@@ -273,7 +271,7 @@ struct Constants
 
 			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
 
-			static constexpr double IOPCORE_CLK_SPEED = 37500000.0; // 37.5 MHz.
+			static constexpr double IOPCORE_CLK_SPEED = 37500000.0; // 37.5 MHz in PS2 mode, PS1 mode not supported for now (runs at original PSX speed of ~33 MHz).
 		};
 
 		struct DMAC
@@ -309,16 +307,43 @@ struct Constants
 		};
 
 		static constexpr double IOPBUS_CLK_SPEED = 37500000.0; // 37.5 MHz (same as IOPCore speed).
-		static constexpr double IOPBUS8_CLK_SPEED = (37500000.0 / 8);
-		static constexpr double IOPBUS16_CLK_SPEED = (37500000.0 / 16);
-		static constexpr double IOPBUS256_CLK_SPEED = (37500000.0 / 256);
 	};
 
 	struct GS
 	{
-		struct PCRTC
+		struct GSCore
 		{
-			static constexpr double HBLNK_CLK_SPEED = 59.94; // NTSC.
+			static constexpr double GSCORE_CLK_SPEED = 150000000.0; // 150 MHz.
 		};
+
+		struct CRTC
+		{
+			struct NTSC
+			{
+				static constexpr double INTERLACED_FIELD_REFRESH_RATE = 59.94; // Vertical refresh rate (interlaced).
+				static constexpr double PROGRESSIVE_FRAME_REFRESH_RATE = 59.82; // Vertical refresh rate (progressive).
+				static constexpr double SCANLINE_REFRESH_RATE = 15734.0; // Horizontal refresh rate.
+			};
+
+			struct PAL
+			{
+				static constexpr double INTERLACED_FIELD_REFRESH_RATE = 50.00; // Vertical refresh rate (interlaced).
+				static constexpr double PROGRESSIVE_FRAME_REFRESH_RATE = 49.76; // Vertical refresh rate (progressive).
+				static constexpr double SCANLINE_REFRESH_RATE = 16625.0; // Horizontal refresh rate.
+			};
+
+			struct VESA
+			{
+			};
+
+			struct DTV
+			{
+			};
+
+			static constexpr double PCRTC_CLK_SPEED_DEFAULT = 1 / ((1/15734.0) / 2 / 640); // ~20 MHz, guess based on NTSC defaults of resX = 640 @ 15.734 kHz. Working: period of 1 cycle, divided by half (actual render vs. hblank), divided by number of resX pixels, all inversed for Hz.
+		};
+
 	};
+
+	
 };

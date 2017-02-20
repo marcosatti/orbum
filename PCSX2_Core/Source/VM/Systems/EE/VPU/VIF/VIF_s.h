@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 #include "Resources/EE/VPU/VIF/Types/VIFcode_t.h"
 
@@ -13,16 +13,16 @@ The VIF is responsible for processing and transfering data to the VU units, or o
 
 For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the size of 1 DMA transfer unit of 128-bits.
 */
-class VIF : public VMSystem_t
+class VIF_s : public VMSystem_s
 {
 public:
-	explicit VIF(VM * vmMain, u32 vifUnitIndex);
-	virtual ~VIF();
+	explicit VIF_s(VM * vm, u32 vifUnitIndex);
+	virtual ~VIF_s();
 
 	/*
 	Check the FIFO queue and process data if available.
 	*/
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 
@@ -95,42 +95,42 @@ private:
 	Static arrays needed to call the appropriate VIFcode handler function.
 	In total there are 34 unique instructions, based on the VIFcodeInstructionTable unique index.
 	*/
-	void(VIF::* INSTRUCTION_TABLE[Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])() =
+	void(VIF_s::* INSTRUCTION_TABLE[Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])() =
 	{
-		&VIF::INSTRUCTION_UNSUPPORTED,
-		&VIF::NOP,
-		&VIF::STCYCL,
-		&VIF::OFFSET,
-		&VIF::BASE,
-		&VIF::ITOP,
-		&VIF::STMOD,
-		&VIF::MSKPATH3,
-		&VIF::MARK,
-		&VIF::FLUSHE,
-		&VIF::FLUSH,
-		&VIF::FLUSHA,
-		&VIF::MSCAL,
-		&VIF::MSCALF,
-		&VIF::MSCNT,
-		&VIF::STMASK,
-		&VIF::STROW,
-		&VIF::STCOL,
-		&VIF::MPG,
-		&VIF::DIRECT,
-		&VIF::DIRECTHL,
-		&VIF::UNPACK_S_32,
-		&VIF::UNPACK_S_16,
-		&VIF::UNPACK_S_8,
-		&VIF::UNPACK_V2_32,
-		&VIF::UNPACK_V2_16,
-		&VIF::UNPACK_V2_8,
-		&VIF::UNPACK_V3_32,
-		&VIF::UNPACK_V3_16,
-		&VIF::UNPACK_V3_8,
-		&VIF::UNPACK_V4_32,
-		&VIF::UNPACK_V4_16,
-		&VIF::UNPACK_V4_8,
-		&VIF::UNPACK_V4_5
+		&VIF_s::INSTRUCTION_UNSUPPORTED,
+		&VIF_s::NOP,
+		&VIF_s::STCYCL,
+		&VIF_s::OFFSET,
+		&VIF_s::BASE,
+		&VIF_s::ITOP,
+		&VIF_s::STMOD,
+		&VIF_s::MSKPATH3,
+		&VIF_s::MARK,
+		&VIF_s::FLUSHE,
+		&VIF_s::FLUSH,
+		&VIF_s::FLUSHA,
+		&VIF_s::MSCAL,
+		&VIF_s::MSCALF,
+		&VIF_s::MSCNT,
+		&VIF_s::STMASK,
+		&VIF_s::STROW,
+		&VIF_s::STCOL,
+		&VIF_s::MPG,
+		&VIF_s::DIRECT,
+		&VIF_s::DIRECTHL,
+		&VIF_s::UNPACK_S_32,
+		&VIF_s::UNPACK_S_16,
+		&VIF_s::UNPACK_S_8,
+		&VIF_s::UNPACK_V2_32,
+		&VIF_s::UNPACK_V2_16,
+		&VIF_s::UNPACK_V2_8,
+		&VIF_s::UNPACK_V3_32,
+		&VIF_s::UNPACK_V3_16,
+		&VIF_s::UNPACK_V3_8,
+		&VIF_s::UNPACK_V4_32,
+		&VIF_s::UNPACK_V4_16,
+		&VIF_s::UNPACK_V4_8,
+		&VIF_s::UNPACK_V4_5
 	};
 
 };

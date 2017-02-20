@@ -4,7 +4,7 @@
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
@@ -12,7 +12,7 @@
 #include "Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 
-void EECoreInterpreter::MFSA()
+void EECoreInterpreter_s::MFSA()
 {
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	auto& sourceReg = mEECore->R5900->SA;
@@ -20,7 +20,7 @@ void EECoreInterpreter::MFSA()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MTSA()
+void EECoreInterpreter_s::MTSA()
 {
 	auto& sourceReg = mEECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = mEECore->R5900->SA;
@@ -28,7 +28,7 @@ void EECoreInterpreter::MTSA()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTSAB()
+void EECoreInterpreter_s::MTSAB()
 {
 	auto& sourceReg = mEECore->R5900->GPR[mInstruction.getIRs()];
 	auto& destReg = mEECore->R5900->SA;
@@ -37,7 +37,7 @@ void EECoreInterpreter::MTSAB()
 	destReg->writeWord(EE, ((sourceReg->readWord(EE, 0) & 0xF) ^ (imm & 0xF)) * 8);
 }
 
-void EECoreInterpreter::MTSAH()
+void EECoreInterpreter_s::MTSAH()
 {
 	auto& sourceReg = mEECore->R5900->GPR[mInstruction.getIRs()];
 	auto& destReg = mEECore->R5900->SA;
@@ -46,7 +46,7 @@ void EECoreInterpreter::MTSAH()
 	destReg->writeWord(EE, ((sourceReg->readWord(EE, 0) & 0x7) ^ (imm & 0x7)) * 16);
 }
 
-void EECoreInterpreter::MFBPC()
+void EECoreInterpreter_s::MFBPC()
 {
 	if (handleCOP0Usable())
         return;
@@ -57,7 +57,7 @@ void EECoreInterpreter::MFBPC()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFC0()
+void EECoreInterpreter_s::MFC0()
 {
 	if (handleCOP0Usable())
         return;
@@ -68,7 +68,7 @@ void EECoreInterpreter::MFC0()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFDAB()
+void EECoreInterpreter_s::MFDAB()
 {
 	if (handleCOP0Usable())
         return;
@@ -79,7 +79,7 @@ void EECoreInterpreter::MFDAB()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFDABM()
+void EECoreInterpreter_s::MFDABM()
 {
 	if (handleCOP0Usable())
         return;
@@ -90,7 +90,7 @@ void EECoreInterpreter::MFDABM()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFDVB()
+void EECoreInterpreter_s::MFDVB()
 {
 	if (handleCOP0Usable())
         return;
@@ -101,7 +101,7 @@ void EECoreInterpreter::MFDVB()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFDVBM()
+void EECoreInterpreter_s::MFDVBM()
 {
 	if (handleCOP0Usable())
         return;
@@ -112,7 +112,7 @@ void EECoreInterpreter::MFDVBM()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFIAB()
+void EECoreInterpreter_s::MFIAB()
 {
 	if (handleCOP0Usable())
         return;
@@ -123,7 +123,7 @@ void EECoreInterpreter::MFIAB()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFIABM()
+void EECoreInterpreter_s::MFIABM()
 {
 	if (handleCOP0Usable())
 		return;
@@ -134,7 +134,7 @@ void EECoreInterpreter::MFIABM()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFPC()
+void EECoreInterpreter_s::MFPC()
 {
 	if (handleCOP0Usable())
         return;
@@ -146,7 +146,7 @@ void EECoreInterpreter::MFPC()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MFPS()
+void EECoreInterpreter_s::MFPS()
 {
 	if (handleCOP0Usable())
         return;
@@ -157,7 +157,7 @@ void EECoreInterpreter::MFPS()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::MTBPC()
+void EECoreInterpreter_s::MTBPC()
 {
 	if (handleCOP0Usable())
         return;
@@ -168,7 +168,7 @@ void EECoreInterpreter::MTBPC()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTC0()
+void EECoreInterpreter_s::MTC0()
 {
 	if (handleCOP0Usable())
         return;
@@ -179,7 +179,7 @@ void EECoreInterpreter::MTC0()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTDAB()
+void EECoreInterpreter_s::MTDAB()
 {
 	if (handleCOP0Usable())
         return;
@@ -190,7 +190,7 @@ void EECoreInterpreter::MTDAB()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTDABM()
+void EECoreInterpreter_s::MTDABM()
 {
 	if (handleCOP0Usable())
         return;
@@ -201,7 +201,7 @@ void EECoreInterpreter::MTDABM()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTDVB()
+void EECoreInterpreter_s::MTDVB()
 {
 	if (handleCOP0Usable())
         return;
@@ -212,7 +212,7 @@ void EECoreInterpreter::MTDVB()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTDVBM()
+void EECoreInterpreter_s::MTDVBM()
 {
 	if (handleCOP0Usable())
         return;
@@ -223,7 +223,7 @@ void EECoreInterpreter::MTDVBM()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTIAB()
+void EECoreInterpreter_s::MTIAB()
 {
 	if (handleCOP0Usable())
         return;
@@ -234,7 +234,7 @@ void EECoreInterpreter::MTIAB()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTIABM()
+void EECoreInterpreter_s::MTIABM()
 {
 	if (handleCOP0Usable())
         return;
@@ -245,7 +245,7 @@ void EECoreInterpreter::MTIABM()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTPC()
+void EECoreInterpreter_s::MTPC()
 {
 	if (handleCOP0Usable())
         return;
@@ -257,7 +257,7 @@ void EECoreInterpreter::MTPC()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::MTPS()
+void EECoreInterpreter_s::MTPS()
 {
 	if (handleCOP0Usable())
         return;
@@ -268,7 +268,7 @@ void EECoreInterpreter::MTPS()
 	destReg->writeWord(EE, sourceReg->readWord(EE, 0));
 }
 
-void EECoreInterpreter::CFC1()
+void EECoreInterpreter_s::CFC1()
 {
 	if (handleCOP1Usable())
         return;
@@ -279,7 +279,7 @@ void EECoreInterpreter::CFC1()
 	destReg->writeDword(EE, 0, static_cast<u64>(sourceReg->readWord(EE)));
 }
 
-void EECoreInterpreter::CTC1()
+void EECoreInterpreter_s::CTC1()
 {
 	if (handleCOP1Usable())
         return;

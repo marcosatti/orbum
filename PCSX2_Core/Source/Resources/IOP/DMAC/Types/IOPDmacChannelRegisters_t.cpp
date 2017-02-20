@@ -23,7 +23,7 @@ IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic
 	registerField(Fields::BA, "BA", 16, 16, 0);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeHword(const Context& context, size_t arrayIndex, u16 value)
+void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t& context, size_t arrayIndex, u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
@@ -31,7 +31,7 @@ void IOPDmacChannelRegister_BCR_t::writeHword(const Context& context, size_t arr
 	mOriginalBS = getFieldValue(Fields::BS);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeWord(const Context& context, u32 value)
+void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t& context, u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 

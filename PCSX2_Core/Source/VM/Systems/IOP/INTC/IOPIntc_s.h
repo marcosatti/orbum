@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 class IOPCoreCOP0_t;
 class IOPIntc_t;
@@ -11,13 +11,13 @@ interrupts to send to the IOP Core to process.
 TODO: Verify the clock speed. Assumed to be IOP clock speed (~37 MHz), as the max reported bus rate is 137 MB/s and width is 32-bit.
 See https://en.wikipedia.org/wiki/PlayStation_technical_specifications and https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
 */
-class IOPIntc : public VMSystem_t
+class IOPIntc_s : public VMSystem_s
 {
 public:
-	explicit IOPIntc(VM * vmMain);
-	virtual ~IOPIntc();
+	explicit IOPIntc_s(VM * vm);
+	virtual ~IOPIntc_s();
 
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*

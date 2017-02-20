@@ -43,7 +43,7 @@ EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
 	registerField(Fields::MEIM, "MEIM", 30, 1, 0);
 }
 
-void EEDmacRegister_STAT_t::writeWord(const Context & context, u32 value)
+void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 {
 	if (context == EE)
 	{

@@ -33,7 +33,7 @@ Register8_t::~Register8_t()
 {
 }
 
-u8 Register8_t::readByte(const Context& context)
+u8 Register8_t::readByte(const Context_t& context)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -49,7 +49,7 @@ u8 Register8_t::readByte(const Context& context)
 	return UB;
 }
 
-void Register8_t::writeByte(const Context& context, u8 value)
+void Register8_t::writeByte(const Context_t& context, u8 value)
 {
 	UB = value;
 

@@ -20,18 +20,19 @@ public:
 	/*
 	Returns the register value, and sets it to 0 after (IOP context only).
 	*/
-	u32 readWord(const Context& context) override;
+	u32 readWord(const Context_t& context) override;
 };
 
 /*
 The IOP INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
+Names from here, not sure if accurate: https://github.com/kode54/Highly_Experimental/blob/master/Core/iop.c.
 */
 class IOPIntcRegister_MASK_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
-		static constexpr u8 VBLNK = 0;
+		static constexpr u8 VBLANK = 0;
 		static constexpr u8 GPU = 1;
 		static constexpr u8 CDROM = 2;
 		static constexpr u8 DMA = 3;
@@ -65,13 +66,14 @@ public:
 /*
 The IOP INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 When written to, AND's the previous value with the new value (see IopHwWrite.cpp in PCSX2).
+Names from here, not sure if accurate: https://github.com/kode54/Highly_Experimental/blob/master/Core/iop.c.
 */
 class IOPIntcRegister_STAT_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
 	{
-		static constexpr u8 VBLNK = 0;
+		static constexpr u8 VBLANK = 0;
 		static constexpr u8 GPU = 1;
 		static constexpr u8 CDROM = 2;
 		static constexpr u8 DMA = 3;
@@ -98,7 +100,7 @@ public:
 		static constexpr u8 FWRE = 24;
 		static constexpr u8 FDMA = 25;
 
-		static constexpr u8 IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLNK, GPU, CDROM, DMA, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
+		static constexpr u8 IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLANK, GPU, CDROM, DMA, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
 		static constexpr u8 TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 	};
 
@@ -108,5 +110,5 @@ public:
 	AND's the new value with old value (IOP context only).
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 };

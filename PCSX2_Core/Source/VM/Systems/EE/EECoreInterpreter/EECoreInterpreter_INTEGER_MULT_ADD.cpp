@@ -3,12 +3,12 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 
-void EECoreInterpreter::MADD()
+void EECoreInterpreter_s::MADD()
 {
 	// (LO, HI, Rd) = (HI || LO) + SignExtend<s64>(Rs[SW] * Rt[SW])
 	// No Exceptions generated.
@@ -29,13 +29,13 @@ void EECoreInterpreter::MADD()
 	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
 }
 
-void EECoreInterpreter::MADD1()
+void EECoreInterpreter_s::MADD1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MADD();
 }
 
-void EECoreInterpreter::MADDU()
+void EECoreInterpreter_s::MADDU()
 {
 	// (LO, HI, Rd) = (HI || LO) + SignExtend<u64>(Rs[UW] * Rt[UW])
 	// No Exceptions generated.
@@ -56,13 +56,13 @@ void EECoreInterpreter::MADDU()
 	destReg->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
 }
 
-void EECoreInterpreter::MADDU1()
+void EECoreInterpreter_s::MADDU1()
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MADDU();
 }
 
-void EECoreInterpreter::PHMADH()
+void EECoreInterpreter_s::PHMADH()
 {
 	// (LO, HI, Rd)[i] = SignExtend<s32>(Rs[SH] * Rt[SH])[i] + SignExtend<s32>(Rs[SH] * Rt[SH])[i + 1]
 	// No Exceptions generated.
@@ -91,7 +91,7 @@ void EECoreInterpreter::PHMADH()
 	}
 }
 
-void EECoreInterpreter::PHMSBH()
+void EECoreInterpreter_s::PHMSBH()
 {
 	// (LO, HI, Rd)[i] = SignExtend<s32>(Rs[SH] * Rt[SH])[i] - SignExtend<s32>(Rs[SH] * Rt[SH])[i + 1]
 	// No Exceptions generated.
@@ -120,7 +120,7 @@ void EECoreInterpreter::PHMSBH()
 	}
 }
 
-void EECoreInterpreter::PMADDH()
+void EECoreInterpreter_s::PMADDH()
 {
 	// (LO, HI, Rd) = SignExtend<s32>(Rs[SH] * Rt[SH] + (HI,LO)[i]) (varying indexes - see EE Core Instruction Manual page 216).
 	// (HI,LO)[i] = "C" in comments written below.
@@ -155,7 +155,7 @@ void EECoreInterpreter::PMADDH()
 	}
 }
 
-void EECoreInterpreter::PMADDUW()
+void EECoreInterpreter_s::PMADDUW()
 {
 	// (LO, HI, Rd) = SignExtend<u64>(Rs[UW] * Rt[UW] + (HI || LO)[i]) (varying indexes - see EE Core Instruction Manual page 218).
 	// No Exceptions generated.
@@ -179,7 +179,7 @@ void EECoreInterpreter::PMADDUW()
 	}
 }
 
-void EECoreInterpreter::PMADDW()
+void EECoreInterpreter_s::PMADDW()
 {
 	// (LO, HI, Rd) = SignExtend<s64>(Rs[SW] * Rt[SW] + (HI || LO)[i]) (varying indexes - see EE Core Instruction Manual page 220).
 	// No Exceptions generated.
@@ -203,7 +203,7 @@ void EECoreInterpreter::PMADDW()
 	}
 }
 
-void EECoreInterpreter::PMSUBH()
+void EECoreInterpreter_s::PMSUBH()
 {
 	// (LO, HI, Rd) = SignExtend<s32>((HI,LO)[i] - Rs[SH] * Rt[SH]) (varying indexes - see EE Core Instruction Manual page 216).
 	// (HI,LO)[i] = "C" in comments written below.
@@ -238,7 +238,7 @@ void EECoreInterpreter::PMSUBH()
 	}
 }
 
-void EECoreInterpreter::PMSUBW()
+void EECoreInterpreter_s::PMSUBW()
 {
 	// (LO, HI, Rd) = SignExtend<s64>((HI || LO)[i] - Rs[SW] * Rt[SW]) (varying indexes - see EE Core Instruction Manual page 220).
 	// No Exceptions generated.

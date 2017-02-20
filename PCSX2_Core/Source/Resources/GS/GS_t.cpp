@@ -4,8 +4,10 @@
 #include "Common/Types/Memory/ConstantMemory_t.h"
 
 #include "Resources/GS/GS_t.h"
+#include "Resources/GS/CRTC/CRTC_t.h"
 
 GS_t::GS_t() :
+	CRTC(std::make_shared<CRTC_t>()),
 	// Registers.
 	PMODE(std::make_shared<Register64_t>("SPE: PMODE")),
 	SMODE1(std::make_shared<Register64_t>("SPE: SMODE1")),

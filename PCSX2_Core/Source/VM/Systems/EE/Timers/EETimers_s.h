@@ -2,9 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_t.h"
-
-#include "Resources/Clock/Types/ClockSource_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 class EEIntc_t;
 class EETimers_t;
@@ -17,16 +15,16 @@ If interrupt conditions are met, sets the corresponding interrupt bit in the EE 
 
 The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 or HBLNK clocks.
 */
-class EETimers : public VMSystem_t
+class EETimers_s : public VMSystem_s
 {
 public:
-	explicit EETimers(VM * vmMain);
-	virtual ~EETimers();
+	explicit EETimers_s(VM * vm);
+	virtual ~EETimers_s();
 
 	/*
 	Updates the timers with the specified clock source type.
 	*/
-	double executeStep(const ClockSource_t & clockSource, const double & ticksAvailable) override;
+	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
 	/*
@@ -34,15 +32,9 @@ private:
 	*/
 	u32 mTimerIndex;
 	EETimersTimer_t * mTimer;
-	ClockSource_t mClockSource;
 	std::shared_ptr<EETimers_t> mTimers;
 	std::shared_ptr<EEIntc_t> mINTC;
 	std::shared_ptr<GS_t> mGS;
-
-	/*
-	Returns if the clock source of the timer is equal to the type of TimerEvent_t, by looking at the Timer.Mode register (CLKS).
-	*/
-	bool isTimerCLKSEqual() const;
 
 	/*
 	Checks the timer status and count values for interrupt conditions.
@@ -58,7 +50,6 @@ private:
 	Checks the previous gate condition and resets if required.
 	*/
 	void handleTimerGateReset() const;
-
 	
 };
 

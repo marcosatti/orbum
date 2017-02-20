@@ -2,22 +2,24 @@
 
 #include <memory>
 #include <thread>
+#include <vector>
+
+#include "Common/Types/EnumMap_t.h"
 
 #include "VM/Types/VMOptions.h"
-#include "VM/Types/VMSystem_t.h"
+#include "VM/Types/VMSystem_s.h"
 
 class Resources_t;
-class VUInterpreter;
-class VIF;
-class VM;
-class EECoreInterpreter;
-class EEDmac;
-class EEIntc;
-class EETimers;
-class IOPCoreInterpreter;
-class IOPIntc;
-class IOPDmac;
-class IOPTimers;
+class VUInterpreter_s;
+class VIF_s;
+class EECoreInterpreter_s;
+class EEDmac_s;
+class EEIntc_s;
+class EETimers_s;
+class IOPCoreInterpreter_s;
+class IOPIntc_s;
+class IOPDmac_s;
+class IOPTimers_s;
 
 /*
 Entry point into all PCSX2 core emulation.
@@ -59,19 +61,7 @@ private:
 	/*
 	PS2 systems / components.
 	*/
-	std::shared_ptr<VUInterpreter> mInterpreterVU0;
-	std::shared_ptr<VUInterpreter> mInterpreterVU1;
-	std::shared_ptr<VIF> mVIF0;
-	std::shared_ptr<VIF> mVIF1;
-	std::shared_ptr<EECoreInterpreter> mEECoreInterpreter;
-	std::shared_ptr<EEDmac> mEEDmac;
-	std::shared_ptr<EEIntc> mEEIntc;
-	std::shared_ptr<EETimers> mEETimers;
-	std::shared_ptr<IOPCoreInterpreter> mIOPCoreInterpreter;
-	std::shared_ptr<IOPIntc> mIOPIntc;
-	std::shared_ptr<IOPDmac> mIOPDmac;
-	std::shared_ptr<IOPTimers> mIOPTimers;
-	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
+	EnumMap_t<System_t, std::shared_ptr<VMSystem_s>> mSystems;
 
 	/*
 	Threading resources.

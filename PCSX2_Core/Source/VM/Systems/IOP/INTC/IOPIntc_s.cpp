@@ -2,7 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/IOP/INTC/IOPIntc.h"
+#include "VM/VM.h"
+#include "VM/Systems/IOP/INTC/IOPIntc_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -12,18 +13,18 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPIntc::IOPIntc(VM * vmMain) : 
-	VMSystem_t(vmMain, System_t::IOPIntc)
+IOPIntc_s::IOPIntc_s(VM * vm) : 
+	VMSystem_s(vm, System_t::IOPIntc)
 {
-	mIOPCOP0 = getResources()->IOP->IOPCore->COP0;
-	mINTC = getResources()->IOP->INTC;
+	mIOPCOP0 = getVM()->getResources()->IOP->IOPCore->COP0;
+	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-IOPIntc::~IOPIntc()
+IOPIntc_s::~IOPIntc_s()
 {
 }
 
-double IOPIntc::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;

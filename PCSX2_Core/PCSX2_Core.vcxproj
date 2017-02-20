@@ -327,7 +327,8 @@
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
-    <ClInclude Include="Source\Common\Global\Context.h" />
+    <ClInclude Include="Source\Common\Types\Context_t.h" />
+    <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
@@ -348,8 +349,10 @@
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
-    <ClInclude Include="Source\Resources\Clock\Types\SystemClockState_t.h" />
-    <ClInclude Include="Source\Resources\Clock\Types\System_t.h" />
+    <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
+    <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
+    <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
+    <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\IOPDmac_t.h" />
@@ -382,11 +385,12 @@
     <ClInclude Include="Source\Resources\IOP\Timers\IOPTimers_t.h" />
     <ClInclude Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.h" />
     <ClInclude Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.h" />
-    <ClInclude Include="Source\VM\Systems\EE\VPU\VIF\VIF.h" />
-    <ClInclude Include="Source\VM\Systems\IOP\DMAC\IOPDmac.h" />
-    <ClInclude Include="Source\VM\Systems\IOP\INTC\IOPIntc.h" />
-    <ClInclude Include="Source\VM\Systems\IOP\Timers\IOPTimers.h" />
-    <ClInclude Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter.h" />
+    <ClInclude Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.h" />
+    <ClInclude Include="Source\VM\Systems\GS\GSCore\GSCore_s.h" />
+    <ClInclude Include="Source\VM\Systems\IOP\DMAC\IOPDmac_s.h" />
+    <ClInclude Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.h" />
+    <ClInclude Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.h" />
+    <ClInclude Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_s.h" />
     <ClInclude Include="Source\VM\Types\VMOptions.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreException_t.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
@@ -400,7 +404,7 @@
     <ClInclude Include="Source\Common\Types\MIPSInstructionInfo\MIPSInstructionInfo_t.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.h" />
-    <ClInclude Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter.h" />
+    <ClInclude Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_s.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\IOPCore_t.h" />
     <ClInclude Include="Source\Resources\EE\GIF\GIF_t.h" />
     <ClInclude Include="Source\Resources\EE\IPU\IPU_t.h" />
@@ -414,9 +418,8 @@
     <ClInclude Include="Source\Resources\Clock\Clock_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\EEDmac_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\DMAtag_t.h" />
-    <ClInclude Include="Source\VM\Systems\EE\DMAC\EEDmac.h" />
-    <ClInclude Include="Source\Resources\Clock\Types\ClockSource_t.h" />
-    <ClInclude Include="Source\VM\Systems\EE\INTC\EEIntc.h" />
+    <ClInclude Include="Source\VM\Systems\EE\DMAC\EEDmac_s.h" />
+    <ClInclude Include="Source\VM\Systems\EE\INTC\EEIntc_s.h" />
     <ClInclude Include="Source\Common\Global\CompileOptions.h" />
     <ClInclude Include="Source\Resources\GS\GS_t.h" />
     <ClInclude Include="Source\Resources\EE\Types\EERegisters_t.h" />
@@ -442,9 +445,9 @@
     <ClInclude Include="Source\Common\Global\Globals.h" />
     <ClInclude Include="Source\Common\Global\PrimativeTypes.h" />
     <ClInclude Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.h" />
-    <ClInclude Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter.h" />
+    <ClInclude Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.h" />
-    <ClInclude Include="Source\VM\Types\VMSystem_t.h" />
+    <ClInclude Include="Source\VM\Types\VMSystem_s.h" />
     <ClInclude Include="Source\VM\VM.h" />
     <ClInclude Include="Source\Resources\EE\EECore\Types\EECoreException_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register32_t.h" />
@@ -453,7 +456,7 @@
     <ClInclude Include="Source\targetver.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\Memory_t.h" />
-    <ClInclude Include="Source\VM\Systems\EE\Timers\EETimers.h" />
+    <ClInclude Include="Source\VM\Systems\EE\Timers\EETimers_s.h" />
     <ClInclude Include="Source\Resources\EE\Timers\Types\EETimersTimerRegisters_t.h" />
     <ClInclude Include="Source\Resources\EE\Timers\EETimers_t.h" />
   </ItemGroup>
@@ -483,6 +486,7 @@
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
@@ -524,12 +528,15 @@
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF.cpp" />
-    <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac.cpp" />
-    <ClCompile Include="Source\VM\Systems\IOP\INTC\IOPIntc.cpp" />
-    <ClCompile Include="Source\VM\Systems\IOP\Timers\IOPTimers.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_COP2.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_CONVERT.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_EFU.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_FLAG.cpp" />
@@ -537,7 +544,7 @@
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_INTEGER.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_OTHER.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_TRANSFER.cpp" />
-    <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_s.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\IOPCore_t.cpp" />
     <ClCompile Include="Source\Resources\EE\GIF\GIF_t.cpp" />
     <ClCompile Include="Source\Resources\EE\IPU\IPU_t.cpp" />
@@ -550,7 +557,6 @@
     <ClCompile Include="Source\Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\EEDmac_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\DMAtag_t.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_ALU_OTHERS.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_BREAK_TRAP.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_CALL.cpp" />
@@ -570,7 +576,7 @@
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_SHIFT.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_SPECIAL_TRANSFER.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_STORE_MEM.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\INTC\EEIntc.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\INTC\EEIntc_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_ALU.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_BRANCH_JUMP.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\IOPCoreInterpreter\IOPCoreInterpreter_LOAD_STORE_MEM.cpp" />
@@ -597,9 +603,9 @@
     <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\FPRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPSInstruction\MIPSInstruction_t.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.cpp" />
-    <ClCompile Include="Source\VM\Types\VMSystem_t.cpp" />
+    <ClCompile Include="Source\VM\Types\VMSystem_s.cpp" />
     <ClCompile Include="Source\VM\VM.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp" />
     <ClCompile Include="Source\stdafx.cpp">
@@ -614,7 +620,7 @@
     </ClCompile>
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\Memory_t.cpp" />
-    <ClCompile Include="Source\VM\Systems\EE\Timers\EETimers.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\Timers\EETimers_s.cpp" />
     <ClCompile Include="Source\Resources\EE\Timers\Types\EETimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\Timers\EETimers_t.cpp" />
   </ItemGroup>

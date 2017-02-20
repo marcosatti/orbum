@@ -2,7 +2,8 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/INTC/EEIntc.h"
+#include "VM/VM.h"
+#include "VM/Systems/EE/INTC/EEIntc_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -12,18 +13,18 @@
 #include "Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 
-EEIntc::EEIntc(VM * vmMain) :
-	VMSystem_t(vmMain, System_t::EEIntc)
+EEIntc_s::EEIntc_s(VM * vm) :
+	VMSystem_s(vm, System_t::EEIntc)
 {
-	mEECOP0 = getResources()->EE->EECore->COP0;
-	mINTC = getResources()->EE->INTC;
+	mEECOP0 = getVM()->getResources()->EE->EECore->COP0;
+	mINTC = getVM()->getResources()->EE->INTC;
 }
 
-EEIntc::~EEIntc()
+EEIntc_s::~EEIntc_s()
 {
 }
 
-double EEIntc::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the interrupt status on the stat register.
 	if (mINTC->STAT->readWord(RAW) & mINTC->MASK->readWord(RAW))

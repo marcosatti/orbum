@@ -1,8 +1,9 @@
 #include "stdafx.h"
 
-#include "VM/Systems/IOP/Timers/IOPTimers.h"
-
 #include "Common/Global/Globals.h"
+
+#include "VM/VM.h"
+#include "VM/Systems/IOP/Timers/IOPTimers_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -12,34 +13,36 @@
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPTimers::IOPTimers(VM* vmMain) :
-	VMSystem_t(vmMain, System_t::IOPTimers),
+IOPTimers_s::IOPTimers_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPTimers),
 	mTimerIndex(0),
-	mTimer(nullptr),
-	mClockSource()
+	mTimer(nullptr)
 {
 	// Set resource pointer variables.
-	mTimers = getResources()->IOP->Timers;
-	mINTC = getResources()->IOP->INTC;
+	mTimers = getVM()->getResources()->IOP->Timers;
+	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-IOPTimers::~IOPTimers()
+IOPTimers_s::~IOPTimers_s()
 {
 }
 
-double IOPTimers::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	// Set context.
-	mClockSource = clockSource;
-
-	// Update the timers which are set to count based on the type of event recieved. The timers are always "enabled".
+	// Update the timers which are set to count based on the type of event recieved.
 	for (mTimerIndex = 0; mTimerIndex < Constants::IOP::Timers::NUMBER_TIMERS; mTimerIndex++)
 	{
 		// Set context.
 		mTimer = &(*mTimers->TIMERS[mTimerIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
+		
+		// Count only if "enabled". There is no explicit "enable bit" in the IOP timers, however a timer is only useful to us if it can cause an interrupt, so we use this to check.
+		// If a timer is written to (such that interrupt conditions are now enabled), the count register is cleared upon write anyway.
+		// This means we do not have to consider the case where the timer suddenly comes alive, with a populated count register.
+		if (!mTimer->MODE->isEnabled())
+			continue;
 
 		// Check if the timer mode is equal to the clock source.
-		if (mClockSource == mTimer->MODE->getClockSource())
+		if (clockSource == mTimer->MODE->getClockSource())
 		{
 			// Next check for the gate function.
 			if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
@@ -67,7 +70,7 @@ double IOPTimers::executeStep(const ClockSource_t & clockSource, const double & 
 	return 1;
 }
 
-void IOPTimers::handleTimerInterrupt() const
+void IOPTimers_s::handleTimerInterrupt() const
 {
 	bool interrupt = false;
 
@@ -124,7 +127,7 @@ void IOPTimers::handleTimerInterrupt() const
 	}
 }
 
-void IOPTimers::handleTimerOverflow() const
+void IOPTimers_s::handleTimerOverflow() const
 {
 	// Check for overflow conditions.
 	if (mTimer->COUNT->isOverflowed())
@@ -134,7 +137,7 @@ void IOPTimers::handleTimerOverflow() const
 	}
 }
 
-void IOPTimers::handleTimerTarget() const
+void IOPTimers_s::handleTimerTarget() const
 {
 	// Check for target condition.
 	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)

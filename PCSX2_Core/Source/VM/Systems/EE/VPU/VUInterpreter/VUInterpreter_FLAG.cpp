@@ -2,9 +2,9 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-void VUInterpreter::FSAND()
+void VUInterpreter_s::FSAND()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void VUInterpreter::FSAND()
 #endif
 }
 
-void VUInterpreter::FSEQ()
+void VUInterpreter_s::FSEQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void VUInterpreter::FSEQ()
 #endif
 }
 
-void VUInterpreter::FSOR()
+void VUInterpreter_s::FSOR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void VUInterpreter::FSOR()
 #endif
 }
 
-void VUInterpreter::FSSET()
+void VUInterpreter_s::FSSET()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void VUInterpreter::FSSET()
 #endif
 }
 
-void VUInterpreter::FMAND()
+void VUInterpreter_s::FMAND()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void VUInterpreter::FMAND()
 #endif
 }
 
-void VUInterpreter::FMEQ()
+void VUInterpreter_s::FMEQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void VUInterpreter::FMEQ()
 #endif
 }
 
-void VUInterpreter::FMOR()
+void VUInterpreter_s::FMOR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void VUInterpreter::FMOR()
 #endif
 }
 
-void VUInterpreter::FCAND()
+void VUInterpreter_s::FCAND()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -84,7 +84,7 @@ void VUInterpreter::FCAND()
 #endif
 }
 
-void VUInterpreter::FCEQ()
+void VUInterpreter_s::FCEQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -94,7 +94,7 @@ void VUInterpreter::FCEQ()
 #endif
 }
 
-void VUInterpreter::FCOR()
+void VUInterpreter_s::FCOR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -104,7 +104,7 @@ void VUInterpreter::FCOR()
 #endif
 }
 
-void VUInterpreter::FCSET()
+void VUInterpreter_s::FCSET()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -114,7 +114,7 @@ void VUInterpreter::FCSET()
 #endif
 }
 
-void VUInterpreter::FCGET()
+void VUInterpreter_s::FCGET()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

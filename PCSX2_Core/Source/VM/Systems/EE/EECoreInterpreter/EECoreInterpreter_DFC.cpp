@@ -5,13 +5,13 @@
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 
-void EECoreInterpreter::PEXT5()
+void EECoreInterpreter_s::PEXT5()
 {
 	// Rd = EXTEND[1-5-5-5 -> 32](Rt)
 	// No Exceptions generated.
@@ -30,7 +30,7 @@ void EECoreInterpreter::PEXT5()
 	}
 }
 
-void EECoreInterpreter::PPAC5()
+void EECoreInterpreter_s::PPAC5()
 {
 	// Rd = PACK[32 -> 1-5-5-5](Rt)
 	// No Exceptions generated.
@@ -49,7 +49,7 @@ void EECoreInterpreter::PPAC5()
 	}
 }
 
-void EECoreInterpreter::CVT_S_W()
+void EECoreInterpreter_s::CVT_S_W()
 {
 	// Fd = CONVERT_AND_ROUND<s32 -> f32>(Fs) (Exception on FPU unusable).
 	if (handleCOP1Usable())
@@ -61,7 +61,7 @@ void EECoreInterpreter::CVT_S_W()
 	destReg->writeFloat(EE,static_cast<f32>(source1Reg->readWord(EE)));
 }
 
-void EECoreInterpreter::CVT_W_S()
+void EECoreInterpreter_s::CVT_W_S()
 {
 	// Fd = CONVERT_AND_ROUND<f32 -> s32>(Fs) (Exception on FPU unusable). Clamping occurs if exponent is > 0x9D.
 	if (handleCOP1Usable())

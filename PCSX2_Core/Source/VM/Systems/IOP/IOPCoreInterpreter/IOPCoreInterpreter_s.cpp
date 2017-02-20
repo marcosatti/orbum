@@ -10,7 +10,7 @@
 #include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VM.h"
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter.h"
+#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -23,27 +23,27 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include <Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h>
 
-IOPCoreInterpreter::IOPCoreInterpreter(VM * vmMain) :
-	VMSystem_t(vmMain, System_t::IOPCore),
+IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPCore),
 	mInstructionInfo(nullptr)
 {
-	mIOPCore = getResources()->IOP->IOPCore;
-	mPhysicalMMU = getResources()->IOP->PhysicalMMU;
+	mIOPCore = getVM()->getResources()->IOP->IOPCore;
+	mPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
 }
 
-IOPCoreInterpreter::~IOPCoreInterpreter()
+IOPCoreInterpreter_s::~IOPCoreInterpreter_s()
 {
 }
 
-void IOPCoreInterpreter::initalise()
+void IOPCoreInterpreter_s::initalise()
 {
 	// An IOP reset is done by raising a Reset exception.
 	handleException(IOPCoreException_t::EX_RESET);
 }
 
-double IOPCoreInterpreter::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	auto& IOPCore = getResources()->IOP->IOPCore;
+	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
 
 	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
 	IOPCore->R3000->BD->handleBranchDelay();
@@ -60,7 +60,7 @@ double IOPCoreInterpreter::executeStep(const ClockSource_t & clockSource, const 
 	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000000; // 0x1b5aff;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000000; //0x1b8415; // 0x1b5aff;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0; // 0x2dc8;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
@@ -93,10 +93,10 @@ double IOPCoreInterpreter::executeStep(const ClockSource_t & clockSource, const 
 #endif
 
 	// Return the number of cycles the instruction took to complete.
-	return static_cast<double>(mInstructionInfo->mCycles);
+	return mInstructionInfo->mCycles;
 }
 
-void IOPCoreInterpreter::handleInterruptCheck()
+void IOPCoreInterpreter_s::handleInterruptCheck()
 {
 	auto& COP0 = mIOPCore->COP0;
 
@@ -108,9 +108,9 @@ void IOPCoreInterpreter::handleInterruptCheck()
 		if (ipCause & imStatus)
 		{
 #if defined(BUILD_DEBUG)
-			auto& IOPCore = getResources()->IOP->IOPCore;
-			auto& STAT = getResources()->IOP->INTC->STAT;
-			auto& MASK = getResources()->IOP->INTC->MASK;
+			auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
+			auto& STAT = getVM()->getResources()->IOP->INTC->STAT;
+			auto& MASK = getVM()->getResources()->IOP->INTC->MASK;
 			log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
 				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(IOP), IOPCore->R3000->BD->isInBranchDelay());
 			log(Debug, "Printing list of interrupt sources...");
@@ -128,7 +128,7 @@ void IOPCoreInterpreter::handleInterruptCheck()
 	}
 }
 
-bool IOPCoreInterpreter::handleCOP0Usable()
+bool IOPCoreInterpreter_s::handleCOP0Usable()
 {
 	if (!mIOPCore->COP0->isCoprocessorUsable())
 	{
@@ -143,7 +143,7 @@ bool IOPCoreInterpreter::handleCOP0Usable()
 }
 
 
-bool IOPCoreInterpreter::handleOverOrUnderflow32(const s32& x, const s32& y)
+bool IOPCoreInterpreter_s::handleOverOrUnderflow32(const s32& x, const s32& y)
 {
 	if (MathUtil::testOverOrUnderflow32(x, y))
 	{
@@ -156,7 +156,7 @@ bool IOPCoreInterpreter::handleOverOrUnderflow32(const s32& x, const s32& y)
 	return false;
 }
 
-void IOPCoreInterpreter::INSTRUCTION_UNKNOWN()
+void IOPCoreInterpreter_s::INSTRUCTION_UNKNOWN()
 {
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
@@ -165,7 +165,7 @@ void IOPCoreInterpreter::INSTRUCTION_UNKNOWN()
 #endif
 }
 
-void IOPCoreInterpreter::handleException(const IOPCoreException_t & exception)
+void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 {
 #if defined(BUILD_DEBUG)
 	DEBUG_HANDLED_EXCEPTION_COUNT += 1;
@@ -231,7 +231,7 @@ void IOPCoreInterpreter::handleException(const IOPCoreException_t & exception)
 	COP0->Status->pushExceptionStack();
 }
 
-bool IOPCoreInterpreter::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
+bool IOPCoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
 {
 	auto& COP0 = mIOPCore->COP0;
 

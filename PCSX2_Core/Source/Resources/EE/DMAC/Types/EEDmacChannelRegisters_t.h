@@ -126,7 +126,7 @@ public:
 	See PCSX2's "sif0.cpp".
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 private:
 	/*
@@ -158,7 +158,7 @@ public:
 	See PCSX2's "sif1.cpp".
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 private:
 	/*
@@ -190,7 +190,7 @@ public:
 	See PCSX2's "sif2.cpp".
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 
 private:
 	/*

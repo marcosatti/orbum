@@ -8,14 +8,14 @@
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter.h"
+#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPU_t.h"
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-void EECoreInterpreter::PABSH()
+void EECoreInterpreter_s::PABSH()
 {
 	// Rd = ABS(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -31,7 +31,7 @@ void EECoreInterpreter::PABSH()
 	}
 }
 
-void EECoreInterpreter::PABSW()
+void EECoreInterpreter_s::PABSW()
 {
 	// Rd = ABS(Rt), No exceptions.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -47,7 +47,7 @@ void EECoreInterpreter::PABSW()
 	}
 }
 
-void EECoreInterpreter::PLZCW()
+void EECoreInterpreter_s::PLZCW()
 {
 	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
@@ -61,7 +61,7 @@ void EECoreInterpreter::PLZCW()
 	}
 }
 
-void EECoreInterpreter::ABS_S()
+void EECoreInterpreter_s::ABS_S()
 {
 	// Fd = ABS(Fs) (Exception on FPU unusable only).
 	if (handleCOP1Usable())
@@ -75,7 +75,7 @@ void EECoreInterpreter::ABS_S()
 	destReg->writeFloat(EE, std::abs(source1Reg->readFloat(EE))); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
-void EECoreInterpreter::NEG_S()
+void EECoreInterpreter_s::NEG_S()
 {
 	// Fd = NEG(Fs) (Exception on FPU unusable only).
 	if (handleCOP1Usable())
@@ -89,7 +89,7 @@ void EECoreInterpreter::NEG_S()
 	destReg->writeFloat(EE, -source1Reg->readFloat(EE)); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
-void EECoreInterpreter::RSQRT_S()
+void EECoreInterpreter_s::RSQRT_S()
 {
 	// Fd = RSQRT(Fs, Ft) (Exception on FPU unusable only).
 	if (handleCOP1Usable())
@@ -129,7 +129,7 @@ void EECoreInterpreter::RSQRT_S()
 	destReg->writeFloat(EE, result);
 }
 
-void EECoreInterpreter::SQRT_S()
+void EECoreInterpreter_s::SQRT_S()
 {
 	// Fd = SQRT(Ft) (Exception on FPU unusable only).
 	if (handleCOP1Usable())

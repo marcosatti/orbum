@@ -36,7 +36,7 @@ public:
 	/*
 	(EE) Reverses any bits written to.
 	*/
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 };
 
 /*
@@ -74,5 +74,5 @@ public:
 	(EE context) Clears any bits written to.
 	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
-	void writeWord(const Context& context, u32 value) override;
+	void writeWord(const Context_t& context, u32 value) override;
 };

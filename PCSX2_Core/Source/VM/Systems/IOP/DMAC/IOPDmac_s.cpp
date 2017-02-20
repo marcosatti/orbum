@@ -5,7 +5,8 @@
 #include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
 #include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
-#include "VM/Systems/IOP/DMAC/IOPDmac.h"
+#include "VM/VM.h"
+#include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -19,22 +20,22 @@
 using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
-IOPDmac::IOPDmac(VM* vmMain) :
-	VMSystem_t(vmMain, System_t::IOPDmac),
+IOPDmac_s::IOPDmac_s(VM * vm) :
+	VMSystem_s(vm, System_t::IOPDmac),
 	mChannelIndex(0),
 	mChannel(nullptr)
 {
 	// Set resource pointer variables.
-	mDMAC = getResources()->IOP->DMAC;
-	mINTC = getResources()->IOP->INTC;
-	mIOPPhysicalMMU = getResources()->IOP->PhysicalMMU;
+	mDMAC = getVM()->getResources()->IOP->DMAC;
+	mINTC = getVM()->getResources()->IOP->INTC;
+	mIOPPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
 }
 
-IOPDmac::~IOPDmac()
+IOPDmac_s::~IOPDmac_s()
 {
 }
 
-double IOPDmac::executeStep(const ClockSource_t & clockSource, const double & ticksAvailable)
+int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
 	for (mChannelIndex = 0; mChannelIndex < Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)
@@ -84,7 +85,7 @@ double IOPDmac::executeStep(const ClockSource_t & clockSource, const double & ti
 	return 1;
 }
 
-void IOPDmac::executionStep_Normal()
+void IOPDmac_s::executionStep_Normal()
 {
 	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
 	u32 dataCount = transferData();
@@ -100,7 +101,7 @@ void IOPDmac::executionStep_Normal()
 	}
 }
 
-bool IOPDmac::isDMACChannelEnabled() const
+bool IOPDmac_s::isDMACChannelEnabled() const
 {
 	u32 pcrGroup = mChannelIndex / 7;
 	u32 pcrIndex = mChannelIndex % 7;
@@ -108,7 +109,7 @@ bool IOPDmac::isDMACChannelEnabled() const
 	return (mDMAC->PCRS[pcrGroup]->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
 }
 
-void IOPDmac::handleInterruptCheck() const
+void IOPDmac_s::handleInterruptCheck() const
 {
 	for (auto& ICR : mDMAC->ICRS)
 	{
@@ -122,7 +123,7 @@ void IOPDmac::handleInterruptCheck() const
 	}
 }
 
-u32 IOPDmac::transferData() const
+u32 IOPDmac_s::transferData() const
 {
 	// Determine the direction of data flow. 
 	Direction_t direction = static_cast<Direction_t>(mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::TD));
@@ -162,7 +163,7 @@ u32 IOPDmac::transferData() const
 	return 1;
 }
 
-void IOPDmac::setStateSuspended() const
+void IOPDmac_s::setStateSuspended() const
 {
 	// Stop channel.
 	mChannel->CHCR->setFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::START_B, 0);
@@ -175,17 +176,17 @@ void IOPDmac::setStateSuspended() const
 		mDMAC->ICR2->raiseIRQLine(icrIndex);
 }
 
-void IOPDmac::setStateFailedTransfer() const
+void IOPDmac_s::setStateFailedTransfer() const
 {
 	throw std::runtime_error("IOP DMAC failed transfer not implemented.");
 }
 
-u32 IOPDmac::readDataMemory(u32 PhysicalAddressOffset) const
+u32 IOPDmac_s::readDataMemory(u32 PhysicalAddressOffset) const
 {
 	return mIOPPhysicalMMU->readWord(RAW, PhysicalAddressOffset);
 }
 
-void IOPDmac::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
+void IOPDmac_s::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
 {
 	mIOPPhysicalMMU->writeWord(RAW, PhysicalAddressOffset, data);
 }

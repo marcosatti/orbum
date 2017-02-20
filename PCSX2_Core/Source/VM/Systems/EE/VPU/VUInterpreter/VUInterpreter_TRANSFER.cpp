@@ -5,15 +5,11 @@
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/FPRegister128_t.h"
 
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter.h"
+#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/Resources_t.h"
-#include "Resources/EE/EE_t.h"
-#include "Resources/EE/VPU/VPU_t.h"
-#include "Resources/EE/VPU/VU/VU_t.h"
 #include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
 
-void VUInterpreter::MOVE()
+void VUInterpreter_s::MOVE()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -23,7 +19,7 @@ void VUInterpreter::MOVE()
 #endif
 }
 
-void VUInterpreter::MFIR()
+void VUInterpreter_s::MFIR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -33,7 +29,7 @@ void VUInterpreter::MFIR()
 #endif
 }
 
-void VUInterpreter::MTIR()
+void VUInterpreter_s::MTIR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -43,7 +39,7 @@ void VUInterpreter::MTIR()
 #endif
 }
 
-void VUInterpreter::MR32()
+void VUInterpreter_s::MR32()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -53,7 +49,7 @@ void VUInterpreter::MR32()
 #endif
 }
 
-void VUInterpreter::LQ()
+void VUInterpreter_s::LQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -63,7 +59,7 @@ void VUInterpreter::LQ()
 #endif
 }
 
-void VUInterpreter::LQD()
+void VUInterpreter_s::LQD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -73,7 +69,7 @@ void VUInterpreter::LQD()
 #endif
 }
 
-void VUInterpreter::LQI()
+void VUInterpreter_s::LQI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -83,7 +79,7 @@ void VUInterpreter::LQI()
 #endif
 }
 
-void VUInterpreter::SQ()
+void VUInterpreter_s::SQ()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -93,7 +89,7 @@ void VUInterpreter::SQ()
 #endif
 }
 
-void VUInterpreter::SQD()
+void VUInterpreter_s::SQD()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -103,12 +99,12 @@ void VUInterpreter::SQD()
 #endif
 }
 
-void VUInterpreter::SQI()
+void VUInterpreter_s::SQI()
 {
 	// MEM(Ft) = Fs
-	auto& source1Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VF[mInstruction.getFs()];
-	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Mem Addr.
-	auto& Mem = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // Mem Addr.
+	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
@@ -123,7 +119,7 @@ void VUInterpreter::SQI()
 	source2Reg->writeHword(EE, source2Reg->readHword(EE) + 1);
 }
 
-void VUInterpreter::ILW()
+void VUInterpreter_s::ILW()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -133,7 +129,7 @@ void VUInterpreter::ILW()
 #endif
 }
 
-void VUInterpreter::ISW()
+void VUInterpreter_s::ISW()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -143,7 +139,7 @@ void VUInterpreter::ISW()
 #endif
 }
 
-void VUInterpreter::ILWR()
+void VUInterpreter_s::ILWR()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -153,12 +149,12 @@ void VUInterpreter::ILWR()
 #endif
 }
 
-void VUInterpreter::ISWR()
+void VUInterpreter_s::ISWR()
 {
 	// MEM(Fs) = Ft.
-	auto& source1Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFt()]; // Data.
-	auto& source2Reg = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->VI[mInstruction.getFs()]; // Mem Addr.
-	auto& Mem = getResources()->EE->VPU->VU->VU_UNITS[mVUUnitIndex]->MemPhysicalMMU;
+	auto& source1Reg = mVuUnit->VI[mInstruction.getFt()]; // Data.
+	auto& source2Reg = mVuUnit->VI[mInstruction.getFs()]; // Mem Addr.
+	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
@@ -170,7 +166,7 @@ void VUInterpreter::ISWR()
 	if (mInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHword(EE)));
 }
 
-void VUInterpreter::LOI()
+void VUInterpreter_s::LOI()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -180,7 +176,7 @@ void VUInterpreter::LOI()
 #endif
 }
 
-void VUInterpreter::MFP()
+void VUInterpreter_s::MFP()
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
