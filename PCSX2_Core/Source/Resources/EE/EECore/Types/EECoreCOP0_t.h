@@ -4,6 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor0_t.h"
+#include "Common/Types/MIPSCoprocessor/MIPSOperatingContext_t.h"
 
 class BitfieldRegister32_t;
 class Register32_t;
@@ -58,11 +59,9 @@ public:
 	void initalise() override;
 
 	/*
-	Functions to determine the CPU context. Uses the Status register.
+	Determine the CPU context. Uses the Status register.
 	*/
-	bool isOperatingUserMode() const override;
-	bool isOperatingSupervisorMode() const override;
-	bool isOperatingKernelMode() const override;
+	MIPSOperatingContext_t getCPUOperatingContext() const override;
 
 	/*
 	EECore COP0 register implementations. Follows EE Core Users Manual.

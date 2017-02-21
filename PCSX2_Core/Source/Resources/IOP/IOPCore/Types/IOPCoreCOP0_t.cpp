@@ -31,7 +31,7 @@ IOPCoreCOP0_t::IOPCoreCOP0_t() :
 bool IOPCoreCOP0_t::isCoprocessorUsable() const
 {
 	// First check for kernel mode - the COP0 is always available in this mode. If not, then check that CU[bit 0] == 1 (ie: >0) in the status register.
-	if (isOperatingKernelMode())
+	if (getCPUOperatingContext() == MIPSOperatingContext_t::Kernel)
 		return true;
 	else if ((Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::CU) & 0x1) > 0)
 		return true;
@@ -45,27 +45,14 @@ void IOPCoreCOP0_t::initalise()
 		if (reg != nullptr) reg->initalise();
 }
 
-bool IOPCoreCOP0_t::isOperatingUserMode() const
+MIPSOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext() const
 {
 	const u32& KUc = Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc);
 
 	if (KUc == 1)
-		return true;
+		return MIPSOperatingContext_t::User;
+	else if (KUc == 0)
+		return MIPSOperatingContext_t::Kernel;
 	else
-		return false;
-}
-
-bool IOPCoreCOP0_t::isOperatingSupervisorMode() const
-{
-	throw new std::runtime_error("Call to check if IOP Core running in supervisor mode - but it doesn't support this mode.");
-}
-
-bool IOPCoreCOP0_t::isOperatingKernelMode() const
-{
-	const u32& KUc = Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc);
-
-	if (KUc == 0)
-		return true;
-	else
-		return false;
+		throw std::runtime_error("IOP COP0 could not determine CPU operating context! Please debug.");
 }

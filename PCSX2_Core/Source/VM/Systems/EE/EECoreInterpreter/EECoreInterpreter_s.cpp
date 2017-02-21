@@ -464,7 +464,8 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MM
 
 	// Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
 	// Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.
-	if (COP0->isOperatingUserMode())
+	auto context = COP0->getCPUOperatingContext();
+	if (context == MIPSOperatingContext_t::User)
 	{
 		// Operating in user mode.
 		if (!(virtualAddress <= Constants::MIPS::MMU::VADDRESS_USER_UPPER_BOUND))
@@ -473,7 +474,7 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MM
 			return true;
 		}
 	}
-	else if (COP0->isOperatingSupervisorMode())
+	else if (context == MIPSOperatingContext_t::Supervisor)
 	{
 		// Operating in supervisor mode.
 		if (!((virtualAddress >= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_LOWER_BOUND_2 && virtualAddress <= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_1)
@@ -486,7 +487,7 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MM
 
 	// Stage 2 - perform TLB lookup and perform checks.
 	// If we are operating in kernel mode, then SOME addreses are unmapped, and we do not need to perform a TLB lookup.
-	if (COP0->isOperatingKernelMode())
+	if (context == MIPSOperatingContext_t::Kernel)
 	{
 		// Test for kseg0
 		if (virtualAddress >= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtualAddress <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)

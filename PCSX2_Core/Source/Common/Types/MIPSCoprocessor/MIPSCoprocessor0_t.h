@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
+#include "Common/Types/MIPSCoprocessor/MIPSOperatingContext_t.h"
 
 /*
 Represents a MIPS co-processor 0 base class (aka COP0).
@@ -16,11 +17,9 @@ public:
 	virtual ~MIPSCoprocessor0_t();
 
 	/*
-	Below functions can be used to check the operating context - Kernel mode, Supervisor mode, or User mode.
+	Used to check the operating context - Kernel mode, Supervisor mode, or User mode.
 	Set to a virtual function as the COP0 register formats are not always compatible.
 	*/
-	virtual	bool isOperatingUserMode() const = 0;
-	virtual bool isOperatingSupervisorMode() const = 0;
-	virtual bool isOperatingKernelMode() const = 0;
+	virtual	MIPSOperatingContext_t getCPUOperatingContext() const = 0;
 };
 

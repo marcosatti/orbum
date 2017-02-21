@@ -60,8 +60,8 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000000000; //0x1b8415; // 0x1b5aff;
-	static u32 DEBUG_PC_BREAKPOINT = 0x0; // 0x2dc8;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x2b0071; //0x1b8415; // 0x1b5aff;
+	static u32 DEBUG_PC_BREAKPOINT = 0x1404;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -236,7 +236,8 @@ bool IOPCoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const M
 	auto& COP0 = mIOPCore->COP0;
 
 	// If in kernel mode, perform a direct translation if VA is within kernel segments.
-	if (COP0->isOperatingKernelMode())
+	auto context = COP0->getCPUOperatingContext();
+	if (context == MIPSOperatingContext_t::Kernel)
 	{
 		// Test for kseg0
 		if (virtualAddress >= Constants::MIPS::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtualAddress <= Constants::MIPS::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)

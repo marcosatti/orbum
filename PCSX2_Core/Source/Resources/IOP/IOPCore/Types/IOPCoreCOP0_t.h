@@ -4,14 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor0_t.h"
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
-
-/*
-COP0 refers to the system control coprocessor (used for manipulating the memory management and exception handling facilities of the processor, etc).
-See EE Core Users Manual page 62 onwards.
-
-TODO: Finish implementing 'Register32_t' registers? IOP COP0 registers that are unused within the emulator have been left as reserved, since there is no need for them. Probably will never need to.
-*/
+#include "Common/Types/MIPSCoprocessor/MIPSOperatingContext_t.h"
 
 class Register32_t;
 class IOPCoreCOP0Register_Context_t;
@@ -19,6 +12,12 @@ class IOPCoreCOP0Register_Status_t;
 class IOPCoreCOP0Register_Cause_t;
 class IOPCoreCOP0Register_PRId_t;
 
+/*
+COP0 refers to the system control coprocessor (used for manipulating the memory management and exception handling facilities of the processor, etc).
+See EE Core Users Manual page 62 onwards.
+
+TODO: Finish implementing 'Register32_t' registers? IOP COP0 registers that are unused within the emulator have been left as reserved, since there is no need for them. Probably will never need to.
+*/
 class IOPCoreCOP0_t : public MIPSCoprocessor0_t
 {
 public:
@@ -36,11 +35,9 @@ public:
 	void initalise() override;
 
 	/*
-	Functions to determine the CPU context. Uses the Status register.
+	Determine the CPU context. Uses the Status register.
 	*/
-	bool isOperatingUserMode() const override;
-	bool isOperatingSupervisorMode() const override; // Not supported on the IOP - throws exception if called.
-	bool isOperatingKernelMode() const override;
+	MIPSOperatingContext_t getCPUOperatingContext() const override;
 
 	/*
 	IOP COP0 register implementations. 
