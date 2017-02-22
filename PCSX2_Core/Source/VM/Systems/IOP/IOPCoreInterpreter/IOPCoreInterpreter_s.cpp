@@ -61,7 +61,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x2b0071; //0x1b8415; // 0x1b5aff;
-	static u32 DEBUG_PC_BREAKPOINT = 0x1404;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -77,7 +77,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT)
 	{
-		log(Debug, "IOPCore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
+		log(Debug, "IOPCore PC breakpoint hit @ cycle = 0x%llX, PC = 0x%08X", DEBUG_LOOP_COUNTER, DEBUG_PC_BREAKPOINT);
 	}
 #endif
 

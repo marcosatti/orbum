@@ -2,7 +2,7 @@
 
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask) :
+IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t() :
 	BitfieldRegister32_t("IOP INTC: STAT", false, false)
 {
 	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
@@ -31,7 +31,6 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegi
 	registerField(Fields::EXTR, "EXTR", 23, 1, 0);
 	registerField(Fields::FWRE, "FWRE", 24, 1, 0);
 	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
-
 }
 
 void IOPIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)

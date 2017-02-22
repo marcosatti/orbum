@@ -5,7 +5,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
-using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
 
 class EEDmacChannelRegister_CHCR_t;
@@ -36,7 +35,7 @@ public:
 	The ID of this channel. Used to look up properties in the EEDmacChannelTable, which lists the physical mode, direction, etc listed on EE Users Manual page 42.
 	*/
 	const u32 mChannelID;
-	const ChannelProperties_t * getChannelProperties() const;
+	const EEDmacChannelTable::ChannelProperties_t * getChannelProperties() const;
 
 	/*
 	EE DMAC channel registers.

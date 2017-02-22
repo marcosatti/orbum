@@ -21,9 +21,10 @@ public:
 	explicit IOPDmacChannel_t(const u32 & channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
-	The ID of this channel.
+	The ID of this channel. Used to look up properties in the IOPDmacChannelTable, which the static properties.
 	*/
 	const u32 mChannelID;
+	const IOPDmacChannelTable::ChannelProperties_t * getChannelProperties() const;
 
 	/*
 	IOP DMAC Channel Registers.

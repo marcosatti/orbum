@@ -3,7 +3,7 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+	BitfieldRegister32_t(mnemonic, false, true)
 {
 	registerField(Fields::TD, "TD", 0, 1, 0);
 	registerField(Fields::MAS, "MAS", 1, 1, 0);

@@ -64,8 +64,8 @@ struct u128
 	{
 		struct 
 		{
-			u64 hi;
 			u64 lo;
+			u64 hi;
 		};
 
 		u64 UD[2];
@@ -81,14 +81,14 @@ struct u128
 	 - Initalised with 4 x 32-bit values (LSB (w0) -> MSB (w3)).
 	*/
 	u128() :
-		hi(0),
-		lo(0)
+		lo(0),
+		hi(0)
 	{
 	}
 
 	u128(const u64 & lower, const u64 & upper) :
-		hi(upper),
-		lo(lower)
+		lo(lower),
+		hi(upper)
 	{
 	}
 
@@ -104,8 +104,8 @@ struct u128
 	*/
 	void operator=(const u128& right)
 	{
-		hi = right.hi;
 		lo = right.lo;
+		hi = right.hi;
 	}
 
 	bool operator==(const u128& right) const

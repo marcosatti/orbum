@@ -104,11 +104,10 @@ public:
 		static constexpr u8 TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 	};
 
-	explicit IOPIntcRegister_STAT_t(const std::shared_ptr<IOPIntcRegister_MASK_t> & mask);
+	explicit IOPIntcRegister_STAT_t();
 
 	/*
 	AND's the new value with old value (IOP context only).
-	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
 	void writeWord(const Context_t& context, u32 value) override;
 };

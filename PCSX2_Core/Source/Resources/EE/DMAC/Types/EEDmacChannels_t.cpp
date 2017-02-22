@@ -42,7 +42,7 @@ EEDmacChannel_t::EEDmacChannel_t(const u32& channelID, const std::shared_ptr<FIF
 {
 }
 
-const ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
+const EEDmacChannelTable::ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
 {
 	return EEDmacChannelTable::getChannelInfo(mChannelID);
 }

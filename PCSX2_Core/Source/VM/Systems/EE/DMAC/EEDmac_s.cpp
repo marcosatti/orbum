@@ -111,11 +111,21 @@ u32 EEDmac_s::transferData() const
 		{
 			u128 packet = readDataMemory(SPRPhysicalAddressOffset, true);
 			writeDataMemory(PhysicalAddressOffset, false, packet);
+
+			log(Debug, "EE DMAC Read u128 channel %s, SPRAddr = 0x%08llX, valueLo = 0x%016llX, valueHi = 0x%016X -> MemAddr = 0x%08X", 
+				mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.lo, packet.hi, PhysicalAddressOffset);
 		}
 		else if (direction == Direction_t::TO)
 		{
 			u128 packet = readDataMemory(PhysicalAddressOffset, false);
 			writeDataMemory(SPRPhysicalAddressOffset, true, packet);
+
+			log(Debug, "EE DMAC Write u128 channel %s, SPRAddr = 0x%08llX, valueLo = 0x%016llX, valueHi = 0x%016X <- MemAddr = 0x%08X",
+				mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.lo, packet.hi, PhysicalAddressOffset);
+		}
+		else
+		{
+			throw std::runtime_error("EE DMAC could not determine transfer direction (SPR)! Please debug.");
 		}
 
 		// Increment the MADR & SADR register by a qword, and decrement the QWC register by a qword.
@@ -136,6 +146,9 @@ u32 EEDmac_s::transferData() const
 
 			u128 packet = mChannel->mFIFOQueue->readQword(RAW);
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
+
+			log(Debug, "EE DMAC Read u128 channel %s, valueLo = 0x%016llX, valueHi = 0x%016llX -> MemAddr = 0x%08X", 
+				mChannel->getChannelProperties()->Mnemonic, packet.lo, packet.hi, PhysicalAddressOffset);
 		}
 		else if (direction == Direction_t::TO)
 		{
@@ -145,6 +158,13 @@ u32 EEDmac_s::transferData() const
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
 			mChannel->mFIFOQueue->writeQword(RAW, packet);
+
+			log(Debug, "EE DMAC Write u128 channel %s, valueLo = 0x%016llX, valueHi = 0x%016llX <- MemAddr = 0x%08X",
+				mChannel->getChannelProperties()->Mnemonic, packet.lo, packet.hi, PhysicalAddressOffset);
+		}
+		else
+		{
+			throw std::runtime_error("EE DMAC could not determine transfer direction! Please debug.");
 		}
 
 		// Increment the MADR register by a qword, and decrement the QWC register by a qword.

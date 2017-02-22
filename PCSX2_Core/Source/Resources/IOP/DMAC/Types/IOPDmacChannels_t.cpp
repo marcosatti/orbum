@@ -15,6 +15,11 @@ IOPDmacChannel_t::IOPDmacChannel_t(const u32 & channelID, const std::shared_ptr<
 {
 }
 
+const IOPDmacChannelTable::ChannelProperties_t * IOPDmacChannel_t::getChannelProperties() const
+{
+	return IOPDmacChannelTable::getChannelInfo(mChannelID);
+}
+
 IOPDmacChannel_fromMDEC_t::IOPDmacChannel_fromMDEC_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	IOPDmacChannel_t(CHANNEL_ID, fifoQueue)
 {

@@ -57,7 +57,7 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			case LogicalMode_t::BLOCK: 
 			{
 				// Block mode ("sync blocks to DMA requests"). 
-				// Due to the emulator implementation, logic is not different to normal mode.
+				// Due to the emulator implementation, logic is not different to normal mode. TODO: verify?
 				executionStep_Normal();
 				break;
 			}
@@ -120,6 +120,10 @@ void IOPDmac_s::handleInterruptCheck() const
 			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
 			break;
 		}
+		else
+		{
+			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
+		}
 	}
 }
 
@@ -140,6 +144,8 @@ u32 IOPDmac_s::transferData() const
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
 		writeDataMemory(PhysicalAddressOffset, packet);
+
+		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, PhysicalAddressOffset);
 	}
 	else if (direction == Direction_t::TO)
 	{
@@ -149,6 +155,12 @@ u32 IOPDmac_s::transferData() const
 
 		u32 packet = readDataMemory(PhysicalAddressOffset);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
+
+		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, PhysicalAddressOffset);
+	}
+	else
+	{
+		throw std::runtime_error("IOP DMAC could not determine direction! Please debug.");
 	}
 
 	// Increment or decrement (depending on CHCR.MAS) the MADR register by a word.
