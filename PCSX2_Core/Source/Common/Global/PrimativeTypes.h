@@ -57,6 +57,7 @@ typedef float f32;
 Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2 (but we just call it unsigned).
 Mnemonic: UD stands for value (64-bit), UW stands for value (32-bit), etc.
 TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, and for the arrays, it is layed out (MSB to LSB) [3]->[2]->[1]->[0].
+TODO: Compiler does not guarantee that the struct order in memory will be the same as the declared order... Need a more portable way.
 */
 struct u128
 {
