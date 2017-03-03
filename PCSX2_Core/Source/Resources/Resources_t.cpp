@@ -459,7 +459,6 @@ void Resources_t::postInit_IOP_DMAC() const
 	IOP->DMAC->CHANNELS[10] = IOP->DMAC->CHANNEL_SIF1;
 	IOP->DMAC->CHANNELS[11] = IOP->DMAC->CHANNEL_fromSIO2;
 	IOP->DMAC->CHANNELS[12] = IOP->DMAC->CHANNEL_toSIO2;
-	IOP->DMAC->CHANNELS[13] = nullptr; // CH 13 undefined, just to keep number of channels even (total 14).
 }
 
 void Resources_t::postInit_IOP() const
@@ -475,7 +474,7 @@ void Resources_t::postInit_IOP() const
 			IOP->PhysicalMMU->mapObject(Constants::EE::ROM::PADDRESS_BOOT_ROM, EE->BootROM);
 			IOP->PhysicalMMU->mapObject(Constants::EE::ROM::PADDRESS_ROM1, EE->ROM1);
 
-			// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation.
+			// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation. TODO: related to cache control (this is probably very wrong), investigate.
 			IOP->PhysicalMMU->mapObject(0xFFC00000, EE->BootROM);
 
 			// Scratchpad Memory.
@@ -508,7 +507,6 @@ void Resources_t::postInit_IOP() const
 			IOP->PhysicalMMU->mapObject(0x1F801560, IOP->REGISTER_1560);
 			IOP->PhysicalMMU->mapObject(0x1F801564, IOP->REGISTER_1564);
 			IOP->PhysicalMMU->mapObject(0x1F801568, IOP->REGISTER_1568);
-			IOP->PhysicalMMU->mapObject(0x1F801578, IOP->REGISTER_1578);
 			IOP->PhysicalMMU->mapObject(0x1F8015F0, IOP->REGISTER_15F0);
 			IOP->PhysicalMMU->mapObject(0x1F802070, IOP->REGISTER_2070);
 
@@ -554,10 +552,11 @@ void Resources_t::postInit_IOP() const
 			IOP->PhysicalMMU->mapObject(0x1F801550, IOP->DMAC->CHANNEL_toSIO2->MADR);
 			IOP->PhysicalMMU->mapObject(0x1F801554, IOP->DMAC->CHANNEL_toSIO2->BCR);
 			IOP->PhysicalMMU->mapObject(0x1F801558, IOP->DMAC->CHANNEL_toSIO2->CHCR);
-			IOP->PhysicalMMU->mapObject(0x1F8010F0, IOP->DMAC->PCR);
-			IOP->PhysicalMMU->mapObject(0x1F8010F4, IOP->DMAC->ICR);
-			IOP->PhysicalMMU->mapObject(0x1F801570, IOP->DMAC->PCR2);
-			IOP->PhysicalMMU->mapObject(0x1F801574, IOP->DMAC->ICR2);
+			IOP->PhysicalMMU->mapObject(0x1F8010F0, IOP->DMAC->PCR0);
+			IOP->PhysicalMMU->mapObject(0x1F8010F4, IOP->DMAC->ICR0);
+			IOP->PhysicalMMU->mapObject(0x1F801570, IOP->DMAC->PCR1);
+			IOP->PhysicalMMU->mapObject(0x1F801574, IOP->DMAC->ICR1);
+			IOP->PhysicalMMU->mapObject(0x1F801578, IOP->DMAC->GCTRL);
 
 			// INTC Registers.
 			IOP->PhysicalMMU->mapObject(0x1F801070, IOP->INTC->STAT);

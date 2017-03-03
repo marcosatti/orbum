@@ -17,12 +17,12 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
+using ChannelProperties_t = IOPDmacChannelTable::ChannelProperties_t;
 using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
 IOPDmac_s::IOPDmac_s(VM * vm) :
 	VMSystem_s(vm, System_t::IOPDmac),
-	mChannelIndex(0),
 	mChannel(nullptr)
 {
 	// Set resource pointer variables.
@@ -37,103 +37,88 @@ IOPDmac_s::~IOPDmac_s()
 
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
-	for (mChannelIndex = 0; mChannelIndex < Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS; mChannelIndex++)
+	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
+	if (mDMAC->GCTRL->readWord(RAW) > 0)
 	{
-		// Set context variables.
-		mChannel = &(*mDMAC->CHANNELS[mChannelIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
-
-		// Check if channel is enabled for transfer (both from PCR and the CHCR).
-		if (isDMACChannelEnabled() && (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::START_B) > 0))
+		// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
+		for (auto& channel : mDMAC->CHANNELS)
 		{
-			switch (mChannel->getRuntimeLogicalMode())
+			// Set channel resource context.
+			mChannel = channel.get();
+
+			// Check if channel is enabled for transfer (both from PCR and the CHCR).
+			if (isChannelEnabled())
 			{
-			case LogicalMode_t::NORMAL:
-			{
-				// Normal mode.
-				executionStep_Normal();
-				break;
-			}
-			case LogicalMode_t::BLOCK: 
-			{
-				// Block mode ("sync blocks to DMA requests"). 
-				// Due to the emulator implementation, logic is not different to normal mode. TODO: verify?
-				executionStep_Normal();
-				break;
-			}
-			case LogicalMode_t::LINKEDLIST:
-			{
-				// Linked list mode.
-				throw std::runtime_error("IOP DMAC linked list mode not implemented.");
-			}
-			case LogicalMode_t::RESERVED:
-			{
-				// Reserved (not defined).
-				throw std::runtime_error("IOP DMAC channel had reserved operating mode.");
-			}
-			default:
-			{
-				throw std::runtime_error("Could not determine IOP DMAC channel operating mode.");
-			}
+				switch (mChannel->CHCR->getLogicalMode())
+				{
+				case LogicalMode_t::NORMAL:
+				{
+					// Normal mode.
+					transferNormal();
+					break;
+				}
+				case LogicalMode_t::BLOCK:
+				{
+					// Block mode ("sync blocks to DMA requests"). 
+					// Due to the emulator implementation, logic is not different to normal mode. TODO: verify?
+					transferNormal();
+					break;
+				}
+				case LogicalMode_t::LINKEDLIST:
+				{
+					// Linked list mode.
+					throw std::runtime_error("IOP DMAC linked list mode not implemented.");
+				}
+				case LogicalMode_t::CHAIN:
+				{
+					// Reserved (not defined).
+					throw std::runtime_error("IOP DMAC channel had chain operating mode.");
+				}
+				default:
+				{
+					throw std::runtime_error("Could not determine IOP DMAC channel logical mode.");
+				}
+				}
 			}
 		}
-	}
 
-	// Check for D_ICR interrupt bit status, send interrupt to IOP INTC (IRQ 3) if not masked.
-	handleInterruptCheck();
+		// Check for ICR0 or ICR1 interrupt bit status, send interrupt to IOP INTC (IRQ 3) if not masked.
+		handleInterruptCheck();
+	}
 	
 	return 1;
 }
 
-void IOPDmac_s::executionStep_Normal()
+void IOPDmac_s::transferNormal() const
 {
 	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
-	u32 dataCount = transferData();
-	if (!dataCount)
-	{
+	if (!transferData())
 		return;
-	}
 
-	// Check if BCR.BS == 0 (transfer completed), in which case stop transferring and update status.
-	if (mChannel->BCR->getFieldValue(IOPDmacChannelRegister_BCR_t::Fields::BS) == 0)
-	{
+	// Check if there is no more data to process, in which case stop transferring and update status.
+	if (mChannel->BCR->isFinished(false))
 		setStateSuspended();
-	}
-}
-
-bool IOPDmac_s::isDMACChannelEnabled() const
-{
-	u32 pcrGroup = mChannelIndex / 7;
-	u32 pcrIndex = mChannelIndex % 7;
-
-	return (mDMAC->PCRS[pcrGroup]->getFieldValue(IOPDmacRegister_PCR_t::Fields::ENA_KEYS[pcrIndex]) > 0);
 }
 
 void IOPDmac_s::handleInterruptCheck() const
 {
-	for (auto& ICR : mDMAC->ICRS)
+	// Check ICR0 and ICR1 for interrupt status, else clear the master interrupt and INTC bits.
+	if (mDMAC->ICR0->isInterruptPending() || mDMAC->ICR1->isInterruptPending())
+		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
+	else
 	{
-		if (ICR->isInterrupted())
-		{
-			// DMAC connected to INTC IRQ line 3.
-			// TODO: Assuming edge triggered interrupt. Need to deassert line on no condition?
-			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
-			break;
-		}
-		else
-		{
-			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
-		}
+		mDMAC->ICR0->setFieldValue(IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 0);
+		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
 	}
 }
 
-u32 IOPDmac_s::transferData() const
+int IOPDmac_s::transferData() const
 {
 	// Determine the direction of data flow. 
-	Direction_t direction = static_cast<Direction_t>(mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::TD));
+	Direction_t direction = mChannel->CHCR->getDirection();
 
 	// Get the main memory address.
-	const u32 PhysicalAddressOffset = mChannel->MADR->readWord(RAW);
+	const u32 physicalAddress = mChannel->MADR->readWord(RAW);
 
 	// Transfer data to or from the FIFO queue.
 	if (direction == Direction_t::FROM)
@@ -143,9 +128,9 @@ u32 IOPDmac_s::transferData() const
 			return 0;
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
-		writeDataMemory(PhysicalAddressOffset, packet);
+		writeDataMemory(physicalAddress, packet);
 
-		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, PhysicalAddressOffset);
+		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->mMnemonic, packet, physicalAddress);
 	}
 	else if (direction == Direction_t::TO)
 	{
@@ -153,10 +138,10 @@ u32 IOPDmac_s::transferData() const
 		if (mChannel->mFIFOQueue->isFull())
 			return 0;
 
-		u32 packet = readDataMemory(PhysicalAddressOffset);
+		u32 packet = readDataMemory(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
 
-		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, PhysicalAddressOffset);
+		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->mMnemonic, packet, physicalAddress);
 	}
 	else
 	{
@@ -169,7 +154,7 @@ u32 IOPDmac_s::transferData() const
 	else
 		mChannel->MADR->decrement();
 
-	// Update number of units/blocks left (BCR).
+	// Update number of word units left (BCR).
 	mChannel->BCR->decrement();
 
 	return 1;
@@ -178,19 +163,28 @@ u32 IOPDmac_s::transferData() const
 void IOPDmac_s::setStateSuspended() const
 {
 	// Stop channel.
-	mChannel->CHCR->setFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::START_B, 0);
+	mChannel->CHCR->setFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
 
-	// Emit interrupt stat bit.
-	u32 icrIndex = mChannelIndex % 7;
-	if (mChannelIndex < 8)
-		mDMAC->ICR->raiseIRQLine(icrIndex);
+	// Emit interrupt stat bit (use ICR0 or ICR1 based on channel index).
+	if (mChannel->getChannelID() < 7)
+		mDMAC->ICR0->setFieldValue(IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID()], 1);
 	else
-		mDMAC->ICR2->raiseIRQLine(icrIndex);
+		mDMAC->ICR1->setFieldValue(IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID() % 7], 1);
 }
 
-void IOPDmac_s::setStateFailedTransfer() const
+bool IOPDmac_s::isChannelEnabled() const
 {
-	throw std::runtime_error("IOP DMAC failed transfer not implemented.");
+	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::Start) > 0)
+	{
+		if (mChannel->getChannelID() < 7)
+			return (mDMAC->PCR0->getFieldValue(IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID()]) > 0);
+		else
+			return (mDMAC->PCR1->getFieldValue(IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID() % 7]) > 0);
+	}
+	else
+	{
+		return false;
+	}
 }
 
 u32 IOPDmac_s::readDataMemory(u32 PhysicalAddressOffset) const

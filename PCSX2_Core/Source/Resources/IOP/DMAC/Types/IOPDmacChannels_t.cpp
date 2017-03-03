@@ -1,18 +1,22 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register32_t.h"
-
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
-IOPDmacChannel_t::IOPDmacChannel_t(const u32 & channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
-	mChannelID(channelID),
+IOPDmacChannel_t::IOPDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	MADR(nullptr),
 	BCR(nullptr),
 	CHCR(nullptr),
 	TADR(nullptr),
-	mFIFOQueue(fifoQueue)
+	mFIFOQueue(fifoQueue),
+	mChannelID(channelID)
 {
+}
+
+int IOPDmacChannel_t::getChannelID() const
+{
+	return mChannelID;
 }
 
 const IOPDmacChannelTable::ChannelProperties_t * IOPDmacChannel_t::getChannelProperties() const
@@ -124,9 +128,4 @@ IOPDmacChannel_toSIO2_t::IOPDmacChannel_toSIO2_t(const std::shared_ptr<FIFOQueue
 	MADR = std::make_shared<IOPDmacChannelRegister_MADR_t>("IOP CH_toSIO2 MADR");
 	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP CH_toSIO2 BCR");
 	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP CH_toSIO2 CHCR");
-}
-
-IOPDmacChannelTable::LogicalMode_t IOPDmacChannel_t::getRuntimeLogicalMode() const
-{
-	return static_cast<IOPDmacChannelTable::LogicalMode_t>(CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::SM));
 }

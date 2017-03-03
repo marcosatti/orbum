@@ -18,7 +18,7 @@ public:
 		const char * mMnemonic;
 		u8	         mExeCode;
 	};
-	static constexpr ExceptionProperties_t ExceptionProperties[Constants::IOP::IOPCore::Exceptions::NUMBER_EXCEPTIONS] =
+	static constexpr ExceptionProperties_t ExceptionProperties[Constants::IOP::IOPCore::R3000::NUMBER_EXCEPTIONS] =
 	{
 		{ "EX_INTERRUPT",                            0   },
 		{ "EX_TLB_MODIFIED",                         1   },

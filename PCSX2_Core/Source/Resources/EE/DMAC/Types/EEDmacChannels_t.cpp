@@ -6,8 +6,7 @@
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 
-EEDmacChannel_t::EEDmacChannel_t(const u32& channelID) :
-	mChannelID(channelID),
+EEDmacChannel_t::EEDmacChannel_t(const int channelID) :
 	CHCR(nullptr),
 	MADR(nullptr),
 	QWC(nullptr),
@@ -15,17 +14,13 @@ EEDmacChannel_t::EEDmacChannel_t(const u32& channelID) :
 	ASR0(nullptr),
 	ASR1(nullptr),
 	SADR(nullptr),
-	ASR{ ASR0, ASR1 },
+	ASR{ },
 	mFIFOQueue(nullptr),
-	mChainExitState(false),
-	mChainStackLevelState(0),
-	mInterleavedInSkipBlock(false),
-	mInterleavedBlockCount(0)
+	mChannelID(channelID)
 {
 }
 
-EEDmacChannel_t::EEDmacChannel_t(const u32& channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
-	mChannelID(channelID),
+EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	CHCR(nullptr),
 	MADR(nullptr),
 	QWC(nullptr),
@@ -33,12 +28,9 @@ EEDmacChannel_t::EEDmacChannel_t(const u32& channelID, const std::shared_ptr<FIF
 	ASR0(nullptr),
 	ASR1(nullptr),
 	SADR(nullptr),
-	ASR{ ASR0, ASR1 },
+	ASR{ },
 	mFIFOQueue(fifoQueue),
-	mChainExitState(false),
-	mChainStackLevelState(0),
-	mInterleavedInSkipBlock(false),
-	mInterleavedBlockCount(0)
+	mChannelID(channelID)
 {
 }
 
@@ -47,119 +39,23 @@ const EEDmacChannelTable::ChannelProperties_t * EEDmacChannel_t::getChannelPrope
 	return EEDmacChannelTable::getChannelInfo(mChannelID);
 }
 
-EEDmacChannelTable::LogicalMode_t EEDmacChannel_t::getRuntimeLogicalMode() const
+int EEDmacChannel_t::getChannelID() const
 {
-	return static_cast<EEDmacChannelTable::LogicalMode_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::MOD));
-}
-
-Direction_t EEDmacChannel_t::getRuntimeDirection() const
-{
-	Direction_t direction = getChannelProperties()->Direction;
-	if (direction == Direction_t::BOTH)
-		direction = static_cast<Direction_t>(CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::DIR));
-
-	return direction;
-}
-
-void EEDmacChannel_t::resetChainExitState()
-{
-	mChainExitState = false;
-	mChainStackLevelState = 0;
-}
-
-void EEDmacChannel_t::setChainExitStateTrue()
-{
-	mChainExitState = true;
-}
-
-bool EEDmacChannel_t::isChainInDrainStallControlTag() const
-{
-	return ((CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x4;
-}
-
-bool EEDmacChannel_t::isChainInSourceStallControlTag() const
-{
-	return ((CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) >> 12) & 0x7) == 0x0;
-}
-
-bool EEDmacChannel_t::isChainInInterruptTag() const
-{
-	if (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) != 0 
-		&& (CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG) & 0x8000) != 0)
-	{
-		return true;
-	}
-	
-	return false;
-}
-
-bool EEDmacChannel_t::isChainInExitTag() const
-{
-	return mChainExitState;
-}
-
-bool EEDmacChannel_t::isChainStackOverflowed() const
-{
-	if (mChainStackLevelState >= 2) // Remember: 0 indexed!
-		return true;
-
-	return false;
-}
-
-bool EEDmacChannel_t::isChainStackUnderflowed() const
-{
-	if (mChainStackLevelState == 0)
-		return true;
-
-	return false;
-}
-
-void EEDmacChannel_t::pushChainStack()
-{
-	ASR[mChainStackLevelState]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR, TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	ASR[mChainStackLevelState]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR, TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-	mChainStackLevelState += 1;
-}
-
-void EEDmacChannel_t::popChainStack()
-{
-	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
-	TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, ASR[mChainStackLevelState]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
-	mChainStackLevelState -= 1;
-}
-
-u32 EEDmacChannel_t::getInterleavedCount() const
-{
-	return mInterleavedBlockCount;
-}
-
-bool EEDmacChannel_t::isInterleaveInSkipMode() const
-{
-	return mInterleavedInSkipBlock;
-}
-
-void EEDmacChannel_t::toggleInterleaveMode()
-{
-	// Toggle mode and reset the count.
-	mInterleavedInSkipBlock = !mInterleavedInSkipBlock;
-	mInterleavedBlockCount = 0;
-}
-
-void EEDmacChannel_t::incrementInterleaveCount()
-{
-	mInterleavedBlockCount += 1;
+	return mChannelID;
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_8060(std::make_shared<ConstantMemory_t>(0xFA0, "EE DMAC VIF0 Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_VIF0 CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_VIF0 CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_VIF0 MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_VIF0 QWC");
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_VIF0 TADR");
 	ASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_VIF0 ASR0");
 	ASR1 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_VIF0 ASR1");
+	ASR[0] = ASR0;
+	ASR[1] = ASR1;
 }
 
 EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
@@ -172,25 +68,29 @@ EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue_t> & 
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_VIF1 TADR");
 	ASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_VIF1 ASR0");
 	ASR1 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_VIF1 ASR1");
+	ASR[0] = ASR0;
+	ASR[1] = ASR1;
 }
 
 EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_A060(std::make_shared<ConstantMemory_t>(0xFA0, "EE DMAC GIF Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_GIF CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_GIF CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_GIF MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_GIF QWC");
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_GIF TADR");
 	ASR0 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_GIF ASR0");
 	ASR1 = std::make_shared<EEDmacChannelRegister_ASR_t>("EE CH_GIF ASR1");
+	ASR[0] = ASR0;
+	ASR[1] = ASR1;
 }
 
 EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_B030(std::make_shared<ConstantMemory_t>(0x3D0, "EE DMAC fromIPU Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_fromIPU CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_FROM_CHCR_t>("EE CH_fromIPU CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_fromIPU MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_fromIPU QWC");
 }
@@ -199,7 +99,7 @@ EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue_t> 
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_B440(std::make_shared<ConstantMemory_t>(0xBC0, "EE DMAC toIPU Reserved Memory"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_toIPU CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_toIPU CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_toIPU MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_toIPU QWC");
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_toIPU TADR");
@@ -238,7 +138,7 @@ EEDmacChannel_fromSPR_t::EEDmacChannel_fromSPR_t() :
 	MEMORY_D030(std::make_shared<ConstantMemory_t>(0x50, "EE DMAC fromSPR Reserved Memory0")),
 	MEMORY_D090(std::make_shared<ConstantMemory_t>(0x370, "EE DMAC fromSPR Reserved Memory1"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_fromSPR CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_FROM_CHCR_t>("EE CH_fromSPR CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_fromSPR MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_fromSPR QWC");
 	SADR = std::make_shared<EEDmacChannelRegister_SADR_t>("EE CH_fromSPR SADR");
@@ -249,7 +149,7 @@ EEDmacChannel_toSPR_t::EEDmacChannel_toSPR_t() :
 	MEMORY_D440(std::make_shared<ConstantMemory_t>(0x40, "EE DMAC toSPR Reserved Memory0")),
 	MEMORY_D490(std::make_shared<ConstantMemory_t>(0xB70, "EE DMAC fromSPR Reserved Memory1"))
 {
-	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_toSPR CHCR");
+	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_toSPR CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_toSPR MADR");
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE CH_toSPR QWC");
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE CH_toSPR TADR");

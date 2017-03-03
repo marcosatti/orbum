@@ -3,7 +3,10 @@
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 
 EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+	BitfieldRegister32_t(mnemonic, false, false),
+	mTagExit(false),
+	mTagStallControl(false),
+	mTagIRQ(false)
 {
 	registerField(Fields::DIR, "DIR", 0, 1, 0);
 	registerField(Fields::MOD, "MOD", 2, 2, 0);
@@ -12,6 +15,23 @@ EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic
 	registerField(Fields::TIE, "TIE", 7, 1, 0);
 	registerField(Fields::STR, "STR", 8, 1, 0);
 	registerField(Fields::TAG, "TAG", 16, 16, 0);
+}
+
+EEDmacChannelTable::LogicalMode_t EEDmacChannelRegister_CHCR_t::getLogicalMode() const
+{
+	return static_cast<EEDmacChannelTable::LogicalMode_t>(getFieldValue(Fields::MOD));
+}
+
+EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection() const
+{
+	return static_cast<EEDmacChannelTable::Direction_t>(getFieldValue(Fields::DIR));
+}
+
+void EEDmacChannelRegister_CHCR_t::resetTagFlags()
+{
+	mTagExit = false;
+	mTagStallControl = false;
+	mTagIRQ = false;
 }
 
 EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic) :
@@ -65,8 +85,34 @@ void EEDmacChannelRegister_SADR_t::increment()
 	writeWord(RAW, readWord(RAW) + 0x10);
 }
 
+EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :
+	EEDmacChannelRegister_CHCR_t(mnemonic)
+{
+}
+
+void EEDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == EE)
+		value |= 0x1;
+
+	BitfieldRegister32_t::writeWord(context, value);
+}
+
+EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char* mnemonic) :
+	EEDmacChannelRegister_CHCR_t(mnemonic)
+{
+}
+
+void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == EE)
+		value &= (~0x1);
+
+	BitfieldRegister32_t::writeWord(context, value);
+}
+
 EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	EEDmacChannelRegister_CHCR_t(mnemonic),
+	EEDmacChannelRegister_FROM_CHCR_t(mnemonic),
 	mSbusF240(sbusF240)
 {
 }
@@ -77,7 +123,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	if (fieldIndex == Fields::STR)
 	{
 		auto oldSTR = getFieldValue(Fields::STR);
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
 		auto newSTR = getFieldValue(Fields::STR);
 
 		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
@@ -91,14 +137,14 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 	else
 	{
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
 	}
 }
 
 void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	auto oldSTR = getFieldValue(Fields::STR);
-	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	EEDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 	auto newSTR = getFieldValue(Fields::STR);
 
 	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
@@ -125,7 +171,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish() const
 }
 
 EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	EEDmacChannelRegister_CHCR_t(mnemonic),
+	EEDmacChannelRegister_TO_CHCR_t(mnemonic),
 	mSbusF240(sbusF240)
 {
 }
@@ -136,7 +182,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	if (fieldIndex == Fields::STR)
 	{
 		auto oldSTR = getFieldValue(Fields::STR);
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
 		auto newSTR = getFieldValue(Fields::STR);
 
 		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
@@ -150,14 +196,14 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 	else
 	{
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
 	}
 }
 
 void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	auto oldSTR = getFieldValue(Fields::STR);
-	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	EEDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 	auto newSTR = getFieldValue(Fields::STR);
 
 	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.

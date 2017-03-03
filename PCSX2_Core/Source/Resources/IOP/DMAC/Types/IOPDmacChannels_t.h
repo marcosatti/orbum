@@ -11,6 +11,10 @@ class IOPDmacChannelRegister_BCR_t;
 class IOPDmacChannelRegister_CHCR_t;
 class IOPDmacChannelRegister_MADR_t;
 class IOPDmacChannelRegister_TADR_t;
+class IOPDmacRegister_PCR0_t;
+class IOPDmacRegister_ICR0_t;
+class IOPDmacRegister_PCR1_t;
+class IOPDmacRegister_ICR1_t;
 
 /*
 A base type representing an IOP DMAC Channel.
@@ -18,13 +22,8 @@ A base type representing an IOP DMAC Channel.
 class IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_t(const u32 & channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
-
-	/*
-	The ID of this channel. Used to look up properties in the IOPDmacChannelTable, which the static properties.
-	*/
-	const u32 mChannelID;
-	const IOPDmacChannelTable::ChannelProperties_t * getChannelProperties() const;
+	explicit IOPDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	virtual ~IOPDmacChannel_t() = default;
 
 	/*
 	IOP DMAC Channel Registers.
@@ -35,19 +34,25 @@ public:
 	std::shared_ptr<IOPDmacChannelRegister_TADR_t> TADR;
 
 	/*
-	A reference to the associated FIFO queue, set at creation.
+	A reference to the associated FIFO queue, from which data (words) can be read/written to.
 	*/
 	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
 
-	/////////////////////////////
-	// Common Helper Functions //
-	/////////////////////////////
+	/*
+	Returns the ID of this channel.
+	*/
+	int getChannelID() const;
 
 	/*
-	Returns the channel runtime logical mode its operating in.
+	Returns the constant channel properties.
 	*/
-	IOPDmacChannelTable::LogicalMode_t getRuntimeLogicalMode() const;
+	const IOPDmacChannelTable::ChannelProperties_t * getChannelProperties() const;
 
+private:
+	/*
+	The index of this channel.
+	*/
+	const int mChannelID;
 };
 
 /*
@@ -59,7 +64,7 @@ class IOPDmacChannel_fromMDEC_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_fromMDEC_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 0;
+	static constexpr int CHANNEL_ID = 0;
 };
 
 /*
@@ -71,7 +76,7 @@ class IOPDmacChannel_toMDEC_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_toMDEC_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 1;
+	static constexpr int CHANNEL_ID = 1;
 };
 
 /*
@@ -83,7 +88,7 @@ class IOPDmacChannel_GPU_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_GPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 2;
+	static constexpr int CHANNEL_ID = 2;
 };
 
 /*
@@ -96,7 +101,7 @@ class IOPDmacChannel_CDROM_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_CDROM_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 3;
+	static constexpr int CHANNEL_ID = 3;
 };
 
 /*
@@ -109,7 +114,7 @@ class IOPDmacChannel_SPU2c1_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_SPU2c1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 4;
+	static constexpr int CHANNEL_ID = 4;
 };
 
 /*
@@ -121,7 +126,7 @@ class IOPDmacChannel_PIO_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_PIO_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 5;
+	static constexpr int CHANNEL_ID = 5;
 };
 
 /*
@@ -134,7 +139,7 @@ class IOPDmacChannel_OTClear_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_OTClear_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 6;
+	static constexpr int CHANNEL_ID = 6;
 };
 
 /*
@@ -146,7 +151,7 @@ class IOPDmacChannel_SPU2c2_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_SPU2c2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 7;
+	static constexpr int CHANNEL_ID = 7;
 };
 
 /*
@@ -158,7 +163,7 @@ class IOPDmacChannel_DEV9_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_DEV9_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 8;
+	static constexpr int CHANNEL_ID = 8;
 };
 
 /*
@@ -171,7 +176,7 @@ class IOPDmacChannel_SIF0_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 9;
+	static constexpr int CHANNEL_ID = 9;
 };
 
 /*
@@ -183,7 +188,7 @@ class IOPDmacChannel_SIF1_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 10;
+	static constexpr int CHANNEL_ID = 10;
 };
 
 /*
@@ -195,7 +200,7 @@ class IOPDmacChannel_fromSIO2_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_fromSIO2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 11;
+	static constexpr int CHANNEL_ID = 11;
 };
 
 /*
@@ -207,5 +212,5 @@ class IOPDmacChannel_toSIO2_t : public IOPDmacChannel_t
 public:
 	explicit IOPDmacChannel_toSIO2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	static constexpr u32 CHANNEL_ID = 12;
+	static constexpr int CHANNEL_ID = 12;
 };

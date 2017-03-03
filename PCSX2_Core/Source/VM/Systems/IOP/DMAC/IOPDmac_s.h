@@ -29,29 +29,25 @@ public:
 
 private:
 	/*
-	Context variables set by executionStep() in each cycle.
-	Used by all of the functions below.
+	Resources.
 	*/
-	u32 mChannelIndex;
 	std::shared_ptr<IOPDmac_t> mDMAC;
 	std::shared_ptr<PhysicalMMU_t> mIOPPhysicalMMU;
 	std::shared_ptr<IOPIntc_t> mINTC;
 	IOPDmacChannel_t * mChannel;
 
-	///////////////////////////
-	// DMAC Helper Functions //
-	///////////////////////////
+	/////////////////////////////////
+	// DMAC Logical Mode Functions //
+	/////////////////////////////////
 
 	/*
 	Do a normal/block logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Normal();
+	void transferNormal() const;
 
-	/*
-	Returns from the DMAC->PCR(2) register if the given channel is enabled.
-	Automatically determines which PCR register to use based on ID context.
-	*/
-	bool isDMACChannelEnabled() const;
+	///////////////////////////
+	// DMAC Helper Functions //
+	///////////////////////////
 
 	/*
 	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the IOP Core (through the INTC).
@@ -63,7 +59,7 @@ private:
 	Returns the number of data units transfered.
 	On the condition that the channel FIFO is empty (source) or full (drain), returns 0.
 	*/
-	u32 transferData() const;
+	int transferData() const;
 
 	/*
 	Sets the DMAC and channel state for suspend conditions.
@@ -71,10 +67,9 @@ private:
 	void setStateSuspended() const;
 
 	/*
-	Sets the DMAC and channel state for failed transfer conditions.
-	TODO: not yet implemented, throws runtime_error.
+	Returns if the channel is enabled, based on the index (use PCR0 or PCR1).
 	*/
-	void setStateFailedTransfer() const;
+	bool isChannelEnabled() const;
 
 	//////////////////////////////////////////
 	// Raw Memory Transfer Helper Functions //

@@ -529,10 +529,12 @@
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.cpp" />

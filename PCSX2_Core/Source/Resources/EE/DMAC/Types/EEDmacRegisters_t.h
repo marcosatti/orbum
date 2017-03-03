@@ -61,10 +61,7 @@ public:
 		static constexpr u8 SIM = 23;
 		static constexpr u8 MEIM = 24;
 
-		/*
-		Array of IRQ line keys.
-		*/
-		static constexpr u8 IRQ_KEYS[Constants::EE::DMAC::NUMBER_IRQ_LINES]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9, SIS, MEIS, BEIS };
+		static constexpr u8 CHANNEL_IRQ_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
 	};
 
 	EEDmacRegister_STAT_t();
@@ -73,31 +70,13 @@ public:
 	(EE context only.)
 	When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
 	When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
-	Sets the internal flag after, if an interrupt should be raised (caches result).
 	*/
 	void writeWord(const Context_t & context, u32 value) override;
 
 	/*
-	Writes to the IRQ line stat bit and sets the internal flag if there should be an interrupt raised (caches result).
-	*/
-	void raiseIRQLine(const u8 & irqLine);	
-
-	/*
 	Returns if there is a pending interrupt that should be raised.
 	*/
-	bool isInterrupted() const;
-
-private:
-	/*
-	Checks for interrupt conditions and sets the mIsInterrupted flag.
-	See the formula listed at the end of page 65 of the EE Users Manual.
-	*/
-	void handleInterruptCheck();
-
-	/*
-	See handleInterruptCheck() and isInterrupted() above.
-	*/
-	bool mIsInterrupted;
+	bool isInterruptPending();
 };
 
 /*

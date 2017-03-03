@@ -7,12 +7,12 @@ const EEDmacChannelTable::ChannelProperties_t* EEDmacChannelTable::getChannelInf
 	return &ChannelProperties[index];
 }
 
-const u8& EEDmacChannelTable::getSTSChannelIndex(const u8 & STS)
+int EEDmacChannelTable::getSTSChannelIndex(const int STS)
 {
 	return STS_MAP[STS];
 }
 
-const u8& EEDmacChannelTable::getSTDChannelIndex(const u8 & STD)
+int EEDmacChannelTable::getSTDChannelIndex(const int STD)
 {
 	return STD_MAP[STD];
 }

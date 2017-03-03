@@ -47,20 +47,20 @@ struct Constants
 
 	static constexpr u32 MASK_16KB = 0x00003FFF;
 
-	static constexpr u32 NUMBER_BYTES_IN_QWORD = 16;
-	static constexpr u32 NUMBER_HWORDS_IN_QWORD = 8;
-	static constexpr u32 NUMBER_WORDS_IN_QWORD = 4;
-	static constexpr u32 NUMBER_DWORDS_IN_QWORD = 2;
-	static constexpr u32 NUMBER_BYTES_IN_DWORD = 8;
-	static constexpr u32 NUMBER_HWORDS_IN_DWORD = 4;
-	static constexpr u32 NUMBER_WORDS_IN_DWORD = 2;
-	static constexpr u32 NUMBER_BYTES_IN_WORD = 4;
-	static constexpr u32 NUMBER_HWORDS_IN_WORD = 2;
-	static constexpr u32 NUMBER_BYTES_IN_HWORD = 2;
+	static constexpr int NUMBER_BYTES_IN_QWORD = 16;
+	static constexpr int NUMBER_HWORDS_IN_QWORD = 8;
+	static constexpr int NUMBER_WORDS_IN_QWORD = 4;
+	static constexpr int NUMBER_DWORDS_IN_QWORD = 2;
+	static constexpr int NUMBER_BYTES_IN_DWORD = 8;
+	static constexpr int NUMBER_HWORDS_IN_DWORD = 4;
+	static constexpr int NUMBER_WORDS_IN_DWORD = 2;
+	static constexpr int NUMBER_BYTES_IN_WORD = 4;
+	static constexpr int NUMBER_HWORDS_IN_WORD = 2;
+	static constexpr int NUMBER_BYTES_IN_HWORD = 2;
 
 	struct MIPS
 	{
-		static constexpr size_t SIZE_MIPS_INSTRUCTION = 4;
+		static constexpr size_t SIZE_MIPS_INSTRUCTION = 0x4;
 
 		struct MMU
 		{
@@ -126,15 +126,15 @@ struct Constants
 
 			struct R5900
 			{
-				static constexpr u32 NUMBER_GP_REGISTERS = 32;
-				static constexpr u32 NUMBER_SYSCALLS = 256; // TODO: get real value.
-				static constexpr u32 NUMBER_EXCEPTIONS = 20;
+				static constexpr int NUMBER_GP_REGISTERS = 32;
+				static constexpr int NUMBER_SYSCALLS = 256; // TODO: get real value.
+				static constexpr int NUMBER_EXCEPTIONS = 20;
 			};
 
 			struct COP0
 			{
-				static constexpr u32 NUMBER_REGISTERS = 32;
-				static constexpr u32 NUMBER_PCR_REGISTERS = 2;
+				static constexpr int NUMBER_REGISTERS = 32;
+				static constexpr int NUMBER_PCR_REGISTERS = 2;
 			};
 
 			struct FPU
@@ -159,30 +159,28 @@ struct Constants
 				static constexpr u32 MASK_PAGE_SIZE_4MB = 1023;
 				static constexpr u32 MASK_PAGE_SIZE_16MB = 4095;
 
-				static constexpr u32 NUMBER_TLB_ENTRIES = 48;
+				static constexpr int NUMBER_TLB_ENTRIES = 48;
 				static constexpr u32 MASK_VPN2_FIELD_16MB = 0x0007F000;
 			};
 
-			static constexpr u32 NUMBER_EECORE_INSTRUCTIONS = 388;
-
+			static constexpr int NUMBER_INSTRUCTIONS = 388;
 			static constexpr double EECORE_CLK_SPEED = 294912000.0; // 294.912 MHz.
 		};
 
 		struct Timers
 		{
-			static constexpr u32 NUMBER_TIMERS = 4;
+			static constexpr int NUMBER_TIMERS = 4;
 		};
 
 		struct DMAC
 		{
-			static constexpr u32 NUMBER_DMAC_CHANNELS = 10;
-			static constexpr u32 NUMBER_CHAIN_INSTRUCTIONS = 8;
-			static constexpr u32 NUMBER_IRQ_LINES = 13;
+			static constexpr int NUMBER_DMAC_CHANNELS = 10;
+			static constexpr int NUMBER_CHAIN_INSTRUCTIONS = 8;
 		};
 
 		struct INTC
 		{
-			static constexpr u32 NUMBER_IRQ_LINES = 15;
+			static constexpr int NUMBER_IRQ_LINES = 15;
 		};
 
 		struct MainMemory
@@ -215,17 +213,17 @@ struct Constants
 			struct VIF
 			{
 				// Number of instructions is based off the CMD field in the VIFcode, without the leading interrupt bit and the m bit in the UNPACK instructions. See EE Users Manual page 87.
-				static constexpr u32 NUMBER_INSTRUCTIONS = 34;
-				static constexpr u32 NUMBER_VIF_UNITS = 2;
+				static constexpr int NUMBER_INSTRUCTIONS = 34;
+				static constexpr int NUMBER_VIF_UNITS = 2;
 			};
 
 			struct VU
 			{
-				static constexpr u32 NUMBER_VF_REGISTERS = 32;
-				static constexpr u32 NUMBER_VI_REGISTERS = 16;
-				static constexpr u32 NUMBER_VU_UNITS = 2;
-				static constexpr u32 NUMBER_VU0_CCR_REGISTERS = 32;
-				static constexpr u32 NUMBER_VU_INSTRUCTIONS = 164;
+				static constexpr int NUMBER_VF_REGISTERS = 32;
+				static constexpr int NUMBER_VI_REGISTERS = 16;
+				static constexpr int NUMBER_VU_UNITS = 2;
+				static constexpr int NUMBER_VU0_CCR_REGISTERS = 32;
+				static constexpr int NUMBER_VU_INSTRUCTIONS = 164;
 				static constexpr double VU_CLK_SPEED = 147456000.0; // 147.456 MHz.
 			};
 		};
@@ -239,18 +237,14 @@ struct Constants
 		{
 			struct R3000
 			{
-				static constexpr u32 NUMBER_GP_REGISTERS = 32;
-				static constexpr u32 NUMBER_SYSCALLS = 256; // TODO: get real value.
+				static constexpr int NUMBER_GP_REGISTERS = 32;
+				static constexpr int NUMBER_SYSCALLS = 256; // TODO: get real value.
+				static constexpr int NUMBER_EXCEPTIONS = 14;
 			};
 
 			struct COP0
 			{
-				static constexpr u32 NUMBER_REGISTERS = 32;
-			};
-
-			struct Exceptions
-			{
-				static constexpr u32 NUMBER_EXCEPTIONS = 14;
+				static constexpr int NUMBER_REGISTERS = 32;
 			};
 
 			struct ScratchpadMemory
@@ -269,27 +263,26 @@ struct Constants
 				static constexpr u32 VADDRESS_SPECIAL_2_UPPER_BOUND = 0xFFFFFFFF;
 			};
 
-			static constexpr u32 NUMBER_IOP_INSTRUCTIONS = 91;
-
+			static constexpr int NUMBER_IOP_INSTRUCTIONS = 91;
 			static constexpr double IOPCORE_CLK_SPEED = 37500000.0; // 37.5 MHz in PS2 mode, PS1 mode not supported for now (runs at original PSX speed of ~33 MHz).
 		};
 
 		struct DMAC
 		{
-			static constexpr u32 NUMBER_DMAC_CHANNELS = 14;
-			static constexpr u32 NUMBER_PCR_REGISTERS = 2;
-			static constexpr u32 NUMBER_ICR_REGISTERS = 2;
-			static constexpr u32 NUMBER_ICR_IRQ_LINES = 7;
+			static constexpr int NUMBER_DMAC_CHANNELS = 14;
+			static constexpr int NUMBER_PCR_REGISTERS = 2;
+			static constexpr int NUMBER_ICR_REGISTERS = 2;
+			static constexpr int NUMBER_ICR_IRQ_LINES = 7;
 		};
 
 		struct Timers
 		{
-			static constexpr u32 NUMBER_TIMERS = 6;
+			static constexpr int NUMBER_TIMERS = 6;
 		};
 
 		struct INTC
 		{
-			static constexpr u32 NUMBER_IRQ_LINES = 26;
+			static constexpr int NUMBER_IRQ_LINES = 26;
 		};
 
 		struct IOPMemory

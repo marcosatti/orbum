@@ -613,7 +613,7 @@ private:
 	Sometimes there are differences in the instruction mnemonics within the manual. 
 	Alternative names have been provided as comments against the array function used.
 	*/
-	void(EECoreInterpreter_s::* EECORE_INSTRUCTION_TABLE[Constants::EE::EECore::NUMBER_EECORE_INSTRUCTIONS])() =
+	void(EECoreInterpreter_s::* EECORE_INSTRUCTION_TABLE[Constants::EE::EECore::NUMBER_INSTRUCTIONS])() =
 	{
 		&EECoreInterpreter_s::INSTRUCTION_UNKNOWN,
 		&EECoreInterpreter_s::J,

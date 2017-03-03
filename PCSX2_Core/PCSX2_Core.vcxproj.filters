@@ -504,6 +504,8 @@
     <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
     <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_CHAIN.cpp" />
+    <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

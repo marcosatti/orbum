@@ -5,10 +5,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Types/Registers/Register32_t.h"
+#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
 /*
 The DMAC D_CHCR register, aka channel control register.
-Needs a reference to a slice count variable that is reset when the STR bit is set to 1.
 */
 class EEDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 {
@@ -25,6 +25,39 @@ public:
 	};
 
 	EEDmacChannelRegister_CHCR_t(const char * mnemonic);
+
+	/*
+	Returns the channel runtime logical mode its operating in.
+	*/
+	EEDmacChannelTable::LogicalMode_t getLogicalMode() const;
+
+	/*
+	Returns the runtime direction. Useful for channels where it can be either way.
+	*/
+	EEDmacChannelTable::Direction_t getDirection() const;
+
+	/*
+	Resets the tag state (flags below) to false. Meant to be called on every finished tag transfer.
+	*/
+	void resetTagFlags();
+
+	/*
+	Tag exit flag. Within DMAC logic, set this to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer. Reset this on a finished transfer.
+	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	*/
+	bool mTagExit;
+
+	/*
+	Tag stall control flag. Within DMAC logic, set this to true when an stall control tag is encountered, and use to check whether to update STADR or skip a cycle. Reset this on a finished transfer.
+	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	*/
+	bool mTagStallControl;
+
+	/*
+	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. Reset this on a finished transfer.
+	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	*/
+	bool mTagIRQ;
 };
 
 /*
@@ -111,12 +144,43 @@ public:
 };
 
 /*
+A base TO DMAC D_CHCR register, aka channel control register.
+Sets the constant direction (TO) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+*/
+class EEDmacChannelRegister_TO_CHCR_t : public EEDmacChannelRegister_CHCR_t
+{
+public:
+	explicit EEDmacChannelRegister_TO_CHCR_t(const char * mnemonic);
+
+	/*
+	(EE context only.) Upon writes, sets the correct direction (FROM).
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
+};
+
+/*
+A base FROM DMAC D_CHCR register, aka channel control register.
+Sets the constant direction (FROM) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+*/
+class EEDmacChannelRegister_FROM_CHCR_t : public EEDmacChannelRegister_CHCR_t
+{
+public:
+	explicit EEDmacChannelRegister_FROM_CHCR_t(const char * mnemonic);
+
+	/*
+	(EE context only.) Upon writes, sets the correct direction (FROM).
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
+};
+
+/*
 The SIF0 DMAC D_CHCR register, aka channel control register.
 SIF0 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
 As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
 TODO: Look into properly RE'ing the SBUS.
+TODO: SIF0 direction is IOP -> EE, so need to move the SBUS start update into the IOP side.
 */
-class EEDmacChannelRegister_SIF0_CHCR_t : public EEDmacChannelRegister_CHCR_t
+class EEDmacChannelRegister_SIF0_CHCR_t : public EEDmacChannelRegister_FROM_CHCR_t
 {
 public:
 	EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
@@ -147,8 +211,9 @@ The SIF1 DMAC D_CHCR register, aka channel control register.
 SIF1 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
 As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
 TODO: Look into properly RE'ing the SBUS.
+TODO: SIF1 direction is EE -> IOP, so need to move the SBUS finish update into the IOP side.
 */
-class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_CHCR_t
+class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_TO_CHCR_t
 {
 public:
 	EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
@@ -179,6 +244,7 @@ The SIF2 DMAC D_CHCR register, aka channel control register.
 SIF2 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
 As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
 TODO: Look into properly RE'ing the SBUS.
+TODO: SIF0 direction is IOP <-> EE (bidirectional), so need to trigger either the start or finish on the IOP side (vice versa on the EE side).
 */
 class EEDmacChannelRegister_SIF2_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
@@ -186,8 +252,7 @@ public:
 	EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
-	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
-	See PCSX2's "sif2.cpp".
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. See PCSX2's "sif2.cpp".
 	*/
 	void setFieldValue(const u8& fieldIndex, const u32& value) override;
 	void writeWord(const Context_t& context, u32 value) override;

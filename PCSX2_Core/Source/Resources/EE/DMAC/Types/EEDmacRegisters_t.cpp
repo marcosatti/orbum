@@ -13,8 +13,7 @@ EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
 }
 
 EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
-	BitfieldRegister32_t("EE DMAC STAT", false, false),
-	mIsInterrupted(false)
+	BitfieldRegister32_t("EE DMAC STAT", false, false)
 {
 	registerField(Fields::CIS0, "CIS0", 0, 1, 0);
 	registerField(Fields::CIS1, "CIS1", 1, 1, 0);
@@ -56,39 +55,25 @@ void EEDmacRegister_STAT_t::writeWord(const Context_t & context, u32 value)
 	}
 
 	BitfieldRegister32_t::writeWord(context, value);
-	handleInterruptCheck();
 }
 
-void EEDmacRegister_STAT_t::raiseIRQLine(const u8& irqLine)
+bool EEDmacRegister_STAT_t::isInterruptPending()
 {
-	setFieldValue(Fields::IRQ_KEYS[irqLine], 1);
-	handleInterruptCheck();
-}
-
-bool EEDmacRegister_STAT_t::isInterrupted() const
-{
-	return mIsInterrupted;
-}
-
-void EEDmacRegister_STAT_t::handleInterruptCheck()
-{
-	// Check for interrupt conditions.
 	// See the formula listed at the end of page 65 of the EE Users Manual.
-	bool interrupt = false;
 	u32 regValue = readWord(RAW);
-
-	// Check for STAT & MASK > 0.
 	u32 statValue = regValue & 0xFFFF;
 	u32 maskValue = (regValue & 0xFFFF0000) >> 16;
+
+	// Check for STAT & MASK > 0.
 	if (statValue & maskValue)
-		interrupt = true;
+		return true;
 
 	// Check for BUSERR interrupt status.
 	if (getFieldValue(Fields::BEIS))
-		interrupt = true;
+		return true;
 
-	// Set the internal flag.
-	mIsInterrupted = interrupt;
+	// Else return false.
+	return false;
 }
 
 EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()

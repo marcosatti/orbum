@@ -19,8 +19,11 @@ class IOPDmacChannel_SIF0_t;
 class IOPDmacChannel_SIF1_t;
 class IOPDmacChannel_fromSIO2_t;
 class IOPDmacChannel_toSIO2_t; 
-class IOPDmacRegister_PCR_t; 
-class IOPDmacRegister_ICR_t;
+class IOPDmacRegister_PCR0_t; 
+class IOPDmacRegister_ICR0_t;
+class IOPDmacRegister_PCR1_t; 
+class IOPDmacRegister_ICR1_t;
+class Register32_t;
 
 /*
 IOP DMAC resources.
@@ -32,7 +35,7 @@ public:
 	
 	/*
 	IOP DMA Channels. 
-	There are 12 channels in total.
+	There are 14 channels in total (to make it even), with the last one being undefined.
 	*/
 	std::shared_ptr<IOPDmacChannel_fromMDEC_t> CHANNEL_fromMDEC;
 	std::shared_ptr<IOPDmacChannel_toMDEC_t>   CHANNEL_toMDEC;
@@ -47,16 +50,15 @@ public:
 	std::shared_ptr<IOPDmacChannel_SIF1_t>     CHANNEL_SIF1;
 	std::shared_ptr<IOPDmacChannel_fromSIO2_t> CHANNEL_fromSIO2;
 	std::shared_ptr<IOPDmacChannel_toSIO2_t>   CHANNEL_toSIO2;
-	std::shared_ptr<IOPDmacChannel_t> CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
+	std::shared_ptr<IOPDmacChannel_t> CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS - 1]; 
 
 	/*
 	DMAC Common Registers.
 	*/
-	std::shared_ptr<IOPDmacRegister_PCR_t> PCR;  // Register "PCR (Primary Control Register)"    @ 0x1F8010F0 -> 0x1F8010F3. Responsible for DMA channels 0 -> 6.
-	std::shared_ptr<IOPDmacRegister_ICR_t> ICR;  // Register "ICR (Interrupt Control Register)"  @ 0x1F8010F4 -> 0x1F8010F7. Responsible for DMA channels 0 -> 6.
-	std::shared_ptr<IOPDmacRegister_PCR_t> PCR2; // Register "PCR2 (Primary Control Register)"   @ 0x1F801570 -> 0x1F801573. Responsible for DMA channels 7 -> 12.
-	std::shared_ptr<IOPDmacRegister_ICR_t> ICR2; // Register "ICR  (Interrupt Control Register)" @ 0x1F801574 -> 0x1F801577. Responsible for DMA channels 7 -> 12.
-	std::shared_ptr<IOPDmacRegister_PCR_t> PCRS[Constants::IOP::DMAC::NUMBER_PCR_REGISTERS]; // Array of PCR registers needed for iterations.
-	std::shared_ptr<IOPDmacRegister_ICR_t> ICRS[Constants::IOP::DMAC::NUMBER_ICR_REGISTERS]; // Array of PCR registers needed for iterations.
+	std::shared_ptr<IOPDmacRegister_PCR0_t> PCR0;  // Register "PCR0 (Primary Control Register)"   @ 0x1F8010F0 -> 0x1F8010F3. Responsible for DMA channels 0 -> 6.
+	std::shared_ptr<IOPDmacRegister_ICR0_t> ICR0;  // Register "ICR0 (Interrupt Control Register)" @ 0x1F8010F4 -> 0x1F8010F7. Responsible for DMA channels 0 -> 6.
+	std::shared_ptr<IOPDmacRegister_PCR1_t> PCR1;  // Register "PCR1 (Primary Control Register)"   @ 0x1F801570 -> 0x1F801573. Responsible for DMA channels 7 -> 13. (Channel 13 is undefined.)
+	std::shared_ptr<IOPDmacRegister_ICR1_t> ICR1;  // Register "ICR1 (Interrupt Control Register)" @ 0x1F801574 -> 0x1F801577. Responsible for DMA channels 7 -> 13. (Channel 13 is undefined.)
+	std::shared_ptr<Register32_t>           GCTRL; // Register "GCTRL (Global Control Register)"   @ 0x1F801578 -> 0x1F80157B. From wisi and SP193's DMA docs.
 };
 

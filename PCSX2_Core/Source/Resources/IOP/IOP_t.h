@@ -92,7 +92,6 @@ public:
 	std::shared_ptr<Register32_t>  REGISTER_1560;        // Register "Undocumented: 1560"   @ 0x1F801560 -> 0x1F801563.
 	std::shared_ptr<Register32_t>  REGISTER_1564;        // Register "Undocumented: 1564"   @ 0x1F801564 -> 0x1F801567.
 	std::shared_ptr<Register32_t>  REGISTER_1568;        // Register "Undocumented: 1568"   @ 0x1F801568 -> 0x1F80156B.
-	std::shared_ptr<Register32_t>  REGISTER_1578;        // Register "Undocumented: 1578"   @ 0x1F801578 -> 0x1F80157B.
 	std::shared_ptr<Register32_t>  REGISTER_15F0;        // Register "Undocumented: 15F0"   @ 0x1F8015F0 -> 0x1F8015F3.
 	std::shared_ptr<Register32_t>  REGISTER_2070;        // Register "Undocumented: 2070"   @ 0x1F802070 -> 0x1F802073.
 	std::shared_ptr<Register32_t>  REGISTER_3800;        // Register "Undocumented: 3800"   @ 0x1F803800 -> 0x1F803800.

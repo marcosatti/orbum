@@ -46,31 +46,34 @@ public:
 
 private:
 	/*
-	Context resources needed.
+	Resources.
 	*/
-	u32 mChannelIndex;
-	EEDmacChannel_t * mChannel;
 	std::shared_ptr<EEDmac_t> mDMAC;
 	std::shared_ptr<PhysicalMMU_t> mEEPhysicalMMU;
+	EEDmacChannel_t * mChannel;
 
-	///////////////////////////
-	// DMAC Helper Functions //
-	///////////////////////////
+	/////////////////////////////////
+	// DMAC Logical Mode Functions //
+	/////////////////////////////////
 
 	/*
 	Do a normal logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Normal();
+	void transferNormal();
 
 	/*
 	Do a chain logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Chain();
+	void transferChain();
 
 	/*
 	Do a interleaved logical mode transfer through the specified DMA channel.
 	*/
-	void executionStep_Interleaved();
+	void transferInterleaved();
+
+	///////////////////////////
+	// DMAC Helper Functions //
+	///////////////////////////
 
 	/*
 	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the EE Core.
@@ -168,18 +171,18 @@ private:
 	/*
 	Chain DMAtag handler functions. Consult page 59 - 61 of EE Users Manual.
 	*/
-	void INSTRUCTION_UNSUPPORTED();
-	void SRC_CNT();
-	void SRC_NEXT();
-	void SRC_REF();
-	void SRC_REFS();
-	void SRC_REFE();
-	void SRC_CALL();
-	void SRC_RET();
-	void SRC_END();
-	void DST_CNT();
-	void DST_CNTS();
-	void DST_END();
+	void CHAIN_TAGID_UNKNOWN();
+	void CHAIN_SRC_CNT();
+	void CHAIN_SRC_NEXT();
+	void CHAIN_SRC_REF();
+	void CHAIN_SRC_REFS();
+	void CHAIN_SRC_REFE();
+	void CHAIN_SRC_CALL();
+	void CHAIN_SRC_RET();
+	void CHAIN_SRC_END();
+	void CHAIN_DST_CNT();
+	void CHAIN_DST_CNTS();
+	void CHAIN_DST_END();
 
 	/*
 	Static arrays needed to call the appropriate DMAtag handler function.
@@ -187,35 +190,24 @@ private:
 	*/
 	void(EEDmac_s::* SRC_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac_s::SRC_REFE,
-		&EEDmac_s::SRC_CNT,
-		&EEDmac_s::SRC_NEXT,
-		&EEDmac_s::SRC_REF,
-		&EEDmac_s::SRC_REFS,
-		&EEDmac_s::SRC_CALL,
-		&EEDmac_s::SRC_RET,
-		&EEDmac_s::SRC_END
+		&EEDmac_s::CHAIN_SRC_REFE,
+		&EEDmac_s::CHAIN_SRC_CNT,
+		&EEDmac_s::CHAIN_SRC_NEXT,
+		&EEDmac_s::CHAIN_SRC_REF,
+		&EEDmac_s::CHAIN_SRC_REFS,
+		&EEDmac_s::CHAIN_SRC_CALL,
+		&EEDmac_s::CHAIN_SRC_RET,
+		&EEDmac_s::CHAIN_SRC_END
 	};
 	void(EEDmac_s::* DST_CHAIN_INSTRUCTION_TABLE[Constants::EE::DMAC::NUMBER_CHAIN_INSTRUCTIONS])() =
 	{
-		&EEDmac_s::DST_CNTS,
-		&EEDmac_s::DST_CNT,
-		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
-		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
-		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
-		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
-		&EEDmac_s::INSTRUCTION_UNSUPPORTED,
-		&EEDmac_s::DST_END,
+		&EEDmac_s::CHAIN_DST_CNTS,
+		&EEDmac_s::CHAIN_DST_CNT,
+		&EEDmac_s::CHAIN_TAGID_UNKNOWN,
+		&EEDmac_s::CHAIN_TAGID_UNKNOWN,
+		&EEDmac_s::CHAIN_TAGID_UNKNOWN,
+		&EEDmac_s::CHAIN_TAGID_UNKNOWN,
+		&EEDmac_s::CHAIN_TAGID_UNKNOWN,
+		&EEDmac_s::CHAIN_DST_END,
 	};
-
-	///////////////////////////////////////
-	// Interleaved Mode Helper Functions //
-	///////////////////////////////////////
-
-	/*
-	Returns if the transfer or skip limit has been reached.
-	(The two states are mutually exclusive).
-	*/
-	bool isInterleaveLimitReached();
-
 };

@@ -60,7 +60,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	IOPCore->R3000->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x2b0071; //0x1b8415; // 0x1b5aff;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x2b04bc; 
 	static u32 DEBUG_PC_BREAKPOINT = 0x3A68;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
