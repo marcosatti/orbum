@@ -23,7 +23,8 @@ using Direction_t = IOPDmacChannelTable::Direction_t;
 
 IOPDmac_s::IOPDmac_s(VM * vm) :
 	VMSystem_s(vm, System_t::IOPDmac),
-	mChannel(nullptr)
+	mChannel(nullptr),
+	mDMAtag()
 {
 	// Set resource pointer variables.
 	mDMAC = getVM()->getResources()->IOP->DMAC;
@@ -51,17 +52,16 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			{
 				switch (mChannel->CHCR->getLogicalMode())
 				{
-				case LogicalMode_t::NORMAL:
+				case LogicalMode_t::NORMAL_BURST:
 				{
-					// Normal mode.
-					transferNormal();
+					// Normal/burst mode.
+					transferNormalBurst();
 					break;
 				}
-				case LogicalMode_t::BLOCK:
+				case LogicalMode_t::NORMAL_SLICE:
 				{
-					// Block mode ("sync blocks to DMA requests"). 
-					// Due to the emulator implementation, logic is not different to normal mode. TODO: verify?
-					transferNormal();
+					// Normal/slice mode.
+					transferNormalSlice();
 					break;
 				}
 				case LogicalMode_t::LINKEDLIST:
@@ -71,8 +71,9 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 				}
 				case LogicalMode_t::CHAIN:
 				{
-					// Reserved (not defined).
-					throw std::runtime_error("IOP DMAC channel had chain operating mode.");
+					// Chain mode (listed as undefined in nocash PSX docs), based of wisi's docs.
+					transferChain();
+					break;
 				}
 				default:
 				{
@@ -89,15 +90,89 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	return 1;
 }
 
-void IOPDmac_s::transferNormal() const
+void IOPDmac_s::transferNormalBurst()
 {
 	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
 	if (!transferData())
 		return;
 
-	// Check if there is no more data to process, in which case stop transferring and update status.
+	// Check if there is no more data to process (check BS), in which case stop transferring and update status.
 	if (mChannel->BCR->isFinished(false))
 		setStateSuspended();
+}
+
+void IOPDmac_s::transferNormalSlice()
+{
+	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
+	if (!transferData())
+		return;
+
+	// Check if there is no more data to process (check BS and BA), in which case stop transferring and update status.
+	if (mChannel->BCR->isFinished(true))
+		setStateSuspended();
+}
+
+void IOPDmac_s::transferChain()
+{
+	// Check the transfer size, make sure that size > 0 for a transfer to occur (otherwise read a tag). 
+	// TODO: Chain mode has its own transfer length counter? Not sure how this is meant to be counted through BCR register. See wisi's docs later..
+	if (mChannel->CHCR->mTagTransferLength > 0)
+	{
+		// Transfer a data unit (32-bits). If no data was transfered, try again next cycle. 
+		int count = transferData();
+		if (!count)
+			return;
+
+		// Decrement the chain mode transfer length (as we are not using BCR).
+		mChannel->CHCR->mTagTransferLength -= count;
+		
+		// If transfer length is now 0, update the tag flags state, and check for suspend conditions.
+		if (mChannel->CHCR->mTagTransferLength == 0)
+		{
+			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
+			// TODO: verify whats meant to happen... suspend or just emit interrupt?
+			if (isChannelIRQEnabled() && mChannel->CHCR->mTagIRQ)
+				setStateSuspended();
+
+			// Check if we need to exit based on tag flag (set by ERT flag within DMA tag).
+			if (mChannel->CHCR->mTagExit)
+				setStateSuspended();
+
+			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
+			mChannel->CHCR->resetChainState();
+		}
+	}
+	else
+	{
+		// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, BCR, etc).
+		// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties? Works both ways, but direction is less code.
+		switch (mChannel->CHCR->getDirection())
+		{
+		case Direction_t::TO:
+		{
+			// Read in a tag, exit early if we need to wait for data.
+			if (!readChainSourceTag())
+				return;
+			
+			break;
+		}
+		case Direction_t::FROM:
+		{
+			// Read in a tag, exit early if we need to wait for data.
+			if (!readChainDestTag())
+				return;
+			
+			break;
+		}
+		default:
+		{
+			throw std::runtime_error("IOP DMAC could not determine chain mode context.");
+		}
+		}
+
+		// Set the IRQ flag if the DMAtag.IRQ bit is set.
+		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
+	}
 }
 
 void IOPDmac_s::handleInterruptCheck() const
@@ -187,6 +262,11 @@ bool IOPDmac_s::isChannelEnabled() const
 	}
 }
 
+bool IOPDmac_s::isChannelIRQEnabled() const
+{
+	return (mDMAC->ICR1->getFieldValue(IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
+}
+
 u32 IOPDmac_s::readDataMemory(u32 PhysicalAddressOffset) const
 {
 	return mIOPPhysicalMMU->readWord(RAW, PhysicalAddressOffset);
@@ -195,4 +275,53 @@ u32 IOPDmac_s::readDataMemory(u32 PhysicalAddressOffset) const
 void IOPDmac_s::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
 {
 	mIOPPhysicalMMU->writeWord(RAW, PhysicalAddressOffset, data);
+}
+
+bool IOPDmac_s::readChainSourceTag()
+{
+	throw std::runtime_error("IOP DMAC source chain mode not implemented.");
+}
+
+bool IOPDmac_s::readChainDestTag()
+{
+	// Check first if there is data available.
+	if (mChannel->mFIFOQueue->isEmpty())
+		return false;
+
+	// Read tag (2 x 32-bits) from channel FIFO.
+	u32 tag0 = mChannel->mFIFOQueue->readWord(RAW);
+	u32 tag1 = mChannel->mFIFOQueue->readWord(RAW);
+
+	// Set mDMAtag based upon the first 2 words read from the channel.
+	mDMAtag.setValue(tag0, tag1);
+
+	// Set the tag transfer properties.
+	mChannel->CHCR->mTagExit = mDMAtag.getERT() > 0;
+	mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
+	mChannel->CHCR->mTagTransferLength = mDMAtag.getLength();
+	mChannel->MADR->writeWord(RAW, mDMAtag.getADDR());
+
+	// Check for the EE tag transfer option (CHCR bit 8 aka "chopping enable" set).
+	// TODO: implement properly... I don't know what wisi's docs mean by send to EE - does this mean send directly to the SIF0 FIFO? How would the EE even know about this (look at SBUS)? 
+	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
+	{
+		// Read EE chain tag (LSB 64-bits) from channel FIFO. This is important or else the FIFO order will get messed up.
+		u32 tag3 = mChannel->mFIFOQueue->readWord(RAW);
+		u32 tag4 = mChannel->mFIFOQueue->readWord(RAW);
+
+		// Check first that the tag size is above 0 - dont bother doing anything (first 16 bits).
+		if ((tag3 & 0xFFFF) > 0)
+		{
+			// Pack tag words into a u128 for sending. The MSB 64-bits are filled with 0's.
+			u128 EEtag = u128(tag3, tag4, 0, 0);
+
+			throw std::runtime_error("IOP DMAC had chain mode (dest) with CHCR.8 set - send tag to EE not implemented.");
+		}
+		else
+		{
+			log(Warning, "IOP DMAC chain mode EE tag had size of zero - not sending.");
+		}
+	}
+
+	return true;
 }

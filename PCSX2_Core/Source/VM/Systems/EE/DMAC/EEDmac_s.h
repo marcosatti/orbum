@@ -1,15 +1,10 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
 
 #include "VM/Types/VMSystem_s.h"
 
-#include "Resources/EE/DMAC/Types/DMAtag_t.h"
-
-using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
-using Direction_t = EEDmacChannelTable::Direction_t;
-using LogicalMode_t = EEDmacChannelTable::LogicalMode_t;
+#include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
 class EEDmac_t;
 class PhysicalMMU_t;
@@ -152,7 +147,7 @@ private:
 	/*
 	Temporary context variables, set by the chain mode functions.
 	*/
-	DMAtag_t mDMAtag;
+	EEDMAtag_t mDMAtag;
 
 	/*
 	Sets mDMAtag to the tag from the TADR register.

@@ -3,13 +3,16 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, true)
+	BitfieldRegister32_t(mnemonic, false, true),
+	mTagExit(false),
+	mTagIRQ(false),
+	mTagTransferLength(0)
 {
 	registerField(Fields::TD, "TD", 0, 1, 0);
 	registerField(Fields::MAS, "MAS", 1, 1, 0);
 	registerField(Fields::CE, "CE", 8, 1, 0);
 	registerField(Fields::SM, "SM", 9, 2, 0);
-	registerField(Fields::ILinkUnk, "ILinkUnk", 10, 1, 0);
+	registerField(Fields::ILinkUnk, "ILinkUnk", 11, 1, 0);
 	registerField(Fields::C_DWS, "C_DWS", 16, 3, 0);
 	registerField(Fields::C_CWS, "C_CWS", 20, 3, 0);
 	registerField(Fields::Start, "Start", 24, 1, 0);
@@ -27,6 +30,13 @@ IOPDmacChannelTable::LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode
 IOPDmacChannelTable::Direction_t IOPDmacChannelRegister_CHCR_t::getDirection() const
 {
 	return static_cast<IOPDmacChannelTable::Direction_t>(getFieldValue(Fields::TD));
+}
+
+void IOPDmacChannelRegister_CHCR_t::resetChainState()
+{
+	mTagExit = false;
+	mTagIRQ = false;
+	mTagTransferLength = 0;
 }
 
 IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic) :
@@ -102,4 +112,43 @@ void IOPDmacChannelRegister_TADR_t::increment()
 void IOPDmacChannelRegister_TADR_t::decrement()
 {
 	writeWord(RAW, readWord(RAW) - 0x4);
+}
+
+IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :
+	IOPDmacChannelRegister_CHCR_t(mnemonic)
+{
+}
+
+void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == IOP)
+		value |= (1 << 0);
+
+	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
+}
+
+IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const char* mnemonic) :
+	IOPDmacChannelRegister_CHCR_t(mnemonic)
+{
+}
+
+void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == IOP)
+		value &= ~(1 << 0);
+
+	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
+}
+
+IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic) :
+	IOPDmacChannelRegister_FROM_CHCR_t(mnemonic)
+{
+}
+
+void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
+{
+	if (context == IOP)
+		value |= (1 << 10);
+
+	IOPDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 }

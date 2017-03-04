@@ -7,7 +7,7 @@ A class containing info as required by a DMAtag, as explained on page 58 of the 
 
 Designed so it can be reused (use setValue() and then the get functions to extract the field values).
 
-Although a DMAtag is 128-bit long, only the lower 64-bits are used (for the tag).
+Although a DMAtag is 128-bit long, only the lower 64-bits are used.
 
 Bitfield map (relevant only):
 - Bits 0-15 (length 16): "QWC" (Quadword count).
@@ -17,19 +17,15 @@ Bitfield map (relevant only):
 - Bits 32-62 (length 31): "ADDR" (Address of packet or next tag instruction, due to qword alignment, lower 4 bits are 0's).
 - Bits 63 (length 1): "SPR" (Memory or scratchpad ram (SPR) selection).
 */
-class DMAtag_t
+class EEDMAtag_t
 {
 public:
-	/*
-	Initalise a DMAtag object optionally with the tag value.
-	*/
-	DMAtag_t();
-	DMAtag_t(const u64 & DMAtagValue);
+	EEDMAtag_t();
 
 	/*
-	Holder for the tag value.
+	Get the tag value.
 	*/
-	u64 mTagValue;
+	const u64 & getValue() const;
 
 	/*
 	Set the tag value.
@@ -46,6 +42,11 @@ public:
 	u32 getADDR() const;
 	u8 getSPR() const;
 
+private:
+	/*
+	Holder for the tag value.
+	*/
+	u64 mTagValue;
 };
 
 

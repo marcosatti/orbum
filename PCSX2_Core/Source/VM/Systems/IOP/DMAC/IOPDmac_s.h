@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
 
 #include "VM/Types/VMSystem_s.h"
+
+#include "Resources/IOP/DMAC/Types/IOPDMAtag_t.h"
 
 class IOPDmac_t;
 class IOPIntc_t;
@@ -43,7 +44,17 @@ private:
 	/*
 	Do a normal/block logical mode transfer through the specified DMA channel.
 	*/
-	void transferNormal() const;
+	void transferNormalBurst();
+
+	/*
+	Do a normal/slice logical mode transfer through the specified DMA channel.
+	*/
+	void transferNormalSlice();
+
+	/*
+	Do a chain logical mode transfer through the specified DMA channel.
+	*/
+	void transferChain();
 
 	///////////////////////////
 	// DMAC Helper Functions //
@@ -71,6 +82,11 @@ private:
 	*/
 	bool isChannelEnabled() const;
 
+	/*
+	Returns if the channel is enabled for an IRQ tag interrupt (checks PCR1).
+	*/
+	bool isChannelIRQEnabled() const;
+
 	//////////////////////////////////////////
 	// Raw Memory Transfer Helper Functions //
 	//////////////////////////////////////////
@@ -86,5 +102,28 @@ private:
 	SPRAccess controls if the write is through the EE main memory or the EE Core scratchpad.
 	*/
 	void writeDataMemory(u32 PhysicalAddressOffset, u32 data) const;
+
+	/////////////////////////////////
+	// Chain Mode Helper Functions //
+	/////////////////////////////////
+
+	/*
+	Temporary context variables, set by the chain mode functions.
+	*/
+	IOPDMAtag_t mDMAtag;
+
+	/*
+	Sets mDMAtag to the tag from the TADR register.
+	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
+	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
+	*/
+	bool readChainSourceTag();
+
+	/*
+	Sets mDMAtag to the tag from the channel queue.
+	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
+	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
+	*/
+	bool readChainDestTag();
 
 };

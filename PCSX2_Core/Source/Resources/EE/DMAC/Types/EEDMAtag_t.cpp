@@ -1,48 +1,48 @@
 #include "stdafx.h"
 
-#include "Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
-DMAtag_t::DMAtag_t() :
+EEDMAtag_t::EEDMAtag_t() :
 	mTagValue(0)
 {
 }
 
-DMAtag_t::DMAtag_t(const u64 & DMAtagValue) :
-	mTagValue(DMAtagValue)
+const u64& EEDMAtag_t::getValue() const
 {
+	return mTagValue;
 }
 
-void DMAtag_t::setValue(const u64& DMAtagValue)
+void EEDMAtag_t::setValue(const u64& DMAtagValue)
 {
 	mTagValue = DMAtagValue;
 }
 
-u16 DMAtag_t::getQWC() const
+u16 EEDMAtag_t::getQWC() const
 {
 	return static_cast<u16>(mTagValue & 0xFFFF);
 }
 
-u8 DMAtag_t::getPCE() const
+u8 EEDMAtag_t::getPCE() const
 {
 	return static_cast<u8>((mTagValue >> 26) & 0x3);
 }
 
-u8 DMAtag_t::getID() const
+u8 EEDMAtag_t::getID() const
 {
 	return static_cast<u8>((mTagValue >> 28) & 0x7);
 }
 
-u8 DMAtag_t::getIRQ() const
+u8 EEDMAtag_t::getIRQ() const
 {
 	return static_cast<u8>((mTagValue >> 31) & 0x1);
 }
 
-u32 DMAtag_t::getADDR() const
+u32 EEDMAtag_t::getADDR() const
 {
 	return static_cast<u32>((mTagValue >> 32) & 0x7FFFFFFF);
 }
 
-u8 DMAtag_t::getSPR() const
+u8 EEDMAtag_t::getSPR() const
 {
 	return static_cast<u8>((mTagValue >> 63) & 0x1);
 }

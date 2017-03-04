@@ -37,9 +37,9 @@ public:
 	EEDmacChannelTable::Direction_t getDirection() const;
 
 	/*
-	Resets the tag state (flags below) to false. Meant to be called on every finished tag transfer.
+	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
 	*/
-	void resetTagFlags();
+	void resetChainState();
 
 	/*
 	Tag exit flag. Within DMAC logic, set this to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer. Reset this on a finished transfer.
@@ -144,7 +144,7 @@ public:
 };
 
 /*
-A base TO DMAC D_CHCR register, aka channel control register.
+A base EE TO DMAC D_CHCR register, aka channel control register.
 Sets the constant direction (TO) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
 */
 class EEDmacChannelRegister_TO_CHCR_t : public EEDmacChannelRegister_CHCR_t
@@ -159,7 +159,7 @@ public:
 };
 
 /*
-A base FROM DMAC D_CHCR register, aka channel control register.
+A base EE FROM DMAC D_CHCR register, aka channel control register.
 Sets the constant direction (FROM) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
 */
 class EEDmacChannelRegister_FROM_CHCR_t : public EEDmacChannelRegister_CHCR_t

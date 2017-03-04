@@ -17,8 +17,8 @@ public:
 	enum class LogicalMode_t
 	{
 		// Ordered according to Dn_CHCR.SM.
-		NORMAL = 0,
-		BLOCK = 1,
+		NORMAL_BURST = 0,
+		NORMAL_SLICE = 1,
 		LINKEDLIST = 2,
 		CHAIN = 3
 	};

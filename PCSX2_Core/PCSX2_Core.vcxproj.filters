@@ -211,7 +211,6 @@
     <ClInclude Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
     <ClInclude Include="Source\Resources\Common\Common_t.h" />
-    <ClInclude Include="Source\Resources\EE\DMAC\Types\DMAtag_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDmacChannels_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDmacRegisters_t.h" />
@@ -308,6 +307,8 @@
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSOperatingContext_t.h" />
+    <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
+    <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -393,7 +394,6 @@
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Common_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\DMAC\Types\DMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacRegisters_t.cpp" />
@@ -506,6 +506,8 @@
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
+    <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

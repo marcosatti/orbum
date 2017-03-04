@@ -6,7 +6,7 @@
 
 /*
 The IOP DMAC D_CHCR register.
-Based off the PSX docs.
+Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
 class IOPDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 {
@@ -38,11 +38,31 @@ public:
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
 	IOPDmacChannelTable::Direction_t getDirection() const;
+
+	/*
+	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
+	*/
+	void resetChainState();
+
+	/*
+	Tag exit flag. Within DMAC logic, set this to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer. Reset this on a finished transfer.
+	*/
+	bool mTagExit;
+
+	/*
+	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. Reset this on a finished transfer.
+	*/
+	bool mTagIRQ;
+
+	/*
+	Chain mode transfer length. Set upon reading a tag and decremented on every unit transfered.
+	*/
+	size_t mTagTransferLength;
 };
 
 /*
 The IOP DMAC D_BCR register.
-Based of the nocash PSX docs.
+Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
 class IOPDmacChannelRegister_BCR_t : public BitfieldRegister32_t
 {
@@ -68,7 +88,7 @@ public:
 
 	/*
 	Returns if the transfer size is finished.
-	checkBS controls whether to check if both BS and BA are equal to 0 or just check if BS is equal to 0 (use in linked-list/chain or normal modes respectively).
+	checkBS controls whether to check if both BS and BA are equal to 0 or just check if BS is equal to 0 (use in slice or burst mode respectively).
 	*/
 	bool isFinished(bool checkBS) const;
 
@@ -83,6 +103,7 @@ private:
 
 /*
 The DMAC D_MADR register, aka transfer address register.
+Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
 class IOPDmacChannelRegister_MADR_t : public Register32_t
 {
@@ -97,7 +118,8 @@ public:
 };
 
 /*
-The DMAC D_MADR register, aka transfer address register.
+The DMAC D_TADR register, aka transfer address register.
+Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
 class IOPDmacChannelRegister_TADR_t : public Register32_t
 {
@@ -109,4 +131,49 @@ public:
 	*/
 	void increment();
 	void decrement();
+};
+
+/*
+A base IOP TO DMAC D_CHCR register.
+Sets the constant direction (TO) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+*/
+class IOPDmacChannelRegister_TO_CHCR_t : public IOPDmacChannelRegister_CHCR_t
+{
+public:
+	explicit IOPDmacChannelRegister_TO_CHCR_t(const char * mnemonic);
+
+	/*
+	(IOP context only.) Upon writes, sets the correct direction (FROM).
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
+};
+
+/*
+A base IOP FROM DMAC D_CHCR register.
+Sets the constant direction (FROM) upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+*/
+class IOPDmacChannelRegister_FROM_CHCR_t : public IOPDmacChannelRegister_CHCR_t
+{
+public:
+	explicit IOPDmacChannelRegister_FROM_CHCR_t(const char * mnemonic);
+
+	/*
+	(IOP context only.) Upon writes, sets the correct direction (FROM).
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
+};
+
+/*
+The IOP DMAC SIF1 CHCR register.
+Sets the chain mode bit to 1 upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+*/
+class IOPDmacChannelRegister_SIF1_CHCR_t : public IOPDmacChannelRegister_FROM_CHCR_t
+{
+public:
+	explicit IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic);
+
+	/*
+	(IOP context only.) Upon writes, sets the chain mode bit (bit 10) to 1.
+	*/
+	void writeWord(const Context_t& context, u32 value) override;
 };

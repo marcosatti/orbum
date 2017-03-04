@@ -17,9 +17,9 @@
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
-#include "Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
-using ChannelProperties_t = EEDmacChannelTable::ChannelProperties_t;
+using LogicalMode_t = EEDmacChannelTable::LogicalMode_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
 using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
 
@@ -240,14 +240,17 @@ void EEDmac_s::transferChain()
 		{
 			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
 			if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) > 0 && mChannel->CHCR->mTagIRQ)
+			{
+				log(Warning, "EE DMAC channel %s had tag IRQ flag set - please verify what is meant to happen!", mChannel->getChannelProperties()->Mnemonic);
 				setStateSuspended();
+			}
 
 			// Check if we need to exit based on tag flag (set by "end", "ret", etc).
 			if (mChannel->CHCR->mTagExit)
 				setStateSuspended();
 
 			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
-			mChannel->CHCR->resetTagFlags();
+			mChannel->CHCR->resetChainState();
 		}
 	}
 	else
@@ -286,13 +289,13 @@ void EEDmac_s::transferChain()
 		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
 
 		// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
-		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.mTagValue >> 16) & 0xFFFF);
+		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.getValue() >> 16) & 0xFFFF);
 	}
 }
 
 void EEDmac_s::transferInterleaved()
 {
-	throw std::runtime_error("EE DMAC interleave mode not fully implemented (fixup).");
+	throw std::runtime_error("EE DMAC interleave mode not fully implemented (fix me up).");
 
 	/*
 	// Check the QWC register, make sure that size > 0 in order to start transfer.

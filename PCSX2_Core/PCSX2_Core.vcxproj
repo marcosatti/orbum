@@ -352,6 +352,7 @@
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
+    <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
@@ -418,7 +419,7 @@
     <ClInclude Include="Source\Resources\EE\EECore\Types\EECoreTLBEntry_t.h" />
     <ClInclude Include="Source\Resources\Clock\Clock_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\EEDmac_t.h" />
-    <ClInclude Include="Source\Resources\EE\DMAC\Types\DMAtag_t.h" />
+    <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
     <ClInclude Include="Source\VM\Systems\EE\DMAC\EEDmac_s.h" />
     <ClInclude Include="Source\VM\Systems\EE\INTC\EEIntc_s.h" />
     <ClInclude Include="Source\Common\Global\CompileOptions.h" />
@@ -506,6 +507,7 @@
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VU\VU_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\CDVD\CDVD_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacRegisters_t.cpp" />
@@ -559,7 +561,7 @@
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable\EECoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\EEDmac_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\DMAC\Types\DMAtag_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_ALU_OTHERS.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_BREAK_TRAP.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_CALL.cpp" />

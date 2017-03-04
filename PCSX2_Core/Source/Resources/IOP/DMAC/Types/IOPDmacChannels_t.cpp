@@ -111,7 +111,7 @@ IOPDmacChannel_SIF1_t::IOPDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> 
 {
 	MADR = std::make_shared<IOPDmacChannelRegister_MADR_t>("IOP CH_SIF1 MADR");
 	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP CH_SIF1 BCR");
-	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP CH_SIF1 CHCR");
+	CHCR = std::make_shared<IOPDmacChannelRegister_SIF1_CHCR_t>("IOP CH_SIF1 CHCR");
 }
 
 IOPDmacChannel_fromSIO2_t::IOPDmacChannel_fromSIO2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :

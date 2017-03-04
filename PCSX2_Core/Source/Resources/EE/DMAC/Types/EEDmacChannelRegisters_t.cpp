@@ -27,7 +27,7 @@ EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection() con
 	return static_cast<EEDmacChannelTable::Direction_t>(getFieldValue(Fields::DIR));
 }
 
-void EEDmacChannelRegister_CHCR_t::resetTagFlags()
+void EEDmacChannelRegister_CHCR_t::resetChainState()
 {
 	mTagExit = false;
 	mTagStallControl = false;
@@ -93,9 +93,9 @@ EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char* mne
 void EEDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	if (context == EE)
-		value |= 0x1;
+		value |= (1 << 0);
 
-	BitfieldRegister32_t::writeWord(context, value);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
 EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char* mnemonic) :
@@ -106,9 +106,9 @@ EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char*
 void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
 	if (context == EE)
-		value &= (~0x1);
+		value &= ~(1 << 0);
 
-	BitfieldRegister32_t::writeWord(context, value);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
 EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :

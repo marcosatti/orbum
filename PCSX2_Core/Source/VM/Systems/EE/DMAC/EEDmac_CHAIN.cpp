@@ -6,7 +6,7 @@
 
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
-#include "Resources/EE/DMAC/Types/DMAtag_t.h"
+#include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
 void EEDmac_s::CHAIN_TAGID_UNKNOWN()
 {
