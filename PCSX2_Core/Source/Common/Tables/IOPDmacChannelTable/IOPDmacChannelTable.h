@@ -24,7 +24,7 @@ public:
 	};
 	struct ChannelProperties_t
 	{
-		const char * mMnemonic;
+		const char * Mnemonic;
 	};
 	static constexpr ChannelProperties_t ChannelProperties[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] =
 	{

@@ -89,29 +89,29 @@ IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char* mnemoni
 {
 }
 
-void IOPDmacChannelRegister_MADR_t::increment()
+void IOPDmacChannelRegister_MADR_t::increment(const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) + 0x4);
+	writeWord(RAW, readWord(RAW) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_MADR_t::decrement()
+void IOPDmacChannelRegister_MADR_t::decrement(const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) - 0x4);
+	writeWord(RAW, readWord(RAW) - static_cast<u32>(amount));
 }
 
 IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
-	Register32_t(mnemonic, false, false)
+	Register32_t(mnemonic, false, true)
 {
 }
 
-void IOPDmacChannelRegister_TADR_t::increment()
+void IOPDmacChannelRegister_TADR_t::increment(const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) + 0x4);
+	writeWord(RAW, readWord(RAW) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_TADR_t::decrement()
+void IOPDmacChannelRegister_TADR_t::decrement(const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) - 0x4);
+	writeWord(RAW, readWord(RAW) - static_cast<u32>(amount));
 }
 
 IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :

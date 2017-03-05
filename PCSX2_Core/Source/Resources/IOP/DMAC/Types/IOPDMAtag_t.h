@@ -33,6 +33,13 @@ public:
 	u8 getERT() const;
 	u32 getLength() const;
 
+#if defined(BUILD_DEBUG)
+	/*
+	Log debug each of the fields above.
+	*/
+	void logDebugAllFields() const;
+#endif
+
 private:
 	/*
 	Holder for the tag value.

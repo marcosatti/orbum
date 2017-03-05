@@ -443,6 +443,9 @@ bool EEDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the u128 read from memory (lower 64-bits).
 	mDMAtag.setValue(data.lo);
 	
+	log(Debug, "EE tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1= 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	mDMAtag.logDebugAllFields();
+	
 	// Check if we need to transfer the tag.
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
@@ -464,6 +467,9 @@ bool EEDmac_s::readChainDestTag()
 
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);
+
+	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1= 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))

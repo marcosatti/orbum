@@ -33,3 +33,8 @@ u32 IOPDMAtag_t::getLength() const
 {
 	return static_cast<u32>(mTagValue1 & 0x00FFFFFF);
 }
+
+void IOPDMAtag_t::logDebugAllFields() const
+{
+	log(Debug, "IOP DMA tag info: Length = 0x%X, IRQ = 0x%X, ERT = 0x%x, ADDR = 0x%X.", getLength(), getIRQ(), getERT(), getADDR());
+}

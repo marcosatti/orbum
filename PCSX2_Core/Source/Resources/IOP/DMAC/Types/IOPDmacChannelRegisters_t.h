@@ -111,10 +111,10 @@ public:
 	IOPDmacChannelRegister_MADR_t(const char * mnemonic);
 
 	/*
-	Increments or decrements the register by 0x4 (word), which is the size of 1 DMA transfer (used when one transfer has completed).
+	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
 	*/
-	void increment();
-	void decrement();
+	void increment(const size_t amount = 0x4);
+	void decrement(const size_t amount = 0x4);
 };
 
 /*
@@ -127,10 +127,10 @@ public:
 	IOPDmacChannelRegister_TADR_t(const char * mnemonic);
 
 	/*
-	Increments or decrements the register by 0x4, which is the size of 1 DMA transfer (used when one transfer has completed).
+	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
 	*/
-	void increment();
-	void decrement();
+	void increment(const size_t amount = 0x4);
+	void decrement(const size_t amount = 0x4);
 };
 
 /*

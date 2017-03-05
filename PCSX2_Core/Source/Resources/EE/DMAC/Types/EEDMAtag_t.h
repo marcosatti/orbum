@@ -42,6 +42,13 @@ public:
 	u32 getADDR() const;
 	u8 getSPR() const;
 
+#if defined(BUILD_DEBUG)
+	/*
+	Log debug each of the fields above.
+	*/
+	void logDebugAllFields() const;
+#endif
+
 private:
 	/*
 	Holder for the tag value.

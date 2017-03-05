@@ -46,3 +46,8 @@ u8 EEDMAtag_t::getSPR() const
 {
 	return static_cast<u8>((mTagValue >> 63) & 0x1);
 }
+
+void EEDMAtag_t::logDebugAllFields() const
+{
+	log(Debug, "EE DMA tag info: QWC = 0x%X, PCE = 0x%X, ID = 0x%X, IRQ = 0x%X, ADDR = 0x%X, SPR = 0x%X.", getQWC(), getPCE(), getID(), getIRQ(), getADDR(), getSPR());
+}

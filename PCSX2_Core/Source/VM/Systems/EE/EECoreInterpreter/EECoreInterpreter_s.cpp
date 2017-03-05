@@ -67,8 +67,8 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	mEECore->R5900->PC->setPCValueNext();
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x15000000; //0x1437463;
-	static u32 DEBUG_PC_BREAKPOINT = 0x0;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x13FCDEF; //0x1437463;
+	static u32 DEBUG_PC_BREAKPOINT = 0x80000224;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -81,7 +81,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	}
 
 	// Breakpoint.
-	if (pcAddress == DEBUG_PC_BREAKPOINT)
+	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress = 0x0)
 	{
 		log(Debug, "EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
 	}
@@ -283,12 +283,11 @@ void EECoreInterpreter_s::handleException_L1() const
 	// Set Cause.ExeCode value.
 	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::ExcCode, mExceptionProperties->mExeCode);
 
-	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD. Also use general exception handler vector.
+	// If already in exception handler (EXL == 1), do not update EPC and Cause.BD, and use general exception handler vector. Else perform normal exception processing.
 	if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1)
 	{
 		vectorOffset = Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 	}
-	// Normal exception processing.
 	else
 	{
 		// Set EPC and Cause.BD fields.
@@ -324,16 +323,16 @@ void EECoreInterpreter_s::handleException_L1() const
 		{
 			vectorOffset = Constants::MIPS::Exceptions::Imp46::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 		}
+	}
 
-		// Select vector base to use and set PC to use the specified vector.
-		if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
-		{
-			PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
-		}
-		else
-		{
-			PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
-		}
+	// Select vector base to use and set PC to use the specified vector.
+	if (COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::BEV) == 1)
+	{
+		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+	}
+	else
+	{
+		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 	}
 }
 
