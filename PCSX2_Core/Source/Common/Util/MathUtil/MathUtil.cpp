@@ -5,18 +5,25 @@
 #include "Common/Global/Globals.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
+#pragma optimize("", off);
 u32 MathUtil::countLeadingBits(s32 value)
 {
+	// If the value is 0, return 32 automatically.
+	if (value == 0)
+		return 32;
+
 	// If the sign bit is 1, we invert the bits to 0 for count-leading-zero.
 	if (value < 0)
 		value = ~value;
 
-	// Perform our count leading zero. Formula from here: http://stackoverflow.com/questions/4244274/how-do-i-count-the-number-of-zero-bits-in-an-integer. Thanks!
+	// Perform our count leading zero.
 	u32 num_leading_bits = 0;
-	for (u32 i = 0; i < CHAR_BIT * sizeof value; ++i)
+	for (int i = CHAR_BIT * sizeof value; i > 0; i--)
 	{
-		if ((value & (1 << i)) == 0)
-			++num_leading_bits;
+		if ((value & (1 << (i - 1))) == 0)
+			num_leading_bits++;
+		else
+			break;
 	}
 
 	return num_leading_bits;

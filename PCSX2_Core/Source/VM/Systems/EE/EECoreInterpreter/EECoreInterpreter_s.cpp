@@ -68,7 +68,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x13FCDEF; //0x1437463;
-	static u32 DEBUG_PC_BREAKPOINT = 0x80000224;
+	static u32 DEBUG_PC_BREAKPOINT = 0x80000200;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -81,9 +81,9 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	}
 
 	// Breakpoint.
-	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress = 0x0)
+	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress == 0x0)
 	{
-		log(Debug, "EECore Breakpoint hit @ cycle = 0x%llX.", DEBUG_LOOP_COUNTER);
+		log(Debug, "EECore Breakpoint hit @ cycle = 0x%llX, PC = 0x%08X.", DEBUG_LOOP_COUNTER, pcAddress);
 	}
 #endif
 
@@ -125,13 +125,18 @@ void EECoreInterpreter_s::handleInterruptCheck()
 			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
 				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->BD->isInBranchDelay());
 			log(Debug, "Printing list of interrupt sources...");
-			for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS) // INTC
+			if ((ipCause & imStatus) & 0x4) // INTC
 			{
-				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
-					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
+				for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
+				{
+					if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
+						log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
+				}
 			}
-			if ((ipCause & imStatus) & 0x4) // DMAC
+			if ((ipCause & imStatus) & 0x8) // DMAC
+			{
 				log(Debug, "DMAC");
+			}
 #endif
 			// Handle the interrupt immediately.
 			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.

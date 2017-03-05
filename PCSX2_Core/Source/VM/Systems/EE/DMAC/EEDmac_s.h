@@ -71,7 +71,8 @@ private:
 	///////////////////////////
 
 	/*
-	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the EE Core.
+	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the EE Core (through the INT1 line).
+	See EE Core Users Manual page 73-75 for the EE Core details. Note that on page 75, there is a typo, where the INTx lines are mixed up on bits 10 and 11 (verified through running through bios code).
 	*/
 	void handleInterruptCheck() const;
 

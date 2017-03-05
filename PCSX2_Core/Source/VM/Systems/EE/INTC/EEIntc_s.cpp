@@ -28,9 +28,9 @@ int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the interrupt status on the stat register.
 	if (mINTC->STAT->readWord(RAW) & mINTC->MASK->readWord(RAW))
-		mEECOP0->Cause->setIRQLine(3);
+		mEECOP0->Cause->setIRQLine(2);
 	else
-		mEECOP0->Cause->clearIRQLine(3);
+		mEECOP0->Cause->clearIRQLine(2);
 	
 	// INTC has completed 1 cycle.
 	return 1;

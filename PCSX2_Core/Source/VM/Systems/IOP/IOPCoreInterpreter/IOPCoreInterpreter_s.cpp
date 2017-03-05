@@ -77,7 +77,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress == 0x0)
 	{
-		log(Debug, "IOPCore PC breakpoint hit @ cycle = 0x%llX, PC = 0x%08X", DEBUG_LOOP_COUNTER, DEBUG_PC_BREAKPOINT);
+		log(Debug, "IOPCore PC breakpoint hit @ cycle = 0x%llX, PC = 0x%08X.", DEBUG_LOOP_COUNTER, DEBUG_PC_BREAKPOINT);
 	}
 #endif
 

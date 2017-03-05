@@ -345,9 +345,9 @@ void EEDmac_s::handleInterruptCheck() const
 
 	// Set the interrupt line if there was a condition set, otherwise clear the interrupt line.
 	if (D_STAT->isInterruptPending())
-		COP0->Cause->setIRQLine(2);
+		COP0->Cause->setIRQLine(3);
 	else
-		COP0->Cause->clearIRQLine(2);
+		COP0->Cause->clearIRQLine(3);
 }
 
 bool EEDmac_s::isSourceStallControlOn() const
