@@ -3,7 +3,6 @@
 #include <stdexcept>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
 
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
@@ -21,14 +20,14 @@ void IOPCoreInterpreter_s::BREAK()
 
 void IOPCoreInterpreter_s::SYSCALL()
 {
-#if DEBUG_SYSCALL_LOG
+#if DEBUG_IOP_SYSCALL_LOG
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v0 ($2), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v0, it is done so through
 	//   ADDIU $v0, $0, number.
-	// The IOP OS only defines handlers for syscall numbers 0 -> 15 (16 total). 
+	// The IOP OS only defines handlers for syscall numbers 0 -> ??? (? total). TODO: figure out number of syscalls.
 	u8 index = mIOPCore->R3000->GPR[2]->readByte(IOP, 0);
-	log(Debug, "IOPCore Syscall, number %d (%s).", index, IOPCoreSyscallTable::getSyscallMnemonic(index));
+	log(Debug, "IOPCore Syscall, number %d (%s) @ cycle = 0x%llX.", index, IOPCoreSyscallTable::getSyscallMnemonic(index), DEBUG_LOOP_COUNTER);
 #endif
 
 	// EXCEPTION(SYSCALL)
@@ -87,10 +86,6 @@ void IOPCoreInterpreter_s::RFE()
 {
 	// Pop the COP0.Status exception state.
 	mIOPCore->COP0->Status->popExceptionStack();
-
-	// Make sure we flush the cpu pipeline (in emulator, this means flush branch delay).
-	// TODO: Not documented anywhere, however due to the way the emulator works, needed in order to prevent the EPC pointing to the current RFE instruction and entering an uninterruptable infinite loop.
-	mIOPCore->R3000->BD->executeBranchDelayNow();
 }
 
 void IOPCoreInterpreter_s::RTPS()

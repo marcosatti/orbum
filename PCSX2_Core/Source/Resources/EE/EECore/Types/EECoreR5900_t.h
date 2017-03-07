@@ -9,7 +9,6 @@ class Register32_t;
 class ConstantRegister128_t;
 class LinkRegister128_t;
 class PCRegister32_t;
-class MIPSBranchDelay_t;
 
 /*
 The R5900 is the EE Core's CPU. 
@@ -27,12 +26,6 @@ public:
 	Must be initalised before LinkRegister and BD below due to dependency.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;
-
-	/*
-	The branch delay slot functionality.
-	Depends on the PC register defined above.
-	*/
-	std::shared_ptr<MIPSBranchDelay_t> BD;
 
 	/*
 	The R5900 general purpose registers (GPR's) are 128-bit long.

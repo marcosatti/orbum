@@ -40,9 +40,11 @@ Only enabled when a debug build is selected.
 Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each one.
 */
 #if defined(BUILD_DEBUG)
-#define DEBUG_SYSCALL_LOG 0
+#define DEBUG_EE_SYSCALL_LOG 0
+#define DEBUG_IOP_SYSCALL_LOG 0
 #else
-#define DEBUG_SYSCALL_LOG 0
+#define DEBUG_EE_SYSCALL_LOG 0
+#define DEBUG_IOP_SYSCALL_LOG 0
 #endif
 
 /*

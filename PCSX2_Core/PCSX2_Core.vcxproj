@@ -333,7 +333,6 @@
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSOperatingContext_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
-    <ClInclude Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
@@ -470,7 +469,6 @@
     <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
-    <ClCompile Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />

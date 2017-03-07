@@ -25,7 +25,7 @@ IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char* mnemonic) :
 }
 
 IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, true)
+	BitfieldRegister32_t(mnemonic, false, false)
 {
 	registerField(Fields::IRM0, "IRM0", 0, 1, 0);
 	registerField(Fields::IRM1, "IRM1", 1, 1, 0);
@@ -98,7 +98,7 @@ IOPDmacRegister_PCR1_t::IOPDmacRegister_PCR1_t(const char* mnemonic) :
 }
 
 IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char* mnemonic, const std::shared_ptr<IOPDmacRegister_ICR0_t>& ICR0) :
-	BitfieldRegister32_t(mnemonic, false, true),
+	BitfieldRegister32_t(mnemonic, false, false),
 	mICR0(ICR0)
 {
 	registerField(Fields::IQE0, "IQE0", 0, 1, 0);

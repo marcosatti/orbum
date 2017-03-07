@@ -1,29 +1,60 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-
 #include "Common/Types/Registers/Register32_t.h"
 
 /*
 Represents the program counter register of a MIPS CPU. It is defined as 32-bits long.
-Extends a normal 32-bit register to provide convenience functions for manipulating the PC value.
+Extends a normal 32-bit register to provide convenience functions for manipulating the PC value, and provides a branch delay slot.
 */
 class PCRegister32_t : public Register32_t
 {
 public:
-	/*
-	Set the PC to a relative value.
-	*/
-	void setPCValueRelative(const s32& relativeLocation);
+	PCRegister32_t();
 
 	/*
-	Set the PC to an absolute value.
+	Handles the updating of the PC by either jumping to the branch location or incrementing the PC by 4 (next instruction).
 	*/
-	void setPCValueAbsolute(const u32& absoluteLocation);
+	void next();
 
 	/*
-	Increments the PC by a default size of 4 bytes (equal to the size of a MIPS instruction).
+	Set the PC to a relative value immediately.
 	*/
-	void setPCValueNext(const u32 instructionSize = Constants::MIPS::SIZE_MIPS_INSTRUCTION);
+	void setPCValueRelative(const s32 relativePC);
+
+	/*
+	Set the PC to an absolute value immediately.
+	*/
+	void setPCValueAbsolute(const u32 absolutePC);
+
+	/*
+	Set a branch PC, to be triggered in the number of cycles set.
+	Convenience functions provided for different MIPS branch instructions.
+	*/
+	void setBranchPCAbsolute(const u32 pc, const int cycles);
+	void setBranchPCJRegion(const u32 JInstructionTarget, const int cycles);
+	void setBranchPCIOffset(const s16 IInstructionOffset, const int cycles);
+
+	/*
+	Causes the branch delay to execute immediately (useful for pipeline flushes).
+	*/
+	void doBranchNow();
+
+	/*
+	Returns if there is a pending branch delay.
+	*/
+	bool isBranchPending() const;
+
+	/*
+	Resets the state to no branch pending.
+	*/
+	void resetBranch();
+
+private:
+	/*
+	Branch delay context.
+	*/
+	int mBranchDelayCycles;
+	u32 mBranchDelayPC;
 };
 

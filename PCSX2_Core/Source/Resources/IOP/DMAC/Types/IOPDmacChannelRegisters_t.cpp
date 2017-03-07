@@ -3,7 +3,7 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, true),
+	BitfieldRegister32_t(mnemonic, false, false),
 	mTagExit(false),
 	mTagIRQ(false),
 	mTagTransferLength(0)
@@ -100,7 +100,7 @@ void IOPDmacChannelRegister_MADR_t::decrement(const size_t amount)
 }
 
 IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
-	Register32_t(mnemonic, false, true)
+	Register32_t(mnemonic, false, false)
 {
 }
 

@@ -21,7 +21,7 @@ void EECoreInterpreter_s::BREAK()
 
 void EECoreInterpreter_s::SYSCALL()
 {
-#if DEBUG_SYSCALL_LOG
+#if DEBUG_EE_SYSCALL_LOG
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v1 ($3), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v1, it is done so through
@@ -29,7 +29,7 @@ void EECoreInterpreter_s::SYSCALL()
 	// If the 16-bit 'syscall number' above has the sign bit set (negative), the EE OS will first make it unsigned then call the handler with the (i) prefix... TODO: not sure what the differnece is.
 	// The EE OS only defines handlers for syscall numbers 0 -> 127 (128 total). 
 	u8 index = mEECore->R5900->GPR[3]->readByte(EE, 0);
-	log(Debug, "EECore Syscall, number %d (%s).", index, EECoreSyscallTable::getSyscallMnemonic(index));
+	log(Debug, "EECore Syscall, number %d (%s) @ cycle = 0x%llX.", index, EECoreSyscallTable::getSyscallMnemonic(index), DEBUG_LOOP_COUNTER);
 #endif
 
 	// EXCEPTION(SYSCALL)
@@ -189,13 +189,13 @@ void EECoreInterpreter_s::ERET()
 	// ERET(). No exceptions.
 	if (mEECore->COP0->Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) > 0)
 	{
-		const u32 pcValue = mEECore->COP0->ErrorEPC->readWord(EE);
+		const u32 pcValue = mEECore->COP0->ErrorEPC->readWord(EE) - static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 		mEECore->R5900->PC->setPCValueAbsolute(pcValue);
 		mEECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::ERL, 0);
 	}
 	else
 	{
-		const u32 pcValue = mEECore->COP0->EPC->readWord(EE);
+		const u32 pcValue = mEECore->COP0->EPC->readWord(EE) - static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 		mEECore->R5900->PC->setPCValueAbsolute(pcValue);
 		mEECore->COP0->Status->setFieldValue(EECoreCOP0Register_Status_t::Fields::EXL, 0);
 	}

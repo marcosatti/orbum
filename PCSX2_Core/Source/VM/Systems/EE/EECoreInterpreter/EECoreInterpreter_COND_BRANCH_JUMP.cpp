@@ -3,7 +3,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/Register128_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
@@ -23,7 +22,7 @@ void EECoreInterpreter_s::BEQ()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
 
 	if (source1Val == source2Val)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BEQL()
@@ -37,9 +36,9 @@ void EECoreInterpreter_s::BEQL()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
 
 	if (source1Val == source2Val)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BGEZ()
@@ -51,7 +50,7 @@ void EECoreInterpreter_s::BGEZ()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val >= 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BGEZL()
@@ -63,9 +62,9 @@ void EECoreInterpreter_s::BGEZL()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val >= 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BGTZ()
@@ -77,7 +76,7 @@ void EECoreInterpreter_s::BGTZ()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val > 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BGTZL()
@@ -89,9 +88,9 @@ void EECoreInterpreter_s::BGTZL()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val > 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BLEZ()
@@ -103,7 +102,7 @@ void EECoreInterpreter_s::BLEZ()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val <= 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BLEZL()
@@ -115,9 +114,9 @@ void EECoreInterpreter_s::BLEZL()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val <= 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BLTZ()
@@ -129,7 +128,7 @@ void EECoreInterpreter_s::BLTZ()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val < 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BLTZL()
@@ -141,9 +140,9 @@ void EECoreInterpreter_s::BLTZL()
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
 	if (source1Val < 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BNE()
@@ -157,7 +156,7 @@ void EECoreInterpreter_s::BNE()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
 
 	if (source1Val != source2Val)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BNEL()
@@ -171,9 +170,9 @@ void EECoreInterpreter_s::BNEL()
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
 
 	if (source1Val != source2Val)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BC0F()
@@ -257,7 +256,7 @@ void EECoreInterpreter_s::BC1F()
 	const s16 offset = mInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BC1FL()
@@ -269,9 +268,9 @@ void EECoreInterpreter_s::BC1FL()
 	const s16 offset = mInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BC1T()
@@ -283,7 +282,7 @@ void EECoreInterpreter_s::BC1T()
 	const s16 offset = mInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 }
 
 void EECoreInterpreter_s::BC1TL()
@@ -295,20 +294,20 @@ void EECoreInterpreter_s::BC1TL()
 	const s16 offset = mInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::J()
 {
 	// JUMP(). No Exceptions.
-	mEECore->R5900->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
+	mEECore->R5900->PC->setBranchPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
 void EECoreInterpreter_s::JR()
 {
 	// JUMP(). Address error exception generated upon instruction load - but not in this instruction.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	mEECore->R5900->BD->setBranchDelayPCAbsolute(source1Reg->readWord(EE, 0), 2);
+	mEECore->R5900->PC->setBranchPCAbsolute(source1Reg->readWord(EE, 0), 2);
 }

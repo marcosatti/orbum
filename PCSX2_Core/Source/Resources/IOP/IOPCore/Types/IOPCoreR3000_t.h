@@ -9,7 +9,6 @@ class Register32_t;
 class PCRegister32_t;
 class LinkRegister32_t;
 class ConstantRegister32_t;
-class MIPSBranchDelay_t;
 
 /*
 The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
@@ -29,12 +28,6 @@ public:
 	Must be initalised before LinkRegister and BD below due to dependency.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;
-
-	/*
-	The branch delay slot functionality.
-	Depends on the PC register defined above.
-	*/
-	std::shared_ptr<MIPSBranchDelay_t> BD;
 
 	/*
 	The 32 general purpose registers. They are each 32-bits long.

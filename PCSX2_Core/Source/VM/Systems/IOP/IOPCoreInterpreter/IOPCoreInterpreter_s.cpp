@@ -5,7 +5,6 @@
 #include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -43,10 +42,8 @@ void IOPCoreInterpreter_s::initalise()
 
 int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
-
-	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
-	IOPCore->R3000->BD->handleBranchDelay();
+	// Check if any external interrupts are pending and immediately handle exception if there is one.
+	handleInterruptCheck();
 
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
 	const u32 pcAddress = mIOPCore->R3000->PC->readWord(IOP);
@@ -56,12 +53,9 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	mInstruction.setInstructionValue(instructionValue);
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
-	// Increment PC.
-	IOPCore->R3000->PC->setPCValueNext();
-
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x2b04bc; 
-	static u32 DEBUG_PC_BREAKPOINT = 0x3A68;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100002afde9;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -71,7 +65,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			pcAddress, IOPCore->R3000->BD->isInBranchDelay(), !IOPCore->COP0->Status->isInterruptsMasked(),
+			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
@@ -84,8 +78,8 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	// Run the instruction, which is based on the implementation index.
 	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
-	// Check if any external interrupts are pending and immediately handle exception if there is one.
-	handleInterruptCheck();
+	// Increment PC.
+	mIOPCore->R3000->PC->next();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -112,7 +106,7 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 			auto& STAT = getVM()->getResources()->IOP->INTC->STAT;
 			auto& MASK = getVM()->getResources()->IOP->INTC->MASK;
 			log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
-				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(IOP), IOPCore->R3000->BD->isInBranchDelay());
+				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(IOP), IOPCore->R3000->PC->isBranchPending());
 			log(Debug, "Printing list of interrupt sources...");
 			for (auto& irqField : IOPIntcRegister_STAT_t::Fields::IRQ_KEYS)
 			{
@@ -121,8 +115,6 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 			}
 #endif
 			// Handle the interrupt immediately.
-			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.
-			IOPCore->R3000->PC->setPCValueNext();
 			handleException(IOPCoreException_t::EX_INTERRUPT);
 		}
 	}
@@ -172,7 +164,6 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 #endif
 
 	auto& COP0 = mIOPCore->COP0;
-	auto& BD = mIOPCore->R3000->BD;
 	auto& PC = mIOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
@@ -199,18 +190,18 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::ExcCode, exceptionProperties->mExeCode);
 
 	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
-	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
+	// Note that the EPC register should point to the instruction that caused the exception.
 	// If we are in a branch delay slot, need to flush it (reset) so we dont jump after this exits.
-	if (BD->isInBranchDelay())
+	if (PC->isBranchPending())
 	{
-		u32 pcValue = PC->readWord(IOP) - Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2;
+		u32 pcValue = PC->readWord(IOP) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
 		COP0->EPC->writeWord(RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
-		BD->resetBranchDelay();
+		PC->resetBranch();
 	}
 	else
 	{
-		u32 pcValue = PC->readWord(IOP) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
+		u32 pcValue = PC->readWord(IOP);
 		COP0->EPC->writeWord(RAW, pcValue);
 		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}
@@ -229,6 +220,15 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 
 	// Push the exception state within the COP0.Status register (will cause IEc and KUc to switch to interrupts disabled and kernel mode respectively).
 	COP0->Status->pushExceptionStack();
+
+	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
+	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
+	//       This is the easiest way to fix this, not sure how to properly do it (just need to play around with the code structure).
+	if (exception != IOPCoreException_t::EX_INTERRUPT 
+		&& exception != IOPCoreException_t::EX_RESET)
+	{
+		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
+	}
 }
 
 bool IOPCoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)

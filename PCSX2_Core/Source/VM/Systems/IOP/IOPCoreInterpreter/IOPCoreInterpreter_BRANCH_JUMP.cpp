@@ -4,7 +4,6 @@
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
 #include "Common/Types/Registers/MIPS/LinkRegister32_t.h"
 #include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
@@ -22,7 +21,7 @@ void IOPCoreInterpreter_s::BEQ()
 	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
 
 	if (source1Val == source2Val)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::BGEZ()
@@ -34,7 +33,7 @@ void IOPCoreInterpreter_s::BGEZ()
 	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
 
 	if (source1Val >= 0)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::BGEZAL()
@@ -48,7 +47,7 @@ void IOPCoreInterpreter_s::BGEZAL()
 	if (source1Val >= 0)
 	{
 		mIOPCore->R3000->LinkRegister->setLinkAddress();
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 	}
 }
 
@@ -61,7 +60,7 @@ void IOPCoreInterpreter_s::BGTZ()
 	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
 
 	if (source1Val > 0)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::BLEZ()
@@ -73,7 +72,7 @@ void IOPCoreInterpreter_s::BLEZ()
 	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
 
 	if (source1Val <= 0)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::BLTZ()
@@ -85,7 +84,7 @@ void IOPCoreInterpreter_s::BLTZ()
 	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
 
 	if (source1Val < 0)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::BLTZAL()
@@ -99,7 +98,7 @@ void IOPCoreInterpreter_s::BLTZAL()
 	if (source1Val < 0)
 	{
 		mIOPCore->R3000->LinkRegister->setLinkAddress();
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 	}
 }
 
@@ -114,27 +113,27 @@ void IOPCoreInterpreter_s::BNE()
 	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
 
 	if (source1Val != source2Val)
-		mIOPCore->R3000->BD->setBranchDelayPCIOffset(offset, 2);
+		mIOPCore->R3000->PC->setBranchPCIOffset(offset, 2);
 }
 
 void IOPCoreInterpreter_s::J()
 {
 	// JUMP(). No Exceptions.
-	mIOPCore->R3000->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
+	mIOPCore->R3000->PC->setBranchPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
 void IOPCoreInterpreter_s::JR()
 {
 	// JUMP_REGISTER().
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRs()];
-	mIOPCore->R3000->BD->setBranchDelayPCAbsolute(source1Reg->readWord(IOP), 2);
+	mIOPCore->R3000->PC->setBranchPCAbsolute(source1Reg->readWord(IOP), 2);
 }
 
 void IOPCoreInterpreter_s::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	mIOPCore->R3000->LinkRegister->setLinkAddress();
-	mIOPCore->R3000->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
+	mIOPCore->R3000->PC->setBranchPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
 void IOPCoreInterpreter_s::JALR()
@@ -143,7 +142,7 @@ void IOPCoreInterpreter_s::JALR()
 	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getRRs()];
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
 
-	destReg->writeWord(IOP, static_cast<u32>(mIOPCore->R3000->PC->readWord(IOP) + Constants::MIPS::SIZE_MIPS_INSTRUCTION));
-	mIOPCore->R3000->BD->setBranchDelayPCAbsolute(sourceReg->readWord(IOP), 2);
+	destReg->writeWord(IOP, static_cast<u32>(mIOPCore->R3000->PC->readWord(IOP) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+	mIOPCore->R3000->PC->setBranchPCAbsolute(sourceReg->readWord(IOP), 2);
 }
 

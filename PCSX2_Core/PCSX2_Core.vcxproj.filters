@@ -195,7 +195,6 @@
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
-    <ClInclude Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.h" />
     <ClInclude Include="Source\Common\Global\Constants.h">
       <Filter>Source\Common\Global</Filter>
     </ClInclude>
@@ -388,7 +387,6 @@
       <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
     </ClCompile>
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.cpp" />
-    <ClCompile Include="Source\Common\Types\MIPSBranchDelay\MIPSBranchDelay_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.cpp" />
     <ClCompile Include="Source\Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />

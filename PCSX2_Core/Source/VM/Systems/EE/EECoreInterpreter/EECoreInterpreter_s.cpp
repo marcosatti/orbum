@@ -4,7 +4,6 @@
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -52,8 +51,8 @@ void EECoreInterpreter_s::initalise()
 
 int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	// Check if in a branch delay slot - function will set the PC automatically to the correct location.
-	mEECore->R5900->BD->handleBranchDelay();
+	// Check if any external interrupts are pending and immediately handle exception if there is one.
+	handleInterruptCheck();
 
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
 	const u32 pcAddress = mEECore->R5900->PC->readWord(EE);
@@ -63,12 +62,9 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	mInstruction.setInstructionValue(instructionValue);
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
-	// Increment PC.
-	mEECore->R5900->PC->setPCValueNext();
-
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x13FCDEF; //0x1437463;
-	static u32 DEBUG_PC_BREAKPOINT = 0x80000200;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000001431200;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -76,7 +72,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			pcAddress, mEECore->R5900->BD->isInBranchDelay(), !mEECore->COP0->Status->isInterruptsMasked(),
+			pcAddress, mEECore->R5900->PC->isBranchPending(), !mEECore->COP0->Status->isInterruptsMasked(),
 			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
@@ -90,12 +86,12 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	// Run the instruction, which is based on the implementation index.
 	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
 
+	// Increment PC.
+	mEECore->R5900->PC->next();
+
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
 	mEECore->COP0->Count->increment(mInstructionInfo->mCycles);
 	handleCountEventCheck();
-
-	// Check if any external interrupts are pending and queue exception if there are.
-	handleInterruptCheck();
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -123,7 +119,7 @@ void EECoreInterpreter_s::handleInterruptCheck()
 			auto& STAT = getVM()->getResources()->EE->INTC->STAT;
 			auto& MASK = getVM()->getResources()->EE->INTC->MASK;
 			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
-				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->BD->isInBranchDelay());
+				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(EE), mEECore->R5900->PC->isBranchPending());
 			log(Debug, "Printing list of interrupt sources...");
 			if ((ipCause & imStatus) & 0x4) // INTC
 			{
@@ -140,7 +136,6 @@ void EECoreInterpreter_s::handleInterruptCheck()
 #endif
 			// Handle the interrupt immediately.
 			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.
-			mEECore->R5900->PC->setPCValueNext(); 
 			handleException(EECoreException_t::EX_INTERRUPT);
 		}
 	}
@@ -280,7 +275,6 @@ void EECoreInterpreter_s::handleException_L1() const
 	// Exception level 1 handler code. Adapted from EE Core Users Manual page 91.
 	auto& COP0 = mEECore->COP0;
 	auto& PC = mEECore->R5900->PC;
-	auto& BD = mEECore->R5900->BD;
 
 	// Vector offset value, used to set final vector address.
 	u32 vectorOffset = 0x0;
@@ -296,17 +290,18 @@ void EECoreInterpreter_s::handleException_L1() const
 	else
 	{
 		// Set EPC and Cause.BD fields.
-		// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-		if (BD->isInBranchDelay())
+		// Note that the EPC register should point to the instruction that caused the exception.
+		// If we are in a branch delay slot, need to flush it (reset) so we dont jump after this exits.
+		if (PC->isBranchPending())
 		{
-			u32 pcValue = PC->readWord(EE) - Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2;
+			u32 pcValue = PC->readWord(EE) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
 			COP0->EPC->writeWord(EE, pcValue);
 			COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 1);
-			BD->resetBranchDelay(); // Reset branch delay slot.
+			PC->resetBranch(); // Reset branch delay slot.
 		}
 		else
 		{
-			u32 pcValue = PC->readWord(EE) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
+			u32 pcValue = PC->readWord(EE);
 			COP0->EPC->writeWord(EE, pcValue);
 			COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD, 0);
 		}
@@ -339,6 +334,16 @@ void EECoreInterpreter_s::handleException_L1() const
 	{
 		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 	}
+
+	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
+	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
+	//       This is the easiest way to fix this, not sure how to properly do it (just need to play around with the code structure).
+	if (mException != EECoreException_t::EX_INTERRUPT
+		&& mException != EECoreException_t::EX_RESET
+		&& mException != EECoreException_t::EX_NMI)
+	{
+		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
+	}
 }
 
 void EECoreInterpreter_s::handleException_L2() const
@@ -346,7 +351,6 @@ void EECoreInterpreter_s::handleException_L2() const
 	// Exception level 2 handler code. Adapted from EE Core Users Manual page 92.
 	auto& COP0 = mEECore->COP0;
 	auto& PC = mEECore->R5900->PC;
-	auto& BD = mEECore->R5900->BD;
 
 	// Vector offset value, used to set final vector address.
 	u32 vectorOffset = 0x0;
@@ -355,14 +359,15 @@ void EECoreInterpreter_s::handleException_L2() const
 	COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::EXC2, mExceptionProperties->mExeCode);
 
 	// Set EPC and Cause.BD fields.
-	// Note that the EPC register should point to the instruction that caused the exception - so it is always set to at least PC - 4.
-	if (BD->isInBranchDelay())
+	// Note that the EPC register should point to the instruction that caused the exception.
+	// If we are in a branch delay slot, need to flush it (reset) so we dont jump after this exits.
+	if (PC->isBranchPending())
 	{
 		// TODO: no idea if this code works, yet to encounter a branch delay exception.
 		u32 pcValue = PC->readWord(EE) - Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2;
 		COP0->ErrorEPC->writeWord(EE, pcValue);
 		COP0->Cause->setFieldValue(EECoreCOP0Register_Cause_t::Fields::BD2, 1);
-		BD->resetBranchDelay(); // Reset branch delay slot.
+		PC->resetBranch(); // Reset branch delay slot.
 	}
 	else
 	{
@@ -405,6 +410,16 @@ void EECoreInterpreter_s::handleException_L2() const
 		{
 			PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp46::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 		}
+	}
+
+	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
+	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
+	//       This is the easiest way to fix this, not sure how to properly do it (just need to play around with the code structure).
+	if (mException != EECoreException_t::EX_INTERRUPT
+		&& mException != EECoreException_t::EX_RESET
+		&& mException != EECoreException_t::EX_NMI)
+	{
+		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
 	}
 }
 

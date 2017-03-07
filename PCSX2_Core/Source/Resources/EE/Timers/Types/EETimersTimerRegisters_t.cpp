@@ -4,6 +4,7 @@
 #include "Resources/EE/Timers/EETimers_t.h"
 
 EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemonic) :
+	Register32_t(mnemonic),
 	mIsOverflowed(false),
 	mPrescale(1),
 	mPrescaleCount(0)
@@ -53,6 +54,7 @@ void EETimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
 }
 
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
+	BitfieldRegister32_t(mnemonic),
 	mCount(count),
 	mClockSource(ClockSource_t::EEBusClock)
 {

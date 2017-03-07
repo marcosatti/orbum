@@ -2,7 +2,6 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/MIPSBranchDelay/MIPSBranchDelay_t.h"
 #include "Common/Types/Registers/MIPS/LinkRegister128_t.h"
 #include "Common/Types/Registers/Register128_t.h"
 
@@ -22,7 +21,7 @@ void EECoreInterpreter_s::BGEZAL()
 	if (source1Val >= 0)
 	{
 		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	}
 }
 
@@ -37,10 +36,10 @@ void EECoreInterpreter_s::BGEZALL()
 	if (source1Val >= 0)
 	{
 		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	}
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BLTZAL()
@@ -54,7 +53,7 @@ void EECoreInterpreter_s::BLTZAL()
 	if (source1Val < 0)
 	{
 		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	}
 }
 
@@ -69,17 +68,17 @@ void EECoreInterpreter_s::BLTZALL()
 	if (source1Val < 0)
 	{
 		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->BD->setBranchDelayPCIOffset(offset, 2);
+		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
 	}
 	else
-		mEECore->R5900->PC->setPCValueNext(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::JAL()
 {
 	// JUMP_LINK(). No exceptions.
 	mEECore->R5900->LinkRegister->setLinkAddress();
-	mEECore->R5900->BD->setBranchDelayPCJRegion(mInstruction.getJRegionAddress(), 2);
+	mEECore->R5900->PC->setBranchPCJRegion(mInstruction.getJRegionAddress(), 2);
 }
 
 void EECoreInterpreter_s::JALR()
@@ -88,6 +87,6 @@ void EECoreInterpreter_s::JALR()
 	auto& sourceReg = mEECore->R5900->GPR[mInstruction.getRRs()];
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, static_cast<u64>(mEECore->R5900->PC->readWord(EE) + Constants::MIPS::SIZE_MIPS_INSTRUCTION));
-	mEECore->R5900->BD->setBranchDelayPCAbsolute(sourceReg->readWord(EE, 0), 2);
+	destReg->writeDword(EE, 0, static_cast<u64>(mEECore->R5900->PC->readWord(EE) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+	mEECore->R5900->PC->setBranchPCAbsolute(sourceReg->readWord(EE, 0), 2);
 }
