@@ -16,12 +16,8 @@ VUInterpreter_s::VUInterpreter_s(VM * vm, u32 vuUnitIndex) :
 	mVuUnit = getVM()->getResources()->EE->VPU->VU->VU_UNITS[vuUnitIndex];
 }
 
-VUInterpreter_s::~VUInterpreter_s()
-{
-}
-
 int VUInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// TODO: Implement.
-	return 1;
+	return ticksAvailable;
 }

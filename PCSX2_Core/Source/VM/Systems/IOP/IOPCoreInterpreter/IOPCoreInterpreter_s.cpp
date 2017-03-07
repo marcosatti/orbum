@@ -30,10 +30,6 @@ IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	mPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
 }
 
-IOPCoreInterpreter_s::~IOPCoreInterpreter_s()
-{
-}
-
 void IOPCoreInterpreter_s::initalise()
 {
 	// An IOP reset is done by raising a Reset exception.

@@ -7,20 +7,21 @@
 #include "Common/Types/ClockSource_t.h"
 
 /*
-The Timer Count register type.
-The register can be set to 16-bit (default) mode (for timers 0 -> 2) or 32-bit (word) mode (for timers 3 -> 5).
+The base Timer Count register type.
+Subclasses are provided for 16-bit (default) mode (for timers 0 -> 2) or 32-bit (word) mode (for timers 3 -> 5).
 Upon hitting overflow conditions (either in 16-bit or 32-bit mode), the value is wrapped around and an internal flag is set.
 The flag can be checked with isOverflowed().
 */
 class IOPTimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	IOPTimersTimerRegister_COUNT_t(const char * mnemonic, const bool & wordMode);
+	IOPTimersTimerRegister_COUNT_t(const char * mnemonic);
 
 	/*
-	Increments the timer by the amount specified (prescalling when required) while also updating the overflow status.
+	Increments the timer by the amount specified (controlling prescalling when required).
+	Updates the overflow status.
 	*/
-	void increment(u16 value);
+	virtual void increment(u16 value) = 0;
 
 	/*
 	Returns if the register has overflowed or not, and resets the flag.
@@ -28,25 +29,20 @@ public:
 	bool isOverflowed();
 
 	/*
-	Resets the count to 0, and sets the prescale.
+	Resets the count to 0.
 	*/
 	void reset();
 
 	/*
 	Sets the prescale (ie: needs x amount before 1 is added to the count).
 	*/
-	void setPrescale(const int & prescale);
+	void setPrescale(const int prescale);
 
-private:
+protected:
 	/*
 	Internal overflow flag. Use isOverflowed() to get the status and to reset the flag.
 	*/
 	bool mIsOverflowed;
-
-	/*
-	Used to determine if the count register is in 16 or 32-bit mode.
-	*/
-	bool mWordMode;
 
 	/*
 	Prescale functionality.
@@ -54,6 +50,35 @@ private:
 	int mPrescale;
 	int mPrescaleCount;
 };
+
+/*
+The 16-bit (hword) version of the IOP Timers Count register.
+*/
+class IOPTimersTimerRegister_HWORD_COUNT_t : public IOPTimersTimerRegister_COUNT_t
+{
+public:
+	IOPTimersTimerRegister_HWORD_COUNT_t(const char * mnemonic);
+
+	/*
+	Checks for 16-bit overflow.
+	*/
+	void increment(u16 value) override;
+};
+
+/*
+The 16-bit (word) version of the IOP Timers Count register.
+*/
+class IOPTimersTimerRegister_WORD_COUNT_t : public IOPTimersTimerRegister_COUNT_t
+{
+public:
+	IOPTimersTimerRegister_WORD_COUNT_t(const char * mnemonic);
+
+	/*
+	Checks for 32-bit overflow.
+	*/
+	void increment(u16 value) override;
+};
+
 
 /*
 The Timer Mode register type.
@@ -80,7 +105,7 @@ public:
 		static constexpr u8 Prescale1 = 12;
 	};
 
-	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const u8 & timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
+	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
 
 	/*
 	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.
@@ -88,7 +113,6 @@ public:
 	*/
 	void writeHword(const Context_t& context, size_t arrayIndex, u16 value) override;
 	void writeWord(const Context_t& context, u32 value) override;
-
 
 	/*
 	Returns if the timer is "enabled" by returning if either of the interrupt bits have been set (otherwise the timer is useless).
@@ -104,7 +128,7 @@ private:
 	/*
 	The timer index this mode register belongs to. Used to calculate the correct clock source when written to (cache the result).
 	*/
-	u8 mTimerIndex;
+	int mTimerIndex;
 
 	/*
 	Sets the internal clock source based on the register state.

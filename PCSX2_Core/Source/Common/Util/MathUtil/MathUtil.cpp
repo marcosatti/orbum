@@ -5,7 +5,6 @@
 #include "Common/Global/Globals.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-#pragma optimize("", off);
 u32 MathUtil::countLeadingBits(s32 value)
 {
 	// If the value is 0, return 32 automatically.

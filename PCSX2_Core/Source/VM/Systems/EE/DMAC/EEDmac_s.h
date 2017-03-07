@@ -32,7 +32,7 @@ class EEDmac_s : public VMSystem_s
 {
 public:
 	explicit EEDmac_s(VM * vm);
-	virtual ~EEDmac_s();
+	virtual ~EEDmac_s() = default;
 
 	/*
 	Check through the channels and initate data transfers.

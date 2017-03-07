@@ -14,7 +14,7 @@ class EEIntc_s : public VMSystem_s
 {
 public:
 	explicit EEIntc_s(VM * vm);
-	virtual ~EEIntc_s();
+	virtual ~EEIntc_s() = default;
 
 	/*
 	Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.

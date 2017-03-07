@@ -15,7 +15,7 @@ class IOPIntc_s : public VMSystem_s
 {
 public:
 	explicit IOPIntc_s(VM * vm);
-	virtual ~IOPIntc_s();
+	virtual ~IOPIntc_s() = default;
 
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 

@@ -24,10 +24,6 @@ CRTC_s::CRTC_s(VM * vm) :
 	mIOPINTC = getVM()->getResources()->IOP->INTC;
 }
 
-CRTC_s::~CRTC_s()
-{
-}
-
 int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	static int col = 0;

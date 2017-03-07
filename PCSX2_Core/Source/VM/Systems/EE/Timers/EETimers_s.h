@@ -19,7 +19,7 @@ class EETimers_s : public VMSystem_s
 {
 public:
 	explicit EETimers_s(VM * vm);
-	virtual ~EETimers_s();
+	virtual ~EETimers_s() = default;
 
 	/*
 	Updates the timers with the specified clock source type.
@@ -30,11 +30,10 @@ private:
 	/*
 	Context resources needed.
 	*/
-	u32 mTimerIndex;
-	EETimersTimer_t * mTimer;
 	std::shared_ptr<EETimers_t> mTimers;
 	std::shared_ptr<EEIntc_t> mINTC;
 	std::shared_ptr<GS_t> mGS;
+	EETimersTimer_t * mTimer;
 
 	/*
 	Checks the timer status and count values for interrupt conditions.

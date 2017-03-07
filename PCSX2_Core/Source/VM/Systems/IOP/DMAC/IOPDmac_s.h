@@ -21,7 +21,7 @@ class IOPDmac_s : public VMSystem_s
 {
 public:
 	explicit IOPDmac_s(VM * vm);
-	virtual ~IOPDmac_s();
+	virtual ~IOPDmac_s() = default;
 
 	/*
 	Check through the channels and initate data transfers.

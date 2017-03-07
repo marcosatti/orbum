@@ -24,7 +24,7 @@ class IOPCoreInterpreter_s : public VMSystem_s
 {
 public:
 	explicit IOPCoreInterpreter_s(VM * vm);
-	virtual ~IOPCoreInterpreter_s();
+	virtual ~IOPCoreInterpreter_s() = default;
 
 	/*
 	Initalisation.

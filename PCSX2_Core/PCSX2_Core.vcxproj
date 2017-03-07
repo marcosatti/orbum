@@ -634,9 +634,6 @@
     <None Include="Docs\Memory Mappings.xlsx" />
     <None Include="Docs\EECore Instruction Implementation Register.xlsm" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Source\VM\Systems\Systems.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

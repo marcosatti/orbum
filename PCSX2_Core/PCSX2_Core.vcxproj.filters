@@ -520,7 +520,4 @@
     <None Include="Docs\Bitfield Register Creation Helper.xlsx" />
     <None Include="Docs\IOP Instruction Implementation Register.xlsm" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="Source\VM\Systems\Systems.txt" />
-  </ItemGroup>
 </Project>

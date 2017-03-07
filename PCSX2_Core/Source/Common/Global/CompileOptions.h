@@ -2,9 +2,10 @@
 
 #include "Common/Global/Macros.h"
 
-///////////////////
-// Debug Options //
-///////////////////
+////////////////////////////////////////////
+// Debug Options                          //
+// (Only enabled if using a debug build.) //
+////////////////////////////////////////////
 
 /*
 Define if the emulator should log host Memory_t allocations or not. 
@@ -52,7 +53,20 @@ Option of whether to throw a runtime error on index out of bounds access for Bit
 Turn off if you are sure that no errors will occur and want to debug quicker.
 */
 #if defined(BUILD_DEBUG)
-#define ERROR_BR32_FIELD_INDEX_RANGE 0
+#define DEBUG_ERROR_BR32_FIELD_INDEX_RANGE 0
 #else
-#define ERROR_BR32_FIELD_INDEX_RANGE 0
+#define DEBUG_ERROR_BR32_FIELD_INDEX_RANGE 0
 #endif
+
+//////////////////////
+// Accuracy Options //
+//////////////////////
+
+/*
+Option to consume all available ticks on a system run through if there is no work to be done.
+It is up to the implementing system to decide on the criteria for this to happen.
+The end user needs to be aware of the interaction of this with the bias given as a runtime option!
+For single threaded mode, this should do no harm.
+TODO: Not tested under multi threaded mode!
+*/
+#define ACCURACY_SKIP_TICKS_ON_NO_WORK 1

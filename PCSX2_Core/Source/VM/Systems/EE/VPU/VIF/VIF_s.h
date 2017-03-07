@@ -17,7 +17,7 @@ class VIF_s : public VMSystem_s
 {
 public:
 	explicit VIF_s(VM * vm, u32 vifUnitIndex);
-	virtual ~VIF_s();
+	virtual ~VIF_s() = default;
 
 	/*
 	Check the FIFO queue and process data if available.

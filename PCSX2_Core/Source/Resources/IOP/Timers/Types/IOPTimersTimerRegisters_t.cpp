@@ -3,52 +3,12 @@
 #include "Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
 
-IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnemonic, const bool & wordMode) :
+IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnemonic) :
 	Register32_t(mnemonic, false, false),
 	mIsOverflowed(false),
-	mWordMode(wordMode),
 	mPrescale(1),
 	mPrescaleCount(0)
 {
-}
-
-void IOPTimersTimerRegister_COUNT_t::increment(u16 value)
-{
-	// Update only if the prescale threshold has been reached.
-	mPrescaleCount += value;
-	while (mPrescaleCount >= mPrescale)
-	{
-		u32 temp = readWord(RAW);
-
-		// Test for 16/32-bit mode.
-		if (!mWordMode)
-		{
-			temp = temp + value;
-			if (temp > Constants::VALUE_U16_MAX)
-			{
-				// Set overflow flag and wrap value around.
-				mIsOverflowed = true;
-				temp = temp % Constants::VALUE_U16_MAX;
-			}
-		}
-		else
-		{
-			u64 temp32 = temp + value;
-			if (temp32 > Constants::VALUE_U32_MAX)
-			{
-				// Set overflow flag and wrap value around.
-				mIsOverflowed = true;
-				temp = temp32 % Constants::VALUE_U32_MAX;
-			}
-			else
-			{
-				temp = static_cast<u32>(temp32);
-			}
-		}
-
-		writeWord(RAW, temp);
-		mPrescaleCount -= mPrescale;
-	}
 }
 
 bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
@@ -63,7 +23,7 @@ void IOPTimersTimerRegister_COUNT_t::reset()
 	writeWord(RAW, 0);
 }
 
-void IOPTimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
+void IOPTimersTimerRegister_COUNT_t::setPrescale(const int prescale)
 {
 	// Prescale can only be 1 (no prescale) or above.
 	if (prescale > 0)
@@ -74,9 +34,68 @@ void IOPTimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
 	mPrescaleCount = 0;
 }
 
-IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const u8 & timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
+IOPTimersTimerRegister_HWORD_COUNT_t::IOPTimersTimerRegister_HWORD_COUNT_t(const char* mnemonic) :
+	IOPTimersTimerRegister_COUNT_t(mnemonic)
+{
+}
+
+void IOPTimersTimerRegister_HWORD_COUNT_t::increment(u16 value)
+{
+	u32 temp = readWord(RAW);
+
+	// Update only if the prescale threshold has been reached.
+	mPrescaleCount += value;
+	if (mPrescaleCount >= mPrescale)
+	{
+		while (mPrescaleCount >= mPrescale)
+		{
+			temp += 1;
+			mPrescaleCount -= mPrescale;
+		}
+
+		if (temp > Constants::VALUE_U16_MAX)
+		{
+			temp = temp % Constants::VALUE_U16_MAX;
+			mIsOverflowed = true;
+		}
+
+		writeWord(RAW, temp);
+	}
+}
+
+IOPTimersTimerRegister_WORD_COUNT_t::IOPTimersTimerRegister_WORD_COUNT_t(const char* mnemonic) : 
+	IOPTimersTimerRegister_COUNT_t(mnemonic)
+{
+}
+
+void IOPTimersTimerRegister_WORD_COUNT_t::increment(u16 value)
+{
+	u64 temp = static_cast<u64>(readWord(RAW));
+
+	// Update only if the prescale threshold has been reached.
+	mPrescaleCount += value;
+	if (mPrescaleCount >= mPrescale)
+	{
+		while (mPrescaleCount >= mPrescale)
+		{
+			temp += 1;
+			mPrescaleCount -= mPrescale;
+		}
+
+		if (temp > Constants::VALUE_U32_MAX)
+		{
+			temp = temp % Constants::VALUE_U32_MAX;
+			mIsOverflowed = true;
+		}
+
+		writeWord(RAW, static_cast<u32>(temp));
+	}
+}
+
+IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
 	BitfieldRegister32_t(mnemonic, false, false),
 	mTimerIndex(timerIndex),
+	mIsEnabled(false),
 	mClockSource(ClockSource_t::IOPBusClock),
 	mCount(count)
 {
@@ -138,7 +157,7 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
 	if (mTimerIndex > 5)
 		throw std::runtime_error("Invalid IOP timer index to determine clock source!");
 	
-	// Sources are majorly different for each type of timer... no easy way of doing this... time for spaghetti code! TODO: maybe use a table for this?
+	// Sources are majorly different for each type of timer... no easy way of doing this... time for spaghetti code! 
 	// Prescale is handled by the Count register, but we need to set its mode through here.
 	if (mTimerIndex < 3)
 	{

@@ -19,13 +19,9 @@ VIF_s::VIF_s(VM * vm, u32 vifUnitIndex) :
 {
 }
 
-VIF_s::~VIF_s()
-{
-}
-
 int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	return 1; // not yet completed.
+	return ticksAvailable; // not yet completed.
 
 	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
 

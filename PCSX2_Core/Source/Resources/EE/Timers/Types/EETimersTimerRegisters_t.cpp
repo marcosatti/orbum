@@ -42,7 +42,7 @@ void EETimersTimerRegister_COUNT_t::reset()
 	writeWord(RAW, 0);
 }
 
-void EETimersTimerRegister_COUNT_t::setPrescale(const int& prescale)
+void EETimersTimerRegister_COUNT_t::setPrescale(const int prescale)
 {
 	// Prescale can only be 1 (no prescale) or above.
 	if (prescale > 0)

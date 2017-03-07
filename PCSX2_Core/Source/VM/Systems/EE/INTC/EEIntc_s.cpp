@@ -20,10 +20,6 @@ EEIntc_s::EEIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->EE->INTC;
 }
 
-EEIntc_s::~EEIntc_s()
-{
-}
-
 int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the interrupt status on the stat register.
@@ -33,5 +29,9 @@ int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		mEECOP0->Cause->clearIRQLine(2);
 	
 	// INTC has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	return ticksAvailable;
+#else
 	return 1;
+#endif
 }

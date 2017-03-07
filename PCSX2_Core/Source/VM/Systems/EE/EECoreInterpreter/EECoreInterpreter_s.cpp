@@ -39,10 +39,6 @@ EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterp
 	mVU0 = getVM()->getResources()->EE->VPU->VU->VU0;
 }
 
-EECoreInterpreter_s::~EECoreInterpreter_s()
-{
-}
-
 void EECoreInterpreter_s::initalise()
 {
 	// An EE Core reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
@@ -338,9 +334,7 @@ void EECoreInterpreter_s::handleException_L1() const
 	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
 	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
 	//       This is the easiest way to fix this, not sure how to properly do it (just need to play around with the code structure).
-	if (mException != EECoreException_t::EX_INTERRUPT
-		&& mException != EECoreException_t::EX_RESET
-		&& mException != EECoreException_t::EX_NMI)
+	if (mException != EECoreException_t::EX_INTERRUPT)
 	{
 		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
 	}
@@ -415,8 +409,7 @@ void EECoreInterpreter_s::handleException_L2() const
 	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
 	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
 	//       This is the easiest way to fix this, not sure how to properly do it (just need to play around with the code structure).
-	if (mException != EECoreException_t::EX_INTERRUPT
-		&& mException != EECoreException_t::EX_RESET
+	if (mException != EECoreException_t::EX_RESET
 		&& mException != EECoreException_t::EX_NMI)
 	{
 		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));

@@ -20,7 +20,7 @@ public:
 	void increment(u16 value);
 	bool isOverflowed();
 	void reset();
-	void setPrescale(const int & prescale);
+	void setPrescale(const int prescale);
 
 private:
 	/*

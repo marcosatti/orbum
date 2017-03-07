@@ -20,10 +20,6 @@ IOPIntc_s::IOPIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-IOPIntc_s::~IOPIntc_s()
-{
-}
-
 int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the master CTRL register and STAT register.
@@ -41,5 +37,9 @@ int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		mIOPCOP0->Cause->clearIRQLine(2);
 
 	// INTC has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	return ticksAvailable;
+#else
 	return 1;
+#endif
 }

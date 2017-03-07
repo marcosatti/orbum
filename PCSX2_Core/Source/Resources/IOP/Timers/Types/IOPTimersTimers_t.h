@@ -15,12 +15,7 @@ Documentation taken from PCSX2 and No$PSX docs.
 class IOPTimersTimer_t
 {
 public:
-	explicit IOPTimersTimer_t(const u32 & timerID);
-
-	/*
-	The ID of this timer. Used for debug.
-	*/
-	const u32 mTimerID;
+	explicit IOPTimersTimer_t(const int timerID);
 
 	/*
 	IOP Timers timer registers.
@@ -30,6 +25,17 @@ public:
 	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> COUNT;
 	std::shared_ptr<IOPTimersTimerRegister_MODE_t>  MODE;
 	std::shared_ptr<Register32_t>                   COMP;
+
+	/*
+	Returns the ID of this timer.
+	*/
+	int getTimerID() const;
+
+private:
+	/*
+	The ID of this timer.
+	*/
+	const int mTimerID;
 };
 
 /*
@@ -40,7 +46,7 @@ class IOPTimersTimer_TIM0_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM0_t();
 
-	static constexpr u32 TIMER_ID = 0;
+	static constexpr int TIMER_ID = 0;
 };
 
 /*
@@ -51,7 +57,7 @@ class IOPTimersTimer_TIM1_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM1_t();
 
-	static constexpr u32 TIMER_ID = 1;
+	static constexpr int TIMER_ID = 1;
 };
 
 /*
@@ -62,7 +68,7 @@ class IOPTimersTimer_TIM2_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM2_t();
 
-	static constexpr u32 TIMER_ID = 2;
+	static constexpr int TIMER_ID = 2;
 };
 
 /*
@@ -73,7 +79,7 @@ class IOPTimersTimer_TIM3_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM3_t();
 
-	static constexpr u32 TIMER_ID = 3;
+	static constexpr int TIMER_ID = 3;
 };
 
 /*
@@ -84,7 +90,7 @@ class IOPTimersTimer_TIM4_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM4_t();
 
-	static constexpr u32 TIMER_ID = 4;
+	static constexpr int TIMER_ID = 4;
 };
 
 /*
@@ -95,5 +101,5 @@ class IOPTimersTimer_TIM5_t : public IOPTimersTimer_t
 public:
 	IOPTimersTimer_TIM5_t();
 
-	static constexpr u32 TIMER_ID = 5;
+	static constexpr int TIMER_ID = 5;
 };

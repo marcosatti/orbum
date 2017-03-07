@@ -22,7 +22,7 @@ class CRTC_s : public VMSystem_s
 {
 public:
 	explicit CRTC_s(VM * vm);
-	virtual ~CRTC_s();
+	virtual ~CRTC_s() = default;
 
 	/*
 	Steps through the CRTC, incrementing the number of pixels based on the CRTC configuration.

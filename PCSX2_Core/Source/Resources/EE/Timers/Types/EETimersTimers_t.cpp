@@ -3,13 +3,18 @@
 #include "Resources/EE/Timers/Types/EETimersTimers_t.h"
 #include "Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 
-EETimersTimer_t::EETimersTimer_t(const u32& timerID) :
-	mTimerID(timerID),
+EETimersTimer_t::EETimersTimer_t(const int timerID) :
 	COUNT(nullptr),
 	MODE(nullptr),
 	COMP(nullptr),
-	HOLD(nullptr)
+	HOLD(nullptr),
+	mTimerID(timerID)
 {
+}
+
+int EETimersTimer_t::getTimerID() const
+{
+	return mTimerID;
 }
 
 EETimersTimer_TIM0_t::EETimersTimer_TIM0_t() :

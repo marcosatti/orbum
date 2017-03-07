@@ -15,7 +15,7 @@ class VUInterpreter_s : public VMSystem_s
 {
 public:
 	explicit VUInterpreter_s(VM * vm, u32 vuUnitIndex);
-	virtual ~VUInterpreter_s();
+	virtual ~VUInterpreter_s() = default;
 
 	/*
 	TODO: implement.

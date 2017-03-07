@@ -33,12 +33,13 @@ EEDmac_s::EEDmac_s(VM * vm) :
 	mEEPhysicalMMU = getVM()->getResources()->EE->PhysicalMMU;
 }
 
-EEDmac_s::~EEDmac_s()
-{
-}
-
 int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
+	bool workDone = false;
+#endif
+
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->CTRL->getFieldValue(EEDmacRegister_CTRL_t::Fields::DMAE) > 0)
 	{
@@ -51,6 +52,10 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			// Check if channel is enabled for transfer.
 			if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
 			{
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+				// A channel was enabled for transfer - do not skip any ticks.
+				workDone = true;
+#endif
 				switch (mChannel->CHCR->getLogicalMode())
 				{
 				case LogicalMode_t::NORMAL:
@@ -81,7 +86,14 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	}
 
 	// DMAC has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	if (!workDone)
+		return ticksAvailable;
+	else
+		return 1;
+#else
 	return 1;
+#endif
 }
 
 u32 EEDmac_s::transferData() const

@@ -9,11 +9,7 @@ GSCore_s::GSCore_s(VM * vm) :
 {
 }
 
-GSCore_s::~GSCore_s()
-{
-}
-
 int GSCore_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
-	return 1;
+	return ticksAvailable;
 }

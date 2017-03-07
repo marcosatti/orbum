@@ -17,7 +17,7 @@ class IOPTimers_s : public VMSystem_s
 {
 public:
 	explicit IOPTimers_s(VM * vm);
-	virtual ~IOPTimers_s();
+	virtual ~IOPTimers_s() = default;
 
 	/*
 	Updates the timers with the specified clock source type.
@@ -28,10 +28,9 @@ private:
 	/*
 	Context resources needed.
 	*/
-	u32 mTimerIndex;
-	IOPTimersTimer_t * mTimer;
 	std::shared_ptr<IOPTimers_t> mTimers;
 	std::shared_ptr<IOPIntc_t> mINTC;
+	IOPTimersTimer_t * mTimer;
 
 	/*
 	Checks the timer status and count values for interrupt conditions.

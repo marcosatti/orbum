@@ -16,12 +16,7 @@ If the timer contains a Hold register, set the constructor parameter to true. Ho
 class EETimersTimer_t
 {
 public:
-	explicit EETimersTimer_t(const u32 & timerID);
-
-	/*
-	The ID of this timer. Used for debug.
-	*/
-	const u32 mTimerID;
+	explicit EETimersTimer_t(const int timerID);
 
 	/*
 	EE Timers timer registers.
@@ -33,6 +28,17 @@ public:
 	std::shared_ptr<EETimersTimerRegister_MODE_t>  MODE;
 	std::shared_ptr<Register32_t>                  COMP;
 	std::shared_ptr<Register32_t>                  HOLD;
+
+	/*
+	Returns the ID of this timer.
+	*/
+	int getTimerID() const;
+
+private:
+	/*
+	The ID of this timer.
+	*/
+	const int mTimerID;
 };
 
 /*
@@ -43,7 +49,7 @@ class EETimersTimer_TIM0_t : public EETimersTimer_t
 public:
 	EETimersTimer_TIM0_t();
 
-	static constexpr u32 TIMER_ID = 0;
+	static constexpr int TIMER_ID = 0;
 };
 
 /*
@@ -54,7 +60,7 @@ class EETimersTimer_TIM1_t : public EETimersTimer_t
 public:
 	EETimersTimer_TIM1_t();
 
-	static constexpr u32 TIMER_ID = 1;
+	static constexpr int TIMER_ID = 1;
 };
 
 /*
@@ -65,7 +71,7 @@ class EETimersTimer_TIM2_t : public EETimersTimer_t
 public:
 	EETimersTimer_TIM2_t();
 
-	static constexpr u32 TIMER_ID = 2;
+	static constexpr int TIMER_ID = 2;
 };
 
 /*
@@ -76,5 +82,5 @@ class EETimersTimer_TIM3_t : public EETimersTimer_t
 public:
 	EETimersTimer_TIM3_t();
 
-	static constexpr u32 TIMER_ID = 3;
+	static constexpr int TIMER_ID = 3;
 };

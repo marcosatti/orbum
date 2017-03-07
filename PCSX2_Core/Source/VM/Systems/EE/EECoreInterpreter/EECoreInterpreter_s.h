@@ -30,7 +30,7 @@ class EECoreInterpreter_s : public VMSystem_s
 {
 public:
 	explicit EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter);
-	virtual ~EECoreInterpreter_s();
+	virtual ~EECoreInterpreter_s() = default;
 
 	/*
 	Initalisation.

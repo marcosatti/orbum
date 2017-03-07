@@ -16,7 +16,6 @@
 
 EETimers_s::EETimers_s(VM * vm) :
 	VMSystem_s(vm, System_t::EETimers),
-	mTimerIndex(0), 
 	mTimer(nullptr)
 {
 	// Set resource pointer variables.
@@ -25,64 +24,76 @@ EETimers_s::EETimers_s(VM * vm) :
 	mGS = getVM()->getResources()->GS;
 }
 
-EETimers_s::~EETimers_s()
-{
-}
-
 int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed.
+	bool workDone = false;
+#endif
+
 	// Update the timers which are set to count based on the type of event recieved.
-	for (mTimerIndex = 0; mTimerIndex < Constants::EE::Timers::NUMBER_TIMERS; mTimerIndex++)
+	for (auto& timer : mTimers->TIMERS)
 	{
-		// Set context.
-		mTimer = &(*mTimers->TIMERS[mTimerIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
+		// Set timer resource context.
+		mTimer = timer.get();
 
 		// Count only if enabled.
-		if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CUE) == 0)
-			continue;
-
-		// Check if the timer mode is equal to the clock source.
-		if (clockSource == mTimer->MODE->getClockSource())
+		if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CUE) > 0)
 		{
-			// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
-			//  in which case count normally.
-			if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATE) 
-				&& !mTimer->MODE->isGateHBLNKSpecial())
+			// Check if the timer mode is equal to the clock source.
+			if (clockSource == mTimer->MODE->getClockSource())
 			{
-				// Check if the timer needs to be reset.
-				handleTimerGateReset();
-
-				// If the timer is using GATM = 0, need to check if the signal is low first.
-				if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+				// A timer consumed a tick for this clock source - do not skip any ticks.
+				workDone = true;
+#endif
+				// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
+				//  in which case count normally.
+				if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATE)
+					&& !mTimer->MODE->isGateHBLNKSpecial())
 				{
-					throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
+					// Check if the timer needs to be reset.
+					handleTimerGateReset();
 
-					const u8 * gateSources[] = { nullptr, nullptr };
-					u32 index = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
-					if (!(*gateSources[index]))
+					// If the timer is using GATM = 0, need to check if the signal is low first.
+					if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
+					{
+						throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
+
+						const u8 * gateSources[] = { nullptr, nullptr };
+						u32 index = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
+						if (!(*gateSources[index]))
+							mTimer->COUNT->increment(1);
+					}
+					else
+					{
 						mTimer->COUNT->increment(1);
+					}
 				}
 				else
 				{
+					// Count normally without gate.
 					mTimer->COUNT->increment(1);
 				}
-			}
-			else
-			{
-				// Count normally without gate.
-				mTimer->COUNT->increment(1);
-			}
 
-			// Check for interrupt conditions on the timer.
-			handleTimerInterrupt();
+				// Check for interrupt conditions on the timer.
+				handleTimerInterrupt();
 
-			// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise this may cause interrupt to be missed).
-			handleTimerZRET();
+				// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise this may cause interrupt to be missed).
+				handleTimerZRET();
+			}
 		}
 	}
 
 	// Timers has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	if (!workDone)
+		return ticksAvailable;
+	else
+		return 1;
+#else
 	return 1;
+#endif
 }
 
 void EETimers_s::handleTimerInterrupt() const
@@ -110,7 +121,7 @@ void EETimers_s::handleTimerInterrupt() const
 	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
 	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
-		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimerIndex], 1);
+		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimer->getTimerID()], 1);
 }
 
 void EETimers_s::handleTimerZRET() const

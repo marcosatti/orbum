@@ -32,12 +32,13 @@ IOPDmac_s::IOPDmac_s(VM * vm) :
 	mIOPPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
 }
 
-IOPDmac_s::~IOPDmac_s()
-{
-}
-
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
+	bool workDone = false;
+#endif
+
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->GCTRL->readWord(RAW) > 0)
 	{
@@ -50,6 +51,10 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			// Check if channel is enabled for transfer (both from PCR and the CHCR).
 			if (isChannelEnabled())
 			{
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+				// A channel was enabled for transfer - do not skip any ticks.
+				workDone = true;
+#endif
 				switch (mChannel->CHCR->getLogicalMode())
 				{
 				case LogicalMode_t::NORMAL_BURST:
@@ -87,7 +92,15 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		handleInterruptCheck();
 	}
 	
+	// DMAC has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	if (!workDone)
+		return ticksAvailable;
+	else
+		return 1;
+#else
 	return 1;
+#endif
 }
 
 void IOPDmac_s::transferNormalBurst()

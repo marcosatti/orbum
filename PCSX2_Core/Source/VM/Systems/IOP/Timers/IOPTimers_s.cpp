@@ -15,7 +15,6 @@
 
 IOPTimers_s::IOPTimers_s(VM * vm) :
 	VMSystem_s(vm, System_t::IOPTimers),
-	mTimerIndex(0),
 	mTimer(nullptr)
 {
 	// Set resource pointer variables.
@@ -23,51 +22,63 @@ IOPTimers_s::IOPTimers_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-IOPTimers_s::~IOPTimers_s()
-{
-}
-
 int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed.
+	bool workDone = false;
+#endif
+
 	// Update the timers which are set to count based on the type of event recieved.
-	for (mTimerIndex = 0; mTimerIndex < Constants::IOP::Timers::NUMBER_TIMERS; mTimerIndex++)
+	for (auto& timer : mTimers->TIMERS)
 	{
-		// Set context.
-		mTimer = &(*mTimers->TIMERS[mTimerIndex]); // I give up, for now I need the speed for debugging. Change back later & sort out why this is so slow.
+		// Set timer resource context.
+		mTimer = timer.get();
 		
 		// Count only if "enabled". There is no explicit "enable bit" in the IOP timers, however a timer is only useful to us if it can cause an interrupt, so we use this to check.
 		// If a timer is written to (such that interrupt conditions are now enabled), the count register is cleared upon write anyway.
-		// This means we do not have to consider the case where the timer suddenly comes alive, with a populated count register.
-		if (!mTimer->MODE->isEnabled())
-			continue;
-
-		// Check if the timer mode is equal to the clock source.
-		if (clockSource == mTimer->MODE->getClockSource())
+		// This means we do not have to consider the case where the timer suddenly comes alive, with a populated count register, therefore missing the interrupt condition.
+		if (mTimer->MODE->isEnabled())
 		{
-			// Next check for the gate function.
-			if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
+			// Check if the timer mode is equal to the clock source.
+			if (clockSource == mTimer->MODE->getClockSource())
 			{
-				throw std::runtime_error("IOP Timers sync mode (gate) = 1, but not implemented.");
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+				// A timer consumed a tick for this clock source - do not skip any ticks.
+				workDone = true;
+#endif
+				// Next check for the gate function.
+				if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
+				{
+					throw std::runtime_error("IOP Timers sync mode (gate) = 1, but not implemented.");
+				}
+				else
+				{
+					// Count normally without gate.
+					mTimer->COUNT->increment(1);
+				}
+
+				// Check for interrupt conditions on the timer. Needs to be done before handling the overflow or target conditions.
+				handleTimerInterrupt();
+
+				// Check for overflow conditions on the timer.
+				handleTimerOverflow();
+
+				// Check for target conditions on the timer.
+				handleTimerTarget();
 			}
-			else
-			{
-				// Count normally without gate.
-				mTimer->COUNT->increment(1);
-			}
-
-			// Check for interrupt conditions on the timer.
-			handleTimerInterrupt();
-
-			// Check for overflow conditions on the timer.
-			handleTimerOverflow();
-
-			// Check for target conditions on the timer.
-			handleTimerTarget();
 		}
 	}
 
 	// Timers has completed 1 cycle.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+	if (!workDone)
+		return ticksAvailable;
+	else
+		return 1;
+#else
 	return 1;
+#endif
 }
 
 void IOPTimers_s::handleTimerInterrupt() const
@@ -104,8 +115,9 @@ void IOPTimers_s::handleTimerInterrupt() const
 			if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqToggle))
 			{
 				// Toggle bit.
-				u32 value = mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest);
-				mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, value ^ 1);
+				throw std::runtime_error("IOP Timers int toggle mode not implemented.");
+				// u32 value = mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest);
+				// mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, value ^ 1);
 			}
 			else
 			{
@@ -115,14 +127,14 @@ void IOPTimers_s::handleTimerInterrupt() const
 		}
 		else
 		{
-			throw std::runtime_error("IOP Timers oneshot mode not implemented.");
+			throw std::runtime_error("IOP Timers int oneshot mode not implemented.");
 		}
 
 		// Check for internal interrupt bit is low, and send INTC interrupt.
 		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest) == 0)
 		{
 			// Raise IRQ.
-			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::TMR_KEYS[mTimerIndex], 1);
+			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::TMR_KEYS[mTimer->getTimerID()], 1);
 		}
 	}
 }
@@ -132,24 +144,31 @@ void IOPTimers_s::handleTimerOverflow() const
 	// Check for overflow conditions.
 	if (mTimer->COUNT->isOverflowed())
 	{
-		// Set reach overflow bit (reset is done automatically inside count register).
+		// Check for target reset condition.
+		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) == 0)
+		{
+			// Set Count to 0.
+			mTimer->COUNT->reset();
+		}
+
+		// Set reach overflow bit.
 		mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ReachOF, 1);
 	}
 }
 
 void IOPTimers_s::handleTimerTarget() const
 {
-	// Check for target condition.
-	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)
+	// Check for Count >= Compare.
+	if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
 	{
-		// Check for Count >= Compare.
-		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
+		// Check for target reset condition.
+		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)
 		{
 			// Set Count to 0.
 			mTimer->COUNT->reset();
-
-			// Set reach target bit.
-			mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ReachTarget, 1);
 		}
+
+		// Set reach target bit.
+		mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ReachTarget, 1);
 	}
 }
