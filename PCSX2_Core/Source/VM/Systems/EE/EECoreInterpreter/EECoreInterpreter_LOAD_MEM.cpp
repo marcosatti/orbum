@@ -25,7 +25,7 @@ void EECoreInterpreter_s::LB()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readByte(EE, physicalAddress);
+	auto value = static_cast<s8>(mPhysicalMMU->readByte(EE, physicalAddress));
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 
@@ -57,7 +57,7 @@ void EECoreInterpreter_s::LD()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(EE, physicalAddress);
+	auto value = static_cast<s64>(mPhysicalMMU->readDword(EE, physicalAddress));
 	destReg->writeDword(EE, 0, value);
 }
 
@@ -132,7 +132,7 @@ void EECoreInterpreter_s::LH()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readHword(EE, physicalAddress);
+	auto value = static_cast<s16>(mPhysicalMMU->readHword(EE, physicalAddress));
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 
@@ -175,7 +175,7 @@ void EECoreInterpreter_s::LW()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
+	auto value = static_cast<s32>(mPhysicalMMU->readWord(EE, physicalAddress));
 	destReg->writeDword(EE, 0, static_cast<s64>(value));
 }
 

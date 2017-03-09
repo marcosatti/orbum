@@ -54,7 +54,7 @@ void EETimersTimerRegister_COUNT_t::setPrescale(const int prescale)
 }
 
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
-	BitfieldRegister32_t(mnemonic),
+	BitfieldRegister32_t(mnemonic, false, false),
 	mCount(count),
 	mClockSource(ClockSource_t::EEBusClock)
 {

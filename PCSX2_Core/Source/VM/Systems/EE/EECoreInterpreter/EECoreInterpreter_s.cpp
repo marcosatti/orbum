@@ -59,7 +59,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000001431200;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
@@ -131,7 +131,6 @@ void EECoreInterpreter_s::handleInterruptCheck()
 			}
 #endif
 			// Handle the interrupt immediately.
-			// TODO: Set PC next is needed as otherwise the EPC will point to an instruction that has already completed - leading to crashes. Not sure if there is a better way to do this.
 			handleException(EECoreException_t::EX_INTERRUPT);
 		}
 	}

@@ -46,7 +46,7 @@ EETimersTimer_TIM2_t::EETimersTimer_TIM2_t() :
 EETimersTimer_TIM3_t::EETimersTimer_TIM3_t() :
 	EETimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer2 Count");
-	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer2 Mode", COUNT);
-	COMP = std::make_shared<Register32_t>("EE Timer2 Compare", false, false);
+	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer3 Count");
+	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer3 Mode", COUNT);
+	COMP = std::make_shared<Register32_t>("EE Timer3 Compare", false, true);
 }
