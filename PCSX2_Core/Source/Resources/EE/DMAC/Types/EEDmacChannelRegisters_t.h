@@ -200,9 +200,8 @@ private:
 
 	/*
 	Contains logic for updating the SBUS registers.
-	One function for starting a transfer, and ending a transfer.
+	One function for ending a transfer - a starting function should never be called as this is fixed in the FROM direction.
 	*/
-	void handleSBUSUpdateStart() const;
 	void handleSBUSUpdateFinish() const;
 };
 
@@ -211,7 +210,6 @@ The SIF1 DMAC D_CHCR register, aka channel control register.
 SIF1 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
 As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
 TODO: Look into properly RE'ing the SBUS.
-TODO: SIF1 direction is EE -> IOP, so need to move the SBUS finish update into the IOP side.
 */
 class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_TO_CHCR_t
 {
@@ -233,10 +231,9 @@ private:
 
 	/*
 	Contains logic for updating the SBUS registers.
-	One function for starting a transfer, and ending a transfer.
+	One function for starting a transfer - a ending function should never be called as this is fixed in the TO direction.
 	*/
 	void handleSBUSUpdateStart() const;
-	void handleSBUSUpdateFinish() const;
 };
 
 /*
@@ -244,7 +241,6 @@ The SIF2 DMAC D_CHCR register, aka channel control register.
 SIF2 requires access to the SBUS_F240 register (in the EE, this is @ 0x1000F240), which is set on CHCR.STR becoming 1 or 0 (starting or finishing).
 As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
 TODO: Look into properly RE'ing the SBUS.
-TODO: SIF0 direction is IOP <-> EE (bidirectional), so need to trigger either the start or finish on the IOP side (vice versa on the EE side).
 */
 class EEDmacChannelRegister_SIF2_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {

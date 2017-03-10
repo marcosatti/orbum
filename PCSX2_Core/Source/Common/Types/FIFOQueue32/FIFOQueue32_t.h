@@ -10,12 +10,12 @@ Represents a FIFO queue used in (for example) the EE/IOP DMAC channels.
 The minimum sized data unit that can be read/written to the queue is 32-bit, however 128-bit read/writes are also allowed.
 TODO: test perf (use std::queue or own?), add in thread safety.
 */
-class FIFOQueue_t
+class FIFOQueue32_t
 {
 public:
-	explicit FIFOQueue_t(const size_t & maxSize);
-	explicit FIFOQueue_t(const char * mnemonic, const size_t & maxSize);
-	virtual ~FIFOQueue_t();
+	explicit FIFOQueue32_t(const size_t & maxSize);
+	explicit FIFOQueue32_t(const char * mnemonic, const size_t & maxSize);
+	virtual ~FIFOQueue32_t();
 
 	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
@@ -36,16 +36,6 @@ public:
 	Write 128-bits of data to the FIFO queue (splits the u128 into 4 x 32-bit).
 	*/
 	virtual void writeQword(const Context_t & context, const u128 & data);
-
-	/*
-	Returns if the FIFO queue has no data available.
-	*/
-	bool isEmpty() const;
-
-	/*
-	Returns if the FIFO queue is full.
-	*/
-	bool isFull() const;
 
 	/*
 	Gets the current number of 32-bit data elements in the queue.

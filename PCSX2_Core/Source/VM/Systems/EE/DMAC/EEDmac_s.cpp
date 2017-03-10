@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/EE/DMAC/EEDmac_s.h"
@@ -157,9 +157,12 @@ int EEDmac_s::transferData() const
 		// Else transfer data normally.
 		if (direction == Direction_t::FROM)
 		{
-			// Check if channel does not have data ready - need to try again next cycle.
-			if (mChannel->mFIFOQueue->isEmpty())
+			// Check if channel does not have data ready (at least 4 x u32's) - need to try again next cycle.
+			if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+			{
+				log(Warning, "EE DMAC tried to read u128 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 				return 0;
+			}
 
 			u128 packet = mChannel->mFIFOQueue->readQword(RAW);
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
@@ -169,9 +172,12 @@ int EEDmac_s::transferData() const
 		}
 		else if (direction == Direction_t::TO)
 		{
-			// Check if channel is full - need to try again next cycle.
-			if (mChannel->mFIFOQueue->isFull())
+			// Check if channel is full (we need at least 4 x u32 spaces) - need to try again next cycle.
+			if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+			{
+				log(Warning, "EE DMAC tried to write u128 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 				return 0;
+			}
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
 			mChannel->mFIFOQueue->writeQword(RAW, packet);
@@ -460,8 +466,11 @@ bool EEDmac_s::readChainSourceTag()
 	// Check first if we need to transfer the tag - return false if the channel queue is full.
 	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
 	{
-		if (mChannel->mFIFOQueue->isFull())
+		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+		{
+			//log(Warning, "EE DMAC tried to write tag (u128) to FIFO queue (%s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return false;
+		}
 	}
 
 	// Read tag from TADR.
@@ -490,8 +499,11 @@ bool EEDmac_s::readChainSourceTag()
 bool EEDmac_s::readChainDestTag()
 {
 	// Check first if there is data available.
-	if (mChannel->mFIFOQueue->isEmpty())
+	if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+	{
+		//log(Warning, "EE DMAC tried to read tag (u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 		return false;
+	}
 
 	// Read tag from channel FIFO (always next to transfer data).
 	u128 data = mChannel->mFIFOQueue->readQword(RAW);

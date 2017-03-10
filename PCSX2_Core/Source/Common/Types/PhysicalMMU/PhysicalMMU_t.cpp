@@ -136,7 +136,7 @@ void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<
 	mapObject(std::make_shared<MappedFPRegister128_t>(physicalAddress, fpRegister128));
 }
 
-void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<FIFOQueue_t>& fifoQueue)
+void PhysicalMMU_t::mapObject(const u32& physicalAddress, const std::shared_ptr<FIFOQueue32_t>& fifoQueue)
 {
 	mapObject(std::make_shared<MappedFIFOQueue_t>(physicalAddress, fifoQueue));
 }

@@ -173,7 +173,6 @@
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\ConstantMemory_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
-    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.h" />
@@ -308,6 +307,7 @@
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSOperatingContext_t.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -365,7 +365,6 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ConstantMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
-    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.cpp" />
@@ -506,6 +505,7 @@
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

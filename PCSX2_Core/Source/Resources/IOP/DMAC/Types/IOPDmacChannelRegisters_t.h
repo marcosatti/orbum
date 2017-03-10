@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
 #include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
@@ -164,16 +166,98 @@ public:
 };
 
 /*
+The IOP DMAC SIF0 CHCR register.
+SIF0 requires access to the SBUS_F240 register (in the IOP, this is @ 0x1D000040), which is set on CHCR.Start becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
+*/
+class IOPDmacChannelRegister_SIF0_CHCR_t : public IOPDmacChannelRegister_TO_CHCR_t
+{
+public:
+	explicit IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
+
+	/*
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
+	See PCSX2's "sif0.cpp".
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for starting a transfer - a ending function should never be called as this is fixed in the TO direction.
+	*/
+	void handleSBUSUpdateStart() const;
+};
+
+/*
 The IOP DMAC SIF1 CHCR register.
 Sets the chain mode bit to 1 upon writes, as the bios overwrites this (hardware probably contains a hardwired bit).
+SIF1 requires access to the SBUS_F240 register (in the IOP, this is @ 0x1D000040), which is set on CHCR.Start becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
 */
 class IOPDmacChannelRegister_SIF1_CHCR_t : public IOPDmacChannelRegister_FROM_CHCR_t
 {
 public:
-	explicit IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	(IOP context only.) Upon writes, sets the chain mode bit (bit 10) to 1.
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
+	See PCSX2's "sif1.cpp".
 	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
 	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for ending a transfer - a starting function should never be called as this is fixed in the FROM direction. 
+	*/
+	void handleSBUSUpdateFinish() const;
 };
+
+/*
+The SIF2 DMAC D_CHCR register, aka channel control register.
+SIF2 requires access to the SBUS_F240 register (in the IOP, this is @ 0x1D000040), which is set on CHCR.Start becoming 1 or 0 (starting or finishing).
+As the SBUS (registers) is not fully understood, this is needed as a way to set the correct magic values.
+TODO: Look into properly RE'ing the SBUS.
+*/
+class IOPDmacChannelRegister_SIF2_CHCR_t : public IOPDmacChannelRegister_CHCR_t
+{
+public:
+	IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
+
+	/*
+	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. 
+	See PCSX2's "sif2.cpp".
+	*/
+	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void writeWord(const Context_t& context, u32 value) override;
+
+private:
+	/*
+	Reference to the SBUS_F240 register.
+	*/
+	std::shared_ptr<Register32_t> mSbusF240;
+
+	/*
+	Contains logic for updating the SBUS registers.
+	One function for starting a transfer, and ending a transfer.
+	*/
+	void handleSBUSUpdateStart() const;
+	void handleSBUSUpdateFinish() const;
+};
+

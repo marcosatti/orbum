@@ -9,7 +9,7 @@ class SBUSRegister_F240_t;
 class SBUSRegister_F300_t;
 class Register32_t;
 class ConstantRegister32_t;
-class FIFOQueue_t;
+class FIFOQueue32_t;
 class SBUSFIFOQueue_SIF2_t;
 
 /*
@@ -33,21 +33,21 @@ public:
 	std::shared_ptr<SBUSRegister_F240_t>  SBUS_F240;  // Register "Undocumented: F240" @ 0x1000F240 (EE) & 0x1D000040 (IOP). Manipulates reads/writes with magic values.
 	std::shared_ptr<Register32_t>         SBUS_F250;  // Register "Undocumented: F250" @ 0x1000F250 (EE) & 0x1D000050 (IOP).
 	std::shared_ptr<ConstantRegister32_t> SBUS_F260;  // Register "Undocumented: F260" @ 0x1000F260 (EE) & 0x1D000060 (IOP). Always set to 0.
-	std::shared_ptr<SBUSRegister_F300_t>  SBUS_F300;  // Register "Undocumented: F300" @ 0x1000F300 (EE). // TODO: related to psx gpu? Investigate (see PCSX2).
+	std::shared_ptr<SBUSRegister_F300_t>  SBUS_F300;  // Register "Undocumented: F300" @ 0x1000F300 (EE). // TODO: related to psx sif2/gpu? Investigate (see PCSX2).
 	std::shared_ptr<Register32_t>         SBUS_F380;  // Register "Undocumented: F380" @ 0x1000F380 (EE).
 
 	/*
 	FIFO Queue registers, attached to both the EE and IOP DMAC channels.
 	SIF2 has a custom FIFO to trigger updates to the SBUS_REGISTER_F3000 defined above (dependency).
 	*/
-	std::shared_ptr<FIFOQueue_t>          FIFO_VIF0;
-	std::shared_ptr<FIFOQueue_t>          FIFO_VIF1;
-	std::shared_ptr<FIFOQueue_t>          FIFO_GIF;
-	std::shared_ptr<FIFOQueue_t>          FIFO_fromIPU;
-	std::shared_ptr<FIFOQueue_t>          FIFO_toIPU;
-	std::shared_ptr<FIFOQueue_t>          FIFO_SIF0;
-	std::shared_ptr<FIFOQueue_t>          FIFO_SIF1;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_VIF0;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_VIF1;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_GIF;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_fromIPU;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_toIPU;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_SIF0;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_SIF1;
 	std::shared_ptr<SBUSFIFOQueue_SIF2_t> FIFO_SIF2;
-	std::shared_ptr<FIFOQueue_t>          FIFO_DEBUG;    // DEBUG / NULL FIFO queue.
+	std::shared_ptr<FIFOQueue32_t>          FIFO_DEBUG;    // DEBUG / NULL FIFO queue.
 };
 

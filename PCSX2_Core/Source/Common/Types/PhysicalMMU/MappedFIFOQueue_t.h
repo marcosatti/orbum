@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMapped_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
 /*
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
@@ -13,7 +13,7 @@ Only read/writeWord and Qword is allowed on non-zero storage indexes - all other
 class MappedFIFOQueue_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedFIFOQueue_t(const u32& physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	explicit MappedFIFOQueue_t(const u32& physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 	virtual ~MappedFIFOQueue_t();
 
 	u8 readByte(const Context_t& context, size_t storageIndex) override;
@@ -41,5 +41,5 @@ private:
 	/*
 	The underlying FIFO queue this class maps to.
 	*/
-	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
+	std::shared_ptr<FIFOQueue32_t> mFIFOQueue;
 };

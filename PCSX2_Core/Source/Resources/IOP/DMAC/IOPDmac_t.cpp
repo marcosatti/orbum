@@ -9,7 +9,7 @@ IOPDmac_t::IOPDmac_t() :
 	// Channels (defined on post resources initalisation).
 	CHANNEL_fromMDEC(nullptr),
 	CHANNEL_toMDEC(nullptr),
-	CHANNEL_GPU(nullptr),
+	CHANNEL_SIF2(nullptr),
 	CHANNEL_CDROM(nullptr),
 	CHANNEL_SPU2c1(nullptr),
 	CHANNEL_PIO(nullptr),

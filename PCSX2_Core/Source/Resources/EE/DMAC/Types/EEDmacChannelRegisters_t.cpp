@@ -2,6 +2,9 @@
 
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
 
+using LogicalMode_t = EEDmacChannelTable::LogicalMode_t;
+using Direction_t = EEDmacChannelTable::Direction_t;
+
 EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic) :
 	BitfieldRegister32_t(mnemonic, false, false),
 	mTagExit(false),
@@ -119,48 +122,36 @@ EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char*
 
 void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
+	EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
+
 	// Only bother if its for the STR bit.
 	if (fieldIndex == Fields::STR)
 	{
-		auto oldSTR = getFieldValue(Fields::STR);
-		EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
-		auto newSTR = getFieldValue(Fields::STR);
+		auto start = getFieldValue(Fields::STR);
+		auto direction = getDirection();
 
-		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-		if (oldSTR ^ newSTR)
-		{
-			if (newSTR > 0)
-				handleSBUSUpdateStart(); // Starting.
-			else
-				handleSBUSUpdateFinish(); // Stopping.
-		}
-	}
-	else
-	{
-		EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
+		// Trigger update based on direction and if we are starting or stopping.
+		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		if (start > 0 && direction == Direction_t::TO)
+			throw std::runtime_error("EE SIF0 channel tried to start in the TO direction! Not possible.");
+		else if (start == 0 && direction == Direction_t::FROM)
+			handleSBUSUpdateFinish();
 	}
 }
 
 void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
-	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
-	auto newSTR = getFieldValue(Fields::STR);
 
-	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-	if (oldSTR ^ newSTR)
-	{
-		if (newSTR > 0)
-			handleSBUSUpdateStart(); // Starting.
-		else
-			handleSBUSUpdateFinish(); // Stopping.
-	}
-}
+	auto start = getFieldValue(Fields::STR);
+	auto direction = getDirection();
 
-void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart() const
-{
-	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x2000);
+	// Trigger update based on direction and if we are starting or stopping.
+	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	if (start > 0 && direction == Direction_t::TO)
+		throw std::runtime_error("EE SIF0 channel tried to start in the TO direction! Not possible.");
+	else if (start == 0 && direction == Direction_t::FROM)
+		handleSBUSUpdateFinish();
 }
 
 void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish() const
@@ -178,55 +169,42 @@ EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char*
 
 void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
+	EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
+
 	// Only bother if its for the STR bit.
 	if (fieldIndex == Fields::STR)
 	{
-		auto oldSTR = getFieldValue(Fields::STR);
-		EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
-		auto newSTR = getFieldValue(Fields::STR);
+		auto start = getFieldValue(Fields::STR);
+		auto direction = getDirection();
 
-		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-		if (oldSTR ^ newSTR)
-		{
-			if (newSTR > 0)
-				handleSBUSUpdateStart(); // Starting.
-			else
-				handleSBUSUpdateFinish(); // Stopping.
-		}
-	}
-	else
-	{
-		EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
+		// Trigger update based on direction and if we are starting or stopping.
+		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		if (start > 0 && direction == Direction_t::TO)
+			handleSBUSUpdateStart();
+		else if (start == 0 && direction == Direction_t::FROM)
+			throw std::runtime_error("EE SIF1 channel tried to start in the FROM direction! Not possible.");
 	}
 }
 
 void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
-	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
-	auto newSTR = getFieldValue(Fields::STR);
 
-	// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-	if (oldSTR ^ newSTR)
-	{
-		if (newSTR > 0)
-			handleSBUSUpdateStart(); // Starting.
-		else
-			handleSBUSUpdateFinish(); // Stopping.
-	}
+	auto start = getFieldValue(Fields::STR);
+	auto direction = getDirection();
+
+	// Trigger update based on direction and if we are starting or stopping.
+	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	if (start > 0 && direction == Direction_t::TO)
+		handleSBUSUpdateStart();
+	else if (start == 0 && direction == Direction_t::FROM)
+		throw std::runtime_error("EE SIF1 channel tried to start in the FROM direction! Not possible.");
 }
 
 void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart() const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
 	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x4000);
-}
-
-void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish() const
-{
-	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x40));
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x4000));
 }
 
 EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -237,42 +215,36 @@ EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char*
 
 void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
 {
+	EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+
 	// Only bother if its for the STR bit.
 	if (fieldIndex == Fields::STR)
 	{
-		auto oldSTR = getFieldValue(Fields::STR);
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
-		auto newSTR = getFieldValue(Fields::STR);
+		auto str = getFieldValue(Fields::STR);
+		auto direction = getDirection();
 
-		// Trigger update if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-		if (oldSTR ^ newSTR)
-		{
-			if (newSTR > 0)
-				handleSBUSUpdateStart(); // Starting.
-			else
-				handleSBUSUpdateFinish(); // Stopping.
-		}
-	}
-	else
-	{
-		EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+		// Trigger update based on direction and if we are starting or stopping.
+		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		if (str > 0 && direction == Direction_t::TO)
+			handleSBUSUpdateStart();
+		else if (str == 0 && direction == Direction_t::FROM)
+			handleSBUSUpdateFinish();
 	}
 }
 
 void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 value)
 {
-	auto oldSTR = getFieldValue(Fields::STR);
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
-	auto newSTR = getFieldValue(Fields::STR);
+	
+	auto str = getFieldValue(Fields::STR);
+	auto direction = getDirection();
 
-	// Trigger update only if (stopped -> started) or (started -> stopped). We can use XOR to check this.
-	if (oldSTR ^ newSTR)
-	{
-		if (newSTR > 0)
-			handleSBUSUpdateStart(); // Starting.
-		else
-			handleSBUSUpdateFinish(); // Stopping.
-	}
+	// Trigger update based on direction and if we are starting or stopping.
+	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	if (str > 0 && direction == Direction_t::TO)
+		handleSBUSUpdateStart();
+	else if (str == 0 && direction == Direction_t::FROM)
+		handleSBUSUpdateFinish();
 }
 
 void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart() const

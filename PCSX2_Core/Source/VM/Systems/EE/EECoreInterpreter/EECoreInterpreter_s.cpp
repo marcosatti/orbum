@@ -60,7 +60,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
-	static u32 DEBUG_PC_BREAKPOINT = 0x0;
+	static u32 DEBUG_PC_BREAKPOINT = 0x82430;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.

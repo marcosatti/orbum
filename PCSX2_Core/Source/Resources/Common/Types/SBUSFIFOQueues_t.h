@@ -3,14 +3,14 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
 class SBUSRegister_F300_t;
 
 /*
 A custom FIFO for the SIF2 DMA interface to trigger updates to the Common->SBUS_REGISTER_F300 (magic values).
 */
-class SBUSFIFOQueue_SIF2_t : public FIFOQueue_t
+class SBUSFIFOQueue_SIF2_t : public FIFOQueue32_t
 {
 public:
 	explicit SBUSFIFOQueue_SIF2_t(const size_t & maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300);

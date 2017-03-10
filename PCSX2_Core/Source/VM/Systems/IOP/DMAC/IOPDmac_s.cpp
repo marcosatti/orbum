@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
@@ -233,9 +233,12 @@ int IOPDmac_s::transferData() const
 	// Transfer data to or from the FIFO queue.
 	if (direction == Direction_t::FROM)
 	{
-		// Check if channel does not have data ready - need to try again next cycle.
-		if (mChannel->mFIFOQueue->isEmpty())
+		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
+		if (mChannel->mFIFOQueue->getCurrentSize() < 1)
+		{
+			log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return 0;
+		}
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
 		writeDataMemory(physicalAddress, packet);
@@ -244,9 +247,12 @@ int IOPDmac_s::transferData() const
 	}
 	else if (direction == Direction_t::TO)
 	{
-		// Check if channel is full - need to try again next cycle.
-		if (mChannel->mFIFOQueue->isFull())
+		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
+		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - 1))
+		{
+			log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return 0;
+		}
 
 		u32 packet = readDataMemory(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
@@ -314,11 +320,15 @@ void IOPDmac_s::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
 
 bool IOPDmac_s::readChainSourceTag()
 {
-	// Check for the EE tag transfer option (CHCR bit 8 aka "chopping enable" set), and return early if there is no space in the FIFO available.
+	// Check for space in the FIFO queue, which depends on if the EE tag transfer option is on (CHCR bit 8 aka "chopping enable" set). 
+	// Note: unsure if this is needed, see below.
 	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
-		if (mChannel->mFIFOQueue->isFull())
+		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+		{
+			//log(Warning, "IOP DMAC tried to write EE tag (u128) to FIFO queue (%s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return false;
+		}
 	}
 
 	// Read tag (2 x 32-bits) from TADR, and increment.
@@ -361,9 +371,23 @@ bool IOPDmac_s::readChainSourceTag()
 
 bool IOPDmac_s::readChainDestTag()
 {
-	// Check first if there is data available.
-	if (mChannel->mFIFOQueue->isEmpty())
-		return false;
+	// Check first if there is tag data available, depending on if transfer EE tag is on or not.
+	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
+	{
+		if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+		{
+			//log(Warning, "IOP DMAC tried to read tag (IOP + EE, u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			return false;
+		}
+	}
+	else
+	{
+		if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_DWORD)
+		{
+			//log(Warning, "IOP DMAC tried to read tag (IOP, u64) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			return false;
+		}
+	}
 
 	// Read tag (2 x 32-bits) from channel FIFO.
 	const u32 tag0 = mChannel->mFIFOQueue->readWord(RAW);

@@ -30,7 +30,7 @@ public:
 	{
 		{ "fromMDEC" },
 		{ "toMDEC"   },
-		{ "GPU"      },
+		{ "SIF2/GPU" },
 		{ "CDROM"    },
 		{ "SPU2c1"   },
 		{ "PIO"      },

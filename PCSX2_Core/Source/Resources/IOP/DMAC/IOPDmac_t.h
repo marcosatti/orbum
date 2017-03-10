@@ -8,7 +8,7 @@ class BitfieldRegister32_t;
 class IOPDmacChannel_t;
 class IOPDmacChannel_fromMDEC_t;
 class IOPDmacChannel_toMDEC_t;
-class IOPDmacChannel_GPU_t;
+class IOPDmacChannel_SIF2_t;
 class IOPDmacChannel_CDROM_t;
 class IOPDmacChannel_SPU2c1_t;
 class IOPDmacChannel_PIO_t;
@@ -39,7 +39,7 @@ public:
 	*/
 	std::shared_ptr<IOPDmacChannel_fromMDEC_t> CHANNEL_fromMDEC;
 	std::shared_ptr<IOPDmacChannel_toMDEC_t>   CHANNEL_toMDEC;
-	std::shared_ptr<IOPDmacChannel_GPU_t>      CHANNEL_GPU;
+	std::shared_ptr<IOPDmacChannel_SIF2_t>     CHANNEL_SIF2;
 	std::shared_ptr<IOPDmacChannel_CDROM_t>    CHANNEL_CDROM;
 	std::shared_ptr<IOPDmacChannel_SPU2c1_t>   CHANNEL_SPU2c1;
 	std::shared_ptr<IOPDmacChannel_PIO_t>      CHANNEL_PIO;

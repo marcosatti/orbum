@@ -329,7 +329,7 @@
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Types\Context_t.h" />
     <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
-    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.h" />
     <ClInclude Include="Source\Common\Types\MIPSCoprocessor\MIPSOperatingContext_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.h" />
@@ -466,7 +466,7 @@
     <ClCompile Include="Source\Common\Tables\EECoreSyscallTable\EECoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable\IOPDmacChannelTable.cpp" />
-    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable\VIFcodeInstructionTable.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />

@@ -16,7 +16,7 @@ public:
 
 /*
 SBUS_MSFLG (F220) register.
-Write sNOT AND (clears) or OR with the previous value.
+Writes NOT AND (clears) or OR with the previous value.
 */
 class SBUSRegister_MSFLG_t : public Register32_t
 {

@@ -434,21 +434,21 @@ void Resources_t::postInit_IOP_DMAC() const
 {
 	IOP->DMAC->CHANNEL_fromMDEC = std::make_shared<IOPDmacChannel_fromMDEC_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_toMDEC = std::make_shared<IOPDmacChannel_toMDEC_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_GPU = std::make_shared<IOPDmacChannel_GPU_t>(Common->FIFO_DEBUG);
+	IOP->DMAC->CHANNEL_SIF2 = std::make_shared<IOPDmacChannel_SIF2_t>(Common->FIFO_SIF2, Common->SBUS_F240);
 	IOP->DMAC->CHANNEL_CDROM = std::make_shared<IOPDmacChannel_CDROM_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_SPU2c1 = std::make_shared<IOPDmacChannel_SPU2c1_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_PIO = std::make_shared<IOPDmacChannel_PIO_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_OTClear = std::make_shared<IOPDmacChannel_OTClear_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_SPU2c2 = std::make_shared<IOPDmacChannel_SPU2c2_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_DEV9 = std::make_shared<IOPDmacChannel_DEV9_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_SIF0 = std::make_shared<IOPDmacChannel_SIF0_t>(Common->FIFO_SIF0);
-	IOP->DMAC->CHANNEL_SIF1 = std::make_shared<IOPDmacChannel_SIF1_t>(Common->FIFO_SIF1);
+	IOP->DMAC->CHANNEL_SIF0 = std::make_shared<IOPDmacChannel_SIF0_t>(Common->FIFO_SIF0, Common->SBUS_F240);
+	IOP->DMAC->CHANNEL_SIF1 = std::make_shared<IOPDmacChannel_SIF1_t>(Common->FIFO_SIF1, Common->SBUS_F240);
 	IOP->DMAC->CHANNEL_fromSIO2 = std::make_shared<IOPDmacChannel_fromSIO2_t>(Common->FIFO_DEBUG);
 	IOP->DMAC->CHANNEL_toSIO2 = std::make_shared<IOPDmacChannel_toSIO2_t>(Common->FIFO_DEBUG);
 
 	IOP->DMAC->CHANNELS[0] = IOP->DMAC->CHANNEL_fromMDEC;
 	IOP->DMAC->CHANNELS[1] = IOP->DMAC->CHANNEL_toMDEC;
-	IOP->DMAC->CHANNELS[2] = IOP->DMAC->CHANNEL_GPU;
+	IOP->DMAC->CHANNELS[2] = IOP->DMAC->CHANNEL_SIF2;
 	IOP->DMAC->CHANNELS[3] = IOP->DMAC->CHANNEL_CDROM;
 	IOP->DMAC->CHANNELS[4] = IOP->DMAC->CHANNEL_SPU2c1;
 	IOP->DMAC->CHANNELS[5] = IOP->DMAC->CHANNEL_PIO;
@@ -517,9 +517,9 @@ void Resources_t::postInit_IOP() const
 			IOP->PhysicalMMU->mapObject(0x1F801090, IOP->DMAC->CHANNEL_toMDEC->MADR);
 			IOP->PhysicalMMU->mapObject(0x1F801094, IOP->DMAC->CHANNEL_toMDEC->BCR);
 			IOP->PhysicalMMU->mapObject(0x1F801098, IOP->DMAC->CHANNEL_toMDEC->CHCR);
-			IOP->PhysicalMMU->mapObject(0x1F8010A0, IOP->DMAC->CHANNEL_GPU->MADR);
-			IOP->PhysicalMMU->mapObject(0x1F8010A4, IOP->DMAC->CHANNEL_GPU->BCR);
-			IOP->PhysicalMMU->mapObject(0x1F8010A8, IOP->DMAC->CHANNEL_GPU->CHCR);
+			IOP->PhysicalMMU->mapObject(0x1F8010A0, IOP->DMAC->CHANNEL_SIF2->MADR);
+			IOP->PhysicalMMU->mapObject(0x1F8010A4, IOP->DMAC->CHANNEL_SIF2->BCR);
+			IOP->PhysicalMMU->mapObject(0x1F8010A8, IOP->DMAC->CHANNEL_SIF2->CHCR);
 			IOP->PhysicalMMU->mapObject(0x1F8010B0, IOP->DMAC->CHANNEL_CDROM->MADR);
 			IOP->PhysicalMMU->mapObject(0x1F8010B4, IOP->DMAC->CHANNEL_CDROM->BCR);
 			IOP->PhysicalMMU->mapObject(0x1F8010B8, IOP->DMAC->CHANNEL_CDROM->CHCR);
