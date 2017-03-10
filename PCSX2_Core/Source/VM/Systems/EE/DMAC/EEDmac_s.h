@@ -54,17 +54,17 @@ private:
 	/*
 	Do a normal logical mode transfer through the specified DMA channel.
 	*/
-	void transferNormal();
+	bool transferNormal();
 
 	/*
 	Do a chain logical mode transfer through the specified DMA channel.
 	*/
-	void transferChain();
+	bool transferChain();
 
 	/*
 	Do a interleaved logical mode transfer through the specified DMA channel.
 	*/
-	void transferInterleaved();
+	bool transferInterleaved();
 
 	///////////////////////////
 	// DMAC Helper Functions //
@@ -81,7 +81,7 @@ private:
 	Returns the number of data units transfered.
 	On the condition that the channel FIFO is empty (source) or full (drain), returns 0.
 	*/
-	u32 transferData() const;
+	int transferData() const;
 
 	/*
 	Sets the DMAC and channel state for suspend conditions.

@@ -44,17 +44,17 @@ private:
 	/*
 	Do a normal/block logical mode transfer through the specified DMA channel.
 	*/
-	void transferNormalBurst();
+	bool transferNormalBurst();
 
 	/*
 	Do a normal/slice logical mode transfer through the specified DMA channel.
 	*/
-	void transferNormalSlice();
+	bool transferNormalSlice();
 
 	/*
 	Do a chain logical mode transfer through the specified DMA channel.
 	*/
-	void transferChain();
+	bool transferChain();
 
 	///////////////////////////
 	// DMAC Helper Functions //

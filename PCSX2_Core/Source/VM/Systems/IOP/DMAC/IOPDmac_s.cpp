@@ -51,22 +51,26 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			// Check if channel is enabled for transfer (both from PCR and the CHCR).
 			if (isChannelEnabled())
 			{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-				// A channel was enabled for transfer - do not skip any ticks.
-				workDone = true;
-#endif
 				switch (mChannel->CHCR->getLogicalMode())
 				{
 				case LogicalMode_t::NORMAL_BURST:
 				{
 					// Normal/burst mode.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferNormalBurst();
+#else
 					transferNormalBurst();
+#endif
 					break;
 				}
 				case LogicalMode_t::NORMAL_SLICE:
 				{
 					// Normal/slice mode.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferNormalSlice();
+#else
 					transferNormalSlice();
+#endif
 					break;
 				}
 				case LogicalMode_t::LINKEDLIST:
@@ -77,7 +81,11 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 				case LogicalMode_t::CHAIN:
 				{
 					// Chain mode (listed as undefined in nocash PSX docs), based of wisi's docs.
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferChain();
+#else
 					transferChain();
+#endif
 					break;
 				}
 				default:
@@ -103,29 +111,37 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 #endif
 }
 
-void IOPDmac_s::transferNormalBurst()
+bool IOPDmac_s::transferNormalBurst()
 {
 	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
-	if (!transferData())
-		return;
+	int count = transferData();
+	if (count == 0)
+		return false;
 
 	// Check if there is no more data to process (check BS), in which case stop transferring and update status.
 	if (mChannel->BCR->isFinished(false))
 		setStateSuspended();
+
+	// Transfer successful, done for this cycle.
+	return true;
 }
 
-void IOPDmac_s::transferNormalSlice()
+bool IOPDmac_s::transferNormalSlice()
 {
 	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
-	if (!transferData())
-		return;
+	int count = transferData();
+	if (count == 0)
+		return false;
 
 	// Check if there is no more data to process (check BS and BA), in which case stop transferring and update status.
 	if (mChannel->BCR->isFinished(true))
 		setStateSuspended();
+	
+	// Transfer successful, done for this cycle.
+	return true;
 }
 
-void IOPDmac_s::transferChain()
+bool IOPDmac_s::transferChain()
 {
 	// Check the transfer size, make sure that size > 0 for a transfer to occur (otherwise read a tag). 
 	// TODO: Chain mode has its own transfer length counter? Not sure how this is meant to be counted through BCR register. See wisi's docs later..
@@ -133,8 +149,8 @@ void IOPDmac_s::transferChain()
 	{
 		// Transfer a data unit (32-bits). If no data was transfered, try again next cycle. 
 		int count = transferData();
-		if (!count)
-			return;
+		if (count == 0)
+			return false;
 
 		// Decrement the chain mode transfer length (as we are not using BCR).
 		mChannel->CHCR->mTagTransferLength -= count;
@@ -154,6 +170,9 @@ void IOPDmac_s::transferChain()
 			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
 			mChannel->CHCR->resetChainState();
 		}
+
+		// Transfer successful, done for this cycle.
+		return true;
 	}
 	else
 	{
@@ -165,7 +184,7 @@ void IOPDmac_s::transferChain()
 		{
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainSourceTag())
-				return;
+				return false;
 			
 			break;
 		}
@@ -173,7 +192,7 @@ void IOPDmac_s::transferChain()
 		{
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainDestTag())
-				return;
+				return false;
 			
 			break;
 		}
@@ -185,6 +204,9 @@ void IOPDmac_s::transferChain()
 
 		// Set the IRQ flag if the DMAtag.IRQ bit is set.
 		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
+
+		// Chain mode setup was successful, done for this cycle.
+		return true;
 	}
 }
 
@@ -308,7 +330,7 @@ bool IOPDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag.setValue(tag0, tag1);
 
-	log(Debug, "IOP tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1= 0x%08X, XFER_EE_TAG = %d.", mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+	log(Debug, "IOP tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set the tag transfer properties.

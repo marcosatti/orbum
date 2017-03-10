@@ -52,25 +52,33 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			// Check if channel is enabled for transfer.
 			if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::STR) > 0)
 			{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-				// A channel was enabled for transfer - do not skip any ticks.
-				workDone = true;
-#endif
 				switch (mChannel->CHCR->getLogicalMode())
 				{
 				case LogicalMode_t::NORMAL:
 				{
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferNormal();
+#else
 					transferNormal();
+#endif
 					break;
 				}
 				case LogicalMode_t::CHAIN:
 				{
-					transferChain();       
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferChain();
+#else
+					transferChain();
+#endif   
 					break;
 				}
 				case LogicalMode_t::INTERLEAVED:
 				{
-					transferInterleaved(); 
+#if ACCURACY_SKIP_TICKS_ON_NO_WORK
+					workDone |= transferInterleaved();
+#else
+					transferInterleaved();
+#endif
 					break;
 				}
 				default:
@@ -96,7 +104,7 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 #endif
 }
 
-u32 EEDmac_s::transferData() const
+int EEDmac_s::transferData() const
 {
 	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
 	Direction_t direction = mChannel->CHCR->getDirection();
@@ -198,25 +206,26 @@ void EEDmac_s::setStateFailedTransfer() const
 	throw std::runtime_error("failed transfer not implemented.");
 }
 
-void EEDmac_s::transferNormal()
+bool EEDmac_s::transferNormal()
 {
 	// Check the QWC register, make sure that size > 0 in order to start transfer.
 	if (mChannel->QWC->readWord(RAW) == 0)
 	{
 		setStateFailedTransfer();
-		return;
+		return false;
 	}
 
 	// Check for drain stall control conditions, and skip cycle if the data is not ready (when the next slice is not ready).
 	if (isDrainStallControlOn() && isDrainStallControlWaiting())
 	{
 		setDMACStallControlSIS();
-		return;
+		return false;
 	}
 
 	// Transfer a data unit (128-bits). If no data was transfered, try again next cycle.
-	if (!transferData())
-		return;
+	int count = transferData();
+	if (count == 0)
+		return false;
 
 	// Check for source stall control conditions, and update D_STADR if required.
 	if (isSourceStallControlOn())
@@ -225,9 +234,12 @@ void EEDmac_s::transferNormal()
 	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
 	if (mChannel->QWC->readWord(RAW) == 0)
 		setStateSuspended();
+
+	// Transfer successful, done for this cycle.
+	return true;
 }
 
-void EEDmac_s::transferChain()
+bool EEDmac_s::transferChain()
 {
 	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
 	if (mChannel->QWC->readWord(RAW) > 0)
@@ -236,12 +248,13 @@ void EEDmac_s::transferChain()
 		if (isDrainStallControlOn() && isDrainStallControlWaiting() && mChannel->CHCR->mTagStallControl)
 		{
 			setDMACStallControlSIS();
-			return;
+			return false;
 		}
 
 		// Transfer a data unit (128-bits). If no data was transfered, try again next cycle.
-		if (!transferData())
-			return;
+		int count = transferData();
+		if (count == 0)
+			return false;
 
 		// Check for source stall control conditions (including if we are in "cnts" tag id), and update D_STADR if required.
 		if (isSourceStallControlOn() && mChannel->CHCR->mTagStallControl)
@@ -264,6 +277,9 @@ void EEDmac_s::transferChain()
 			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
 			mChannel->CHCR->resetChainState();
 		}
+		
+		// Transfer successful, done for this cycle.
+		return true;
 	}
 	else
 	{
@@ -275,7 +291,7 @@ void EEDmac_s::transferChain()
 		{
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainSourceTag())
-				return;
+				return false;
 
 			// Execute the tag handler
 			(this->*SRC_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
@@ -285,7 +301,7 @@ void EEDmac_s::transferChain()
 		{
 			// Read in a tag, exit early if we need to wait for data.
 			if (!readChainDestTag())
-				return;
+				return false;
 
 			// Execute the tag handler
 			(this->*DST_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
@@ -302,10 +318,13 @@ void EEDmac_s::transferChain()
 
 		// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
 		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.getValue() >> 16) & 0xFFFF);
+
+		// Transfer successful, done for this cycle.
+		return true;
 	}
 }
 
-void EEDmac_s::transferInterleaved()
+bool EEDmac_s::transferInterleaved()
 {
 	throw std::runtime_error("EE DMAC interleave mode not fully implemented (fix me up).");
 
@@ -455,7 +474,7 @@ bool EEDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the u128 read from memory (lower 64-bits).
 	mDMAtag.setValue(data.lo);
 	
-	log(Debug, "EE tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1= 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	log(Debug, "EE tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
@@ -480,7 +499,7 @@ bool EEDmac_s::readChainDestTag()
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);
 
-	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1= 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
