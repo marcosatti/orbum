@@ -236,28 +236,28 @@ int IOPDmac_s::transferData() const
 		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() < 1)
 		{
-			log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			//log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return 0;
 		}
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
 		writeDataMemory(physicalAddress, packet);
 
-		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
+		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
 	}
 	else if (direction == Direction_t::TO)
 	{
 		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - 1))
 		{
-			log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			//log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 			return 0;
 		}
 
 		u32 packet = readDataMemory(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
 
-		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
+		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
 	}
 	else
 	{
@@ -331,16 +331,16 @@ bool IOPDmac_s::readChainSourceTag()
 		}
 	}
 
-	// Read tag (2 x 32-bits) from TADR, and increment.
+	// Read tag (2 x 32-bits) from TADR.
 	const u32 TADR = mChannel->TADR->readWord(RAW);
 	const u32 tag0 = readDataMemory(TADR);
 	const u32 tag1 = readDataMemory(TADR + 0x4);
-	mChannel->TADR->increment(0x8);
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag.setValue(tag0, tag1);
 
-	log(Debug, "IOP tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", 
+		mChannel->getChannelProperties()->Mnemonic, TADR, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set the tag transfer properties.
@@ -359,12 +359,18 @@ bool IOPDmac_s::readChainSourceTag()
 		// Read EE chain tag (LSB 64-bits) from TADR and increment
 		const u32 tag2 = readDataMemory(TADR + 0x8);
 		const u32 tag3 = readDataMemory(TADR + 0xC);
-		mChannel->TADR->increment(0x8);
 
 		// Pack tag words into a u128 for sending. The MSB 64-bits are filled with 0's. Then write to the channel FIFO.
 		u128 EEtag = u128(tag2, tag3, 0, 0);
 		mChannel->mFIFOQueue->writeQword(RAW, EEtag);
 	}
+	else
+	{
+		log(Warning, "IOP source chain mode used without XFER_EE_TAG - please verify what is meant to happen with TADR (inc. by 0x10 by default)!");
+	}
+	
+	// Increment TADR.
+	mChannel->TADR->increment(0x10);
 
 	return true;
 }
@@ -396,7 +402,8 @@ bool IOPDmac_s::readChainDestTag()
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag.setValue(tag0, tag1);
 	
-	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", 
+		mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set the tag transfer properties.

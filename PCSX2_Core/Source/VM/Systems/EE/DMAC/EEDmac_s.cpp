@@ -129,16 +129,16 @@ int EEDmac_s::transferData() const
 			u128 packet = readDataMemory(SPRPhysicalAddressOffset, true);
 			writeDataMemory(PhysicalAddressOffset, false, packet);
 
-			log(Debug, "EE DMAC Read u128 channel %s, SPRAddr = 0x%08llX, valueLo = 0x%016llX, valueHi = 0x%016X -> MemAddr = 0x%08X", 
-				mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.lo, packet.hi, PhysicalAddressOffset);
+			//log(Debug, "EE DMAC Read u128 channel %s, SPRAddr = 0x%08llX, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X -> MemAddr = 0x%08X", 
+			//	mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.UW[0], packet.UW[1], packet.UW[2], packet.UW[3], PhysicalAddressOffset);
 		}
 		else if (direction == Direction_t::TO)
 		{
 			u128 packet = readDataMemory(PhysicalAddressOffset, false);
 			writeDataMemory(SPRPhysicalAddressOffset, true, packet);
 
-			log(Debug, "EE DMAC Write u128 channel %s, SPRAddr = 0x%08llX, valueLo = 0x%016llX, valueHi = 0x%016X <- MemAddr = 0x%08X",
-				mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.lo, packet.hi, PhysicalAddressOffset);
+			//log(Debug, "EE DMAC Write u128 channel %s, SPRAddr = 0x%08llX, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X <- MemAddr = 0x%08X",
+			//	mChannel->getChannelProperties()->Mnemonic, SPRPhysicalAddressOffset, packet.UW[0], packet.UW[1], packet.UW[2], packet.UW[3], PhysicalAddressOffset);
 		}
 		else
 		{
@@ -160,30 +160,30 @@ int EEDmac_s::transferData() const
 			// Check if channel does not have data ready (at least 4 x u32's) - need to try again next cycle.
 			if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
 			{
-				log(Warning, "EE DMAC tried to read u128 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+				//log(Warning, "EE DMAC tried to read u128 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 				return 0;
 			}
 
 			u128 packet = mChannel->mFIFOQueue->readQword(RAW);
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 
-			log(Debug, "EE DMAC Read u128 channel %s, valueLo = 0x%016llX, valueHi = 0x%016llX -> MemAddr = 0x%08X", 
-				mChannel->getChannelProperties()->Mnemonic, packet.lo, packet.hi, PhysicalAddressOffset);
+			//log(Debug, "EE DMAC Read u128 channel %s, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X -> MemAddr = 0x%08X", 
+			//	mChannel->getChannelProperties()->Mnemonic, packet.UW[0], packet.UW[1], packet.UW[2], packet.UW[3], PhysicalAddressOffset);
 		}
 		else if (direction == Direction_t::TO)
 		{
 			// Check if channel is full (we need at least 4 x u32 spaces) - need to try again next cycle.
 			if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 			{
-				log(Warning, "EE DMAC tried to write u128 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+				//log(Warning, "EE DMAC tried to write u128 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
 				return 0;
 			}
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
 			mChannel->mFIFOQueue->writeQword(RAW, packet);
 
-			log(Debug, "EE DMAC Write u128 channel %s, valueLo = 0x%016llX, valueHi = 0x%016llX <- MemAddr = 0x%08X",
-				mChannel->getChannelProperties()->Mnemonic, packet.lo, packet.hi, PhysicalAddressOffset);
+			//log(Debug, "EE DMAC Write u128 channel %s, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X <- MemAddr = 0x%08X",
+			//	mChannel->getChannelProperties()->Mnemonic, packet.UW[0], packet.UW[1], packet.UW[2], packet.UW[3], PhysicalAddressOffset);
 		}
 		else
 		{
@@ -483,7 +483,8 @@ bool EEDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the u128 read from memory (lower 64-bits).
 	mDMAtag.setValue(data.lo);
 	
-	log(Debug, "EE tag (source chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
+		mChannel->getChannelProperties()->Mnemonic, mChannel->TADR->readWord(RAW), data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
@@ -511,7 +512,8 @@ bool EEDmac_s::readChainDestTag()
 	// Set mDMAtag based upon the u128 read from the channel.
 	mDMAtag.setValue(data.lo);
 
-	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
+		mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.

@@ -10,7 +10,7 @@
 
 void EEDmac_s::CHAIN_TAGID_UNKNOWN()
 {
-	throw std::runtime_error("DMAC chain mode called invalid tag ID");
+	throw std::runtime_error("EE DMAC chain mode called invalid tag ID");
 }
 
 void EEDmac_s::CHAIN_SRC_CNT()
@@ -22,9 +22,9 @@ void EEDmac_s::CHAIN_SRC_CNT()
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
 
-	// Calculate where the next tag will be.
+	// Calculate where the next tag will be. SPR flag unchanged within TADR register.
 	u32 nextTagAddr = mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + (mDMAtag.getQWC() + 1) * 0x10;
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr); // SPR flag unchanged within TADR register.
+	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr);
 }
 
 void EEDmac_s::CHAIN_SRC_NEXT()
@@ -50,8 +50,8 @@ void EEDmac_s::CHAIN_SRC_REF()
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 
-	// Set next qword as tag.
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
+	// Set next qword as tag. SPR flag unchanged within TADR register.
+	mChannel->TADR->increment(); 
 }
 
 void EEDmac_s::CHAIN_SRC_REFS()
@@ -67,7 +67,7 @@ void EEDmac_s::CHAIN_SRC_REFS()
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 
 	// Set next qword as tag.
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10); // SPR flag unchanged within TADR register.
+	mChannel->TADR->increment(); // SPR flag unchanged within TADR register.
 }
 
 void EEDmac_s::CHAIN_SRC_REFE()
@@ -76,6 +76,11 @@ void EEDmac_s::CHAIN_SRC_REFE()
 	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+
+	// Not documented: REFE requires that TADR be incremented after ending. See PCSX2's "Hw.cpp".
+	mChannel->TADR->increment();
+
+	// Set channel exit state.
 	mChannel->CHCR->mTagExit = true;
 }
 
@@ -93,7 +98,7 @@ void EEDmac_s::CHAIN_SRC_CALL()
 	if (ASP >= 2)
 	{
 		mChannel->CHCR->mTagExit = true;
-		log(Warning, "EE DMAC Channel %s had chain mode stack overflow! Exiting transfer.", mChannel->getChannelProperties()->Mnemonic);
+		log(Warning, "EE DMAC Channel %s had chain mode stack overflow! Exiting transfer. TADR has been changed.", mChannel->getChannelProperties()->Mnemonic);
 	}
 	else
 	{
@@ -112,7 +117,7 @@ void EEDmac_s::CHAIN_SRC_RET()
 	if (ASP == 0)
 	{
 		mChannel->CHCR->mTagExit = true;
-		log(Warning, "EE DMAC Channel %s had chain mode stack underflow! Exiting transfer.", mChannel->getChannelProperties()->Mnemonic);
+		log(Warning, "EE DMAC Channel %s had chain mode stack underflow! Exiting transfer. TADR left unchanged.", mChannel->getChannelProperties()->Mnemonic);
 	}
 	else
 	{
@@ -133,6 +138,8 @@ void EEDmac_s::CHAIN_SRC_END()
 	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
 	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+
+	// Set channel exit state.
 	mChannel->CHCR->mTagExit = true;
 }
 

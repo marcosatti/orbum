@@ -60,7 +60,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
-	static u32 DEBUG_PC_BREAKPOINT = 0x82430;
+	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{
 		// Debug print details.
@@ -472,6 +472,13 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MM
 	// TODO: try to reduce the spaghetti code-ness of this... however the lookup process is complicated and error propogation is needed, so may not be able to do much.
 	auto& COP0 = mEECore->COP0;
 	auto& TLB = mEECore->TLB;
+
+	static u32 DEBUG_VA_BREAKPOINT = 0xFFFFFFFF;
+	if (virtualAddress == DEBUG_VA_BREAKPOINT)
+	{
+		log(Debug, "EE MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).",
+			DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(RAW), DEBUG_VA_BREAKPOINT, (access == READ) ? "READ" : "WRITE");
+	}
 
 	// Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
 	// Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.

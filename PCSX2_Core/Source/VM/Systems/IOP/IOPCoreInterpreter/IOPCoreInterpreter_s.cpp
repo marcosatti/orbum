@@ -50,7 +50,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000002C93FF;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x1000003855c8;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
@@ -230,6 +230,13 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 bool IOPCoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
 {
 	auto& COP0 = mIOPCore->COP0;
+
+	static u32 DEBUG_VA_BREAKPOINT = 0xFFFFFFFF;
+	if (virtualAddress == DEBUG_VA_BREAKPOINT)
+	{
+		log(Debug, "IOP MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).",
+			DEBUG_LOOP_COUNTER, mIOPCore->R3000->PC->readWord(RAW), DEBUG_VA_BREAKPOINT, (access == READ) ? "READ" : "WRITE");
+	}
 
 	// If in kernel mode, perform a direct translation if VA is within kernel segments.
 	auto context = COP0->getCPUOperatingContext();
