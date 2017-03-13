@@ -13,9 +13,8 @@ class IOPDmacChannel_t;
 
 /*
 The IOP DMAC system logic.
-It operates using 32-bit data units.
-Logic adapted from PCSX2 and PSX docs: http://problemkaputt.de/psx-spx.htm.
-TODO: finish documentation.
+It operates using 32-bit data units and can operate in burst, slice, linked-list or chain modes.
+Logic adapted from PCSX2, nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
 class IOPDmac_s : public VMSystem_s
 {
@@ -92,16 +91,19 @@ private:
 	//////////////////////////////////////////
 
 	/*
-	Reads a qword from memory using the address given.
-	SPRAccess controls if the read is through the EE main memory or the EE Core scratchpad.
+	Reads a word from memory using the address given.
 	*/
-	u32 readDataMemory(u32 PhysicalAddressOffset) const;
+	u32 readDataMemory32(u32 PhysicalAddressOffset) const;
 
 	/*
-	Writes a qword to memory using the address given.
-	SPRAccess controls if the write is through the EE main memory or the EE Core scratchpad.
+	Writes a word to memory using the address given.
 	*/
-	void writeDataMemory(u32 PhysicalAddressOffset, u32 data) const;
+	void writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const;
+
+	/*
+	Reads a qword from memory using the address given.
+	*/
+	u128 readDataMemory128(u32 PhysicalAddressOffset) const;
 
 	/////////////////////////////////
 	// Chain Mode Helper Functions //
@@ -114,15 +116,11 @@ private:
 
 	/*
 	Sets mDMAtag to the tag from the TADR register.
-	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
-	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
 	*/
 	bool readChainSourceTag();
 
 	/*
 	Sets mDMAtag to the tag from the channel queue.
-	Also sets the CHCH.TAG field to bits 16-31 of the DMAtag read. If CHCR.TTE is set, transfers the tag.
-	Returns if it was successful (true) or not (false) - use to determine if an early exit should occur (need to wait for more data).
 	*/
 	bool readChainDestTag();
 

@@ -269,12 +269,9 @@ bool EEDmac_s::transferChain()
 		// If QWC is now 0, update the tag flags state, and check for suspend conditions.
 		if (mChannel->QWC->readWord(RAW) == 0)
 		{
-			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
+			// Check if we need to emit an interrupt due to tag (done after chain transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
 			if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TIE) > 0 && mChannel->CHCR->mTagIRQ)
-			{
-				log(Warning, "EE DMAC channel %s had tag IRQ flag set - please verify what is meant to happen!", mChannel->getChannelProperties()->Mnemonic);
 				setStateSuspended();
-			}
 
 			// Check if we need to exit based on tag flag (set by "end", "ret", etc).
 			if (mChannel->CHCR->mTagExit)
@@ -464,7 +461,7 @@ void EEDmac_s::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) c
 bool EEDmac_s::readChainSourceTag()
 {
 	// Check first if we need to transfer the tag - return false if the channel queue is full.
-	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
+	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 		{
@@ -474,24 +471,23 @@ bool EEDmac_s::readChainSourceTag()
 	}
 
 	// Read tag from TADR.
-	// Get the main memory or SPR address we are reading or writing from.
-	u128 data;
 	const u32 TADR = mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR);
 	const bool SPRFlag = (mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR) != 0);
-	data = readDataMemory(TADR, SPRFlag);
+	const u128 tag = readDataMemory(TADR, SPRFlag);
 
-	// Set mDMAtag based upon the u128 read from memory (lower 64-bits).
-	mDMAtag.setValue(data.lo);
+	// Set mDMAtag based upon the LSB 64-bits of tag.
+	mDMAtag.setValue(tag.lo);
 	
 	log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
-		mChannel->getChannelProperties()->Mnemonic, mChannel->TADR->readWord(RAW), data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+		mChannel->getChannelProperties()->Mnemonic, mChannel->TADR->readWord(RAW), tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
-	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
+	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
-		// Write the tag to the channel.
-		mChannel->mFIFOQueue->writeQword(RAW, data);
+		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
+		u128 sendTag = u128(tag.UW[2], tag.UW[3], 0, 0);
+		mChannel->mFIFOQueue->writeQword(RAW, sendTag);
 	}
 
 	return true;
@@ -506,24 +502,20 @@ bool EEDmac_s::readChainDestTag()
 		return false;
 	}
 
-	// Read tag from channel FIFO (always next to transfer data).
-	u128 data = mChannel->mFIFOQueue->readQword(RAW);
+	// Read tag from channel FIFO.
+	const u128 tag = mChannel->mFIFOQueue->readQword(RAW);
 
 	// Set mDMAtag based upon the u128 read from the channel.
-	mDMAtag.setValue(data.lo);
+	mDMAtag.setValue(tag.lo);
 
 	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, data.UW[0], data.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+		mChannel->getChannelProperties()->Mnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
-	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE))
+	if (mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
-		// Write the tag to memory (MADR) and increment.
-		const u32 MADR = mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR);
-		const bool SPRFlag = (mChannel->MADR->getFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR) != 0);
-		writeDataMemory(MADR, SPRFlag, data);
-		mChannel->MADR->increment();
+		throw std::runtime_error("EE DMAC dest chain mode TTE set but not implemented.");
 	}
 	
 	return true;

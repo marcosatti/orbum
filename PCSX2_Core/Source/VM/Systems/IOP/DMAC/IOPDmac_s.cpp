@@ -202,8 +202,12 @@ bool IOPDmac_s::transferChain()
 		}
 		}
 
-		// Set the IRQ flag if the DMAtag.IRQ bit is set.
-		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
+		// Set the tag flag properties.
+		mChannel->CHCR->mTagExit = mDMAtag.getERT() > 0;
+		mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
+
+		// Set the tag data transfer address.
+		mChannel->MADR->writeWord(RAW, mDMAtag.getADDR());
 
 		// Chain mode setup was successful, done for this cycle.
 		return true;
@@ -241,7 +245,7 @@ int IOPDmac_s::transferData() const
 		}
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
-		writeDataMemory(physicalAddress, packet);
+		writeDataMemory32(physicalAddress, packet);
 
 		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
 	}
@@ -254,7 +258,7 @@ int IOPDmac_s::transferData() const
 			return 0;
 		}
 
-		u32 packet = readDataMemory(physicalAddress);
+		u32 packet = readDataMemory32(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
 
 		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
@@ -308,20 +312,24 @@ bool IOPDmac_s::isChannelIRQEnabled() const
 	return (mDMAC->ICR1->getFieldValue(IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
 }
 
-u32 IOPDmac_s::readDataMemory(u32 PhysicalAddressOffset) const
+u32 IOPDmac_s::readDataMemory32(u32 PhysicalAddressOffset) const
 {
 	return mIOPPhysicalMMU->readWord(RAW, PhysicalAddressOffset);
 }
 
-void IOPDmac_s::writeDataMemory(u32 PhysicalAddressOffset, u32 data) const
+void IOPDmac_s::writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const
 {
 	mIOPPhysicalMMU->writeWord(RAW, PhysicalAddressOffset, data);
 }
 
+u128 IOPDmac_s::readDataMemory128(u32 PhysicalAddressOffset) const
+{
+	return mIOPPhysicalMMU->readQword(RAW, PhysicalAddressOffset);
+}
+
 bool IOPDmac_s::readChainSourceTag()
 {
-	// Check for space in the FIFO queue, which depends on if the EE tag transfer option is on (CHCR bit 8 aka "chopping enable" set). 
-	// Note: unsure if this is needed, see below.
+	// Check for space (u128) in the FIFO queue, which depends on if the tag transfer (TTE) option is on (CHCR bit 8 aka "chopping enable" set). See below.
 	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
@@ -331,111 +339,78 @@ bool IOPDmac_s::readChainSourceTag()
 		}
 	}
 
-	// Read tag (2 x 32-bits) from TADR.
+	// Get tag memory address (TADR).
 	const u32 TADR = mChannel->TADR->readWord(RAW);
-	const u32 tag0 = readDataMemory(TADR);
-	const u32 tag1 = readDataMemory(TADR + 0x4);
 
-	// Set mDMAtag based upon the first 2 words read from the channel.
+	// Read IOP tag (64-bits) from TADR.
+	const u32 tag0 = readDataMemory32(TADR);
+	const u32 tag1 = readDataMemory32(TADR + 0x4);
+
+	// Set mDMAtag.
 	mDMAtag.setValue(tag0, tag1);
 
-	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", 
+	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
 		mChannel->getChannelProperties()->Mnemonic, TADR, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
-	// Set the tag transfer properties.
-	mChannel->CHCR->mTagExit = mDMAtag.getERT() > 0;
-	mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
-	mChannel->MADR->writeWord(RAW, mDMAtag.getADDR());
-
-	// Set the transfer length.
+	// Set tag transfer length.
 	// The maximum supported length is 1MB - 16 bytes, rounded up to the nearest qword alignment (from PCSX2).
-	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2).
+	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter?
+	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
 	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
 
-	// Check for the EE tag transfer option (CHCR bit 8 aka "chopping enable" set).
+	// Check if we need to transfer the tag (CHCR bit 8 aka "chopping enable" set).
 	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
-		// Read EE chain tag (LSB 64-bits) from TADR and increment
-		const u32 tag2 = readDataMemory(TADR + 0x8);
-		const u32 tag3 = readDataMemory(TADR + 0xC);
+		// Read EE tag (64-bits) from TADR + 0x8.
+		const u32 tag2 = readDataMemory32(TADR + 0x8);
+		const u32 tag3 = readDataMemory32(TADR + 0xC);
 
-		// Pack tag words into a u128 for sending. The MSB 64-bits are filled with 0's. Then write to the channel FIFO.
-		u128 EEtag = u128(tag2, tag3, 0, 0);
-		mChannel->mFIFOQueue->writeQword(RAW, EEtag);
+		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
+		u128 sendTag = u128(tag2, tag3, 0, 0);
+		mChannel->mFIFOQueue->writeQword(RAW, sendTag);
+
+		// Increment TADR.
+		mChannel->TADR->increment(0x10);
 	}
 	else
 	{
-		log(Warning, "IOP source chain mode used without XFER_EE_TAG - please verify what is meant to happen with TADR (inc. by 0x10 by default)!");
+		// Increment TADR.
+		mChannel->TADR->increment(0x8);
 	}
-	
-	// Increment TADR.
-	mChannel->TADR->increment(0x10);
 
 	return true;
 }
 
 bool IOPDmac_s::readChainDestTag()
 {
-	// Check first if there is tag data available, depending on if transfer EE tag is on or not.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
+	// Check first if there is tag data available.
+	if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
 	{
-		if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
-		{
-			//log(Warning, "IOP DMAC tried to read tag (IOP + EE, u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
-			return false;
-		}
-	}
-	else
-	{
-		if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_DWORD)
-		{
-			//log(Warning, "IOP DMAC tried to read tag (IOP, u64) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
-			return false;
-		}
+		//log(Warning, "IOP DMAC tried to read tag (u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+		return false;
 	}
 
-	// Read tag (2 x 32-bits) from channel FIFO.
-	const u32 tag0 = mChannel->mFIFOQueue->readWord(RAW);
-	const u32 tag1 = mChannel->mFIFOQueue->readWord(RAW);
+	// Read tag (u128) from channel FIFO. Only first 2 u32's are used for the IOP.
+	const u128 tag = mChannel->mFIFOQueue->readQword(RAW);
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
-	mDMAtag.setValue(tag0, tag1);
+	mDMAtag.setValue(tag.UW[0], tag.UW[1]);
 	
-	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, XFER_EE_TAG = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
+		mChannel->getChannelProperties()->Mnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
-	// Set the tag transfer properties.
-	mChannel->CHCR->mTagExit = mDMAtag.getERT() > 0;
-	mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
-	mChannel->MADR->writeWord(RAW, mDMAtag.getADDR());
+	// Set tag transfer length.
+	// The maximum supported length is 1MB - 16 bytes.
+	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter?
+	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
+	mChannel->CHCR->mTagTransferLength = mDMAtag.getLength() & 0xFFFFC;
 
-	// Set the transfer length.
-	// The maximum supported length is 1MB - 16 bytes (from PCSX2). TODO: no qword alignment? Might not matter for the IOP side.
-	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2).
-	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
-
-	// Check for the EE tag transfer option (CHCR bit 8 aka "chopping enable" set).
-	// TODO: implement properly... I think wisi's docs meant this was only for source chain mode? Not sure. PCSX2 doesn't do this at all.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
-	{
-		// Read EE chain tag (LSB 64-bits) from channel FIFO. This is important or else the FIFO order will get messed up.
-		const u32 tag2 = mChannel->mFIFOQueue->readWord(RAW);
-		const u32 tag3 = mChannel->mFIFOQueue->readWord(RAW);
-
-		// Check first that the tag size is above 0 - dont bother doing anything (first 16 bits).
-		if ((tag2 & 0xFFFF) > 0)
-		{
-			// Pack tag words into a u128 for sending. The MSB 64-bits are filled with 0's.
-			u128 EEtag = u128(tag2, tag3, 0, 0);
-			throw std::runtime_error("IOP DMAC had chain mode (dest) with CHCR.8 set - send tag to EE not implemented.");
-		}
-		else
-		{
-			log(Warning, "IOP DMAC dest chain mode EE tag had size of zero - not sending.");
-		}
-	}
+	// TODO: look into the tag transfer enable (TTE) option (CHCR bit 8 aka "chopping enable" set).
+	//       PCSX2 does not implement anything at all, but wisi might know something. SIF1 has this bit set always. For now, left unimplemented.
+	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
+		throw std::runtime_error("IOP DMAC dest chain mode had TTE set to 0 - what is meant to happen?");
 
 	return true;
 }
