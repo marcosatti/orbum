@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <gtest/gtest_prod.h>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
@@ -37,6 +38,7 @@ public:
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
+	FRIEND_TEST(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS);
 
 	//////////////////////////
 	// Common Functionality //

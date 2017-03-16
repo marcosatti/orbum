@@ -20,17 +20,19 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Types_Test.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EECoreInstruction_Test.cpp">
+    <ClCompile Include="Source\Tests\Common\TEST_PrimativeTypes.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\VMMMUHandler_Test.cpp">
+    <ClCompile Include="Source\Tests\Common\TEST_PhysicalMMU_t.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Tests\Common\TEST_MIPSInstruction_t.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Tests\EE\TEST_EECoreInterpreter_s.cpp" />
+    <ClCompile Include="Source\Tests\IOP\TEST_IOPCoreInterpreter_s.cpp" />
   </ItemGroup>
 </Project>

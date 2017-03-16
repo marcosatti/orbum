@@ -10,16 +10,6 @@
 #include "VM/Types/VMSystem_s.h"
 
 class Resources_t;
-class VUInterpreter_s;
-class VIF_s;
-class EECoreInterpreter_s;
-class EEDmac_s;
-class EEIntc_s;
-class EETimers_s;
-class IOPCoreInterpreter_s;
-class IOPIntc_s;
-class IOPDmac_s;
-class IOPTimers_s;
 
 /*
 Entry point into all PCSX2 core emulation.
@@ -51,6 +41,9 @@ public:
 	const std::shared_ptr<Resources_t> & getResources() const;
 
 private:
+	friend class TEST_EECoreInterpreter_s;
+	friend class TEST_IOPCoreInterpreter_s;
+
 	/*
 	VM state resources.
 	*/

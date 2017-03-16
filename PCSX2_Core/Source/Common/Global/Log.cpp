@@ -17,5 +17,6 @@ void log(const LogLevel_t level, const char* format, ...)
 	va_end(args);
 
 	// Call the frontend to log the message.
-	LOG_CALLBACK_FUNCPTR(level, buffer);
+	if (LOG_CALLBACK_FUNCPTR != nullptr)
+		LOG_CALLBACK_FUNCPTR(level, buffer);
 }

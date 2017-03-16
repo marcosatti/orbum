@@ -49,7 +49,8 @@ void VM::reset()
 	log(Info, "VM resources initalised.");
 
 	// Initalise Roms.
-	mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH, 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
+	if (!mVMOptions.BOOT_ROM_PATH.empty())
+		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH, 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
 	// ROM1.
 	// ROM2.
 	// EROM.

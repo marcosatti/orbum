@@ -5,7 +5,6 @@
 /*
 Extends the MIPS instruction type with additional fields available, needed to support the VU0 (COP2) instruction lookup.
 */
-
 class EECoreInstruction_t : public MIPSInstruction_t
 {
 public:

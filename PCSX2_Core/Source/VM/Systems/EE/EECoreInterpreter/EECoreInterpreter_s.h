@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <gtest/gtest_prod.h>
 
 #include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
 #include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
@@ -43,6 +44,7 @@ public:
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
+	FRIEND_TEST(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS);
 
 	//////////////////////////
 	// Common Functionality //
