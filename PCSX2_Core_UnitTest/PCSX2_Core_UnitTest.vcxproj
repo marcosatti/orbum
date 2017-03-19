@@ -347,6 +347,7 @@
   <ItemGroup>
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\targetver.h" />
+    <ClInclude Include="Source\Util\MIPSUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Tests\Common\TEST_PhysicalMMU_t.cpp" />

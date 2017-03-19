@@ -176,20 +176,18 @@ void IOPCoreInterpreter_s::DIVU()
 
 void IOPCoreInterpreter_s::MULT()
 {
-	// (Rd, LO, HI) = SignExtend<s32>(Rs[SW] * Rt[SW])
+	// (LO, HI) = SignExtend<s32>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& LO = mIOPCore->R3000->LO;
 	auto& HI = mIOPCore->R3000->HI;
 
-	auto source1Val = static_cast<s64>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s64>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s64>(static_cast<s32>(source1Reg->readWord(IOP)));
+	auto source2Val = static_cast<s64>(static_cast<s32>(source2Reg->readWord(IOP)));
 
 	s64 result = source1Val * source2Val;
 
-	destReg->writeWord(IOP, static_cast<s32>(result & 0xFFFFFFFF));
 	LO->writeWord(IOP, static_cast<s32>(result & 0xFFFFFFFF));
 	HI->writeWord(IOP, static_cast<s32>((result >> 32) & 0xFFFFFFFF));
 }
@@ -198,7 +196,6 @@ void IOPCoreInterpreter_s::MULTU()
 {
 	// (LO, HI) = Rs[UW] * Rt[UW]
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getRRd()];
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getRRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getRRt()];
 	auto& LO = mIOPCore->R3000->LO;
@@ -209,7 +206,6 @@ void IOPCoreInterpreter_s::MULTU()
 
 	u64 result = source1Val * source2Val;
 
-	destReg->writeWord(IOP, static_cast<u32>(result & 0xFFFFFFFF));
 	LO->writeWord(IOP, static_cast<u32>(result & 0xFFFFFFFF));
 	HI->writeWord(IOP, static_cast<u32>((result >> 32) & 0xFFFFFFFF));
 }
@@ -399,7 +395,7 @@ void IOPCoreInterpreter_s::SLTIU()
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
 
 	u32 source1Val = source1Reg->readWord(IOP);
-	u32 imm = static_cast<u32>(mInstruction.getIImmU());
+	u32 imm = static_cast<u32>(static_cast<s32>(mInstruction.getIImmS()));
 
 	u32 result = (source1Val < imm) ? 1 : 0;
 

@@ -11,27 +11,13 @@
 #include <Common/Types/Registers/MIPS/PCRegister32_t.h>
 #include <Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h>
 #include <Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h>
+#include "Util/MIPSUtil.h"
 
 class TEST_IOPCoreInterpreter_s : public testing::Test
 {
 public:
 	VM * vm;
 	IOPCoreInterpreter_s * core;
-
-	u32 genRInstruction(int opcode, int s, int t, int d, int shamt, int funct)
-	{
-		return (((opcode & 0x3F) << 26) | ((s & 0x1F) << 21) | ((t & 0x1F) << 16) | ((d & 0x1F) << 11) | ((shamt & 0x1F) << 6) | ((funct & 0x3F) << 0));
-	}
-
-	u32 genIInstruction(int opcode, int s, int t, int imm)
-	{
-		return (((opcode & 0x3F) << 26) | ((s & 0x1F) << 21) | ((t & 0x1F) << 16) | ((imm & 0xFFFF) << 0));
-	}
-
-	u32 genJInstruction(int opcode, int target)
-	{
-		return (((opcode & 0x1F) << 26) | ((target & 0x3FFFFFF) << 0));
-	}
 
 	virtual void SetUp()
 	{
@@ -46,12 +32,12 @@ public:
 			false,
 			{}
 		};
-		
+
 		vm = new VM(vmOptions);
 		core = dynamic_cast<IOPCoreInterpreter_s*>(vm->mSystems[System_t::IOPCore].get());
 	}
 
-	virtual void TearDown() 
+	virtual void TearDown()
 	{
 		core = nullptr;
 		delete vm;
@@ -65,7 +51,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 
 	// ADD
 	{
-		auto inst = genRInstruction(0, 4, 5, 2, 0, 32);
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 32);
 		EXPECT_STREQ("ADD", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
@@ -76,7 +62,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 
 	// ADDI
 	{
-		auto inst = genIInstruction(8, 4, 2, -256);
+		auto inst = MIPSUtil::genIInstruction(8, 4, 2, -256);
 		EXPECT_STREQ("ADDI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
@@ -84,10 +70,32 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(5156, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
-	// ADDU (overflows)
+	// SUB
 	{
-		auto inst = genRInstruction(0, 4, 5, 2, 0, 33);
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 34);
+		EXPECT_STREQ("SUB", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 12345);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 81);
+		core->SUB();
+		EXPECT_EQ(12264, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// ADDU
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 33);
 		EXPECT_STREQ("ADDU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 7891);
+		core->SUB();
+		EXPECT_EQ(-2479, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SUBU
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 35);
+		EXPECT_STREQ("SUBU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 2505381576);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 2505381576);
@@ -95,9 +103,9 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(715795856, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
-	// ADDIU (underflows)
+	// ADDIU
 	{
-		auto inst = genIInstruction(9, 4, 2, -256);
+		auto inst = MIPSUtil::genIInstruction(9, 4, 2, -256);
 		EXPECT_STREQ("ADDIU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 12);
@@ -107,7 +115,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 
 	// AND
 	{
-		auto inst = genRInstruction(0, 4, 5, 2, 0, 36);
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 36);
 		EXPECT_STREQ("AND", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1234ABCD);
@@ -118,7 +126,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 
 	// ANDI
 	{
-		auto inst = genIInstruction(12, 4, 2, 0xCCCC);
+		auto inst = MIPSUtil::genIInstruction(12, 4, 2, 0xCCCC);
 		EXPECT_STREQ("ANDI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x66666666);
@@ -126,9 +134,168 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(0x4444, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
+	// OR
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 37);
+		EXPECT_STREQ("OR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
+		core->OR();
+		EXPECT_EQ(0x99999999, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// ORI
+	{
+		auto inst = MIPSUtil::genIInstruction(13, 4, 2, 0x8888);
+		EXPECT_STREQ("ORI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x11111111);
+		core->ORI();
+		EXPECT_EQ(0x11119999, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// NOR
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 39);
+		EXPECT_STREQ("NOR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x77777777);
+		core->NOR();
+		EXPECT_EQ(0x0, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+
+	// SLL
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 2, 0);
+		EXPECT_STREQ("SLL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
+		core->SLL();
+		EXPECT_EQ(0x44444444, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SLLV
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 4);
+		EXPECT_STREQ("SLLV", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x3);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
+		core->SLLV();
+		EXPECT_EQ(0x88888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SRA
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 3);
+		EXPECT_STREQ("SRA", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
+		core->SRA();
+		EXPECT_EQ(0xF8888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SRAV
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 7);
+		EXPECT_STREQ("SRAV", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0X4);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
+		core->SRAV();
+		EXPECT_EQ(0xF8888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SRL
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 2);
+		EXPECT_STREQ("SRL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
+		core->SRL();
+		EXPECT_EQ(0x08888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SRLV
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 6);
+		EXPECT_STREQ("SRLV", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0X4);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
+		core->SRLV();
+		EXPECT_EQ(0x08888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SLT
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 42);
+		EXPECT_STREQ("SLT", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x10);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x20);
+		core->SLT();
+		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SLTI
+	{
+		auto inst = MIPSUtil::genIInstruction(10, 4, 2, -256);
+		EXPECT_STREQ("SLTI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, -1000);
+		core->SLTI();
+		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SLTU
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 43);
+		EXPECT_STREQ("SLTU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x8E000000);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x8F000000);
+		core->SLTU();
+		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SLTIU
+	{
+		auto inst = MIPSUtil::genIInstruction(11, 4, 2, -256);
+		EXPECT_STREQ("SLTIU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, -1000);
+		core->SLTIU();
+		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// XOR
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 38);
+		EXPECT_STREQ("XOR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFF);
+		core->XOR();
+		EXPECT_EQ(0x77777777, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// XORI
+	{
+		auto inst = MIPSUtil::genIInstruction(14, 4, 2, 0x8888);
+		EXPECT_STREQ("XORI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFF);
+		core->XORI();
+		EXPECT_EQ(0xFFFF7777, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
 	// BEQ
 	{
-		auto inst = genIInstruction(4, 4, 2, -256);
+		auto inst = MIPSUtil::genIInstruction(4, 4, 2, -256);
 		EXPECT_STREQ("BEQ", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
@@ -140,4 +307,196 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(0xBFBFFC04, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
 	}
 
+	// BGEZ
+	{
+		auto inst = MIPSUtil::genIInstruction(1, 4, 1, 63);
+		EXPECT_STREQ("BGEZ", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BGEZ();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// BGEZAL
+	{
+		auto inst = MIPSUtil::genIInstruction(1, 4, 17, 63);
+		EXPECT_STREQ("BGEZAL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x0);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BGEZAL();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->GPR[31]->readWord(RAW));
+	}
+
+	// BGTZ
+	{
+		auto inst = MIPSUtil::genIInstruction(7, 4, 0, 63);
+		EXPECT_STREQ("BGTZ", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BGTZ();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// BLEZ
+	{
+		auto inst = MIPSUtil::genIInstruction(6, 4, 0, 63);
+		EXPECT_STREQ("BLEZ", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BLEZ();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// BLTZ
+	{
+		auto inst = MIPSUtil::genIInstruction(1, 4, 0, 63);
+		EXPECT_STREQ("BLTZ", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BLTZ();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// BLTZAL
+	{
+		auto inst = MIPSUtil::genIInstruction(1, 4, 16, 63);
+		EXPECT_STREQ("BLTZAL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BLTZAL();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00100, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->GPR[31]->readWord(RAW));
+	}
+
+	// BNE
+	{
+		auto inst = MIPSUtil::genIInstruction(5, 4, 2, -256);
+		EXPECT_STREQ("BNE", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x87654321);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1234ABCD);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->BNE();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFBFFC04, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// MULT
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 24);
+		EXPECT_STREQ("MULT", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
+		core->MULT();
+		EXPECT_EQ(0xA, vm->getResources()->IOP->IOPCore->R3000->LO->readWord(RAW));
+		EXPECT_EQ(0x0, vm->getResources()->IOP->IOPCore->R3000->HI->readWord(RAW));
+	}
+
+	// MULTU
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 25);
+		EXPECT_STREQ("MULTU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
+		core->MULTU();
+		EXPECT_EQ(0x0000000A, vm->getResources()->IOP->IOPCore->R3000->LO->readWord(RAW));
+		EXPECT_EQ(0xFFFFFFF9, vm->getResources()->IOP->IOPCore->R3000->HI->readWord(RAW));
+	}
+
+	// DIV
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 26);
+		EXPECT_STREQ("DIV", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
+		core->DIV();
+		EXPECT_EQ(0x2, vm->getResources()->IOP->IOPCore->R3000->LO->readWord(RAW));
+		EXPECT_EQ(0xFFFFFFFF, vm->getResources()->IOP->IOPCore->R3000->HI->readWord(RAW));
+	}
+
+	// DIVU
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 27);
+		EXPECT_STREQ("DIVU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x10);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x7);
+		core->DIVU();
+		EXPECT_EQ(0x2, vm->getResources()->IOP->IOPCore->R3000->LO->readWord(RAW));
+		EXPECT_EQ(0x2, vm->getResources()->IOP->IOPCore->R3000->HI->readWord(RAW));
+	}
+
+	// J
+	{
+		auto inst = MIPSUtil::genJInstruction(2, 0x3F00400);
+		EXPECT_STREQ("J", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->J();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC01000, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// JAL
+	{
+		auto inst = MIPSUtil::genJInstruction(3, 0x3F00400);
+		EXPECT_STREQ("JAL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		core->JAL();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC01000, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->GPR[31]->readWord(RAW));
+	}
+
+	// JALR
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 4, 0, 31, 0, 9);
+		EXPECT_STREQ("JALR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xBFC01000);
+		core->JALR();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC01000, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->GPR[31]->readWord(RAW));
+	}
+
+	// JR
+	{
+		auto inst = MIPSUtil::genRInstruction(0, 31, 0, 0, 0, 8);
+		EXPECT_STREQ("JR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[31]->writeWord(RAW, 0xBFC00008);
+		core->JR();
+		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
+		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
+		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
 }
