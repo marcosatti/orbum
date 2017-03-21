@@ -88,8 +88,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("ADDU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
-		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 7891);
-		core->SUB();
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, -7891);
+		core->ADDU();
 		EXPECT_EQ(-2479, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
@@ -98,10 +98,10 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 35);
 		EXPECT_STREQ("SUBU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
-		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 2505381576);
-		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 2505381576);
-		core->ADDU();
-		EXPECT_EQ(715795856, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 64841);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 314898);
+		core->SUBU();
+		EXPECT_EQ(-250057, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
 	// ADDIU

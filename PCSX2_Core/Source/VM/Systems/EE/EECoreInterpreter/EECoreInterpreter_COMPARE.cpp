@@ -48,7 +48,7 @@ void EECoreInterpreter_s::SLTIU()
 	// No Exceptions generated.
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto imm = static_cast<u64>(mInstruction.getIImmU());
+	auto imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS()));
 
 	auto source1Val = static_cast<u64>(source1Reg->readDword(EE, 0));
 

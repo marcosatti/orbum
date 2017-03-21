@@ -9,6 +9,11 @@ class EECoreInstruction_t : public MIPSInstruction_t
 {
 public:
 	/*
+	Initialise an Instruction object with the specified 32-bit MIPS instruction. Defaults to 0.
+	*/
+	EECoreInstruction_t(const u32 instructionValue = 0);
+
+	/*
 	Gets the various VU instruction fields required. Prefixed with getV*.
 	- I    @ Bit 0.
 	- BC   @ Bits 0-1.

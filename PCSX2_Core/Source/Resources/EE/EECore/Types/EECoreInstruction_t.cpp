@@ -2,6 +2,11 @@
 
 #include "Resources/EE/EECore/Types/EECoreInstruction_t.h"
 
+EECoreInstruction_t::EECoreInstruction_t(const u32 instructionValue) :
+	MIPSInstruction_t(instructionValue)
+{
+}
+
 u8 EECoreInstruction_t::getVI() const
 {
 	return static_cast<u8>(mInstructionValue & 0x1);

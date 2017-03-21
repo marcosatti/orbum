@@ -121,7 +121,7 @@ void EECoreInterpreter_s::SLL()
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	s64 result = static_cast<s64>(source1Reg->readWord(EE, 0) << shamt);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) << shamt));
 	destReg->writeDword(EE, 0, result);
 }
 
@@ -134,7 +134,7 @@ void EECoreInterpreter_s::SLLV()
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x1F;
 
-	s64 result = static_cast<s64>(source1Reg->readWord(EE, 0) << shamt);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) << shamt));
 	destReg->writeDword(EE, 0, result);
 }
 
@@ -171,7 +171,7 @@ void EECoreInterpreter_s::SRL()
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = mInstruction.getRShamt();
 
-	s64 result = static_cast<s64>(source1Reg->readWord(EE, 0) >> shamt);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) >> shamt));
 	destReg->writeDword(EE, 0, result);
 }
 
@@ -184,7 +184,7 @@ void EECoreInterpreter_s::SRLV()
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x1F;
 
-	s64 result = static_cast<s64>(source1Reg->readWord(EE, 0) >> shamt);
+	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) >> shamt));
 	destReg->writeDword(EE, 0, result);
 }
 
