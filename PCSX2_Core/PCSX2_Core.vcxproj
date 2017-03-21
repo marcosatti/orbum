@@ -440,6 +440,7 @@
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\SPU2_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
@@ -614,6 +615,7 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreExceptionsTable\IOPCoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPCoreInstructionTable\IOPCoreInstructionTable.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />

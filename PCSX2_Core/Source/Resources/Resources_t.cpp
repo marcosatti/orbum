@@ -52,6 +52,7 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
 #include "Resources/IOP/CDVD/CDVD_t.h"
+#include "Resources/IOP/SPU2/SPU2_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
@@ -599,6 +600,10 @@ void Resources_t::postInit_IOP() const
 			IOP->PhysicalMMU->mapObject(0x1F402039, IOP->CDVD->KEY_XOR);
 			IOP->PhysicalMMU->mapObject(0x1F40203A, IOP->CDVD->DEC_SET);
 
+			// SPU2 Registers.
+			IOP->PhysicalMMU->mapObject(0x1F900000, IOP->SPU2->SPU2_REGISTERS);
+			IOP->PhysicalMMU->mapObject(0x1F900800, IOP->SPU2->SPU2_REGISTERS); // Mirrored? See "spu2sys.cpp" in PCSX2.
+
 			// Timers Registers.
 			IOP->PhysicalMMU->mapObject(0x1F801100, IOP->Timers->TIMER_0->COUNT);
 			IOP->PhysicalMMU->mapObject(0x1F801104, IOP->Timers->TIMER_0->MODE);
@@ -621,7 +626,6 @@ void Resources_t::postInit_IOP() const
 
 			// Parallel Port.
 			IOP->PhysicalMMU->mapObject(Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
-
 		}
 
 		// SIF Registers

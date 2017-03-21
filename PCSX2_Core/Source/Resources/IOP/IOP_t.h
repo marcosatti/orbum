@@ -6,6 +6,7 @@ class IOPCore_t;
 class IOPDmac_t;
 class IOPIntc_t;
 class CDVD_t;
+class SPU2_t;
 class IOPTimers_t;
 class Memory_t;
 class DebugMemory_t;
@@ -42,6 +43,11 @@ public:
 	CD-ROM / DVD Drive resources (CDVD).
 	*/
 	std::shared_ptr<CDVD_t> CDVD;
+
+	/*
+	SPU2 Resources.
+	*/
+	std::shared_ptr<SPU2_t> SPU2;
 
 	/*
 	Timers resources.

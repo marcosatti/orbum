@@ -308,6 +308,7 @@
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\SPU2_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -506,6 +507,7 @@
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
     <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

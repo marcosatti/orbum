@@ -12,6 +12,7 @@
 #include "Resources/IOP/DMAC/IOPDmac_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/CDVD/CDVD_t.h"
+#include "Resources/IOP/SPU2/SPU2_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
 
 IOP_t::IOP_t() :
@@ -19,6 +20,7 @@ IOP_t::IOP_t() :
 	DMAC(std::make_shared<IOPDmac_t>()),
 	INTC(std::make_shared<IOPIntc_t>()),
 	CDVD(std::make_shared<CDVD_t>()),
+	SPU2(std::make_shared<SPU2_t>()),
 	Timers(std::make_shared<IOPTimers_t>()),
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_8KB, 1)),
 	MainMemory(std::make_shared<Memory_t>(Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
