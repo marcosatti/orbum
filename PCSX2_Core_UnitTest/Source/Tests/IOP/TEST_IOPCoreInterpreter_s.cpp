@@ -8,6 +8,7 @@
 #include <Resources/IOP/IOPCore/IOPCore_t.h>
 #include <Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h>
 #include <Common/Types/Registers/Register32_t.h>
+#include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
 #include <Common/Types/Registers/MIPS/PCRegister32_t.h>
 #include <Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h>
 #include <Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h>
@@ -293,6 +294,15 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(0xFFFF7777, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
 
+	// LUI
+	{
+		auto inst = MIPSUtil::genIInstruction(15, 0, 2, 0x8888);
+		EXPECT_STREQ("LUI", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		core->LUI();
+		EXPECT_EQ(0x88880000, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
 	// BEQ
 	{
 		auto inst = MIPSUtil::genIInstruction(4, 4, 2, -256);
@@ -498,5 +508,141 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
 		vm->getResources()->IOP->IOPCore->R3000->PC->doBranchNow();
 		EXPECT_EQ(0xBFC00008, vm->getResources()->IOP->IOPCore->R3000->PC->readWord(RAW));
+	}
+
+	// LB
+	{
+		auto inst = MIPSUtil::genIInstruction(32, 4, 2, -4);
+		EXPECT_STREQ("LB", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeByte(RAW, 0x0, 0xCD);
+		core->LB();
+		EXPECT_EQ(0xFFFFFFCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// LBU
+	{
+		auto inst = MIPSUtil::genIInstruction(36, 4, 2, -4);
+		EXPECT_STREQ("LBU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeByte(RAW, 0x0, 0xAB);
+		core->LBU();
+		EXPECT_EQ(0xAB, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// LH
+	{
+		auto inst = MIPSUtil::genIInstruction(33, 4, 2, -4);
+		EXPECT_STREQ("LH", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeHword(RAW, 0x0, 0xCDEF);
+		core->LH();
+		EXPECT_EQ(0xFFFFCDEF, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// LHU
+	{
+		auto inst = MIPSUtil::genIInstruction(37, 4, 2, -4);
+		EXPECT_STREQ("LHU", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeHword(RAW, 0x0, 0xABCD);
+		core->LHU();
+		EXPECT_EQ(0xABCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// LW
+	{
+		auto inst = MIPSUtil::genIInstruction(35, 4, 2, -4);
+		EXPECT_STREQ("LW", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0x12345678);
+		core->LW();
+		EXPECT_EQ(0x12345678, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SB
+	{
+		auto inst = MIPSUtil::genIInstruction(40, 4, 2, -4);
+		EXPECT_STREQ("SB", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
+		core->SB();
+		EXPECT_EQ(0xCD, vm->getResources()->IOP->PhysicalMMU->readByte(RAW, 0x0));
+	}
+
+	// SH
+	{
+		auto inst = MIPSUtil::genIInstruction(41, 4, 2, -4);
+		EXPECT_STREQ("SH", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
+		core->SH();
+		EXPECT_EQ(0xABCD, vm->getResources()->IOP->PhysicalMMU->readHword(RAW, 0x0));
+	}
+
+	// SW
+	{
+		auto inst = MIPSUtil::genIInstruction(43, 4, 2, -4);
+		EXPECT_STREQ("SW", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
+		core->SW();
+		EXPECT_EQ(0x1234ABCD, vm->getResources()->IOP->PhysicalMMU->readWord(RAW, 0x0));
+	}
+
+	// LWL
+	{
+		auto inst = MIPSUtil::genIInstruction(34, 4, 2, -3);
+		EXPECT_STREQ("LWL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0xCDCDCDCD);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0x01234567);
+		core->LWL();
+		EXPECT_EQ(0x4567CDCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// LWR
+	{
+		auto inst = MIPSUtil::genIInstruction(38, 4, 2, 2);
+		EXPECT_STREQ("LWR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0xCDCDCDCD);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x4, 0x89ABCDEF);
+		core->LWR();
+		EXPECT_EQ(0xCDCD89AB, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
+	}
+
+	// SWL
+	{
+		auto inst = MIPSUtil::genIInstruction(42, 4, 2, -3);
+		EXPECT_STREQ("SWL", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x11111111);
+		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0xABABABAB);
+		core->SWL();
+		EXPECT_EQ(0xABAB1111, vm->getResources()->IOP->PhysicalMMU->readWord(RAW, 0x0));
+	}
+
+	// SWR
+	{
+		auto inst = MIPSUtil::genIInstruction(46, 4, 2, 2);
+		EXPECT_STREQ("SWR", IOPCoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
+		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x11111111);
+		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x4, 0xCDCDCDCD);
+		core->SWR();
+		EXPECT_EQ(0x1111CDCD, vm->getResources()->IOP->PhysicalMMU->readWord(RAW, 0x4));
 	}
 }

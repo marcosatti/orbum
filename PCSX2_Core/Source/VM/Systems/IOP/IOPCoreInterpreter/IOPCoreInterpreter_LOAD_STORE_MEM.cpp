@@ -104,58 +104,42 @@ void IOPCoreInterpreter_s::LWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
-	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWL is to be used with LWR, to read in a full 32-bit value.
-	// LWL reads in the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
-	// Note that the other bytes already in the register are not changed. They are changed through LDR.
+	// Credit to PCSX2.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
 	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWord(IOP) + imm; // Get the unaligned virtual address.
-	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
-	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
+	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 shift = (virtualAddress & 3) << 3;
+	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
 	u32 physicalAddress;
-	if (getPhysicalAddress(baseAddress, READ, physicalAddress)) // Check for MMU error and do not continue if true.
+	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	u32 alignedValue = mPhysicalMMU->readWord(IOP, physicalAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
-
-	u8 MSBShift = ((4 - (offset + 1)) * 8); // A shift value used thoughout.
-	u32 MSBMask = Constants::VALUE_U32_MAX >> MSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
-	u32 MSBValue = (alignedValue & MSBMask) << MSBShift; // Calculate the MSB value part.
-
-	u32 keepMask = ~(MSBMask << MSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeWord(IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(IOP) & keepMask) | MSBValue))); // Calculate the new desination register value and write to it.
+	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
+	destReg->writeWord(IOP, (destReg->readWord(IOP) & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
 }
 
 void IOPCoreInterpreter_s::LWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
-	// Unaligned memory read. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned read. LWR is to be used with LWL, to read in a full 32-bit value.
-	// LWR reads in the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination register.
-	// Note that the other bytes already in the register are not changed. They are changed through LWL.
+	// Credit to PCSX2.
 	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
 	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = sourceReg->readWord(IOP) + imm; // Get the unaligned virtual address.
-	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
-	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
+	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 shift = (virtualAddress & 3) << 3;
+	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
 	u32 physicalAddress;
-	if (getPhysicalAddress(baseAddress, READ, physicalAddress)) // Check for MMU error and do not continue if true.
+	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	u32 alignedValue = mPhysicalMMU->readWord(IOP, physicalAddress); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
-
-	u8 LSBShift = (offset * 8); // A shift value used thoughout.
-	u32 LSBMask = Constants::VALUE_U32_MAX << LSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
-	u32 LSBValue = (alignedValue & LSBMask) >> LSBShift; // Calculate the LSB value part.
-
-	u32 keepMask = ~(LSBMask >> LSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	destReg->writeWord(IOP, static_cast<s32>(static_cast<s32>((destReg->readWord(IOP) & keepMask) | LSBValue))); // Calculate the new desination register value and write to it.
+	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
+	destReg->writeWord(IOP, (destReg->readWord(IOP) & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
 }
 
 void IOPCoreInterpreter_s::SB()
@@ -207,69 +191,49 @@ void IOPCoreInterpreter_s::SWL()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWL is to be used with SWR, to write a full 32-bit value.
-	// SWL writes the most significant bytes (MSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
-	// Note that the other bytes already in the register are not changed. They are changed through SWR.
+	// Credit to PCSX2.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = source1Reg->readWord(IOP) + imm; // Get the unaligned virtual address.
-	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
-	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
-
-	u32 regValue = source2Reg->readWord(IOP); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
-
-	u8 MSBShift = ((4 - (offset + 1)) * 8); // A shift value used thoughout.
-	u32 MSBMask = Constants::VALUE_U32_MAX << MSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
-	u32 MSBValue = (regValue & MSBMask) >> MSBShift; // Calculate the MSB value part.
-
-	u32 keepMask = ~(MSBMask >> MSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
+	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 shift = (virtualAddress & 3) << 3;
+	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
 	u32 physicalAddress;
-	if (getPhysicalAddress(baseAddress, READ, physicalAddress))
+	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto alignedValue = mPhysicalMMU->readWord(IOP, physicalAddress); // Get the full aligned value (from which only the relevant bits will be kept).
+	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
 
-	if (getPhysicalAddress(baseAddress, WRITE, physicalAddress)) // Need to get the physical address again, to check for write permissions.
+	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(IOP, physicalAddress, (alignedValue & keepMask) | MSBValue); // Calculate the new desination memory value and write to it.
+	mPhysicalMMU->writeWord(IOP, physicalAddress, ((source2Reg->readWord(IOP) >> (24 - shift))) | (value & (0xFFFFFF00 << shift))); 
 }
 
 void IOPCoreInterpreter_s::SWR()
 {
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	// Unaligned memory write. Alignment occurs on an 4 byte boundary, but this instruction allows an unaligned write. SWR is to be used with SWL, to write a full 32-bit value.
-	// SWR writes the least significant bytes (LSB's) depending on the virtual address offset, and stores them in the most significant part of the destination memory.
-	// Note that the other bytes already in the register are not changed. They are changed through SWL.
+	// Credit to PCSX2.
 	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
 	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
 	const s16 imm = mInstruction.getIImmS();
 
-	u32 unalignedAddress = source1Reg->readWord(IOP) + imm; // Get the unaligned virtual address.
-	u32 baseAddress = unalignedAddress & ~static_cast<u32>(0x3); // Strip off the last 2 bits, making sure we are now aligned on a 4-byte boundary.
-	u32 offset = unalignedAddress & static_cast<u32>(0x3); // Get the value of the last 2 bits, which will be from 0 -> 3 indicating the byte offset within the 4-byte alignment.
+	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 shift = (virtualAddress & 3) << 3;
+	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
-	u32 regValue = source2Reg->readWord(IOP); // Get the full aligned value, but we only want the full value minus the offset number of bytes.
-
-	u8 LSBShift = (offset * 8); // A shift value used thoughout.
-	u32 LSBMask = Constants::VALUE_U32_MAX >> LSBShift; // Mask for getting rid of the unwanted bytes from the aligned value.
-	u32 LSBValue = (regValue & LSBMask) << LSBShift; // Calculate the LSB value part.
-
-	u32 keepMask = ~(LSBMask << LSBShift); // The keep mask is used to select the bytes in the register which we do not want to change - this mask will be AND with those bytes, while stripping away the other bytes about to be overriden.
-	
 	u32 physicalAddress;
-	if (getPhysicalAddress(baseAddress, READ, physicalAddress))
+	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto alignedValue = mPhysicalMMU->readWord(EE, physicalAddress); // Get the full aligned value (from which only the relevant bits will be kept).
+	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
 
-	if (getPhysicalAddress(baseAddress, WRITE, physicalAddress)) // Need to get the physical address again, to check for write permissions.
+	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(EE, physicalAddress, (alignedValue & keepMask) | LSBValue); // Calculate the new desination memory value and write to it.
+	mPhysicalMMU->writeWord(IOP, physicalAddress, ((source2Reg->readWord(IOP) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 
