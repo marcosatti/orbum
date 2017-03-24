@@ -35,14 +35,14 @@ void EECoreInterpreter_s::DIV()
 	// Else perform normal operation.
 	else
 	{
-		s64 resultQ = source1Val / source2Val;
-		s64 resultR = source1Val % source2Val;
+		s32 resultQ = source1Val / source2Val;
+		s32 resultR = source1Val % source2Val;
 
 		// Quotient.
-		LO->writeDword(EE, 0, resultQ);
+		LO->writeDword(EE, 0, static_cast<s64>(resultQ));
 
 		// Remainder.
-		HI->writeDword(EE, 0, resultR);
+		HI->writeDword(EE, 0, static_cast<s64>(resultR));
 	}
 }
 
@@ -72,14 +72,14 @@ void EECoreInterpreter_s::DIVU()
 	// Else perform normal operation.
 	else
 	{
-		u64 resultQ = source1Val / source2Val;
-		u64 resultR = source1Val % source2Val;
+		u32 resultQ = source1Val / source2Val;
+		u32 resultR = source1Val % source2Val;
 
 		// Quotient.
-		mEECore->R5900->LO->writeDword(EE, 0, resultQ);
+		mEECore->R5900->LO->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(resultQ)));
 
 		// Remainder.
-		mEECore->R5900->HI->writeDword(EE, 0, resultR);
+		mEECore->R5900->HI->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(resultR)));
 	}
 }
 
@@ -99,8 +99,8 @@ void EECoreInterpreter_s::MULT()
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(EE, 0));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(EE, 0));
+	auto source1Val = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0)));
+	auto source2Val = static_cast<s64>(static_cast<s32>(source2Reg->readWord(EE, 0)));
 
 	s64 result = source1Val * source2Val;
 
@@ -117,7 +117,7 @@ void EECoreInterpreter_s::MULT1()
 
 void EECoreInterpreter_s::MULTU()
 {
-	// (LO, HI) = Rs[UW] * Rt[UW]
+	// (Rd, LO, HI) = SignExtend<s64>(Rs[UW] * Rt[UW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
 	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
@@ -125,14 +125,14 @@ void EECoreInterpreter_s::MULTU()
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(EE, 0));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(EE, 0));
+	auto source1Val = static_cast<u64>(source1Reg->readWord(EE, 0));
+	auto source2Val = static_cast<u64>(source2Reg->readWord(EE, 0));
 
 	u64 result = source1Val * source2Val;
 
-	destReg->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	LO->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	HI->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result >> 32)));
+	destReg->writeDword(EE, 0, static_cast<u64>(static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF))));
+	LO->writeDword(EE, 0, static_cast<u64>(static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF))));
+	HI->writeDword(EE, 0, static_cast<u64>(static_cast<s64>(static_cast<s32>(result >> 32))));
 }
 
 void EECoreInterpreter_s::MULTU1()
