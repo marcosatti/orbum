@@ -560,7 +560,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LW", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xF2345678);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xF2345678);
 		core->LW();
 		EXPECT_EQ(0xFFFFFFFFF2345678, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
 	}
@@ -571,9 +571,20 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LWU", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xF2345678);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xF2345678);
 		core->LWU();
 		EXPECT_EQ(0xF2345678, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
+	}
+
+	// LD
+	{
+		auto inst = MIPSUtil::genIInstruction(55, 4, 2, -4);
+		EXPECT_STREQ("LD", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
+		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x12345678ABCDEF0);
+		core->LD();
+		EXPECT_EQ(0x12345678ABCDEF0, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
 	}
 
 	// SB
@@ -606,7 +617,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x1234ABCD);
 		core->SW();
-		EXPECT_EQ(0x1234ABCD, vm->getResources()->EE->PhysicalMMU->readDword(RAW, 0x0));
+		EXPECT_EQ(0x1234ABCD, vm->getResources()->EE->PhysicalMMU->readWord(RAW, 0x0));
 	}
 
 	// LWL
@@ -616,7 +627,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x01234567);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0x01234567);
 		core->LWL();
 		EXPECT_EQ(0x4567CDCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
 	}
@@ -628,9 +639,33 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x4, 0x89ABCDEF);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x4, 0x89ABCDEF);
 		core->LWR();
-		EXPECT_EQ(0xCDCD89AB, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
+		EXPECT_EQ(0xFFFFFFFFCDCD89AB, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
+	}
+
+	// LDL
+	{
+		auto inst = MIPSUtil::genIInstruction(26, 4, 2, -1);
+		EXPECT_STREQ("LDL", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCDCDCDCDCD);
+		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
+		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x4141414141414141);
+		core->LDL();
+		EXPECT_EQ(0x41414141CDCDCDCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
+	}
+
+	// LDR
+	{
+		auto inst = MIPSUtil::genIInstruction(27, 4, 2, 0);
+		EXPECT_STREQ("LDR", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCDCDCDCDCD);
+		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
+		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x4141414141414141);
+		core->LDR();
+		EXPECT_EQ(0xCDCDCDCD41414141, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
 	}
 
 	// SWL
@@ -640,9 +675,9 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x11111111);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xABABABAB);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xABABABAB);
 		core->SWL();
-		EXPECT_EQ(0xABAB1111, vm->getResources()->EE->PhysicalMMU->readDword(RAW, 0x0));
+		EXPECT_EQ(0xABAB1111, vm->getResources()->EE->PhysicalMMU->readWord(RAW, 0x0));
 	}
 
 	// SWR
@@ -652,9 +687,33 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mInstruction.setInstructionValue(inst);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x11111111);
-		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x4, 0xCDCDCDCD);
+		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x4, 0xCDCDCDCD);
 		core->SWR();
-		EXPECT_EQ(0x1111CDCD, vm->getResources()->EE->PhysicalMMU->readDword(RAW, 0x4));
+		EXPECT_EQ(0x1111CDCD, vm->getResources()->EE->PhysicalMMU->readWord(RAW, 0x4));
+	}
+
+	// SDL
+	{
+		auto inst = MIPSUtil::genIInstruction(44, 4, 2, -1);
+		EXPECT_STREQ("SDL", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
+		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x4141414141414141);
+		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xCDCDCDCDCDCDCDCD);
+		core->SDL();
+		EXPECT_EQ(0xCDCDCDCD41414141, vm->getResources()->EE->PhysicalMMU->readDword(RAW, 0x0));
+	}
+
+	// SDR
+	{
+		auto inst = MIPSUtil::genIInstruction(45, 4, 2, 0);
+		EXPECT_STREQ("SDR", EECoreInstructionTable::getInstructionInfo(inst)->mMnemonic);
+		core->mInstruction.setInstructionValue(inst);
+		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
+		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x4141414141414141);
+		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xCDCDCDCDCDCDCDCD);
+		core->SDR();
+		EXPECT_EQ(0x41414141CDCDCDCD, vm->getResources()->EE->PhysicalMMU->readDword(RAW, 0x0));
 	}
 }
 

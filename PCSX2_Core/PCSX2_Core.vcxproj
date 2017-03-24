@@ -624,7 +624,6 @@
     <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\GSCore\GSCore_s.cpp" />
-    <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\DMAC\IOPDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.cpp" />
     <ClCompile Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.cpp" />
