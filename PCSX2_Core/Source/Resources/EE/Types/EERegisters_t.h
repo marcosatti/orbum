@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
 /*
@@ -16,7 +16,7 @@ Some useful information can be found in the old PCSX2 under Hw.h (register names
 In a real PS2, you can communicate with the EE over this serial port.
 Allocated at base PS2 physical memory address 0x1000F100.
 */
-class EERegister_SIO_t : public Memory_t
+class EERegister_SIO_t : public ByteMemory_t
 {
 public:
 	EERegister_SIO_t();
@@ -26,9 +26,9 @@ public:
 	static constexpr u32 OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
 	static constexpr u32 OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
-	void writeByte(const Context_t& context, size_t storageIndex, u8 value) override;
-	u32 readWord(const Context_t& context, size_t storageIndex) override;
-	void writeWord(const Context_t& context, size_t storageIndex, u32 value) override;
+	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;
+	u32 readWord(const Context_t context, size_t storageIndex) override;
+	void writeWord(const Context_t context, size_t storageIndex, u32 value) override;
 
 private:
 #if DEBUG_SIO_LOG_MESSAGES
@@ -44,7 +44,7 @@ Seems to be related to the RDRAM memory controller.
 It requires some special functionality (see below).
 Allocated at base PS2 physical memory address 0x1000F430 (from MCH_RICM).
 */
-class EERegister_MCH_t : public Memory_t
+class EERegister_MCH_t : public ByteMemory_t
 {
 public:
 	EERegister_MCH_t();
@@ -54,8 +54,8 @@ public:
 	static constexpr u32 OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
 	static constexpr u32 OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 
-	u32 readWord(const Context_t& context, size_t storageIndex) override;
-	void writeWord(const Context_t& context, size_t storageIndex, u32 value) override;
+	u32 readWord(const Context_t context, size_t storageIndex) override;
+	void writeWord(const Context_t context, size_t storageIndex, u32 value) override;
 
 private:
 	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).

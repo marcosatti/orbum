@@ -4,7 +4,7 @@
 #include <cmath>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Memory/ROMemory_t.h"
+#include "Common/Types/Memory/ROByteMemory_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"

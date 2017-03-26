@@ -4,7 +4,7 @@
 #include "Common/Types/Registers/FPRegister32_t.h"
 #include "Common/Types/Registers/Register16_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister16_t.h"
-#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/Constant/ConstantFPRegister128_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister16_t.h"
@@ -42,8 +42,8 @@ VuUnit_VU0_t::VuUnit_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0) :
 	VuUnit_t(UNIT_ID),
 	COP0(cop0)
 {
-	MEMORY_Micro = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Micro Mem");
-	MEMORY_Mem = std::make_shared<Memory_t>(Constants::SIZE_4KB, "VU0 Main Mem");
+	MEMORY_Micro = std::make_shared<ByteMemory_t>(Constants::SIZE_4KB, "VU0 Micro Mem");
+	MEMORY_Mem = std::make_shared<ByteMemory_t>(Constants::SIZE_4KB, "VU0 Main Mem");
 }
 
 bool VuUnit_VU0_t::isCoprocessorUsable() const
@@ -58,6 +58,6 @@ bool VuUnit_VU0_t::isCoprocessorUsable() const
 VuUnit_VU1_t::VuUnit_VU1_t() :
 	VuUnit_t(UNIT_ID)
 {
-	MEMORY_Micro = std::make_shared<Memory_t>(Constants::SIZE_16KB, "VU1 Micro Mem");
-	MEMORY_Mem = std::make_shared<Memory_t>(Constants::SIZE_16KB, "VU1 Main Mem");
+	MEMORY_Micro = std::make_shared<ByteMemory_t>(Constants::SIZE_16KB, "VU1 Micro Mem");
+	MEMORY_Mem = std::make_shared<ByteMemory_t>(Constants::SIZE_16KB, "VU1 Main Mem");
 }

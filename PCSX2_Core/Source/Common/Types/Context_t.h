@@ -22,7 +22,7 @@ enum Context_t
 Static array of names used for debug logging.
 */
 static constexpr char * CONTEXT_STR[static_cast<int>(COUNT)] = { "RAW", "EE", "IOP" };
-static const char* getContextStr(const Context_t & context)
+static const char* getContextStr(const Context_t context)
 {
 	return CONTEXT_STR[static_cast<int>(context)];
 }

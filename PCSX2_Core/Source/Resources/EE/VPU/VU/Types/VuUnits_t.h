@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
 
-class Memory_t;
+class ByteMemory_t;
 class PhysicalMMU_t;
 class FPRegister128_t;
 class FPRegister32_t;
@@ -103,8 +103,8 @@ public:
 	VU memory, defined on page 18 of the VU Users Manual.
 	Initalised by subclasses; different for VU0 (4KB) and VU1 (16KB).
 	*/
-	std::shared_ptr<Memory_t> MEMORY_Micro;
-	std::shared_ptr<Memory_t> MEMORY_Mem;
+	std::shared_ptr<ByteMemory_t> MEMORY_Micro;
+	std::shared_ptr<ByteMemory_t> MEMORY_Mem;
 };
 
 /*

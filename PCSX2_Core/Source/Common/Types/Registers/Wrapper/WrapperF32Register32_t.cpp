@@ -18,32 +18,32 @@ WrapperF32Register32_t::~WrapperF32Register32_t()
 {
 }
 
-u8 WrapperF32Register32_t::readByte(const Context_t& context, size_t arrayIndex)
+u8 WrapperF32Register32_t::readByte(const Context_t context, size_t arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to FPRegister32_t are allowed.");
 }
 
-void WrapperF32Register32_t::writeByte(const Context_t& context, size_t arrayIndex, u8 value)
+void WrapperF32Register32_t::writeByte(const Context_t context, size_t arrayIndex, u8 value)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to FPRegister32_t are allowed.");
 }
 
-u16 WrapperF32Register32_t::readHword(const Context_t& context, size_t arrayIndex)
+u16 WrapperF32Register32_t::readHword(const Context_t context, size_t arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to FPRegister32_t are allowed.");
 }
 
-void WrapperF32Register32_t::writeHword(const Context_t& context, size_t arrayIndex, u16 value)
+void WrapperF32Register32_t::writeHword(const Context_t context, size_t arrayIndex, u16 value)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to FPRegister32_t are allowed.");
 }
 
-u32 WrapperF32Register32_t::readWord(const Context_t& context)
+u32 WrapperF32Register32_t::readWord(const Context_t context)
 {
 	return mFPRegister32->readWord(context);
 }
 
-void WrapperF32Register32_t::writeWord(const Context_t& context, u32 value)
+void WrapperF32Register32_t::writeWord(const Context_t context, u32 value)
 {
 	mFPRegister32->writeWord(context, value);
 }

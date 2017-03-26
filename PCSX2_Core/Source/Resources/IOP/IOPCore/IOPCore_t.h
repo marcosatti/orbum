@@ -4,7 +4,7 @@
 
 class IOPCoreR3000_t;
 class IOPCoreCOP0_t;
-class Memory_t;
+class ByteMemory_t;
 
 class IOPCore_t
 {
@@ -24,7 +24,7 @@ public:
 	/*
 	Scratchpad memory (1KB). Allocated at 0x1F800000.
 	*/
-	std::shared_ptr<Memory_t> ScratchpadMemory;
+	std::shared_ptr<ByteMemory_t> ScratchpadMemory;
 
 };
 

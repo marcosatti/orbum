@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Memory/Memory_t.h"
-#include "Common/Types/Memory/ROMemory_t.h"
-#include "Common/Types/Memory/ConstantMemory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
+#include "Common/Types/Memory/ROByteMemory_t.h"
+#include "Common/Types/Memory/ConstantByteMemory_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 
@@ -27,19 +27,19 @@ EE_t::EE_t() :
 	GIF(std::make_shared<GIF_t>()),
 	VPU(std::make_shared<VPU_t>()),
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_4B)),
-	MainMemory(std::make_shared<Memory_t>(Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
-	BootROM(std::make_shared<ROMemory_t>(Constants::EE::ROM::SIZE_BOOT_ROM)),
-	ROM1(std::make_shared<ROMemory_t>(Constants::EE::ROM::SIZE_ROM1)),
-	EROM(std::make_shared<ROMemory_t>(Constants::EE::ROM::SIZE_EROM)),
-	ROM2(std::make_shared<ROMemory_t>(Constants::EE::ROM::SIZE_ROM2)),
-	UNKNOWN_1A000000(std::make_shared<ConstantMemory_t>(0x10000, "Unknown: 1A00")),
+	MainMemory(std::make_shared<ByteMemory_t>(Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
+	BootROM(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_BOOT_ROM)),
+	ROM1(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_ROM1)),
+	EROM(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_EROM)),
+	ROM2(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_ROM2)),
+	UNKNOWN_1A000000(std::make_shared<ConstantByteMemory_t>(0x10000, "Unknown: 1A00")),
 
 	// Registers.
 	MEMORY_SIO(std::make_shared<EERegister_SIO_t>()),
 	REGISTER_F400(std::make_shared<Register32_t>()),
-	MEMORY_F410(std::make_shared<ConstantMemory_t>(0x04, "Undocumented: F410")),
+	MEMORY_F410(std::make_shared<ConstantByteMemory_t>(0x04, "Undocumented: F410")),
 	REGISTER_F420(std::make_shared<Register32_t>()),
 	MEMORY_MCH(std::make_shared<EERegister_MCH_t>()),
-	MEMORY_F450(std::make_shared<Memory_t>(0xB0, "Undocumented: F450"))
+	MEMORY_F450(std::make_shared<ByteMemory_t>(0xB0, "Undocumented: F450"))
 {
 }

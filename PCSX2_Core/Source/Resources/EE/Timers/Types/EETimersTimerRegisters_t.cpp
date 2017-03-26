@@ -70,7 +70,7 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_MODE_t::writeWord(const Context_t & context, u32 value)
+void EETimersTimerRegister_MODE_t::writeWord(const Context_t context, u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	if (context == EE)

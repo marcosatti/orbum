@@ -33,7 +33,7 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t() :
 	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
 }
 
-void IOPIntcRegister_STAT_t::writeWord(const Context_t& context, u32 value)
+void IOPIntcRegister_STAT_t::writeWord(const Context_t context, u32 value)
 {
 	// Preprocessing for IOP: AND with old value (acknowledge bits).
 	if (context == IOP)
@@ -78,7 +78,7 @@ IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t() :
 {
 }
 
-u32 IOPIntcRegister_CTRL_t::readWord(const Context_t& context)
+u32 IOPIntcRegister_CTRL_t::readWord(const Context_t context)
 {
 	auto temp = Register32_t::readWord(context);
 

@@ -3,7 +3,7 @@
 #include <memory>
 
 class Register32_t;
-class ConstantMemory_t;
+class ConstantByteMemory_t;
 
 class GIF_t
 {
@@ -16,7 +16,7 @@ public:
 	std::shared_ptr<Register32_t>     CTRL;
 	std::shared_ptr<Register32_t>     MODE;
 	std::shared_ptr<Register32_t>     STAT;
-	std::shared_ptr<ConstantMemory_t> MEMORY_3030;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_3030;
 	std::shared_ptr<Register32_t>     TAG0;
 	std::shared_ptr<Register32_t>     TAG1;
 	std::shared_ptr<Register32_t>     TAG2;
@@ -24,6 +24,6 @@ public:
 	std::shared_ptr<Register32_t>     CNT;
 	std::shared_ptr<Register32_t>     P3CNT;
 	std::shared_ptr<Register32_t>     P3TAG;
-	std::shared_ptr<ConstantMemory_t> MEMORY_30B0;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_30B0;
 };
 

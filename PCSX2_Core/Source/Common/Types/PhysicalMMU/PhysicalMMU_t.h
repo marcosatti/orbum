@@ -6,7 +6,7 @@
 #include "Common/Types/Context_t.h"
 
 class PhysicalMapped_t;
-class Memory_t;
+class ByteMemory_t;
 class Register8_t;
 class Register16_t;
 class Register32_t;
@@ -73,7 +73,7 @@ public:
 	Convenience mapping functions have been provided that maps the object with the appropriate wrapper class (makes it compatible with the PhysicalMapped interface).
 	*/
 	void mapObject(const std::shared_ptr<PhysicalMapped_t> & physicalMapped);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Memory_t> & memory);
+	void mapObject(const u32 & physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
 	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
@@ -88,16 +88,16 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeByte(const Context_t & context, u32 PS2PhysicalAddress, u8 value) const;
-	u16 readHword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeHword(const Context_t & context, u32 PS2PhysicalAddress, u16 value) const;
-	u32 readWord(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeWord(const Context_t & context, u32 PS2PhysicalAddress, u32 value) const;
-	u64 readDword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeDword(const Context_t & context, u32 PS2PhysicalAddress, u64 value) const;
-	u128 readQword(const Context_t & context, u32 PS2PhysicalAddress) const;
-	void writeQword(const Context_t & context, u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(const Context_t context, u32 PS2PhysicalAddress) const;
+	void writeByte(const Context_t context, u32 PS2PhysicalAddress, u8 value) const;
+	u16 readHword(const Context_t context, u32 PS2PhysicalAddress) const;
+	void writeHword(const Context_t context, u32 PS2PhysicalAddress, u16 value) const;
+	u32 readWord(const Context_t context, u32 PS2PhysicalAddress) const;
+	void writeWord(const Context_t context, u32 PS2PhysicalAddress, u32 value) const;
+	u64 readDword(const Context_t context, u32 PS2PhysicalAddress) const;
+	void writeDword(const Context_t context, u32 PS2PhysicalAddress, u64 value) const;
+	u128 readQword(const Context_t context, u32 PS2PhysicalAddress) const;
+	void writeQword(const Context_t context, u32 PS2PhysicalAddress, u128 value) const;
 
 private:
 	/*

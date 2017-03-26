@@ -275,6 +275,11 @@ struct Constants
 			static constexpr int NUMBER_ICR_IRQ_LINES = 7;
 		};
 
+		struct SPU2
+		{
+			static constexpr size_t SIZE_MAIN_MEMORY = SIZE_2MB;
+		};
+
 		struct Timers
 		{
 			static constexpr int NUMBER_TIMERS = 6;

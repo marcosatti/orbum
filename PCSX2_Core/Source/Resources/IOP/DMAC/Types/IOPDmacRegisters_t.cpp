@@ -53,7 +53,7 @@ IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char* mnemonic) :
 	registerField(Fields::MasterInterrupt, "MasterInterrupt", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR0_t::writeWord(const Context_t& context, u32 value)
+void IOPDmacRegister_ICR0_t::writeWord(const Context_t context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	if (context == IOP)
@@ -131,7 +131,7 @@ IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char* mnemonic, const std::
 	registerField(Fields::TCI13, "TCI13", 30, 1, 0);
 }
 
-void IOPDmacRegister_ICR1_t::writeWord(const Context_t& context, u32 value)
+void IOPDmacRegister_ICR1_t::writeWord(const Context_t context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	if (context == IOP)

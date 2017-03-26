@@ -4,7 +4,7 @@
 
 class CRTC_t;
 class Register64_t;
-class ConstantMemory_t;
+class ConstantByteMemory_t;
 
 /*
 GS_t defines the structure needed for the GS (graphics synthesiser unit).
@@ -38,20 +38,20 @@ public:
 	std::shared_ptr<Register64_t>     EXTDATA;
 	std::shared_ptr<Register64_t>     EXTWRITE;
 	std::shared_ptr<Register64_t>     BGCOLOR;
-	std::shared_ptr<ConstantMemory_t> MEMORY_00F0;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_00F0;
 
 	// 0x12001000.
 	std::shared_ptr<Register64_t>     CSR;
 	std::shared_ptr<Register64_t>     IMR;
-	std::shared_ptr<ConstantMemory_t> MEMORY_1020;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_1020;
 	std::shared_ptr<Register64_t>     BUSDIR;
-	std::shared_ptr<ConstantMemory_t> MEMORY_1050;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_1050;
 	std::shared_ptr<Register64_t>     SIGLBLID;
-	std::shared_ptr<ConstantMemory_t> MEMORY_1090;
-	std::shared_ptr<ConstantMemory_t> MEMORY_1100;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_1090;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_1100;
 
 	// 0x12002000.
-	std::shared_ptr<ConstantMemory_t> MEMORY_2000;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_2000;
 
 };
 

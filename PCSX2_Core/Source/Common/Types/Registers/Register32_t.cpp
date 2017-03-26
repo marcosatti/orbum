@@ -34,7 +34,7 @@ Register32_t::~Register32_t()
 {
 }
 
-u8 Register32_t::readByte(const Context_t& context, size_t arrayIndex)
+u8 Register32_t::readByte(const Context_t context, size_t arrayIndex)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -50,7 +50,7 @@ u8 Register32_t::readByte(const Context_t& context, size_t arrayIndex)
 	return UB[arrayIndex];
 }
 
-void Register32_t::writeByte(const Context_t& context, size_t arrayIndex, u8 value)
+void Register32_t::writeByte(const Context_t context, size_t arrayIndex, u8 value)
 {
 	UB[arrayIndex] = value;
 
@@ -66,7 +66,7 @@ void Register32_t::writeByte(const Context_t& context, size_t arrayIndex, u8 val
 #endif
 }
 
-u16 Register32_t::readHword(const Context_t& context, size_t arrayIndex)
+u16 Register32_t::readHword(const Context_t context, size_t arrayIndex)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -82,7 +82,7 @@ u16 Register32_t::readHword(const Context_t& context, size_t arrayIndex)
 	return UH[arrayIndex];
 }
 
-void Register32_t::writeHword(const Context_t& context, size_t arrayIndex, u16 value)
+void Register32_t::writeHword(const Context_t context, size_t arrayIndex, u16 value)
 {
 	UH[arrayIndex] = value;
 
@@ -98,7 +98,7 @@ void Register32_t::writeHword(const Context_t& context, size_t arrayIndex, u16 v
 #endif
 }
 
-u32 Register32_t::readWord(const Context_t& context)
+u32 Register32_t::readWord(const Context_t context)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -114,7 +114,7 @@ u32 Register32_t::readWord(const Context_t& context)
 	return UW;
 }
 
-void Register32_t::writeWord(const Context_t& context, u32 value)
+void Register32_t::writeWord(const Context_t context, u32 value)
 {
 	UW = value;
 

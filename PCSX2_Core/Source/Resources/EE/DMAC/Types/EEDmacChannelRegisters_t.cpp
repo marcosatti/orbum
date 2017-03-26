@@ -93,7 +93,7 @@ EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char* mne
 {
 }
 
-void EEDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t& context, u32 value)
+void EEDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t context, u32 value)
 {
 	if (context == EE)
 		value |= (1 << 0);
@@ -106,7 +106,7 @@ EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char*
 {
 }
 
-void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t& context, u32 value)
+void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t context, u32 value)
 {
 	if (context == EE)
 		value &= ~(1 << 0);
@@ -139,7 +139,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t& context, u32 value)
+void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, u32 value)
 {
 	EEDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 
@@ -186,7 +186,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t& context, u32 value)
+void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, u32 value)
 {
 	EEDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
@@ -232,7 +232,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8& fieldIndex, cons
 	}
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t& context, u32 value)
+void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, u32 value)
 {
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 	

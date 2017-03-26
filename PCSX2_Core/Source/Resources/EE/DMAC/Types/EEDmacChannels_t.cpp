@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
-#include "Common/Types/Memory/ConstantMemory_t.h"
+#include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 #include "Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h"
@@ -46,7 +46,7 @@ int EEDmacChannel_t::getChannelID() const
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_8060(std::make_shared<ConstantMemory_t>(0xFA0, "EE DMAC VIF0 Reserved Memory"))
+	MEMORY_8060(std::make_shared<ConstantByteMemory_t>(0xFA0, "EE DMAC VIF0 Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_VIF0 CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_VIF0 MADR");
@@ -60,7 +60,7 @@ EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> 
 
 EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_9060(std::make_shared<ConstantMemory_t>(0xFA0, "EE DMAC VIF1 Reserved Memory"))
+	MEMORY_9060(std::make_shared<ConstantByteMemory_t>(0xFA0, "EE DMAC VIF1 Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_CHCR_t>("EE CH_VIF1 CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_VIF1 MADR");
@@ -74,7 +74,7 @@ EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue32_t> 
 
 EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_A060(std::make_shared<ConstantMemory_t>(0xFA0, "EE DMAC GIF Reserved Memory"))
+	MEMORY_A060(std::make_shared<ConstantByteMemory_t>(0xFA0, "EE DMAC GIF Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_GIF CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_GIF MADR");
@@ -88,7 +88,7 @@ EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue32_t> & 
 
 EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_B030(std::make_shared<ConstantMemory_t>(0x3D0, "EE DMAC fromIPU Reserved Memory"))
+	MEMORY_B030(std::make_shared<ConstantByteMemory_t>(0x3D0, "EE DMAC fromIPU Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_FROM_CHCR_t>("EE CH_fromIPU CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_fromIPU MADR");
@@ -97,7 +97,7 @@ EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue
 
 EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_B440(std::make_shared<ConstantMemory_t>(0xBC0, "EE DMAC toIPU Reserved Memory"))
+	MEMORY_B440(std::make_shared<ConstantByteMemory_t>(0xBC0, "EE DMAC toIPU Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_toIPU CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_toIPU MADR");
@@ -107,7 +107,7 @@ EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue32_t
 
 EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_C030(std::make_shared<ConstantMemory_t>(0x3D0, "EE DMAC SIF0 Reserved Memory"))
+	MEMORY_C030(std::make_shared<ConstantByteMemory_t>(0x3D0, "EE DMAC SIF0 Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_SIF0_CHCR_t>("EE CH_SIF0 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF0 MADR");
@@ -116,7 +116,7 @@ EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> 
 
 EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_C440(std::make_shared<ConstantMemory_t>(0x3C0, "EE DMAC SIF1 Reserved Memory"))
+	MEMORY_C440(std::make_shared<ConstantByteMemory_t>(0x3C0, "EE DMAC SIF1 Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_SIF1_CHCR_t>("EE CH_SIF1 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF1 MADR");
@@ -126,7 +126,7 @@ EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> 
 
 EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
-	MEMORY_C830(std::make_shared<ConstantMemory_t>(0x7D0, "EE DMAC SIF2 Reserved Memory"))
+	MEMORY_C830(std::make_shared<ConstantByteMemory_t>(0x7D0, "EE DMAC SIF2 Reserved Memory"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_SIF2_CHCR_t>("EE CH_SIF2 CHCR", sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_SIF2 MADR");
@@ -135,8 +135,8 @@ EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> 
 
 EEDmacChannel_fromSPR_t::EEDmacChannel_fromSPR_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	MEMORY_D030(std::make_shared<ConstantMemory_t>(0x50, "EE DMAC fromSPR Reserved Memory0")),
-	MEMORY_D090(std::make_shared<ConstantMemory_t>(0x370, "EE DMAC fromSPR Reserved Memory1"))
+	MEMORY_D030(std::make_shared<ConstantByteMemory_t>(0x50, "EE DMAC fromSPR Reserved Memory0")),
+	MEMORY_D090(std::make_shared<ConstantByteMemory_t>(0x370, "EE DMAC fromSPR Reserved Memory1"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_FROM_CHCR_t>("EE CH_fromSPR CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_fromSPR MADR");
@@ -146,8 +146,8 @@ EEDmacChannel_fromSPR_t::EEDmacChannel_fromSPR_t() :
 
 EEDmacChannel_toSPR_t::EEDmacChannel_toSPR_t() :
 	EEDmacChannel_t(CHANNEL_ID),
-	MEMORY_D440(std::make_shared<ConstantMemory_t>(0x40, "EE DMAC toSPR Reserved Memory0")),
-	MEMORY_D490(std::make_shared<ConstantMemory_t>(0xB70, "EE DMAC fromSPR Reserved Memory1"))
+	MEMORY_D440(std::make_shared<ConstantByteMemory_t>(0x40, "EE DMAC toSPR Reserved Memory0")),
+	MEMORY_D490(std::make_shared<ConstantByteMemory_t>(0xB70, "EE DMAC fromSPR Reserved Memory1"))
 {
 	CHCR = std::make_shared<EEDmacChannelRegister_TO_CHCR_t>("EE CH_toSPR CHCR");
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE CH_toSPR MADR");

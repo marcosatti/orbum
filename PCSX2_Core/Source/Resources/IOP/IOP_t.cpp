@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Types/Registers/Register32_t.h"
 
@@ -23,8 +23,8 @@ IOP_t::IOP_t() :
 	SPU2(std::make_shared<SPU2_t>()),
 	Timers(std::make_shared<IOPTimers_t>()),
 	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_8KB, 1)),
-	MainMemory(std::make_shared<Memory_t>(Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
-	ParallelPort(std::make_shared<Memory_t>(Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port")),
+	MainMemory(std::make_shared<ByteMemory_t>(Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
+	ParallelPort(std::make_shared<ByteMemory_t>(Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port")),
 
 	// Registers.
 	HW_SSBUS_SPD_ADDR(std::make_shared<Register32_t>()),

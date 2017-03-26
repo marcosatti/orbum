@@ -5,7 +5,7 @@
 class EECoreR5900_t;
 class EECoreCOP0_t;
 class EECoreFPU_t;
-class Memory_t;
+class ByteMemory_t;
 class EECoreTLB_t;
 
 /*
@@ -38,7 +38,7 @@ public:
 	/*
 	Scratchpad memory.
 	*/
-	std::shared_ptr<Memory_t> ScratchpadMemory;
+	std::shared_ptr<ByteMemory_t> ScratchpadMemory;
 
 	/*
 	TLB state.

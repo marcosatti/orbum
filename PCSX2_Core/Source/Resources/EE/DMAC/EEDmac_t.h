@@ -26,8 +26,8 @@ class EEDmacRegister_STADR_t;
 class EEDmacRegister_ENABLEW_t;
 class EEDmacRegister_ENABLER_t;
 
-class Memory_t;
-class ConstantMemory_t;
+class ByteMemory_t;
+class ConstantByteMemory_t;
 
 /*
 EE DMAC Resources. See page 41 onwards of the EE Users Manual.
@@ -65,12 +65,12 @@ public:
 	std::shared_ptr<EEDmacRegister_RBSR_t>    RBSR;
 	std::shared_ptr<EEDmacRegister_RBOR_t>    RBOR;
 	std::shared_ptr<EEDmacRegister_STADR_t>   STADR;
-	std::shared_ptr<ConstantMemory_t>         MEMORY_E070;
-	std::shared_ptr<Memory_t>                 MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
+	std::shared_ptr<ConstantByteMemory_t>         MEMORY_E070;
+	std::shared_ptr<ByteMemory_t>                 MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
 	std::shared_ptr<EEDmacRegister_ENABLER_t> ENABLER;
-	std::shared_ptr<ConstantMemory_t>         MEMORY_F530;
+	std::shared_ptr<ConstantByteMemory_t>         MEMORY_F530;
 	std::shared_ptr<EEDmacRegister_ENABLEW_t> ENABLEW;
-	std::shared_ptr<ConstantMemory_t>         MEMORY_F5A0;
+	std::shared_ptr<ConstantByteMemory_t>         MEMORY_F5A0;
 
 private:
 	/*

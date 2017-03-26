@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Memory/Memory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
 
 #include "Resources/EE/Types/EERegisters_t.h"
 
 EERegister_SIO_t::EERegister_SIO_t() :
-	Memory_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO")
+	ByteMemory_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO")
 {
 }
 
-void EERegister_SIO_t::writeByte(const Context_t& context, size_t storageIndex, u8 value)
+void EERegister_SIO_t::writeByte(const Context_t context, size_t storageIndex, u8 value)
 {
 	switch (storageIndex)
 	{
@@ -36,13 +36,13 @@ void EERegister_SIO_t::writeByte(const Context_t& context, size_t storageIndex, 
 	}
 	default:
 	{
-		Memory_t::writeByte(context, storageIndex, value);
+		ByteMemory_t::writeByte(context, storageIndex, value);
 		break;
 	}
 	}
 }
 
-u32 EERegister_SIO_t::readWord(const Context_t& context, size_t storageIndex)
+u32 EERegister_SIO_t::readWord(const Context_t context, size_t storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -53,12 +53,12 @@ u32 EERegister_SIO_t::readWord(const Context_t& context, size_t storageIndex)
 	}
 	default:
 	{
-		return Memory_t::readWord(context, storageIndex);
+		return ByteMemory_t::readWord(context, storageIndex);
 	}
 	}
 }
 
-void EERegister_SIO_t::writeWord(const Context_t& context, size_t storageIndex, u32 value)
+void EERegister_SIO_t::writeWord(const Context_t context, size_t storageIndex, u32 value)
 {
 	switch (storageIndex)
 	{
@@ -71,27 +71,27 @@ void EERegister_SIO_t::writeWord(const Context_t& context, size_t storageIndex, 
 	}
 	default:
 	{
-		Memory_t::writeWord(context, storageIndex, value);
+		ByteMemory_t::writeWord(context, storageIndex, value);
 		break;
 	}
 	}
 }
 
 EERegister_MCH_t::EERegister_MCH_t() :
-	Memory_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH")
+	ByteMemory_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH")
 {
 }
 
-u32 EERegister_MCH_t::readWord(const Context_t& context, size_t storageIndex)
+u32 EERegister_MCH_t::readWord(const Context_t context, size_t storageIndex)
 {
 	switch (storageIndex)
 	{
 	case OFFSET_MCH_DRD:
 	{
 		// Below logic is from the old PCSX2.
-		if (!((Memory_t::readWord(context, OFFSET_MCH_RICM) >> 6) & 0xF))
+		if (!((ByteMemory_t::readWord(context, OFFSET_MCH_RICM) >> 6) & 0xF))
 		{
-			switch ((Memory_t::readWord(context, OFFSET_MCH_RICM) >> 16) & 0xFFF)
+			switch ((ByteMemory_t::readWord(context, OFFSET_MCH_RICM) >> 16) & 0xFFF)
 			{
 				// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 			case 0x21: //INIT
@@ -110,7 +110,7 @@ u32 EERegister_MCH_t::readWord(const Context_t& context, size_t storageIndex)
 				return 0x0090;	// SVER=0 | CORG=4(5x9x6) | SPT=1 | DEVTYP=0 | BYTE=0
 
 			case 0x40: // DEVID
-				return Memory_t::readWord(context, OFFSET_MCH_RICM) & 0x1F;	// =SDEV
+				return ByteMemory_t::readWord(context, OFFSET_MCH_RICM) & 0x1F;	// =SDEV
 			}
 		}
 	}
@@ -120,12 +120,12 @@ u32 EERegister_MCH_t::readWord(const Context_t& context, size_t storageIndex)
 	}
 	default:
 	{
-		return Memory_t::readWord(context, storageIndex);
+		return ByteMemory_t::readWord(context, storageIndex);
 	}
 	}
 }
 
-void EERegister_MCH_t::writeWord(const Context_t& context, size_t storageIndex, u32 value)
+void EERegister_MCH_t::writeWord(const Context_t context, size_t storageIndex, u32 value)
 {
 	switch (storageIndex)
 	{
@@ -134,16 +134,16 @@ void EERegister_MCH_t::writeWord(const Context_t& context, size_t storageIndex, 
 		// Below logic is from the old PCSX2.
 		// MCH_RICM: x:4|SA:12|x:5|SDEV:1|SOP:4|SBC:1|SDEV:5
 
-		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((Memory_t::readWord(context, OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
+		if ((((value >> 16) & 0xFFF) == 0x21) && (((value >> 6) & 0xF) == 1) && (((ByteMemory_t::readWord(context, OFFSET_MCH_DRD) >> 7) & 1) == 0)) // INIT & SRP=0
 			rdram_sdevid = 0;	// If SIO repeater is cleared, reset sdevid
 
-		Memory_t::writeWord(context, OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
+		ByteMemory_t::writeWord(context, OFFSET_MCH_RICM, value & ~0x80000000);	// Kill the busy bit
 
 		break;
 	}
 	default:
 	{
-		Memory_t::writeWord(context, storageIndex, value);
+		ByteMemory_t::writeWord(context, storageIndex, value);
 		break;
 	}
 	}

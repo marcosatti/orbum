@@ -34,10 +34,10 @@ public:
 	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	NOTE: IT IS UP TO THE USER TO MAKE SURE THE FLOAT VALUE WRITTEN IS COMPATIBLE WITH THE PS2! Use the FPUUtil static class functions to help with conversion.
 	*/
-	virtual u32 readWord(const Context_t & context);
-	virtual void writeWord(const Context_t & context, u32 value);
-	virtual f32 readFloat(const Context_t & context);
-	virtual void writeFloat(const Context_t & context, f32 value);
+	virtual u32 readWord(const Context_t context);
+	virtual void writeWord(const Context_t context, u32 value);
+	virtual f32 readFloat(const Context_t context);
+	virtual void writeFloat(const Context_t context, f32 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.

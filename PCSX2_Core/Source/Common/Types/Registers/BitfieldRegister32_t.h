@@ -34,18 +34,18 @@ public:
 	/*
 	If enabled, log all field contents on read.
 	*/
-	u8 readByte(const Context_t& context, size_t arrayIndex) override;
-	u16 readHword(const Context_t& context, size_t arrayIndex) override;
-	u32 readWord(const Context_t& context) override;
+	u8 readByte(const Context_t context, size_t arrayIndex) override;
+	u16 readHword(const Context_t context, size_t arrayIndex) override;
+	u32 readWord(const Context_t context) override;
 #endif
 
 	/*
 	Override write functions to sync with the bitfield map.
 	If enabled, log all field contents on write.
 	*/
-	void writeByte(const Context_t& context, size_t arrayIndex, u8 value) override;
-	void writeHword(const Context_t& context, size_t arrayIndex, u16 value) override;
-	void writeWord(const Context_t & context, u32 value) override;
+	void writeByte(const Context_t context, size_t arrayIndex, u8 value) override;
+	void writeHword(const Context_t context, size_t arrayIndex, u16 value) override;
+	void writeWord(const Context_t context, u32 value) override;
 
 	/*
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.

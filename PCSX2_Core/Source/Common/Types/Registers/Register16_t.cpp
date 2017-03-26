@@ -34,7 +34,7 @@ Register16_t::~Register16_t()
 {
 }
 
-u8 Register16_t::readByte(const Context_t& context, size_t arrayIndex)
+u8 Register16_t::readByte(const Context_t context, size_t arrayIndex)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -50,7 +50,7 @@ u8 Register16_t::readByte(const Context_t& context, size_t arrayIndex)
 	return UB[arrayIndex];
 }
 
-void Register16_t::writeByte(const Context_t& context, size_t arrayIndex, u8 value)
+void Register16_t::writeByte(const Context_t context, size_t arrayIndex, u8 value)
 {
 	UB[arrayIndex] = value;
 
@@ -66,7 +66,7 @@ void Register16_t::writeByte(const Context_t& context, size_t arrayIndex, u8 val
 #endif
 }
 
-u16 Register16_t::readHword(const Context_t& context)
+u16 Register16_t::readHword(const Context_t context)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
@@ -82,7 +82,7 @@ u16 Register16_t::readHword(const Context_t& context)
 	return UH;
 }
 
-void Register16_t::writeHword(const Context_t& context, u16 value)
+void Register16_t::writeHword(const Context_t context, u16 value)
 {
 	UH = value;
 

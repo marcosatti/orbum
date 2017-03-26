@@ -4,7 +4,7 @@
 #include <memory>
 
 #include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
-#include <Common/Types/Memory/Memory_t.h>
+#include <Common/Types/Memory/ByteMemory_t.h>
 
 class TEST_PhysicalMMU_t : public testing::Test 
 {
@@ -14,7 +14,7 @@ public:
 
 	virtual void SetUp() 
 	{
-		std::shared_ptr<Memory_t> mem = std::make_shared<Memory_t>(1024, "Test of PhysicalMMU_t");
+		std::shared_ptr<ByteMemory_t> mem = std::make_shared<ByteMemory_t>(1024, "Test of PhysicalMMU_t");
 		mmu.mapObject(address, mem);
 	}
 

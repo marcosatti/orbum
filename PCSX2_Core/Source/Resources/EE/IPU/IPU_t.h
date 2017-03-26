@@ -3,7 +3,7 @@
 #include <memory>
 
 class Register32_t;
-class ConstantMemory_t;
+class ConstantByteMemory_t;
 
 class IPU_t
 {
@@ -18,6 +18,6 @@ public:
 	std::shared_ptr<Register32_t>     CTRL;
 	std::shared_ptr<Register32_t>     BP;
 	std::shared_ptr<Register32_t>     TOP;
-	std::shared_ptr<ConstantMemory_t> MEMORY_2040;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_2040;
 };
 

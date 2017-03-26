@@ -12,7 +12,7 @@ class EEDmacChannelRegister_TADR_t;
 class EEDmacChannelRegister_ASR_t;
 class EEDmacChannelRegister_SADR_t;
 class FIFOQueue32_t;
-class ConstantMemory_t;
+class ConstantByteMemory_t;
 class PhysicalMMU_t;
 class Register32_t;
 
@@ -86,7 +86,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_8060;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_8060;
 };
 
 /*
@@ -106,7 +106,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_9060;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_9060;
 };
 
 /*
@@ -126,7 +126,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_A060;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_A060;
 };
 
 /*
@@ -146,7 +146,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_B030;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_B030;
 };
 
 /*
@@ -166,7 +166,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_B440;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_B440;
 };
 
 /*
@@ -186,7 +186,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_C030;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_C030;
 };
 
 /*
@@ -206,7 +206,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_C440;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_C440;
 };
 
 /*
@@ -226,7 +226,7 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_C830;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_C830;
 };
 
 /*
@@ -247,8 +247,8 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_D030;
-	std::shared_ptr<ConstantMemory_t> MEMORY_D090;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_D030;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_D090;
 };
 
 /*
@@ -269,6 +269,6 @@ public:
 	See page 23 onwards of the EE Users Manual.
 	This needs to be initalised into the EE memory map.
 	*/
-	std::shared_ptr<ConstantMemory_t> MEMORY_D440;
-	std::shared_ptr<ConstantMemory_t> MEMORY_D490;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_D440;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_D490;
 };

@@ -40,14 +40,14 @@ public:
 	Read/write functions to access the register, with subclassed functionality.
 	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	*/
-	virtual u8 readByte(const Context_t & context, size_t arrayIndex);
-	virtual void writeByte(const Context_t & context, size_t arrayIndex, u8 value);
-	virtual u16 readHword(const Context_t & context, size_t arrayIndex);
-	virtual void writeHword(const Context_t & context, size_t arrayIndex, u16 value);
-	virtual u32 readWord(const Context_t & context, size_t arrayIndex);
-	virtual void writeWord(const Context_t & context, size_t arrayIndex, u32 value);
-	virtual u64 readDword(const Context_t & context);
-	virtual void writeDword(const Context_t & context, u64 value);
+	virtual u8 readByte(const Context_t context, size_t arrayIndex);
+	virtual void writeByte(const Context_t context, size_t arrayIndex, u8 value);
+	virtual u16 readHword(const Context_t context, size_t arrayIndex);
+	virtual void writeHword(const Context_t context, size_t arrayIndex, u16 value);
+	virtual u32 readWord(const Context_t context, size_t arrayIndex);
+	virtual void writeWord(const Context_t context, size_t arrayIndex, u32 value);
+	virtual u64 readDword(const Context_t context);
+	virtual void writeDword(const Context_t context, u64 value);
 
 	/*
 	Gets the mnemonic of this register. Used for debug/logging.

@@ -8,9 +8,9 @@
 #include "Common/Types/Registers/MIPS/PCRegister16_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister8_t.h"
 #include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
-#include "Common/Types/Memory/Memory_t.h"
-#include "Common/Types/Memory/ROMemory_t.h"
-#include "Common/Types/Memory/ConstantMemory_t.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
+#include "Common/Types/Memory/ROByteMemory_t.h"
+#include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/Clock/Clock_t.h"

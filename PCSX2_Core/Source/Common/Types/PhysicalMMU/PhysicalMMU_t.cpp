@@ -96,7 +96,7 @@ void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped_t> & physical
 	}
 }
 
-void PhysicalMMU_t::mapObject(const u32 & physicalAddress, const std::shared_ptr<Memory_t>& memory)
+void PhysicalMMU_t::mapObject(const u32 & physicalAddress, const std::shared_ptr<ByteMemory_t>& memory)
 {
 	mapObject(std::make_shared<MappedMemory_t>(physicalAddress, memory));
 }
@@ -209,7 +209,7 @@ std::shared_ptr<PhysicalMapped_t> & PhysicalMMU_t::getMappedMemory(size_t baseVD
 	return mappedMemory;
 }
 
-u8 PhysicalMMU_t::readByte(const Context_t& context, u32 PS2PhysicalAddress) const
+u8 PhysicalMMU_t::readByte(const Context_t context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -225,7 +225,7 @@ u8 PhysicalMMU_t::readByte(const Context_t& context, u32 PS2PhysicalAddress) con
 	return mappedMemory->readByte(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeByte(const Context_t& context, u32 PS2PhysicalAddress, u8 value) const
+void PhysicalMMU_t::writeByte(const Context_t context, u32 PS2PhysicalAddress, u8 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -241,7 +241,7 @@ void PhysicalMMU_t::writeByte(const Context_t& context, u32 PS2PhysicalAddress, 
 	mappedMemory->writeByte(context, storageIndex, value);
 }
 
-u16 PhysicalMMU_t::readHword(const Context_t& context, u32 PS2PhysicalAddress) const
+u16 PhysicalMMU_t::readHword(const Context_t context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -257,7 +257,7 @@ u16 PhysicalMMU_t::readHword(const Context_t& context, u32 PS2PhysicalAddress) c
 	return mappedMemory->readHword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeHword(const Context_t& context, u32 PS2PhysicalAddress, u16 value) const
+void PhysicalMMU_t::writeHword(const Context_t context, u32 PS2PhysicalAddress, u16 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -273,7 +273,7 @@ void PhysicalMMU_t::writeHword(const Context_t& context, u32 PS2PhysicalAddress,
 	mappedMemory->writeHword(context, storageIndex, value);
 }
 
-u32 PhysicalMMU_t::readWord(const Context_t& context, u32 PS2PhysicalAddress) const
+u32 PhysicalMMU_t::readWord(const Context_t context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -289,7 +289,7 @@ u32 PhysicalMMU_t::readWord(const Context_t& context, u32 PS2PhysicalAddress) co
 	return mappedMemory->readWord(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeWord(const Context_t& context, u32 PS2PhysicalAddress, u32 value) const
+void PhysicalMMU_t::writeWord(const Context_t context, u32 PS2PhysicalAddress, u32 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -305,7 +305,7 @@ void PhysicalMMU_t::writeWord(const Context_t& context, u32 PS2PhysicalAddress, 
 	mappedMemory->writeWord(context, storageIndex, value);
 }
 
-u64 PhysicalMMU_t::readDword(const Context_t& context, u32 PS2PhysicalAddress) const
+u64 PhysicalMMU_t::readDword(const Context_t context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -321,7 +321,7 @@ u64 PhysicalMMU_t::readDword(const Context_t& context, u32 PS2PhysicalAddress) c
 	return mappedMemory->readDword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeDword(const Context_t& context, u32 PS2PhysicalAddress, u64 value) const
+void PhysicalMMU_t::writeDword(const Context_t context, u32 PS2PhysicalAddress, u64 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -337,7 +337,7 @@ void PhysicalMMU_t::writeDword(const Context_t& context, u32 PS2PhysicalAddress,
 	mappedMemory->writeDword(context, storageIndex, value);
 }
 
-u128 PhysicalMMU_t::readQword(const Context_t& context, u32 PS2PhysicalAddress) const
+u128 PhysicalMMU_t::readQword(const Context_t context, u32 PS2PhysicalAddress) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -353,7 +353,7 @@ u128 PhysicalMMU_t::readQword(const Context_t& context, u32 PS2PhysicalAddress) 
 	return mappedMemory->readQword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeQword(const Context_t& context, u32 PS2PhysicalAddress, u128 value) const
+void PhysicalMMU_t::writeQword(const Context_t context, u32 PS2PhysicalAddress, u128 value) const
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);

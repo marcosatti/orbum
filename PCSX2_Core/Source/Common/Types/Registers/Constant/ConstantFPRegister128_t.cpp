@@ -11,22 +11,22 @@ ConstantFPRegister128_t::ConstantFPRegister128_t(const f32 f0, const f32 f1, con
 	F[3] = f3;
 }
 
-void ConstantFPRegister128_t::writeWord(const Context_t& context, size_t arrayIndex, u32 value)
+void ConstantFPRegister128_t::writeWord(const Context_t context, size_t arrayIndex, u32 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantFPRegister128_t::writeDword(const Context_t& context, size_t arrayIndex, u64 value)
+void ConstantFPRegister128_t::writeDword(const Context_t context, size_t arrayIndex, u64 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantFPRegister128_t::writeQword(const Context_t& context, u128 value)
+void ConstantFPRegister128_t::writeQword(const Context_t context, u128 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantFPRegister128_t::writeFloat(const Context_t& context, size_t arrayIndex, f32 value)
+void ConstantFPRegister128_t::writeFloat(const Context_t context, size_t arrayIndex, f32 value)
 {
 	// Do not write value (constant register).
 }

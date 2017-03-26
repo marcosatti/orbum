@@ -8,7 +8,7 @@ class IOPIntc_t;
 class CDVD_t;
 class SPU2_t;
 class IOPTimers_t;
-class Memory_t;
+class ByteMemory_t;
 class DebugMemory_t;
 class PhysicalMMU_t;
 class Register32_t;
@@ -62,12 +62,12 @@ public:
 	/*
 	IOP Main Memory (2MB). Allocated at 0x00000000.
 	*/
-	std::shared_ptr<Memory_t> MainMemory;
+	std::shared_ptr<ByteMemory_t> MainMemory;
 
 	/*
 	IOP Parallel Port IO (64KB). Allocated at 0x1F000000.
 	*/
-	std::shared_ptr<Memory_t> ParallelPort;
+	std::shared_ptr<ByteMemory_t> ParallelPort;
 
 	/*
 	IOP memory/registers.
