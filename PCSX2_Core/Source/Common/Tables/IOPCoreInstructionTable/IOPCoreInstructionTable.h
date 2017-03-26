@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-class MIPSInstruction_t;
+struct MIPSInstruction_t;
 struct MIPSInstructionInfo_t;
 
 /*

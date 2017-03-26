@@ -54,8 +54,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	const u32 pcAddress = mEECore->R5900->PC->readWord(EE);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	const u32 instructionValue = mPhysicalMMU->readWord(EE, physicalAddress); 
-	mInstruction.setInstructionValue(instructionValue);
+	mInstruction.mValue = mPhysicalMMU->readWord(EE, physicalAddress);
 	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
@@ -69,7 +68,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mEECore->R5900->PC->isBranchPending(), !mEECore->COP0->Status->isInterruptsMasked(),
-			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+			(mInstruction.mValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
 	// Breakpoint.

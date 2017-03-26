@@ -3,30 +3,27 @@
 #include "Common/Global/Globals.h"
 
 /*
-A class containing info as required by a DMAtag, as explained by wisi and SP193's IOP DMA docs.
-
-Designed so it can be reused (use setValue() and then the get functions to extract the field values).
-
+An IOP DMAtag type, as explained by wisi and SP193's IOP DMA docs.
 Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred to as 64-bits in the map data below).
-
-Bitfield map (relevant only):
-- Bits 0-23 (length 24): "ADDR" (data memory address).
-- Bits 30 (length 1): "IRQ" (tag interrupt flag).
-- Bits 31 (length 1): "ERT" (tag end transfer flag).
-- Bits 32-55 (length 24): "Length" (transfer amount).
 */
-class IOPDMAtag_t
+struct IOPDMAtag_t
 {
-public:
-	IOPDMAtag_t();
 	/*
-	Set the tag value.
-	DMAtagValue0 should be the first word (LSB) of the tag, DMAtagValue1 should be the next word of the tag.
+	DMAtag values.
+	All functions below extract information from these.
+	mValue0 is for bits 0-31.
+	mValue1 is for bits 32-63.
 	*/
-	void setValue(const u32 & DMAtagValue0, const u32 & DMAtagValue1);
+	u32 mValue0;
+	u32 mValue1;
 
 	/*
 	Get functions for the DMAtag field values.
+	Bitfield map (relevant only):
+	- Bits 0-23 (length 24): "ADDR" (data memory address).
+	- Bits 30 (length 1): "IRQ" (tag interrupt flag).
+	- Bits 31 (length 1): "ERT" (tag end transfer flag).
+	- Bits 32-55 (length 24): "Length" (transfer amount).
 	*/
 	u32 getADDR() const;
 	u8 getIRQ() const;
@@ -40,12 +37,6 @@ public:
 	void logDebugAllFields() const;
 #endif
 
-private:
-	/*
-	Holder for the tag value.
-	*/
-	u32 mTagValue0;
-	u32 mTagValue1;
 };
 
 

@@ -44,7 +44,7 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		else
 		{
 			// Set the current data as the VIFcode.
-			mVIFcode.setValue(data);
+			mVIFcode.mValue = data;
 
 			// Get the instruction info.
 			VIFcodeInstructionInfo_t instruction = VIFcodeInstructionTable::getInstructionInfo(mVIFcode);

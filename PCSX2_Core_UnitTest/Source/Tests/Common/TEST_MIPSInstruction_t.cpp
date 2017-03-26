@@ -10,7 +10,7 @@ TEST(TEST_MIPSInstruction_t, RType)
 	u32 rawInstruction = 0x01093822; // (8 << 21) | (9 << 16) | (7 << 11) | 34;
 
 	MIPSInstruction_t instruction;
-	instruction.setInstructionValue(rawInstruction);
+	instruction.mValue = rawInstruction;
 
 	ASSERT_EQ(instruction.getOpcode(), 0);
 	ASSERT_EQ(instruction.getRRs(), 8);
@@ -26,7 +26,7 @@ TEST(TEST_MIPSInstruction_t, IType)
 	u32 rawInstruction = 0x954500FE; // (37 << 26) | (10 << 21) | (5 << 16) | 254;
 
 	MIPSInstruction_t instruction;
-	instruction.setInstructionValue(rawInstruction);
+	instruction.mValue = rawInstruction;
 
 	ASSERT_EQ(instruction.getOpcode(), 37);
 	ASSERT_EQ(instruction.getIRs(), 10);
@@ -40,7 +40,7 @@ TEST(TEST_MIPSInstruction_t, JType)
 	u32 rawInstruction = 0x08001000;
 
 	MIPSInstruction_t instruction;
-	instruction.setInstructionValue(rawInstruction);
+	instruction.mValue = rawInstruction;
 
 	ASSERT_EQ(instruction.getOpcode(), 2);
 	ASSERT_EQ(instruction.getJRegionAddress(), 4096);

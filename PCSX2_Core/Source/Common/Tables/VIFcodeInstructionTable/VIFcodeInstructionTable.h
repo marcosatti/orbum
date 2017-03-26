@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-class VIFcode_t;
+struct VIFcode_t;
 
 /*
 A struct to hold information about a VIFcode instruction.

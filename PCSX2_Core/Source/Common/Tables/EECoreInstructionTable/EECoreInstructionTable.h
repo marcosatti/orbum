@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
 
-class EECoreInstruction_t;
+struct EECoreInstruction_t;
 
 /*
 Encapsulates information about any MIPS instruction defined.

@@ -45,8 +45,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	const u32 pcAddress = mIOPCore->R3000->PC->readWord(IOP);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	const u32 instructionValue = mPhysicalMMU->readWord(IOP, physicalAddress);
-	mInstruction.setInstructionValue(instructionValue);
+	mInstruction.mValue = mPhysicalMMU->readWord(IOP, physicalAddress);
 	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
 
 #if defined(BUILD_DEBUG)
@@ -62,7 +61,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(),
-			(instructionValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+			(mInstruction.mValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
 	}
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress == 0x0)

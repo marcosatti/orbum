@@ -8,7 +8,6 @@
 
 /*
 An implementation of the VIF channel system.
-
 The VIF is responsible for processing and transfering data to the VU units, or optionally the GIF in the case of VIF1.
 
 For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the size of 1 DMA transfer unit of 128-bits.

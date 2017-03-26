@@ -320,7 +320,7 @@ bool EEDmac_s::transferChain()
 		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
 
 		// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
-		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.getValue() >> 16) & 0xFFFF);
+		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TAG, (mDMAtag.mValue0 >> 16) & 0xFFFF);
 
 		// Transfer successful, done for this cycle.
 		return true;
@@ -470,16 +470,19 @@ bool EEDmac_s::readChainSourceTag()
 		}
 	}
 
-	// Read tag from TADR.
+	// Get tag memory address (TADR).
 	const u32 TADR = mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR);
 	const bool SPRFlag = (mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR) != 0);
+
+	// Read EE tag (128-bits) from TADR.
 	const u128 tag = readDataMemory(TADR, SPRFlag);
 
 	// Set mDMAtag based upon the LSB 64-bits of tag.
-	mDMAtag.setValue(tag.lo);
+	mDMAtag.mValue0 = tag.UW[0];
+	mDMAtag.mValue1 = tag.UW[1];
 	
 	log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
-		mChannel->getChannelProperties()->Mnemonic, mChannel->TADR->readWord(RAW), tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+		mChannel->getChannelProperties()->Mnemonic, mChannel->TADR->readWord(RAW), mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
@@ -505,8 +508,9 @@ bool EEDmac_s::readChainDestTag()
 	// Read tag from channel FIFO.
 	const u128 tag = mChannel->mFIFOQueue->readQword(RAW);
 
-	// Set mDMAtag based upon the u128 read from the channel.
-	mDMAtag.setValue(tag.lo);
+	// Set mDMAtag based upon the first 2 words read from the channel.
+	mDMAtag.mValue0 = tag.UW[0];
+	mDMAtag.mValue1 = tag.UW[1];
 
 	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
 		mChannel->getChannelProperties()->Mnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));

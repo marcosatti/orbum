@@ -343,14 +343,11 @@ bool IOPDmac_s::readChainSourceTag()
 	const u32 TADR = mChannel->TADR->readWord(RAW);
 
 	// Read IOP tag (64-bits) from TADR.
-	const u32 tag0 = readDataMemory32(TADR);
-	const u32 tag1 = readDataMemory32(TADR + 0x4);
-
-	// Set mDMAtag.
-	mDMAtag.setValue(tag0, tag1);
+	mDMAtag.mValue0 = readDataMemory32(TADR);
+	mDMAtag.mValue1 = readDataMemory32(TADR + 0x4);
 
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, TADR, tag0, tag1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getChannelProperties()->Mnemonic, TADR, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.
@@ -395,10 +392,11 @@ bool IOPDmac_s::readChainDestTag()
 	const u128 tag = mChannel->mFIFOQueue->readQword(RAW);
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
-	mDMAtag.setValue(tag.UW[0], tag.UW[1]);
+	mDMAtag.mValue0 = tag.UW[0];
+	mDMAtag.mValue1 = tag.UW[1];
 	
 	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getChannelProperties()->Mnemonic, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.

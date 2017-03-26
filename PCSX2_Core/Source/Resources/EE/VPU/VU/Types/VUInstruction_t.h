@@ -3,32 +3,23 @@
 #include "Common/Global/Globals.h"
 
 /*
-Represents a VU instruction, which is used to extract information out of the parsed 32-bit value.
+A VU instruction type, which is used to extract information out of the parsed 32-bit value.
 See VU Users Manual page 58 onwards (micro) & page 226 onwards (macro).
 
-The Micro and Macro instruction types are compatible with eachother as they both use 32-bit values.
+The micro and macro instruction types are compatible with eachother as they both use 32-bit values.
 However, the field names are from the micro series of instructions.
+This is very similar to a MIPS instruction type.
 
-Parsing a full 64-bit micro instruction is not supported. In the system code, you must split the 64-bit value into 2 x 32-bit values, 
- from which you can use the upper and lower instructions.
+Parsing a full 64-bit micro instruction is not supported. 
+In the system code, you must split the 64-bit value into 2 x 32-bit values, from which you can use the instructions.
 */
-class VUInstruction_t
+struct VUInstruction_t
 {
-public:
 	/*
-	Initalise a VUInstruction object optionally with the code value.
+	Instruction value.
+	All functions below extract information from this.
 	*/
-	VUInstruction_t(const u32 & vuCodeValue = 0);
-
-	/*
-	Holder for the VU instruction value.
-	*/
-	u32 mInstructionValue;
-
-	/*
-	Set the VU instruction value.
-	*/
-	void setValue(const u32 & vuCodeValue);
+	u32 mValue;
 
 	/*
 	Get functions for the VU instruction field values.
@@ -47,15 +38,17 @@ public:
 
 	/*
 	Test functions for the subfields of the dest field (x, y, z, w).
-	Checks if the subfield bit is set. 
+	Returns if the subfield bit is set. 
 	Only an index parm of 0 -> 3 is supported, otherwise a runtime error occurs (on debug builds).
+
+	The fieldIndex/bits/subfield map is as follows:
 	Index Parm. 3  ->  0.
 	Bits        21 ->  24.
 	Subfield    W  ->  X.
 
 	See VU Users Manual page 61.
 	*/
-	bool testDestField(const u8 & fieldIndex) const;
+	bool testDestField(const int index) const;
 	bool testDestX() const;
 	bool testDestY() const;
 	bool testDestZ() const;
