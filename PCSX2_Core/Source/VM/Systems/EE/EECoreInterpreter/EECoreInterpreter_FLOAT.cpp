@@ -17,9 +17,9 @@ void EECoreInterpreter_s::ADD_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Calculate value and update flags.
@@ -38,8 +38,8 @@ void EECoreInterpreter_s::ADDA_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& destReg = mEECore->FPU->ACC; // ACC
 	auto& CSR = mEECore->FPU->CSR;
 
@@ -60,10 +60,10 @@ void EECoreInterpreter_s::MADD_S()
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& source3Reg = mEECore->FPU->ACC; // ACC
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Calculate value and update flags.
@@ -83,8 +83,8 @@ void EECoreInterpreter_s::MADDA_S()
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& destReg = mEECore->FPU->ACC; // ACC
 	auto& CSR = mEECore->FPU->CSR;
 
@@ -104,9 +104,9 @@ void EECoreInterpreter_s::MUL_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Calculate value and update flags.
@@ -125,8 +125,8 @@ void EECoreInterpreter_s::MULA_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& destReg = mEECore->FPU->ACC; // ACC
 	auto& CSR = mEECore->FPU->CSR;
 
@@ -146,9 +146,9 @@ void EECoreInterpreter_s::DIV_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Set flags when special conditions occur.
@@ -183,10 +183,10 @@ void EECoreInterpreter_s::MSUB_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& source3Reg = mEECore->FPU->ACC; // ACC
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Calculate value and update flags.
@@ -206,8 +206,8 @@ void EECoreInterpreter_s::MSUBA_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& destReg = mEECore->FPU->ACC; // ACC
 	auto& CSR = mEECore->FPU->CSR;
 
@@ -227,9 +227,9 @@ void EECoreInterpreter_s::SUB_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	// Calculate value and update flags.
@@ -248,8 +248,8 @@ void EECoreInterpreter_s::SUBA_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& destReg = mEECore->FPU->ACC; // ACC
 	auto& CSR = mEECore->FPU->CSR;
 

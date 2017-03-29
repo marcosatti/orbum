@@ -102,18 +102,18 @@ void VUInterpreter_s::SQD()
 void VUInterpreter_s::SQI()
 {
 	// MEM(Ft) = Fs
-	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
-	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // Mem Addr.
+	auto& source1Reg = mVuUnit->VF[mVUInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VI[mVUInstruction.getFt()]; // Mem Addr.
 	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
 
 	// 32-bit write for each dest subfield.
-	if (mInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, source1Reg->readWord(EE, 0));
-	if (mInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, source1Reg->readWord(EE, 1));
-	if (mInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, source1Reg->readWord(EE, 2));
-	if (mInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, source1Reg->readWord(EE, 3));
+	if (mVUInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, source1Reg->readWord(EE, 0));
+	if (mVUInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, source1Reg->readWord(EE, 1));
+	if (mVUInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, source1Reg->readWord(EE, 2));
+	if (mVUInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, source1Reg->readWord(EE, 3));
 
 	// Post increment.
 	source2Reg->writeHword(EE, source2Reg->readHword(EE) + 1);
@@ -152,18 +152,18 @@ void VUInterpreter_s::ILWR()
 void VUInterpreter_s::ISWR()
 {
 	// MEM(Fs) = Ft.
-	auto& source1Reg = mVuUnit->VI[mInstruction.getFt()]; // Data.
-	auto& source2Reg = mVuUnit->VI[mInstruction.getFs()]; // Mem Addr.
+	auto& source1Reg = mVuUnit->VI[mVUInstruction.getFt()]; // Data.
+	auto& source2Reg = mVuUnit->VI[mVUInstruction.getFs()]; // Mem Addr.
 	auto& Mem = mVuUnit->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
 
 	// 32-bit write for each dest subfield. Upper 16-bits of VI[Ft] value is set to 0.
-	if (mInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHword(EE)));
+	if (mVUInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, static_cast<u32>(source1Reg->readHword(EE)));
+	if (mVUInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, static_cast<u32>(source1Reg->readHword(EE)));
+	if (mVUInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, static_cast<u32>(source1Reg->readHword(EE)));
+	if (mVUInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHword(EE)));
 }
 
 void VUInterpreter_s::LOI()

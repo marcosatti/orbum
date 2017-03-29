@@ -14,9 +14,9 @@
 void EECoreInterpreter_s::BEQ()
 {
 	// BRANCH(Rs == Rt). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
@@ -28,9 +28,9 @@ void EECoreInterpreter_s::BEQ()
 void EECoreInterpreter_s::BEQL()
 {
 	// BRANCH_LIKELY(Rs == Rt). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
@@ -44,8 +44,8 @@ void EECoreInterpreter_s::BEQL()
 void EECoreInterpreter_s::BGEZ()
 {
 	// BRANCH(Rs >= 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -56,8 +56,8 @@ void EECoreInterpreter_s::BGEZ()
 void EECoreInterpreter_s::BGEZL()
 {
 	// BRANCH(Rs >= 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -70,8 +70,8 @@ void EECoreInterpreter_s::BGEZL()
 void EECoreInterpreter_s::BGTZ()
 {
 	// BRANCH(Rs > 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -82,8 +82,8 @@ void EECoreInterpreter_s::BGTZ()
 void EECoreInterpreter_s::BGTZL()
 {
 	// BRANCH(Rs > 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -96,8 +96,8 @@ void EECoreInterpreter_s::BGTZL()
 void EECoreInterpreter_s::BLEZ()
 {
 	// BRANCH(Rs <= 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -108,8 +108,8 @@ void EECoreInterpreter_s::BLEZ()
 void EECoreInterpreter_s::BLEZL()
 {
 	// BRANCH(Rs <= 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -122,8 +122,8 @@ void EECoreInterpreter_s::BLEZL()
 void EECoreInterpreter_s::BLTZ()
 {
 	// BRANCH(Rs < 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -134,8 +134,8 @@ void EECoreInterpreter_s::BLTZ()
 void EECoreInterpreter_s::BLTZL()
 {
 	// BRANCH(Rs < 0). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -148,9 +148,9 @@ void EECoreInterpreter_s::BLTZL()
 void EECoreInterpreter_s::BNE()
 {
 	// BRANCH(Rs != Rt). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
@@ -162,9 +162,9 @@ void EECoreInterpreter_s::BNE()
 void EECoreInterpreter_s::BNEL()
 {
 	// BRANCH(Rs != Rt). No exceptions.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto offset = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto offset = mEECoreInstruction.getIImmS();
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
@@ -182,7 +182,7 @@ void EECoreInterpreter_s::BC0F()
 	if (handleCOP0Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	// if (CPCOND0 == false)
 		// branch; 
@@ -200,7 +200,7 @@ void EECoreInterpreter_s::BC0FL()
 	if (handleCOP0Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	// if (CPCOND0 == false)
 		// branch likely; 
@@ -218,7 +218,7 @@ void EECoreInterpreter_s::BC0T()
 	if (handleCOP0Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	// if (CPCOND0 == true)
 	// branch; 
@@ -236,7 +236,7 @@ void EECoreInterpreter_s::BC0TL()
 	if (handleCOP0Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	// if (CPCOND0 == true)
 	// branch likely; 
@@ -253,7 +253,7 @@ void EECoreInterpreter_s::BC1F()
 	if (handleCOP1Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
 		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
@@ -265,7 +265,7 @@ void EECoreInterpreter_s::BC1FL()
 	if (handleCOP1Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 0)
 		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
@@ -279,7 +279,7 @@ void EECoreInterpreter_s::BC1T()
 	if (handleCOP1Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
 		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
@@ -291,7 +291,7 @@ void EECoreInterpreter_s::BC1TL()
 	if (handleCOP1Usable())
         return;
 
-	const s16 offset = mInstruction.getIImmS();
+	const s16 offset = mEECoreInstruction.getIImmS();
 
 	if (mEECore->FPU->CSR->getFieldValue(EECoreFPURegister_CSR_t::Fields::C) == 1)
 		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
@@ -302,12 +302,12 @@ void EECoreInterpreter_s::BC1TL()
 void EECoreInterpreter_s::J()
 {
 	// JUMP(). No Exceptions.
-	mEECore->R5900->PC->setBranchPCJRegion(mInstruction.getJRegionAddress(), 2);
+	mEECore->R5900->PC->setBranchPCJRegion(mEECoreInstruction.getJRegionAddress(), 2);
 }
 
 void EECoreInterpreter_s::JR()
 {
 	// JUMP(). Address error exception generated upon instruction load - but not in this instruction.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	mEECore->R5900->PC->setBranchPCAbsolute(source1Reg->readWord(EE, 0), 2);
 }

@@ -3,15 +3,13 @@
 #include <memory>
 #include <gtest/gtest_prod.h>
 
-#include "Common/Tables/EECoreExceptionsTable/EECoreExceptionsTable.h"
-#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
+#include "Common/Global/Globals.h"
+#include "Common/Tables/EECoreExceptionsTable.h"
 
 #include "VM/Types/VMSystem_s.h"
 
 #include "Resources/EE/EECore/Types/EECoreInstruction_t.h"
 #include "Resources/EE/EECore/Types/EECoreException_t.h"
-
-using ExceptionProperties_t = EECoreExceptionsTable::ExceptionProperties_t;
 
 class VM;
 class VUInterpreter_s;
@@ -78,11 +76,9 @@ private:
 	void handleCountEventCheck() const;
 
 	/*
-	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
-	It is also used while an instruction is being performed.
+	The is used as a temporary holder for the current instruction, while the operation to perform is running.
 	*/
-	EECoreInstruction_t mInstruction;
-	const EECoreInstructionInfo_t * mInstructionInfo;
+	EECoreInstruction_t mEECoreInstruction;
 
 	/*
 	The VU interpreter reference, used to call any COP2 instructions prefixed with V* as the mnemonic.
@@ -1030,7 +1026,7 @@ private:
 	Temp state variables.
 	*/
 	EECoreException_t mException;
-	const ExceptionProperties_t * mExceptionProperties;
+	const EECoreExceptionsTable::EECoreExceptionInfo_t * mExceptionProperties;
 
 	/*
 	The level 1 or level 2 exception handler, which is called by the base handleException() function.

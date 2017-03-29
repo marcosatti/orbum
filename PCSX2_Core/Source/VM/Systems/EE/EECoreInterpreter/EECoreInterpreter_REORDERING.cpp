@@ -11,8 +11,8 @@
 void EECoreInterpreter_s::PCPYH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 4)
 	{
@@ -30,9 +30,9 @@ void EECoreInterpreter_s::PCPYH()
 void EECoreInterpreter_s::PCPYLD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
@@ -47,9 +47,9 @@ void EECoreInterpreter_s::PCPYLD()
 void EECoreInterpreter_s::PCPYUD()
 {
 	// Rd = COPY_DW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
@@ -64,8 +64,8 @@ void EECoreInterpreter_s::PCPYUD()
 void EECoreInterpreter_s::PEXCH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -87,8 +87,8 @@ void EECoreInterpreter_s::PEXCH()
 void EECoreInterpreter_s::PEXCW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -107,8 +107,8 @@ void EECoreInterpreter_s::PEXCW()
 void EECoreInterpreter_s::PEXEH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
@@ -130,8 +130,8 @@ void EECoreInterpreter_s::PEXEH()
 void EECoreInterpreter_s::PEXEW()
 {
 	// Rd = COPY_W(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -150,9 +150,9 @@ void EECoreInterpreter_s::PEXEW()
 void EECoreInterpreter_s::PEXTLB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD / 2; i++)
 	{
@@ -164,9 +164,9 @@ void EECoreInterpreter_s::PEXTLB()
 void EECoreInterpreter_s::PEXTLH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
@@ -178,9 +178,9 @@ void EECoreInterpreter_s::PEXTLH()
 void EECoreInterpreter_s::PEXTLW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
@@ -192,9 +192,9 @@ void EECoreInterpreter_s::PEXTLW()
 void EECoreInterpreter_s::PEXTUB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = Constants::NUMBER_BYTES_IN_QWORD / 2; i > 0 ; i--)
 	{
@@ -206,9 +206,9 @@ void EECoreInterpreter_s::PEXTUB()
 void EECoreInterpreter_s::PEXTUH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = Constants::NUMBER_HWORDS_IN_QWORD / 2; i > 0; i--)
 	{
@@ -220,9 +220,9 @@ void EECoreInterpreter_s::PEXTUH()
 void EECoreInterpreter_s::PEXTUW()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = Constants::NUMBER_WORDS_IN_QWORD / 2; i > 0; i--)
 	{
@@ -234,9 +234,9 @@ void EECoreInterpreter_s::PEXTUW()
 void EECoreInterpreter_s::PINTEH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -248,9 +248,9 @@ void EECoreInterpreter_s::PINTEH()
 void EECoreInterpreter_s::PINTH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 
@@ -266,9 +266,9 @@ void EECoreInterpreter_s::PINTH()
 void EECoreInterpreter_s::PPACB()
 {
 	// Rd = COPY_B(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use halfwords for this, just read the low-order bytes directly.
@@ -285,9 +285,9 @@ void EECoreInterpreter_s::PPACB()
 void EECoreInterpreter_s::PPACH()
 {
 	// Rd = COPY_HW(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use words for this, just read the low-order hwords directly.
@@ -304,9 +304,9 @@ void EECoreInterpreter_s::PPACH()
 void EECoreInterpreter_s::PPACW()
 {
 	// Rd = COPY_W(Rs, Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	// Easier to write this instruction using two loops - one for Rs and one for Rt.
 	// Also dont need to use dwords for this, just read the low-order words directly.
@@ -323,8 +323,8 @@ void EECoreInterpreter_s::PPACW()
 void EECoreInterpreter_s::PREVH()
 {
 	// Rd = COPY_HW(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
@@ -337,8 +337,8 @@ void EECoreInterpreter_s::PREVH()
 void EECoreInterpreter_s::PROT3W()
 {
 	// Rd = COPY_W(Rt), No exceptions. Bit of a weird one...
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	destReg->writeWord(EE, 0, source2Reg->readWord(EE, 1));
 	destReg->writeWord(EE, 1, source2Reg->readWord(EE, 2));

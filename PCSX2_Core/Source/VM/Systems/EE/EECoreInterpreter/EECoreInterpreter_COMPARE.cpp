@@ -15,9 +15,9 @@ void EECoreInterpreter_s::SLT()
 {
 	// Rd = SignExtended<s64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<s64>(source2Reg->readDword(EE, 0));
@@ -31,9 +31,9 @@ void EECoreInterpreter_s::SLTI()
 {
 	// Rd = SignExtended<s64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto imm = static_cast<s64>(mInstruction.getIImmS());
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto imm = static_cast<s64>(mEECoreInstruction.getIImmS());
 
 	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
 
@@ -46,9 +46,9 @@ void EECoreInterpreter_s::SLTIU()
 {
 	// Rd = SignExtended<u64>((Rs < Imm) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	auto imm = static_cast<u64>(static_cast<s64>(mInstruction.getIImmS()));
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto imm = static_cast<u64>(static_cast<s64>(mEECoreInstruction.getIImmS()));
 
 	auto source1Val = static_cast<u64>(source1Reg->readDword(EE, 0));
 
@@ -61,9 +61,9 @@ void EECoreInterpreter_s::SLTU()
 {
 	// Rd = SignExtended<u64>((Rs < Rt) ? 1 : 0)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	auto source1Val = static_cast<u64>(source1Reg->readDword(EE, 0));
 	auto source2Val = static_cast<u64>(source2Reg->readDword(EE, 0));
@@ -77,9 +77,9 @@ void EECoreInterpreter_s::PCEQB()
 {
 	// Rd = SignExtended<u8>((Rs == Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
@@ -94,9 +94,9 @@ void EECoreInterpreter_s::PCEQH()
 {
 	// Rd = SignExtended<u16>((Rs == Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -111,9 +111,9 @@ void EECoreInterpreter_s::PCEQW()
 {
 	// Rd = SignExtended<u32>((Rs == Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -128,9 +128,9 @@ void EECoreInterpreter_s::PCGTB()
 {
 	// Rd = SignExtended<u8>((Rs > Rt) ? 0xFF : 0x00)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i++)
 	{
@@ -145,9 +145,9 @@ void EECoreInterpreter_s::PCGTH()
 {
 	// Rd = SignExtended<u16>((Rs > Rt) ? 0xFFFF : 0x0000)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -162,9 +162,9 @@ void EECoreInterpreter_s::PCGTW()
 {
 	// Rd = SignExtended<u32>((Rs > Rt) ? 0xFFFFFFFF : 0x00000000)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -182,8 +182,8 @@ void EECoreInterpreter_s::C_EQ_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& CSR = mEECore->FPU->CSR; // FCR[31] aka control status register.
 
 	f32 source1Val = source1Reg->readFloat(EE);
@@ -215,8 +215,8 @@ void EECoreInterpreter_s::C_LE_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& CSR = mEECore->FPU->CSR; // FCR[31] aka control status register.
 
 	f32 source1Val = source1Reg->readFloat(EE);
@@ -235,8 +235,8 @@ void EECoreInterpreter_s::C_LT_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
 	auto& CSR = mEECore->FPU->CSR; // FCR[31] aka control status register.
 
 	f32 source1Val = source1Reg->readFloat(EE);

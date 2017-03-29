@@ -150,9 +150,9 @@ void VUInterpreter_s::ADDAbc_3()
 void VUInterpreter_s::SUB()
 {
 	// Fd = Fs - Ft.
-	auto& destReg = mVuUnit->VF[mInstruction.getFd()];
-	auto& source1Reg = mVuUnit->VF[mInstruction.getFs()];
-	auto& source2Reg = mVuUnit->VF[mInstruction.getFt()];
+	auto& destReg = mVuUnit->VF[mVUInstruction.getFd()];
+	auto& source1Reg = mVuUnit->VF[mVUInstruction.getFs()];
+	auto& source2Reg = mVuUnit->VF[mVUInstruction.getFt()];
 	auto& MAC = mVuUnit->MAC;
 	auto& Status = mVuUnit->Status;
 
@@ -161,7 +161,7 @@ void VUInterpreter_s::SUB()
 	FPUFlags_t flags;
 	for (auto i = 0; i < 4; i++)
 	{
-		if (mInstruction.testDestField(i))
+		if (mVUInstruction.testDestField(i))
 		{
 			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(EE, i) - source2Reg->readFloat(EE, i), flags);
 			destReg->writeFloat(EE, i, result);

@@ -11,9 +11,9 @@
 void VUInterpreter_s::IADD()
 {
 	// ID = IS + IT.
-	auto& source1Reg = mVuUnit->VI[mInstruction.getFs()]; // IS.
-	auto& source2Reg = mVuUnit->VI[mInstruction.getFt()]; // IT.
-	auto& destReg = mVuUnit->VI[mInstruction.getFd()]; // ID.
+	auto& source1Reg = mVuUnit->VI[mVUInstruction.getFs()]; // IS.
+	auto& source2Reg = mVuUnit->VI[mVUInstruction.getFt()]; // IT.
+	auto& destReg = mVuUnit->VI[mVUInstruction.getFd()]; // ID.
 
 	destReg->writeHword(EE, source1Reg->readHword(EE) + source2Reg->readHword(EE));
 }

@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
+#include "Common/Tables/IOPDmacChannelTable.h"
 #include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
 #include "VM/VM.h"
@@ -17,7 +17,6 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
-using ChannelProperties_t = IOPDmacChannelTable::ChannelProperties_t;
 using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
@@ -240,28 +239,28 @@ int IOPDmac_s::transferData() const
 		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() < 1)
 		{
-			//log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			//log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return 0;
 		}
 
 		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
 		writeDataMemory32(physicalAddress, packet);
 
-		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
+		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
 	}
 	else if (direction == Direction_t::TO)
 	{
 		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - 1))
 		{
-			//log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			//log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return 0;
 		}
 
 		u32 packet = readDataMemory32(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(RAW, packet);
 
-		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelProperties()->Mnemonic, packet, physicalAddress);
+		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
 	}
 	else
 	{
@@ -334,7 +333,7 @@ bool IOPDmac_s::readChainSourceTag()
 	{
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 		{
-			//log(Warning, "IOP DMAC tried to write EE tag (u128) to FIFO queue (%s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+			//log(Warning, "IOP DMAC tried to write EE tag (u128) to FIFO queue (%s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return false;
 		}
 	}
@@ -347,7 +346,7 @@ bool IOPDmac_s::readChainSourceTag()
 	mDMAtag.mValue1 = readDataMemory32(TADR + 0x4);
 
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, TADR, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getChannelInfo()->mMnemonic, TADR, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.
@@ -384,7 +383,7 @@ bool IOPDmac_s::readChainDestTag()
 	// Check first if there is tag data available.
 	if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
 	{
-		//log(Warning, "IOP DMAC tried to read tag (u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelProperties()->Mnemonic);
+		//log(Warning, "IOP DMAC tried to read tag (u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 		return false;
 	}
 
@@ -396,7 +395,7 @@ bool IOPDmac_s::readChainDestTag()
 	mDMAtag.mValue1 = tag.UW[1];
 	
 	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelProperties()->Mnemonic, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getChannelInfo()->mMnemonic, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.

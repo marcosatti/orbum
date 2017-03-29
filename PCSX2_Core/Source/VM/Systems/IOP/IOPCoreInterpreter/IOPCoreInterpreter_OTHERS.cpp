@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "Common/Global/Globals.h"
-#include "Common/Tables/IOPCoreSyscallTable/IOPCoreSyscallTable.h"
+#include "Common/Tables/IOPCoreSyscallTable.h"
 
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
@@ -27,7 +27,7 @@ void IOPCoreInterpreter_s::SYSCALL()
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> ??? (? total). TODO: figure out number of syscalls.
 	u8 index = mIOPCore->R3000->GPR[2]->readByte(IOP, 0);
-	log(Debug, "IOPCore Syscall, number %d (%s) @ cycle = 0x%llX.", index, IOPCoreSyscallTable::getSyscallMnemonic(index), DEBUG_LOOP_COUNTER);
+	log(Debug, "IOPCore Syscall, number %d (%s) @ cycle = 0x%llX.", index, IOPCoreSyscallTable::getSyscallInfo(index)->mMnemonic, DEBUG_LOOP_COUNTER);
 #endif
 
 	// EXCEPTION(SYSCALL)

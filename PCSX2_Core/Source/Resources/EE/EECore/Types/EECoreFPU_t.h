@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
+#include "Common/Types/MIPS/MIPSCoprocessor_t.h"
 
 class FPRegister32_t;
 class BitfieldRegister32_t;

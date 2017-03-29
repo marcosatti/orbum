@@ -4,7 +4,7 @@
 
 #include "Common/Global/Log.h"
 
-void(*LOG_CALLBACK_FUNCPTR)(const LogLevel_t level, const std::string message);
+void (*LOG_CALLBACK_FUNCPTR)(const LogLevel_t level, const std::string message);
 
 void log(const LogLevel_t level, const char* format, ...)
 {

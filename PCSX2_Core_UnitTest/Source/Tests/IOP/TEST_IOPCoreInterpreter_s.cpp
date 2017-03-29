@@ -10,8 +10,6 @@
 #include <Common/Types/Registers/Register32_t.h>
 #include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
 #include <Common/Types/Registers/MIPS/PCRegister32_t.h>
-#include <Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h>
-#include <Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h>
 #include "Util/MIPSUtil.h"
 
 class TEST_IOPCoreInterpreter_s : public testing::Test
@@ -53,8 +51,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADD
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 32);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADD", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ADD", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 7891);
 		core->ADD();
@@ -64,8 +62,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDI
 	{
 		auto inst = MIPSUtil::genIInstruction(8, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ADDI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
 		core->ADDI();
 		EXPECT_EQ(5156, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -74,8 +72,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SUB
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 34);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SUB", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SUB", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 12345);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 81);
 		core->SUB();
@@ -85,8 +83,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 33);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ADDU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 5412);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, -7891);
 		core->ADDU();
@@ -96,8 +94,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SUBU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 35);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SUBU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SUBU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 64841);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 314898);
 		core->SUBU();
@@ -107,8 +105,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDIU
 	{
 		auto inst = MIPSUtil::genIInstruction(9, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDIU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ADDIU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 12);
 		core->ADDIU();
 		EXPECT_EQ(-244, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -117,8 +115,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// AND
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 36);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("AND", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("AND", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1234ABCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x56789EF0);
 		core->AND();
@@ -128,8 +126,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ANDI
 	{
 		auto inst = MIPSUtil::genIInstruction(12, 4, 2, 0xCCCC);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ANDI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ANDI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x66666666);
 		core->ANDI();
 		EXPECT_EQ(0x4444, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -138,8 +136,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// OR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 37);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("OR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("OR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
 		core->OR();
@@ -149,8 +147,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ORI
 	{
 		auto inst = MIPSUtil::genIInstruction(13, 4, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ORI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("ORI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x11111111);
 		core->ORI();
 		EXPECT_EQ(0x11119999, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -159,8 +157,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// NOR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 39);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("NOR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("NOR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x77777777);
 		core->NOR();
@@ -171,8 +169,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 2, 0);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
 		core->SLL();
 		EXPECT_EQ(0x44444444, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -181,8 +179,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLLV", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLLV", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x3);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x11111111);
 		core->SLLV();
@@ -192,8 +190,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRA
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRA", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SRA", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
 		core->SRA();
 		EXPECT_EQ(0xF8888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -202,8 +200,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRAV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 7);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRAV", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SRAV", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0X4);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
 		core->SRAV();
@@ -213,8 +211,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SRL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
 		core->SRL();
 		EXPECT_EQ(0x08888888, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -223,8 +221,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 6);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRLV", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SRLV", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0X4);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x88888888);
 		core->SRLV();
@@ -234,8 +232,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLT
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 42);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLT", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLT", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x10);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x20);
 		core->SLT();
@@ -245,8 +243,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTI
 	{
 		auto inst = MIPSUtil::genIInstruction(10, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLTI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, -1000);
 		core->SLTI();
 		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -255,8 +253,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 43);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLTU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x8E000000);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x8F000000);
 		core->SLTU();
@@ -266,8 +264,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTIU
 	{
 		auto inst = MIPSUtil::genIInstruction(11, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTIU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SLTIU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, -1000);
 		core->SLTIU();
 		EXPECT_EQ(0x1, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -276,8 +274,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// XOR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 38);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("XOR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("XOR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x88888888);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFF);
 		core->XOR();
@@ -287,8 +285,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// XORI
 	{
 		auto inst = MIPSUtil::genIInstruction(14, 4, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("XORI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("XORI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFF);
 		core->XORI();
 		EXPECT_EQ(0xFFFF7777, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
@@ -297,8 +295,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LUI
 	{
 		auto inst = MIPSUtil::genIInstruction(15, 0, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LUI", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LUI", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		core->LUI();
 		EXPECT_EQ(0x88880000, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(RAW));
 	}
@@ -306,8 +304,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BEQ
 	{
 		auto inst = MIPSUtil::genIInstruction(4, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BEQ", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BEQ", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1234ABCD);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
@@ -320,8 +318,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGEZ
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 1, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGEZ", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BGEZ", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGEZ();
@@ -333,8 +331,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGEZAL
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 17, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGEZAL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BGEZAL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x0);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGEZAL();
@@ -347,8 +345,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGTZ
 	{
 		auto inst = MIPSUtil::genIInstruction(7, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGTZ", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BGTZ", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGTZ();
@@ -360,8 +358,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLEZ
 	{
 		auto inst = MIPSUtil::genIInstruction(6, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLEZ", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BLEZ", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLEZ();
@@ -373,8 +371,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLTZ
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLTZ", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BLTZ", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLTZ();
@@ -386,8 +384,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLTZAL
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 16, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLTZAL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BLTZAL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x87654321);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLTZAL();
@@ -400,8 +398,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BNE
 	{
 		auto inst = MIPSUtil::genIInstruction(5, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BNE", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("BNE", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x87654321);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x1234ABCD);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
@@ -414,8 +412,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MULT
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 24);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MULT", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("MULT", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
 		core->MULT();
@@ -426,8 +424,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MULTU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 25);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MULTU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("MULTU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
 		core->MULTU();
@@ -438,8 +436,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DIV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 26);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DIV", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("DIV", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xFFFFFFFB);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0xFFFFFFFE);
 		core->DIV();
@@ -450,8 +448,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DIVU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 27);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DIVU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("DIVU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0x10);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[5]->writeWord(RAW, 0x7);
 		core->DIVU();
@@ -462,8 +460,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// J
 	{
 		auto inst = MIPSUtil::genJInstruction(2, 0x3F00400);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("J", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("J", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->J();
 		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
@@ -474,8 +472,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JAL
 	{
 		auto inst = MIPSUtil::genJInstruction(3, 0x3F00400);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JAL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("JAL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		core->JAL();
 		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
@@ -487,8 +485,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JALR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 0, 31, 0, 9);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JALR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("JALR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->PC->setPCValueAbsolute(0xBFC00000);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xBFC01000);
 		core->JALR();
@@ -501,8 +499,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 31, 0, 0, 0, 8);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("JR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[31]->writeWord(RAW, 0xBFC00008);
 		core->JR();
 		EXPECT_EQ(true, vm->getResources()->IOP->IOPCore->R3000->PC->isBranchPending());
@@ -513,8 +511,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LB
 	{
 		auto inst = MIPSUtil::genIInstruction(32, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LB", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LB", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeByte(RAW, 0x0, 0xCD);
 		core->LB();
@@ -524,8 +522,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LBU
 	{
 		auto inst = MIPSUtil::genIInstruction(36, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LBU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LBU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeByte(RAW, 0x0, 0xAB);
 		core->LBU();
@@ -535,8 +533,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LH
 	{
 		auto inst = MIPSUtil::genIInstruction(33, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LH", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LH", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeHword(RAW, 0x0, 0xCDEF);
 		core->LH();
@@ -546,8 +544,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LHU
 	{
 		auto inst = MIPSUtil::genIInstruction(37, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LHU", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LHU", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeHword(RAW, 0x0, 0xABCD);
 		core->LHU();
@@ -557,8 +555,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LW
 	{
 		auto inst = MIPSUtil::genIInstruction(35, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LW", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LW", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0x12345678);
 		core->LW();
@@ -568,8 +566,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SB
 	{
 		auto inst = MIPSUtil::genIInstruction(40, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SB", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SB", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
 		core->SB();
@@ -579,8 +577,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SH
 	{
 		auto inst = MIPSUtil::genIInstruction(41, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SH", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SH", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
 		core->SH();
@@ -590,8 +588,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SW
 	{
 		auto inst = MIPSUtil::genIInstruction(43, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SW", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SW", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x1234ABCD);
 		core->SW();
@@ -601,8 +599,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LWL
 	{
 		auto inst = MIPSUtil::genIInstruction(34, 4, 2, -3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LWL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LWL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0xCDCDCDCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0x01234567);
@@ -613,8 +611,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LWR
 	{
 		auto inst = MIPSUtil::genIInstruction(38, 4, 2, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LWR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("LWR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0xCDCDCDCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x4, 0x89ABCDEF);
@@ -625,8 +623,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SWL
 	{
 		auto inst = MIPSUtil::genIInstruction(42, 4, 2, -3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SWL", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SWL", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x11111111);
 		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x0, 0xABABABAB);
@@ -637,8 +635,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SWR
 	{
 		auto inst = MIPSUtil::genIInstruction(46, 4, 2, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SWR", IOPCoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mIOPCoreInstruction = inst;
+		EXPECT_STREQ("SWR", core->mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(RAW, 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(RAW, 0x11111111);
 		vm->getResources()->IOP->PhysicalMMU->writeWord(RAW, 0x4, 0xCDCDCDCD);

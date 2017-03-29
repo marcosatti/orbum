@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
@@ -18,6 +17,8 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID) :
 	mFIFOQueue(nullptr),
 	mChannelID(channelID)
 {
+	// Perform lookup for constant channel info.
+	mChannelInfo = EEDmacChannelTable::getChannelInfo(this);
 }
 
 EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
@@ -32,16 +33,18 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFO
 	mFIFOQueue(fifoQueue),
 	mChannelID(channelID)
 {
-}
-
-const EEDmacChannelTable::ChannelProperties_t * EEDmacChannel_t::getChannelProperties() const
-{
-	return EEDmacChannelTable::getChannelInfo(mChannelID);
+	// Perform lookup for constant channel info.
+	mChannelInfo = EEDmacChannelTable::getChannelInfo(this);
 }
 
 int EEDmacChannel_t::getChannelID() const
 {
 	return mChannelID;
+}
+
+const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getChannelInfo()
+{
+	return mChannelInfo;
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :

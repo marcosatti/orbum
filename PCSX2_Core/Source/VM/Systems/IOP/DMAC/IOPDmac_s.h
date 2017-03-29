@@ -123,5 +123,4 @@ private:
 	Sets mDMAtag to the tag from the channel queue.
 	*/
 	bool readChainDestTag();
-
 };

@@ -11,7 +11,8 @@
 
 VUInterpreter_s::VUInterpreter_s(VM * vm, u32 vuUnitIndex) :
 	VMSystem_s(vm, vuUnitIndex == 0 ? System_t::VU0 : System_t::VU1),
-	mVUUnitIndex(vuUnitIndex)
+	mVUUnitIndex(vuUnitIndex),
+	mVUInstruction(0)
 {
 	mVuUnit = getVM()->getResources()->EE->VPU->VU->VU_UNITS[vuUnitIndex];
 }

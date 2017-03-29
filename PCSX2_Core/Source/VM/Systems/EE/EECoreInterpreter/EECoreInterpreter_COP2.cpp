@@ -19,13 +19,13 @@ void EECoreInterpreter_s::QMFC2()
         return;
 
 	// Check for the interlock bit.
-	if (mInstruction.getVI())
+	if (mEECoreInstruction.getVI())
 	{
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = mVU0->VF[mInstruction.getRRd()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source1Reg = mVU0->VF[mEECoreInstruction.getRRd()];
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
@@ -38,13 +38,13 @@ void EECoreInterpreter_s::QMTC2()
         return;
 
 	// Check for the interlock bit.
-	if (mInstruction.getVI())
+	if (mEECoreInstruction.getVI())
 	{
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = mVU0->VF[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mVU0->VF[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
 	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
@@ -56,13 +56,13 @@ void EECoreInterpreter_s::CFC2()
         return;
 
 	// Check for the interlock bit.
-	if (mInstruction.getVI())
+	if (mEECoreInstruction.getVI())
 	{
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source1Reg = mVU0->CCR[mInstruction.getRRd()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source1Reg = mVU0->CCR[mEECoreInstruction.getRRd()];
 
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readWord(EE)));
 }
@@ -73,13 +73,13 @@ void EECoreInterpreter_s::CTC2()
         return;
 
 	// Check for the interlock bit.
-	if (mInstruction.getVI())
+	if (mEECoreInstruction.getVI())
 	{
 		throw std::runtime_error("COP2 (VU0) interlock bit set, but not implemented");
 	}
 
-	auto& destReg = mVU0->CCR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mVU0->CCR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	destReg->writeWord(EE, static_cast<u32>(source1Reg->readWord(EE, 0)));
 }
@@ -1176,7 +1176,7 @@ void EECoreInterpreter_s::VISWR()
         return;
 
 	// Delegate to the VU0 system.
-	mVU0Interpreter->mInstruction.mValue = mInstruction.mValue;
+	mVU0Interpreter->mVUInstruction = mEECoreInstruction.getValue();
 	mVU0Interpreter->ISWR();
 }
 

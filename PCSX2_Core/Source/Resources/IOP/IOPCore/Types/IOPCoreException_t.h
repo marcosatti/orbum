@@ -2,13 +2,10 @@
 
 /*
 Lists all of the 20 exceptions that can be encountered when running the IOP. For reference, see MIPS R3000 docs.
-Due to macro issues caused by <math>, all of the exceptions have EX_ as a prefix.
-
-See the IOPCoreExceptionHandler class for how they are handled, and the EE Core Users Manual.
-
-NOTE: Do NOT change the order - they are sync'd with the IOPCoreExceptionsTable::ExceptionProperties[] array. If you change one you must reflect the changes in the other.
+Enum order sync'd with the exception order in the manual.
 */
-enum class IOPCoreException_t {
+enum class IOPCoreException_t 
+{
 	EX_INTERRUPT = 0,
 	EX_TLB_MODIFIED = 1,
 	EX_TLB_REFILL_INSTRUCTION_FETCH_LOAD = 2,
@@ -22,5 +19,5 @@ enum class IOPCoreException_t {
 	EX_RESERVED_INSTRUCTION = 10,
 	EX_COPROCESSOR_UNUSABLE = 11,
 	EX_OVERFLOW = 12,
-	EX_RESET = 13 // Not documented as a type but used for resetting the R3000 state.
+	EX_RESET // Not documented, but used for resetting within the emulator.
 };

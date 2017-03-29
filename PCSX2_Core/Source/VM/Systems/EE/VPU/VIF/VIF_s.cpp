@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include "Common/Tables/VIFcodeInstructionTable/VIFcodeInstructionTable.h"
-
 #include "VM/VM.h"
 #include "VM/Systems/EE/VPU/VIF/VIF_s.h"
 
@@ -15,7 +13,8 @@
 VIF_s::VIF_s(VM * vm, u32 vifUnitIndex) :
 	VMSystem_s(vm, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
 	mVIFUnitIndex(vifUnitIndex),
-	mDMAPacket()
+	mDMAPacket(),
+	mVIFcodeInstruction(0)
 {
 }
 
@@ -44,13 +43,10 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		else
 		{
 			// Set the current data as the VIFcode.
-			mVIFcode.mValue = data;
-
-			// Get the instruction info.
-			VIFcodeInstructionInfo_t instruction = VIFcodeInstructionTable::getInstructionInfo(mVIFcode);
+			mVIFcodeInstruction = data;
 
 			// Process the VIFcode by calling the instruction handler.
-			(this->*INSTRUCTION_TABLE[instruction.mBaseInfo->mImplementationIndex])();
+			(this->*INSTRUCTION_TABLE[mVIFcodeInstruction.getInstructionInfo()->mImplementationIndex])();
 
 			// If the I bit is set, we need to raise an interrupt after the whole VIF packet has been processed - set a context variable.
 

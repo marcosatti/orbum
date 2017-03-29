@@ -18,8 +18,8 @@
 void EECoreInterpreter_s::PABSH()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -34,8 +34,8 @@ void EECoreInterpreter_s::PABSH()
 void EECoreInterpreter_s::PABSW()
 {
 	// Rd = ABS(Rt), No exceptions.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -50,8 +50,8 @@ void EECoreInterpreter_s::PABSW()
 void EECoreInterpreter_s::PLZCW()
 {
 	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
@@ -67,8 +67,8 @@ void EECoreInterpreter_s::ABS_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	CSR->clearFlags();
@@ -81,8 +81,8 @@ void EECoreInterpreter_s::NEG_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	CSR->clearFlags();
@@ -95,9 +95,9 @@ void EECoreInterpreter_s::RSQRT_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	f32 source1Val = source1Reg->readFloat(EE);
@@ -135,8 +135,8 @@ void EECoreInterpreter_s::SQRT_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
 	f32 source2Val = source2Reg->readFloat(EE);

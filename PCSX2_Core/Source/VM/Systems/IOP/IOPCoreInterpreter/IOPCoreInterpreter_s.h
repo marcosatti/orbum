@@ -4,11 +4,11 @@
 #include <gtest/gtest_prod.h>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 
 #include "VM/Types/VMSystem_s.h"
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
+#include "Resources/IOP/IOPCore/Types/IOPCoreInstruction_t.h"
 
 class VM;
 class IOPCore_t;
@@ -63,8 +63,7 @@ private:
 	The is used as a temporary holder for the current instruction, while the operation to perform is being determined.
 	It is also used while an instruction is being performed.
 	*/
-	MIPSInstruction_t mInstruction;
-	const MIPSInstructionInfo_t * mInstructionInfo;
+	IOPCoreInstruction_t mIOPCoreInstruction;
 
 	/*
 	Helper functions to check for: 

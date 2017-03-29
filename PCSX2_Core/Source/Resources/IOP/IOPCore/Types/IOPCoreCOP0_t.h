@@ -3,8 +3,8 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/MIPSCoprocessor/MIPSCoprocessor0_t.h"
-#include "Common/Types/MIPSCoprocessor/MIPSOperatingContext_t.h"
+#include "Common/Types/MIPS/MIPSCoprocessor0_t.h"
+#include "Common/Types/MIPS/MIPSOperatingContext_t.h"
 
 class Register32_t;
 class IOPCoreCOP0Register_Context_t;

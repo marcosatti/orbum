@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/MIPSCoprocessor/MIPSCoprocessor_t.h"
+#include "Common/Types/MIPS/MIPSCoprocessor_t.h"
 
 class ByteMemory_t;
 class PhysicalMMU_t;

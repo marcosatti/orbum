@@ -16,9 +16,9 @@
 void EECoreInterpreter_s::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;
@@ -31,9 +31,9 @@ void EECoreInterpreter_s::SB()
 void EECoreInterpreter_s::SD()
 {
 	// MEM[UD] = Rt. Address error or TLB error generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;
@@ -48,9 +48,9 @@ void EECoreInterpreter_s::SDL()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[UD]. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
@@ -73,9 +73,9 @@ void EECoreInterpreter_s::SDR()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[UD]. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
@@ -96,9 +96,9 @@ void EECoreInterpreter_s::SDR()
 void EECoreInterpreter_s::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;
@@ -111,9 +111,9 @@ void EECoreInterpreter_s::SH()
 void EECoreInterpreter_s::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;
@@ -128,9 +128,9 @@ void EECoreInterpreter_s::SWL()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
@@ -153,9 +153,9 @@ void EECoreInterpreter_s::SWR()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
@@ -176,9 +176,9 @@ void EECoreInterpreter_s::SWR()
 void EECoreInterpreter_s::SQ()
 {
 	// MEM[UQ] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;
@@ -194,9 +194,9 @@ void EECoreInterpreter_s::SWC1()
 	if (handleCOP1Usable())
 		return;
 
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getIRt()]; // Ft
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = (source1Reg->readWord(EE, 0) + imm);
 	u32 physicalAddress;
@@ -212,9 +212,9 @@ void EECoreInterpreter_s::SQC2()
 	if (handleCOP2Usable())
 		return;
 
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mVU0->VF[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mVU0->VF[mEECoreInstruction.getRt()];
+	const s16 imm = mEECoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
 	u32 physicalAddress;

@@ -4,7 +4,7 @@
 
 #include "VM/Types/VMSystem_s.h"
 
-#include "Resources/EE/VPU/VIF/Types/VIFcode_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h"
 
 /*
 An implementation of the VIF channel system.
@@ -38,7 +38,7 @@ private:
 	/*
 	A holder for a VIFcode instruction.
 	*/
-	VIFcode_t mVIFcode;
+	VIFcodeInstruction_t mVIFcodeInstruction;
 
 	/*
 	Checks if the VIF has stalled by looking at the STAT register fields.

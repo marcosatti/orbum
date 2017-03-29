@@ -15,8 +15,8 @@ void EECoreInterpreter_s::PEXT5()
 {
 	// Rd = EXTEND[1-5-5-5 -> 32](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
@@ -34,8 +34,8 @@ void EECoreInterpreter_s::PPAC5()
 {
 	// Rd = PACK[32 -> 1-5-5-5](Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -55,8 +55,8 @@ void EECoreInterpreter_s::CVT_S_W()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 
 	destReg->writeFloat(EE,static_cast<f32>(source1Reg->readWord(EE)));
 }
@@ -67,8 +67,8 @@ void EECoreInterpreter_s::CVT_W_S()
 	if (handleCOP1Usable())
         return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 
 	f32 source1Val = source1Reg->readFloat(EE);
 

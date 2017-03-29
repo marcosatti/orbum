@@ -12,9 +12,9 @@
 void IOPCoreInterpreter_s::LB()
 {
 	// Rd = MEM[SB]. Address error or TLB error generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -28,9 +28,9 @@ void IOPCoreInterpreter_s::LB()
 void IOPCoreInterpreter_s::LBU()
 {
 	// Rd = MEM[UB]. Address error or TLB error generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -44,9 +44,9 @@ void IOPCoreInterpreter_s::LBU()
 void IOPCoreInterpreter_s::LH()
 {
 	// Rd = MEM[SH]. Address error or TLB error generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -60,9 +60,9 @@ void IOPCoreInterpreter_s::LH()
 void IOPCoreInterpreter_s::LHU()
 {
 	// Rd = MEM[UH]. Address error or TLB error generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -76,8 +76,8 @@ void IOPCoreInterpreter_s::LHU()
 void IOPCoreInterpreter_s::LUI()
 {
 	// Rd = Imm << 16. No exceptions generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto imm = static_cast<s32>(mInstruction.getIImmS());
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto imm = static_cast<s32>(mIOPCoreInstruction.getIImmS());
 
 	s32 result = imm << 16;
 
@@ -87,9 +87,9 @@ void IOPCoreInterpreter_s::LUI()
 void IOPCoreInterpreter_s::LW()
 {
 	// Rd = MEM[SW]. Address error or TLB error generated.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -105,9 +105,9 @@ void IOPCoreInterpreter_s::LWL()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
@@ -126,9 +126,9 @@ void IOPCoreInterpreter_s::LWR()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// Rd = MEM[SW]. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& destReg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	auto& sourceReg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	const s16 imm = mInstruction.getIImmS();
+	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
@@ -145,9 +145,9 @@ void IOPCoreInterpreter_s::LWR()
 void IOPCoreInterpreter_s::SB()
 {
 	// MEM[UB] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -160,9 +160,9 @@ void IOPCoreInterpreter_s::SB()
 void IOPCoreInterpreter_s::SH()
 {
 	// MEM[UH] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -175,9 +175,9 @@ void IOPCoreInterpreter_s::SH()
 void IOPCoreInterpreter_s::SW()
 {
 	// MEM[UW] = Rd. Address error or TLB error generated.
-	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
 	u32 physicalAddress;
@@ -192,9 +192,9 @@ void IOPCoreInterpreter_s::SWL()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
@@ -217,9 +217,9 @@ void IOPCoreInterpreter_s::SWR()
 	// TODO: check this, dont think its right. This should work for little-endian architectures (ie: x86), but not sure about big-endian. Luckily most machines are little-endian today, so this may never be a problem.
 	// MEM[UW] = Rd. Address error or TLB error generated.
 	// Credit to PCSX2.
-	auto& source1Reg = mIOPCore->R3000->GPR[mInstruction.getIRs()]; // "Base"
-	auto& source2Reg = mIOPCore->R3000->GPR[mInstruction.getIRt()];
-	const s16 imm = mInstruction.getIImmS();
+	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
+	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
+	const s16 imm = mIOPCoreInstruction.getIImmS();
 
 	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
 	u32 shift = (virtualAddress & 3) << 3;

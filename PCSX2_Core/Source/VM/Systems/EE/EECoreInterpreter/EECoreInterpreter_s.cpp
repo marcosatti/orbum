@@ -2,9 +2,8 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h"
+#include "Common/Tables/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VM.h"
@@ -29,8 +28,8 @@
 
 EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
 	VMSystem_s(vm, System_t::EECore),
-	mInstructionInfo(nullptr),
 	mVU0Interpreter(vuInterpreter), 
+	mEECoreInstruction(0),
 	mException(), 
 	mExceptionProperties(nullptr) 
 {
@@ -54,8 +53,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	const u32 pcAddress = mEECore->R5900->PC->readWord(EE);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mInstruction.mValue = mPhysicalMMU->readWord(EE, physicalAddress);
-	mInstructionInfo = EECoreInstructionTable::getInstructionInfo(mInstruction);
+	mEECoreInstruction = mPhysicalMMU->readWord(EE, physicalAddress);
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
@@ -68,7 +66,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mEECore->R5900->PC->isBranchPending(), !mEECore->COP0->Status->isInterruptsMasked(),
-			(mInstruction.mValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+			(mEECoreInstruction.getValue() == 0) ? "SLL (NOP)" : mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 	}
 
 	// Breakpoint.
@@ -79,13 +77,13 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 #endif
 
 	// Run the instruction, which is based on the implementation index.
-	(this->*EECORE_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
+	(this->*EECORE_INSTRUCTION_TABLE[mEECoreInstruction.getInstructionInfo()->mImplementationIndex])();
 
 	// Increment PC.
 	mEECore->R5900->PC->next();
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
-	mEECore->COP0->Count->increment(mInstructionInfo->mCycles);
+	mEECore->COP0->Count->increment(mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles);
 	handleCountEventCheck();
 
 #if defined(BUILD_DEBUG)
@@ -94,7 +92,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 #endif
 
 	// Return the number of cycles completed.
-	return mInstructionInfo->mCycles;
+	return mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles;
 }
 
 void EECoreInterpreter_s::handleInterruptCheck()
@@ -218,7 +216,7 @@ void EECoreInterpreter_s::INSTRUCTION_UNKNOWN()
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R5900 instruction encountered! (Lookup: %s -> %s)",
-		__FILENAME__, __LINE__, mInstructionInfo->mBaseClass, mInstructionInfo->mMnemonic);
+		__FILENAME__, __LINE__, mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 #endif
 }
 

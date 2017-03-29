@@ -2,13 +2,10 @@
 
 /*
 Lists all of the 20 exceptions that can be encountered when running the EECore. For reference, see EE Core Users Manual page 94.
-Due to macro issues caused by <math>, all of the exceptions have EX_ as a prefix.
-
-See the EECoreExceptionHandler class for how they are handled, and the EE Core Users Manual.
-
-NOTE: Do NOT change the order - they are sync'd with the EECoreExceptionsTable::ExceptionProperties[] array which is from the order in the manual.
+Enum order sync'd with the exception order in the manual.
 */
-enum class EECoreException_t {
+enum class EECoreException_t 
+{
 	EX_RESET = 0,
 	EX_NMI = 1,
 	EX_PERFORMANCE_COUNTER = 2,

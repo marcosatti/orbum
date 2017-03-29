@@ -17,9 +17,9 @@ void EECoreInterpreter_s::PMAXH()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -34,9 +34,9 @@ void EECoreInterpreter_s::PMAXW()
 {
 	// Rd = MAX(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -51,9 +51,9 @@ void EECoreInterpreter_s::PMINH()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -68,9 +68,9 @@ void EECoreInterpreter_s::PMINW()
 {
 	// Rd = MIN(Rs, Rt)
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -88,9 +88,9 @@ void EECoreInterpreter_s::MAX_S()
 	if (handleCOP1Usable())
 		return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();
@@ -107,9 +107,9 @@ void EECoreInterpreter_s::MIN_S()
 	if (handleCOP1Usable())
 		return;
 
-	auto& source1Reg = mEECore->FPU->FPR[mInstruction.getRRd()]; // Fs
-	auto& source2Reg = mEECore->FPU->FPR[mInstruction.getRRt()]; // Ft
-	auto& destReg = mEECore->FPU->FPR[mInstruction.getRShamt()]; // Fd
+	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
+	auto& source2Reg = mEECore->FPU->FPR[mEECoreInstruction.getRt()]; // Ft
+	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR; // FCR[31] aka control status register.
 
 	CSR->clearFlags();

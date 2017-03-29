@@ -55,7 +55,7 @@ private:
 	It is also used while an instruction is being performed.
 	TODO: make thread safe, need to make sure if COP2 (macro) instruction is running it doesnt interfere with micro instruction running.
 	*/
-	VUInstruction_t mInstruction;
+	VUInstruction_t mVUInstruction;
 
 	/*
 	Upper instruction functions. There are 59 instructions total.

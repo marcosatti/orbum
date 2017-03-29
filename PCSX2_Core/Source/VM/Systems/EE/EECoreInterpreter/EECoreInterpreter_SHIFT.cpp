@@ -15,9 +15,9 @@ void EECoreInterpreter_s::DSRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
 }
@@ -26,9 +26,9 @@ void EECoreInterpreter_s::DSLL()
 {
 	// Rd = Rt << shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
 }
@@ -37,9 +37,9 @@ void EECoreInterpreter_s::DSLL32()
 {
 	// Rd = Rt << shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() + 32;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() + 32;
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
 }
@@ -48,9 +48,9 @@ void EECoreInterpreter_s::DSLLV()
 {
 	// Rd = Rt << Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x3F;
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) << shamt);
@@ -60,9 +60,9 @@ void EECoreInterpreter_s::DSRA32()
 {
 	// Rd = Rt >> shamt(32->61). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() + 32;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() + 32;
 
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
 }
@@ -71,9 +71,9 @@ void EECoreInterpreter_s::DSRAV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x3F;
 
 	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readDword(EE, 0)) >> shamt);
@@ -83,9 +83,9 @@ void EECoreInterpreter_s::DSRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
 }
@@ -94,9 +94,9 @@ void EECoreInterpreter_s::DSRL32()
 {
 	// Rd = Rt >> shamt(32->63). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() + 32;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() + 32;
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
 }
@@ -105,9 +105,9 @@ void EECoreInterpreter_s::DSRLV()
 {
 	// Rd = Rt >> Rs (lowest 6 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x3F;
 
 	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) >> shamt);
@@ -117,9 +117,9 @@ void EECoreInterpreter_s::SLL()
 {
 	// Rd = SignExtend<s64>(Rt << shamt(0->31)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) << shamt));
 	destReg->writeDword(EE, 0, result);
@@ -129,9 +129,9 @@ void EECoreInterpreter_s::SLLV()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x1F;
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) << shamt));
@@ -142,9 +142,9 @@ void EECoreInterpreter_s::SRA()
 {
 	// Rd = Rt >> shamt(0->31). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0)) >> shamt);
 	destReg->writeDword(EE, 0, result);
@@ -154,9 +154,9 @@ void EECoreInterpreter_s::SRAV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x1F;
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0)) >> shamt);
@@ -167,9 +167,9 @@ void EECoreInterpreter_s::SRL()
 {
 	// Rd = Rt >> shamt(0->31). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) >> shamt));
 	destReg->writeDword(EE, 0, result);
@@ -179,9 +179,9 @@ void EECoreInterpreter_s::SRLV()
 {
 	// Rd = Rt >> Rs (lowest 5 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	u8 shamt = source2Reg->readByte(EE, 0) & 0x1F;
 
 	s64 result = static_cast<s64>(static_cast<s32>(source1Reg->readWord(EE, 0) >> shamt));
@@ -192,9 +192,9 @@ void EECoreInterpreter_s::PSLLH()
 {
 	// Rd = Rt << shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() & 0xF;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -206,9 +206,9 @@ void EECoreInterpreter_s::PSLLVW()
 {
 	// Rd = SignExtend<s64>(Rt << Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -222,9 +222,9 @@ void EECoreInterpreter_s::PSLLW()
 {
 	// Rd = Rt << shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -236,9 +236,9 @@ void EECoreInterpreter_s::PSRAH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() & 0xF;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -250,9 +250,9 @@ void EECoreInterpreter_s::PSRAVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -266,9 +266,9 @@ void EECoreInterpreter_s::PSRAW()
 {
 	// Rd = Rt >> shamt. Arithmetic shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -280,9 +280,9 @@ void EECoreInterpreter_s::PSRLH()
 {
 	// Rd = Rt >> shamt(lowest 4 bits). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt() & 0xF;
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt() & 0xF;
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
@@ -294,9 +294,9 @@ void EECoreInterpreter_s::PSRLVW()
 {
 	// Rd = SignExtend<s64>(Rt >> Rs (lowest 5 bits)). Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
@@ -310,9 +310,9 @@ void EECoreInterpreter_s::PSRLW()
 {
 	// Rd = Rt >> shamt. Logical shift.
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	u8 shamt = mInstruction.getRShamt();
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	u8 shamt = mEECoreInstruction.getRShamt();
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
@@ -325,9 +325,9 @@ void EECoreInterpreter_s::QFSRV()
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.
 	// TODO: check this instruction... were they high when they created this???
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& SAReg = mEECore->R5900->SA;
 
 	u32 shamt = SAReg->readWord(EE); // From the docs it must be a multiple of bytes or halfwords, as you use the MTSAB or MTSAH instructions to write to the SA register.

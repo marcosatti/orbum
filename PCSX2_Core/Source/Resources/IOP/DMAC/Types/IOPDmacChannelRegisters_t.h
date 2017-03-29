@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/BitfieldRegister32_t.h"
-#include "Common/Tables/IOPDmacChannelTable/IOPDmacChannelTable.h"
+#include "Common/Tables/IOPDmacChannelTable.h"
 
 /*
 The IOP DMAC D_CHCR register.

@@ -49,11 +49,11 @@ public:
 	/*
 	Returns a value reference for the given key.
 	*/
-	inline value_t & operator[](const enumKey_t & key)
+	value_t & operator[](const enumKey_t & key)
 	{
 		return mMap[static_cast<int>(key)].second;
 	}
-	inline const value_t & operator[](const enumKey_t & key) const
+	const value_t & operator[](const enumKey_t & key) const
 	{
 		return mMap[static_cast<int>(key)].second;
 	}
@@ -61,19 +61,19 @@ public:
 	/*
 	Iterator functions.
 	*/
-	inline typename std::vector<std::pair<enumKey_t, value_t>>::iterator begin()
+	typename std::vector<std::pair<enumKey_t, value_t>>::iterator begin()
 	{
 		return mMap.begin();
 	}
-	inline typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator begin() const
+	typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator begin() const
 	{
 		return mMap.begin();
 	}
-	inline typename std::vector<std::pair<enumKey_t, value_t>>::iterator end()
+	typename std::vector<std::pair<enumKey_t, value_t>>::iterator end()
 	{
 		return mMap.end();
 	}
-	inline typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator end() const
+	typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator end() const
 	{
 		return mMap.end();
 	}

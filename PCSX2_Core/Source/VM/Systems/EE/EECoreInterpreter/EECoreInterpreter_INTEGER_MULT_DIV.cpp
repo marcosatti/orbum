@@ -12,8 +12,8 @@ void EECoreInterpreter_s::DIV()
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -56,8 +56,8 @@ void EECoreInterpreter_s::DIVU()
 {
 	// (LO, HI) = SignExtend<u64>(Rs[UW] / Rt[UW])
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -93,9 +93,9 @@ void EECoreInterpreter_s::MULT()
 {
 	// (Rd, LO, HI) = SignExtend<s64>(Rs[SW] * Rt[SW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -119,9 +119,9 @@ void EECoreInterpreter_s::MULTU()
 {
 	// (Rd, LO, HI) = SignExtend<s64>(Rs[UW] * Rt[UW])
 	// LO = Lower 32 bits, HI = Higher 32 bits. No Exceptions generated.
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -145,8 +145,8 @@ void EECoreInterpreter_s::PDIVBW()
 {
 	// (LO, HI) = SignExtend<s64>(Rs[SW] / Rt[SH,0]) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated, but special condition for VALUE_S32_MIN / -1.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -187,8 +187,8 @@ void EECoreInterpreter_s::PDIVUW()
 {
 	// (LO, HI)(0,1) = SignExtend<u64>(Rs[UW](0,2) / Rt[UW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -221,8 +221,8 @@ void EECoreInterpreter_s::PDIVW()
 {
 	// (LO, HI)(0,1) = SignExtend<s64>(Rs[SW](0,2) / Rt[SW](0,2)) Parallel.
 	// LO = Quotient, HI = Remainder. No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -262,9 +262,9 @@ void EECoreInterpreter_s::PMULTH()
 {
 	// (LO, HI, Rd) = SignExtend<s32>(Rs[SH] * Rt[SH]) (varying indexes - see EE Core Instruction Manual page 246).
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()]; // "A"
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()]; // "B"
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "A"
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()]; // "B"
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -288,9 +288,9 @@ void EECoreInterpreter_s::PMULTUW()
 {
 	// (LO, HI, Rd) = SignExtend<u64>(Rs[UW] * Rt[UW]) (varying indexes - see EE Core Instruction Manual page 248).
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
@@ -310,9 +310,9 @@ void EECoreInterpreter_s::PMULTW()
 {
 	// (LO, HI, Rd) = SignExtend<s64>(Rs[SW] * Rt[SW]) (varying indexes - see EE Core Instruction Manual page 250).
 	// No Exceptions generated.
-	auto& source1Reg = mEECore->R5900->GPR[mInstruction.getRRs()];
-	auto& source2Reg = mEECore->R5900->GPR[mInstruction.getRRt()];
-	auto& destReg = mEECore->R5900->GPR[mInstruction.getRRd()];
+	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
+	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
+	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 

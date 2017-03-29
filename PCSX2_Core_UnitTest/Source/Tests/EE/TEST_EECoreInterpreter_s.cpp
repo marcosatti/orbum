@@ -11,8 +11,6 @@
 #include <Common/Types/Registers/Register128_t.h>
 #include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
 #include <Common/Types/Registers/MIPS/PCRegister32_t.h>
-#include <Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h>
-#include <Common/Tables/EECoreInstructionTable/EECoreInstructionTable.h>
 #include "Util/MIPSUtil.h"
 
 class TEST_EECoreInterpreter_s : public testing::Test
@@ -54,8 +52,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADD
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 32);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADD", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ADD", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-5412));
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-7891));
 		core->ADD();
@@ -65,8 +63,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDI
 	{
 		auto inst = MIPSUtil::genIInstruction(8, 4, 2, 256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ADDI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-5412));
 		core->ADDI();
 		EXPECT_EQ(-5156, static_cast<s64>(vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0)));
@@ -75,8 +73,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDIU
 	{
 		auto inst = MIPSUtil::genIInstruction(9, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDIU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ADDIU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 12);
 		core->ADDIU();
 		EXPECT_EQ(-244, static_cast<s64>(vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0)));
@@ -85,8 +83,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ADDU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 33);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ADDU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ADDU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 5412);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-7891));
 		core->ADDU();
@@ -96,8 +94,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DADD
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 44);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DADD", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DADD", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x30000002CCCCDDDD);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x0EEEEFF000000000);
 		core->DADD();
@@ -107,8 +105,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DADDI
 	{
 		auto inst = MIPSUtil::genIInstruction(24, 4, 2, 256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DADDI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DADDI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-5412));
 		core->DADDI();
 		EXPECT_EQ(-5156, static_cast<s64>(vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0)));
@@ -117,8 +115,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DADDU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 45);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DADDU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DADDU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 5412);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-7891));
 		core->DADDU();
@@ -128,8 +126,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DADDIU
 	{
 		auto inst = MIPSUtil::genIInstruction(25, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DADDIU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DADDIU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 12);
 		core->DADDIU();
 		EXPECT_EQ(-244, static_cast<s64>(vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0)));
@@ -138,8 +136,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SUB
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 34);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SUB", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SUB", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-12345));
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-81));
 		core->SUB();
@@ -149,8 +147,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SUBU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 35);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SUBU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SUBU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 5649652);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-856261945));
 		core->SUBU();
@@ -160,8 +158,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSUB
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 46);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSUB", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSUB", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-12345));
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-81));
 		core->DSUB();
@@ -171,8 +169,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSUBU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 47);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSUBU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSUBU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 5649652);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-856261945));
 		core->DSUBU();
@@ -182,8 +180,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MOVN
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 11);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MOVN", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("MOVN", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x20);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 1);
 		core->MOVN();
@@ -193,8 +191,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MOVZ
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 10);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MOVZ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("MOVZ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x20);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0);
 		core->MOVZ();
@@ -204,8 +202,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// AND
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 36);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("AND", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("AND", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-48446));
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-636952));
 		core->AND();
@@ -215,8 +213,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ANDI
 	{
 		auto inst = MIPSUtil::genIInstruction(12, 4, 2, 0xCCCC);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ANDI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ANDI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFF66666666);
 		core->ANDI();
 		EXPECT_EQ(0x4444, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -225,8 +223,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// OR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 37);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("OR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("OR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x88888888);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xFFFFFFFF11111111);
 		core->OR();
@@ -236,8 +234,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// ORI
 	{
 		auto inst = MIPSUtil::genIInstruction(13, 4, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("ORI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("ORI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xCCCCCCCC11111111);
 		core->ORI();
 		EXPECT_EQ(0xCCCCCCCC11119999, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -246,8 +244,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// NOR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 39);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("NOR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("NOR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x88888888);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x77777777);
 		core->NOR();
@@ -257,8 +255,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 0);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x08888888);
 		core->SLL();
 		EXPECT_EQ(0xFFFFFFFF88888880, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -267,8 +265,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLLV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLLV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x3);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x11111111);
 		core->SLLV();
@@ -278,8 +276,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRA
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRA", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SRA", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x88888888);
 		core->SRA();
 		EXPECT_EQ(0xFFFFFFFFF8888888, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -288,8 +286,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRAV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 7);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRAV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SRAV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x4);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x88888888);
 		core->SRAV();
@@ -299,8 +297,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SRL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x88888888);
 		core->SRL();
 		EXPECT_EQ(0x08888888, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -309,8 +307,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SRLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 6);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SRLV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SRLV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x0);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x88888888);
 		core->SRLV();
@@ -320,8 +318,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSLL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 28, 56);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSLL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSLL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xABABABAB);
 		core->DSLL();
 		EXPECT_EQ(0x0ABABABAB0000000, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -330,8 +328,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSLL32
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 0, 60);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSLL32", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSLL32", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xABABABAB);
 		core->DSLL32();
 		EXPECT_EQ(0xABABABAB00000000, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -340,8 +338,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSLLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 20);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSLLV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSLLV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 35);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x11111111);
 		core->DSLLV();
@@ -351,8 +349,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRA
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 59);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRA", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRA", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xABABABABCDCDCDCD);
 		core->DSRA();
 		EXPECT_EQ(0xFABABABABCDCDCDC, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -361,8 +359,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRA32
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 28, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRA32", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRA32", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xABABABABCDCDCDCD);
 		core->DSRA32();
 		EXPECT_EQ(0xFFFFFFFFFFFFFFFA, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -371,8 +369,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRAV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 23);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRAV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRAV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 60);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xABABABABCDCDCDCD);
 		core->DSRAV();
@@ -382,8 +380,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRL
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 58);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xAAAABBBBCCCCDDDD);
 		core->DSRL();
 		EXPECT_EQ(0x0AAAABBBBCCCCDDD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -392,8 +390,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRL32
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 0, 5, 2, 4, 62);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRL32", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRL32", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xAAAABBBBCCCCDDDD);
 		core->DSRL32();
 		EXPECT_EQ(0x0AAAABBB, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -402,8 +400,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DSRLV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 22);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DSRLV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DSRLV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 4);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xAAAABBBBCCCCDDDD);
 		core->DSRLV();
@@ -413,8 +411,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLT
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 42);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLT", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLT", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-81));
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-1));
 		core->SLT();
@@ -424,8 +422,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTI
 	{
 		auto inst = MIPSUtil::genIInstruction(10, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLTI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-1000));
 		core->SLTI();
 		EXPECT_EQ(0x1, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -434,8 +432,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 43);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLTU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 1);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, static_cast<s64>(-1));
 		core->SLTU();
@@ -445,8 +443,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SLTIU
 	{
 		auto inst = MIPSUtil::genIInstruction(11, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SLTIU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SLTIU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-1000));
 		core->SLTIU();
 		EXPECT_EQ(0x1, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -455,8 +453,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// XOR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 2, 0, 38);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("XOR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("XOR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFF88888888);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x88888888FFFFFFFF);
 		core->XOR();
@@ -466,8 +464,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// XORI
 	{
 		auto inst = MIPSUtil::genIInstruction(14, 4, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("XORI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("XORI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFF);
 		core->XORI();
 		EXPECT_EQ(0xFFFFFFFFFFFF7777, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
@@ -476,8 +474,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LUI
 	{
 		auto inst = MIPSUtil::genIInstruction(15, 0, 2, 0x8888);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LUI", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LUI", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		core->LUI();
 		EXPECT_EQ(0xFFFFFFFF88880000, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(RAW, 0));
 	}
@@ -485,8 +483,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BEQ
 	{
 		auto inst = MIPSUtil::genIInstruction(4, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BEQ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BEQ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x1234ABCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x1234ABCD);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
@@ -499,8 +497,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGEZ
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 1, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGEZ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BGEZ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x1);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGEZ();
@@ -512,8 +510,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGEZAL
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 17, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGEZAL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BGEZAL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x0);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGEZAL();
@@ -526,8 +524,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BGTZ
 	{
 		auto inst = MIPSUtil::genIInstruction(7, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BGTZ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BGTZ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x1);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BGTZ();
@@ -539,8 +537,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLEZ
 	{
 		auto inst = MIPSUtil::genIInstruction(6, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLEZ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BLEZ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLEZ();
@@ -552,8 +550,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLTZ
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 0, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLTZ", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BLTZ", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-1));
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLTZ();
@@ -565,8 +563,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BLTZAL
 	{
 		auto inst = MIPSUtil::genIInstruction(1, 4, 16, 63);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BLTZAL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BLTZAL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, static_cast<s64>(-1));
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->BLTZAL();
@@ -579,8 +577,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// BNE
 	{
 		auto inst = MIPSUtil::genIInstruction(5, 4, 2, -256);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("BNE", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("BNE", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xFFFFFFFF87654321);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x1234ABCD);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
@@ -593,8 +591,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MULT
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 24);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MULT", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("MULT", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFB);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFE);
 		core->MULT();
@@ -605,8 +603,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// MULTU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 25);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("MULTU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("MULTU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFB);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFE);
 		core->MULTU();
@@ -617,8 +615,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DIV
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 26);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DIV", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DIV", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFB);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0xFFFFFFFFFFFFFFFE);
 		core->DIV();
@@ -629,8 +627,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// DIVU
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 5, 0, 0, 27);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("DIVU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("DIVU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0x10);
 		vm->getResources()->EE->EECore->R5900->GPR[5]->writeDword(RAW, 0, 0x7);
 		core->DIVU();
@@ -641,8 +639,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// J
 	{
 		auto inst = MIPSUtil::genJInstruction(2, 0x3F00400);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("J", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("J", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->J();
 		EXPECT_EQ(true, vm->getResources()->EE->EECore->R5900->PC->isBranchPending());
@@ -653,8 +651,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JAL
 	{
 		auto inst = MIPSUtil::genJInstruction(3, 0x3F00400);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JAL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("JAL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		core->JAL();
 		EXPECT_EQ(true, vm->getResources()->EE->EECore->R5900->PC->isBranchPending());
@@ -666,8 +664,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JALR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 4, 0, 31, 0, 9);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JALR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("JALR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->PC->setPCValueAbsolute(0xBFC00000);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xBFC01000);
 		core->JALR();
@@ -680,8 +678,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// JR
 	{
 		auto inst = MIPSUtil::genRInstruction(0, 31, 0, 0, 0, 8);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("JR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("JR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[31]->writeDword(RAW, 0, 0xBFC00008);
 		core->JR();
 		EXPECT_EQ(true, vm->getResources()->EE->EECore->R5900->PC->isBranchPending());
@@ -692,8 +690,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LB
 	{
 		auto inst = MIPSUtil::genIInstruction(32, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LB", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LB", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeByte(RAW, 0x0, 0xCD);
 		core->LB();
@@ -703,8 +701,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LBU
 	{
 		auto inst = MIPSUtil::genIInstruction(36, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LBU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LBU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeByte(RAW, 0x0, 0xAB);
 		core->LBU();
@@ -714,8 +712,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LH
 	{
 		auto inst = MIPSUtil::genIInstruction(33, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LH", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LH", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeHword(RAW, 0x0, 0xCDEF);
 		core->LH();
@@ -725,8 +723,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LHU
 	{
 		auto inst = MIPSUtil::genIInstruction(37, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LHU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LHU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeHword(RAW, 0x0, 0xABCD);
 		core->LHU();
@@ -736,8 +734,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LW
 	{
 		auto inst = MIPSUtil::genIInstruction(35, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LW", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LW", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xF2345678);
 		core->LW();
@@ -747,8 +745,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LWU
 	{
 		auto inst = MIPSUtil::genIInstruction(39, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LWU", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LWU", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xF2345678);
 		core->LWU();
@@ -758,8 +756,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LD
 	{
 		auto inst = MIPSUtil::genIInstruction(55, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LD", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LD", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x12345678ABCDEF0);
 		core->LD();
@@ -769,8 +767,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SB
 	{
 		auto inst = MIPSUtil::genIInstruction(40, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SB", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SB", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x1234ABCD);
 		core->SB();
@@ -780,8 +778,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SH
 	{
 		auto inst = MIPSUtil::genIInstruction(41, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SH", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SH", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x1234ABCD);
 		core->SH();
@@ -791,8 +789,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SW
 	{
 		auto inst = MIPSUtil::genIInstruction(43, 4, 2, -4);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SW", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SW", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x1234ABCD);
 		core->SW();
@@ -802,8 +800,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LWL
 	{
 		auto inst = MIPSUtil::genIInstruction(34, 4, 2, -3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LWL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LWL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0x01234567);
@@ -814,8 +812,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LWR
 	{
 		auto inst = MIPSUtil::genIInstruction(38, 4, 2, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LWR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LWR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x4, 0x89ABCDEF);
@@ -826,8 +824,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LDL
 	{
 		auto inst = MIPSUtil::genIInstruction(26, 4, 2, -1);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LDL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LDL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCDCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x4141414141414141);
@@ -838,8 +836,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// LDR
 	{
 		auto inst = MIPSUtil::genIInstruction(27, 4, 2, 0);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("LDR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("LDR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0xCDCDCDCDCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0x4141414141414141);
@@ -850,8 +848,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SWL
 	{
 		auto inst = MIPSUtil::genIInstruction(42, 4, 2, -3);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SWL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SWL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x11111111);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x0, 0xABABABAB);
@@ -862,8 +860,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SWR
 	{
 		auto inst = MIPSUtil::genIInstruction(46, 4, 2, 2);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SWR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SWR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x11111111);
 		vm->getResources()->EE->PhysicalMMU->writeWord(RAW, 0x4, 0xCDCDCDCD);
@@ -874,8 +872,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SDL
 	{
 		auto inst = MIPSUtil::genIInstruction(44, 4, 2, -1);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SDL", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SDL", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x4141414141414141);
 		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xCDCDCDCDCDCDCDCD);
@@ -886,8 +884,8 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 	// SDR
 	{
 		auto inst = MIPSUtil::genIInstruction(45, 4, 2, 0);
-		core->mInstruction.mValue = inst;
-		EXPECT_STREQ("SDR", EECoreInstructionTable::getInstructionInfo(core->mInstruction)->mMnemonic);
+		core->mEECoreInstruction = inst;
+		EXPECT_STREQ("SDR", core->mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(RAW, 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(RAW, 0, 0x4141414141414141);
 		vm->getResources()->EE->PhysicalMMU->writeDword(RAW, 0x0, 0xCDCDCDCDCDCDCDCD);

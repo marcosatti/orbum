@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Tables/EEDmacChannelTable/EEDmacChannelTable.h"
+#include "Common/Tables/EEDmacChannelTable.h"
 
 class EEDmacChannelRegister_CHCR_t;
 class EEDmacChannelRegister_MADR_t;
@@ -58,15 +58,20 @@ public:
 	int getChannelID() const;
 
 	/*
-	Returns the constant channel properties.
+	Returns the constant properties for this channel.
 	*/
-	const EEDmacChannelTable::ChannelProperties_t * getChannelProperties() const;
+	const EEDmacChannelTable::EEDmacChannelInfo_t * getChannelInfo();
 
 private:
 	/*
 	The index of this channel.
 	*/
 	const int mChannelID;
+
+	/*
+	Constant channel properties.
+	*/
+	const EEDmacChannelTable::EEDmacChannelInfo_t * mChannelInfo;
 };
 
 /*

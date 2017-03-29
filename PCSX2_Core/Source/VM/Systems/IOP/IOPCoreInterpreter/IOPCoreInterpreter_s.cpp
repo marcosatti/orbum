@@ -2,9 +2,8 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Tables/IOPCoreInstructionTable/IOPCoreInstructionTable.h"
-#include "Common/Types/MIPSInstruction/MIPSInstruction_t.h"
-#include "Common/Types/MIPSInstructionInfo/MIPSInstructionInfo_t.h"
+#include "Common/Tables/IOPCoreInstructionTable.h"
+#include "Common/Tables/IOPCoreExceptionsTable.h"
 #include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -20,11 +19,10 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include <Common/Tables/IOPCoreExceptionsTable/IOPCoreExceptionsTable.h>
 
 IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	VMSystem_s(vm, System_t::IOPCore),
-	mInstructionInfo(nullptr)
+	mIOPCoreInstruction(0)
 {
 	mIOPCore = getVM()->getResources()->IOP->IOPCore;
 	mPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
@@ -45,8 +43,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	const u32 pcAddress = mIOPCore->R3000->PC->readWord(IOP);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mInstruction.mValue = mPhysicalMMU->readWord(IOP, physicalAddress);
-	mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(mInstruction);
+	mIOPCoreInstruction = mPhysicalMMU->readWord(IOP, physicalAddress);
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1000000000000;
@@ -61,7 +58,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(),
-			(mInstruction.mValue == 0) ? "SLL (NOP)" : mInstructionInfo->mMnemonic);
+			(mIOPCoreInstruction.getValue() == 0) ? "SLL (NOP)" : mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 	}
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress == 0x0)
@@ -71,7 +68,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 #endif
 
 	// Run the instruction, which is based on the implementation index.
-	(this->*IOP_INSTRUCTION_TABLE[mInstructionInfo->mImplementationIndex])();
+	(this->*IOP_INSTRUCTION_TABLE[mIOPCoreInstruction.getInstructionInfo()->mImplementationIndex])();
 
 	// Increment PC.
 	mIOPCore->R3000->PC->next();
@@ -82,7 +79,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 #endif
 
 	// Return the number of cycles the instruction took to complete.
-	return mInstructionInfo->mCycles;
+	return mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles;
 }
 
 void IOPCoreInterpreter_s::handleInterruptCheck()
@@ -148,7 +145,7 @@ void IOPCoreInterpreter_s::INSTRUCTION_UNKNOWN()
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 instruction encountered! (Lookup: %s -> %s)",
-		__FILENAME__, __LINE__, mInstructionInfo->mBaseClass, mInstructionInfo->mMnemonic);
+		__FILENAME__, __LINE__, mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
 #endif
 }
 
