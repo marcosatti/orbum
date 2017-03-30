@@ -341,38 +341,37 @@ bool IOPDmac_s::readChainSourceTag()
 	// Get tag memory address (TADR).
 	const u32 TADR = mChannel->TADR->readWord(RAW);
 
-	// Read IOP tag (64-bits) from TADR.
-	mDMAtag = IOPDMAtag_t(readDataMemory32(TADR), readDataMemory32(TADR + 0x4));
+	// Read EE tag (128-bits) from TADR.
+	const u128 tag = readDataMemory128(TADR);
+
+	// Set mDMAtag based upon the LSB 64-bits of tag.
+	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
 		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
-	// Set tag transfer length.
-	// The maximum supported length is 1MB - 16 bytes, rounded up to the nearest qword alignment (from PCSX2).
-	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter?
-	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
-	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
-
 	// Check if we need to transfer the tag (CHCR bit 8 aka "chopping enable" set).
 	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
-		// Read EE tag (64-bits) from TADR + 0x8.
-		const u32 tag2 = readDataMemory32(TADR + 0x8);
-		const u32 tag3 = readDataMemory32(TADR + 0xC);
-
 		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
-		u128 sendTag = u128(tag2, tag3, 0, 0);
+		u128 sendTag = u128(tag.UW[2], tag.UW[3], 0, 0);
 		mChannel->mFIFOQueue->writeQword(RAW, sendTag);
+	}
 
-		// Increment TADR.
-		mChannel->TADR->increment(0x10);
-	}
-	else
-	{
-		// Increment TADR.
-		mChannel->TADR->increment(0x8);
-	}
+	// Set tag transfer length.
+	// The maximum supported length is 1MB - 16 bytes, rounded up to the nearest qword alignment (from PCSX2).
+	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter? Probably doesn't need it, when source chain is enforced anyway (ie: will never receive data that isn't qword aligned).
+	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
+	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
+
+	// Increment TADR.
+	mChannel->TADR->increment(0x10);
+
+	// TODO: look into the tag transfer enable (TTE) option not set (CHCR bit 8 aka "chopping enable" set).
+	//       PCSX2 does not implement anything at all, but wisi might know something. SIF0 has this bit set always. For now, left unimplemented.
+	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
+		throw std::runtime_error("IOP DMAC source chain mode had TTE set to 0 - what is meant to happen?");
 
 	return true;
 }
@@ -398,11 +397,12 @@ bool IOPDmac_s::readChainDestTag()
 
 	// Set tag transfer length.
 	// The maximum supported length is 1MB - 16 bytes.
-	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter?
+	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter? Probably doesn't need it, when source chain is enforced anyway (ie: will never receive data that isn't qword aligned).
 	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
-	mChannel->CHCR->mTagTransferLength = mDMAtag.getLength() & 0xFFFFC;
+	// TODO: check if "& 0xFFFFC" is needed, or if its just PCSX2 specific.
+	mChannel->CHCR->mTagTransferLength = mDMAtag.getLength();
 
-	// TODO: look into the tag transfer enable (TTE) option (CHCR bit 8 aka "chopping enable" set).
+	// TODO: look into the tag transfer enable (TTE) option not set (CHCR bit 8 aka "chopping enable").
 	//       PCSX2 does not implement anything at all, but wisi might know something. SIF1 has this bit set always. For now, left unimplemented.
 	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
 		throw std::runtime_error("IOP DMAC dest chain mode had TTE set to 0 - what is meant to happen?");
