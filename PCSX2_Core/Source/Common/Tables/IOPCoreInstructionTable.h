@@ -370,6 +370,6 @@ struct IOPCoreInstructionTable
 	/*
 	The main lookup function. Use this to return information on the instruction given.
 	*/
-	static const IOPCoreInstructionInfo_t * getInstructionInfo(const IOPCoreInstruction_t * instruction);	
+	static const IOPCoreInstructionInfo_t * getInfo(const IOPCoreInstruction_t * instruction);	
 };
 

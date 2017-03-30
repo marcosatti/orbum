@@ -346,7 +346,7 @@ bool IOPDmac_s::readChainSourceTag()
 	mDMAtag.mValue1 = readDataMemory32(TADR + 0x4);
 
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelInfo()->mMnemonic, TADR, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.
@@ -395,7 +395,7 @@ bool IOPDmac_s::readChainDestTag()
 	mDMAtag.mValue1 = tag.UW[1];
 	
 	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelInfo()->mMnemonic, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getInfo()->mMnemonic, mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.

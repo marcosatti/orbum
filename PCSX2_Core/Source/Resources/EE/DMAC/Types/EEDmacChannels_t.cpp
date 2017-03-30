@@ -18,7 +18,7 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID) :
 	mChannelID(channelID)
 {
 	// Perform lookup for constant channel info.
-	mChannelInfo = EEDmacChannelTable::getChannelInfo(this);
+	mInfo = EEDmacChannelTable::getInfo(this);
 }
 
 EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
@@ -34,7 +34,7 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFO
 	mChannelID(channelID)
 {
 	// Perform lookup for constant channel info.
-	mChannelInfo = EEDmacChannelTable::getChannelInfo(this);
+	mInfo = EEDmacChannelTable::getInfo(this);
 }
 
 int EEDmacChannel_t::getChannelID() const
@@ -42,9 +42,9 @@ int EEDmacChannel_t::getChannelID() const
 	return mChannelID;
 }
 
-const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getChannelInfo()
+const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getInfo()
 {
-	return mChannelInfo;
+	return mInfo;
 }
 
 EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :

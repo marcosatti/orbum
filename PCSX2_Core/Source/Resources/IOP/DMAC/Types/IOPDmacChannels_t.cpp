@@ -13,7 +13,7 @@ IOPDmacChannel_t::IOPDmacChannel_t(const int channelID, const std::shared_ptr<FI
 	mChannelID(channelID)
 {
 	// Perform lookup for constant channel info.
-	mChannelInfo = IOPDmacChannelTable::getChannelInfo(this);
+	mInfo = IOPDmacChannelTable::getInfo(this);
 }
 
 int IOPDmacChannel_t::getChannelID() const
@@ -21,9 +21,9 @@ int IOPDmacChannel_t::getChannelID() const
 	return mChannelID;
 }
 
-const IOPDmacChannelTable::IOPDmacChannelInfo_t * IOPDmacChannel_t::getChannelInfo()
+const IOPDmacChannelTable::IOPDmacChannelInfo_t * IOPDmacChannel_t::getInfo()
 {
-	return mChannelInfo;
+	return mInfo;
 }
 
 IOPDmacChannel_fromMDEC_t::IOPDmacChannel_fromMDEC_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :

@@ -275,6 +275,6 @@ struct IOPCoreSyscallTable
 	/*
 	Returns the syscall properties from above given the syscall number.
 	*/
-	static const IOPCoreSyscallInfo_t * getSyscallInfo(const int syscallNumber);
+	static const IOPCoreSyscallInfo_t * getInfo(const int syscallNumber);
 };
 

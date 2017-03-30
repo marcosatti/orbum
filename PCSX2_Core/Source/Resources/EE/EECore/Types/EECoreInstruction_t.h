@@ -15,7 +15,7 @@ struct EECoreInstruction_t : public MIPSInstruction_t
 	EECoreInstruction_t(const u32 value) : 
 		MIPSInstruction_t(value) 
 	{ 
-		mInstructionInfo = EECoreInstructionTable::getInstructionInfo(this); 
+		mInfo = EECoreInstructionTable::getInfo(this); 
 	}
 
 	/*
@@ -45,14 +45,14 @@ struct EECoreInstruction_t : public MIPSInstruction_t
 	/*
 	Returns the constant EECore instruction information.
 	*/
-	const EECoreInstructionTable::EECoreInstructionInfo_t * getInstructionInfo()
+	const EECoreInstructionTable::EECoreInstructionInfo_t * getInfo()
 	{
-		return mInstructionInfo;
+		return mInfo;
 	}
 
 private:
 	/*
 	Constant instruction information.
 	*/
-	const EECoreInstructionTable::EECoreInstructionInfo_t * mInstructionInfo;
+	const EECoreInstructionTable::EECoreInstructionInfo_t * mInfo;
 };

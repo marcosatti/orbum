@@ -6,8 +6,8 @@
 
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
-#include "Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCores_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h"
 
 void VUInterpreter_s::ABS()
 {
@@ -150,11 +150,11 @@ void VUInterpreter_s::ADDAbc_3()
 void VUInterpreter_s::SUB()
 {
 	// Fd = Fs - Ft.
-	auto& destReg = mVuUnit->VF[mVUInstruction.getFd()];
-	auto& source1Reg = mVuUnit->VF[mVUInstruction.getFs()];
-	auto& source2Reg = mVuUnit->VF[mVUInstruction.getFt()];
-	auto& MAC = mVuUnit->MAC;
-	auto& Status = mVuUnit->Status;
+	auto& destReg = mVUCore->VF[mVUInstruction.getFd()];
+	auto& source1Reg = mVUCore->VF[mVUInstruction.getFs()];
+	auto& source2Reg = mVUCore->VF[mVUInstruction.getFt()];
+	auto& MAC = mVUCore->MAC;
+	auto& Status = mVUCore->Status;
 
 	Status->clearFlags();
 

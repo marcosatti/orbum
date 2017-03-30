@@ -4,7 +4,7 @@
 
 #include "Resources/EE/DMAC/Types/EEDmacChannels_t.h"
 
-const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannelTable::getChannelInfo(const EEDmacChannel_t * channel)
+const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannelTable::getInfo(const EEDmacChannel_t * channel)
 {
 	return &EEDMAC_CHANNEL_TABLE[channel->getChannelID()];
 }

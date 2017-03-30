@@ -39,12 +39,12 @@
 #include "Resources/EE/VPU/VPU_t.h"
 #include "Resources/EE/VPU/Types/VPURegisters_t.h"
 #include "Resources/EE/VPU/VIF/VIF_t.h"
-#include "Resources/EE/VPU/VIF/Types/VifUnits_t.h"
-#include "Resources/EE/VPU/VIF/Types/VifUnitRegisters_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFCores_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 #include "Resources/EE/VPU/VU/VU_t.h"
-#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 #include "Resources/EE/VPU/VU/Types/VURegisters_t.h"
-#include "Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h"
 
 #include "Resources/IOP/IOPCore/IOPCore_t.h"
 #include "Resources/IOP/DMAC/IOPDmac_t.h"
@@ -105,7 +105,7 @@ void Resources_t::postInit_EE_VPU_VU() const
 {
 	// Initalise VU0 & the CCR registers.
 	{
-		EE->VPU->VU->VU0 = std::make_shared<VuUnit_VU0_t>(EE->EECore->COP0);
+		EE->VPU->VU->VU0 = std::make_shared<VUCore_VU0_t>(EE->EECore->COP0);
 		EE->VPU->VU->VU0->CCR[0] = std::make_shared<WrapperR16Register32_t>(EE->VPU->VU->VU0->VI[0]);
 		EE->VPU->VU->VU0->CCR[1] = std::make_shared<WrapperR16Register32_t>(EE->VPU->VU->VU0->VI[1]);
 		EE->VPU->VU->VU0->CCR[2] = std::make_shared<WrapperR16Register32_t>(EE->VPU->VU->VU0->VI[2]);
@@ -142,8 +142,8 @@ void Resources_t::postInit_EE_VPU_VU() const
 
 	// Initalise VU units array.
 	{
-		EE->VPU->VU->VU_UNITS[0] = EE->VPU->VU->VU0;
-		EE->VPU->VU->VU_UNITS[1] = EE->VPU->VU->VU1;
+		EE->VPU->VU->VU_CORES[0] = EE->VPU->VU->VU0;
+		EE->VPU->VU->VU_CORES[1] = EE->VPU->VU->VU1;
 	}
 
 	// Initalise VU0 and VU1 physical memory map.

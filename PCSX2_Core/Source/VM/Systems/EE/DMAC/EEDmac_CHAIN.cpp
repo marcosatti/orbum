@@ -98,7 +98,7 @@ void EEDmac_s::CHAIN_SRC_CALL()
 	if (ASP >= 2)
 	{
 		mChannel->CHCR->mTagExit = true;
-		log(Warning, "EE DMAC Channel %s had chain mode stack overflow! Exiting transfer. TADR has been changed.", mChannel->getChannelInfo()->mMnemonic);
+		log(Warning, "EE DMAC Channel %s had chain mode stack overflow! Exiting transfer. TADR has been changed.", mChannel->getInfo()->mMnemonic);
 	}
 	else
 	{
@@ -117,7 +117,7 @@ void EEDmac_s::CHAIN_SRC_RET()
 	if (ASP == 0)
 	{
 		mChannel->CHCR->mTagExit = true;
-		log(Warning, "EE DMAC Channel %s had chain mode stack underflow! Exiting transfer. TADR left unchanged.", mChannel->getChannelInfo()->mMnemonic);
+		log(Warning, "EE DMAC Channel %s had chain mode stack underflow! Exiting transfer. TADR left unchanged.", mChannel->getInfo()->mMnemonic);
 	}
 	else
 	{

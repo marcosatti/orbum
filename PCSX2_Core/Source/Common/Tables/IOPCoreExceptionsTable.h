@@ -36,6 +36,6 @@ struct IOPCoreExceptionsTable
 	/*
 	Returns the exception info above given the exception type.
 	*/
-	static const IOPCoreExceptionInfo_t * getExceptionInfo(const IOPCoreException_t exception);
+	static const IOPCoreExceptionInfo_t * getInfo(const IOPCoreException_t exception);
 };
 

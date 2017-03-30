@@ -34,7 +34,7 @@ const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * IOPCoreInstructionTabl
 	return &IOPCORE_CP2BSC_TABLE[instruction->getRs()];
 }
 
-const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * IOPCoreInstructionTable::getInstructionInfo(const IOPCoreInstruction_t * instruction)
+const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * IOPCoreInstructionTable::getInfo(const IOPCoreInstruction_t * instruction)
 {
 	// A dummy class to kickstart the search.
 	const IOPCoreInstructionInfo_t rootInfo = { "root", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "OPCODE", MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R3000_DEFAULT, IOPCORE_INSTRUCTION_OPCODE_LOOKUP, 0 };

@@ -50,7 +50,7 @@ struct EEDmacChannelTable
 	/*
 	Returns the channel information given the channel.
 	*/
-	static const EEDmacChannelInfo_t * getChannelInfo(const EEDmacChannel_t * channel);
+	static const EEDmacChannelInfo_t * getInfo(const EEDmacChannel_t * channel);
 
 	/*
 	Converts the D_CTRL.STS and STD fields to the proper channel id's.

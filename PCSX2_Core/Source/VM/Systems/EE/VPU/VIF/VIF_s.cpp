@@ -7,8 +7,8 @@
 #include "Resources/EE/EE_t.h"
 #include "Resources/EE/VPU/VPU_t.h"
 #include "Resources/EE/VPU/VIF/VIF_t.h"
-#include "Resources/EE/VPU/VIF/Types/VIFUnits_t.h"
-#include "Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFCores_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
 VIF_s::VIF_s(VM * vm, u32 vifUnitIndex) :
 	VMSystem_s(vm, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
@@ -22,7 +22,7 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	return ticksAvailable; // not yet completed.
 
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_CORES[mVIFUnitIndex];
 
 	// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
 	if (isVIFStalled())
@@ -36,7 +36,7 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	for (auto& data : mDMAPacket.UW)
 	{
 		// Check the NUM register, to determine if we are continuing a VIFcode instruction instead of reading a VIFcode.
-		if (VIF->NUM->getFieldValue(VifUnitRegister_NUM_t::Fields::NUM))
+		if (VIF->NUM->getFieldValue(VIFCoreRegister_NUM_t::Fields::NUM))
 		{
 		
 		}
@@ -60,17 +60,17 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 
 bool VIF_s::isVIFStalled() const
 {
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_UNITS[mVIFUnitIndex];
+	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_CORES[mVIFUnitIndex];
 	auto& STAT = VIF->STAT;
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 
 	//  then the VIF has stalled and needs to be reset by writing to FBRST.STC.
-	if (STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::VSS)
-		|| STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::VFS)
-		|| STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::VIS)
-		|| STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::INT)
-		|| STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::ER0)
-		|| STAT->getFieldValue(VifUnitRegister_STAT_t::Fields::ER1))
+	if (STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VSS)
+		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VFS)
+		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VIS)
+		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::INT)
+		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::ER0)
+		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::ER1))
 	{
 		return true;
 	}

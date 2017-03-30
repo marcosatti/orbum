@@ -6,14 +6,14 @@
 
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
-#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 
 void VUInterpreter_s::IADD()
 {
 	// ID = IS + IT.
-	auto& source1Reg = mVuUnit->VI[mVUInstruction.getFs()]; // IS.
-	auto& source2Reg = mVuUnit->VI[mVUInstruction.getFt()]; // IT.
-	auto& destReg = mVuUnit->VI[mVUInstruction.getFd()]; // ID.
+	auto& source1Reg = mVUCore->VI[mVUInstruction.getFs()]; // IS.
+	auto& source2Reg = mVUCore->VI[mVUInstruction.getFt()]; // IT.
+	auto& destReg = mVUCore->VI[mVUInstruction.getFd()]; // ID.
 
 	destReg->writeHword(EE, source1Reg->readHword(EE) + source2Reg->readHword(EE));
 }

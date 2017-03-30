@@ -14,7 +14,7 @@
 class VM;
 class VUInterpreter_s;
 class EECore_t;
-class VuUnit_VU0_t;
+class VUCore_VU0_t;
 class PhysicalMMU_t;
 
 /*
@@ -53,7 +53,7 @@ private:
 	*/
 	std::shared_ptr<EECore_t> mEECore;
 	std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
-	std::shared_ptr<VuUnit_VU0_t> mVU0;
+	std::shared_ptr<VUCore_VU0_t> mVU0;
 
 #if defined(BUILD_DEBUG)
 	// Debug loop counter.

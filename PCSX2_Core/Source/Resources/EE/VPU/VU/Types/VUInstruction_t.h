@@ -22,7 +22,7 @@ struct VUInstruction_t
 	VUInstruction_t(const u32 value) :
 		mValue(value)
 	{
-		// mInstructionInfo = VIFcodeInstructionTable::getInstructionInfo(this);
+		// mInfo = VUInstructionTable::getInfo(this);
 	}
 
 	/*
@@ -118,9 +118,9 @@ struct VUInstruction_t
 	Returns the constant VU instruction information.
 	*/
 	/*
-	const VIFcodeInstructionTable::VIFcodeInstructionInfo_t * getInstructionInfo()
+	const VUInstructionTable::VUInstructionInfo_t * getInfo()
 	{
-		return mInstructionInfo;
+		return mInfo;
 	}
 	*/
 
@@ -134,5 +134,5 @@ private:
 	/*
 	Constant instruction information.
 	*/
-	// const VIFcodeInstructionTable::VIFcodeInstructionInfo_t * mInstructionInfo;
+	// const VUInstructionTable::VUInstructionInfo_t * mInfo;
 };

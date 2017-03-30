@@ -10,7 +10,7 @@
 
 #include "Resources/EE/EECore/EECore_t.h"
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 
 void EECoreInterpreter_s::QMFC2()
 {

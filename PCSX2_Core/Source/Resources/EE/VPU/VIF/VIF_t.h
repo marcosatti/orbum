@@ -4,9 +4,9 @@
 
 #include "Common/Global/Globals.h"
 
-class VifUnit_t;
-class VifUnit_VIF0_t;
-class VifUnit_VIF1_t;
+class VIFCore_t;
+class VIFCore_VIF0_t;
+class VIFCore_VIF1_t;
 
 /*
 TODO: finish writing documentation.
@@ -18,7 +18,7 @@ public:
 	explicit VIF_t();
 
 	// VIF units.
-	std::shared_ptr<VifUnit_VIF0_t> VIF0;
-	std::shared_ptr<VifUnit_VIF1_t> VIF1;
-	std::shared_ptr<VifUnit_t>      VIF_UNITS[Constants::EE::VPU::VIF::NUMBER_VIF_UNITS];
+	std::shared_ptr<VIFCore_VIF0_t> VIF0;
+	std::shared_ptr<VIFCore_VIF1_t> VIF1;
+	std::shared_ptr<VIFCore_t>      VIF_CORES[Constants::EE::VPU::VIF::NUMBER_VIF_CORES];
 };

@@ -214,14 +214,14 @@ struct Constants
 			{
 				// Number of instructions is based off the CMD field in the VIFcode, without the leading interrupt bit and the m bit in the UNPACK instructions. See EE Users Manual page 87.
 				static constexpr int NUMBER_INSTRUCTIONS = 34;
-				static constexpr int NUMBER_VIF_UNITS = 2;
+				static constexpr int NUMBER_VIF_CORES = 2;
 			};
 
 			struct VU
 			{
 				static constexpr int NUMBER_VF_REGISTERS = 32;
 				static constexpr int NUMBER_VI_REGISTERS = 16;
-				static constexpr int NUMBER_VU_UNITS = 2;
+				static constexpr int NUMBER_VU_CORES = 2;
 				static constexpr int NUMBER_VU0_CCR_REGISTERS = 32;
 				static constexpr int NUMBER_VU_INSTRUCTIONS = 164;
 				static constexpr double VU_CLK_SPEED = 147456000.0; // 147.456 MHz.

@@ -60,7 +60,7 @@ public:
 	/*
 	Returns the constant properties for this channel.
 	*/
-	const EEDmacChannelTable::EEDmacChannelInfo_t * getChannelInfo();
+	const EEDmacChannelTable::EEDmacChannelInfo_t * getInfo();
 
 private:
 	/*
@@ -71,7 +71,7 @@ private:
 	/*
 	Constant channel properties.
 	*/
-	const EEDmacChannelTable::EEDmacChannelInfo_t * mChannelInfo;
+	const EEDmacChannelTable::EEDmacChannelInfo_t * mInfo;
 };
 
 /*

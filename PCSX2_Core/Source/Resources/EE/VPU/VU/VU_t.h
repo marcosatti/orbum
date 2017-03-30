@@ -4,9 +4,9 @@
 
 #include "Common/Global/Globals.h"
 
-class VuUnit_VU0_t;
-class VuUnit_VU1_t;
-class VuUnit_t; 
+class VUCore_VU0_t;
+class VUCore_VU1_t;
+class VUCore_t; 
 class VURegister_FBRST_t;
 
 /*
@@ -20,9 +20,9 @@ public:
 	explicit VU_t();
 
 	// VU units.
-	std::shared_ptr<VuUnit_VU0_t> VU0;
-	std::shared_ptr<VuUnit_VU1_t> VU1;
-	std::shared_ptr<VuUnit_t>     VU_UNITS[Constants::EE::VPU::VU::NUMBER_VU_UNITS];
+	std::shared_ptr<VUCore_VU0_t> VU0;
+	std::shared_ptr<VUCore_VU1_t> VU1;
+	std::shared_ptr<VUCore_t>     VU_CORES[Constants::EE::VPU::VU::NUMBER_VU_CORES];
 
 	// FBRST shared register.
 	std::shared_ptr<VURegister_FBRST_t> FBRST;

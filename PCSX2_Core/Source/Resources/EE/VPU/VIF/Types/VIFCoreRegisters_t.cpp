@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "Resources/EE/VPU/VIF/Types/VIFUnitRegisters_t.h"
+#include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
-VifUnitRegister_CYCLE_t::VifUnitRegister_CYCLE_t()
+VIFCoreRegister_CYCLE_t::VIFCoreRegister_CYCLE_t()
 {
 	registerField(Fields::CL, "CL", 0, 8, 0);
 	registerField(Fields::WL, "WL", 8, 8, 0);
 }
 
-VifUnitRegister_MASK_t::VifUnitRegister_MASK_t()
+VIFCoreRegister_MASK_t::VIFCoreRegister_MASK_t()
 {
 	registerField(Fields::m0, "m0", 0, 2, 0);
 	registerField(Fields::m1, "m1", 2, 2, 0);
@@ -28,59 +28,59 @@ VifUnitRegister_MASK_t::VifUnitRegister_MASK_t()
 	registerField(Fields::m15, "m15", 30, 2, 0);
 }
 
-VifUnitRegister_MODE_t::VifUnitRegister_MODE_t()
+VIFCoreRegister_MODE_t::VIFCoreRegister_MODE_t()
 {
 	registerField(Fields::MOD, "MOD", 0, 2, 0);
 }
 
-VifUnitRegister_ITOP_t::VifUnitRegister_ITOP_t()
+VIFCoreRegister_ITOP_t::VIFCoreRegister_ITOP_t()
 {
 	registerField(Fields::ITOP, "ITOP", 0, 10, 0);
 }
 
-VifUnitRegister_ITOPS_t::VifUnitRegister_ITOPS_t()
+VIFCoreRegister_ITOPS_t::VIFCoreRegister_ITOPS_t()
 {
 	registerField(Fields::ITOPS, "ITOPS", 0, 10, 0);
 }
 
-VifUnitRegister_BASE_t::VifUnitRegister_BASE_t()
+VIFCoreRegister_BASE_t::VIFCoreRegister_BASE_t()
 {
 	registerField(Fields::BASE, "BASE", 0, 10, 0);
 }
 
-VifUnitRegister_OFST_t::VifUnitRegister_OFST_t()
+VIFCoreRegister_OFST_t::VIFCoreRegister_OFST_t()
 {
 	registerField(Fields::OFFSET, "OFFSET", 0, 10, 0);
 }
 
-VifUnitRegister_TOP_t::VifUnitRegister_TOP_t()
+VIFCoreRegister_TOP_t::VIFCoreRegister_TOP_t()
 {
 	registerField(Fields::TOP, "TOP", 0, 10, 0);
 }
 
-VifUnitRegister_TOPS_t::VifUnitRegister_TOPS_t()
+VIFCoreRegister_TOPS_t::VIFCoreRegister_TOPS_t()
 {
 	registerField(Fields::TOPS, "TOPS", 0, 10, 0);
 }
 
-VifUnitRegister_MARK_t::VifUnitRegister_MARK_t()
+VIFCoreRegister_MARK_t::VIFCoreRegister_MARK_t()
 {
 	registerField(Fields::MARK, "MARK", 0, 16, 0);
 }
 
-VifUnitRegister_NUM_t::VifUnitRegister_NUM_t()
+VIFCoreRegister_NUM_t::VIFCoreRegister_NUM_t()
 {
 	registerField(Fields::NUM, "NUM", 0, 8, 0);
 }
 
-VifUnitRegister_CODE_t::VifUnitRegister_CODE_t()
+VIFCoreRegister_CODE_t::VIFCoreRegister_CODE_t()
 {
 	registerField(Fields::IMMEDIATE, "IMMEDIATE", 0, 16, 0);
 	registerField(Fields::NUM, "NUM", 16, 8, 0);
 	registerField(Fields::CMD, "CMD", 24, 8, 0);
 }
 
-VifUnitRegister_STAT_t::VifUnitRegister_STAT_t()
+VIFCoreRegister_STAT_t::VIFCoreRegister_STAT_t()
 {
 	registerField(Fields::VPS, "VPS", 0, 2, 0);
 	registerField(Fields::VEW, "VEW", 2, 1, 0);
@@ -97,7 +97,7 @@ VifUnitRegister_STAT_t::VifUnitRegister_STAT_t()
 	registerField(Fields::FQC, "FQC", 24, 4, 0);
 }
 
-VifUnitRegister_FBRST_t::VifUnitRegister_FBRST_t()
+VIFCoreRegister_FBRST_t::VIFCoreRegister_FBRST_t()
 {
 	registerField(Fields::RST, "RST", 0, 1, 0);
 	registerField(Fields::FBK, "FBK", 1, 1, 0);
@@ -105,7 +105,7 @@ VifUnitRegister_FBRST_t::VifUnitRegister_FBRST_t()
 	registerField(Fields::STC, "STC", 3, 1, 0);
 }
 
-VifUnitRegister_ERR_t::VifUnitRegister_ERR_t()
+VIFCoreRegister_ERR_t::VIFCoreRegister_ERR_t()
 {
 	registerField(Fields::MII, "MII", 0, 1, 0);
 	registerField(Fields::ME0, "ME0", 1, 1, 0);

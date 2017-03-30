@@ -65,8 +65,8 @@ public:
 		static constexpr u8 VU0WD = 14;
 
 		static constexpr u8 IRQ_KEYS[Constants::EE::INTC::NUMBER_IRQ_LINES] = { GS, SBUS, VBON, VBOF, VIF0, VIF1, VU0, VU1, IPU, TIM0, TIM1, TIM2, TIM3, SFIFO, VU0WD };
-		static constexpr u8 VIF_KEYS[Constants::EE::VPU::VIF::NUMBER_VIF_UNITS] = { VIF0, VIF1 };
-		static constexpr u8 VU_KEYS[Constants::EE::VPU::VU::NUMBER_VU_UNITS] = { VU0, VU1 };
+		static constexpr u8 VIF_KEYS[Constants::EE::VPU::VIF::NUMBER_VIF_CORES] = { VIF0, VIF1 };
+		static constexpr u8 VU_KEYS[Constants::EE::VPU::VU::NUMBER_VU_CORES] = { VU0, VU1 };
 		static constexpr u8 TIM_KEYS[Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 	};
 

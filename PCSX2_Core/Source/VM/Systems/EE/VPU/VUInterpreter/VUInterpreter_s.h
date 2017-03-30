@@ -6,7 +6,7 @@
 
 #include "Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
-class VuUnit_t;
+class VUCore_t;
 
 /*
 The VU0/1 interpreter.
@@ -34,7 +34,7 @@ private:
 	/*
 	Resources.
 	*/
-	std::shared_ptr<VuUnit_t> mVuUnit;
+	std::shared_ptr<VUCore_t> mVUCore;
 
 #if defined(BUILD_DEBUG)
 	// Debug loop counter.

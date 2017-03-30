@@ -48,6 +48,6 @@ struct IOPDmacChannelTable
 	/*
 	Returns the channel properties given the index.
 	*/
-	static const IOPDmacChannelInfo_t * getChannelInfo(const IOPDmacChannel_t * channel);
+	static const IOPDmacChannelInfo_t * getInfo(const IOPDmacChannel_t * channel);
 };
 

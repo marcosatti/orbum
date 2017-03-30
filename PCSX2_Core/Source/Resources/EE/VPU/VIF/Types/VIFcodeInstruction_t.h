@@ -16,7 +16,7 @@ struct VIFcodeInstruction_t
 	VIFcodeInstruction_t(const u32 value) : 
 		mValue(value)
 	{
-		mInstructionInfo = VIFcodeInstructionTable::getInstructionInfo(this);
+		mInstructionInfo = VIFcodeTable::getInfo(this);
 	}
 
 	/*
@@ -50,7 +50,7 @@ struct VIFcodeInstruction_t
 	/*
 	Returns the constant VIFcode instruction information.
 	*/
-	const VIFcodeInstructionTable::VIFcodeInstructionInfo_t * getInstructionInfo()
+	const VIFcodeTable::VIFcodeInstructionInfo_t * getInstructionInfo()
 	{
 		return mInstructionInfo;
 	}
@@ -65,5 +65,5 @@ private:
 	/*
 	Constant instruction information.
 	*/
-	const VIFcodeInstructionTable::VIFcodeInstructionInfo_t * mInstructionInfo;
+	const VIFcodeTable::VIFcodeInstructionInfo_t * mInstructionInfo;
 };

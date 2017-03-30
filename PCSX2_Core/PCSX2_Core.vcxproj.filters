@@ -226,13 +226,7 @@
     <ClInclude Include="Source\Resources\EE\Timers\EETimers_t.h" />
     <ClInclude Include="Source\Resources\EE\Types\EERegisters_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\Types\VPURegisters_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VifUnits_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\VIF_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VuUnitRegisters_t.h" />
-    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VuUnits_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VU\VU_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VPU_t.h" />
     <ClInclude Include="Source\Resources\EE\EE_t.h">
@@ -311,6 +305,12 @@
     </ClInclude>
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUCoreRegisters_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUCores_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.h" />
+    <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -402,12 +402,7 @@
     <ClCompile Include="Source\Resources\EE\Timers\EETimers_t.cpp" />
     <ClCompile Include="Source\Resources\EE\Types\EERegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\Types\VPURegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VifUnitRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VifUnits_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\VIF_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VuUnitRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VuUnits_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VU\VU_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VPU_t.cpp" />
     <ClCompile Include="Source\Resources\EE\EE_t.cpp" />
@@ -499,6 +494,11 @@
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUCoreRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUCores_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

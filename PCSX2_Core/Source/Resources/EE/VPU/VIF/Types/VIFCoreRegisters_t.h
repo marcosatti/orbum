@@ -7,7 +7,7 @@
 The VIF CYCLE register - Data write cycle.
 See EE Users Manual page 127.
 */
-class VifUnitRegister_CYCLE_t : public BitfieldRegister32_t
+class VIFCoreRegister_CYCLE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -16,7 +16,7 @@ public:
 		static constexpr u8 WL = 1;
 	};
 
-	VifUnitRegister_CYCLE_t();
+	VIFCoreRegister_CYCLE_t();
 
 };
 
@@ -24,7 +24,7 @@ public:
 The VIF MASK register - Write mask pattern.
 See EE Users Manual page 128.
 */
-class VifUnitRegister_MASK_t : public BitfieldRegister32_t
+class VIFCoreRegister_MASK_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -47,7 +47,7 @@ public:
 		static constexpr u8 m15 = 15;
 	};
 
-	VifUnitRegister_MASK_t();
+	VIFCoreRegister_MASK_t();
 
 };
 
@@ -55,7 +55,7 @@ public:
 The VIF MODE register - Addition mode.
 See EE Users Manual page 129.
 */
-class VifUnitRegister_MODE_t : public BitfieldRegister32_t
+class VIFCoreRegister_MODE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -63,7 +63,7 @@ public:
 		static constexpr u8 MOD = 0;
 	};
 
-	VifUnitRegister_MODE_t();
+	VIFCoreRegister_MODE_t();
 
 };
 
@@ -71,7 +71,7 @@ public:
 The VIF ITOP register - ITOP value.
 See EE Users Manual page 130.
 */
-class VifUnitRegister_ITOP_t : public BitfieldRegister32_t
+class VIFCoreRegister_ITOP_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -79,7 +79,7 @@ public:
 		static constexpr u8 ITOP = 0;
 	};
 
-	VifUnitRegister_ITOP_t();
+	VIFCoreRegister_ITOP_t();
 
 };
 
@@ -87,7 +87,7 @@ public:
 The VIF ITOPS register - Following ITOP value.
 See EE Users Manual page 131.
 */
-class VifUnitRegister_ITOPS_t : public BitfieldRegister32_t
+class VIFCoreRegister_ITOPS_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -95,7 +95,7 @@ public:
 		static constexpr u8 ITOPS = 0;
 	};
 
-	VifUnitRegister_ITOPS_t();
+	VIFCoreRegister_ITOPS_t();
 
 };
 
@@ -103,7 +103,7 @@ public:
 The VIF BASE register - Double buffer base address.
 See EE Users Manual page 132.
 */
-class VifUnitRegister_BASE_t : public BitfieldRegister32_t
+class VIFCoreRegister_BASE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -111,7 +111,7 @@ public:
 		static constexpr u8 BASE = 0;
 	};
 
-	VifUnitRegister_BASE_t();
+	VIFCoreRegister_BASE_t();
 
 };
 
@@ -119,7 +119,7 @@ public:
 The VIF OFST register - Double buffer offset.
 See EE Users Manual page 133.
 */
-class VifUnitRegister_OFST_t : public BitfieldRegister32_t
+class VIFCoreRegister_OFST_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -127,7 +127,7 @@ public:
 		static constexpr u8 OFFSET = 0;
 	};
 
-	VifUnitRegister_OFST_t();
+	VIFCoreRegister_OFST_t();
 
 };
 
@@ -135,7 +135,7 @@ public:
 The VIF TOP register - TOP value.
 See EE Users Manual page 134.
 */
-class VifUnitRegister_TOP_t : public BitfieldRegister32_t
+class VIFCoreRegister_TOP_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -143,7 +143,7 @@ public:
 		static constexpr u8 TOP = 0;
 	};
 
-	VifUnitRegister_TOP_t();
+	VIFCoreRegister_TOP_t();
 
 };
 
@@ -151,7 +151,7 @@ public:
 The VIF TOPS register - Next TOP value / data write address.
 See EE Users Manual page 135.
 */
-class VifUnitRegister_TOPS_t : public BitfieldRegister32_t
+class VIFCoreRegister_TOPS_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -159,7 +159,7 @@ public:
 		static constexpr u8 TOPS = 0;
 	};
 
-	VifUnitRegister_TOPS_t();
+	VIFCoreRegister_TOPS_t();
 
 };
 
@@ -167,7 +167,7 @@ public:
 The VIF MARK register - Mark value.
 See EE Users Manual page 136.
 */
-class VifUnitRegister_MARK_t : public BitfieldRegister32_t
+class VIFCoreRegister_MARK_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -175,7 +175,7 @@ public:
 		static constexpr u8 MARK = 0;
 	};
 
-	VifUnitRegister_MARK_t();
+	VIFCoreRegister_MARK_t();
 
 };
 
@@ -183,7 +183,7 @@ public:
 The VIF NUM register - Amount of unwritten data.
 See EE Users Manual page 137.
 */
-class VifUnitRegister_NUM_t : public BitfieldRegister32_t
+class VIFCoreRegister_NUM_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -191,7 +191,7 @@ public:
 		static constexpr u8 NUM = 0;
 	};
 
-	VifUnitRegister_NUM_t();
+	VIFCoreRegister_NUM_t();
 
 };
 
@@ -199,7 +199,7 @@ public:
 The VIF CODE register - Most recently processed VIFcode.
 See EE Users Manual page 139.
 */
-class VifUnitRegister_CODE_t : public BitfieldRegister32_t
+class VIFCoreRegister_CODE_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -209,7 +209,7 @@ public:
 		static constexpr u8 CMD = 2;
 	};
 
-	VifUnitRegister_CODE_t();
+	VIFCoreRegister_CODE_t();
 
 };
 
@@ -218,7 +218,7 @@ The VIF STAT register - VIF status.
 Some fields are unused for the VIF0 unit (VGW, DBF and FDR).
 See EE Users Manual page 140.
 */
-class VifUnitRegister_STAT_t : public BitfieldRegister32_t
+class VIFCoreRegister_STAT_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -238,7 +238,7 @@ public:
 		static constexpr u8 FQC = 12;
 	};
 
-	VifUnitRegister_STAT_t();
+	VIFCoreRegister_STAT_t();
 
 };
 
@@ -246,7 +246,7 @@ public:
 The VIF FBRST register - VIF operation control.
 See EE Users Manual page 141.
 */
-class VifUnitRegister_FBRST_t : public BitfieldRegister32_t
+class VIFCoreRegister_FBRST_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -257,7 +257,7 @@ public:
 		static constexpr u8 STC = 3;
 	};
 
-	VifUnitRegister_FBRST_t();
+	VIFCoreRegister_FBRST_t();
 
 };
 
@@ -265,7 +265,7 @@ public:
 The VIF ERR register - VIF error status.
 See EE Users Manual page 142.
 */
-class VifUnitRegister_ERR_t : public BitfieldRegister32_t
+class VIFCoreRegister_ERR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -275,6 +275,6 @@ public:
 		static constexpr u8 ME1 = 2;
 	};
 
-	VifUnitRegister_ERR_t();
+	VIFCoreRegister_ERR_t();
 
 };

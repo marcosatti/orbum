@@ -15,20 +15,20 @@ struct IOPCoreInstruction_t : public MIPSInstruction_t
 	IOPCoreInstruction_t(const u32 value) : 
 		MIPSInstruction_t(value) 
 	{
-		mInstructionInfo = IOPCoreInstructionTable::getInstructionInfo(this); 
+		mInfo = IOPCoreInstructionTable::getInfo(this); 
 	}
 
 	/*
 	Returns the constant IOPCore instruction information.
 	*/
-	const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * getInstructionInfo()
+	const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * getInfo()
 	{
-		return mInstructionInfo;
+		return mInfo;
 	}
 
 private:
 	/*
 	Constant instruction information.
 	*/
-	const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * mInstructionInfo;
+	const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * mInfo;
 };

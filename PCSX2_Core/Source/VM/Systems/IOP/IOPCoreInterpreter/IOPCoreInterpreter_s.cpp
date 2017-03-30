@@ -58,7 +58,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(),
-			(mIOPCoreInstruction.getValue() == 0) ? "SLL (NOP)" : mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
+			(mIOPCoreInstruction.getValue() == 0) ? "SLL (NOP)" : mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 	}
 
 	if (pcAddress == DEBUG_PC_BREAKPOINT || pcAddress == 0x0)
@@ -68,7 +68,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 #endif
 
 	// Run the instruction, which is based on the implementation index.
-	(this->*IOP_INSTRUCTION_TABLE[mIOPCoreInstruction.getInstructionInfo()->mImplementationIndex])();
+	(this->*IOP_INSTRUCTION_TABLE[mIOPCoreInstruction.getInfo()->mImplementationIndex])();
 
 	// Increment PC.
 	mIOPCore->R3000->PC->next();
@@ -79,7 +79,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 #endif
 
 	// Return the number of cycles the instruction took to complete.
-	return mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles;
+	return mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mCycles;
 }
 
 void IOPCoreInterpreter_s::handleInterruptCheck()
@@ -145,7 +145,7 @@ void IOPCoreInterpreter_s::INSTRUCTION_UNKNOWN()
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R3000 instruction encountered! (Lookup: %s -> %s)",
-		__FILENAME__, __LINE__, mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mIOPCoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
+		__FILENAME__, __LINE__, mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 #endif
 }
 
@@ -159,7 +159,7 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	auto& PC = mIOPCore->R3000->PC;
 
 	// Set the PS2Exception pointer and get properties.
-	auto exceptionProperties = IOPCoreExceptionsTable::getExceptionInfo(exception);
+	auto exceptionProperties = IOPCoreExceptionsTable::getInfo(exception);
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.

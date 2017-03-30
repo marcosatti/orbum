@@ -46,7 +46,7 @@ public:
 	/*
 	Returns the constant properties for this channel.
 	*/
-	const IOPDmacChannelTable::IOPDmacChannelInfo_t * getChannelInfo();
+	const IOPDmacChannelTable::IOPDmacChannelInfo_t * getInfo();
 
 private:
 	/*
@@ -57,7 +57,7 @@ private:
 	/*
 	Constant channel properties.
 	*/
-	const IOPDmacChannelTable::IOPDmacChannelInfo_t * mChannelInfo;
+	const IOPDmacChannelTable::IOPDmacChannelInfo_t * mInfo;
 };
 
 /*

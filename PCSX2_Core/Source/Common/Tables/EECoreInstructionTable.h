@@ -1071,6 +1071,6 @@ struct EECoreInstructionTable
 	/*
 	The main lookup function. Use this to return information on the instruction given.
 	*/
-	static const EECoreInstructionInfo_t * getInstructionInfo(const EECoreInstruction_t * instruction);
+	static const EECoreInstructionInfo_t * getInfo(const EECoreInstruction_t * instruction);
 };
 

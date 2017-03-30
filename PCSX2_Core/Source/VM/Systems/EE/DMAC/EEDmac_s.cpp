@@ -482,7 +482,7 @@ bool EEDmac_s::readChainSourceTag()
 	mDMAtag.mValue1 = tag.UW[1];
 	
 	log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
-		mChannel->getChannelInfo()->mMnemonic, mChannel->TADR->readWord(RAW), mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+		mChannel->getInfo()->mMnemonic, mChannel->TADR->readWord(RAW), mDMAtag.mValue0, mDMAtag.mValue1, mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.
@@ -513,7 +513,7 @@ bool EEDmac_s::readChainDestTag()
 	mDMAtag.mValue1 = tag.UW[1];
 
 	log(Debug, "EE tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getChannelInfo()->mMnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
+		mChannel->getInfo()->mMnemonic, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::TTE));
 	mDMAtag.logDebugAllFields();
 	
 	// Check if we need to transfer the tag.

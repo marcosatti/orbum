@@ -12,20 +12,20 @@ class FPRegister32_t;
 class Register16_t;
 class Register32_t;
 class PCRegister16_t;
-class VuUnitRegister_MAC_t;
-class VuUnitRegister_Status_t;
-class VuUnitRegister_Clipping_t;
-class VuUnitRegister_CMSAR_t;
+class VUCoreRegister_MAC_t;
+class VUCoreRegister_Status_t;
+class VUCoreRegister_Clipping_t;
+class VUCoreRegister_CMSAR_t;
 class EECoreCOP0_t;
 
 /*
 A base class for an implementation of a VU unit resource. Common resources are initalised, all others set to nullptr (see below).
-Extended by VuUnit_VU0_t and VuUnit_VU1_t.
+Extended by VUCore_VU0_t and VUCore_VU1_t.
 */
-class VuUnit_t
+class VUCore_t
 {
 public:
-	explicit VuUnit_t(const u32 & unitID);
+	explicit VUCore_t(const u32 & unitID);
 
 	/*
 	ID of the VU. Currently used for debug.
@@ -75,9 +75,9 @@ public:
 
 	The MAC register is dependant on the Status register for special functionality.
 	*/
-	std::shared_ptr<VuUnitRegister_Status_t>   Status;
-	std::shared_ptr<VuUnitRegister_MAC_t>      MAC;
-	std::shared_ptr<VuUnitRegister_Clipping_t> Clipping;
+	std::shared_ptr<VUCoreRegister_Status_t>   Status;
+	std::shared_ptr<VUCoreRegister_MAC_t>      MAC;
+	std::shared_ptr<VUCoreRegister_Clipping_t> Clipping;
 
 	/*
 	PC (program counter) register for micro subroutines.
@@ -90,7 +90,7 @@ public:
 	The CMSAR register used for micro subroutine execution.
 	See VU Users Manual page 202.
 	*/
-	std::shared_ptr<VuUnitRegister_CMSAR_t> CMSAR;
+	std::shared_ptr<VUCoreRegister_CMSAR_t> CMSAR;
 
 	/*
 	VU0 contains a physical memory map of its real working space (& mirrors) and the VU1 registers.
@@ -111,10 +111,10 @@ public:
 Represents VU0.
 It is attached as a MIPS coprocessor to the EE Core, as COP2.
 */
-class VuUnit_VU0_t : public VuUnit_t, public MIPSCoprocessor_t
+class VUCore_VU0_t : public VUCore_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VuUnit_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
+	explicit VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	static constexpr u32 UNIT_ID = 0;
 
@@ -145,10 +145,10 @@ private:
 /*
 Represents VU1.
 */
-class VuUnit_VU1_t : public VuUnit_t
+class VUCore_VU1_t : public VUCore_t
 {
 public:
-	explicit VuUnit_VU1_t();
+	explicit VUCore_VU1_t();
 
 	static constexpr u32 UNIT_ID = 1;
 };

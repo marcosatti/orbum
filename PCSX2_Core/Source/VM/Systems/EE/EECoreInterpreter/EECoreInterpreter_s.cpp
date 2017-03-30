@@ -22,7 +22,7 @@
 #include "Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 #include "Resources/EE/VPU/VPU_t.h"
 #include "Resources/EE/VPU/VU/VU_t.h"
-#include "Resources/EE/VPU/VU/Types/VuUnits_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
@@ -66,7 +66,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
 			pcAddress, mEECore->R5900->PC->isBranchPending(), !mEECore->COP0->Status->isInterruptsMasked(),
-			(mEECoreInstruction.getValue() == 0) ? "SLL (NOP)" : mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
+			(mEECoreInstruction.getValue() == 0) ? "SLL (NOP)" : mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 	}
 
 	// Breakpoint.
@@ -77,13 +77,13 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 #endif
 
 	// Run the instruction, which is based on the implementation index.
-	(this->*EECORE_INSTRUCTION_TABLE[mEECoreInstruction.getInstructionInfo()->mImplementationIndex])();
+	(this->*EECORE_INSTRUCTION_TABLE[mEECoreInstruction.getInfo()->mImplementationIndex])();
 
 	// Increment PC.
 	mEECore->R5900->PC->next();
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
-	mEECore->COP0->Count->increment(mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles);
+	mEECore->COP0->Count->increment(mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mCycles);
 	handleCountEventCheck();
 
 #if defined(BUILD_DEBUG)
@@ -92,7 +92,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 #endif
 
 	// Return the number of cycles completed.
-	return mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mCycles;
+	return mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mCycles;
 }
 
 void EECoreInterpreter_s::handleInterruptCheck()
@@ -216,7 +216,7 @@ void EECoreInterpreter_s::INSTRUCTION_UNKNOWN()
 	// Unknown instruction, log if debug is enabled.
 #if defined(BUILD_DEBUG)
 	log(Debug, "(%s, %d) Unknown R5900 instruction encountered! (Lookup: %s -> %s)",
-		__FILENAME__, __LINE__, mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mEECoreInstruction.getInstructionInfo()->mMIPSInstructionInfo.mMnemonic);
+		__FILENAME__, __LINE__, mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mBaseClassMnemonic, mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 #endif
 }
 
@@ -232,7 +232,7 @@ void EECoreInterpreter_s::handleException(const EECoreException_t& exception)
 	mException = exception;
 
 	// Get the exception properties.
-	mExceptionProperties = EECoreExceptionsTable::getExceptionInfo(mException);
+	mExceptionProperties = EECoreExceptionsTable::getInfo(mException);
 
 #if 0 // defined(BUILD_DEBUG)
 	// Debug print exception type.

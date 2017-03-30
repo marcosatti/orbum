@@ -44,6 +44,6 @@ struct EECoreExceptionsTable
 	/*
 	Returns the exception info above given the exception type.
 	*/
-	static const EECoreExceptionInfo_t * getExceptionInfo(const EECoreException_t exception);
+	static const EECoreExceptionInfo_t * getInfo(const EECoreException_t exception);
 };
 

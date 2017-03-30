@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Resources/EE/VPU/VU/Types/VuUnitRegisters_t.h"
+#include "Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h"
 
-VuUnitRegister_Status_t::VuUnitRegister_Status_t()
+VUCoreRegister_Status_t::VUCoreRegister_Status_t()
 {
 	registerField(Fields::Z, "Z", 0, 1, 0);
 	registerField(Fields::S, "S", 1, 1, 0);
@@ -18,7 +18,7 @@ VuUnitRegister_Status_t::VuUnitRegister_Status_t()
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VuUnitRegister_Status_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
+void VUCoreRegister_Status_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
 {
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 
@@ -31,7 +31,7 @@ void VuUnitRegister_Status_t::setFieldValueSticky(const u8& fieldIndex, const u3
 	}
 }
 
-void VuUnitRegister_Status_t::clearFlags()
+void VUCoreRegister_Status_t::clearFlags()
 {
 	setFieldValueSticky(Fields::Z, 0);
 	setFieldValueSticky(Fields::S, 0);
@@ -41,7 +41,7 @@ void VuUnitRegister_Status_t::clearFlags()
 	setFieldValueSticky(Fields::D, 0);
 }
 
-VuUnitRegister_MAC_t::VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status) :
+VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status) :
 	mStatus(status)
 {
 	registerField(Fields::Zw, "Zw", 0, 1, 0);
@@ -62,7 +62,7 @@ VuUnitRegister_MAC_t::VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VuUnitRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& value)
+void VUCoreRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& value)
 {
 	setFieldValue(fieldIndex, value);
 
@@ -75,7 +75,7 @@ void VuUnitRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& 
 		throw std::runtime_error("VU MAC register set flag stick index out of range.");
 }
 
-void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlags_t& flags)
+void VUCoreRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlags_t& flags)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -89,7 +89,7 @@ void VuUnitRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlag
 	setFieldValueStatus(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
 }
 
-void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
+void VUCoreRegister_MAC_t::clearVectorField(const u8& fieldIndex)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -101,7 +101,7 @@ void VuUnitRegister_MAC_t::clearVectorField(const u8& fieldIndex)
 		setFieldValueStatus(FIELD_FLAGS_SET[i], 0);
 }
 
-VuUnitRegister_Clipping_t::VuUnitRegister_Clipping_t()
+VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t()
 {
 	registerField(Fields::NegX_0, "NegX_0", 0, 1, 0);
 	registerField(Fields::PosX_0, "PosX_0", 1, 1, 0);
@@ -129,12 +129,12 @@ VuUnitRegister_Clipping_t::VuUnitRegister_Clipping_t()
 	registerField(Fields::PosZ_3, "PosZ_3", 23, 1, 0);
 }
 
-void VuUnitRegister_Clipping_t::shiftJudgement()
+void VUCoreRegister_Clipping_t::shiftJudgement()
 {
 	writeWord(RAW, (readWord(RAW) << 6) & 0x00FFFFFF);
 }
 
-VuUnitRegister_CMSAR_t::VuUnitRegister_CMSAR_t()
+VUCoreRegister_CMSAR_t::VUCoreRegister_CMSAR_t()
 {
 	registerField(Fields::CMSAR, "CMSAR", 0, 16, 0);
 }

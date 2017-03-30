@@ -276,6 +276,6 @@ struct EECoreSyscallTable
 	/*
 	Returns the syscall properties from above given the syscall number.
 	*/
-	static const EECoreSyscallInfo_t * getSyscallInfo(const int syscallNumber);
+	static const EECoreSyscallInfo_t * getInfo(const int syscallNumber);
 };
 

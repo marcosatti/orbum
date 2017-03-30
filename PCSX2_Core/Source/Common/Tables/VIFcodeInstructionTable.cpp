@@ -4,7 +4,7 @@
 
 #include "Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h"
 
-const VIFcodeInstructionTable::VIFcodeInstructionInfo_t * VIFcodeInstructionTable::getInstructionInfo(const VIFcodeInstruction_t * vifCode)
+const VIFcodeTable::VIFcodeInstructionInfo_t * VIFcodeTable::getInfo(const VIFcodeInstruction_t * vifCode)
 {
 	u8 CMD = vifCode->getCMD();
 

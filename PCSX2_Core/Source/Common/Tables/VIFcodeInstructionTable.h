@@ -9,7 +9,7 @@ Static class used as the VIFcode instruction information lookup.
 See EE Users Manual page 87.
 It does not have an associated spreadsheet table as there is only a small number of instructions.
 */
-struct VIFcodeInstructionTable
+struct VIFcodeTable
 {
 	struct VIFcodeInstructionInfo_t
 	{
@@ -170,7 +170,7 @@ struct VIFcodeInstructionTable
 	};
 
 	/*
-	Returns VIFcode instruction info for the given instruction.
+	Returns info for the given VIFcode.
 	*/
-	static const VIFcodeInstructionInfo_t * getInstructionInfo(const VIFcodeInstruction_t * vifCode);
+	static const VIFcodeInstructionInfo_t * getInfo(const VIFcodeInstruction_t * vifCode);
 };

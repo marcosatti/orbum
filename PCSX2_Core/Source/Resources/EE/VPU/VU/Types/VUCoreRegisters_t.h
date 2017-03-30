@@ -12,7 +12,7 @@ See VU Users Manual page 39.
 
 Declared before the MAC register due to dependency.
 */
-class VuUnitRegister_Status_t : public BitfieldRegister32_t
+class VUCoreRegister_Status_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -31,7 +31,7 @@ public:
 		static constexpr u8 DS = 11;
 	};
 
-	VuUnitRegister_Status_t();
+	VUCoreRegister_Status_t();
 
 	/*
 	Overriden write functions to trigger the update of the sticky bit flags.
@@ -51,7 +51,7 @@ See VU Users Manual page 39.
 
 Needs a reference to the associated Status register for its special functionality.
 */
-class VuUnitRegister_MAC_t : public BitfieldRegister32_t
+class VUCoreRegister_MAC_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -79,7 +79,7 @@ public:
 		static constexpr u8 W_FLAGS[] = { Zw, Sw, Uw, Ow };
 	};
 
-	VuUnitRegister_MAC_t(const std::shared_ptr<VuUnitRegister_Status_t> & status);
+	VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status);
 
 	/*
 	Set bit field function to trigger changes to the associated VU status register.
@@ -101,7 +101,7 @@ private:
 	A reference to the VU status flags register, which fields are changed when various MAC register write conditions occur.
 	See VU Users Manual page 39.
 	*/
-	std::shared_ptr<VuUnitRegister_Status_t> mStatus;
+	std::shared_ptr<VUCoreRegister_Status_t> mStatus;
 };
 
 /*
@@ -114,7 +114,7 @@ Bitfields are organsied by {Neg/Pos}{X/Y/Z}_{digit below} for:
 - 2nd previous judgement = 2.
 - 3rd previous judgement = 3.
 */
-class VuUnitRegister_Clipping_t : public BitfieldRegister32_t
+class VUCoreRegister_Clipping_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -145,7 +145,7 @@ public:
 		static constexpr u8 PosZ_3 = 23;
 	};
 
-	VuUnitRegister_Clipping_t();
+	VUCoreRegister_Clipping_t();
 
 	/*
 	Shifts the register 6-bits (judgement) right, evicting the MSB 6-bits (LSB's set to 0).
@@ -162,7 +162,7 @@ See VU Users Manual page 202.
 
 CMSAR0 and CMSAR1 are the same register, so it is defined simply as CMSAR.
 */
-class VuUnitRegister_CMSAR_t : public BitfieldRegister32_t
+class VUCoreRegister_CMSAR_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -170,5 +170,5 @@ public:
 		static constexpr u8 CMSAR = 0;
 	};
 
-	VuUnitRegister_CMSAR_t();
+	VUCoreRegister_CMSAR_t();
 };

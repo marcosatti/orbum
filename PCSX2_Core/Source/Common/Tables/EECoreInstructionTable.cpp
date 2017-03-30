@@ -119,7 +119,7 @@ const EECoreInstructionTable::EECoreInstructionInfo_t * EECoreInstructionTable::
 	return &EECORE_VEXT3_TABLE[instruction->getRShamt()];
 }
 
-const EECoreInstructionTable::EECoreInstructionInfo_t * EECoreInstructionTable::getInstructionInfo(const EECoreInstruction_t * instruction)
+const EECoreInstructionTable::EECoreInstructionInfo_t * EECoreInstructionTable::getInfo(const EECoreInstruction_t * instruction)
 {
 	// A dummy class to kickstart the search.
 	const EECoreInstructionInfo_t rootInfo = { "root", 0, MIPSInstructionInfo_t::InstructionType::CLASS, "OPCODE", MIPSInstructionInfo_t::BranchDelayType::NONE, CycleConstants::R5900_DEFAULT, EECORE_INSTRUCTION_OPCODE_LOOKUP, 0 };
