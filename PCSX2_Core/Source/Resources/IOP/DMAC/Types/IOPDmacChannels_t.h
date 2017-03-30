@@ -52,7 +52,7 @@ private:
 	/*
 	The index of this channel.
 	*/
-	const int mChannelID;
+	int mChannelID;
 
 	/*
 	Constant channel properties.

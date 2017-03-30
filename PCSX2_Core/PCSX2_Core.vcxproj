@@ -599,7 +599,6 @@
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VURegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VU\VU_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\CDVD\CDVD_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacRegisters_t.cpp" />
@@ -646,7 +645,6 @@
     <ClCompile Include="Source\Resources\Common\Common_t.cpp" />
     <ClCompile Include="Source\Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\EEDmac_t.cpp" />
-    <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_ALU_OTHERS.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_BREAK_TRAP.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_CALL.cpp" />

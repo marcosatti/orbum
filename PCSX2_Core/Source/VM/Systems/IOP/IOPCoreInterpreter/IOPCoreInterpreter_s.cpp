@@ -43,7 +43,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	const u32 pcAddress = mIOPCore->R3000->PC->readWord(IOP);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mIOPCoreInstruction = mPhysicalMMU->readWord(IOP, physicalAddress);
+	mIOPCoreInstruction = IOPCoreInstruction_t(mPhysicalMMU->readWord(IOP, physicalAddress));
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1000000000000;

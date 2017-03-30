@@ -15,7 +15,7 @@ For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the
 class VIF_s : public VMSystem_s
 {
 public:
-	explicit VIF_s(VM * vm, u32 vifUnitIndex);
+	explicit VIF_s(VM * vm, const int vifCoreIndex);
 	virtual ~VIF_s() = default;
 
 	/*
@@ -28,7 +28,7 @@ private:
 	/*
 	Context of which VIF this system is processing.
 	*/
-	const u32 mVIFUnitIndex;
+	u32 mVIFUnitIndex;
 
 	/*
 	A temporary holder for a DMA packet currently being processed from the FIFO queue.

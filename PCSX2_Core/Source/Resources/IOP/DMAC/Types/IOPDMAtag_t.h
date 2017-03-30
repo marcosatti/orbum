@@ -9,13 +9,27 @@ Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred
 struct IOPDMAtag_t
 {
 	/*
-	DMAtag values.
-	All functions below extract information from these.
-	mValue0 is for bits 0-31.
-	mValue1 is for bits 32-63.
+	Construct the tag with the raw values.
+	- tag0 is for bits 0-31.
+	- tag1 is for bits 32-63.
 	*/
-	u32 mValue0;
-	u32 mValue1;
+	IOPDMAtag_t(const u32 tag0, const u32 tag1) :
+		mTag0(tag0),
+		mTag1(tag1)
+	{
+	}
+
+	/*
+	Returns the tag values.
+	*/
+	u32 getTag0() const
+	{
+		return mTag0;
+	}
+	u32 getTag1() const
+	{
+		return mTag1;
+	}
 
 	/*
 	Get functions for the DMAtag field values.
@@ -25,18 +39,42 @@ struct IOPDMAtag_t
 	- Bits 31 (length 1): "ERT" (tag end transfer flag).
 	- Bits 32-55 (length 24): "Length" (transfer amount).
 	*/
-	u32 getADDR() const;
-	u8 getIRQ() const;
-	u8 getERT() const;
-	u32 getLength() const;
+	u32 getADDR() const
+	{
+		return static_cast<u32>(mTag0 & 0x00FFFFFF);
+	}
+
+	u8 getIRQ() const
+	{
+		return static_cast<u8>((mTag0 >> 30) & 0x1);
+	}
+
+	u8 getERT() const
+	{
+		return static_cast<u8>((mTag0 >> 31) & 0x1);
+	}
+
+	u32 getLength() const
+	{
+		return static_cast<u32>(mTag1 & 0x00FFFFFF);
+	}
 
 #if defined(BUILD_DEBUG)
-	/*
-	Log debug each of the fields above.
-	*/
-	void logDebugAllFields() const;
+	void logDebugAllFields() const
+	{
+		log(Debug, "IOP DMA tag info: Length = 0x%X, IRQ = 0x%X, ERT = 0x%x, ADDR = 0x%X.", getLength(), getIRQ(), getERT(), getADDR());
+	}
 #endif
 
+private:
+	/*
+	DMAtag values.
+	All functions above extract information from these.
+	mTag0 is for bits 0-31.
+	mTag1 is for bits 32-63.
+	*/
+	u32 mTag0;
+	u32 mTag1;
 };
 
 

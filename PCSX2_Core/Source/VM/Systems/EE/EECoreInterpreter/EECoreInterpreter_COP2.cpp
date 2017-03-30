@@ -1176,7 +1176,7 @@ void EECoreInterpreter_s::VISWR()
         return;
 
 	// Delegate to the VU0 system.
-	mVU0Interpreter->mVUInstruction = mEECoreInstruction.getValue();
+	mVU0Interpreter->mVUInstruction = VUInstruction_t(mEECoreInstruction.getValue());
 	mVU0Interpreter->ISWR();
 }
 

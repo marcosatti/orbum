@@ -10,9 +10,9 @@
 #include "Resources/EE/VPU/VIF/Types/VIFCores_t.h"
 #include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
-VIF_s::VIF_s(VM * vm, u32 vifUnitIndex) :
-	VMSystem_s(vm, vifUnitIndex == 0 ? System_t::VIF0 : System_t::VIF1),
-	mVIFUnitIndex(vifUnitIndex),
+VIF_s::VIF_s(VM * vm, const int vifCoreIndex) :
+	VMSystem_s(vm, vifCoreIndex == 0 ? System_t::VIF0 : System_t::VIF1),
+	mVIFUnitIndex(vifCoreIndex),
 	mDMAPacket(),
 	mVIFcodeInstruction(0)
 {
@@ -43,7 +43,7 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		else
 		{
 			// Set the current data as the VIFcode.
-			mVIFcodeInstruction = data;
+			mVIFcodeInstruction = VIFcodeInstruction_t(data);
 
 			// Process the VIFcode by calling the instruction handler.
 			(this->*INSTRUCTION_TABLE[mVIFcodeInstruction.getInstructionInfo()->mImplementationIndex])();
@@ -52,7 +52,6 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 
 		}
 	}
-
 
 	// VIF has completed 1 cycle.
 	return 1;

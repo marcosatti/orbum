@@ -473,7 +473,6 @@
     <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
-    <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.cpp" />
     <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ByteMemory_t.cpp" />
@@ -483,7 +482,6 @@
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannelRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacChannels_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDmacRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreExceptionsTable.cpp" />
     <ClCompile Include="Source\Common\Tables\EECoreInstructionTable.cpp" />

@@ -14,7 +14,7 @@ The VU0/1 interpreter.
 class VUInterpreter_s : public VMSystem_s
 {
 public:
-	explicit VUInterpreter_s(VM * vm, u32 vuUnitIndex);
+	explicit VUInterpreter_s(VM * vm, const int vuCoreIndex);
 	virtual ~VUInterpreter_s() = default;
 
 	/*
@@ -44,7 +44,7 @@ private:
 	/*
 	Context of which VU this system is processing.
 	*/
-	const u32 mVUUnitIndex;
+	u32 mVUCoreIndex;
 
 	///////////////////////////////
 	// Instruction Functionality //

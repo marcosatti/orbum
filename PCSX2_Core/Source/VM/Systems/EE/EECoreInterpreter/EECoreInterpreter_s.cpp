@@ -53,7 +53,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	const u32 pcAddress = mEECore->R5900->PC->readWord(EE);
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mEECoreInstruction = mPhysicalMMU->readWord(EE, physicalAddress);
+	mEECoreInstruction = EECoreInstruction_t(mPhysicalMMU->readWord(EE, physicalAddress));
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
