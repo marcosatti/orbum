@@ -10,7 +10,6 @@ class ROByteMemory_t : public ByteMemory_t
 {
 public:
 	ROByteMemory_t(const size_t & size);
-	virtual ~ROByteMemory_t();
 
 	/*
 	All writes are discarded - this is a silent discard!

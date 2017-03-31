@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedRegister64_t.h"
 
-MappedRegister64_t::MappedRegister64_t(const u32& physicalAddress, const std::shared_ptr<Register64_t> & register64) :
+MappedRegister64_t::MappedRegister64_t(const u32 physicalAddress, const std::shared_ptr<Register64_t> & register64) :
 	PhysicalMapped_t(physicalAddress),
 	mRegister64(register64)
-{
-}
-
-MappedRegister64_t::~MappedRegister64_t()
 {
 }
 

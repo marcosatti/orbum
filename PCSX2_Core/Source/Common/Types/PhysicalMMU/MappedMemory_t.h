@@ -13,8 +13,7 @@ The API between PhysicalMMU_t and Memory_t is directly compatible, so this class
 class MappedMemory_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedMemory_t(const u32& physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
-	virtual ~MappedMemory_t();
+	explicit MappedMemory_t(const u32 physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
 
 	/*
 	Read or Write to the underlying memory.

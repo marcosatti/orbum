@@ -30,8 +30,8 @@ class IOPCoreCOP0Register_Context_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 BadVPN2 = 0;
-		static constexpr u8 PTEBase = 1;
+		static constexpr int BadVPN2 = 0;
+		static constexpr int PTEBase = 1;
 
 	};
 
@@ -47,22 +47,22 @@ class IOPCoreCOP0Register_Status_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 IEc = 0;
-		static constexpr u8 KUc = 1;
-		static constexpr u8 IEp = 2;
-		static constexpr u8 KUp = 3;
-		static constexpr u8 IEo = 4;
-		static constexpr u8 KUo = 5;
-		static constexpr u8 IM = 6;
-		static constexpr u8 IsC = 7;
-		static constexpr u8 SwC = 8;
-		static constexpr u8 PZ = 9;
-		static constexpr u8 CM = 10;
-		static constexpr u8 PE = 11;
-		static constexpr u8 TS = 12;
-		static constexpr u8 BEV = 13;
-		static constexpr u8 RE = 14;
-		static constexpr u8 CU = 15;
+		static constexpr int IEc = 0;
+		static constexpr int KUc = 1;
+		static constexpr int IEp = 2;
+		static constexpr int KUp = 3;
+		static constexpr int IEo = 4;
+		static constexpr int KUo = 5;
+		static constexpr int IM = 6;
+		static constexpr int IsC = 7;
+		static constexpr int SwC = 8;
+		static constexpr int PZ = 9;
+		static constexpr int CM = 10;
+		static constexpr int PE = 11;
+		static constexpr int TS = 12;
+		static constexpr int BEV = 13;
+		static constexpr int RE = 14;
+		static constexpr int CU = 15;
 	};
 
 	explicit IOPCoreCOP0Register_Status_t();
@@ -107,10 +107,10 @@ class IOPCoreCOP0Register_Cause_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 ExcCode = 0;
-		static constexpr u8 IP = 1;
-		static constexpr u8 CE = 2;
-		static constexpr u8 BD = 3;
+		static constexpr int ExcCode = 0;
+		static constexpr int IP = 1;
+		static constexpr int CE = 2;
+		static constexpr int BD = 3;
 	};
 
 	explicit IOPCoreCOP0Register_Cause_t();
@@ -143,8 +143,8 @@ class IOPCoreCOP0Register_PRId_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Rev = 0;
-		static constexpr u8 Imp = 1;
+		static constexpr int Rev = 0;
+		static constexpr int Imp = 1;
 	};
 
 	explicit IOPCoreCOP0Register_PRId_t();

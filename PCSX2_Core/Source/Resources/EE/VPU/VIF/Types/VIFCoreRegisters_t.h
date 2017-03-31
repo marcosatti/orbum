@@ -12,8 +12,8 @@ class VIFCoreRegister_CYCLE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CL = 0;
-		static constexpr u8 WL = 1;
+		static constexpr int CL = 0;
+		static constexpr int WL = 1;
 	};
 
 	VIFCoreRegister_CYCLE_t();
@@ -29,22 +29,22 @@ class VIFCoreRegister_MASK_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 m0 = 0;
-		static constexpr u8 m1 = 1;
-		static constexpr u8 m2 = 2;
-		static constexpr u8 m3 = 3;
-		static constexpr u8 m4 = 4;
-		static constexpr u8 m5 = 5;
-		static constexpr u8 m6 = 6;
-		static constexpr u8 m7 = 7;
-		static constexpr u8 m8 = 8;
-		static constexpr u8 m9 = 9;
-		static constexpr u8 m10 = 10;
-		static constexpr u8 m11 = 11;
-		static constexpr u8 m12 = 12;
-		static constexpr u8 m13 = 13;
-		static constexpr u8 m14 = 14;
-		static constexpr u8 m15 = 15;
+		static constexpr int m0 = 0;
+		static constexpr int m1 = 1;
+		static constexpr int m2 = 2;
+		static constexpr int m3 = 3;
+		static constexpr int m4 = 4;
+		static constexpr int m5 = 5;
+		static constexpr int m6 = 6;
+		static constexpr int m7 = 7;
+		static constexpr int m8 = 8;
+		static constexpr int m9 = 9;
+		static constexpr int m10 = 10;
+		static constexpr int m11 = 11;
+		static constexpr int m12 = 12;
+		static constexpr int m13 = 13;
+		static constexpr int m14 = 14;
+		static constexpr int m15 = 15;
 	};
 
 	VIFCoreRegister_MASK_t();
@@ -60,7 +60,7 @@ class VIFCoreRegister_MODE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 MOD = 0;
+		static constexpr int MOD = 0;
 	};
 
 	VIFCoreRegister_MODE_t();
@@ -76,7 +76,7 @@ class VIFCoreRegister_ITOP_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 ITOP = 0;
+		static constexpr int ITOP = 0;
 	};
 
 	VIFCoreRegister_ITOP_t();
@@ -92,7 +92,7 @@ class VIFCoreRegister_ITOPS_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 ITOPS = 0;
+		static constexpr int ITOPS = 0;
 	};
 
 	VIFCoreRegister_ITOPS_t();
@@ -108,7 +108,7 @@ class VIFCoreRegister_BASE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 BASE = 0;
+		static constexpr int BASE = 0;
 	};
 
 	VIFCoreRegister_BASE_t();
@@ -124,7 +124,7 @@ class VIFCoreRegister_OFST_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 OFFSET = 0;
+		static constexpr int OFFSET = 0;
 	};
 
 	VIFCoreRegister_OFST_t();
@@ -140,7 +140,7 @@ class VIFCoreRegister_TOP_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 TOP = 0;
+		static constexpr int TOP = 0;
 	};
 
 	VIFCoreRegister_TOP_t();
@@ -156,7 +156,7 @@ class VIFCoreRegister_TOPS_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 TOPS = 0;
+		static constexpr int TOPS = 0;
 	};
 
 	VIFCoreRegister_TOPS_t();
@@ -172,7 +172,7 @@ class VIFCoreRegister_MARK_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 MARK = 0;
+		static constexpr int MARK = 0;
 	};
 
 	VIFCoreRegister_MARK_t();
@@ -188,7 +188,7 @@ class VIFCoreRegister_NUM_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 NUM = 0;
+		static constexpr int NUM = 0;
 	};
 
 	VIFCoreRegister_NUM_t();
@@ -204,9 +204,9 @@ class VIFCoreRegister_CODE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 IMMEDIATE = 0;
-		static constexpr u8 NUM = 1;
-		static constexpr u8 CMD = 2;
+		static constexpr int IMMEDIATE = 0;
+		static constexpr int NUM = 1;
+		static constexpr int CMD = 2;
 	};
 
 	VIFCoreRegister_CODE_t();
@@ -223,19 +223,19 @@ class VIFCoreRegister_STAT_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 VPS = 0;
-		static constexpr u8 VEW = 1;
-		static constexpr u8 VGW = 2;
-		static constexpr u8 MRK = 3;
-		static constexpr u8 DBF = 4;
-		static constexpr u8 VSS = 5;
-		static constexpr u8 VFS = 6;
-		static constexpr u8 VIS = 7;
-		static constexpr u8 INT = 8;
-		static constexpr u8 ER0 = 9;
-		static constexpr u8 ER1 = 10;
-		static constexpr u8 FDR = 11;
-		static constexpr u8 FQC = 12;
+		static constexpr int VPS = 0;
+		static constexpr int VEW = 1;
+		static constexpr int VGW = 2;
+		static constexpr int MRK = 3;
+		static constexpr int DBF = 4;
+		static constexpr int VSS = 5;
+		static constexpr int VFS = 6;
+		static constexpr int VIS = 7;
+		static constexpr int INT = 8;
+		static constexpr int ER0 = 9;
+		static constexpr int ER1 = 10;
+		static constexpr int FDR = 11;
+		static constexpr int FQC = 12;
 	};
 
 	VIFCoreRegister_STAT_t();
@@ -251,10 +251,10 @@ class VIFCoreRegister_FBRST_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 RST = 0;
-		static constexpr u8 FBK = 1;
-		static constexpr u8 STP = 2;
-		static constexpr u8 STC = 3;
+		static constexpr int RST = 0;
+		static constexpr int FBK = 1;
+		static constexpr int STP = 2;
+		static constexpr int STC = 3;
 	};
 
 	VIFCoreRegister_FBRST_t();
@@ -270,9 +270,9 @@ class VIFCoreRegister_ERR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 MII = 0;
-		static constexpr u8 ME0 = 1;
-		static constexpr u8 ME1 = 2;
+		static constexpr int MII = 0;
+		static constexpr int ME0 = 1;
+		static constexpr int ME1 = 2;
 	};
 
 	VIFCoreRegister_ERR_t();

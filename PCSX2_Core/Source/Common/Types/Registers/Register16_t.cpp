@@ -30,10 +30,6 @@ Register16_t::Register16_t(const char* mnemonic, bool debugReads, bool debugWrit
 }
 #endif
 
-Register16_t::~Register16_t()
-{
-}
-
 u8 Register16_t::readByte(const Context_t context, size_t arrayIndex)
 {
 #if defined(BUILD_DEBUG)

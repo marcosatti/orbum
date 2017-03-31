@@ -19,8 +19,7 @@ On byte/hword access, a runtime_error is thrown, reason being that the underlyin
 class MappedFPRegister128_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedFPRegister128_t(const u32& physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
-	virtual ~MappedFPRegister128_t();
+	explicit MappedFPRegister128_t(const u32 physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
 
 	u8 readByte(const Context_t context, size_t storageIndex) override;
 	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;

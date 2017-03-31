@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedRegister16_t.h"
 
-MappedRegister16_t::MappedRegister16_t(const u32& physicalAddress, const std::shared_ptr<Register16_t> & register16) :
+MappedRegister16_t::MappedRegister16_t(const u32 physicalAddress, const std::shared_ptr<Register16_t> & register16) :
 	PhysicalMapped_t(physicalAddress),
 	mRegister16(register16)
-{
-}
-
-MappedRegister16_t::~MappedRegister16_t()
 {
 }
 

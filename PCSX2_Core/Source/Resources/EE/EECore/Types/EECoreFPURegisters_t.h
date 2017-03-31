@@ -33,8 +33,8 @@ class EECoreFPURegister_IRR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Rev = 0;
-		static constexpr u8 Imp = 1;
+		static constexpr int Rev = 0;
+		static constexpr int Imp = 1;
 	};
 
 	explicit EECoreFPURegister_IRR_t();
@@ -67,15 +67,15 @@ class EECoreFPURegister_CSR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 SU = 0;
-		static constexpr u8 SO = 1;
-		static constexpr u8 SD = 2;
-		static constexpr u8 SI = 3;
-		static constexpr u8 U = 4;
-		static constexpr u8 O = 5;
-		static constexpr u8 D = 6;
-		static constexpr u8 I = 7;
-		static constexpr u8 C = 8;
+		static constexpr int SU = 0;
+		static constexpr int SO = 1;
+		static constexpr int SD = 2;
+		static constexpr int SI = 3;
+		static constexpr int U = 4;
+		static constexpr int O = 5;
+		static constexpr int D = 6;
+		static constexpr int I = 7;
+		static constexpr int C = 8;
 	};
 
 	explicit EECoreFPURegister_CSR_t();
@@ -84,7 +84,7 @@ public:
 	Set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).
 	See EE Core Users Manual page 159.
 	*/
-	void setFieldValueSticky(const u8& fieldIndex, const u32& value);
+	void setFieldValueSticky(const int fieldIndex, const u32 value);
 
 	/*
 	Update or clears the U, O, (D, I) flags, which both should be done on each instruction that modifies this register.

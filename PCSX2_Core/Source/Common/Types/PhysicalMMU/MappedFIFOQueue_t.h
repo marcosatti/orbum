@@ -13,8 +13,7 @@ Only read/writeWord and Qword is allowed on non-zero storage indexes - all other
 class MappedFIFOQueue_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedFIFOQueue_t(const u32& physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
-	virtual ~MappedFIFOQueue_t();
+	explicit MappedFIFOQueue_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	u8 readByte(const Context_t context, size_t storageIndex) override;
 	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;

@@ -14,10 +14,6 @@ WrapperR16Register32_t::WrapperR16Register32_t(const char* mnemonic, const std::
 {
 }
 
-WrapperR16Register32_t::~WrapperR16Register32_t()
-{
-}
-
 u8 WrapperR16Register32_t::readByte(const Context_t context, size_t arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to Register16_t are allowed.");

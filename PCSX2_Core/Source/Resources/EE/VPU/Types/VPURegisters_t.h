@@ -13,19 +13,19 @@ class VPURegister_STAT_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 VBS0 = 0;
-		static constexpr u8 VDS0 = 1;
-		static constexpr u8 VTS0 = 2;
-		static constexpr u8 VFS0 = 3;
-		static constexpr u8 DIV0 = 4;
-		static constexpr u8 IBS0 = 5;
-		static constexpr u8 VBS1 = 6;
-		static constexpr u8 VDS1 = 7;
-		static constexpr u8 VTS1 = 8;
-		static constexpr u8 VFS1 = 9;
-		static constexpr u8 VGW1 = 10;
-		static constexpr u8 DIV1 = 11;
-		static constexpr u8 EFU1 = 12;
+		static constexpr int VBS0 = 0;
+		static constexpr int VDS0 = 1;
+		static constexpr int VTS0 = 2;
+		static constexpr int VFS0 = 3;
+		static constexpr int DIV0 = 4;
+		static constexpr int IBS0 = 5;
+		static constexpr int VBS1 = 6;
+		static constexpr int VDS1 = 7;
+		static constexpr int VTS1 = 8;
+		static constexpr int VFS1 = 9;
+		static constexpr int VGW1 = 10;
+		static constexpr int DIV1 = 11;
+		static constexpr int EFU1 = 12;
 	};
 
 	VPURegister_STAT_t();

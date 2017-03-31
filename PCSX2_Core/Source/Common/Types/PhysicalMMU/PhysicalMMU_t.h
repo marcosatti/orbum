@@ -73,15 +73,15 @@ public:
 	Convenience mapping functions have been provided that maps the object with the appropriate wrapper class (makes it compatible with the PhysicalMapped interface).
 	*/
 	void mapObject(const std::shared_ptr<PhysicalMapped_t> & physicalMapped);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register8_t> & register8);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register16_t> & register16);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register32_t> & register32);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register64_t> & register64);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<Register128_t> & register128);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
-	void mapObject(const u32 & physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register8_t> & register8);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register16_t> & register16);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register32_t> & register32);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register64_t> & register64);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register128_t> & register128);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FPRegister128_t> & fpRegister128);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue32);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.

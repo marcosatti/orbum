@@ -510,5 +510,6 @@
     </None>
     <None Include="Docs\Bitfield Register Creation Helper.xlsx" />
     <None Include="Docs\IOP Instruction Implementation Register.xlsm" />
+    <None Include="Docs\IOPCore Instruction Implementation Register.xlsm" />
   </ItemGroup>
 </Project>

@@ -47,7 +47,7 @@ void IOPCoreCOP0_t::initalise()
 
 MIPSOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext() const
 {
-	const u32& KUc = Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc);
+	const u32 KUc = Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc);
 
 	if (KUc == 1)
 		return MIPSOperatingContext_t::User;

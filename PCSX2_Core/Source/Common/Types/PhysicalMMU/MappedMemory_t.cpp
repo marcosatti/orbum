@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedMemory_t.h"
 
-MappedMemory_t::MappedMemory_t(const u32& physicalAddress, const std::shared_ptr<ByteMemory_t> & memory) :
+MappedMemory_t::MappedMemory_t(const u32 physicalAddress, const std::shared_ptr<ByteMemory_t> & memory) :
 	PhysicalMapped_t(physicalAddress),
 	mMemory(memory)
-{
-}
-
-MappedMemory_t::~MappedMemory_t()
 {
 }
 

@@ -18,8 +18,7 @@ TODO: look into size conditions - the EE manual mentions "... only accessible by
 class MappedRegister16_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedRegister16_t(const u32& physicalAddress, const std::shared_ptr<Register16_t> & register16);
-	virtual ~MappedRegister16_t();
+	explicit MappedRegister16_t(const u32 physicalAddress, const std::shared_ptr<Register16_t> & register16);
 
 	u8 readByte(const Context_t context, size_t storageIndex) override;
 	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;

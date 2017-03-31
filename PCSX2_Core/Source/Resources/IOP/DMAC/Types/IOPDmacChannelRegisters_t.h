@@ -15,18 +15,18 @@ class IOPDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 TD = 0;
-		static constexpr u8 MAS = 1;
-		static constexpr u8 CE = 2;
-		static constexpr u8 SM = 3;
-		static constexpr u8 ILinkUnk = 4;
-		static constexpr u8 C_DWS = 5;
-		static constexpr u8 C_CWS = 6;
-		static constexpr u8 Start = 7;
-		static constexpr u8 Force = 8;
-		static constexpr u8 ForceSlice = 9;
-		static constexpr u8 BusSnooping = 10;
-		static constexpr u8 ILinkAR = 11;
+		static constexpr int TD = 0;
+		static constexpr int MAS = 1;
+		static constexpr int CE = 2;
+		static constexpr int SM = 3;
+		static constexpr int ILinkUnk = 4;
+		static constexpr int C_DWS = 5;
+		static constexpr int C_CWS = 6;
+		static constexpr int Start = 7;
+		static constexpr int Force = 8;
+		static constexpr int ForceSlice = 9;
+		static constexpr int BusSnooping = 10;
+		static constexpr int ILinkAR = 11;
 	};
 
 	IOPDmacChannelRegister_CHCR_t(const char * mnemonic);
@@ -71,8 +71,8 @@ class IOPDmacChannelRegister_BCR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 BS = 0;
-		static constexpr u8 BA = 1;
+		static constexpr int BS = 0;
+		static constexpr int BA = 1;
 	};
 
 	IOPDmacChannelRegister_BCR_t(const char * mnemonic);
@@ -180,7 +180,7 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif0.cpp".
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValue(const int fieldIndex, const u32 value) override;
 	void writeWord(const Context_t context, u32 value) override;
 
 private:
@@ -213,7 +213,7 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif1.cpp".
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValue(const int fieldIndex, const u32 value) override;
 	void writeWord(const Context_t context, u32 value) override;
 
 private:
@@ -244,7 +244,7 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. 
 	See PCSX2's "sif2.cpp".
 	*/
-	void setFieldValue(const u8& fieldIndex, const u32& value) override;
+	void setFieldValue(const int fieldIndex, const u32 value) override;
 	void writeWord(const Context_t context, u32 value) override;
 
 private:

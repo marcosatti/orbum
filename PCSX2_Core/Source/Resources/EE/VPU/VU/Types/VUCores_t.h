@@ -25,12 +25,12 @@ Extended by VUCore_VU0_t and VUCore_VU1_t.
 class VUCore_t
 {
 public:
-	explicit VUCore_t(const u32 & unitID);
+	explicit VUCore_t(const int vuCoreID);
 
 	/*
 	ID of the VU. Currently used for debug.
 	*/
-	const u32 mUnitID;
+	int mVUCoreID;
 
 	/*
 	VU floating point registers (VF) (128-bit) and integer registers (VI) (16-bit).
@@ -116,7 +116,7 @@ class VUCore_VU0_t : public VUCore_t, public MIPSCoprocessor_t
 public:
 	explicit VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
-	static constexpr u32 UNIT_ID = 0;
+	static constexpr int CORE_ID = 0;
 
 	// COP2 (attached to EE Core) functionality.
 
@@ -150,5 +150,5 @@ class VUCore_VU1_t : public VUCore_t
 public:
 	explicit VUCore_VU1_t();
 
-	static constexpr u32 UNIT_ID = 1;
+	static constexpr int CORE_ID = 1;
 };

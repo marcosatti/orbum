@@ -65,17 +65,11 @@ public:
 	std::shared_ptr<EEDmacRegister_RBSR_t>    RBSR;
 	std::shared_ptr<EEDmacRegister_RBOR_t>    RBOR;
 	std::shared_ptr<EEDmacRegister_STADR_t>   STADR;
-	std::shared_ptr<ConstantByteMemory_t>         MEMORY_E070;
-	std::shared_ptr<ByteMemory_t>                 MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
+	std::shared_ptr<ConstantByteMemory_t>     MEMORY_E070;
+	std::shared_ptr<ByteMemory_t>             MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
 	std::shared_ptr<EEDmacRegister_ENABLER_t> ENABLER;
-	std::shared_ptr<ConstantByteMemory_t>         MEMORY_F530;
+	std::shared_ptr<ConstantByteMemory_t>     MEMORY_F530;
 	std::shared_ptr<EEDmacRegister_ENABLEW_t> ENABLEW;
-	std::shared_ptr<ConstantByteMemory_t>         MEMORY_F5A0;
-
-private:
-	/*
-	Initalise the EE DMAC channel's with the appropriate FIFO queue attached.
-	*/
-	void initChannels();
+	std::shared_ptr<ConstantByteMemory_t>     MEMORY_F5A0;
 };
 

@@ -8,10 +8,6 @@ ROByteMemory_t::ROByteMemory_t(const size_t& size) :
 {
 }
 
-ROByteMemory_t::~ROByteMemory_t()
-{
-}
-
 void ROByteMemory_t::writeByte(const Context_t context, size_t byteOffset, u8 value)
 {
 	// Do not write (read only).

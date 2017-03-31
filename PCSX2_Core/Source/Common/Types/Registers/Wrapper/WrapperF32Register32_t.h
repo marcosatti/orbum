@@ -17,8 +17,6 @@ public:
 	explicit WrapperF32Register32_t(const std::shared_ptr<FPRegister32_t> & fpRegister32);
 	explicit WrapperF32Register32_t(const char * mnemonic, const std::shared_ptr<FPRegister32_t> & fpRegister32);
 
-	~WrapperF32Register32_t();
-
 	u8 readByte(const Context_t context, size_t arrayIndex) override;
 	void writeByte(const Context_t context, size_t arrayIndex, u8 value) override;
 	u16 readHword(const Context_t context, size_t arrayIndex) override;

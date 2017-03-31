@@ -28,12 +28,12 @@ Extended by EEVpuVif0_t and EEVpuVif1_t.
 class VIFCore_t
 {
 public:
-	explicit VIFCore_t(const u32 & unitID);
+	explicit VIFCore_t(const int vifCoreID);
 
 	/*
 	ID of the VIF unit. Currently used for debug.
 	*/
-	const u32 mUnitID;
+	int mVIFCoreID;
 
 	/*
 	VIF registers. See page 124 of EE Users Manual.
@@ -73,7 +73,7 @@ class VIFCore_VIF0_t : public VIFCore_t
 public:
 	explicit VIFCore_VIF0_t();
 
-	static constexpr u32 UNIT_ID = 0;
+	static constexpr int CORE_ID = 0;
 };
 
 /*
@@ -85,5 +85,5 @@ class VIFCore_VIF1_t : public VIFCore_t
 public:
 	explicit VIFCore_VIF1_t();
 
-	static constexpr u32 UNIT_ID = 1;
+	static constexpr int CORE_ID = 1;
 };

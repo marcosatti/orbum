@@ -15,7 +15,7 @@ class FIFOQueue32_t
 public:
 	explicit FIFOQueue32_t(const size_t & maxSize);
 	explicit FIFOQueue32_t(const char * mnemonic, const size_t & maxSize);
-	virtual ~FIFOQueue32_t();
+	virtual ~FIFOQueue32_t() = default;
 
 	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
@@ -30,12 +30,12 @@ public:
 	/*
 	Writes 32-bits of data to the FIFO queue.
 	*/
-	virtual void writeWord(const Context_t context, const u32 & data);
+	virtual void writeWord(const Context_t context, const u32 data);
 
 	/*
 	Write 128-bits of data to the FIFO queue (splits the u128 into 4 x 32-bit).
 	*/
-	virtual void writeQword(const Context_t context, const u128 & data);
+	virtual void writeQword(const Context_t context, const u128 data);
 
 	/*
 	Gets the current number of 32-bit data elements in the queue.

@@ -12,12 +12,12 @@ class EEDmacRegister_CTRL_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 DMAE = 0;
-		static constexpr u8 RELE = 1;
-		static constexpr u8 MFD = 2;
-		static constexpr u8 STS = 3;
-		static constexpr u8 STD = 4;
-		static constexpr u8 RCYC = 5;
+		static constexpr int DMAE = 0;
+		static constexpr int RELE = 1;
+		static constexpr int MFD = 2;
+		static constexpr int STS = 3;
+		static constexpr int STD = 4;
+		static constexpr int RCYC = 5;
 	};
 
 	EEDmacRegister_CTRL_t();
@@ -35,33 +35,33 @@ class EEDmacRegister_STAT_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CIS0 = 0;
-		static constexpr u8 CIS1 = 1;
-		static constexpr u8 CIS2 = 2;
-		static constexpr u8 CIS3 = 3;
-		static constexpr u8 CIS4 = 4;
-		static constexpr u8 CIS5 = 5;
-		static constexpr u8 CIS6 = 6;
-		static constexpr u8 CIS7 = 7;
-		static constexpr u8 CIS8 = 8;
-		static constexpr u8 CIS9 = 9;
-		static constexpr u8 SIS = 10;
-		static constexpr u8 MEIS = 11;
-		static constexpr u8 BEIS = 12;
-		static constexpr u8 CIM0 = 13;
-		static constexpr u8 CIM1 = 14;
-		static constexpr u8 CIM2 = 15;
-		static constexpr u8 CIM3 = 16;
-		static constexpr u8 CIM4 = 17;
-		static constexpr u8 CIM5 = 18;
-		static constexpr u8 CIM6 = 19;
-		static constexpr u8 CIM7 = 20;
-		static constexpr u8 CIM8 = 21;
-		static constexpr u8 CIM9 = 22;
-		static constexpr u8 SIM = 23;
-		static constexpr u8 MEIM = 24;
+		static constexpr int CIS0 = 0;
+		static constexpr int CIS1 = 1;
+		static constexpr int CIS2 = 2;
+		static constexpr int CIS3 = 3;
+		static constexpr int CIS4 = 4;
+		static constexpr int CIS5 = 5;
+		static constexpr int CIS6 = 6;
+		static constexpr int CIS7 = 7;
+		static constexpr int CIS8 = 8;
+		static constexpr int CIS9 = 9;
+		static constexpr int SIS = 10;
+		static constexpr int MEIS = 11;
+		static constexpr int BEIS = 12;
+		static constexpr int CIM0 = 13;
+		static constexpr int CIM1 = 14;
+		static constexpr int CIM2 = 15;
+		static constexpr int CIM3 = 16;
+		static constexpr int CIM4 = 17;
+		static constexpr int CIM5 = 18;
+		static constexpr int CIM6 = 19;
+		static constexpr int CIM7 = 20;
+		static constexpr int CIM8 = 21;
+		static constexpr int CIM9 = 22;
+		static constexpr int SIM = 23;
+		static constexpr int MEIM = 24;
 
-		static constexpr u8 CHANNEL_IRQ_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
+		static constexpr int CHANNEL_IRQ_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
 	};
 
 	EEDmacRegister_STAT_t();
@@ -87,27 +87,27 @@ class EEDmacRegister_PCR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CPC0 = 0;
-		static constexpr u8 CPC1 = 1;
-		static constexpr u8 CPC2 = 2;
-		static constexpr u8 CPC3 = 3;
-		static constexpr u8 CPC4 = 4;
-		static constexpr u8 CPC5 = 5;
-		static constexpr u8 CPC6 = 6;
-		static constexpr u8 CPC7 = 7;
-		static constexpr u8 CPC8 = 8;
-		static constexpr u8 CPC9 = 9;
-		static constexpr u8 CDE0 = 10;
-		static constexpr u8 CDE1 = 11;
-		static constexpr u8 CDE2 = 12;
-		static constexpr u8 CDE3 = 13;
-		static constexpr u8 CDE4 = 14;
-		static constexpr u8 CDE5 = 15;
-		static constexpr u8 CDE6 = 16;
-		static constexpr u8 CDE7 = 17;
-		static constexpr u8 CDE8 = 18;
-		static constexpr u8 CDE9 = 19;
-		static constexpr u8 PCE = 20;
+		static constexpr int CPC0 = 0;
+		static constexpr int CPC1 = 1;
+		static constexpr int CPC2 = 2;
+		static constexpr int CPC3 = 3;
+		static constexpr int CPC4 = 4;
+		static constexpr int CPC5 = 5;
+		static constexpr int CPC6 = 6;
+		static constexpr int CPC7 = 7;
+		static constexpr int CPC8 = 8;
+		static constexpr int CPC9 = 9;
+		static constexpr int CDE0 = 10;
+		static constexpr int CDE1 = 11;
+		static constexpr int CDE2 = 12;
+		static constexpr int CDE3 = 13;
+		static constexpr int CDE4 = 14;
+		static constexpr int CDE5 = 15;
+		static constexpr int CDE6 = 16;
+		static constexpr int CDE7 = 17;
+		static constexpr int CDE8 = 18;
+		static constexpr int CDE9 = 19;
+		static constexpr int PCE = 20;
 	};
 
 	EEDmacRegister_PCR_t();
@@ -121,8 +121,8 @@ class EEDmacRegister_SWQC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 SQWC = 0;
-		static constexpr u8 TQWC = 1;
+		static constexpr int SQWC = 0;
+		static constexpr int TQWC = 1;
 	};
 
 	EEDmacRegister_SWQC_t();
@@ -136,7 +136,7 @@ class EEDmacRegister_RBOR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 ADDR = 0;
+		static constexpr int ADDR = 0;
 	};
 
 	EEDmacRegister_RBOR_t();
@@ -150,7 +150,7 @@ class EEDmacRegister_RBSR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 RMSK = 0;
+		static constexpr int RMSK = 0;
 	};
 
 	EEDmacRegister_RBSR_t();
@@ -164,7 +164,7 @@ class EEDmacRegister_STADR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 ADDR = 0;
+		static constexpr int ADDR = 0;
 	};
 
 	EEDmacRegister_STADR_t();
@@ -178,7 +178,7 @@ class EEDmacRegister_ENABLEW_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CPND = 0;
+		static constexpr int CPND = 0;
 	};
 
 	EEDmacRegister_ENABLEW_t();
@@ -192,7 +192,7 @@ class EEDmacRegister_ENABLER_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CPND = 0;
+		static constexpr int CPND = 0;
 	};
 
 	EEDmacRegister_ENABLER_t();

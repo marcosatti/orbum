@@ -15,10 +15,6 @@ FPRegister32_t::FPRegister32_t(const char* mnemonic) :
 {
 }
 
-FPRegister32_t::~FPRegister32_t()
-{
-}
-
 u32 FPRegister32_t::readWord(const Context_t context)
 {
 	return UW;

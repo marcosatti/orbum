@@ -31,16 +31,16 @@ struct IOPCoreInstructionTable
 	struct CycleConstants
 	{
 		// R3000 instructions.
-		static constexpr u32 R3000_DEFAULT = 9;
-		static constexpr u32 R3000_BRANCH = 11;
-		static constexpr u32 R3000_MULTIPLY = 16;
-		static constexpr u32 R3000_DIVIDE = 112;
-		static constexpr u32 R3000_STORE = 14;
-		static constexpr u32 R3000_LOAD = 14;
+		static constexpr int R3000_DEFAULT = 9;
+		static constexpr int R3000_BRANCH = 11;
+		static constexpr int R3000_MULTIPLY = 16;
+		static constexpr int R3000_DIVIDE = 112;
+		static constexpr int R3000_STORE = 14;
+		static constexpr int R3000_LOAD = 14;
 
 		// COP0/1 instructions.
-		static constexpr u32 COP_DEFAULT = 11;
-		static constexpr u32 COP_BRANCH = 20; // TODO: This is a very rough guess. Needs testing.
+		static constexpr int COP_DEFAULT = 11;
+		static constexpr int COP_BRANCH = 20; // TODO: This is a very rough guess. Needs testing.
 	};
 
 	struct IOPCoreInstructionInfo_t

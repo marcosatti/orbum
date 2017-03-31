@@ -23,7 +23,7 @@ EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t()
 	registerField(Fields::C, "C", 23, 1, 0);
 }
 
-void EECoreFPURegister_CSR_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
+void EECoreFPURegister_CSR_t::setFieldValueSticky(const int fieldIndex, const u32 value)
 {
 	// Check if the field index is for the non-sticky flags.
 	// TODO: relies on fact that sticky flag indexes are offset by -4.

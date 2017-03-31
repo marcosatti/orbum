@@ -18,7 +18,7 @@ VUCoreRegister_Status_t::VUCoreRegister_Status_t()
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VUCoreRegister_Status_t::setFieldValueSticky(const u8& fieldIndex, const u32& value)
+void VUCoreRegister_Status_t::setFieldValueSticky(const int fieldIndex, const u32 value)
 {
 	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
 
@@ -62,7 +62,7 @@ VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VUCoreRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& value)
+void VUCoreRegister_MAC_t::setFieldValueStatus(const int fieldIndex, const u32 value)
 {
 	setFieldValue(fieldIndex, value);
 
@@ -75,11 +75,11 @@ void VUCoreRegister_MAC_t::setFieldValueStatus(const u8& fieldIndex, const u32& 
 		throw std::runtime_error("VU MAC register set flag stick index out of range.");
 }
 
-void VUCoreRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlags_t& flags)
+void VUCoreRegister_MAC_t::updateVectorField(const int fieldIndex, const FPUFlags_t& flags)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
-	const u8 * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	const int * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Set the relevant flags (Z, S, U, O).
@@ -89,11 +89,11 @@ void VUCoreRegister_MAC_t::updateVectorField(const u8& fieldIndex, const FPUFlag
 	setFieldValueStatus(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
 }
 
-void VUCoreRegister_MAC_t::clearVectorField(const u8& fieldIndex)
+void VUCoreRegister_MAC_t::clearVectorField(const int fieldIndex)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
-	const u8 * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
+	const int * FIELD_FLAGS[] = { Fields::X_FLAGS, Fields::Y_FLAGS, Fields::Z_FLAGS, Fields::W_FLAGS };
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Clear the relevant flags (O, U, S, Z).

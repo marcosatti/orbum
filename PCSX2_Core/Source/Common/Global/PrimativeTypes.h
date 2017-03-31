@@ -87,13 +87,13 @@ struct u128
 	{
 	}
 
-	u128(const u64 & lower, const u64 & upper) :
+	u128(const u64 lower, const u64 upper) :
 		lo(lower),
 		hi(upper)
 	{
 	}
 
-	u128(const u32& w0, const u32& w1, const u32& w2, const u32& w3) :
+	u128(const u32 w0, const u32 w1, const u32 w2, const u32 w3) :
 		UW{ w0, w1, w2, w3 }
 	{
 	}
@@ -103,18 +103,18 @@ struct u128
 	 - Copying to this value.
 	 - Comparing this value to another.
 	*/
-	void operator=(const u128& right)
+	void operator=(const u128 & right)
 	{
 		lo = right.lo;
 		hi = right.hi;
 	}
 
-	bool operator==(const u128& right) const
+	bool operator==(const u128 & right) const
 	{
 		return (lo == right.lo) && (hi == right.hi);
 	}
 
-	bool operator!=(const u128& right) const
+	bool operator!=(const u128 & right) const
 	{
 		return (lo != right.lo) || (hi != right.hi);
 	}

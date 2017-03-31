@@ -22,9 +22,9 @@ public:
 	EERegister_SIO_t();
 
 	static constexpr u32 PADDRESS_EE_REGISTER_SIO = 0x1000F100;
-	static constexpr u32 SIZE_EE_REGISTER_SIO = 0x00000100;
-	static constexpr u32 OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
-	static constexpr u32 OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
+	static constexpr size_t SIZE_EE_REGISTER_SIO = 0x00000100;
+	static constexpr size_t OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
+	static constexpr size_t OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
 	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;
 	u32 readWord(const Context_t context, size_t storageIndex) override;
@@ -50,9 +50,9 @@ public:
 	EERegister_MCH_t();
 
 	static constexpr u32 PADDRESS_EE_REGISTER_MCH = 0x1000F430;
-	static constexpr u32 SIZE_EE_REGISTER_MCH = 0x00000020;
-	static constexpr u32 OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
-	static constexpr u32 OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
+	static constexpr size_t SIZE_EE_REGISTER_MCH = 0x00000020;
+	static constexpr size_t OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
+	static constexpr size_t OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 
 	u32 readWord(const Context_t context, size_t storageIndex) override;
 	void writeWord(const Context_t context, size_t storageIndex, u32 value) override;

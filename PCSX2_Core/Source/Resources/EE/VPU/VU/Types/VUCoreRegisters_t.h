@@ -17,18 +17,18 @@ class VUCoreRegister_Status_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Z = 0;
-		static constexpr u8 S = 1;
-		static constexpr u8 U = 2;
-		static constexpr u8 O = 3;
-		static constexpr u8 I = 4;
-		static constexpr u8 D = 5;
-		static constexpr u8 ZS = 6;
-		static constexpr u8 SS = 7;
-		static constexpr u8 US = 8;
-		static constexpr u8 OS = 9;
-		static constexpr u8 IS = 10;
-		static constexpr u8 DS = 11;
+		static constexpr int Z = 0;
+		static constexpr int S = 1;
+		static constexpr int U = 2;
+		static constexpr int O = 3;
+		static constexpr int I = 4;
+		static constexpr int D = 5;
+		static constexpr int ZS = 6;
+		static constexpr int SS = 7;
+		static constexpr int US = 8;
+		static constexpr int OS = 9;
+		static constexpr int IS = 10;
+		static constexpr int DS = 11;
 	};
 
 	VUCoreRegister_Status_t();
@@ -37,7 +37,7 @@ public:
 	Overriden write functions to trigger the update of the sticky bit flags.
 	See VU Users Manual page 40.
 	*/
-	void setFieldValueSticky(const u8& fieldIndex, const u32& value);
+	void setFieldValueSticky(const int fieldIndex, const u32 value);
 
 	/*
 	Clear the non-sticky flags, which should be done on each instruction that modifies this register.
@@ -56,27 +56,27 @@ class VUCoreRegister_MAC_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Zw = 0;
-		static constexpr u8 Zz = 1;
-		static constexpr u8 Zy = 2;
-		static constexpr u8 Zx = 3;
-		static constexpr u8 Sw = 4;
-		static constexpr u8 Sz = 5;
-		static constexpr u8 Sy = 6;
-		static constexpr u8 Sx = 7;
-		static constexpr u8 Uw = 8;
-		static constexpr u8 Uz = 9;
-		static constexpr u8 Uy = 10;
-		static constexpr u8 Ux = 11;
-		static constexpr u8 Ow = 12;
-		static constexpr u8 Oz = 13;
-		static constexpr u8 Oy = 14;
-		static constexpr u8 Ox = 15;
+		static constexpr int Zw = 0;
+		static constexpr int Zz = 1;
+		static constexpr int Zy = 2;
+		static constexpr int Zx = 3;
+		static constexpr int Sw = 4;
+		static constexpr int Sz = 5;
+		static constexpr int Sy = 6;
+		static constexpr int Sx = 7;
+		static constexpr int Uw = 8;
+		static constexpr int Uz = 9;
+		static constexpr int Uy = 10;
+		static constexpr int Ux = 11;
+		static constexpr int Ow = 12;
+		static constexpr int Oz = 13;
+		static constexpr int Oy = 14;
+		static constexpr int Ox = 15;
 
-		static constexpr u8 X_FLAGS[] = { Zx, Sx, Ux, Ox };
-		static constexpr u8 Y_FLAGS[] = { Zy, Sy, Uy, Oy };
-		static constexpr u8 Z_FLAGS[] = { Zz, Sz, Uz, Oz };
-		static constexpr u8 W_FLAGS[] = { Zw, Sw, Uw, Ow };
+		static constexpr int X_FLAGS[] = { Zx, Sx, Ux, Ox };
+		static constexpr int Y_FLAGS[] = { Zy, Sy, Uy, Oy };
+		static constexpr int Z_FLAGS[] = { Zz, Sz, Uz, Oz };
+		static constexpr int W_FLAGS[] = { Zw, Sw, Uw, Ow };
 	};
 
 	VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status);
@@ -85,15 +85,15 @@ public:
 	Set bit field function to trigger changes to the associated VU status register.
 	See VU Users Manual page 39.
 	*/
-	void setFieldValueStatus(const u8& fieldIndex, const u32& value);
+	void setFieldValueStatus(const int fieldIndex, const u32 value);
 
 	/*
 	Updates or clear all flags (Z, S, U, O) for the given vector field, of which at least one function should be run on each instruction that modifies this register.
 	Mapping: fieldIndex    0 -> 3
 	         vector field  x -> w
 	*/
-	void updateVectorField(const u8 & fieldIndex, const FPUFlags_t & flags);
-	void clearVectorField(const u8 & fieldIndex);
+	void updateVectorField(const int fieldIndex, const FPUFlags_t & flags);
+	void clearVectorField(const int fieldIndex);
 
 private:
 
@@ -119,30 +119,30 @@ class VUCoreRegister_Clipping_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 NegX_0 = 0;
-		static constexpr u8 PosX_0 = 1;
-		static constexpr u8 NegY_0 = 2;
-		static constexpr u8 PosY_0 = 3;
-		static constexpr u8 NegZ_0 = 4;
-		static constexpr u8 PosZ_0 = 5;
-		static constexpr u8 NegX_1 = 6;
-		static constexpr u8 PosX_1 = 7;
-		static constexpr u8 NegY_1 = 8;
-		static constexpr u8 PosY_1 = 9;
-		static constexpr u8 NegZ_1 = 10;
-		static constexpr u8 PosZ_1 = 11;
-		static constexpr u8 NegX_2 = 12;
-		static constexpr u8 PosX_2 = 13;
-		static constexpr u8 NegY_2 = 14;
-		static constexpr u8 PosY_2 = 15;
-		static constexpr u8 NegZ_2 = 16;
-		static constexpr u8 PosZ_2 = 17;
-		static constexpr u8 NegX_3 = 18;
-		static constexpr u8 PosX_3 = 19;
-		static constexpr u8 NegY_3 = 20;
-		static constexpr u8 PosY_3 = 21;
-		static constexpr u8 NegZ_3 = 22;
-		static constexpr u8 PosZ_3 = 23;
+		static constexpr int NegX_0 = 0;
+		static constexpr int PosX_0 = 1;
+		static constexpr int NegY_0 = 2;
+		static constexpr int PosY_0 = 3;
+		static constexpr int NegZ_0 = 4;
+		static constexpr int PosZ_0 = 5;
+		static constexpr int NegX_1 = 6;
+		static constexpr int PosX_1 = 7;
+		static constexpr int NegY_1 = 8;
+		static constexpr int PosY_1 = 9;
+		static constexpr int NegZ_1 = 10;
+		static constexpr int PosZ_1 = 11;
+		static constexpr int NegX_2 = 12;
+		static constexpr int PosX_2 = 13;
+		static constexpr int NegY_2 = 14;
+		static constexpr int PosY_2 = 15;
+		static constexpr int NegZ_2 = 16;
+		static constexpr int PosZ_2 = 17;
+		static constexpr int NegX_3 = 18;
+		static constexpr int PosX_3 = 19;
+		static constexpr int NegY_3 = 20;
+		static constexpr int PosY_3 = 21;
+		static constexpr int NegZ_3 = 22;
+		static constexpr int PosZ_3 = 23;
 	};
 
 	VUCoreRegister_Clipping_t();
@@ -167,7 +167,7 @@ class VUCoreRegister_CMSAR_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CMSAR = 0;
+		static constexpr int CMSAR = 0;
 	};
 
 	VUCoreRegister_CMSAR_t();

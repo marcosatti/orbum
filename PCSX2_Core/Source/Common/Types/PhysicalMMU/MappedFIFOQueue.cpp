@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedFIFOQueue_t.h"
 
-MappedFIFOQueue_t::MappedFIFOQueue_t(const u32& physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+MappedFIFOQueue_t::MappedFIFOQueue_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	PhysicalMapped_t(physicalAddress),
 	mFIFOQueue(fifoQueue)
-{
-}
-
-MappedFIFOQueue_t::~MappedFIFOQueue_t()
 {
 }
 

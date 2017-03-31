@@ -18,10 +18,6 @@ ConstantByteMemory_t::ConstantByteMemory_t(const size_t& size, const char* mnemo
 {
 }
 
-ConstantByteMemory_t::~ConstantByteMemory_t()
-{
-}
-
 u8 ConstantByteMemory_t::readByte(const Context_t context, size_t byteOffset)
 {
 	return static_cast<u8>(mConstantValue);

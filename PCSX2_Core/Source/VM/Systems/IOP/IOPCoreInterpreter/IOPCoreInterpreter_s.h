@@ -339,6 +339,6 @@ private:
 	Currently if the CPU is not in a kernel context or an MMU error occurs, a runtime_error exception will be thrown.
 	TODO: investigate into user mode. I think the original PSX had no TLB...
 	*/
-	bool getPhysicalAddress(const u32 & virtualAddress, const MMUAccess_t & access, u32 & physicalAddress);
+	bool getPhysicalAddress(const u32 virtualAddress, const MMUAccess_t access, u32 & physicalAddress);
 };
 

@@ -29,10 +29,6 @@ Register8_t::Register8_t(const char* mnemonic, bool debugReads, bool debugWrites
 }
 #endif
 
-Register8_t::~Register8_t()
-{
-}
-
 u8 Register8_t::readByte(const Context_t context)
 {
 #if defined(BUILD_DEBUG)

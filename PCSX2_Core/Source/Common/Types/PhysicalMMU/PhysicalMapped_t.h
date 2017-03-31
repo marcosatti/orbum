@@ -15,8 +15,8 @@ The read write functions expect the index to be a byte index (offset), not a siz
 class PhysicalMapped_t
 {
 public:
-	explicit PhysicalMapped_t(const u32 & physicalAddress);
-	virtual ~PhysicalMapped_t();
+	explicit PhysicalMapped_t(const u32 physicalAddress);
+	virtual ~PhysicalMapped_t() = default;
 
 	/*
 	Read or write a value of a given type, to the specified byte index (storageIndex).
@@ -35,7 +35,7 @@ public:
 	/*
 	Gets the base PS2 physical address the mapping starts from.
 	*/
-	const u32 & getMappedPhysicalAddress() const;
+	const u32 getMappedPhysicalAddress() const;
 
 	/*
 	Gets the length of the mapping.

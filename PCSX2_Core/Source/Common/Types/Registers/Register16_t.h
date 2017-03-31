@@ -34,7 +34,7 @@ public:
 	bool mDebugReads, mDebugWrites;
 #endif
 
-	virtual ~Register16_t();
+	virtual ~Register16_t() = default;
 
 	/*
 	Read/write functions to access the register, with subclassed functionality.

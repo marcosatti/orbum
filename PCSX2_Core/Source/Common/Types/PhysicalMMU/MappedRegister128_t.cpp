@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
 
-MappedRegister128_t::MappedRegister128_t(const u32& physicalAddress, const std::shared_ptr<Register128_t> & register128) :
+MappedRegister128_t::MappedRegister128_t(const u32 physicalAddress, const std::shared_ptr<Register128_t> & register128) :
 	PhysicalMapped_t(physicalAddress),
 	mRegister128(register128)
-{
-}
-
-MappedRegister128_t::~MappedRegister128_t()
 {
 }
 

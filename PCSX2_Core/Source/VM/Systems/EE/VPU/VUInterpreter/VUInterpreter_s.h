@@ -68,7 +68,7 @@ private:
 	void ADD();
 	void ADDi();
 	void ADDq();
-	void ADDbc(const u8 & idx);
+	void ADDbc(const int idx);
 	void ADDbc_0();
 	void ADDbc_1();
 	void ADDbc_2();
@@ -76,7 +76,7 @@ private:
 	void ADDA();
 	void ADDAi();
 	void ADDAq();
-	void ADDAbc(const u8 & idx);
+	void ADDAbc(const int idx);
 	void ADDAbc_0();
 	void ADDAbc_1();
 	void ADDAbc_2();
@@ -84,7 +84,7 @@ private:
 	void SUB();
 	void SUBi();
 	void SUBq();
-	void SUBbc(const u8 & idx);
+	void SUBbc(const int idx);
 	void SUBbc_0();
 	void SUBbc_1();
 	void SUBbc_2();
@@ -92,7 +92,7 @@ private:
 	void SUBA();
 	void SUBAi();
 	void SUBAq();
-	void SUBAbc(const u8 & idx);
+	void SUBAbc(const int idx);
 	void SUBAbc_0();
 	void SUBAbc_1();
 	void SUBAbc_2();
@@ -100,7 +100,7 @@ private:
 	void MUL();
 	void MULi();
 	void MULq();
-	void MULbc(const u8 & idx);
+	void MULbc(const int idx);
 	void MULbc_0();
 	void MULbc_1();
 	void MULbc_2();
@@ -108,7 +108,7 @@ private:
 	void MULA();
 	void MULAi();
 	void MULAq();
-	void MULAbc(const u8 & idx);
+	void MULAbc(const int idx);
 	void MULAbc_0();
 	void MULAbc_1();
 	void MULAbc_2();
@@ -116,7 +116,7 @@ private:
 	void MADD();
 	void MADDi();
 	void MADDq();
-	void MADDbc(const u8 & idx);
+	void MADDbc(const int idx);
 	void MADDbc_0();
 	void MADDbc_1();
 	void MADDbc_2();
@@ -124,7 +124,7 @@ private:
 	void MADDA();
 	void MADDAi();
 	void MADDAq();
-	void MADDAbc(const u8 & idx);
+	void MADDAbc(const int idx);
 	void MADDAbc_0();
 	void MADDAbc_1();
 	void MADDAbc_2();
@@ -132,7 +132,7 @@ private:
 	void MSUB();
 	void MSUBi();
 	void MSUBq();
-	void MSUBbc(const u8 & idx);
+	void MSUBbc(const int idx);
 	void MSUBbc_0();
 	void MSUBbc_1();
 	void MSUBbc_2();
@@ -140,21 +140,21 @@ private:
 	void MSUBA();
 	void MSUBAi();
 	void MSUBAq();
-	void MSUBAbc(const u8 & idx);
+	void MSUBAbc(const int idx);
 	void MSUBAbc_0();
 	void MSUBAbc_1();
 	void MSUBAbc_2();
 	void MSUBAbc_3();
 	void MAX();
 	void MAXi();
-	void MAXbc(const u8 & idx);
+	void MAXbc(const int idx);
 	void MAXbc_0();
 	void MAXbc_1();
 	void MAXbc_2();
 	void MAXbc_3();
 	void MINI();
 	void MINIi();
-	void MINIbc(const u8 & idx);
+	void MINIbc(const int idx);
 	void MINIbc_0();
 	void MINIbc_1();
 	void MINIbc_2();

@@ -34,10 +34,6 @@ BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debugReads
 }
 #endif
 
-BitfieldRegister32_t::~BitfieldRegister32_t()
-{
-}
-
 void BitfieldRegister32_t::initalise()
 {
 	Register32_t::initalise();
@@ -132,13 +128,13 @@ void BitfieldRegister32_t::writeWord(const Context_t context, u32 value)
 #endif
 }
 
-void BitfieldRegister32_t::registerField(const u8& fieldIndex, const char* fieldMnemonic, const u8& fieldStartPosition, const u8& fieldLength, const u32& fieldInitialValue)
+void BitfieldRegister32_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u32 fieldInitialValue)
 {
 	mFields[fieldIndex] = { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue };
 	UW = MathUtil::insertMaskedValue32(UW, fieldInitialValue, fieldStartPosition, fieldLength);
 }
 
-const u32& BitfieldRegister32_t::getFieldValue(const u8& fieldIndex) const
+const u32 BitfieldRegister32_t::getFieldValue(const int fieldIndex) const
 {
 #if DEBUG_ERROR_BR32_FIELD_INDEX_RANGE
 	if (!(fieldIndex < FIELD_MAP_SIZE))
@@ -148,7 +144,7 @@ const u32& BitfieldRegister32_t::getFieldValue(const u8& fieldIndex) const
 	return mFields[fieldIndex].mValue;
 }
 
-void BitfieldRegister32_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void BitfieldRegister32_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 #if DEBUG_ERROR_BR32_FIELD_INDEX_RANGE
 	if (!(fieldIndex < FIELD_MAP_SIZE))

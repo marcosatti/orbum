@@ -21,8 +21,8 @@ public:
 	*/
 	u32 readWord(const Context_t context) override;
 	u128 readQword(const Context_t context) override;
-	void writeWord(const Context_t context, const u32& data) override;
-	void writeQword(const Context_t context, const u128& data) override;
+	void writeWord(const Context_t context, const u32 data) override;
+	void writeQword(const Context_t context, const u128 data) override;
 
 private:
 	/*

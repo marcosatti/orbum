@@ -13,14 +13,14 @@ class VURegister_FBRST_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 FB0 = 0;
-		static constexpr u8 RS0 = 1;
-		static constexpr u8 DE0 = 2;
-		static constexpr u8 TE0 = 3;
-		static constexpr u8 FB1 = 4;
-		static constexpr u8 RS1 = 5;
-		static constexpr u8 DE1 = 6;
-		static constexpr u8 TE1 = 7;
+		static constexpr int FB0 = 0;
+		static constexpr int RS0 = 1;
+		static constexpr int DE0 = 2;
+		static constexpr int TE0 = 3;
+		static constexpr int FB1 = 4;
+		static constexpr int RS1 = 5;
+		static constexpr int DE1 = 6;
+		static constexpr int TE1 = 7;
 	};
 
 	VURegister_FBRST_t();

@@ -14,10 +14,6 @@ WrapperF32Register32_t::WrapperF32Register32_t(const char* mnemonic, const std::
 {
 }
 
-WrapperF32Register32_t::~WrapperF32Register32_t()
-{
-}
-
 u8 WrapperF32Register32_t::readByte(const Context_t context, size_t arrayIndex)
 {
 	throw std::runtime_error("Only Word R/W wrapper calls to FPRegister32_t are allowed.");

@@ -18,7 +18,7 @@ public:
 	bool mDebugReads, mDebugWrites;
 #endif
 
-	virtual ~BitfieldRegister32_t();
+	virtual ~BitfieldRegister32_t() = default;
 
 	/*
 	Initalise register with default field values.
@@ -51,17 +51,17 @@ public:
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
 	Requires: a unique field index (fieldIndex), a mnemonic (fieldMnemonic), a bitfield starting position (fieldStartPosition), how long the bitfield is (fieldLength), and an initial value (fieldInitialValue).
 	*/
-	void registerField(const u8 & fieldIndex, const char * fieldMnemonic, const u8 & fieldStartPosition, const u8 & fieldLength, const u32 & fieldInitialValue);
+	void registerField(const int fieldIndex, const char * fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u32 fieldInitialValue);
 
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsistent state and undefined results may happen.
 	*/
-	virtual const u32 & getFieldValue(const u8 & fieldIndex) const;
+	virtual const u32 getFieldValue(const int fieldIndex) const;
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual void setFieldValue(const u8 & fieldIndex, const u32 & value);
+	virtual void setFieldValue(const int fieldIndex, const u32 value);
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
@@ -74,12 +74,12 @@ private:
 	*/
 	friend class EECoreInterpreter_s;
 	friend class IOPCoreInterpreter_s;
-	static constexpr u8 FIELD_MAP_SIZE = 32;
+	static constexpr int FIELD_MAP_SIZE = 32;
 	struct
 	{
 		std::string mMnemonic;
-		u8 mStartPosition;
-		u8 mLength;
+		int mStartPosition;
+		int mLength;
 		u32 mValue;
 		u32 mInitialValue;
 	} mFields[FIELD_MAP_SIZE];

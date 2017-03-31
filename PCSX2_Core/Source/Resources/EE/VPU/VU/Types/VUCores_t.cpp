@@ -14,8 +14,8 @@
 #include "Resources/EE/EECore/Types/EECoreCOP0_t.h"
 #include "Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 
-VUCore_t::VUCore_t(const u32 & unitID) :
-	mUnitID(unitID),
+VUCore_t::VUCore_t(const int vuCoreID) :
+	mVUCoreID(vuCoreID),
 	VF{ std::make_shared<ConstantFPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(),
 		std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(),
 		std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(), std::make_shared<FPRegister128_t>(),
@@ -39,7 +39,7 @@ VUCore_t::VUCore_t(const u32 & unitID) :
 }
 
 VUCore_VU0_t::VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0) :
-	VUCore_t(UNIT_ID),
+	VUCore_t(CORE_ID),
 	COP0(cop0)
 {
 	MEMORY_Micro = std::make_shared<ByteMemory_t>(Constants::SIZE_4KB, "VU0 Micro Mem");
@@ -56,7 +56,7 @@ bool VUCore_VU0_t::isCoprocessorUsable() const
 }
 
 VUCore_VU1_t::VUCore_VU1_t() :
-	VUCore_t(UNIT_ID)
+	VUCore_t(CORE_ID)
 {
 	MEMORY_Micro = std::make_shared<ByteMemory_t>(Constants::SIZE_16KB, "VU1 Micro Mem");
 	MEMORY_Mem = std::make_shared<ByteMemory_t>(Constants::SIZE_16KB, "VU1 Main Mem");

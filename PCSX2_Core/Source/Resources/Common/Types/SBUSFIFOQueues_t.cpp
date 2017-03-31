@@ -25,13 +25,13 @@ u128 SBUSFIFOQueue_SIF2_t::readQword(const Context_t context)
 	return temp;
 }
 
-void SBUSFIFOQueue_SIF2_t::writeWord(const Context_t context, const u32& data)
+void SBUSFIFOQueue_SIF2_t::writeWord(const Context_t context, const u32 data)
 {
 	FIFOQueue32_t::writeWord(context, data);
 	handleSBUSUpdate();
 }
 
-void SBUSFIFOQueue_SIF2_t::writeQword(const Context_t context, const u128& data)
+void SBUSFIFOQueue_SIF2_t::writeQword(const Context_t context, const u128 data)
 {
 	FIFOQueue32_t::writeQword(context, data);
 	handleSBUSUpdate();

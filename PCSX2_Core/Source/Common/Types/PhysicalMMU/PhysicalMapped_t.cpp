@@ -2,17 +2,13 @@
 
 #include "Common/Types/PhysicalMMU/PhysicalMapped_t.h"
 
-PhysicalMapped_t::PhysicalMapped_t(const u32 & physicalAddress) : 
+PhysicalMapped_t::PhysicalMapped_t(const u32 physicalAddress) : 
 	mPhysicalAddress(physicalAddress),
 	mAbsMappedPageIndex(0) 
 {
 }
 
-PhysicalMapped_t::~PhysicalMapped_t()
-{
-}
-
-const u32& PhysicalMapped_t::getMappedPhysicalAddress() const
+const u32 PhysicalMapped_t::getMappedPhysicalAddress() const
 {
 	return mPhysicalAddress;
 }

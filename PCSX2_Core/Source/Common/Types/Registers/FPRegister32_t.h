@@ -27,7 +27,7 @@ public:
 	explicit FPRegister32_t();
 	explicit FPRegister32_t(const char * mnemonic);
 
-	virtual ~FPRegister32_t();
+	virtual ~FPRegister32_t() = default;
 
 	/*
 	Read/write functions to access the register, with subclassed functionality. 

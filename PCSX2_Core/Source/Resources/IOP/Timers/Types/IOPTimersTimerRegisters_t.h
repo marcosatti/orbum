@@ -90,19 +90,19 @@ class IOPTimersTimerRegister_MODE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 SyncEnable = 0;
-		static constexpr u8 SyncMode = 1;
-		static constexpr u8 ResetMode = 2;
-		static constexpr u8 IrqOnTarget = 3;
-		static constexpr u8 IrqOnOF = 4;
-		static constexpr u8 IrqRepeat = 5;
-		static constexpr u8 IrqToggle = 6;
-		static constexpr u8 ClockSrc = 7;
-		static constexpr u8 Prescale0 = 8;
-		static constexpr u8 IrqRequest = 9;
-		static constexpr u8 ReachTarget = 10;
-		static constexpr u8 ReachOF = 11;
-		static constexpr u8 Prescale1 = 12;
+		static constexpr int SyncEnable = 0;
+		static constexpr int SyncMode = 1;
+		static constexpr int ResetMode = 2;
+		static constexpr int IrqOnTarget = 3;
+		static constexpr int IrqOnOF = 4;
+		static constexpr int IrqRepeat = 5;
+		static constexpr int IrqToggle = 6;
+		static constexpr int ClockSrc = 7;
+		static constexpr int Prescale0 = 8;
+		static constexpr int IrqRequest = 9;
+		static constexpr int ReachTarget = 10;
+		static constexpr int ReachOF = 11;
+		static constexpr int Prescale1 = 12;
 	};
 
 	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);

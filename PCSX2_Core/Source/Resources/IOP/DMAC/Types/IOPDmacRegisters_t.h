@@ -18,24 +18,24 @@ class IOPDmacRegister_PCR0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Priority0 = 0;
-		static constexpr u8 Enable0 = 1;
-		static constexpr u8 Priority1 = 2;
-		static constexpr u8 Enable1 = 3;
-		static constexpr u8 Priority2 = 4;
-		static constexpr u8 Enable2 = 5;
-		static constexpr u8 Priority3 = 6;
-		static constexpr u8 Enable3 = 7;
-		static constexpr u8 Priority4 = 8;
-		static constexpr u8 Enable4 = 9;
-		static constexpr u8 Priority5 = 10;
-		static constexpr u8 Enable5 = 11;
-		static constexpr u8 Priority6 = 12;
-		static constexpr u8 Enable6 = 13;
-		static constexpr u8 PriorityCPU = 14;
-		static constexpr u8 EnableCPU = 15;
+		static constexpr int Priority0 = 0;
+		static constexpr int Enable0 = 1;
+		static constexpr int Priority1 = 2;
+		static constexpr int Enable1 = 3;
+		static constexpr int Priority2 = 4;
+		static constexpr int Enable2 = 5;
+		static constexpr int Priority3 = 6;
+		static constexpr int Enable3 = 7;
+		static constexpr int Priority4 = 8;
+		static constexpr int Enable4 = 9;
+		static constexpr int Priority5 = 10;
+		static constexpr int Enable5 = 11;
+		static constexpr int Priority6 = 12;
+		static constexpr int Enable6 = 13;
+		static constexpr int PriorityCPU = 14;
+		static constexpr int EnableCPU = 15;
 
-		static constexpr u8 CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable0, Enable1, Enable2, Enable3, Enable4, Enable5, Enable6 };
+		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable0, Enable1, Enable2, Enable3, Enable4, Enable5, Enable6 };
 	};
 
 	IOPDmacRegister_PCR0_t(const char * mnemonic);
@@ -57,33 +57,33 @@ class IOPDmacRegister_ICR0_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 IRM0 = 0;
-		static constexpr u8 IRM1 = 1;
-		static constexpr u8 IRM2 = 2;
-		static constexpr u8 IRM3 = 3;
-		static constexpr u8 IRM4 = 4;
-		static constexpr u8 IRM5 = 5;
-		static constexpr u8 IRM6 = 6;
-		static constexpr u8 Error = 7;
-		static constexpr u8 TCM0 = 8;
-		static constexpr u8 TCM1 = 9;
-		static constexpr u8 TCM2 = 10;
-		static constexpr u8 TCM3 = 11;
-		static constexpr u8 TCM4 = 12;
-		static constexpr u8 TCM5 = 13;
-		static constexpr u8 TCM6 = 14;
-		static constexpr u8 MasterEnable = 15;
-		static constexpr u8 TCI0 = 16;
-		static constexpr u8 TCI1 = 17;
-		static constexpr u8 TCI2 = 18;
-		static constexpr u8 TCI3 = 19;
-		static constexpr u8 TCI4 = 20;
-		static constexpr u8 TCI5 = 21;
-		static constexpr u8 TCI6 = 22;
-		static constexpr u8 MasterInterrupt = 23;
+		static constexpr int IRM0 = 0;
+		static constexpr int IRM1 = 1;
+		static constexpr int IRM2 = 2;
+		static constexpr int IRM3 = 3;
+		static constexpr int IRM4 = 4;
+		static constexpr int IRM5 = 5;
+		static constexpr int IRM6 = 6;
+		static constexpr int Error = 7;
+		static constexpr int TCM0 = 8;
+		static constexpr int TCM1 = 9;
+		static constexpr int TCM2 = 10;
+		static constexpr int TCM3 = 11;
+		static constexpr int TCM4 = 12;
+		static constexpr int TCM5 = 13;
+		static constexpr int TCM6 = 14;
+		static constexpr int MasterEnable = 15;
+		static constexpr int TCI0 = 16;
+		static constexpr int TCI1 = 17;
+		static constexpr int TCI2 = 18;
+		static constexpr int TCI3 = 19;
+		static constexpr int TCI4 = 20;
+		static constexpr int TCI5 = 21;
+		static constexpr int TCI6 = 22;
+		static constexpr int MasterInterrupt = 23;
 
-		static constexpr u8 CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { IRM0, IRM1, IRM2, IRM3, IRM4, IRM5, IRM6 };
-		static constexpr u8 CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI0, TCI1, TCI2, TCI3, TCI4, TCI5, TCI6 };
+		static constexpr int CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { IRM0, IRM1, IRM2, IRM3, IRM4, IRM5, IRM6 };
+		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI0, TCI1, TCI2, TCI3, TCI4, TCI5, TCI6 };
 	};
 
 	IOPDmacRegister_ICR0_t(const char * mnemonic);
@@ -111,23 +111,23 @@ class IOPDmacRegister_PCR1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 Priority7 = 0;
-		static constexpr u8 Enable7 = 1;
-		static constexpr u8 Priority8 = 2;
-		static constexpr u8 Enable8 = 3;
-		static constexpr u8 Priority9 = 4;
-		static constexpr u8 Enable9 = 5;
-		static constexpr u8 Priority10 = 6;
-		static constexpr u8 Enable10 = 7;
-		static constexpr u8 Priority11 = 8;
-		static constexpr u8 Enable11 = 9;
-		static constexpr u8 Priority12 = 10;
-		static constexpr u8 Enable12 = 11;
-		static constexpr u8 Priority13 = 12;
-		static constexpr u8 Enable13 = 13;
+		static constexpr int Priority7 = 0;
+		static constexpr int Enable7 = 1;
+		static constexpr int Priority8 = 2;
+		static constexpr int Enable8 = 3;
+		static constexpr int Priority9 = 4;
+		static constexpr int Enable9 = 5;
+		static constexpr int Priority10 = 6;
+		static constexpr int Enable10 = 7;
+		static constexpr int Priority11 = 8;
+		static constexpr int Enable11 = 9;
+		static constexpr int Priority12 = 10;
+		static constexpr int Enable12 = 11;
+		static constexpr int Priority13 = 12;
+		static constexpr int Enable13 = 13;
 
 
-		static constexpr u8 CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable7, Enable8, Enable9, Enable10, Enable11, Enable12, Enable13 };
+		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable7, Enable8, Enable9, Enable10, Enable11, Enable12, Enable13 };
 	};
 
 	IOPDmacRegister_PCR1_t(const char * mnemonic);
@@ -147,37 +147,37 @@ class IOPDmacRegister_ICR1_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 IQE0 = 0;
-		static constexpr u8 IQE1 = 1;
-		static constexpr u8 IQE2 = 2;
-		static constexpr u8 IQE3 = 3;
-		static constexpr u8 IQE4 = 4;
-		static constexpr u8 IQE5 = 5;
-		static constexpr u8 IQE6 = 6;
-		static constexpr u8 IQE7 = 7;
-		static constexpr u8 IQE8 = 8;
-		static constexpr u8 IQE9 = 9;
-		static constexpr u8 IQE10 = 10;
-		static constexpr u8 IQE11 = 11;
-		static constexpr u8 IQE12 = 12;
-		static constexpr u8 IQE13 = 13;
-		static constexpr u8 TCM7 = 14;
-		static constexpr u8 TCM8 = 15;
-		static constexpr u8 TCM9 = 16;
-		static constexpr u8 TCM10 = 17;
-		static constexpr u8 TCM11 = 18;
-		static constexpr u8 TCM12 = 19;
-		static constexpr u8 TCM13 = 20;
-		static constexpr u8 TCI7 = 21;
-		static constexpr u8 TCI8 = 22;
-		static constexpr u8 TCI9 = 23;
-		static constexpr u8 TCI10 = 24;
-		static constexpr u8 TCI11 = 25;
-		static constexpr u8 TCI12 = 26;
-		static constexpr u8 TCI13 = 27;
+		static constexpr int IQE0 = 0;
+		static constexpr int IQE1 = 1;
+		static constexpr int IQE2 = 2;
+		static constexpr int IQE3 = 3;
+		static constexpr int IQE4 = 4;
+		static constexpr int IQE5 = 5;
+		static constexpr int IQE6 = 6;
+		static constexpr int IQE7 = 7;
+		static constexpr int IQE8 = 8;
+		static constexpr int IQE9 = 9;
+		static constexpr int IQE10 = 10;
+		static constexpr int IQE11 = 11;
+		static constexpr int IQE12 = 12;
+		static constexpr int IQE13 = 13;
+		static constexpr int TCM7 = 14;
+		static constexpr int TCM8 = 15;
+		static constexpr int TCM9 = 16;
+		static constexpr int TCM10 = 17;
+		static constexpr int TCM11 = 18;
+		static constexpr int TCM12 = 19;
+		static constexpr int TCM13 = 20;
+		static constexpr int TCI7 = 21;
+		static constexpr int TCI8 = 22;
+		static constexpr int TCI9 = 23;
+		static constexpr int TCI10 = 24;
+		static constexpr int TCI11 = 25;
+		static constexpr int TCI12 = 26;
+		static constexpr int TCI13 = 27;
 
-		static constexpr u8 CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] = { IQE0, IQE1, IQE2, IQE3, IQE4, IQE5, IQE6, IQE7, IQE8, IQE9, IQE10, IQE11, IQE12, IQE13 };
-		static constexpr u8 CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI7, TCI8, TCI9, TCI10, TCI11, TCI12, TCI13 };
+		static constexpr int CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] = { IQE0, IQE1, IQE2, IQE3, IQE4, IQE5, IQE6, IQE7, IQE8, IQE9, IQE10, IQE11, IQE12, IQE13 };
+		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI7, TCI8, TCI9, TCI10, TCI11, TCI12, TCI13 };
 	};
 
 	IOPDmacRegister_ICR1_t(const char * mnemonic, const std::shared_ptr<IOPDmacRegister_ICR0_t> & ICR0);

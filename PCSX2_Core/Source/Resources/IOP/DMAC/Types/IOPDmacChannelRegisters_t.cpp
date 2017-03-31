@@ -149,7 +149,7 @@ IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8 & fieldIndex, const u32 & value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
 
@@ -195,7 +195,7 @@ IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8 & fieldIndex, const u32 & value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
 
@@ -245,7 +245,7 @@ IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8 & fieldIndex, const u32 & value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
 

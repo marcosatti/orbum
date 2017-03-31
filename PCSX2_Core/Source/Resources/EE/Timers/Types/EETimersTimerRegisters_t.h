@@ -47,16 +47,16 @@ class EETimersTimerRegister_MODE_t : public BitfieldRegister32_t
 public:
 	struct Fields
 	{
-		static constexpr u8 CLKS = 0;
-		static constexpr u8 GATE = 1;
-		static constexpr u8 GATS = 2;
-		static constexpr u8 GATM = 3;
-		static constexpr u8 ZRET = 4;
-		static constexpr u8 CUE = 5;
-		static constexpr u8 CMPE = 6;
-		static constexpr u8 OVFE = 7;
-		static constexpr u8 EQUF = 8;
-		static constexpr u8 OVFF = 9;
+		static constexpr int CLKS = 0;
+		static constexpr int GATE = 1;
+		static constexpr int GATS = 2;
+		static constexpr int GATM = 3;
+		static constexpr int ZRET = 4;
+		static constexpr int CUE = 5;
+		static constexpr int CMPE = 6;
+		static constexpr int OVFE = 7;
+		static constexpr int EQUF = 8;
+		static constexpr int OVFF = 9;
 	};
 
 	EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);

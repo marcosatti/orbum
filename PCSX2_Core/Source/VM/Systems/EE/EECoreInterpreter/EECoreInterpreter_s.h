@@ -1050,7 +1050,7 @@ private:
 	Also sets the required COP0 TLB information.
 	Called internally from getPhysicalAddress().
 	*/
-	void handleMMUError(const u32 & virtualAddress, const MMUAccess_t & access, const MMUError_t & error, const s32 & tlbEntryIndex);
+	void handleMMUError(const u32 virtualAddress, const MMUAccess_t access, const MMUError_t error, const s32 tlbEntryIndex);
 
 	/*
 	Performs a lookup from the given virtual address and access type.
@@ -1063,5 +1063,5 @@ private:
 	Stage 3 tests the valid and dirty flags, and determines if the VPN is for the even or odd PFN.
 	Stage 4 calculates the final physical address.
 	*/
-	bool getPhysicalAddress(const u32 & virtualAddress, const MMUAccess_t & access, u32 & physicalAddress);
+	bool getPhysicalAddress(const u32 virtualAddress, const MMUAccess_t access, u32 & physicalAddress);
 };

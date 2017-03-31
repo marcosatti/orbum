@@ -5,13 +5,9 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister32_t.h"
 
-MappedFPRegister32_t::MappedFPRegister32_t(const u32& physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32) :
+MappedFPRegister32_t::MappedFPRegister32_t(const u32 physicalAddress, const std::shared_ptr<FPRegister32_t> & fpRegister32) :
 	PhysicalMapped_t(physicalAddress),
 	mFPRegister32(fpRegister32)
-{
-}
-
-MappedFPRegister32_t::~MappedFPRegister32_t()
 {
 }
 

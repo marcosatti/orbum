@@ -120,7 +120,7 @@ EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char*
 {
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
 
@@ -167,7 +167,7 @@ EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char*
 {
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
 
@@ -213,7 +213,7 @@ EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char*
 {
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const u8& fieldIndex, const u32& value)
+void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
 

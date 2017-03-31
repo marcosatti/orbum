@@ -49,7 +49,7 @@ void VUInterpreter_s::ADDq()
 #endif
 }
 
-void VUInterpreter_s::ADDbc(const u8 & idx)
+void VUInterpreter_s::ADDbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -113,7 +113,7 @@ void VUInterpreter_s::ADDAq()
 #endif
 }
 
-void VUInterpreter_s::ADDAbc(const u8 & idx)
+void VUInterpreter_s::ADDAbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -192,7 +192,7 @@ void VUInterpreter_s::SUBq()
 #endif
 }
 
-void VUInterpreter_s::SUBbc(const u8 & idx)
+void VUInterpreter_s::SUBbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -256,7 +256,7 @@ void VUInterpreter_s::SUBAq()
 #endif
 }
 
-void VUInterpreter_s::SUBAbc(const u8 & idx)
+void VUInterpreter_s::SUBAbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -320,7 +320,7 @@ void VUInterpreter_s::MULq()
 #endif
 }
 
-void VUInterpreter_s::MULbc(const u8 & idx)
+void VUInterpreter_s::MULbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -384,7 +384,7 @@ void VUInterpreter_s::MULAq()
 #endif
 }
 
-void VUInterpreter_s::MULAbc(const u8 & idx)
+void VUInterpreter_s::MULAbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -448,7 +448,7 @@ void VUInterpreter_s::MADDq()
 #endif
 }
 
-void VUInterpreter_s::MADDbc(const u8 & idx)
+void VUInterpreter_s::MADDbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -512,7 +512,7 @@ void VUInterpreter_s::MADDAq()
 #endif
 }
 
-void VUInterpreter_s::MADDAbc(const u8 & idx)
+void VUInterpreter_s::MADDAbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -576,7 +576,7 @@ void VUInterpreter_s::MSUBq()
 #endif
 }
 
-void VUInterpreter_s::MSUBbc(const u8 & idx)
+void VUInterpreter_s::MSUBbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -640,7 +640,7 @@ void VUInterpreter_s::MSUBAq()
 #endif
 }
 
-void VUInterpreter_s::MSUBAbc(const u8 & idx)
+void VUInterpreter_s::MSUBAbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -694,7 +694,7 @@ void VUInterpreter_s::MAXi()
 #endif
 }
 
-void VUInterpreter_s::MAXbc(const u8 & idx)
+void VUInterpreter_s::MAXbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -748,7 +748,7 @@ void VUInterpreter_s::MINIi()
 #endif
 }
 
-void VUInterpreter_s::MINIbc(const u8 & idx)
+void VUInterpreter_s::MINIbc(const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

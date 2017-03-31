@@ -412,7 +412,7 @@ void EECoreInterpreter_s::handleException_L2() const
 	}
 }
 
-void EECoreInterpreter_s::handleMMUError(const u32& virtualAddress, const MMUAccess_t& access, const MMUError_t& error, const s32 & tlbEntryIndex)
+void EECoreInterpreter_s::handleMMUError(const u32 virtualAddress, const MMUAccess_t access, const MMUError_t error, const s32 tlbEntryIndex)
 {
 	auto& COP0 = mEECore->COP0;
 	auto& TLB = mEECore->TLB;
@@ -461,7 +461,7 @@ void EECoreInterpreter_s::handleMMUError(const u32& virtualAddress, const MMUAcc
 	handleException(exception);
 }
 
-bool EECoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
+bool EECoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MMUAccess_t access, u32 & physicalAddress)
 {
 	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
 	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 

@@ -15,10 +15,6 @@ FPRegister128_t::FPRegister128_t(const char* mnemonic) :
 {
 }
 
-FPRegister128_t::~FPRegister128_t()
-{
-}
-
 u32 FPRegister128_t::readWord(const Context_t context, size_t arrayIndex)
 {
 	return UW[arrayIndex];

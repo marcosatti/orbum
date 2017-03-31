@@ -223,7 +223,7 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	}
 }
 
-bool IOPCoreInterpreter_s::getPhysicalAddress(const u32& virtualAddress, const MMUAccess_t& access, u32& physicalAddress)
+bool IOPCoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MMUAccess_t access, u32 & physicalAddress)
 {
 	auto& COP0 = mIOPCore->COP0;
 

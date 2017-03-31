@@ -74,9 +74,9 @@ void EECoreCOP0_t::initalise()
 
 MIPSOperatingContext_t EECoreCOP0_t::getCPUOperatingContext() const
 {
-	const u32& KSU = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::KSU);
-	const u32& ERL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL);
-	const u32& EXL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL);
+	const u32 KSU = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::KSU);
+	const u32 ERL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL);
+	const u32 EXL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL);
 
 	if (KSU == 2 && ERL == 0 && EXL == 0)
 		return MIPSOperatingContext_t::User;

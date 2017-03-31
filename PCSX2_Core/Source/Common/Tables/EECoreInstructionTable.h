@@ -30,24 +30,24 @@ struct EECoreInstructionTable
 	struct CycleConstants
 	{
 		// R5900 instructions.
-		static constexpr u32 R5900_DEFAULT = 9;
-		static constexpr u32 R5900_BRANCH = 11;
-		static constexpr u32 R5900_MULTIPLY = 16;
-		static constexpr u32 R5900_DIVIDE = 112;
-		static constexpr u32 R5900_STORE = 14;
-		static constexpr u32 R5900_LOAD = 14;
+		static constexpr int R5900_DEFAULT = 9;
+		static constexpr int R5900_BRANCH = 11;
+		static constexpr int R5900_MULTIPLY = 16;
+		static constexpr int R5900_DIVIDE = 112;
+		static constexpr int R5900_STORE = 14;
+		static constexpr int R5900_LOAD = 14;
 
 		// MMI instructions.
-		static constexpr u32 MMI_DEFAULT = 14;
-		static constexpr u32 MMI_MULTIPLY = 16;
-		static constexpr u32 MMI_DIVIDE = 112;
+		static constexpr int MMI_DEFAULT = 14;
+		static constexpr int MMI_MULTIPLY = 16;
+		static constexpr int MMI_DIVIDE = 112;
 
 		// COP0/1 instructions.
-		static constexpr u32 COP_DEFAULT = 11;
-		static constexpr u32 COP_BRANCH = 20; // TODO: This is a very rough guess. Needs testing.
-		static constexpr u32 COP0_MFC0 = 10;
-		static constexpr u32 COP1_MULTIPLY = 32;
-		static constexpr u32 COP1_DIVIDE = 200; // TODO: This is a very rough guess. Needs testing.
+		static constexpr int COP_DEFAULT = 11;
+		static constexpr int COP_BRANCH = 20; // TODO: This is a very rough guess. Needs testing.
+		static constexpr int COP0_MFC0 = 10;
+		static constexpr int COP1_MULTIPLY = 32;
+		static constexpr int COP1_DIVIDE = 200; // TODO: This is a very rough guess. Needs testing.
 	};
 
 	struct EECoreInstructionInfo_t

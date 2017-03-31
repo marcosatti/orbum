@@ -14,10 +14,6 @@ FIFOQueue32_t::FIFOQueue32_t(const char* mnemonic, const size_t& maxSize) :
 {
 }
 
-FIFOQueue32_t::~FIFOQueue32_t()
-{
-}
-
 u32 FIFOQueue32_t::readWord(const Context_t context)
 {
 	auto temp = mFIFOQueue.front();
@@ -35,7 +31,7 @@ u128 FIFOQueue32_t::readQword(const Context_t context)
 	return data;
 }
 
-void FIFOQueue32_t::writeWord(const Context_t context, const u32 & data)
+void FIFOQueue32_t::writeWord(const Context_t context, const u32 data)
 {
 	if ((getCurrentSize() + 1) > mMaxSize)
 		throw std::runtime_error("FIFO Queue overloaded. Please fix.");
@@ -43,7 +39,7 @@ void FIFOQueue32_t::writeWord(const Context_t context, const u32 & data)
 	mFIFOQueue.push(data);
 }
 
-void FIFOQueue32_t::writeQword(const Context_t context, const u128 & data)
+void FIFOQueue32_t::writeQword(const Context_t context, const u128 data)
 {
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 		writeWord(context, data.UW[i]); 

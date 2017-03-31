@@ -5,8 +5,8 @@
 #include "Resources/EE/VPU/VIF/Types/VIFCores_t.h"
 #include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
-VIFCore_t::VIFCore_t(const u32 & unitID) :
-	mUnitID(unitID),
+VIFCore_t::VIFCore_t(const int vifCoreID) :
+	mVIFCoreID(vifCoreID),
 	R0(std::make_shared<Register32_t>()),
 	R1(std::make_shared<Register32_t>()),
 	R2(std::make_shared<Register32_t>()),
@@ -34,11 +34,11 @@ VIFCore_t::VIFCore_t(const u32 & unitID) :
 }
 
 VIFCore_VIF0_t::VIFCore_VIF0_t() :
-	VIFCore_t(UNIT_ID)
+	VIFCore_t(CORE_ID)
 {
 }
 
 VIFCore_VIF1_t::VIFCore_VIF1_t() :
-	VIFCore_t(UNIT_ID)
+	VIFCore_t(CORE_ID)
 {
 }
