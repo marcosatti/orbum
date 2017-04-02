@@ -422,7 +422,7 @@
     <ClInclude Include="Source\Common\Types\MIPS\MIPSOperatingContext_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Common\Tables\VIFcodeInstructionTable.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
@@ -566,7 +566,7 @@
     <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\HwordMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />

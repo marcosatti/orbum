@@ -16,7 +16,7 @@
 #include "Common/Types/PhysicalMMU/MappedRegister128_t.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister32_t.h"
 #include "Common/Types/PhysicalMMU/MappedFPRegister128_t.h"
-#include "Common/Types/PhysicalMMU/MappedFIFOQueue_t.h"
+#include "Common/Types/PhysicalMMU/MappedFIFOQueue32_t.h"
 
 PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const size_t & directorySizeBytes, const size_t & pageSizeBytes) :
 	MAX_ADDRESSABLE_SIZE_BYTES(maxAddressableSizeBytes),
@@ -138,7 +138,7 @@ void PhysicalMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<F
 
 void PhysicalMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t>& fifoQueue32)
 {
-	mapObject(std::make_shared<MappedFIFOQueue_t>(physicalAddress, fifoQueue32));
+	mapObject(std::make_shared<MappedFIFOQueue32_t>(physicalAddress, fifoQueue32));
 }
 
 size_t PhysicalMMU_t::getVDN(u32 PS2PhysicalAddress) const

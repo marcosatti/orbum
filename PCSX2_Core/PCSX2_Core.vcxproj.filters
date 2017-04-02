@@ -156,7 +156,6 @@
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
@@ -311,6 +310,7 @@
     <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.h" />
+    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -351,7 +351,6 @@
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.cpp" />
@@ -497,6 +496,7 @@
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUCores_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.cpp" />
+    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

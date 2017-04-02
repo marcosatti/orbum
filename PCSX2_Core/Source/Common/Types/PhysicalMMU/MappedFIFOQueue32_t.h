@@ -10,10 +10,10 @@
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
 Only read/writeWord and Qword is allowed on non-zero storage indexes - all other combinations throw a runtime error.
 */
-class MappedFIFOQueue_t : public PhysicalMapped_t
+class MappedFIFOQueue32_t : public PhysicalMapped_t
 {
 public:
-	explicit MappedFIFOQueue_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	explicit MappedFIFOQueue32_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	u8 readByte(const Context_t context, size_t storageIndex) override;
 	void writeByte(const Context_t context, size_t storageIndex, u8 value) override;
@@ -40,5 +40,5 @@ private:
 	/*
 	The underlying FIFO queue this class maps to.
 	*/
-	std::shared_ptr<FIFOQueue32_t> mFIFOQueue;
+	std::shared_ptr<FIFOQueue32_t> mFIFOQueue32;
 };
