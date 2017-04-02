@@ -116,7 +116,7 @@ Bitfield map (defined as constants in the class below):
 - Bits 4-22 (length 19): "BadVPN2".
 - Bits 23-31 (length 9): "PTEBase".
 */
-class EECoreCOP0Register_Context_t : public BitfieldRegister32_t
+class EECoreCOP0Register_System_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -125,7 +125,7 @@ public:
 		static constexpr int PTEBase = 1;
 	};
 
-	explicit EECoreCOP0Register_Context_t();
+	explicit EECoreCOP0Register_System_t();
 };
 
 /*
@@ -175,7 +175,7 @@ class EECoreCOP0Register_Count_t : public Register32_t
 {
 public:
 	// Convenience function that increments the count field value by the specified amount. 
-	void increment(u32 value);
+	void increment(const System_t context, const size_t value);
 };
 
 /*
@@ -233,19 +233,19 @@ public:
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
 	*/
-	void clearIP();
+	void clearIP(const System_t context);
 
 	/*
 	Sets the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQLine(u8 irq);
+	void setIRQLine(const System_t context, const int irq);
 
 	/*
 	Clears the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses ~AND).
 	*/
-	void clearIRQLine(u8 irq);
+	void clearIRQLine(const System_t context, const int irq);
 };
 
 /*
@@ -292,7 +292,7 @@ public:
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master EIE and IE bit.
 	*/
-	bool isInterruptsMasked() const;
+	bool isInterruptsMasked(const System_t context) const;
 };
 
 /*

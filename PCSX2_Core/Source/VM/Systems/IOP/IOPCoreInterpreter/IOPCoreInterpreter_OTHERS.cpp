@@ -26,7 +26,7 @@ void IOPCoreInterpreter_s::SYSCALL()
 	// When the syscall number is loaded into $v0, it is done so through
 	//   ADDIU $v0, $0, number.
 	// The IOP OS only defines handlers for syscall numbers 0 -> ??? (? total). TODO: figure out number of syscalls.
-	u8 index = mIOPCore->R3000->GPR[2]->readByte(IOP, 0);
+	u8 index = mIOPCore->R3000->GPR[2]->readByte(getContext(), 0);
 	log(Debug, "IOPCore Syscall, number %d (%s) @ cycle = 0x%llX.", index, IOPCoreSyscallTable::getSyscallInfo(index)->mMnemonic, DEBUG_LOOP_COUNTER);
 #endif
 
@@ -85,7 +85,7 @@ void IOPCoreInterpreter_s::CTC0()
 void IOPCoreInterpreter_s::RFE()
 {
 	// Pop the COP0.Status exception state.
-	mIOPCore->COP0->Status->popExceptionStack();
+	mIOPCore->COP0->Status->popExceptionStack(getContext());
 }
 
 void IOPCoreInterpreter_s::RTPS()

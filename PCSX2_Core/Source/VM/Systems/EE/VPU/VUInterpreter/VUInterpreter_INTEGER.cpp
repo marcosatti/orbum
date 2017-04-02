@@ -15,7 +15,7 @@ void VUInterpreter_s::IADD()
 	auto& source2Reg = mVUCore->VI[mVUInstruction.getFt()]; // IT.
 	auto& destReg = mVUCore->VI[mVUInstruction.getFd()]; // ID.
 
-	destReg->writeHword(EE, source1Reg->readHword(EE) + source2Reg->readHword(EE));
+	destReg->writeHword(getContext(), source1Reg->readHword(getContext()) + source2Reg->readHword(getContext()));
 }
 
 void VUInterpreter_s::IADDI()

@@ -17,12 +17,12 @@ void EECoreInterpreter_s::PCPYH()
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 4)
 	{
 		// Loop for getting the value from Rt.
-		u16 source1Val = source1Reg->readHword(EE, i);
+		u16 source1Val = source1Reg->readHword(getContext(), i);
 		for (auto j = 0; j < Constants::NUMBER_HWORDS_IN_QWORD / 2; j++)
 		{
 			// Inner loop for copying to Rd.
 			u8 destIndex = i * 4 + j;
-			destReg->writeHword(EE, destIndex, source1Val);
+			destReg->writeHword(getContext(), destIndex, source1Val);
 		}
 	}
 }
@@ -38,9 +38,9 @@ void EECoreInterpreter_s::PCPYLD()
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
 		if (i % 2 == 0) 
-			destReg->writeDword(EE, i, source2Reg->readDword(EE, 0));
+			destReg->writeDword(getContext(), i, source2Reg->readDword(getContext(), 0));
 		else
-			destReg->writeDword(EE, i, source1Reg->readDword(EE, 0));
+			destReg->writeDword(getContext(), i, source1Reg->readDword(getContext(), 0));
 	}
 }
 
@@ -55,9 +55,9 @@ void EECoreInterpreter_s::PCPYUD()
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
 		if (i % 2 == 0)
-			destReg->writeDword(EE, i, source1Reg->readDword(EE, 1));
+			destReg->writeDword(getContext(), i, source1Reg->readDword(getContext(), 1));
 		else
-			destReg->writeDword(EE, i, source2Reg->readDword(EE, 1));
+			destReg->writeDword(getContext(), i, source2Reg->readDword(getContext(), 1));
 	}
 }
 
@@ -79,7 +79,7 @@ void EECoreInterpreter_s::PEXCH()
 			else
 				destIndex += j;
 
-			destReg->writeHword(EE, destIndex, source1Reg->readHword(EE, i * 4 + j));
+			destReg->writeHword(getContext(), destIndex, source1Reg->readHword(getContext(), i * 4 + j));
 		}
 	}
 }
@@ -100,7 +100,7 @@ void EECoreInterpreter_s::PEXCW()
 		else
 			destIndex = i;
 
-		destReg->writeWord(EE, destIndex, source1Reg->readWord(EE, i));
+		destReg->writeWord(getContext(), destIndex, source1Reg->readWord(getContext(), i));
 	}
 }
 
@@ -122,7 +122,7 @@ void EECoreInterpreter_s::PEXEH()
 			else
 				destIndex += j;
 
-			destReg->writeHword(EE, destIndex, source1Reg->readHword(EE, i * 4 + j));
+			destReg->writeHword(getContext(), destIndex, source1Reg->readHword(getContext(), i * 4 + j));
 		}
 	}
 }
@@ -143,7 +143,7 @@ void EECoreInterpreter_s::PEXEW()
 		else
 			destIndex = i;
 
-		destReg->writeWord(EE, destIndex, source1Reg->readWord(EE, i));
+		destReg->writeWord(getContext(), destIndex, source1Reg->readWord(getContext(), i));
 	}
 }
 
@@ -156,8 +156,8 @@ void EECoreInterpreter_s::PEXTLB()
 
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD / 2; i++)
 	{
-			destReg->writeByte(EE, i * 2, source2Reg->readByte(EE, i));
-			destReg->writeByte(EE, i * 2 + 1, source1Reg->readByte(EE, i));
+			destReg->writeByte(getContext(), i * 2, source2Reg->readByte(getContext(), i));
+			destReg->writeByte(getContext(), i * 2 + 1, source1Reg->readByte(getContext(), i));
 	}
 }
 
@@ -170,8 +170,8 @@ void EECoreInterpreter_s::PEXTLH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
-		destReg->writeHword(EE, i * 2, source2Reg->readHword(EE, i));
-		destReg->writeHword(EE, i * 2 + 1, source1Reg->readHword(EE, i));
+		destReg->writeHword(getContext(), i * 2, source2Reg->readHword(getContext(), i));
+		destReg->writeHword(getContext(), i * 2 + 1, source1Reg->readHword(getContext(), i));
 	}
 }
 
@@ -184,8 +184,8 @@ void EECoreInterpreter_s::PEXTLW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD / 2; i++)
 	{
-		destReg->writeWord(EE, i * 2, source2Reg->readWord(EE, i));
-		destReg->writeWord(EE, i * 2 + 1, source1Reg->readWord(EE, i));
+		destReg->writeWord(getContext(), i * 2, source2Reg->readWord(getContext(), i));
+		destReg->writeWord(getContext(), i * 2 + 1, source1Reg->readWord(getContext(), i));
 	}
 }
 
@@ -198,8 +198,8 @@ void EECoreInterpreter_s::PEXTUB()
 
 	for (auto i = Constants::NUMBER_BYTES_IN_QWORD / 2; i > 0 ; i--)
 	{
-		destReg->writeByte(EE, (i - 1) * 2 + 1, source1Reg->readByte(EE, (i - 1) + (Constants::NUMBER_BYTES_IN_QWORD / 2)));
-		destReg->writeByte(EE, (i - 1) * 2, source2Reg->readByte(EE, (i - 1) + (Constants::NUMBER_BYTES_IN_QWORD / 2)));
+		destReg->writeByte(getContext(), (i - 1) * 2 + 1, source1Reg->readByte(getContext(), (i - 1) + (Constants::NUMBER_BYTES_IN_QWORD / 2)));
+		destReg->writeByte(getContext(), (i - 1) * 2, source2Reg->readByte(getContext(), (i - 1) + (Constants::NUMBER_BYTES_IN_QWORD / 2)));
 	}
 }
 
@@ -212,8 +212,8 @@ void EECoreInterpreter_s::PEXTUH()
 
 	for (auto i = Constants::NUMBER_HWORDS_IN_QWORD / 2; i > 0; i--)
 	{
-		destReg->writeHword(EE, (i - 1) * 2 + 1, source1Reg->readHword(EE, (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
-		destReg->writeHword(EE, (i - 1) * 2, source2Reg->readHword(EE, (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
+		destReg->writeHword(getContext(), (i - 1) * 2 + 1, source1Reg->readHword(getContext(), (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
+		destReg->writeHword(getContext(), (i - 1) * 2, source2Reg->readHword(getContext(), (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
 	}
 }
 
@@ -226,8 +226,8 @@ void EECoreInterpreter_s::PEXTUW()
 
 	for (auto i = Constants::NUMBER_WORDS_IN_QWORD / 2; i > 0; i--)
 	{
-		destReg->writeWord(EE, (i - 1) * 2 + 1, source1Reg->readWord(EE, (i - 1) + (Constants::NUMBER_WORDS_IN_QWORD / 2)));
-		destReg->writeWord(EE, (i - 1) * 2, source2Reg->readWord(EE, (i - 1) + (Constants::NUMBER_WORDS_IN_QWORD / 2)));
+		destReg->writeWord(getContext(), (i - 1) * 2 + 1, source1Reg->readWord(getContext(), (i - 1) + (Constants::NUMBER_WORDS_IN_QWORD / 2)));
+		destReg->writeWord(getContext(), (i - 1) * 2, source2Reg->readWord(getContext(), (i - 1) + (Constants::NUMBER_WORDS_IN_QWORD / 2)));
 	}
 }
 
@@ -240,8 +240,8 @@ void EECoreInterpreter_s::PINTEH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
-		destReg->writeHword(EE, i * 2, source2Reg->readHword(EE, i));
-		destReg->writeHword(EE, i * 2 + 1, source1Reg->readHword(EE, i));
+		destReg->writeHword(getContext(), i * 2, source2Reg->readHword(getContext(), i));
+		destReg->writeHword(getContext(), i * 2 + 1, source1Reg->readHword(getContext(), i));
 	}
 }
 
@@ -256,11 +256,11 @@ void EECoreInterpreter_s::PINTH()
 
 	// Rt
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
-		destReg->writeHword(EE, i * 2, source2Reg->readHword(EE, i));
+		destReg->writeHword(getContext(), i * 2, source2Reg->readHword(getContext(), i));
 
 	// Rs
 	for (auto i = Constants::NUMBER_HWORDS_IN_QWORD / 2; i > 0 ; i--)
-		destReg->writeHword(EE, (i - 1) * 2 + 1, source1Reg->readHword(EE, (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
+		destReg->writeHword(getContext(), (i - 1) * 2 + 1, source1Reg->readHword(getContext(), (i - 1) + (Constants::NUMBER_HWORDS_IN_QWORD / 2)));
 }
 
 void EECoreInterpreter_s::PPACB()
@@ -275,11 +275,11 @@ void EECoreInterpreter_s::PPACB()
 
 	// Rt
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i += 2)
-		destReg->writeByte(EE, i / 2, source2Reg->readByte(EE, i));
+		destReg->writeByte(getContext(), i / 2, source2Reg->readByte(getContext(), i));
 
 	// Rs
 	for (auto i = 0; i < Constants::NUMBER_BYTES_IN_QWORD; i += 2)
-		destReg->writeByte(EE, i / 2 + (Constants::NUMBER_BYTES_IN_QWORD / 2), source1Reg->readByte(EE, i));
+		destReg->writeByte(getContext(), i / 2 + (Constants::NUMBER_BYTES_IN_QWORD / 2), source1Reg->readByte(getContext(), i));
 }
 
 void EECoreInterpreter_s::PPACH()
@@ -294,11 +294,11 @@ void EECoreInterpreter_s::PPACH()
 
 	// Rt
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
-		destReg->writeHword(EE, i / 2, source2Reg->readHword(EE, i));
+		destReg->writeHword(getContext(), i / 2, source2Reg->readHword(getContext(), i));
 
 	// Rs
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
-		destReg->writeHword(EE, i / 2 + (Constants::NUMBER_HWORDS_IN_QWORD / 2), source1Reg->readHword(EE, i));
+		destReg->writeHword(getContext(), i / 2 + (Constants::NUMBER_HWORDS_IN_QWORD / 2), source1Reg->readHword(getContext(), i));
 }
 
 void EECoreInterpreter_s::PPACW()
@@ -313,11 +313,11 @@ void EECoreInterpreter_s::PPACW()
 
 	// Rt
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
-		destReg->writeWord(EE, i / 2, source2Reg->readWord(EE, i));
+		destReg->writeWord(getContext(), i / 2, source2Reg->readWord(getContext(), i));
 
 	// Rs
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
-		destReg->writeWord(EE, i / 2 + (Constants::NUMBER_WORDS_IN_QWORD / 2), source1Reg->readWord(EE, i));
+		destReg->writeWord(getContext(), i / 2 + (Constants::NUMBER_WORDS_IN_QWORD / 2), source1Reg->readWord(getContext(), i));
 }
 
 void EECoreInterpreter_s::PREVH()
@@ -328,8 +328,8 @@ void EECoreInterpreter_s::PREVH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD / 2; i++)
 	{
-		destReg->writeHword(EE, (Constants::NUMBER_HWORDS_IN_QWORD / 2) - 1 - i, source2Reg->readHword(EE, i)); // Lower 4 hwords.
-		destReg->writeHword(EE, Constants::NUMBER_HWORDS_IN_QWORD - 1 - i, source2Reg->readHword(EE, i + (Constants::NUMBER_HWORDS_IN_QWORD / 2))); // Upper 4 hwords.
+		destReg->writeHword(getContext(), (Constants::NUMBER_HWORDS_IN_QWORD / 2) - 1 - i, source2Reg->readHword(getContext(), i)); // Lower 4 hwords.
+		destReg->writeHword(getContext(), Constants::NUMBER_HWORDS_IN_QWORD - 1 - i, source2Reg->readHword(getContext(), i + (Constants::NUMBER_HWORDS_IN_QWORD / 2))); // Upper 4 hwords.
 
 	}
 }
@@ -340,9 +340,9 @@ void EECoreInterpreter_s::PROT3W()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
-	destReg->writeWord(EE, 0, source2Reg->readWord(EE, 1));
-	destReg->writeWord(EE, 1, source2Reg->readWord(EE, 2));
-	destReg->writeWord(EE, 2, source2Reg->readWord(EE, 0));
-	destReg->writeWord(EE, 3, source2Reg->readWord(EE, 3));
+	destReg->writeWord(getContext(), 0, source2Reg->readWord(getContext(), 1));
+	destReg->writeWord(getContext(), 1, source2Reg->readWord(getContext(), 2));
+	destReg->writeWord(getContext(), 2, source2Reg->readWord(getContext(), 0));
+	destReg->writeWord(getContext(), 3, source2Reg->readWord(getContext(), 3));
 }
 

@@ -32,7 +32,7 @@ EECoreCOP0Register_EntryLo1_t::EECoreCOP0Register_EntryLo1_t()
 	registerField(Fields::PFN, "PFN", 6, 20, 0);
 }
 
-EECoreCOP0Register_Context_t::EECoreCOP0Register_Context_t()
+EECoreCOP0Register_System_t::EECoreCOP0Register_System_t()
 {
 	registerField(Fields::BadVPN2, "BadVPN2", 4, 19, 0);
 	registerField(Fields::PTEBase, "PTEBase", 23, 9, 0);
@@ -48,9 +48,9 @@ EECoreCOP0Register_Wired_t::EECoreCOP0Register_Wired_t()
 	registerField(Fields::Wired, "Wired", 0, 6, 0);
 }
 
-void EECoreCOP0Register_Count_t::increment(u32 value)
+void EECoreCOP0Register_Count_t::increment(const System_t context, const size_t value)
 {
-	writeWord(RAW, readWord(RAW) + value);
+	writeWord(context, readWord(context) + static_cast<u32>(value));
 }
 
 EECoreCOP0Register_EntryHi_t::EECoreCOP0Register_EntryHi_t()
@@ -74,12 +74,12 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t()
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-bool EECoreCOP0Register_Status_t::isInterruptsMasked() const
+bool EECoreCOP0Register_Status_t::isInterruptsMasked(const System_t context) const
 {
-	return !((getFieldValue(Fields::ERL) == 0)
-		&& (getFieldValue(Fields::EXL) == 0)
-		&& (getFieldValue(Fields::IE) > 0) 
-		&& (getFieldValue(Fields::EIE) > 0));
+	return !((getFieldValue(context, Fields::ERL) == 0)
+		&& (getFieldValue(context, Fields::EXL) == 0)
+		&& (getFieldValue(context, Fields::IE) > 0) 
+		&& (getFieldValue(context, Fields::EIE) > 0));
 }
 
 EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
@@ -92,22 +92,22 @@ EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t()
 	registerField(Fields::BD, "BD", 31, 1, 0);
 }
 
-void EECoreCOP0Register_Cause_t::clearIP()
+void EECoreCOP0Register_Cause_t::clearIP(const System_t context)
 {
-	u32 temp = readWord(RAW) & 0xFFFF00FF;
-	writeWord(RAW, temp);
+	u32 temp = readWord(context) & 0xFFFF00FF;
+	writeWord(context, temp);
 }
 
-void EECoreCOP0Register_Cause_t::setIRQLine(u8 irq)
+void EECoreCOP0Register_Cause_t::setIRQLine(const System_t context, const int irq)
 {
-	auto temp = getFieldValue(Fields::IP) | (1 << irq);
-	setFieldValue(Fields::IP, temp);
+	auto temp = getFieldValue(context, Fields::IP) | (1 << irq);
+	setFieldValue(context, Fields::IP, temp);
 }
 
-void EECoreCOP0Register_Cause_t::clearIRQLine(u8 irq)
+void EECoreCOP0Register_Cause_t::clearIRQLine(const System_t context, const int irq)
 {
-	auto temp = (getFieldValue(Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
-	setFieldValue(Fields::IP, temp);
+	auto temp = (getFieldValue(context, Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
+	setFieldValue(context, Fields::IP, temp);
 }
 
 EECoreCOP0Register_PRId_t::EECoreCOP0Register_PRId_t()

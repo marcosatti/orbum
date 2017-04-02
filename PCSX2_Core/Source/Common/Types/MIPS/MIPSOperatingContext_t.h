@@ -3,7 +3,7 @@
 /*
 Describes the CPU operating context - see MIPSCoprocessor0_t
 */
-enum class MIPSOperatingContext_t
+enum class MIPSCPUOperatingContext_t
 {
 	Kernel,
 	Supervisor,

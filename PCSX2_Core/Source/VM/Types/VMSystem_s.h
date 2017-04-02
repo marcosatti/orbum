@@ -15,18 +15,28 @@ class VMSystem_s
 {
 public:
 	explicit VMSystem_s(VM * vm, const System_t system);
-	virtual ~VMSystem_s();
+	virtual ~VMSystem_s() = default;
 
 	/*
-	System resources.
+	Returns the VM resources.
 	*/
-	VM * getVM() const;
+	VM * getVM() const 
+	{
+		return mVM;
+	}
+
+	/*
+	Returns the system context type.
+	*/
+	System_t getContext() const
+	{
+		return mSystemContext;
+	}
 
 	/*
 	Initalise the system.
 	*/
 	virtual void initalise();
-
 	/*
 	Runs the system logic for each clock source event by looping through the step function.
 	*/
@@ -40,6 +50,7 @@ public:
 	/*
 	Threading resources.
 	threadLoop() is a thin wrapper around executeTicks() that takes care of synchronising with the VM, using the variables below.
+	TODO: cleanup, do properly.
 	*/
 	void threadLoop();
 	std::condition_variable mThreadSync;
@@ -51,5 +62,6 @@ private:
 	VM resources.
 	*/
 	VM * mVM;
-	System_t mSystem;
+	System_t mSystemContext;
+	std::shared_ptr<Clock_t> mClock;
 };

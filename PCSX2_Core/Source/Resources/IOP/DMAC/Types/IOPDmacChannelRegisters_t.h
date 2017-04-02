@@ -34,12 +34,12 @@ public:
 	/*
 	Returns the channel runtime logical mode its operating in.
 	*/
-	IOPDmacChannelTable::LogicalMode_t getLogicalMode() const;
+	IOPDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context) const;
 
 	/*
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
-	IOPDmacChannelTable::Direction_t getDirection() const;
+	IOPDmacChannelTable::Direction_t getDirection(const System_t context) const;
 
 	/*
 	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
@@ -80,16 +80,16 @@ public:
 	/*
 	Upon writing, stores the transfer size to be used by the DMAC.
 	*/
-	void writeHword(const Context_t context, size_t arrayIndex, u16 value) override;
-	void writeWord(const Context_t context, u32 value) override;
+	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 	/*
-	Decrements the transfer size by 1.
+	Decrements the tag transfer size by 1.
 	*/
 	void decrement();
 
 	/*
-	Returns if the transfer size is finished.
+	Returns if the tag transfer size is finished.
 	checkBS controls whether to check if both BS and BA are equal to 0 or just check if BS is equal to 0 (use in slice or burst mode respectively).
 	*/
 	bool isFinished(bool checkBS) const;
@@ -115,8 +115,8 @@ public:
 	/*
 	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
 	*/
-	void increment(const size_t amount = 0x4);
-	void decrement(const size_t amount = 0x4);
+	void increment(const System_t context, const size_t amount = 0x4);
+	void decrement(const System_t context, const size_t amount = 0x4);
 };
 
 /*
@@ -131,8 +131,8 @@ public:
 	/*
 	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
 	*/
-	void increment(const size_t amount = 0x4);
-	void decrement(const size_t amount = 0x4);
+	void increment(const System_t context, const size_t amount = 0x4);
+	void decrement(const System_t context, const size_t amount = 0x4);
 };
 
 /*
@@ -147,7 +147,7 @@ public:
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const Context_t context, u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 };
 
 /*
@@ -162,7 +162,7 @@ public:
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const Context_t context, u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 };
 
 /*
@@ -180,8 +180,8 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif0.cpp".
 	*/
-	void setFieldValue(const int fieldIndex, const u32 value) override;
-	void writeWord(const Context_t context, u32 value) override;
+	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 private:
 	/*
@@ -193,7 +193,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for starting a transfer - a ending function should never be called as this is fixed in the TO direction.
 	*/
-	void handleSBUSUpdateStart() const;
+	void handleSBUSUpdateStart(const System_t context) const;
 };
 
 /*
@@ -213,8 +213,8 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif1.cpp".
 	*/
-	void setFieldValue(const int fieldIndex, const u32 value) override;
-	void writeWord(const Context_t context, u32 value) override;
+	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 private:
 	/*
@@ -226,7 +226,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for ending a transfer - a starting function should never be called as this is fixed in the FROM direction. 
 	*/
-	void handleSBUSUpdateFinish() const;
+	void handleSBUSUpdateFinish(const System_t context) const;
 };
 
 /*
@@ -244,8 +244,8 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. 
 	See PCSX2's "sif2.cpp".
 	*/
-	void setFieldValue(const int fieldIndex, const u32 value) override;
-	void writeWord(const Context_t context, u32 value) override;
+	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 private:
 	/*
@@ -257,7 +257,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for starting a transfer, and ending a transfer.
 	*/
-	void handleSBUSUpdateStart() const;
-	void handleSBUSUpdateFinish() const;
+	void handleSBUSUpdateStart(const System_t context) const;
+	void handleSBUSUpdateFinish(const System_t context) const;
 };
 

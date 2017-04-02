@@ -24,17 +24,17 @@ int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;
-	if (mINTC->CTRL->readWord(RAW) > 0)
+	if (mINTC->CTRL->readWord(getContext()) > 0)
 	{
-		if (mINTC->STAT->readWord(RAW) & mINTC->MASK->readWord(RAW))
+		if (mINTC->STAT->readWord(getContext()) & mINTC->MASK->readWord(getContext()))
 			interrupt = true;
 	}
 
 	// Set IRQ line 2 on IOP Core if an interrupt occured.
 	if (interrupt)
-		mIOPCOP0->Cause->setIRQLine(2);
+		mIOPCOP0->Cause->setIRQLine(getContext(), 2);
 	else
-		mIOPCOP0->Cause->clearIRQLine(2);
+		mIOPCOP0->Cause->clearIRQLine(getContext(), 2);
 
 	// INTC has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK

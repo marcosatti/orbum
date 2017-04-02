@@ -19,6 +19,6 @@ public:
 	Used to check the operating context - Kernel mode, Supervisor mode, or User mode.
 	Set to a virtual function as the COP0 register formats are not always compatible.
 	*/
-	virtual	MIPSOperatingContext_t getCPUOperatingContext() const = 0;
+	virtual	MIPSCPUOperatingContext_t getCPUOperatingContext(const System_t context) const = 0;
 };
 

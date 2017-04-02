@@ -14,16 +14,16 @@ public:
 	/*
 	Set the PC to a relative value.
 	*/
-	void setPCValueRelative(const s16 & relativeLocation);
+	void setPCValueRelative(const System_t context, const s16 relativeLocation);
 
 	/*
 	Set the PC to an absolute value.
 	*/
-	void setPCValueAbsolute(const u16 & absoluteLocation);
+	void setPCValueAbsolute(const System_t context, const u16 absoluteLocation);
 
 	/*
 	Increments the PC by a default size of 4 bytes (equal to the size of a MIPS instruction).
 	*/
-	void setPCValueNext(const u16 instructionSize = Constants::MIPS::SIZE_MIPS_INSTRUCTION);
+	void setPCValueNext(const System_t context, const u16 instructionSize = Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 };
 

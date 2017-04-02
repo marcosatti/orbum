@@ -40,10 +40,10 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	handleInterruptCheck();
 
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
-	const u32 pcAddress = mIOPCore->R3000->PC->readWord(IOP);
+	const u32 pcAddress = mIOPCore->R3000->PC->readWord(getContext());
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mIOPCoreInstruction = IOPCoreInstruction_t(mPhysicalMMU->readWord(IOP, physicalAddress));
+	mIOPCoreInstruction = IOPCoreInstruction_t(mPhysicalMMU->readWord(getContext(), physicalAddress));
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1000000000000;
@@ -57,7 +57,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 			"PC = 0x%08X, BD = %d, IntEn = %d, "
 			"Instruction = %s",
 			DEBUG_LOOP_COUNTER,
-			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(),
+			pcAddress, mIOPCore->R3000->PC->isBranchPending(), !mIOPCore->COP0->Status->isInterruptsMasked(getContext()),
 			(mIOPCoreInstruction.getValue() == 0) ? "SLL (NOP)" : mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 	}
 
@@ -71,7 +71,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	(this->*IOP_INSTRUCTION_TABLE[mIOPCoreInstruction.getInfo()->mImplementationIndex])();
 
 	// Increment PC.
-	mIOPCore->R3000->PC->next();
+	mIOPCore->R3000->PC->next(getContext());
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -87,10 +87,10 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 	auto& COP0 = mIOPCore->COP0;
 
 	// Interrupt exceptions are only taken when conditions are correct.
-	if (!COP0->Status->isInterruptsMasked())
+	if (!COP0->Status->isInterruptsMasked(getContext()))
 	{
-		u32 ipCause = COP0->Cause->getFieldValue(IOPCoreCOP0Register_Cause_t::Fields::IP);
-		u32 imStatus = COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::IM);
+		u32 ipCause = COP0->Cause->getFieldValue(getContext(), IOPCoreCOP0Register_Cause_t::Fields::IP);
+		u32 imStatus = COP0->Status->getFieldValue(getContext(), IOPCoreCOP0Register_Status_t::Fields::IM);
 		if (ipCause & imStatus)
 		{
 #if defined(BUILD_DEBUG)
@@ -98,11 +98,11 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 			auto& STAT = getVM()->getResources()->IOP->INTC->STAT;
 			auto& MASK = getVM()->getResources()->IOP->INTC->MASK;
 			log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
-				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(IOP), IOPCore->R3000->PC->isBranchPending());
+				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(getContext()), IOPCore->R3000->PC->isBranchPending());
 			log(Debug, "Printing list of interrupt sources...");
 			for (auto& irqField : IOPIntcRegister_STAT_t::Fields::IRQ_KEYS)
 			{
-				if (STAT->getFieldValue(irqField) & MASK->getFieldValue(irqField))
+				if (STAT->getFieldValue(getContext(), irqField) & MASK->getFieldValue(getContext(), irqField))
 					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
 			}
 #endif
@@ -114,10 +114,10 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 
 bool IOPCoreInterpreter_s::handleCOP0Usable()
 {
-	if (!mIOPCore->COP0->isCoprocessorUsable())
+	if (!mIOPCore->COP0->isCoprocessorUsable(getContext()))
 	{
 		// Coprocessor was not usable. Raise an exception.
-		mIOPCore->COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::CE, 0);
+		mIOPCore->COP0->Cause->setFieldValue(getContext(), IOPCoreCOP0Register_Cause_t::Fields::CE, 0);
 		handleException(IOPCoreException_t::EX_COPROCESSOR_UNUSABLE);
 		return true;
 	}
@@ -170,7 +170,7 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	if (exception == IOPCoreException_t::EX_RESET)
 	{
 		COP0->initalise();
-		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
+		PC->setPCValueAbsolute(getContext(), Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 		return;
 	}
 
@@ -179,23 +179,23 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	u32 vectorOffset = 0x0;
 
 	// Set Cause.ExeCode value.
-	COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::ExcCode, exceptionProperties->mExeCode);
+	COP0->Cause->setFieldValue(getContext(), IOPCoreCOP0Register_Cause_t::Fields::ExcCode, exceptionProperties->mExeCode);
 
 	// Set EPC and Cause.BD fields, based on if we are in the branch delay slot.
 	// Note that the EPC register should point to the instruction that caused the exception.
 	// If we are in a branch delay slot, need to flush it (reset) so we dont jump after this exits.
 	if (PC->isBranchPending())
 	{
-		u32 pcValue = PC->readWord(IOP) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
-		COP0->EPC->writeWord(RAW, pcValue);
-		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
+		u32 pcValue = PC->readWord(getContext()) - Constants::MIPS::SIZE_MIPS_INSTRUCTION;
+		COP0->EPC->writeWord(getContext(), pcValue);
+		COP0->Cause->setFieldValue(getContext(), IOPCoreCOP0Register_Cause_t::Fields::BD, 1);
 		PC->resetBranch();
 	}
 	else
 	{
-		u32 pcValue = PC->readWord(IOP);
-		COP0->EPC->writeWord(RAW, pcValue);
-		COP0->Cause->setFieldValue(IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
+		u32 pcValue = PC->readWord(getContext());
+		COP0->EPC->writeWord(getContext(), pcValue);
+		COP0->Cause->setFieldValue(getContext(), IOPCoreCOP0Register_Cause_t::Fields::BD, 0);
 	}
 
 	// Select the vector to use (set vectorOffset).
@@ -205,13 +205,13 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 		vectorOffset = Constants::MIPS::Exceptions::Imp0::OADDRESS_EXCEPTION_VECTOR_V_COMMON;
 
 	// Select vector base to use and set PC to use the specified vector.
-	if (COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::BEV) == 1)
-		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
+	if (COP0->Status->getFieldValue(getContext(), IOPCoreCOP0Register_Status_t::Fields::BEV) == 1)
+		PC->setPCValueAbsolute(getContext(), Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A1 + vectorOffset);
 	else
-		PC->setPCValueAbsolute(Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
+		PC->setPCValueAbsolute(getContext(), Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_A0 + vectorOffset);
 
 	// Push the exception state within the COP0.Status register (will cause IEc and KUc to switch to interrupts disabled and kernel mode respectively).
-	COP0->Status->pushExceptionStack();
+	COP0->Status->pushExceptionStack(getContext());
 
 	// TODO: Extra code to make sure the PC is correct. Currently an external exception (eg: interrupt) is run before the instruction is executed, so the PC is correct.
 	//       But for an internal interrupt (eg: syscall), the instruction has already run and so the PC will get incremented upon this function's return, which leads to a skipped instruction.
@@ -219,7 +219,7 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	if (exception != IOPCoreException_t::EX_INTERRUPT 
 		&& exception != IOPCoreException_t::EX_RESET)
 	{
-		PC->setPCValueRelative(-static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
+		PC->setPCValueRelative(getContext(), -static_cast<s32>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
 	}
 }
 
@@ -231,12 +231,12 @@ bool IOPCoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MM
 	if (virtualAddress == DEBUG_VA_BREAKPOINT)
 	{
 		log(Debug, "IOP MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).",
-			DEBUG_LOOP_COUNTER, mIOPCore->R3000->PC->readWord(RAW), DEBUG_VA_BREAKPOINT, (access == READ) ? "READ" : "WRITE");
+			DEBUG_LOOP_COUNTER, mIOPCore->R3000->PC->readWord(getContext()), DEBUG_VA_BREAKPOINT, (access == READ) ? "READ" : "WRITE");
 	}
 
 	// If in kernel mode, perform a direct translation if VA is within kernel segments.
-	auto context = COP0->getCPUOperatingContext();
-	if (context == MIPSOperatingContext_t::Kernel)
+	auto context = COP0->getCPUOperatingContext(getContext());
+	if (context == MIPSCPUOperatingContext_t::Kernel)
 	{
 		// Test for kseg0
 		if (virtualAddress >= Constants::MIPS::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtualAddress <= Constants::MIPS::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
@@ -268,7 +268,7 @@ bool IOPCoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MM
 		if (virtualAddress <= Constants::IOP::IOPCore::MMU::VADDRESS_SPECIAL_1_UPPER_BOUND)
 		{
 			// Check if a write is being performed with isolate cache turned on.
-			if (COP0->Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::IsC) && access == WRITE)
+			if (COP0->Status->getFieldValue(getContext(), IOPCoreCOP0Register_Status_t::Fields::IsC) && access == WRITE)
 			{
 				// Return that an error has occurred but dont invoke the exception handler (doesn't change any instructions behaviour).
 				return true;

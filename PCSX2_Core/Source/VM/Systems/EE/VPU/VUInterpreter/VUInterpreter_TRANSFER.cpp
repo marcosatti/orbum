@@ -107,16 +107,16 @@ void VUInterpreter_s::SQI()
 	auto& Mem = mVUCore->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
-	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
+	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;
 
 	// 32-bit write for each dest subfield.
-	if (mVUInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, source1Reg->readWord(EE, 0));
-	if (mVUInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, source1Reg->readWord(EE, 1));
-	if (mVUInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, source1Reg->readWord(EE, 2));
-	if (mVUInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, source1Reg->readWord(EE, 3));
+	if (mVUInstruction.testDestX()) Mem->writeWord(getContext(), realPhysicalAddress, source1Reg->readWord(getContext(), 0));
+	if (mVUInstruction.testDestY()) Mem->writeWord(getContext(), realPhysicalAddress + 4, source1Reg->readWord(getContext(), 1));
+	if (mVUInstruction.testDestZ()) Mem->writeWord(getContext(), realPhysicalAddress + 8, source1Reg->readWord(getContext(), 2));
+	if (mVUInstruction.testDestW()) Mem->writeWord(getContext(), realPhysicalAddress + 12, source1Reg->readWord(getContext(), 3));
 
 	// Post increment.
-	source2Reg->writeHword(EE, source2Reg->readHword(EE) + 1);
+	source2Reg->writeHword(getContext(), source2Reg->readHword(getContext()) + 1);
 }
 
 void VUInterpreter_s::ILW()
@@ -157,13 +157,13 @@ void VUInterpreter_s::ISWR()
 	auto& Mem = mVUCore->MemPhysicalMMU;
 
 	// Real address obtained by VI * 16.
-	u32 realPhysicalAddress = source2Reg->readHword(EE) * 16;
+	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;
 
 	// 32-bit write for each dest subfield. Upper 16-bits of VI[Ft] value is set to 0.
-	if (mVUInstruction.testDestX()) Mem->writeWord(EE, realPhysicalAddress, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mVUInstruction.testDestY()) Mem->writeWord(EE, realPhysicalAddress + 4, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mVUInstruction.testDestZ()) Mem->writeWord(EE, realPhysicalAddress + 8, static_cast<u32>(source1Reg->readHword(EE)));
-	if (mVUInstruction.testDestW()) Mem->writeWord(EE, realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHword(EE)));
+	if (mVUInstruction.testDestX()) Mem->writeWord(getContext(), realPhysicalAddress, static_cast<u32>(source1Reg->readHword(getContext())));
+	if (mVUInstruction.testDestY()) Mem->writeWord(getContext(), realPhysicalAddress + 4, static_cast<u32>(source1Reg->readHword(getContext())));
+	if (mVUInstruction.testDestZ()) Mem->writeWord(getContext(), realPhysicalAddress + 8, static_cast<u32>(source1Reg->readHword(getContext())));
+	if (mVUInstruction.testDestW()) Mem->writeWord(getContext(), realPhysicalAddress + 12, static_cast<u32>(source1Reg->readHword(getContext())));
 }
 
 void VUInterpreter_s::LOI()

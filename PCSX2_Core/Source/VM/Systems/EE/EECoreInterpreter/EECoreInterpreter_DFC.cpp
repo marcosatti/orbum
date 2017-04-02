@@ -20,13 +20,13 @@ void EECoreInterpreter_s::PEXT5()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
-		u16 packedValue = source1Reg->readHword(EE, i);
+		u16 packedValue = source1Reg->readHword(getContext(), i);
 		u32 temp0 = ((packedValue & 0x1F) << 3);
 		u32 temp1 = ((packedValue & 0x3E0) >> 5) << 11;
 		u32 temp2 = ((packedValue & 0x7C00) >> 10) << 19;
 		u32 temp3 = ((packedValue & 0x8000) >> 16) << 31;
 		u32 extendedValue = temp3 | temp2 | temp1 | temp0;
-		destReg->writeWord(EE, i / 2, extendedValue);
+		destReg->writeWord(getContext(), i / 2, extendedValue);
 	}
 }
 
@@ -39,13 +39,13 @@ void EECoreInterpreter_s::PPAC5()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		u32 extendedValue = source1Reg->readWord(EE, i);
+		u32 extendedValue = source1Reg->readWord(getContext(), i);
 		u8 temp0 = ((extendedValue & 0xF8) >> 3);
 		u8 temp1 = ((extendedValue & 0xF800) >> 11) << 5;
 		u8 temp2 = ((extendedValue & 0xF80000) >> 19) << 10;
 		u8 temp3 = ((extendedValue & 0x80000000) >> 31) << 15;
 		u32 packedValue = 0x0 | temp3 | temp2 | temp1 | temp0; // Slightly different to the above instruction - need to make sure the empty space is packed with 0's.
-		destReg->writeWord(EE, i, packedValue);
+		destReg->writeWord(getContext(), i, packedValue);
 	}
 }
 
@@ -58,7 +58,7 @@ void EECoreInterpreter_s::CVT_S_W()
 	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 
-	destReg->writeFloat(EE,static_cast<f32>(source1Reg->readWord(EE)));
+	destReg->writeFloat(getContext(),static_cast<f32>(source1Reg->readWord(getContext())));
 }
 
 void EECoreInterpreter_s::CVT_W_S()
@@ -70,12 +70,12 @@ void EECoreInterpreter_s::CVT_W_S()
 	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 
-	f32 source1Val = source1Reg->readFloat(EE);
+	f32 source1Val = source1Reg->readFloat(getContext());
 
 	if (FPUUtil::getExponent(source1Val) <= 0x9D)
-		destReg->writeWord(EE, static_cast<u32>(source1Val));
+		destReg->writeWord(getContext(), static_cast<u32>(source1Val));
 	else if (FPUUtil::isNegative(source1Val)) // Clamping has occured, write either S32_MIN or S32_MAX, depending on sign.
-		destReg->writeWord(EE, Constants::VALUE_S32_MIN);
+		destReg->writeWord(getContext(), Constants::VALUE_S32_MIN);
 	else
-		destReg->writeWord(EE, Constants::VALUE_S32_MAX);
+		destReg->writeWord(getContext(), Constants::VALUE_S32_MAX);
 }

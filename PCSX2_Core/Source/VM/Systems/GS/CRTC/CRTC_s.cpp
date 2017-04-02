@@ -52,8 +52,8 @@ int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		if (row == -1)
 		{
 			// Send VBlank end.
-			mEEINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::VBOF, 1);
-			mIOPINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::EVBLANK, 1);
+			mEEINTC->STAT->setFieldValue(getContext(), EEIntcRegister_STAT_t::Fields::VBOF, 1);
+			mIOPINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::EVBLANK, 1);
 			// mCRTC->mInVBlank = false;
 		}
 
@@ -64,8 +64,8 @@ int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			row = -224;
 
 			// Send VBlank start.
-			mEEINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::VBON, 1);
-			mIOPINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::VBLANK, 1);
+			mEEINTC->STAT->setFieldValue(getContext(), EEIntcRegister_STAT_t::Fields::VBON, 1);
+			mIOPINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::VBLANK, 1);
 			// mCRTC->mInVBlank = true;
 
 			// Tell VM to render frame.

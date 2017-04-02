@@ -16,7 +16,7 @@ void EECoreInterpreter_s::AND()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) & source2Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) & source2Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::ANDI()
@@ -27,7 +27,7 @@ void EECoreInterpreter_s::ANDI()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	u64 imm = static_cast<u64>(mEECoreInstruction.getIImmU());
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) & imm);
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) & imm);
 }
 
 void EECoreInterpreter_s::NOR()
@@ -38,7 +38,7 @@ void EECoreInterpreter_s::NOR()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, ~(source1Reg->readDword(EE, 0) | source2Reg->readDword(EE, 0)));
+	destReg->writeDword(getContext(), 0, ~(source1Reg->readDword(getContext(), 0) | source2Reg->readDword(getContext(), 0)));
 }
 
 void EECoreInterpreter_s::OR()
@@ -49,7 +49,7 @@ void EECoreInterpreter_s::OR()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) | source2Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) | source2Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::ORI()
@@ -60,7 +60,7 @@ void EECoreInterpreter_s::ORI()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	s64 imm = static_cast<s64>(mEECoreInstruction.getIImmU());
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) | imm);
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) | imm);
 }
 
 void EECoreInterpreter_s::XOR()
@@ -71,7 +71,7 @@ void EECoreInterpreter_s::XOR()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) ^ source2Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) ^ source2Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::XORI()
@@ -82,7 +82,7 @@ void EECoreInterpreter_s::XORI()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	u64 imm = static_cast<u64>(mEECoreInstruction.getIImmU());
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0) ^ imm);
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0) ^ imm);
 }
 
 void EECoreInterpreter_s::PAND()
@@ -95,7 +95,7 @@ void EECoreInterpreter_s::PAND()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(EE, i, source1Reg->readDword(EE, i) & source2Reg->readDword(EE, i));
+		destReg->writeDword(getContext(), i, source1Reg->readDword(getContext(), i) & source2Reg->readDword(getContext(), i));
 	}
 }
 
@@ -109,7 +109,7 @@ void EECoreInterpreter_s::PNOR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(EE, i, ~(source1Reg->readDword(EE, i) | source2Reg->readDword(EE, i)));
+		destReg->writeDword(getContext(), i, ~(source1Reg->readDword(getContext(), i) | source2Reg->readDword(getContext(), i)));
 	}
 }
 
@@ -123,7 +123,7 @@ void EECoreInterpreter_s::POR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(EE, i, source1Reg->readDword(EE, i) | source2Reg->readDword(EE, i));
+		destReg->writeDword(getContext(), i, source1Reg->readDword(getContext(), i) | source2Reg->readDword(getContext(), i));
 	}
 }
 
@@ -137,6 +137,6 @@ void EECoreInterpreter_s::PXOR()
 
 	for (auto i = 0; i < Constants::NUMBER_DWORDS_IN_QWORD; i++)
 	{
-		destReg->writeDword(EE, i, source1Reg->readDword(EE, i) ^ source2Reg->readDword(EE, i));
+		destReg->writeDword(getContext(), i, source1Reg->readDword(getContext(), i) ^ source2Reg->readDword(getContext(), i));
 	}
 }

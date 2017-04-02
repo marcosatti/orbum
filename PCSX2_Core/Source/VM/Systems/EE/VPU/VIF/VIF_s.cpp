@@ -36,7 +36,7 @@ int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	for (auto& data : mDMAPacket.UW)
 	{
 		// Check the NUM register, to determine if we are continuing a VIFcode instruction instead of reading a VIFcode.
-		if (VIF->NUM->getFieldValue(VIFCoreRegister_NUM_t::Fields::NUM))
+		if (VIF->NUM->getFieldValue(getContext(), VIFCoreRegister_NUM_t::Fields::NUM))
 		{
 		
 		}
@@ -64,12 +64,12 @@ bool VIF_s::isVIFStalled() const
 
 	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 
 	//  then the VIF has stalled and needs to be reset by writing to FBRST.STC.
-	if (STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VSS)
-		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VFS)
-		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::VIS)
-		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::INT)
-		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::ER0)
-		|| STAT->getFieldValue(VIFCoreRegister_STAT_t::Fields::ER1))
+	if (STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::VSS)
+		|| STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::VFS)
+		|| STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::VIS)
+		|| STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::INT)
+		|| STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::ER0)
+		|| STAT->getFieldValue(getContext(), VIFCoreRegister_STAT_t::Fields::ER1))
 	{
 		return true;
 	}

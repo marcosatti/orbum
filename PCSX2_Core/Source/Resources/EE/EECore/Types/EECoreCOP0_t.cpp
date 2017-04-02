@@ -8,7 +8,7 @@ EECoreCOP0_t::EECoreCOP0_t() :
 	Random(std::make_shared<EECoreCOP0Register_Random_t>()),
 	EntryLo0(std::make_shared<EECoreCOP0Register_EntryLo0_t>()),
 	EntryLo1(std::make_shared<EECoreCOP0Register_EntryLo1_t>()),
-	Context(std::make_shared<EECoreCOP0Register_Context_t>()),
+	Context(std::make_shared<EECoreCOP0Register_System_t>()),
 	PageMask(std::make_shared<EECoreCOP0Register_PageMask_t>()),
 	Wired(std::make_shared<EECoreCOP0Register_Wired_t>()),
 	Reserved7(std::make_shared<Register32_t>()),
@@ -52,12 +52,12 @@ EECoreCOP0_t::EECoreCOP0_t() :
 {
 }
 
-bool EECoreCOP0_t::isCoprocessorUsable() const
+bool EECoreCOP0_t::isCoprocessorUsable(const System_t context) const
 {
 	// First check for kernel mode - the COP0 is always available in this mode. If not, then check that CU[bit 0] == 1 (ie: >0) in the status register.
-	if (getCPUOperatingContext() == MIPSOperatingContext_t::Kernel)
+	if (getCPUOperatingContext(context) == MIPSCPUOperatingContext_t::Kernel)
 		return true;
-	else if ((Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::CU) & 0x1) > 0)
+	else if ((Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::CU) & 0x1) > 0)
 		return true;
 	else
 		return false;
@@ -72,18 +72,18 @@ void EECoreCOP0_t::initalise()
 		if (reg != nullptr) reg->initalise();
 }
 
-MIPSOperatingContext_t EECoreCOP0_t::getCPUOperatingContext() const
+MIPSCPUOperatingContext_t EECoreCOP0_t::getCPUOperatingContext(const System_t context) const
 {
-	const u32 KSU = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::KSU);
-	const u32 ERL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL);
-	const u32 EXL = Status->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL);
+	const u32 KSU = Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::KSU);
+	const u32 ERL = Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::ERL);
+	const u32 EXL = Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::EXL);
 
 	if (KSU == 2 && ERL == 0 && EXL == 0)
-		return MIPSOperatingContext_t::User;
+		return MIPSCPUOperatingContext_t::User;
 	else if (KSU == 0 || ERL == 1 || EXL == 1)
-		return MIPSOperatingContext_t::Kernel;
+		return MIPSCPUOperatingContext_t::Kernel;
 	else if (KSU == 1 && ERL == 0 && EXL == 0)
-		return MIPSOperatingContext_t::Supervisor;
+		return MIPSCPUOperatingContext_t::Supervisor;
 	else
 		throw std::runtime_error("EE COP0 could not determine CPU operating context! Please debug.");
 

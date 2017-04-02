@@ -25,7 +25,7 @@ See here where you can find more information: http://hitmen.c02.at/files/docs/ps
 The Context register of the IOP.
 TODO: Finish documentation.
 */
-class IOPCoreCOP0Register_Context_t : public BitfieldRegister32_t
+class IOPCoreCOP0Register_System_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -35,7 +35,7 @@ public:
 
 	};
 
-	explicit IOPCoreCOP0Register_Context_t();
+	explicit IOPCoreCOP0Register_System_t();
 };
 
 /*
@@ -76,26 +76,26 @@ public:
 
 	When pushing, clears the expunged bits to 0 (poping contains old values).
 	*/
-	void pushExceptionStack();
-	void popExceptionStack();
+	void pushExceptionStack(const System_t context);
+	void popExceptionStack(const System_t context);
 
 	/*
 	Returns if all exceptions are currently masked ( = NOT ENABLED).
 	TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
 	*/
-	bool isExceptionsMasked() const;
+	bool isExceptionsMasked(const System_t context) const;
 
 	/*
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master IEc bit.
 	*/
-	bool isInterruptsMasked() const;
+	bool isInterruptsMasked(const System_t context) const;
 
 	/*
 	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
 	Does so by checking the IM[irq] bit.
 	*/
-	bool isIRQMasked(u8 irq) const;
+	bool isIRQMasked(const System_t context, const int irq) const;
 };
 
 /*
@@ -118,19 +118,19 @@ public:
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
 	*/
-	void clearIP();
+	void clearIP(const System_t context);
 
 	/*
 	Sets the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQLine(u8 irq);
+	void setIRQLine(const System_t context, const int irq);
 
 	/*
 	Clears the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses ~AND).
 	*/
-	void clearIRQLine(u8 irq);
+	void clearIRQLine(const System_t context, const int irq);
 };
 
 /*

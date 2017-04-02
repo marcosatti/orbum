@@ -8,7 +8,7 @@ IOPCoreCOP0_t::IOPCoreCOP0_t() :
 	RAND(std::make_shared<Register32_t>()),
 	TLBL(std::make_shared<Register32_t>()),
 	BPC(std::make_shared<Register32_t>()),
-	Context(std::make_shared<IOPCoreCOP0Register_Context_t>()),
+	Context(std::make_shared<IOPCoreCOP0Register_System_t>()),
 	BDA(std::make_shared<Register32_t>()),
 	PIDMASK(std::make_shared<Register32_t>()),
 	DCIC(std::make_shared<Register32_t>()),
@@ -28,12 +28,12 @@ IOPCoreCOP0_t::IOPCoreCOP0_t() :
 {
 }
 
-bool IOPCoreCOP0_t::isCoprocessorUsable() const
+bool IOPCoreCOP0_t::isCoprocessorUsable(const System_t context) const
 {
 	// First check for kernel mode - the COP0 is always available in this mode. If not, then check that CU[bit 0] == 1 (ie: >0) in the status register.
-	if (getCPUOperatingContext() == MIPSOperatingContext_t::Kernel)
+	if (getCPUOperatingContext(context) == MIPSCPUOperatingContext_t::Kernel)
 		return true;
-	else if ((Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::CU) & 0x1) > 0)
+	else if ((Status->getFieldValue(context, IOPCoreCOP0Register_Status_t::Fields::CU) & 0x1) > 0)
 		return true;
 	else
 		return false;
@@ -45,14 +45,14 @@ void IOPCoreCOP0_t::initalise()
 		if (reg != nullptr) reg->initalise();
 }
 
-MIPSOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext() const
+MIPSCPUOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext(const System_t context) const
 {
-	const u32 KUc = Status->getFieldValue(IOPCoreCOP0Register_Status_t::Fields::KUc);
+	const u32 KUc = Status->getFieldValue(context, IOPCoreCOP0Register_Status_t::Fields::KUc);
 
 	if (KUc == 1)
-		return MIPSOperatingContext_t::User;
+		return MIPSCPUOperatingContext_t::User;
 	else if (KUc == 0)
-		return MIPSOperatingContext_t::Kernel;
+		return MIPSCPUOperatingContext_t::Kernel;
 	else
 		throw std::runtime_error("IOP COP0 could not determine CPU operating context! Please debug.");
 }

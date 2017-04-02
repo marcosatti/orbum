@@ -48,14 +48,14 @@ int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 				workDone = true;
 #endif
 				// Next check for the gate function.
-				if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
+				if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::SyncEnable) > 0)
 				{
 					throw std::runtime_error("IOP Timers sync mode (gate) = 1, but not implemented.");
 				}
 				else
 				{
 					// Count normally without gate.
-					mTimer->COUNT->increment(1);
+					mTimer->COUNT->increment(getContext(), 1);
 				}
 
 				// Check for interrupt conditions on the timer. Needs to be done before handling the overflow or target conditions.
@@ -86,16 +86,16 @@ void IOPTimers_s::handleTimerInterrupt() const
 	bool interrupt = false;
 
 	// Check for Compare-Interrupt.
-	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqOnTarget))
+	if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqOnTarget))
 	{
-		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
+		if (mTimer->COUNT->readWord(getContext()) == mTimer->COMP->readWord(getContext()))
 		{
 			interrupt = true;
 		}
 	}
 
 	// Check for Overflow-Interrupt.
-	if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqOnOF))
+	if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqOnOF))
 	{
 		if (mTimer->COUNT->isOverflowed())
 		{
@@ -109,20 +109,20 @@ void IOPTimers_s::handleTimerInterrupt() const
 	{
 		// If after this code block has run, and the internal IrqRequest bit is low (0), then an external interrupt should be generated (ie: to INTC).
 		// Check if we are using one-shot or repeat.
-		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRepeat))
+		if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqRepeat))
 		{
 			// Check for IRQ toggle mode.
-			if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqToggle))
+			if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqToggle))
 			{
 				// Toggle bit.
 				throw std::runtime_error("IOP Timers int toggle mode not implemented.");
-				// u32 value = mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest);
-				// mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, value ^ 1);
+				// u32 value = mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqRequest);
+				// mTimer->MODE->setFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, value ^ 1);
 			}
 			else
 			{
 				// Set bit low (0).
-				mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, 0);
+				mTimer->MODE->setFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqRequest, 0);
 			}
 		}
 		else
@@ -131,10 +131,10 @@ void IOPTimers_s::handleTimerInterrupt() const
 		}
 
 		// Check for internal interrupt bit is low, and send INTC interrupt.
-		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::IrqRequest) == 0)
+		if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::IrqRequest) == 0)
 		{
 			// Raise IRQ.
-			mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::TMR_KEYS[mTimer->getTimerID()], 1);
+			mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::TMR_KEYS[mTimer->getTimerID()], 1);
 		}
 	}
 }
@@ -145,30 +145,30 @@ void IOPTimers_s::handleTimerOverflow() const
 	if (mTimer->COUNT->isOverflowed())
 	{
 		// Check for target reset condition.
-		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) == 0)
+		if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::ResetMode) == 0)
 		{
 			// Set Count to 0.
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		}
 
 		// Set reach overflow bit.
-		mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ReachOF, 1);
+		mTimer->MODE->setFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::ReachOF, 1);
 	}
 }
 
 void IOPTimers_s::handleTimerTarget() const
 {
 	// Check for Count >= Compare.
-	if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
+	if (mTimer->COUNT->readWord(getContext()) == mTimer->COMP->readWord(getContext()))
 	{
 		// Check for target reset condition.
-		if (mTimer->MODE->getFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)
+		if (mTimer->MODE->getFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::ResetMode) > 0)
 		{
 			// Set Count to 0.
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		}
 
 		// Set reach target bit.
-		mTimer->MODE->setFieldValue(IOPTimersTimerRegister_MODE_t::Fields::ReachTarget, 1);
+		mTimer->MODE->setFieldValue(getContext(), IOPTimersTimerRegister_MODE_t::Fields::ReachTarget, 1);
 	}
 }

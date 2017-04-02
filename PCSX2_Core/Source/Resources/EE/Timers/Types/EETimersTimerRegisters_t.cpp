@@ -11,12 +11,12 @@ EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemon
 {
 }
 
-void EETimersTimerRegister_COUNT_t::increment(u16 value)
+void EETimersTimerRegister_COUNT_t::increment(const System_t context, const size_t value)
 {
 	mPrescaleCount += value;
 	while (mPrescaleCount >= mPrescale)
 	{
-		u32 temp = readWord(RAW) + value;
+		u32 temp = readWord(context) + static_cast<u32>(value);
 
 		if (temp > Constants::VALUE_U16_MAX)
 		{
@@ -25,7 +25,7 @@ void EETimersTimerRegister_COUNT_t::increment(u16 value)
 			temp = temp % Constants::VALUE_U16_MAX;
 		}
 
-		writeWord(RAW, temp);
+		writeWord(context, temp);
 		mPrescaleCount -= mPrescale;
 	}
 }
@@ -37,9 +37,9 @@ bool EETimersTimerRegister_COUNT_t::isOverflowed()
 	return temp;
 }
 
-void EETimersTimerRegister_COUNT_t::reset()
+void EETimersTimerRegister_COUNT_t::reset(const System_t context)
 {
-	writeWord(RAW, 0);
+	writeWord(context, 0);
 }
 
 void EETimersTimerRegister_COUNT_t::setPrescale(const int prescale)
@@ -70,10 +70,10 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_MODE_t::writeWord(const Context_t context, u32 value)
+void EETimersTimerRegister_MODE_t::writeWord(const System_t context, u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
-	if (context == EE)
+	if (context == System_t::EECore)
 	{
 		u32 regValue = readWord(context);
 		value = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
@@ -82,16 +82,16 @@ void EETimersTimerRegister_MODE_t::writeWord(const Context_t context, u32 value)
 	BitfieldRegister32_t::writeWord(context, value);
 	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (context == EE)
+	if (context == System_t::EECore)
 	{
-		if (getFieldValue(Fields::CUE))
-			mCount->reset();
+		if (getFieldValue(context, Fields::CUE))
+			mCount->reset(context);
 	}
 }
 
-bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial() const
+bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const System_t context) const
 {
-	return ((getFieldValue(Fields::CLKS) == 3) && (getFieldValue(Fields::GATS) == 0));
+	return ((getFieldValue(context, Fields::CLKS) == 3) && (getFieldValue(context, Fields::GATS) == 0));
 }
 
 ClockSource_t EETimersTimerRegister_MODE_t::getClockSource() const
@@ -99,9 +99,9 @@ ClockSource_t EETimersTimerRegister_MODE_t::getClockSource() const
 	return mClockSource;
 }
 
-void EETimersTimerRegister_MODE_t::handleClockSourceUpdate()
+void EETimersTimerRegister_MODE_t::handleClockSourceUpdate(const System_t context)
 {
-	if (getFieldValue(Fields::CLKS) == 0x3)
+	if (getFieldValue(context, Fields::CLKS) == 0x3)
 	{
 		mClockSource = ClockSource_t::HBlankClock;
 	}
@@ -110,9 +110,9 @@ void EETimersTimerRegister_MODE_t::handleClockSourceUpdate()
 		mClockSource = ClockSource_t::EEBusClock;
 
 		// Set prescale.
-		if (getFieldValue(Fields::CLKS) == 0x1)
+		if (getFieldValue(context, Fields::CLKS) == 0x1)
 			mCount->setPrescale(16);
-		else if (getFieldValue(Fields::CLKS) == 0x2)
+		else if (getFieldValue(context, Fields::CLKS) == 0x2)
 			mCount->setPrescale(256);
 	}
 }

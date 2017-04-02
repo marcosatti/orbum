@@ -20,13 +20,13 @@ void EECoreInterpreter_s::LB()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s8>(mPhysicalMMU->readByte(EE, physicalAddress));
-	destReg->writeDword(EE, 0, static_cast<s64>(value));
+	auto value = static_cast<s8>(mPhysicalMMU->readByte(getContext(), physicalAddress));
+	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter_s::LBU()
@@ -36,13 +36,13 @@ void EECoreInterpreter_s::LBU()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readByte(EE, physicalAddress);
-	destReg->writeDword(EE, 0, static_cast<u64>(value));
+	auto value = mPhysicalMMU->readByte(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter_s::LD()
@@ -52,13 +52,13 @@ void EECoreInterpreter_s::LD()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s64>(mPhysicalMMU->readDword(EE, physicalAddress));
-	destReg->writeDword(EE, 0, value);
+	auto value = static_cast<s64>(mPhysicalMMU->readDword(getContext(), physicalAddress));
+	destReg->writeDword(getContext(), 0, value);
 }
 
 void EECoreInterpreter_s::LDL()
@@ -70,7 +70,7 @@ void EECoreInterpreter_s::LDL()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
 	u32 dwordAddress = (virtualAddress & 0xFFFFFFF8);
 
@@ -78,8 +78,8 @@ void EECoreInterpreter_s::LDL()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(EE, physicalAddress);
-	destReg->writeDword(EE, 0, (destReg->readDword(EE, 0) & (0x00FFFFFFFFFFFFFF >> shift)) | (value << (56 - shift)));
+	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, (destReg->readDword(getContext(), 0) & (0x00FFFFFFFFFFFFFF >> shift)) | (value << (56 - shift)));
 }
 
 void EECoreInterpreter_s::LDR()
@@ -91,7 +91,7 @@ void EECoreInterpreter_s::LDR()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
 	u32 dwordAddress = (virtualAddress & 0xFFFFFFF8);
 
@@ -99,8 +99,8 @@ void EECoreInterpreter_s::LDR()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(EE, physicalAddress);
-	destReg->writeDword(EE, 0, (destReg->readDword(EE, 0) & (0xFFFFFFFFFFFFFF00 << (56 - shift))) | (value >> shift));
+	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, (destReg->readDword(getContext(), 0) & (0xFFFFFFFFFFFFFF00 << (56 - shift))) | (value >> shift));
 }
 
 void EECoreInterpreter_s::LH()
@@ -110,13 +110,13 @@ void EECoreInterpreter_s::LH()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s16>(mPhysicalMMU->readHword(EE, physicalAddress));
-	destReg->writeDword(EE, 0, static_cast<s64>(value));
+	auto value = static_cast<s16>(mPhysicalMMU->readHword(getContext(), physicalAddress));
+	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter_s::LHU()
@@ -126,13 +126,13 @@ void EECoreInterpreter_s::LHU()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readHword(EE, physicalAddress);
-	destReg->writeDword(EE, 0, static_cast<u64>(value));
+	auto value = mPhysicalMMU->readHword(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter_s::LUI()
@@ -143,7 +143,7 @@ void EECoreInterpreter_s::LUI()
 
 	s64 result = static_cast<s64>(imm << 16);
 
-	destReg->writeDword(EE, 0, result);
+	destReg->writeDword(getContext(), 0, result);
 }
 
 void EECoreInterpreter_s::LW()
@@ -153,13 +153,13 @@ void EECoreInterpreter_s::LW()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s32>(mPhysicalMMU->readWord(EE, physicalAddress));
-	destReg->writeDword(EE, 0, static_cast<s64>(value));
+	auto value = static_cast<s32>(mPhysicalMMU->readWord(getContext(), physicalAddress));
+	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
 void EECoreInterpreter_s::LWL()
@@ -171,7 +171,7 @@ void EECoreInterpreter_s::LWL()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -179,8 +179,8 @@ void EECoreInterpreter_s::LWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
-	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>((destReg->readWord(EE, 0) & (0x00FFFFFF >> shift)) | (value << (24 - shift)))));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>((destReg->readWord(getContext(), 0) & (0x00FFFFFF >> shift)) | (value << (24 - shift)))));
 }
 
 void EECoreInterpreter_s::LWR()
@@ -192,7 +192,7 @@ void EECoreInterpreter_s::LWR()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -200,8 +200,8 @@ void EECoreInterpreter_s::LWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
-	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>((destReg->readWord(EE, 0) & (0xFFFFFF00 << (24 - shift))) | (value >> shift))));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>((destReg->readWord(getContext(), 0) & (0xFFFFFF00 << (24 - shift))) | (value >> shift))));
 }
 
 void EECoreInterpreter_s::LWU()
@@ -211,13 +211,13 @@ void EECoreInterpreter_s::LWU()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(EE, 0) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
-	destReg->writeDword(EE, 0, static_cast<u64>(value));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
 void EECoreInterpreter_s::LQ()
@@ -227,13 +227,13 @@ void EECoreInterpreter_s::LQ()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = (sourceReg->readWord(EE, 0) + imm);
+	u32 virtualAddress = (sourceReg->readWord(getContext(), 0) + imm);
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readQword(EE, physicalAddress);
-	destReg->writeQword(EE, value);
+	auto value = mPhysicalMMU->readQword(getContext(), physicalAddress);
+	destReg->writeQword(getContext(), value);
 }
 
 void EECoreInterpreter_s::LWC1()
@@ -246,13 +246,13 @@ void EECoreInterpreter_s::LWC1()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = (sourceReg->readWord(EE, 0) + imm);
+	u32 virtualAddress = (sourceReg->readWord(getContext(), 0) + imm);
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
-	destReg->writeWord(EE, value);
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), value);
 }
 
 void EECoreInterpreter_s::LQC2()
@@ -265,11 +265,11 @@ void EECoreInterpreter_s::LQC2()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = (sourceReg->readWord(EE, 0) + imm);
+	u32 virtualAddress = (sourceReg->readWord(getContext(), 0) + imm);
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readQword(EE, physicalAddress);
-	destReg->writeQword(EE, value);
+	auto value = mPhysicalMMU->readQword(getContext(), physicalAddress);
+	destReg->writeQword(getContext(), value);
 }

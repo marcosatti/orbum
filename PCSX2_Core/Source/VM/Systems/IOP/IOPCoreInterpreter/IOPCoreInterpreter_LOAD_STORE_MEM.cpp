@@ -16,13 +16,13 @@ void IOPCoreInterpreter_s::LB()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s8>(mPhysicalMMU->readByte(IOP, physicalAddress));
-	destReg->writeWord(IOP, static_cast<s32>(value));
+	auto value = static_cast<s8>(mPhysicalMMU->readByte(getContext(), physicalAddress));
+	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter_s::LBU()
@@ -32,13 +32,13 @@ void IOPCoreInterpreter_s::LBU()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readByte(IOP, physicalAddress);
-	destReg->writeWord(IOP, static_cast<u32>(value));
+	auto value = mPhysicalMMU->readByte(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), static_cast<u32>(value));
 }
 
 void IOPCoreInterpreter_s::LH()
@@ -48,13 +48,13 @@ void IOPCoreInterpreter_s::LH()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s16>(mPhysicalMMU->readHword(IOP, physicalAddress));
-	destReg->writeWord(IOP, static_cast<s32>(value));
+	auto value = static_cast<s16>(mPhysicalMMU->readHword(getContext(), physicalAddress));
+	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter_s::LHU()
@@ -64,13 +64,13 @@ void IOPCoreInterpreter_s::LHU()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readHword(IOP, physicalAddress);
-	destReg->writeWord(IOP, static_cast<u32>(value));
+	auto value = mPhysicalMMU->readHword(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), static_cast<u32>(value));
 }
 
 void IOPCoreInterpreter_s::LUI()
@@ -81,7 +81,7 @@ void IOPCoreInterpreter_s::LUI()
 
 	s32 result = imm << 16;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::LW()
@@ -91,13 +91,13 @@ void IOPCoreInterpreter_s::LW()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
-	destReg->writeWord(IOP, static_cast<s32>(value));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
 void IOPCoreInterpreter_s::LWL()
@@ -109,7 +109,7 @@ void IOPCoreInterpreter_s::LWL()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -117,8 +117,8 @@ void IOPCoreInterpreter_s::LWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
-	destReg->writeWord(IOP, (destReg->readWord(IOP) & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), (destReg->readWord(getContext()) & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
 }
 
 void IOPCoreInterpreter_s::LWR()
@@ -130,7 +130,7 @@ void IOPCoreInterpreter_s::LWR()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()]; // "Base"
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = sourceReg->readWord(IOP) + imm;
+	u32 virtualAddress = sourceReg->readWord(getContext()) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -138,8 +138,8 @@ void IOPCoreInterpreter_s::LWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
-	destReg->writeWord(IOP, (destReg->readWord(IOP) & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	destReg->writeWord(getContext(), (destReg->readWord(getContext()) & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
 }
 
 void IOPCoreInterpreter_s::SB()
@@ -149,12 +149,12 @@ void IOPCoreInterpreter_s::SB()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeByte(IOP, physicalAddress, source2Reg->readByte(IOP, 0));
+	mPhysicalMMU->writeByte(getContext(), physicalAddress, source2Reg->readByte(getContext(), 0));
 }
 
 void IOPCoreInterpreter_s::SH()
@@ -164,12 +164,12 @@ void IOPCoreInterpreter_s::SH()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeHword(IOP, physicalAddress, source2Reg->readHword(IOP, 0));
+	mPhysicalMMU->writeHword(getContext(), physicalAddress, source2Reg->readHword(getContext(), 0));
 }
 
 void IOPCoreInterpreter_s::SW()
@@ -179,12 +179,12 @@ void IOPCoreInterpreter_s::SW()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext()) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeWord(IOP, physicalAddress, source2Reg->readWord(IOP));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, source2Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::SWL()
@@ -196,7 +196,7 @@ void IOPCoreInterpreter_s::SWL()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext()) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -204,12 +204,12 @@ void IOPCoreInterpreter_s::SWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(IOP, physicalAddress, ((source2Reg->readWord(IOP) >> (24 - shift))) | (value & (0xFFFFFF00 << shift))); 
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) >> (24 - shift))) | (value & (0xFFFFFF00 << shift))); 
 }
 
 void IOPCoreInterpreter_s::SWR()
@@ -221,7 +221,7 @@ void IOPCoreInterpreter_s::SWR()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	const s16 imm = mIOPCoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(IOP) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext()) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -229,11 +229,11 @@ void IOPCoreInterpreter_s::SWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(IOP, physicalAddress);
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(IOP, physicalAddress, ((source2Reg->readWord(IOP) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 

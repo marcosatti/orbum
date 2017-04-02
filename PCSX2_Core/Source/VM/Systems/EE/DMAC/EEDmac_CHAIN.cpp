@@ -16,42 +16,42 @@ void EEDmac_s::CHAIN_TAGID_UNKNOWN()
 void EEDmac_s::CHAIN_SRC_CNT()
 {
 	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Copy TADR + 0x10 into MADR.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
 
 	// Calculate where the next tag will be. SPR flag unchanged within TADR register.
-	u32 nextTagAddr = mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + (mDMAtag.getQWC() + 1) * 0x10;
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr);
+	u32 nextTagAddr = mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + (mDMAtag.getQWC() + 1) * 0x10;
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, nextTagAddr);
 }
 
 void EEDmac_s::CHAIN_SRC_NEXT()
 {
 	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Copy TADR + 0x10 into MADR.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
 
 	// Set next tag.
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getSPR());
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getSPR());
 }
 
 void EEDmac_s::CHAIN_SRC_REF()
 {
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Set MADR = tag.ADDR.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 
 	// Set next qword as tag. SPR flag unchanged within TADR register.
-	mChannel->TADR->increment(); 
+	mChannel->TADR->increment(getContext()); 
 }
 
 void EEDmac_s::CHAIN_SRC_REFS()
@@ -60,25 +60,25 @@ void EEDmac_s::CHAIN_SRC_REFS()
 	mChannel->CHCR->mTagStallControl = true;
 
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Set MADR = tag.ADDR.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 
 	// Set next qword as tag.
-	mChannel->TADR->increment(); // SPR flag unchanged within TADR register.
+	mChannel->TADR->increment(getContext()); // SPR flag unchanged within TADR register.
 }
 
 void EEDmac_s::CHAIN_SRC_REFE()
 {
 	// Transfers QWC qwords from ADDR, and suspends after packet transfer.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 
 	// Not documented: REFE requires that TADR be incremented after ending. See PCSX2's "Hw.cpp".
-	mChannel->TADR->increment();
+	mChannel->TADR->increment(getContext());
 
 	// Set channel exit state.
 	mChannel->CHCR->mTagExit = true;
@@ -87,14 +87,14 @@ void EEDmac_s::CHAIN_SRC_REFE()
 void EEDmac_s::CHAIN_SRC_CALL()
 {
 	// Transfers QWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR, mDMAtag.getSPR());
 
 	// Check for stack overflow, else push the stack. It is assumed that a stack overflow causes an exit (like underflow in 'ret').
-	u32 ASP = mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::ASP);
+	u32 ASP = mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::ASP);
 	if (ASP >= 2)
 	{
 		mChannel->CHCR->mTagExit = true;
@@ -102,9 +102,9 @@ void EEDmac_s::CHAIN_SRC_CALL()
 	}
 	else
 	{
-		mChannel->ASR[ASP]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-		mChannel->ASR[ASP]->setFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
-		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::ASP, ASP + 1);
+		mChannel->ASR[ASP]->setFieldValue(getContext(), EEDmacChannelRegister_ASR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+		mChannel->ASR[ASP]->setFieldValue(getContext(), EEDmacChannelRegister_ASR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
+		mChannel->CHCR->setFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::ASP, ASP + 1);
 	}
 }
 
@@ -113,7 +113,7 @@ void EEDmac_s::CHAIN_SRC_RET()
 	// Transfers QWC qwords after tag, pops next tag from stack. If stack level = 0, transfers QWC qwords after tag and suspends transfer.
 
 	// Check for stack underflow, else pop the stack.
-	u32 ASP = mChannel->CHCR->getFieldValue(EEDmacChannelRegister_CHCR_t::Fields::ASP);
+	u32 ASP = mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::ASP);
 	if (ASP == 0)
 	{
 		mChannel->CHCR->mTagExit = true;
@@ -121,23 +121,23 @@ void EEDmac_s::CHAIN_SRC_RET()
 	}
 	else
 	{
-		mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[ASP]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::ADDR));
-		mChannel->TADR->setFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[ASP]->getFieldValue(EEDmacChannelRegister_ASR_t::Fields::SPR));
-		mChannel->CHCR->setFieldValue(EEDmacChannelRegister_CHCR_t::Fields::ASP, ASP - 1);
+		mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[ASP]->getFieldValue(getContext(), EEDmacChannelRegister_ASR_t::Fields::ADDR));
+		mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mChannel->ASR[ASP]->getFieldValue(getContext(), EEDmacChannelRegister_ASR_t::Fields::SPR));
+		mChannel->CHCR->setFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::ASP, ASP - 1);
 	}
 
 	// In both cases, QWC following the tag is always performed.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
 }
 
 void EEDmac_s::CHAIN_SRC_END()
 {
 	// Transfers QWC qwords after tag, and suspends after packet transfer.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(EEDmacChannelRegister_TADR_t::Fields::SPR));
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR) + 0x10);
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR));
 
 	// Set channel exit state.
 	mChannel->CHCR->mTagExit = true;
@@ -146,11 +146,11 @@ void EEDmac_s::CHAIN_SRC_END()
 void EEDmac_s::CHAIN_DST_CNT()
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Set MADR to tag values.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 }
 
 void EEDmac_s::CHAIN_DST_CNTS()
@@ -159,20 +159,20 @@ void EEDmac_s::CHAIN_DST_CNTS()
 	mChannel->CHCR->mTagStallControl = true;
 
 	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Set MADR to tag values.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 }
 
 void EEDmac_s::CHAIN_DST_END()
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and suspends transfer after completing.
-	mChannel->QWC->writeWord(RAW, mDMAtag.getQWC());
+	mChannel->QWC->writeWord(getContext(), mDMAtag.getQWC());
 
 	// Set MADR to tag values.
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->MADR->setFieldValue(EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::ADDR, mDMAtag.getADDR());
+	mChannel->MADR->setFieldValue(getContext(), EEDmacChannelRegister_MADR_t::Fields::SPR, mDMAtag.getSPR());
 	mChannel->CHCR->mTagExit = true;
 }

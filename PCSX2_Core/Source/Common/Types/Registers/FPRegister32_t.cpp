@@ -15,22 +15,22 @@ FPRegister32_t::FPRegister32_t(const char* mnemonic) :
 {
 }
 
-u32 FPRegister32_t::readWord(const Context_t context)
+u32 FPRegister32_t::readWord(const System_t context)
 {
 	return UW;
 }
 
-void FPRegister32_t::writeWord(const Context_t context, u32 value)
+void FPRegister32_t::writeWord(const System_t context, u32 value)
 {
 	UW = value;
 }
 
-f32 FPRegister32_t::readFloat(const Context_t context)
+f32 FPRegister32_t::readFloat(const System_t context)
 {
 	return F;
 }
 
-void FPRegister32_t::writeFloat(const Context_t context, f32 value)
+void FPRegister32_t::writeFloat(const System_t context, f32 value)
 {
 	F = value;
 }

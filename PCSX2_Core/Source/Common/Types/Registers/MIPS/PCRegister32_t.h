@@ -15,30 +15,30 @@ public:
 	/*
 	Handles the updating of the PC by either jumping to the branch location or incrementing the PC by 4 (next instruction).
 	*/
-	void next();
+	void next(const System_t context);
 
 	/*
 	Set the PC to a relative value immediately.
 	*/
-	void setPCValueRelative(const s32 relativePC);
+	void setPCValueRelative(const System_t context, const s32 relativePC);
 
 	/*
 	Set the PC to an absolute value immediately.
 	*/
-	void setPCValueAbsolute(const u32 absolutePC);
+	void setPCValueAbsolute(const System_t context, const u32 absolutePC);
 
 	/*
 	Set a branch PC, to be triggered in the number of cycles set.
 	Convenience functions provided for different MIPS branch instructions.
 	*/
 	void setBranchPCAbsolute(const u32 pc, const int cycles);
-	void setBranchPCJRegion(const u32 JInstructionTarget, const int cycles);
-	void setBranchPCIOffset(const s16 IInstructionOffset, const int cycles);
+	void setBranchPCJRegion(const System_t context, const u32 JInstructionTarget, const int cycles);
+	void setBranchPCIOffset(const System_t context, const s16 IInstructionOffset, const int cycles);
 
 	/*
 	Causes the branch delay to execute immediately (useful for pipeline flushes).
 	*/
-	void doBranchNow();
+	void doBranchNow(const System_t context);
 
 	/*
 	Returns if there is a pending branch delay.

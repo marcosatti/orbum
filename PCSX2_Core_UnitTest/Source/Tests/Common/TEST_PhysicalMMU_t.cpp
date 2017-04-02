@@ -26,10 +26,10 @@ TEST_F(TEST_PhysicalMMU_t, READ_WRITE_8BIT)
 	// 8-bit test.
 	u8 valueU8 = 123;
 	s8 valueS8 = -51;
-	mmu.writeByte(RAW, address, valueU8);
-	ASSERT_EQ(valueU8, mmu.readByte(RAW, address));
-	mmu.writeByte(RAW, address, valueS8);
-	ASSERT_EQ(valueS8, static_cast<s8>(mmu.readByte(RAW, address)));
+	mmu.writeByte(System_t::EECore, address, valueU8);
+	ASSERT_EQ(valueU8, mmu.readByte(System_t::EECore, address));
+	mmu.writeByte(System_t::EECore, address, valueS8);
+	ASSERT_EQ(valueS8, static_cast<s8>(mmu.readByte(System_t::EECore, address)));
 }
 
 TEST_F(TEST_PhysicalMMU_t, READ_WRITE_16BIT)
@@ -37,10 +37,10 @@ TEST_F(TEST_PhysicalMMU_t, READ_WRITE_16BIT)
 	// 16-bit test.
 	u16 valueU16 = 12345;
 	s16 valueS16 = -23232;
-	mmu.writeHword(RAW, address, valueU16);
-	ASSERT_EQ(valueU16, mmu.readHword(RAW, address));
-	mmu.writeHword(RAW, address, valueS16);
-	ASSERT_EQ(valueS16, static_cast<s16>(mmu.readHword(RAW, address)));
+	mmu.writeHword(System_t::EECore, address, valueU16);
+	ASSERT_EQ(valueU16, mmu.readHword(System_t::EECore, address));
+	mmu.writeHword(System_t::EECore, address, valueS16);
+	ASSERT_EQ(valueS16, static_cast<s16>(mmu.readHword(System_t::EECore, address)));
 }
 
 TEST_F(TEST_PhysicalMMU_t, READ_WRITE_32BIT)
@@ -48,10 +48,10 @@ TEST_F(TEST_PhysicalMMU_t, READ_WRITE_32BIT)
 	// 32-bit test.
 	u32 valueU32 = 2012345610;
 	s32 valueS32 = -1549267813;
-	mmu.writeWord(RAW, address, valueU32);
-	ASSERT_EQ(valueU32, mmu.readWord(RAW, address));
-	mmu.writeWord(RAW, address, valueS32);
-	ASSERT_EQ(valueS32, static_cast<s32>(mmu.readWord(RAW, address)));
+	mmu.writeWord(System_t::EECore, address, valueU32);
+	ASSERT_EQ(valueU32, mmu.readWord(System_t::EECore, address));
+	mmu.writeWord(System_t::EECore, address, valueS32);
+	ASSERT_EQ(valueS32, static_cast<s32>(mmu.readWord(System_t::EECore, address)));
 }
 
 TEST_F(TEST_PhysicalMMU_t, READ_WRITE_64BIT)
@@ -59,10 +59,10 @@ TEST_F(TEST_PhysicalMMU_t, READ_WRITE_64BIT)
 	// 64-bit test.
 	u64 valueU64 = 8424978132468451571;
 	s64 valueS64 = -2312456987458799565;
-	mmu.writeDword(RAW, address, valueU64);
-	ASSERT_EQ(valueU64, mmu.readDword(RAW, address));
-	mmu.writeDword(RAW, address, valueS64);
-	ASSERT_EQ(valueS64, static_cast<s64>(mmu.readDword(RAW, address)));
+	mmu.writeDword(System_t::EECore, address, valueU64);
+	ASSERT_EQ(valueU64, mmu.readDword(System_t::EECore, address));
+	mmu.writeDword(System_t::EECore, address, valueS64);
+	ASSERT_EQ(valueS64, static_cast<s64>(mmu.readDword(System_t::EECore, address)));
 }
 
 TEST_F(TEST_PhysicalMMU_t, READ_WRITE_128BIT)
@@ -71,8 +71,8 @@ TEST_F(TEST_PhysicalMMU_t, READ_WRITE_128BIT)
 	u64 val0 = 9384;
 	u64 val1 = 6545;
 	u128 valueU128 = u128(val0, val1);
-	mmu.writeQword(RAW, address, valueU128);
-	u128 val2 = mmu.readQword(RAW, address);
+	mmu.writeQword(System_t::EECore, address, valueU128);
+	u128 val2 = mmu.readQword(System_t::EECore, address);
 	ASSERT_EQ(val0, val2.lo);
 	ASSERT_EQ(val1, val2.hi);
 }

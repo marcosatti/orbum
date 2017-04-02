@@ -12,7 +12,7 @@ class EECoreCOP0Register_Index_t;
 class EECoreCOP0Register_Random_t;
 class EECoreCOP0Register_EntryLo0_t;
 class EECoreCOP0Register_EntryLo1_t;
-class EECoreCOP0Register_Context_t;
+class EECoreCOP0Register_System_t;
 class EECoreCOP0Register_PageMask_t;
 class EECoreCOP0Register_Wired_t;
 class EECoreCOP0Register_BadVAddr_t;
@@ -51,7 +51,7 @@ public:
 	Checks if the EECore COP0 coprocessor is usable. 
 	Can be used by the component calling this to raise a EECoreException_t(coprocessor unusable) if not available.
 	*/
-	bool isCoprocessorUsable() const override;
+	bool isCoprocessorUsable(const System_t context) const override;
 
 	/*
 	Initalises the COP0 registers.
@@ -61,7 +61,7 @@ public:
 	/*
 	Determine the CPU context. Uses the Status register.
 	*/
-	MIPSOperatingContext_t getCPUOperatingContext() const override;
+	MIPSCPUOperatingContext_t getCPUOperatingContext(const System_t context) const override;
 
 	/*
 	EECore COP0 register implementations. Follows EE Core Users Manual.
@@ -74,7 +74,7 @@ public:
 	std::shared_ptr<EECoreCOP0Register_Random_t>	Random;	    // r1:  Pseudo-random index for TLB replacement.
 	std::shared_ptr<EECoreCOP0Register_EntryLo0_t>  EntryLo0;   // r2:  Low half of TLB entry (for even PFN).
 	std::shared_ptr<EECoreCOP0Register_EntryLo1_t>  EntryLo1;   // r3:  Low half of TLB entry (for odd PFN).
-	std::shared_ptr<EECoreCOP0Register_Context_t>	Context;    // r4:  Pointer to PTE table.
+	std::shared_ptr<EECoreCOP0Register_System_t>	Context;    // r4:  Pointer to PTE table.
 	std::shared_ptr<EECoreCOP0Register_PageMask_t>  PageMask;   // r5:  Most significant part of the TLB entry (page size mark).
 	std::shared_ptr<EECoreCOP0Register_Wired_t>		Wired;      // r6:  Number of wired TLB entries.
 	std::shared_ptr<Register32_t>			        Reserved7;  // r7:  Reserved.

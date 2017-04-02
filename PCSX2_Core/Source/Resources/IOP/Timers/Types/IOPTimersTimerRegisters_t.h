@@ -21,7 +21,7 @@ public:
 	Increments the timer by the amount specified (controlling prescalling when required).
 	Updates the overflow status.
 	*/
-	virtual void increment(u16 value) = 0;
+	virtual void increment(const System_t context, const size_t value) = 0;
 
 	/*
 	Returns if the register has overflowed or not, and resets the flag.
@@ -31,7 +31,7 @@ public:
 	/*
 	Resets the count to 0.
 	*/
-	void reset();
+	void reset(const System_t context);
 
 	/*
 	Sets the prescale (ie: needs x amount before 1 is added to the count).
@@ -48,7 +48,7 @@ protected:
 	Prescale functionality.
 	*/
 	int mPrescale;
-	int mPrescaleCount;
+	size_t mPrescaleCount;
 };
 
 /*
@@ -62,7 +62,7 @@ public:
 	/*
 	Checks for 16-bit overflow.
 	*/
-	void increment(u16 value) override;
+	void increment(const System_t context, const size_t value) override;
 };
 
 /*
@@ -76,7 +76,7 @@ public:
 	/*
 	Checks for 32-bit overflow.
 	*/
-	void increment(u16 value) override;
+	void increment(const System_t context, const size_t value) override;
 };
 
 
@@ -111,8 +111,8 @@ public:
 	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.
 	Also resets the count register on write.
 	*/
-	void writeHword(const Context_t context, size_t arrayIndex, u16 value) override;
-	void writeWord(const Context_t context, u32 value) override;
+	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 	/*
 	Returns if the timer is "enabled" by returning if either of the interrupt bits have been set (otherwise the timer is useless).
@@ -133,7 +133,7 @@ private:
 	/*
 	Sets the internal clock source based on the register state.
 	*/
-	void handleClockSourceUpdate();
+	void handleClockSourceUpdate(const System_t context);
 
 	/*
 	Holds the result of if the timer is enabled, based on the interrupt bits set.

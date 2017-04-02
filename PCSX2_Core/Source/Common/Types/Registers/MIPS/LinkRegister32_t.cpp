@@ -8,7 +8,7 @@ LinkRegister32_t::LinkRegister32_t(const std::shared_ptr<PCRegister32_t> & pcReg
 {
 }
 
-void LinkRegister32_t::setLinkAddress()
+void LinkRegister32_t::setLinkAddress(const System_t context)
 {
-	writeWord(RAW, mPCRegister->readWord(RAW) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2);
+	writeWord(context, mPCRegister->readWord(context) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2);
 }

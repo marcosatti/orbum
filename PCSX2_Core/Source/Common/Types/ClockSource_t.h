@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common/Global/Globals.h"
+
 enum class ClockSource_t
 {
 	EECoreClock,

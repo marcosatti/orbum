@@ -27,8 +27,8 @@ void EECoreInterpreter_s::QMFC2()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& source1Reg = mVU0->VF[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::QMTC2()
@@ -46,8 +46,8 @@ void EECoreInterpreter_s::QMTC2()
 	auto& destReg = mVU0->VF[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::CFC2()
@@ -64,7 +64,7 @@ void EECoreInterpreter_s::CFC2()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& source1Reg = mVU0->CCR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, static_cast<s64>(source1Reg->readWord(EE)));
+	destReg->writeDword(getContext(), 0, static_cast<s64>(source1Reg->readWord(getContext())));
 }
 
 void EECoreInterpreter_s::CTC2()
@@ -81,7 +81,7 @@ void EECoreInterpreter_s::CTC2()
 	auto& destReg = mVU0->CCR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 
-	destReg->writeWord(EE, static_cast<u32>(source1Reg->readWord(EE, 0)));
+	destReg->writeWord(getContext(), static_cast<u32>(source1Reg->readWord(getContext(), 0)));
 }
 
 void EECoreInterpreter_s::BC2F()

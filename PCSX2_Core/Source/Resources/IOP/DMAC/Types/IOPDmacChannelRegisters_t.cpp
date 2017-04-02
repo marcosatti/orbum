@@ -25,14 +25,14 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 	registerField(Fields::ILinkAR, "ILinkAR", 31, 1, 0);
 }
 
-LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode() const
+LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context) const
 {
-	return static_cast<LogicalMode_t>(getFieldValue(Fields::SM));
+	return static_cast<LogicalMode_t>(getFieldValue(context, Fields::SM));
 }
 
-Direction_t IOPDmacChannelRegister_CHCR_t::getDirection() const
+Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const System_t context) const
 {
-	return static_cast<Direction_t>(getFieldValue(Fields::TD));
+	return static_cast<Direction_t>(getFieldValue(context, Fields::TD));
 }
 
 void IOPDmacChannelRegister_CHCR_t::resetChainState()
@@ -51,22 +51,22 @@ IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic
 	registerField(Fields::BA, "BA", 16, 16, 0);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t context, size_t arrayIndex, u16 value)
+void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
 	// Update the transfer size.
-	mBS = static_cast<u16>(getFieldValue(Fields::BS));
-	mBA = static_cast<u16>(getFieldValue(Fields::BA));
+	mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
+	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
-void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
 	// Update the transfer size.
-	mBS = static_cast<u16>(getFieldValue(Fields::BS));
-	mBA = static_cast<u16>(getFieldValue(Fields::BA));
+	mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
+	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
 void IOPDmacChannelRegister_BCR_t::decrement()
@@ -92,14 +92,14 @@ IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char* mnemoni
 {
 }
 
-void IOPDmacChannelRegister_MADR_t::increment(const size_t amount)
+void IOPDmacChannelRegister_MADR_t::increment(const System_t context, const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) + static_cast<u32>(amount));
+	writeWord(context, readWord(context) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_MADR_t::decrement(const size_t amount)
+void IOPDmacChannelRegister_MADR_t::decrement(const System_t context, const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) - static_cast<u32>(amount));
+	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
 
 IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
@@ -107,14 +107,14 @@ IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemoni
 {
 }
 
-void IOPDmacChannelRegister_TADR_t::increment(const size_t amount)
+void IOPDmacChannelRegister_TADR_t::increment(const System_t context, const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) + static_cast<u32>(amount));
+	writeWord(context, readWord(context) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_TADR_t::decrement(const size_t amount)
+void IOPDmacChannelRegister_TADR_t::decrement(const System_t context, const size_t amount)
 {
-	writeWord(RAW, readWord(RAW) - static_cast<u32>(amount));
+	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
 
 IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :
@@ -122,9 +122,9 @@ IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char* m
 {
 }
 
-void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, u32 value)
 {
-	if (context == IOP)
+	if (context == System_t::IOPCore)
 		value |= (1 << 0);
 
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
@@ -135,9 +135,9 @@ IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, u32 value)
 {
-	if (context == IOP)
+	if (context == System_t::IOPCore)
 		value &= ~(1 << 0);
 
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
@@ -149,44 +149,44 @@ IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-	IOPDmacChannelRegister_TO_CHCR_t::setFieldValue(fieldIndex, value);
+	IOPDmacChannelRegister_TO_CHCR_t::setFieldValue(context, fieldIndex, value);
 
 	// Only bother if its for the Start bit.
 	if (fieldIndex == Fields::Start)
 	{
-		auto start = getFieldValue(Fields::Start);
-		auto direction = getDirection();
+		auto start = getFieldValue(context, Fields::Start);
+		auto direction = getDirection(context);
 
 		// Trigger update based on direction and if we are starting or stopping.
 		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 		if (start > 0 && direction == Direction_t::TO)
-			handleSBUSUpdateStart();
+			handleSBUSUpdateStart(context);
 		else if (start == 0 && direction == Direction_t::FROM)
 			throw std::runtime_error("IOP SIF0 channel tried to start in the FROM direction! Not possible.");
 	}
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, u32 value)
 {
 	IOPDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
-	auto start = getFieldValue(Fields::Start);
-	auto direction = getDirection();
+	auto start = getFieldValue(context, Fields::Start);
+	auto direction = getDirection(context);
 
 	// Trigger update based on direction and if we are starting or stopping.
 	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 	if (start > 0 && direction == Direction_t::TO)
-		handleSBUSUpdateStart();
+		handleSBUSUpdateStart(context);
 	else if (start == 0 && direction == Direction_t::FROM)
 		throw std::runtime_error("IOP SIF0 channel tried to start in the FROM direction! Not possible.");
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart() const
+void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart(const System_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x2000);
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x2000);
 }
 
 IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -195,48 +195,48 @@ IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-	IOPDmacChannelRegister_FROM_CHCR_t::setFieldValue(fieldIndex, value);
+	IOPDmacChannelRegister_FROM_CHCR_t::setFieldValue(context, fieldIndex, value);
 
 	// Only bother if its for the Start bit.
 	if (fieldIndex == Fields::Start)
 	{
-		auto start = getFieldValue(Fields::Start);
-		auto direction = getDirection();
+		auto start = getFieldValue(context, Fields::Start);
+		auto direction = getDirection(context);
 
 		// Trigger update based on direction and if we are starting or stopping.
 		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 		if (start > 0 && direction == Direction_t::TO)
 			throw std::runtime_error("IOP SIF1 channel tried to start in the TO direction! Not possible.");
 		else if (start == 0 && direction == Direction_t::FROM)
-			handleSBUSUpdateFinish();
+			handleSBUSUpdateFinish(context);
 	}
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, u32 value)
 {
-	if (context == IOP)
+	if (context == System_t::IOPCore)
 		value |= (1 << 10);
 
 	IOPDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 
-	auto start = getFieldValue(Fields::Start);
-	auto direction = getDirection();
+	auto start = getFieldValue(context, Fields::Start);
+	auto direction = getDirection(context);
 
 	// Trigger update based on direction and if we are starting or stopping.
 	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 	if (start > 0 && direction == Direction_t::TO)
 		throw std::runtime_error("IOP SIF1 channel tried to start in the TO direction! Not possible.");
 	else if (start == 0 && direction == Direction_t::FROM)
-		handleSBUSUpdateFinish();
+		handleSBUSUpdateFinish(context);
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish() const
+void IOPDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x40));
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x4000));
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x40));
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x4000));
 }
 
 IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t>& sbusF240) :
@@ -245,50 +245,50 @@ IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-	IOPDmacChannelRegister_CHCR_t::setFieldValue(fieldIndex, value);
+	IOPDmacChannelRegister_CHCR_t::setFieldValue(context, fieldIndex, value);
 
 	// Only bother if its for the Start bit.
 	if (fieldIndex == Fields::Start)
 	{
-		auto start = getFieldValue(Fields::Start);
-		auto direction = getDirection();
+		auto start = getFieldValue(context, Fields::Start);
+		auto direction = getDirection(context);
 
 		// Trigger update based on direction and if we are starting or stopping.
 		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 		if (start > 0 && direction == Direction_t::TO)
-			handleSBUSUpdateStart();
+			handleSBUSUpdateStart(context);
 		else if (start == 0 && direction == Direction_t::FROM)
-			handleSBUSUpdateFinish();
+			handleSBUSUpdateFinish(context);
 	}
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, u32 value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, u32 value)
 {
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
 
-	auto start = getFieldValue(Fields::Start);
-	auto direction = getDirection();
+	auto start = getFieldValue(context, Fields::Start);
+	auto direction = getDirection(context);
 
 	// Trigger update based on direction and if we are starting or stopping.
 	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
 	if (start > 0 && direction == Direction_t::TO)
-		handleSBUSUpdateStart();
+		handleSBUSUpdateStart(context);
 	else if (start == 0 && direction == Direction_t::FROM)
-		handleSBUSUpdateFinish();
+		handleSBUSUpdateFinish(context);
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart() const
+void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart(const System_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic value.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) | 0x8000);
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x8000);
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish() const
+void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic values.
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x80));
-	mSbusF240->writeWord(RAW, mSbusF240->readWord(RAW) & (~0x8000));
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x80));
+	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x8000));
 }
 

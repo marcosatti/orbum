@@ -4,7 +4,7 @@
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPCoreCOP0Register_Context_t::IOPCoreCOP0Register_Context_t()
+IOPCoreCOP0Register_System_t::IOPCoreCOP0Register_System_t()
 {
 	registerField(Fields::BadVPN2, "BadVPN2", 2, 19, 0);
 	registerField(Fields::PTEBase, "PTEBase", 21, 11, 0);
@@ -31,33 +31,33 @@ IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t() :
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-void IOPCoreCOP0Register_Status_t::pushExceptionStack()
+void IOPCoreCOP0Register_Status_t::pushExceptionStack(const System_t context)
 {
 	// New status = shift (KU|IP)(c|p) bits left by 2 then make (KU|IP)c bits = 0.
-	u32 statusValue = readWord(RAW);
-	writeWord(RAW, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
+	u32 statusValue = readWord(context);
+	writeWord(context, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
 }
 
-void IOPCoreCOP0Register_Status_t::popExceptionStack()
+void IOPCoreCOP0Register_Status_t::popExceptionStack(const System_t context)
 {
 	// New status = shift (KU|IP)(p|o) bits right by 2. Leave old bits unchanged after.
-	u32 statusValue = readWord(RAW);
-	writeWord(RAW, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
+	u32 statusValue = readWord(context);
+	writeWord(context, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
 }
 
-bool IOPCoreCOP0Register_Status_t::isExceptionsMasked() const
+bool IOPCoreCOP0Register_Status_t::isExceptionsMasked(const System_t context) const
 {
 	return false;
 }
 
-bool IOPCoreCOP0Register_Status_t::isInterruptsMasked() const
+bool IOPCoreCOP0Register_Status_t::isInterruptsMasked(const System_t context) const
 {
-	return !(getFieldValue(Fields::IEc) > 0);
+	return !(getFieldValue(context, Fields::IEc) > 0);
 }
 
-bool IOPCoreCOP0Register_Status_t::isIRQMasked(u8 irq) const
+bool IOPCoreCOP0Register_Status_t::isIRQMasked(const System_t context, const int irq) const
 {
-	return !((getFieldValue(Fields::IM) & (1 << irq)) > 0);
+	return !((getFieldValue(context, Fields::IM) & (1 << irq)) > 0);
 }
 
 IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()
@@ -68,21 +68,21 @@ IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()
 	registerField(Fields::BD, "BD", 31, 1, 0);
 }
 
-void IOPCoreCOP0Register_Cause_t::clearIP()
+void IOPCoreCOP0Register_Cause_t::clearIP(const System_t context)
 {
-	setFieldValue(Fields::IP, 0);
+	setFieldValue(context, Fields::IP, 0);
 }
 
-void IOPCoreCOP0Register_Cause_t::setIRQLine(u8 irq)
+void IOPCoreCOP0Register_Cause_t::setIRQLine(const System_t context, const int irq)
 {
-	auto temp = getFieldValue(Fields::IP) | (1 << irq);
-	setFieldValue(Fields::IP, temp);
+	auto temp = getFieldValue(context, Fields::IP) | (1 << irq);
+	setFieldValue(context, Fields::IP, temp);
 }
 
-void IOPCoreCOP0Register_Cause_t::clearIRQLine(u8 irq)
+void IOPCoreCOP0Register_Cause_t::clearIRQLine(const System_t context, const int irq)
 {
-	auto temp = (getFieldValue(Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
-	setFieldValue(Fields::IP, temp);
+	auto temp = (getFieldValue(context, Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
+	setFieldValue(context, Fields::IP, temp);
 }
 
 IOPCoreCOP0Register_PRId_t::IOPCoreCOP0Register_PRId_t()

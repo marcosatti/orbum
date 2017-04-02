@@ -21,56 +21,56 @@ const char* MappedRegister8_t::getMnemonic() const
 	return mRegister8->getMnemonic();
 }
 
-u8 MappedRegister8_t::readByte(const Context_t context, size_t storageIndex)
+u8 MappedRegister8_t::readByte(const System_t context, size_t storageIndex)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	return mRegister8->readByte(context);
 }
 
-void MappedRegister8_t::writeByte(const Context_t context, size_t storageIndex, u8 value)
+void MappedRegister8_t::writeByte(const System_t context, size_t storageIndex, u8 value)
 {
 	if (storageIndex % 1 != 0)
 		throw std::runtime_error("Tried to access MappedRegister8_t with unaligned index. Not allowed.");
 	mRegister8->writeByte(context, value);
 }
 
-u16 MappedRegister8_t::readHword(const Context_t context, size_t storageIndex)
+u16 MappedRegister8_t::readHword(const System_t context, size_t storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeHword(const Context_t context, size_t storageIndex, u16 value)
+void MappedRegister8_t::writeHword(const System_t context, size_t storageIndex, u16 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-u32 MappedRegister8_t::readWord(const Context_t context, size_t storageIndex)
+u32 MappedRegister8_t::readWord(const System_t context, size_t storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeWord(const Context_t context, size_t storageIndex, u32 value)
+void MappedRegister8_t::writeWord(const System_t context, size_t storageIndex, u32 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-u64 MappedRegister8_t::readDword(const Context_t context, size_t storageIndex)
+u64 MappedRegister8_t::readDword(const System_t context, size_t storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeDword(const Context_t context, size_t storageIndex, u64 value)
+void MappedRegister8_t::writeDword(const System_t context, size_t storageIndex, u64 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-u128 MappedRegister8_t::readQword(const Context_t context, size_t storageIndex)
+u128 MappedRegister8_t::readQword(const System_t context, size_t storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }
 
-void MappedRegister8_t::writeQword(const Context_t context, size_t storageIndex, u128 value)
+void MappedRegister8_t::writeQword(const System_t context, size_t storageIndex, u128 value)
 {
 	throw std::runtime_error("Tried to access MappedRegister8_t with larger than allowed size. Not allowed.");
 }

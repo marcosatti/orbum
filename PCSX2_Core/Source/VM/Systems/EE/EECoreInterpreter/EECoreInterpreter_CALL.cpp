@@ -16,12 +16,12 @@ void EECoreInterpreter_s::BGEZAL()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto offset = mEECoreInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(getContext(), 0));
 
 	if (source1Val >= 0)
 	{
-		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
+		mEECore->R5900->LinkRegister->setLinkAddress(getContext());
+		mEECore->R5900->PC->setBranchPCIOffset(getContext(), offset, 2);
 	}
 }
 
@@ -31,15 +31,15 @@ void EECoreInterpreter_s::BGEZALL()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto offset = mEECoreInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(getContext(), 0));
 
 	if (source1Val >= 0)
 	{
-		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
+		mEECore->R5900->LinkRegister->setLinkAddress(getContext());
+		mEECore->R5900->PC->setBranchPCIOffset(getContext(), offset, 2);
 	}
 	else
-		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(getContext()); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::BLTZAL()
@@ -48,12 +48,12 @@ void EECoreInterpreter_s::BLTZAL()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto offset = mEECoreInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(getContext(), 0));
 
 	if (source1Val < 0)
 	{
-		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
+		mEECore->R5900->LinkRegister->setLinkAddress(getContext());
+		mEECore->R5900->PC->setBranchPCIOffset(getContext(), offset, 2);
 	}
 }
 
@@ -63,22 +63,22 @@ void EECoreInterpreter_s::BLTZALL()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto offset = mEECoreInstruction.getIImmS();
 
-	auto source1Val = static_cast<s64>(source1Reg->readDword(EE, 0));
+	auto source1Val = static_cast<s64>(source1Reg->readDword(getContext(), 0));
 
 	if (source1Val < 0)
 	{
-		mEECore->R5900->LinkRegister->setLinkAddress();
-		mEECore->R5900->PC->setBranchPCIOffset(offset, 2);
+		mEECore->R5900->LinkRegister->setLinkAddress(getContext());
+		mEECore->R5900->PC->setBranchPCIOffset(getContext(), offset, 2);
 	}
 	else
-		mEECore->R5900->PC->next(); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
+		mEECore->R5900->PC->next(getContext()); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
 void EECoreInterpreter_s::JAL()
 {
 	// JUMP_LINK(). No exceptions.
-	mEECore->R5900->LinkRegister->setLinkAddress();
-	mEECore->R5900->PC->setBranchPCJRegion(mEECoreInstruction.getJRegionAddress(), 2);
+	mEECore->R5900->LinkRegister->setLinkAddress(getContext());
+	mEECore->R5900->PC->setBranchPCJRegion(getContext(), mEECoreInstruction.getJRegionAddress(), 2);
 }
 
 void EECoreInterpreter_s::JALR()
@@ -87,6 +87,6 @@ void EECoreInterpreter_s::JALR()
 	auto& sourceReg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	destReg->writeDword(EE, 0, static_cast<u64>(mEECore->R5900->PC->readWord(EE) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
-	mEECore->R5900->PC->setBranchPCAbsolute(sourceReg->readWord(EE, 0), 2);
+	destReg->writeDword(getContext(), 0, static_cast<u64>(mEECore->R5900->PC->readWord(getContext()) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+	mEECore->R5900->PC->setBranchPCAbsolute(sourceReg->readWord(getContext(), 0), 2);
 }

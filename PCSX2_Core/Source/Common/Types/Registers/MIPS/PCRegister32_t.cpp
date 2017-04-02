@@ -8,31 +8,31 @@ PCRegister32_t::PCRegister32_t():
 {
 }
 
-void PCRegister32_t::next()
+void PCRegister32_t::next(const System_t context)
 {
 	// Check if we should execute the branch delay or increment the PC by 1 instruction.
 	if (mBranchDelayCycles > 0)
 	{
 		mBranchDelayCycles--;
 		if (mBranchDelayCycles == 0)
-			setPCValueAbsolute(mBranchDelayPC);
+			setPCValueAbsolute(context, mBranchDelayPC);
 		else
-			setPCValueRelative(Constants::MIPS::SIZE_MIPS_INSTRUCTION);
+			setPCValueRelative(context, Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 	}
 	else
 	{
-		setPCValueRelative(Constants::MIPS::SIZE_MIPS_INSTRUCTION);
+		setPCValueRelative(context, Constants::MIPS::SIZE_MIPS_INSTRUCTION);
 	}
 }
 
-void PCRegister32_t::setPCValueRelative(const s32 relativePC)
+void PCRegister32_t::setPCValueRelative(const System_t context, const s32 relativePC)
 {
-	writeWord(RAW, readWord(RAW) + relativePC);
+	writeWord(context, readWord(context) + relativePC);
 }
 
-void PCRegister32_t::setPCValueAbsolute(const u32 absolutePC)
+void PCRegister32_t::setPCValueAbsolute(const System_t context, const u32 absolutePC)
 {
-	writeWord(RAW, absolutePC);
+	writeWord(context, absolutePC);
 }
 
 void PCRegister32_t::setBranchPCAbsolute(const u32 pc, const int cycles)
@@ -41,26 +41,26 @@ void PCRegister32_t::setBranchPCAbsolute(const u32 pc, const int cycles)
 	mBranchDelayPC = pc;
 }
 
-void PCRegister32_t::setBranchPCJRegion(const u32 JInstructionTarget, const int cycles)
+void PCRegister32_t::setBranchPCJRegion(const System_t context, const u32 JInstructionTarget, const int cycles)
 {
 	mBranchDelayCycles = cycles;
 
 	// New PC = (Current PC)[bits 31-28] | (JInstructionTarget << 2). See for example the instruction JAL for more info.
-	mBranchDelayPC = ((readWord(RAW) + Constants::MIPS::SIZE_MIPS_INSTRUCTION) & 0xF0000000) | (JInstructionTarget << 2);
+	mBranchDelayPC = ((readWord(context) + Constants::MIPS::SIZE_MIPS_INSTRUCTION) & 0xF0000000) | (JInstructionTarget << 2);
 }
 
-void PCRegister32_t::setBranchPCIOffset(const s16 IInstructionOffset, const int cycles)
+void PCRegister32_t::setBranchPCIOffset(const System_t context, const s16 IInstructionOffset, const int cycles)
 {
 	mBranchDelayCycles = cycles;
 
 	// New PC = (Current PC + 4) + IInstructionOffset. See for example the instruction BGEZALL for more info.
-	mBranchDelayPC = (readWord(RAW) + Constants::MIPS::SIZE_MIPS_INSTRUCTION) + (IInstructionOffset << 2);
+	mBranchDelayPC = (readWord(context) + Constants::MIPS::SIZE_MIPS_INSTRUCTION) + (IInstructionOffset << 2);
 }
 
-void PCRegister32_t::doBranchNow()
+void PCRegister32_t::doBranchNow(const System_t context)
 {
 	mBranchDelayCycles = 0;
-	setPCValueAbsolute(mBranchDelayPC);
+	setPCValueAbsolute(context, mBranchDelayPC);
 }
 
 bool PCRegister32_t::isBranchPending() const

@@ -53,25 +53,25 @@ IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char* mnemonic) :
 	registerField(Fields::MasterInterrupt, "MasterInterrupt", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR0_t::writeWord(const Context_t context, u32 value)
+void IOPDmacRegister_ICR0_t::writeWord(const System_t context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
-	if (context == IOP)
-		value = ((readWord(RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
+	if (context == System_t::IOPCore)
+		value = ((readWord(context) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 		
 	BitfieldRegister32_t::writeWord(context, value);
 }
 
-bool IOPDmacRegister_ICR0_t::isInterruptPending()
+bool IOPDmacRegister_ICR0_t::isInterruptPending(const System_t context)
 {
-	u32 regValue = readWord(RAW);
+	u32 regValue = readWord(context);
 	u32 TCM = (regValue & 0x7F0000) >> 16;
 	u32 TCI = (regValue & 0x7F000000) >> 24;
 	
 	// Check for channel interrupts or error interrupt. Set the master interrupt bit if any of the conditions are true.
-	if (((TCM & TCI) && getFieldValue(Fields::MasterEnable)) || getFieldValue(Fields::Error))
+	if (((TCM & TCI) && getFieldValue(context, Fields::MasterEnable)) || getFieldValue(context, Fields::Error))
 	{
-		setFieldValue(Fields::MasterInterrupt, 1);
+		setFieldValue(context, Fields::MasterInterrupt, 1);
 		return true;
 	}
 	
@@ -131,25 +131,25 @@ IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char* mnemonic, const std::
 	registerField(Fields::TCI13, "TCI13", 30, 1, 0);
 }
 
-void IOPDmacRegister_ICR1_t::writeWord(const Context_t context, u32 value)
+void IOPDmacRegister_ICR1_t::writeWord(const System_t context, u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
-	if (context == IOP)
-		value = ((readWord(RAW) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
+	if (context == System_t::IOPCore)
+		value = ((readWord(context) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 
 	BitfieldRegister32_t::writeWord(context, value);
 }
 
-bool IOPDmacRegister_ICR1_t::isInterruptPending()
+bool IOPDmacRegister_ICR1_t::isInterruptPending(const System_t context)
 {
-	u32 regValue = readWord(RAW);
+	u32 regValue = readWord(context);
 	u32 TCM = (regValue & 0x7F0000) >> 16;
 	u32 TCI = (regValue & 0x7F000000) >> 24;
 
 	// Check for channel interrupts or error interrupt. Set the master interrupt bit if any of the conditions are true.
-	if ((TCM & TCI) && mICR0->getFieldValue(IOPDmacRegister_ICR0_t::Fields::MasterEnable))
+	if ((TCM & TCI) && mICR0->getFieldValue(context, IOPDmacRegister_ICR0_t::Fields::MasterEnable))
 	{
-		mICR0->setFieldValue(IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 1);
+		mICR0->setFieldValue(context, IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 1);
 		return true;
 	}
 

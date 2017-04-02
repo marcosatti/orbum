@@ -18,7 +18,7 @@ void EECoreInterpreter_s::MFHI()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MFLO()
@@ -27,7 +27,7 @@ void EECoreInterpreter_s::MFLO()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MOVN()
@@ -37,8 +37,8 @@ void EECoreInterpreter_s::MOVN()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	if (source2Reg->readDword(EE, 0) != 0)
-		destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	if (source2Reg->readDword(getContext(), 0) != 0)
+		destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MOVZ()
@@ -48,8 +48,8 @@ void EECoreInterpreter_s::MOVZ()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 
-	if (source2Reg->readDword(EE, 0) == 0)
-		destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	if (source2Reg->readDword(getContext(), 0) == 0)
+		destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MTHI()
@@ -58,7 +58,7 @@ void EECoreInterpreter_s::MTHI()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& destReg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MTLO()
@@ -67,7 +67,7 @@ void EECoreInterpreter_s::MTLO()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& destReg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MFHI1()
@@ -76,7 +76,7 @@ void EECoreInterpreter_s::MFHI1()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::MFLO1()
@@ -85,7 +85,7 @@ void EECoreInterpreter_s::MFLO1()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::MTHI1()
@@ -94,7 +94,7 @@ void EECoreInterpreter_s::MTHI1()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& destReg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::MTLO1()
@@ -103,7 +103,7 @@ void EECoreInterpreter_s::MTLO1()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& destReg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::PMFHI()
@@ -112,8 +112,8 @@ void EECoreInterpreter_s::PMFHI()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source1Reg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::PMFHL()
@@ -161,9 +161,9 @@ void EECoreInterpreter_s::PMFHL_LH()
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
 		if (HIIndex[i] != -1)
-			destReg->writeHword(EE, HIIndex[i], source1Reg->readHword(EE, i));
+			destReg->writeHword(getContext(), HIIndex[i], source1Reg->readHword(getContext(), i));
 		if (LOIndex[i] != -1)
-			destReg->writeHword(EE, LOIndex[i], source2Reg->readHword(EE, i));
+			destReg->writeHword(getContext(), LOIndex[i], source2Reg->readHword(getContext(), i));
 	}
 }
 
@@ -180,9 +180,9 @@ void EECoreInterpreter_s::PMFHL_LW()
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
 		if (HIIndex[i] != -1)
-			destReg->writeWord(EE, HIIndex[i], source1Reg->readWord(EE, i));
+			destReg->writeWord(getContext(), HIIndex[i], source1Reg->readWord(getContext(), i));
 		if (LOIndex[i] != -1)
-			destReg->writeWord(EE, LOIndex[i], source2Reg->readWord(EE, i));
+			destReg->writeWord(getContext(), LOIndex[i], source2Reg->readWord(getContext(), i));
 	}
 }
 
@@ -198,13 +198,13 @@ void EECoreInterpreter_s::PMFHL_SH()
 	s32 LOIndex[] = { 0, 1, 4, 5 };
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(EE, i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(EE, i));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(getContext(), i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(getContext(), i));
 
 		if (HIIndex[i] != -1)
-			destReg->writeHword(EE, HIIndex[i], MathUtil::saturateWordToHword(source1Val));
+			destReg->writeHword(getContext(), HIIndex[i], MathUtil::saturateWordToHword(source1Val));
 		if (LOIndex[i] != -1)
-			destReg->writeHword(EE, LOIndex[i], MathUtil::saturateWordToHword(source2Val));
+			destReg->writeHword(getContext(), LOIndex[i], MathUtil::saturateWordToHword(source2Val));
 	}
 }
 
@@ -219,13 +219,13 @@ void EECoreInterpreter_s::PMFHL_SLW()
 	s64 tempValue;
 	s32 result;
 
-	tempValue = static_cast<s64>((static_cast<u64>(source1Reg->readWord(EE, 0)) << 32) | static_cast<u64>(source2Reg->readWord(EE, 0)));
+	tempValue = static_cast<s64>((static_cast<u64>(source1Reg->readWord(getContext(), 0)) << 32) | static_cast<u64>(source2Reg->readWord(getContext(), 0)));
 	result = MathUtil::saturateDwordToWord(tempValue);
-	destReg->writeDword(EE, 0, result);
+	destReg->writeDword(getContext(), 0, result);
 
-	tempValue = static_cast<s64>((static_cast<u64>(source1Reg->readWord(EE, 2)) << 32) | static_cast<u64>(source2Reg->readWord(EE, 2)));
+	tempValue = static_cast<s64>((static_cast<u64>(source1Reg->readWord(getContext(), 2)) << 32) | static_cast<u64>(source2Reg->readWord(getContext(), 2)));
 	result = MathUtil::saturateDwordToWord(tempValue);
-	destReg->writeDword(EE, 1, result);
+	destReg->writeDword(getContext(), 1, result);
 }
 
 void EECoreInterpreter_s::PMFHL_UW()
@@ -241,9 +241,9 @@ void EECoreInterpreter_s::PMFHL_UW()
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
 		if (HIIndex[i] != -1)
-			destReg->writeWord(EE, HIIndex[i], source1Reg->readWord(EE, i));
+			destReg->writeWord(getContext(), HIIndex[i], source1Reg->readWord(getContext(), i));
 		if (LOIndex[i] != -1)
-			destReg->writeWord(EE, LOIndex[i], source2Reg->readWord(EE, i));
+			destReg->writeWord(getContext(), LOIndex[i], source2Reg->readWord(getContext(), i));
 	}
 }
 
@@ -253,8 +253,8 @@ void EECoreInterpreter_s::PMFLO()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRRd()];
 	auto& source2Reg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 0, source2Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source2Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source2Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source2Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::PMTHI()
@@ -263,8 +263,8 @@ void EECoreInterpreter_s::PMTHI()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto& destReg = mEECore->R5900->HI;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::PMTHL_LW()
@@ -277,9 +277,9 @@ void EECoreInterpreter_s::PMTHL_LW()
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
 		if (i % 2 == 0)
-			dest2Reg->writeWord(EE, i, source1Reg->readWord(EE, i));
+			dest2Reg->writeWord(getContext(), i, source1Reg->readWord(getContext(), i));
 		else
-			dest1Reg->writeWord(EE, i - 1, source1Reg->readWord(EE, i));
+			dest1Reg->writeWord(getContext(), i - 1, source1Reg->readWord(getContext(), i));
 	}
 }
 
@@ -289,8 +289,8 @@ void EECoreInterpreter_s::PMTLO()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()];
 	auto& destReg = mEECore->R5900->LO;
 
-	destReg->writeDword(EE, 0, source1Reg->readDword(EE, 0));
-	destReg->writeDword(EE, 1, source1Reg->readDword(EE, 1));
+	destReg->writeDword(getContext(), 0, source1Reg->readDword(getContext(), 0));
+	destReg->writeDword(getContext(), 1, source1Reg->readDword(getContext(), 1));
 }
 
 void EECoreInterpreter_s::MFC1()
@@ -302,20 +302,20 @@ void EECoreInterpreter_s::MFC1()
 	auto& destReg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
 
-	destReg->writeWord(EE, 0, source1Reg->readWord(EE));
+	destReg->writeWord(getContext(), 0, source1Reg->readWord(getContext()));
 
 	// Sign extend
-	if (FPUUtil::isNegative(source1Reg->readFloat(EE)))
+	if (FPUUtil::isNegative(source1Reg->readFloat(getContext())))
 	{
-		destReg->writeWord(EE, 1, Constants::VALUE_U32_MAX);
-		destReg->writeWord(EE, 2, Constants::VALUE_U32_MAX);
-		destReg->writeWord(EE, 3, Constants::VALUE_U32_MAX);
+		destReg->writeWord(getContext(), 1, Constants::VALUE_U32_MAX);
+		destReg->writeWord(getContext(), 2, Constants::VALUE_U32_MAX);
+		destReg->writeWord(getContext(), 3, Constants::VALUE_U32_MAX);
 	}
 	else
 	{
-		destReg->writeWord(EE, 1, 0);
-		destReg->writeWord(EE, 2, 0);
-		destReg->writeWord(EE, 3, 0);
+		destReg->writeWord(getContext(), 1, 0);
+		destReg->writeWord(getContext(), 2, 0);
+		destReg->writeWord(getContext(), 3, 0);
 	}
 }
 
@@ -328,7 +328,7 @@ void EECoreInterpreter_s::MOV_S()
 	auto& source1Reg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 
-	destReg->writeFloat(EE,source1Reg->readFloat(EE));
+	destReg->writeFloat(getContext(),source1Reg->readFloat(getContext()));
 }
 
 void EECoreInterpreter_s::MTC1()
@@ -340,6 +340,6 @@ void EECoreInterpreter_s::MTC1()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRRd()]; // Fs
 
-	destReg->writeWord(EE, source1Reg->readWord(EE, 0));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext(), 0));
 }
 

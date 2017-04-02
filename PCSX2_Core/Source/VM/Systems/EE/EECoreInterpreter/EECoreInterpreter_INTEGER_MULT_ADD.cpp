@@ -18,15 +18,15 @@ void EECoreInterpreter_s::MADD()
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(EE, 0));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(EE, 0));
-	auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(EE, 0)));
-	auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(EE, 0)));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext(), 0));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext(), 0));
+	auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(getContext(), 0)));
+	auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(getContext(), 0)));
 	s64 result = (hiVal << 32 | loVal) + (source1Val * source2Val);
 
-	LO->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-	HI->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(result >> 32)));
-	destReg->writeDword(EE, 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	LO->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+	HI->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>(result >> 32)));
+	destReg->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
 }
 
 void EECoreInterpreter_s::MADD1()
@@ -45,15 +45,15 @@ void EECoreInterpreter_s::MADDU()
 	auto& LO = mEECore->R5900->LO;
 	auto& HI = mEECore->R5900->HI;
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(EE, 0));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(EE, 0));
-	auto loVal = static_cast<u64>(static_cast<u32>(LO->readWord(EE, 0)));
-	auto hiVal = static_cast<u64>(static_cast<u32>(HI->readWord(EE, 0)));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(getContext(), 0));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(getContext(), 0));
+	auto loVal = static_cast<u64>(static_cast<u32>(LO->readWord(getContext(), 0)));
+	auto hiVal = static_cast<u64>(static_cast<u32>(HI->readWord(getContext(), 0)));
 	u64 result = (hiVal << 32 | loVal) + (source1Val * source2Val);
 
-	LO->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-	HI->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result >> 32)));
-	destReg->writeDword(EE, 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	LO->writeDword(getContext(), 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+	HI->writeDword(getContext(), 0, static_cast<u64>(static_cast<u32>(result >> 32)));
+	destReg->writeDword(getContext(), 0, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
 }
 
 void EECoreInterpreter_s::MADDU1()
@@ -74,20 +74,20 @@ void EECoreInterpreter_s::PHMADH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val1 = static_cast<s16>(source1Reg->readHword(EE, i));
-		auto source2Val1 = static_cast<s16>(source2Reg->readHword(EE, i));
-		auto source1Val2 = static_cast<s16>(source1Reg->readHword(EE, i + 1));
-		auto source2Val2 = static_cast<s16>(source2Reg->readHword(EE, i + 1));
+		auto source1Val1 = static_cast<s16>(source1Reg->readHword(getContext(), i));
+		auto source2Val1 = static_cast<s16>(source2Reg->readHword(getContext(), i));
+		auto source1Val2 = static_cast<s16>(source1Reg->readHword(getContext(), i + 1));
+		auto source2Val2 = static_cast<s16>(source2Reg->readHword(getContext(), i + 1));
 		s32 result = (source1Val2 * source2Val2) + (source1Val1 * source2Val1);
 
 		// Store in LO on i % 4 == 0 (every second loop), else store in HI, at word indexes 0 and 2.
 		if (i % 4 == 0)
-			LO->writeWord(EE, (i / 4) * 2, result);
+			LO->writeWord(getContext(), (i / 4) * 2, result);
 		else
-			HI->writeWord(EE, ((i - 2) / 4) * 2, result);
+			HI->writeWord(getContext(), ((i - 2) / 4) * 2, result);
 
 		// Set Rd (always done on each loop).
-		destReg->writeWord(EE, i / 2, result);
+		destReg->writeWord(getContext(), i / 2, result);
 	}
 }
 
@@ -103,20 +103,20 @@ void EECoreInterpreter_s::PHMSBH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val1 = static_cast<s16>(source1Reg->readHword(EE, i));
-		auto source2Val1 = static_cast<s16>(source2Reg->readHword(EE, i));
-		auto source1Val2 = static_cast<s16>(source1Reg->readHword(EE, i + 1));
-		auto source2Val2 = static_cast<s16>(source2Reg->readHword(EE, i + 1));
+		auto source1Val1 = static_cast<s16>(source1Reg->readHword(getContext(), i));
+		auto source2Val1 = static_cast<s16>(source2Reg->readHword(getContext(), i));
+		auto source1Val2 = static_cast<s16>(source1Reg->readHword(getContext(), i + 1));
+		auto source2Val2 = static_cast<s16>(source2Reg->readHword(getContext(), i + 1));
 		s32 result = (source1Val2 * source2Val2) - (source1Val1 * source2Val1);
 
 		// Store in LO on i % 4 == 0 (every second loop), else store in HI, at word indexes 0 and 2.
 		if (i % 4 == 0)
-			LO->writeWord(EE, (i / 4) * 2, result);
+			LO->writeWord(getContext(), (i / 4) * 2, result);
 		else
-			HI->writeWord(EE, ((i - 2) / 4) * 2, result);
+			HI->writeWord(getContext(), ((i - 2) / 4) * 2, result);
 
 		// Set Rd (always done on each loop).
-		destReg->writeWord(EE, i / 2, result);
+		destReg->writeWord(getContext(), i / 2, result);
 	}
 }
 
@@ -133,25 +133,25 @@ void EECoreInterpreter_s::PMADDH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s16>(source1Reg->readHword(EE, i));
-		auto source2Val = static_cast<s16>(source2Reg->readHword(EE, i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(getContext(), i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(getContext(), i));
 		s32 result = source1Val * source2Val;
 
 		if ((i / 2) % 2 == 0)
 		{
 			auto index = ((i / 2 > 0) ? i - 2 : i); // A0xB0 + C0, A1xB1 + C1, A4xB4 + C4, A5xB5 + C5. Array ternary operator is to select the correct index from 0 -> 3.
-			result = result + static_cast<s32>(LO->readWord(EE, index)); 
-			LO->writeWord(EE, index, result);
+			result = result + static_cast<s32>(LO->readWord(getContext(), index)); 
+			LO->writeWord(getContext(), index, result);
 		}
 		else
 		{
 			auto index = ((i / 2 > 1) ? i - 4 : i - 2); // A2xB2 + C2, A3xB3 + C3, A6xB6 + C6, A7xB7 + C7. Array ternary operator is to select the correct index from 0 -> 3.
-			result = result + static_cast<s32>(HI->readWord(EE, index));
-			HI->writeWord(EE, index, result);
+			result = result + static_cast<s32>(HI->readWord(getContext(), index));
+			HI->writeWord(getContext(), index, result);
 		}
 			
 		if (i % 2 == 0)
-			destReg->writeWord(EE, i / 2, result); // Write to Rd for even indexes. A0xB0 + C0, A2xB2 + C2, A4xB4 + C4, A6xB6 + C6.
+			destReg->writeWord(getContext(), i / 2, result); // Write to Rd for even indexes. A0xB0 + C0, A2xB2 + C2, A4xB4 + C4, A6xB6 + C6.
 	}
 }
 
@@ -167,15 +167,15 @@ void EECoreInterpreter_s::PMADDUW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<u32>(source1Reg->readWord(EE, i));
-		auto source2Val = static_cast<u32>(source2Reg->readWord(EE, i));
-		auto loVal = static_cast<u64>(static_cast<u32>(LO->readWord(EE, i)));
-		auto hiVal = static_cast<u64>(static_cast<u32>(HI->readWord(EE, i)));
+		auto source1Val = static_cast<u32>(source1Reg->readWord(getContext(), i));
+		auto source2Val = static_cast<u32>(source2Reg->readWord(getContext(), i));
+		auto loVal = static_cast<u64>(static_cast<u32>(LO->readWord(getContext(), i)));
+		auto hiVal = static_cast<u64>(static_cast<u32>(HI->readWord(getContext(), i)));
 		u64 result = (hiVal << 32 | loVal) + (source1Val * source2Val);
 
-		LO->writeDword(EE, i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
-		HI->writeDword(EE, i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
-		destReg->writeDword(EE, i / 2, result);
+		LO->writeDword(getContext(), i / 2, static_cast<u64>(static_cast<u32>(result & 0xFFFFFFFF)));
+		HI->writeDword(getContext(), i / 2, static_cast<u64>(static_cast<u32>(result >> 32)));
+		destReg->writeDword(getContext(), i / 2, result);
 	}
 }
 
@@ -191,15 +191,15 @@ void EECoreInterpreter_s::PMADDW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(EE, i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(EE, i));
-		auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(EE, i)));
-		auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(EE, i)));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(getContext(), i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(getContext(), i));
+		auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(getContext(), i)));
+		auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(getContext(), i)));
 		s64 result = (hiVal << 32 | loVal) + (source1Val * source2Val);
 
-		LO->writeDword(EE, i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-		HI->writeDword(EE, i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
-		destReg->writeDword(EE, i / 2, result);
+		LO->writeDword(getContext(), i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+		HI->writeDword(getContext(), i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
+		destReg->writeDword(getContext(), i / 2, result);
 	}
 }
 
@@ -216,25 +216,25 @@ void EECoreInterpreter_s::PMSUBH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		auto source1Val = static_cast<s16>(source1Reg->readHword(EE, i));
-		auto source2Val = static_cast<s16>(source2Reg->readHword(EE, i));
+		auto source1Val = static_cast<s16>(source1Reg->readHword(getContext(), i));
+		auto source2Val = static_cast<s16>(source2Reg->readHword(getContext(), i));
 		s32 result = source1Val * source2Val;
 
 		if ((i / 2) % 2 == 0)
 		{
 			auto index = ((i / 2 > 0) ? i - 2 : i); // C0 - A0xB0, C1 - A1xB1, C4 - A4xB4, C5 - A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
-			result = static_cast<s32>(LO->readWord(EE, index)) - result;
-			LO->writeWord(EE, index, result);
+			result = static_cast<s32>(LO->readWord(getContext(), index)) - result;
+			LO->writeWord(getContext(), index, result);
 		}
 		else
 		{
 			auto index = ((i / 2 > 1) ? i - 4 : i - 2); // C2 - A2xB2, C3 - A3xB3, C6 - A6xB6, C7 - A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
-			result = static_cast<s32>(HI->readWord(EE, index)) - result;
-			HI->writeWord(EE, index, result);
+			result = static_cast<s32>(HI->readWord(getContext(), index)) - result;
+			HI->writeWord(getContext(), index, result);
 		}
 
 		if (i % 2 == 0)
-			destReg->writeWord(EE, i / 2, result); // Write to Rd for even indexes. C0 - A0xB0, C2 - A2xB2, C4 - A4xB4, C6 - A6xB6.
+			destReg->writeWord(getContext(), i / 2, result); // Write to Rd for even indexes. C0 - A0xB0, C2 - A2xB2, C4 - A4xB4, C6 - A6xB6.
 	}
 }
 
@@ -250,14 +250,14 @@ void EECoreInterpreter_s::PMSUBW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i += 2)
 	{
-		auto source1Val = static_cast<s32>(source1Reg->readWord(EE, i));
-		auto source2Val = static_cast<s32>(source2Reg->readWord(EE, i));
-		auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(EE, i)));
-		auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(EE, i)));
+		auto source1Val = static_cast<s32>(source1Reg->readWord(getContext(), i));
+		auto source2Val = static_cast<s32>(source2Reg->readWord(getContext(), i));
+		auto loVal = static_cast<s64>(static_cast<s32>(LO->readWord(getContext(), i)));
+		auto hiVal = static_cast<s64>(static_cast<s32>(HI->readWord(getContext(), i)));
 		s64 result = (hiVal << 32 | loVal) - (source1Val * source2Val);
 
-		LO->writeDword(EE, i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
-		HI->writeDword(EE, i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
-		destReg->writeDword(EE, i / 2, result);
+		LO->writeDword(getContext(), i / 2, static_cast<s64>(static_cast<s32>(result & 0xFFFFFFFF)));
+		HI->writeDword(getContext(), i / 2, static_cast<s64>(static_cast<s32>(result >> 32)));
+		destReg->writeDword(getContext(), i / 2, result);
 	}
 }

@@ -21,12 +21,12 @@ public:
 	explicit WrapperR16Register32_t(const std::shared_ptr<Register16_t> & register16);
 	explicit WrapperR16Register32_t(const char * mnemonic, const std::shared_ptr<Register16_t> & register16);
 
-	u8 readByte(const Context_t context, size_t arrayIndex) override;
-	void writeByte(const Context_t context, size_t arrayIndex, u8 value) override;
-	u16 readHword(const Context_t context, size_t arrayIndex) override;
-	void writeHword(const Context_t context, size_t arrayIndex, u16 value) override;
-	u32 readWord(const Context_t context) override;
-	void writeWord(const Context_t context, u32 value) override;
+	u8 readByte(const System_t context, size_t arrayIndex) override;
+	void writeByte(const System_t context, size_t arrayIndex, u8 value) override;
+	u16 readHword(const System_t context, size_t arrayIndex) override;
+	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
+	u32 readWord(const System_t context) override;
+	void writeWord(const System_t context, u32 value) override;
 
 	/*
 	Initalise register (initalise underlying register).

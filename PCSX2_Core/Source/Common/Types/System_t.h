@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common/Global/Globals.h"
+
 /*
 Represents a list of systems included in the PS2.
 */

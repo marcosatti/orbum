@@ -18,9 +18,9 @@ bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 	return temp;
 }
 
-void IOPTimersTimerRegister_COUNT_t::reset()
+void IOPTimersTimerRegister_COUNT_t::reset(const System_t context)
 {
-	writeWord(RAW, 0);
+	writeWord(context, 0);
 }
 
 void IOPTimersTimerRegister_COUNT_t::setPrescale(const int prescale)
@@ -39,9 +39,9 @@ IOPTimersTimerRegister_HWORD_COUNT_t::IOPTimersTimerRegister_HWORD_COUNT_t(const
 {
 }
 
-void IOPTimersTimerRegister_HWORD_COUNT_t::increment(u16 value)
+void IOPTimersTimerRegister_HWORD_COUNT_t::increment(const System_t context, const size_t value)
 {
-	u32 temp = readWord(RAW);
+	u32 temp = readWord(context);
 
 	// Update only if the prescale threshold has been reached.
 	mPrescaleCount += value;
@@ -59,7 +59,7 @@ void IOPTimersTimerRegister_HWORD_COUNT_t::increment(u16 value)
 			mIsOverflowed = true;
 		}
 
-		writeWord(RAW, temp);
+		writeWord(context, temp);
 	}
 }
 
@@ -68,9 +68,9 @@ IOPTimersTimerRegister_WORD_COUNT_t::IOPTimersTimerRegister_WORD_COUNT_t(const c
 {
 }
 
-void IOPTimersTimerRegister_WORD_COUNT_t::increment(u16 value)
+void IOPTimersTimerRegister_WORD_COUNT_t::increment(const System_t context, const size_t value)
 {
-	u64 temp = static_cast<u64>(readWord(RAW));
+	u64 temp = static_cast<u64>(readWord(context));
 
 	// Update only if the prescale threshold has been reached.
 	mPrescaleCount += value;
@@ -88,7 +88,7 @@ void IOPTimersTimerRegister_WORD_COUNT_t::increment(u16 value)
 			mIsOverflowed = true;
 		}
 
-		writeWord(RAW, static_cast<u32>(temp));
+		writeWord(context, static_cast<u32>(temp));
 	}
 }
 
@@ -114,32 +114,32 @@ IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemon
 	registerField(Fields::Prescale1, "Prescale1", 13, 2, 0);
 }
 
-void IOPTimersTimerRegister_MODE_t::writeHword(const Context_t context, size_t arrayIndex, u16 value)
+void IOPTimersTimerRegister_MODE_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
-	if (context != RAW)
-	{
-		mCount->reset();
-		handleClockSourceUpdate();
+	if (context == System_t::IOPCore)
+		mCount->reset(context);
 
-		// Check through either of the interrupt bits for "enabled".
-		mIsEnabled = (getFieldValue(Fields::IrqOnOF) || getFieldValue(Fields::IrqOnTarget));
-	}
+	// Update clock source.
+	handleClockSourceUpdate(context);
+
+	// Check through either of the interrupt bits for "enabled".
+	mIsEnabled = (getFieldValue(context, Fields::IrqOnOF) || getFieldValue(context, Fields::IrqOnTarget));
 }
 
-void IOPTimersTimerRegister_MODE_t::writeWord(const Context_t context, u32 value)
+void IOPTimersTimerRegister_MODE_t::writeWord(const System_t context, u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
-	if (context != RAW)
-	{
-		mCount->reset();
-		handleClockSourceUpdate();
+	if (context == System_t::IOPCore)
+		mCount->reset(context);
 
-		// Check through either of the interrupt bits for "enabled".
-		mIsEnabled = (getFieldValue(Fields::IrqOnOF) || getFieldValue(Fields::IrqOnTarget));
-	}
+	// Update clock source.
+	handleClockSourceUpdate(context);
+
+	// Check through either of the interrupt bits for "enabled".
+	mIsEnabled = (getFieldValue(context, Fields::IrqOnOF) || getFieldValue(context, Fields::IrqOnTarget));
 }
 
 bool IOPTimersTimerRegister_MODE_t::isEnabled() const
@@ -152,7 +152,7 @@ ClockSource_t IOPTimersTimerRegister_MODE_t::getClockSource() const
 	return mClockSource;
 }
 
-void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
+void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const System_t context)
 {
 	if (mTimerIndex > 5)
 		throw std::runtime_error("Invalid IOP timer index to determine clock source!");
@@ -162,13 +162,13 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
 	if (mTimerIndex < 3)
 	{
 		// Check for Prescale8 (bit 9).
-		if (getFieldValue(Fields::Prescale0) > 0)
+		if (getFieldValue(context, Fields::Prescale0) > 0)
 		{
 			throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
 		}
 		else
 		{
-			if (getFieldValue(Fields::ClockSrc) == 0)
+			if (getFieldValue(context, Fields::ClockSrc) == 0)
 			{
 				mCount->setPrescale(1);
 				mClockSource = ClockSource_t::IOPBusClock;
@@ -182,13 +182,13 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate()
 	else
 	{
 		// Check for Prescale8/16/256 (bits 13 and 14).
-		if (getFieldValue(Fields::Prescale1) > 0)
+		if (getFieldValue(context, Fields::Prescale1) > 0)
 		{
 			throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
 		}
 		else
 		{
-			if (getFieldValue(Fields::ClockSrc) == 0)
+			if (getFieldValue(context, Fields::ClockSrc) == 0)
 			{
 				mCount->setPrescale(1);
 				mClockSource = ClockSource_t::IOPBusClock;

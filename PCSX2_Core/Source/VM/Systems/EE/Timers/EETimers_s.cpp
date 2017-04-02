@@ -38,7 +38,7 @@ int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		mTimer = timer.get();
 
 		// Count only if enabled.
-		if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CUE) > 0)
+		if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::CUE) > 0)
 		{
 			// Check if the timer mode is equal to the clock source.
 			if (clockSource == mTimer->MODE->getClockSource())
@@ -49,31 +49,31 @@ int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 #endif
 				// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
 				//  in which case count normally.
-				if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATE)
-					&& !mTimer->MODE->isGateHBLNKSpecial())
+				if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATE)
+					&& !mTimer->MODE->isGateHBLNKSpecial(getContext()))
 				{
 					// Check if the timer needs to be reset.
 					handleTimerGateReset();
 
 					// If the timer is using GATM = 0, need to check if the signal is low first.
-					if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
+					if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATM) == 0)
 					{
 						throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
 
 						const u8 * gateSources[] = { nullptr, nullptr };
-						u32 index = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
+						u32 index = mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATS);
 						if (!(*gateSources[index]))
-							mTimer->COUNT->increment(1);
+							mTimer->COUNT->increment(getContext(), 1);
 					}
 					else
 					{
-						mTimer->COUNT->increment(1);
+						mTimer->COUNT->increment(getContext(), 1);
 					}
 				}
 				else
 				{
 					// Count normally without gate.
-					mTimer->COUNT->increment(1);
+					mTimer->COUNT->increment(getContext(), 1);
 				}
 
 				// Check for interrupt conditions on the timer.
@@ -101,16 +101,16 @@ void EETimers_s::handleTimerInterrupt() const
 	bool interrupt = false;
 
 	// Check for Compare-Interrupt.
-	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::CMPE))
+	if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::CMPE))
 	{
-		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
+		if (mTimer->COUNT->readWord(getContext()) == mTimer->COMP->readWord(getContext()))
 		{
 			interrupt = true;
 		}
 	}
 
 	// Check for Overflow-Interrupt.
-	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::OVFE))
+	if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::OVFE))
 	{
 		if (mTimer->COUNT->isOverflowed())
 		{
@@ -121,19 +121,19 @@ void EETimers_s::handleTimerInterrupt() const
 	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
 	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
-		mINTC->STAT->setFieldValue(EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimer->getTimerID()], 1);
+		mINTC->STAT->setFieldValue(getContext(), EEIntcRegister_STAT_t::Fields::TIM_KEYS[mTimer->getTimerID()], 1);
 }
 
 void EETimers_s::handleTimerZRET() const
 {
 	// Check for ZRET condition.
-	if (mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::ZRET))
+	if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (mTimer->COUNT->readWord(RAW) == mTimer->COMP->readWord(RAW))
+		if (mTimer->COUNT->readWord(getContext()) == mTimer->COMP->readWord(getContext()))
 		{
 			// Set Count to 0.
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		}
 	}
 }
@@ -142,8 +142,8 @@ void EETimers_s::handleTimerGateReset() const
 {
 	throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
 
-	auto GATM = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATM);
-	auto GATS = mTimer->MODE->getFieldValue(EETimersTimerRegister_MODE_t::Fields::GATS);
+	auto GATM = mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATM);
+	auto GATS = mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATS);
 
 	const u8 * gateSources[] = { nullptr, nullptr };
 	const u8 * gateSourcesLast[] = {nullptr, nullptr };
@@ -161,21 +161,21 @@ void EETimers_s::handleTimerGateReset() const
 	{
 		// Resets and starts counting at the gate signal’s rising edge.
 		if (gateSource && !gateSourceLast)
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		break;
 	}
 	case 2:
 	{
 		// Resets and starts counting at the gate signal’s falling edge.
 		if (!gateSource && gateSourceLast)
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		break;
 	}
 	case 3:
 	{
 		// Resets and starts counting at both edges of the gate signal.
 		if ((gateSource && !gateSourceLast) || (!gateSource && gateSourceLast))
-			mTimer->COUNT->reset();
+			mTimer->COUNT->reset(getContext());
 		break;
 	}
 	default:

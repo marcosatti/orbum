@@ -23,14 +23,14 @@ EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t()
 	registerField(Fields::C, "C", 23, 1, 0);
 }
 
-void EECoreFPURegister_CSR_t::setFieldValueSticky(const int fieldIndex, const u32 value)
+void EECoreFPURegister_CSR_t::setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value)
 {
 	// Check if the field index is for the non-sticky flags.
 	// TODO: relies on fact that sticky flag indexes are offset by -4.
 	if (fieldIndex >= Fields::U && fieldIndex <= Fields::I)
 	{
-		u32 oldStickyValue = getFieldValue(fieldIndex - 4);
-		setFieldValue(fieldIndex - 4, oldStickyValue | value);
+		u32 oldStickyValue = getFieldValue(context, fieldIndex - 4);
+		setFieldValue(context, fieldIndex - 4, oldStickyValue | value);
 	}
 	else
 	{
@@ -38,16 +38,16 @@ void EECoreFPURegister_CSR_t::setFieldValueSticky(const int fieldIndex, const u3
 	}
 }
 
-void EECoreFPURegister_CSR_t::updateResultFlags(const FPUFlags_t & flags)
+void EECoreFPURegister_CSR_t::updateResultFlags(const System_t context, const FPUFlags_t & flags)
 {
-	setFieldValueSticky(Fields::U, flags.UF ? 1 : 0);
-	setFieldValueSticky(Fields::O, flags.OF ? 1 : 0);
+	setFieldValueSticky(context, Fields::U, flags.UF ? 1 : 0);
+	setFieldValueSticky(context, Fields::O, flags.OF ? 1 : 0);
 }
 
-void EECoreFPURegister_CSR_t::clearFlags()
+void EECoreFPURegister_CSR_t::clearFlags(const System_t context)
 {
-	setFieldValueSticky(Fields::U, 0);
-	setFieldValueSticky(Fields::O, 0);
-	setFieldValueSticky(Fields::D, 0);
-	setFieldValueSticky(Fields::I, 0);
+	setFieldValueSticky(context, Fields::U, 0);
+	setFieldValueSticky(context, Fields::O, 0);
+	setFieldValueSticky(context, Fields::D, 0);
+	setFieldValueSticky(context, Fields::I, 0);
 }

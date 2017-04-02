@@ -156,19 +156,19 @@ void VUInterpreter_s::SUB()
 	auto& MAC = mVUCore->MAC;
 	auto& Status = mVUCore->Status;
 
-	Status->clearFlags();
+	Status->clearFlags(getContext());
 
 	FPUFlags_t flags;
 	for (auto i = 0; i < 4; i++)
 	{
 		if (mVUInstruction.testDestField(i))
 		{
-			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(EE, i) - source2Reg->readFloat(EE, i), flags);
-			destReg->writeFloat(EE, i, result);
-			MAC->updateVectorField(i, flags);
+			f32 result = FPUUtil::formatIEEEToPS2Float(source1Reg->readFloat(getContext(), i) - source2Reg->readFloat(getContext(), i), flags);
+			destReg->writeFloat(getContext(), i, result);
+			MAC->updateVectorField(getContext(), i, flags);
 		}
 		else
-			MAC->clearVectorField(i);
+			MAC->clearVectorField(getContext(), i);
 	}
 }
 

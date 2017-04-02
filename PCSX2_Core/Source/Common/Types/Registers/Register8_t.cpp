@@ -29,15 +29,15 @@ Register8_t::Register8_t(const char* mnemonic, bool debugReads, bool debugWrites
 }
 #endif
 
-u8 Register8_t::readByte(const Context_t context)
+u8 Register8_t::readByte(const System_t context)
 {
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8, Value = 0x%X.", getContextStr(context), getMnemonic(), UB);
+		log(Debug, "%s: %s Read u8, Value = 0x%X.", getSystemStr(context), getMnemonic(), UB);
 #else
-		log(Debug, "%s: %s Read u8, Value = %d.", getContextStr(context), getMnemonic(), UB);
+		log(Debug, "%s: %s Read u8, Value = %d.", getSystemStr(context), getMnemonic(), UB);
 #endif
 	}
 #endif
@@ -45,7 +45,7 @@ u8 Register8_t::readByte(const Context_t context)
 	return UB;
 }
 
-void Register8_t::writeByte(const Context_t context, u8 value)
+void Register8_t::writeByte(const System_t context, u8 value)
 {
 	UB = value;
 
@@ -53,9 +53,9 @@ void Register8_t::writeByte(const Context_t context, u8 value)
 	if (mDebugReads)
 	{
 #if DEBUG_MEMORY_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8, Value = 0x%X.", getContextStr(context), getMnemonic(), UB);
+		log(Debug, "%s: %s Write u8, Value = 0x%X.", getSystemStr(context), getMnemonic(), UB);
 #else
-		log(Debug, "%s: %s Write u8, Value = %d.", getContextStr(context), getMnemonic(), UB);
+		log(Debug, "%s: %s Write u8, Value = %d.", getSystemStr(context), getMnemonic(), UB);
 #endif
 	}
 #endif

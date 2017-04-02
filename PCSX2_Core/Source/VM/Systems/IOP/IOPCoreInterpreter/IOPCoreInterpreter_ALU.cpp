@@ -15,15 +15,15 @@ void IOPCoreInterpreter_s::ADD()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext()));
 	
 	s32 result = source1Val + source2Val;
 
 	if (handleOverOrUnderflow32(source1Val, source2Val))
         return;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::ADDI()
@@ -33,14 +33,14 @@ void IOPCoreInterpreter_s::ADDI()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto imm = mIOPCoreInstruction.getIImmS();
 
-	auto sourceVal = static_cast<s32>(sourceReg->readWord(IOP));
+	auto sourceVal = static_cast<s32>(sourceReg->readWord(getContext()));
 
 	s32 result = sourceVal + imm;
 
 	if (handleOverOrUnderflow32(sourceVal, imm))
         return;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::ADDIU()
@@ -50,11 +50,11 @@ void IOPCoreInterpreter_s::ADDIU()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto imm = mIOPCoreInstruction.getIImmS();
 
-	auto sourceVal = static_cast<s32>(sourceReg->readWord(IOP));
+	auto sourceVal = static_cast<s32>(sourceReg->readWord(getContext()));
 
 	s32 result = sourceVal + imm;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::ADDU()
@@ -64,12 +64,12 @@ void IOPCoreInterpreter_s::ADDU()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext()));
 
 	s32 result = source1Val + source2Val;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::SUB()
@@ -79,15 +79,15 @@ void IOPCoreInterpreter_s::SUB()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext()));
 
 	s32 result = source1Val - source2Val;
 
 	if (handleOverOrUnderflow32(source1Val, source2Val))
         return;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::SUBU()
@@ -97,12 +97,12 @@ void IOPCoreInterpreter_s::SUBU()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(getContext()));
 
 	u32 result = source1Val - source2Val;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::DIV()
@@ -114,15 +114,15 @@ void IOPCoreInterpreter_s::DIV()
 	auto& LO = mIOPCore->R3000->LO;
 	auto& HI = mIOPCore->R3000->HI;
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext()));
 
 	// Check for VALUE_S32_MIN / -1 (special condition).
 	if (source1Val == Constants::VALUE_S32_MIN &&
 		source2Val == -1)
 	{
-		LO->writeWord(IOP, Constants::VALUE_S32_MIN);
-		HI->writeWord(IOP, static_cast<s32>(0));
+		LO->writeWord(getContext(), Constants::VALUE_S32_MIN);
+		HI->writeWord(getContext(), static_cast<s32>(0));
 	}
 	// Check for divide by 0, in which case result is undefined (do nothing).
 	else if (source2Val == 0)
@@ -136,10 +136,10 @@ void IOPCoreInterpreter_s::DIV()
 		s32 resultR = source1Val % source2Val;
 
 		// Quotient.
-		LO->writeWord(IOP, resultQ);
+		LO->writeWord(getContext(), resultQ);
 
 		// Remainder.
-		HI->writeWord(IOP, resultR);
+		HI->writeWord(getContext(), resultR);
 	}
 }
 
@@ -152,8 +152,8 @@ void IOPCoreInterpreter_s::DIVU()
 	auto& LO = mIOPCore->R3000->LO;
 	auto& HI = mIOPCore->R3000->HI;
 
-	auto source1Val = static_cast<u32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<u32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<u32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<u32>(source2Reg->readWord(getContext()));
 
 	// Check for divide by 0, in which case result is undefined (do nothing).
 	if (source2Val == 0)
@@ -167,10 +167,10 @@ void IOPCoreInterpreter_s::DIVU()
 		u32 resultR = source1Val % source2Val;
 
 		// Quotient.
-		LO->writeWord(IOP, resultQ);
+		LO->writeWord(getContext(), resultQ);
 
 		// Remainder.
-		HI->writeWord(IOP, resultR);
+		HI->writeWord(getContext(), resultR);
 	}
 }
 
@@ -183,13 +183,13 @@ void IOPCoreInterpreter_s::MULT()
 	auto& LO = mIOPCore->R3000->LO;
 	auto& HI = mIOPCore->R3000->HI;
 
-	auto source1Val = static_cast<s64>(static_cast<s32>(source1Reg->readWord(IOP)));
-	auto source2Val = static_cast<s64>(static_cast<s32>(source2Reg->readWord(IOP)));
+	auto source1Val = static_cast<s64>(static_cast<s32>(source1Reg->readWord(getContext())));
+	auto source2Val = static_cast<s64>(static_cast<s32>(source2Reg->readWord(getContext())));
 
 	s64 result = source1Val * source2Val;
 
-	LO->writeWord(IOP, static_cast<s32>(result & 0xFFFFFFFF));
-	HI->writeWord(IOP, static_cast<s32>((result >> 32) & 0xFFFFFFFF));
+	LO->writeWord(getContext(), static_cast<s32>(result & 0xFFFFFFFF));
+	HI->writeWord(getContext(), static_cast<s32>((result >> 32) & 0xFFFFFFFF));
 }
 
 void IOPCoreInterpreter_s::MULTU()
@@ -201,13 +201,13 @@ void IOPCoreInterpreter_s::MULTU()
 	auto& LO = mIOPCore->R3000->LO;
 	auto& HI = mIOPCore->R3000->HI;
 
-	auto source1Val = static_cast<u64>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<u64>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<u64>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<u64>(source2Reg->readWord(getContext()));
 
 	u64 result = source1Val * source2Val;
 
-	LO->writeWord(IOP, static_cast<u32>(result & 0xFFFFFFFF));
-	HI->writeWord(IOP, static_cast<u32>((result >> 32) & 0xFFFFFFFF));
+	LO->writeWord(getContext(), static_cast<u32>(result & 0xFFFFFFFF));
+	HI->writeWord(getContext(), static_cast<u32>((result >> 32) & 0xFFFFFFFF));
 }
 
 void IOPCoreInterpreter_s::SLL()
@@ -218,7 +218,7 @@ void IOPCoreInterpreter_s::SLL()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	u8 shamt = mIOPCoreInstruction.getRShamt();
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) << shamt);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) << shamt);
 }
 
 void IOPCoreInterpreter_s::SLLV()
@@ -228,9 +228,9 @@ void IOPCoreInterpreter_s::SLLV()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(IOP, 0) & 0x1F;
+	u8 shamt = source2Reg->readByte(getContext(), 0) & 0x1F;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) << shamt);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) << shamt);
 }
 
 void IOPCoreInterpreter_s::SRA()
@@ -241,7 +241,7 @@ void IOPCoreInterpreter_s::SRA()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	u8 shamt = mIOPCoreInstruction.getRShamt();
 
-	destReg->writeWord(IOP, static_cast<s32>(source1Reg->readWord(IOP)) >> shamt);
+	destReg->writeWord(getContext(), static_cast<s32>(source1Reg->readWord(getContext())) >> shamt);
 }
 
 void IOPCoreInterpreter_s::SRAV()
@@ -251,9 +251,9 @@ void IOPCoreInterpreter_s::SRAV()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(IOP, 0) & 0x1F;
+	u8 shamt = source2Reg->readByte(getContext(), 0) & 0x1F;
 
-	destReg->writeWord(IOP, static_cast<s32>(source1Reg->readWord(IOP)) >> shamt);
+	destReg->writeWord(getContext(), static_cast<s32>(source1Reg->readWord(getContext())) >> shamt);
 }
 
 void IOPCoreInterpreter_s::SRL()
@@ -264,7 +264,7 @@ void IOPCoreInterpreter_s::SRL()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	u8 shamt = mIOPCoreInstruction.getRShamt();
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) >> shamt);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) >> shamt);
 }
 
 void IOPCoreInterpreter_s::SRLV()
@@ -274,9 +274,9 @@ void IOPCoreInterpreter_s::SRLV()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
-	u8 shamt = source2Reg->readByte(IOP, 0) & 0x1F;
+	u8 shamt = source2Reg->readByte(getContext(), 0) & 0x1F;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) >> shamt);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) >> shamt);
 }
 
 void IOPCoreInterpreter_s::AND()
@@ -287,7 +287,7 @@ void IOPCoreInterpreter_s::AND()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) & source2Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) & source2Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::ANDI()
@@ -298,7 +298,7 @@ void IOPCoreInterpreter_s::ANDI()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	u32 imm = static_cast<u32>(mIOPCoreInstruction.getIImmU());
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) & imm);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) & imm);
 }
 
 void IOPCoreInterpreter_s::NOR()
@@ -309,7 +309,7 @@ void IOPCoreInterpreter_s::NOR()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, ~(source1Reg->readWord(IOP) | source2Reg->readWord(IOP)));
+	destReg->writeWord(getContext(), ~(source1Reg->readWord(getContext()) | source2Reg->readWord(getContext())));
 }
 
 void IOPCoreInterpreter_s::OR()
@@ -320,7 +320,7 @@ void IOPCoreInterpreter_s::OR()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) | source2Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) | source2Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::ORI()
@@ -331,7 +331,7 @@ void IOPCoreInterpreter_s::ORI()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	u32 imm = static_cast<u32>(mIOPCoreInstruction.getIImmU());
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) | imm);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) | imm);
 }
 
 void IOPCoreInterpreter_s::XOR()
@@ -342,7 +342,7 @@ void IOPCoreInterpreter_s::XOR()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) ^ source2Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) ^ source2Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::XORI()
@@ -353,7 +353,7 @@ void IOPCoreInterpreter_s::XORI()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	u32 imm = static_cast<u32>(mIOPCoreInstruction.getIImmU());
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP) ^ imm);
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()) ^ imm);
 }
 
 void IOPCoreInterpreter_s::SLT()
@@ -364,12 +364,12 @@ void IOPCoreInterpreter_s::SLT()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
-	auto source2Val = static_cast<s32>(source2Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
+	auto source2Val = static_cast<s32>(source2Reg->readWord(getContext()));
 
 	s32 result = (source1Val < source2Val) ? 1 : 0;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::SLTI()
@@ -380,11 +380,11 @@ void IOPCoreInterpreter_s::SLTI()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto imm = static_cast<s32>(mIOPCoreInstruction.getIImmS());
 
-	auto source1Val = static_cast<s32>(source1Reg->readWord(IOP));
+	auto source1Val = static_cast<s32>(source1Reg->readWord(getContext()));
 
 	s32 result = (source1Val < imm) ? 1 : 0;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::SLTIU()
@@ -394,12 +394,12 @@ void IOPCoreInterpreter_s::SLTIU()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRs()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 
-	u32 source1Val = source1Reg->readWord(IOP);
+	u32 source1Val = source1Reg->readWord(getContext());
 	u32 imm = static_cast<u32>(static_cast<s32>(mIOPCoreInstruction.getIImmS()));
 
 	u32 result = (source1Val < imm) ? 1 : 0;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 
 void IOPCoreInterpreter_s::SLTU()
@@ -410,11 +410,11 @@ void IOPCoreInterpreter_s::SLTU()
 	auto& source2Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 
-	u32 source1Val = source1Reg->readWord(IOP);
-	u32 source2Val = source2Reg->readWord(IOP);
+	u32 source1Val = source1Reg->readWord(getContext());
+	u32 source2Val = source2Reg->readWord(getContext());
 
 	u32 result = (source1Val < source2Val) ? 1 : 0;
 
-	destReg->writeWord(IOP, result);
+	destReg->writeWord(getContext(), result);
 }
 

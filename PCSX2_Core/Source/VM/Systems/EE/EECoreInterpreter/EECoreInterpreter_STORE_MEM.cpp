@@ -20,12 +20,12 @@ void EECoreInterpreter_s::SB()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeByte(EE, physicalAddress, source2Reg->readByte(EE, 0));
+	mPhysicalMMU->writeByte(getContext(), physicalAddress, source2Reg->readByte(getContext(), 0));
 }
 
 void EECoreInterpreter_s::SD()
@@ -35,12 +35,12 @@ void EECoreInterpreter_s::SD()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeDword(EE, physicalAddress, source2Reg->readDword(EE, 0));
+	mPhysicalMMU->writeDword(getContext(), physicalAddress, source2Reg->readDword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::SDL()
@@ -52,7 +52,7 @@ void EECoreInterpreter_s::SDL()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
 	u32 dwordAddress = (virtualAddress & 0xFFFFFFF8);
 
@@ -60,12 +60,12 @@ void EECoreInterpreter_s::SDL()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(EE, physicalAddress);
+	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(dwordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeDword(EE, physicalAddress, ((source2Reg->readDword(EE, 0) >> (56 - shift))) | (value & (0xFFFFFFFFFFFFFF00 << shift)));
+	mPhysicalMMU->writeDword(getContext(), physicalAddress, ((source2Reg->readDword(getContext(), 0) >> (56 - shift))) | (value & (0xFFFFFFFFFFFFFF00 << shift)));
 }
 
 void EECoreInterpreter_s::SDR()
@@ -77,7 +77,7 @@ void EECoreInterpreter_s::SDR()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 7) << 3;
 	u32 dwordAddress = (virtualAddress & 0xFFFFFFF8);
 
@@ -85,12 +85,12 @@ void EECoreInterpreter_s::SDR()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(EE, physicalAddress);
+	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(dwordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeDword(EE, physicalAddress, ((source2Reg->readDword(EE, 0) << shift) | (value & (0x00FFFFFFFFFFFFFF >> (56 - shift)))));
+	mPhysicalMMU->writeDword(getContext(), physicalAddress, ((source2Reg->readDword(getContext(), 0) << shift) | (value & (0x00FFFFFFFFFFFFFF >> (56 - shift)))));
 }
 
 void EECoreInterpreter_s::SH()
@@ -100,12 +100,12 @@ void EECoreInterpreter_s::SH()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeHword(EE, physicalAddress, source2Reg->readHword(EE, 0));
+	mPhysicalMMU->writeHword(getContext(), physicalAddress, source2Reg->readHword(getContext(), 0));
 }
 
 void EECoreInterpreter_s::SW()
@@ -115,12 +115,12 @@ void EECoreInterpreter_s::SW()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeWord(EE, physicalAddress, source2Reg->readWord(EE, 0));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, source2Reg->readWord(getContext(), 0));
 }
 
 void EECoreInterpreter_s::SWL()
@@ -132,7 +132,7 @@ void EECoreInterpreter_s::SWL()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -140,12 +140,12 @@ void EECoreInterpreter_s::SWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(EE, physicalAddress, ((source2Reg->readWord(EE, 0) >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext(), 0) >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
 }
 
 void EECoreInterpreter_s::SWR()
@@ -157,7 +157,7 @@ void EECoreInterpreter_s::SWR()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 shift = (virtualAddress & 3) << 3;
 	u32 wordAddress = (virtualAddress & 0xFFFFFFFC);
 
@@ -165,12 +165,12 @@ void EECoreInterpreter_s::SWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(EE, physicalAddress);
+	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(EE, physicalAddress, ((source2Reg->readWord(EE, 0) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext(), 0) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 
 void EECoreInterpreter_s::SQ()
@@ -180,12 +180,12 @@ void EECoreInterpreter_s::SQ()
 	auto& source2Reg = mEECore->R5900->GPR[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeQword(EE, physicalAddress, source2Reg->readQword(EE));
+	mPhysicalMMU->writeQword(getContext(), physicalAddress, source2Reg->readQword(getContext()));
 }
 
 void EECoreInterpreter_s::SWC1()
@@ -198,12 +198,12 @@ void EECoreInterpreter_s::SWC1()
 	auto& source1Reg = mEECore->R5900->GPR[mEECoreInstruction.getRs()]; // "Base"
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = (source1Reg->readWord(EE, 0) + imm);
+	u32 virtualAddress = (source1Reg->readWord(getContext(), 0) + imm);
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeWord(EE, physicalAddress, source2Reg->readWord(EE));
+	mPhysicalMMU->writeWord(getContext(), physicalAddress, source2Reg->readWord(getContext()));
 }
 
 void EECoreInterpreter_s::SQC2()
@@ -216,10 +216,10 @@ void EECoreInterpreter_s::SQC2()
 	auto& source2Reg = mVU0->VF[mEECoreInstruction.getRt()];
 	const s16 imm = mEECoreInstruction.getIImmS();
 
-	u32 virtualAddress = source1Reg->readWord(EE, 0) + imm;
+	u32 virtualAddress = source1Reg->readWord(getContext(), 0) + imm;
 	u32 physicalAddress;
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeQword(EE, physicalAddress, source2Reg->readQword(EE));
+	mPhysicalMMU->writeQword(getContext(), physicalAddress, source2Reg->readQword(getContext()));
 }

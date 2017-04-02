@@ -18,27 +18,27 @@ VUCoreRegister_Status_t::VUCoreRegister_Status_t()
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VUCoreRegister_Status_t::setFieldValueSticky(const int fieldIndex, const u32 value)
+void VUCoreRegister_Status_t::setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value)
 {
-	BitfieldRegister32_t::setFieldValue(fieldIndex, value);
+	BitfieldRegister32_t::setFieldValue(context, fieldIndex, value);
 
 	// Check if the field index was for one of the regular bits, and update the sticky bit.
 	// TODO: relies on the fact that the sticky bit is always N + 6 apart.
 	if (fieldIndex >= Fields::Z && fieldIndex <= Fields::D)
 	{
-		u32 oldStickyValue = getFieldValue(fieldIndex + 6);
-		BitfieldRegister32_t::setFieldValue(fieldIndex + 6, oldStickyValue | value);
+		u32 oldStickyValue = getFieldValue(context, fieldIndex + 6);
+		BitfieldRegister32_t::setFieldValue(context, fieldIndex + 6, oldStickyValue | value);
 	}
 }
 
-void VUCoreRegister_Status_t::clearFlags()
+void VUCoreRegister_Status_t::clearFlags(const System_t context)
 {
-	setFieldValueSticky(Fields::Z, 0);
-	setFieldValueSticky(Fields::S, 0);
-	setFieldValueSticky(Fields::U, 0);
-	setFieldValueSticky(Fields::O, 0);
-	setFieldValueSticky(Fields::I, 0);
-	setFieldValueSticky(Fields::D, 0);
+	setFieldValueSticky(context, Fields::Z, 0);
+	setFieldValueSticky(context, Fields::S, 0);
+	setFieldValueSticky(context, Fields::U, 0);
+	setFieldValueSticky(context, Fields::O, 0);
+	setFieldValueSticky(context, Fields::I, 0);
+	setFieldValueSticky(context, Fields::D, 0);
 }
 
 VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status) :
@@ -62,20 +62,20 @@ VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VUCoreRegister_MAC_t::setFieldValueStatus(const int fieldIndex, const u32 value)
+void VUCoreRegister_MAC_t::setFieldValueStatus(const System_t context, const int fieldIndex, const u32 value)
 {
-	setFieldValue(fieldIndex, value);
+	setFieldValue(context, fieldIndex, value);
 
 	// Check which flag fieldIndex belongs to, and set the corresponding Status flag (OR with previous value).
 	// Only valid if fieldIndex falls in the Zw -> Ox range, which should always be true...
 	// TODO: relies on the fact that the MAC and Status registers have the same order of flags (ie: can use fieldIndex / 4).
 	if (fieldIndex >= Fields::Zw && fieldIndex <= Fields::Ox)
-		mStatus->setFieldValueSticky(fieldIndex / 4, mStatus->getFieldValue(fieldIndex / 4) | value);
+		mStatus->setFieldValueSticky(context, fieldIndex / 4, mStatus->getFieldValue(context, fieldIndex / 4) | value);
 	else
 		throw std::runtime_error("VU MAC register set flag stick index out of range.");
 }
 
-void VUCoreRegister_MAC_t::updateVectorField(const int fieldIndex, const FPUFlags_t& flags)
+void VUCoreRegister_MAC_t::updateVectorField(const System_t context, const int fieldIndex, const FPUFlags_t& flags)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -83,13 +83,13 @@ void VUCoreRegister_MAC_t::updateVectorField(const int fieldIndex, const FPUFlag
 	auto& FIELD_FLAGS_SET = FIELD_FLAGS[fieldIndex];
 
 	// Set the relevant flags (Z, S, U, O).
-	setFieldValueStatus(FIELD_FLAGS_SET[0], flags.ZF ? 1 : 0);
-	setFieldValueStatus(FIELD_FLAGS_SET[1], flags.SF ? 1 : 0);
-	setFieldValueStatus(FIELD_FLAGS_SET[2], flags.UF ? 1 : 0);
-	setFieldValueStatus(FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
+	setFieldValueStatus(context, FIELD_FLAGS_SET[0], flags.ZF ? 1 : 0);
+	setFieldValueStatus(context, FIELD_FLAGS_SET[1], flags.SF ? 1 : 0);
+	setFieldValueStatus(context, FIELD_FLAGS_SET[2], flags.UF ? 1 : 0);
+	setFieldValueStatus(context, FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
 }
 
-void VUCoreRegister_MAC_t::clearVectorField(const int fieldIndex)
+void VUCoreRegister_MAC_t::clearVectorField(const System_t context, const int fieldIndex)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -98,7 +98,7 @@ void VUCoreRegister_MAC_t::clearVectorField(const int fieldIndex)
 
 	// Clear the relevant flags (O, U, S, Z).
 	for (auto i = 0; i < 4; i++)
-		setFieldValueStatus(FIELD_FLAGS_SET[i], 0);
+		setFieldValueStatus(context, FIELD_FLAGS_SET[i], 0);
 }
 
 VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t()
@@ -129,9 +129,9 @@ VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t()
 	registerField(Fields::PosZ_3, "PosZ_3", 23, 1, 0);
 }
 
-void VUCoreRegister_Clipping_t::shiftJudgement()
+void VUCoreRegister_Clipping_t::shiftJudgement(const System_t context)
 {
-	writeWord(RAW, (readWord(RAW) << 6) & 0x00FFFFFF);
+	writeWord(context, (readWord(context) << 6) & 0x00FFFFFF);
 }
 
 VUCoreRegister_CMSAR_t::VUCoreRegister_CMSAR_t()

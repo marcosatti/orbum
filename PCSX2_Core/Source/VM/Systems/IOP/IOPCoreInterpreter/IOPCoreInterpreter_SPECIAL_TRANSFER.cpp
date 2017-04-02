@@ -17,7 +17,7 @@ void IOPCoreInterpreter_s::MFC0()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& sourceReg = mIOPCore->COP0->Registers[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, static_cast<u32>(sourceReg->readWord(IOP)));
+	destReg->writeWord(getContext(), static_cast<u32>(sourceReg->readWord(getContext())));
 }
 
 void IOPCoreInterpreter_s::MTC0()
@@ -28,7 +28,7 @@ void IOPCoreInterpreter_s::MTC0()
 	auto& sourceReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRt()];
 	auto& destReg = mIOPCore->COP0->Registers[mIOPCoreInstruction.getRRd()];
 
-	destReg->writeWord(IOP, sourceReg->readWord(IOP));
+	destReg->writeWord(getContext(), sourceReg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::MFHI()
@@ -37,7 +37,7 @@ void IOPCoreInterpreter_s::MFHI()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	auto& source1Reg = mIOPCore->R3000->HI;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::MFLO()
@@ -46,7 +46,7 @@ void IOPCoreInterpreter_s::MFLO()
 	auto& destReg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	auto& source1Reg = mIOPCore->R3000->LO;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::MTHI()
@@ -55,7 +55,7 @@ void IOPCoreInterpreter_s::MTHI()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	auto& destReg = mIOPCore->R3000->HI;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::MTLO()
@@ -64,5 +64,5 @@ void IOPCoreInterpreter_s::MTLO()
 	auto& source1Reg = mIOPCore->R3000->GPR[mIOPCoreInstruction.getRRd()];
 	auto& destReg = mIOPCore->R3000->LO;
 
-	destReg->writeWord(IOP, source1Reg->readWord(IOP));
+	destReg->writeWord(getContext(), source1Reg->readWord(getContext()));
 }

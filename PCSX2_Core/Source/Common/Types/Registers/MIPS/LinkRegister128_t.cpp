@@ -8,7 +8,7 @@ LinkRegister128_t::LinkRegister128_t(const std::shared_ptr<PCRegister32_t> & pcR
 {
 }
 
-void LinkRegister128_t::setLinkAddress()
+void LinkRegister128_t::setLinkAddress(const System_t context)
 {
-	writeDword(RAW, 0, mPCRegister->readWord(RAW) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2);
+	writeDword(context, 0, mPCRegister->readWord(context) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2);
 }

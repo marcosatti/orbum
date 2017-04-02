@@ -36,12 +36,12 @@ void EECoreInterpreter_s::DI()
 	// Disable Interrupts. No Exceptions.
 	auto& statusReg = mEECore->COP0->Status;
 
-	if ((statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1) || 
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::KSU) == 0))
+	if ((statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::ERL) == 1) || 
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::KSU) == 0))
 	{
-		statusReg->setFieldValue(EECoreCOP0Register_Status_t::Fields::EIE, 0);
+		statusReg->setFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EIE, 0);
 	}
 }
 
@@ -50,12 +50,12 @@ void EECoreInterpreter_s::EI()
 	// Enable Interrupts. No Exceptions.
 	auto& statusReg = mEECore->COP0->Status;
 
-	if ((statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::ERL) == 1) ||
-		(statusReg->getFieldValue(EECoreCOP0Register_Status_t::Fields::KSU) == 0))
+	if ((statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EDI) == 1) ||
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EXL) == 1) ||
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::ERL) == 1) ||
+		(statusReg->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::KSU) == 0))
 	{
-		statusReg->setFieldValue(EECoreCOP0Register_Status_t::Fields::EIE, 1);
+		statusReg->setFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::EIE, 1);
 	}
 }
 
@@ -80,20 +80,20 @@ void EECoreInterpreter_s::TLBP()
 	auto& EntryHi = mEECore->COP0->EntryHi;
 
 	// Find by VPN2 first.
-	u32 searchVpn2 = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2) << 13;
+	u32 searchVpn2 = EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::VPN2) << 13;
 	s32 tlbIndex = MMU->findTLBIndex(searchVpn2);
 
 	if (tlbIndex == -1)
-		Index->setFieldValue(EECoreCOP0Register_Index_t::Fields::Index, value);
+		Index->setFieldValue(getContext(), EECoreCOP0Register_Index_t::Fields::Index, value);
 	else
 	{
 		// A match was found, but need to check ASID or G bit.
-		if (MMU->getTLBEntry(tlbIndex).mASID == EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID) 
+		if (MMU->getTLBEntry(tlbIndex).mASID == EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::ASID) 
 			|| MMU->getTLBEntry(tlbIndex).mG > 0)
 		{
 			// Entry was found.
 			value = static_cast<u32>(tlbIndex);
-			Index->setFieldValue(EECoreCOP0Register_Index_t::Fields::Index, value);
+			Index->setFieldValue(getContext(), EECoreCOP0Register_Index_t::Fields::Index, value);
 		}
 	}
 }
@@ -111,29 +111,29 @@ void EECoreInterpreter_s::TLBR()
 	auto& EntryLo0 = mEECore->COP0->EntryLo0;
 	auto& EntryLo1 = mEECore->COP0->EntryLo1;
 
-	auto& tlbEntry = MMU->getTLBEntry(static_cast<s32>(Index->getFieldValue(EECoreCOP0Register_Index_t::Fields::Index)));
+	auto& tlbEntry = MMU->getTLBEntry(static_cast<s32>(Index->getFieldValue(getContext(), EECoreCOP0Register_Index_t::Fields::Index)));
 
 	// PageMask.
-	PageMask->setFieldValue(EECoreCOP0Register_PageMask_t::Fields::MASK, tlbEntry.mMask);
+	PageMask->setFieldValue(getContext(), EECoreCOP0Register_PageMask_t::Fields::MASK, tlbEntry.mMask);
 
 	// EntryHi.
-	EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID, tlbEntry.mASID);
-	EntryHi->setFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2, tlbEntry.mVPN2);
+	EntryHi->setFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::ASID, tlbEntry.mASID);
+	EntryHi->setFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::VPN2, tlbEntry.mVPN2);
 
 	// EntryLo0 (even).
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::S, tlbEntry.mS);
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::PFN, tlbEntry.PhysicalInfo[0].mPFN);
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::C, tlbEntry.PhysicalInfo[0].mC);
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::D, tlbEntry.PhysicalInfo[0].mD);
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::V, tlbEntry.PhysicalInfo[0].mV);
-	EntryLo0->setFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::G, tlbEntry.mG);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::S, tlbEntry.mS);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::PFN, tlbEntry.PhysicalInfo[0].mPFN);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::C, tlbEntry.PhysicalInfo[0].mC);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::D, tlbEntry.PhysicalInfo[0].mD);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::V, tlbEntry.PhysicalInfo[0].mV);
+	EntryLo0->setFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::G, tlbEntry.mG);
 
 	// EntryLo1 (odd).
-	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::PFN, tlbEntry.PhysicalInfo[1].mPFN);
-	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::C, tlbEntry.PhysicalInfo[1].mC);
-	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::D, tlbEntry.PhysicalInfo[1].mD);
-	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::V, tlbEntry.PhysicalInfo[1].mV);
-	EntryLo1->setFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::G, tlbEntry.mG);
+	EntryLo1->setFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::PFN, tlbEntry.PhysicalInfo[1].mPFN);
+	EntryLo1->setFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::C, tlbEntry.PhysicalInfo[1].mC);
+	EntryLo1->setFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::D, tlbEntry.PhysicalInfo[1].mD);
+	EntryLo1->setFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::V, tlbEntry.PhysicalInfo[1].mV);
+	EntryLo1->setFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::G, tlbEntry.mG);
 }
 
 void EECoreInterpreter_s::TLBWI()
@@ -152,30 +152,30 @@ void EECoreInterpreter_s::TLBWI()
 	EECoreTLBEntry_t tlbEntry;
 
 	// PageMask.
-	tlbEntry.mMask = PageMask->getFieldValue(EECoreCOP0Register_PageMask_t::Fields::MASK);
+	tlbEntry.mMask = PageMask->getFieldValue(getContext(), EECoreCOP0Register_PageMask_t::Fields::MASK);
 
 	// EntryHi.
-	tlbEntry.mASID = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID);
-	tlbEntry.mVPN2 = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2);
+	tlbEntry.mASID = EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::ASID);
+	tlbEntry.mVPN2 = EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::VPN2);
 
 	// EntryLo0 (even).
-	tlbEntry.mS = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::S);
-	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::PFN);
-	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::C);
-	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::D);
-	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::V);
+	tlbEntry.mS = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::S);
+	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::C);
+	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::D);
+	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::V);
 	
 	// EntryLo1 (odd).
-	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::PFN);
-	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::C);
-	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::D);
-	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::V);
+	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::C);
+	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::D);
+	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::V);
 	
 	// G bit (and of Lo0 and Lo1)
-	tlbEntry.mG = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::G) & EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::G);
+	tlbEntry.mG = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::G) & EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::G);
 
 	// Write to TLB.
-	MMU->setTLBEntry(tlbEntry, Index->getFieldValue(EECoreCOP0Register_Index_t::Fields::Index));
+	MMU->setTLBEntry(tlbEntry, Index->getFieldValue(getContext(), EECoreCOP0Register_Index_t::Fields::Index));
 }
 
 void EECoreInterpreter_s::TLBWR()
@@ -194,29 +194,29 @@ void EECoreInterpreter_s::TLBWR()
 	EECoreTLBEntry_t tlbEntry;
 
 	// PageMask.
-	tlbEntry.mMask = PageMask->getFieldValue(EECoreCOP0Register_PageMask_t::Fields::MASK);
+	tlbEntry.mMask = PageMask->getFieldValue(getContext(), EECoreCOP0Register_PageMask_t::Fields::MASK);
 
 	// EntryHi.
-	tlbEntry.mASID = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::ASID);
-	tlbEntry.mVPN2 = EntryHi->getFieldValue(EECoreCOP0Register_EntryHi_t::Fields::VPN2);
+	tlbEntry.mASID = EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::ASID);
+	tlbEntry.mVPN2 = EntryHi->getFieldValue(getContext(), EECoreCOP0Register_EntryHi_t::Fields::VPN2);
 
 	// EntryLo0 (even).
-	tlbEntry.mS = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::S);
-	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::PFN);
-	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::C);
-	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::D);
-	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::V);
+	tlbEntry.mS = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::S);
+	tlbEntry.PhysicalInfo[0].mPFN = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[0].mC = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::C);
+	tlbEntry.PhysicalInfo[0].mD = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::D);
+	tlbEntry.PhysicalInfo[0].mV = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::V);
 
 	// EntryLo1 (odd).
-	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::PFN);
-	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::C);
-	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::D);
-	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::V);
+	tlbEntry.PhysicalInfo[1].mPFN = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::PFN);
+	tlbEntry.PhysicalInfo[1].mC = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::C);
+	tlbEntry.PhysicalInfo[1].mD = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::D);
+	tlbEntry.PhysicalInfo[1].mV = EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::V);
 
 	// G bit (and of Lo0 and Lo1)
-	tlbEntry.mG = EntryLo0->getFieldValue(EECoreCOP0Register_EntryLo0_t::Fields::G) & EntryLo1->getFieldValue(EECoreCOP0Register_EntryLo1_t::Fields::G);
+	tlbEntry.mG = EntryLo0->getFieldValue(getContext(), EECoreCOP0Register_EntryLo0_t::Fields::G) & EntryLo1->getFieldValue(getContext(), EECoreCOP0Register_EntryLo1_t::Fields::G);
 
 	// Write to TLB.
-	MMU->setTLBEntry(tlbEntry, Random->getFieldValue(EECoreCOP0Register_Random_t::Fields::Random));
+	MMU->setTLBEntry(tlbEntry, Random->getFieldValue(getContext(), EECoreCOP0Register_Random_t::Fields::Random));
 }
 

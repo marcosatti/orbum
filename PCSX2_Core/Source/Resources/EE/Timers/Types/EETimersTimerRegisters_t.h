@@ -17,9 +17,9 @@ class EETimersTimerRegister_COUNT_t : public Register32_t
 public:
 	EETimersTimerRegister_COUNT_t(const char * mnemonic);
 
-	void increment(u16 value);
+	void increment(const System_t context, const size_t value);
 	bool isOverflowed();
-	void reset();
+	void reset(const System_t context);
 	void setPrescale(const int prescale);
 
 private:
@@ -32,7 +32,7 @@ private:
 	Prescale functionality.
 	*/
 	int mPrescale;
-	int mPrescaleCount;
+	size_t mPrescaleCount;
 };
 
 /*
@@ -65,12 +65,12 @@ public:
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
 	 will also reset the count register if CUE is 1 (both EE context only).
 	*/
-	void writeWord(const Context_t context, u32 value) override;
+	void writeWord(const System_t context, u32 value) override;
 
 	/*
 	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.
 	*/
-	bool isGateHBLNKSpecial() const;
+	bool isGateHBLNKSpecial(const System_t context) const;
 
 	/*
 	Returns the cached emulator clock source.
@@ -86,7 +86,7 @@ private:
 	/*
 	Sets the internal clock source based on the register state.
 	*/
-	void handleClockSourceUpdate();
+	void handleClockSourceUpdate(const System_t context);
 
 	/*
 	Contains the emulation clock source updated through handleClockSourceUpdate().

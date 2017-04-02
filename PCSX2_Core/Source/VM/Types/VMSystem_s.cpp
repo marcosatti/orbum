@@ -9,17 +9,9 @@
 VMSystem_s::VMSystem_s(VM * vm, const System_t system) :
 	mThreadRun(false),
 	mVM(vm),
-	mSystem(system)
+	mSystemContext(system)
 {
-}
-
-VMSystem_s::~VMSystem_s()
-{
-}
-
-VM* VMSystem_s::getVM() const
-{
-	return mVM;
+	mClock = getVM()->getResources()->Clock;
 }
 
 void VMSystem_s::initalise()
@@ -29,12 +21,12 @@ void VMSystem_s::initalise()
 void VMSystem_s::run()
 {
 	auto& Clock = getVM()->getResources()->Clock;
-	for (const auto& clockState : Clock->getSystemClockTicks(mSystem))
+	for (const auto& clockState : Clock->getSystemClockTicks(mSystemContext))
 	{
 		int ticks = static_cast<int>(clockState.second);
 		if (ticks > 0)
 		{
-			Clock->subSystemClockTicks(mSystem, clockState.first, ticks);
+			Clock->subSystemClockTicks(mSystemContext, clockState.first, ticks);
 			while (ticks > 0)
 				ticks -= step(clockState.first, ticks);
 		}

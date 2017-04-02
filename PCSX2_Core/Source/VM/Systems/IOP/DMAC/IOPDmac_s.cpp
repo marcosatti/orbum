@@ -39,7 +39,7 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 #endif
 
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
-	if (mDMAC->GCTRL->readWord(RAW) > 0)
+	if (mDMAC->GCTRL->readWord(getContext()) > 0)
 	{
 		// Run through each channel enabled. Note there is no master DMAC enable bit to check - only the individual channels.
 		for (auto& channel : mDMAC->CHANNELS)
@@ -50,7 +50,7 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 			// Check if channel is enabled for transfer (both from PCR and the CHCR).
 			if (isChannelEnabled())
 			{
-				switch (mChannel->CHCR->getLogicalMode())
+				switch (mChannel->CHCR->getLogicalMode(getContext()))
 				{
 				case LogicalMode_t::NORMAL_BURST:
 				{
@@ -177,7 +177,7 @@ bool IOPDmac_s::transferChain()
 	{
 		// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, BCR, etc).
 		// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties? Works both ways, but direction is less code.
-		switch (mChannel->CHCR->getDirection())
+		switch (mChannel->CHCR->getDirection(getContext()))
 		{
 		case Direction_t::TO:
 		{
@@ -206,7 +206,7 @@ bool IOPDmac_s::transferChain()
 		mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
 
 		// Set the tag data transfer address.
-		mChannel->MADR->writeWord(RAW, mDMAtag.getADDR());
+		mChannel->MADR->writeWord(getContext(), mDMAtag.getADDR());
 
 		// Chain mode setup was successful, done for this cycle.
 		return true;
@@ -216,22 +216,22 @@ bool IOPDmac_s::transferChain()
 void IOPDmac_s::handleInterruptCheck() const
 {
 	// Check ICR0 and ICR1 for interrupt status, else clear the master interrupt and INTC bits.
-	if (mDMAC->ICR0->isInterruptPending() || mDMAC->ICR1->isInterruptPending())
-		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 1);
+	if (mDMAC->ICR0->isInterruptPending(getContext()) || mDMAC->ICR1->isInterruptPending(getContext()))
+		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMA, 1);
 	else
 	{
-		mDMAC->ICR0->setFieldValue(IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 0);
-		mINTC->STAT->setFieldValue(IOPIntcRegister_STAT_t::Fields::DMA, 0);
+		mDMAC->ICR0->setFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 0);
+		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMA, 0);
 	}
 }
 
 int IOPDmac_s::transferData() const
 {
 	// Determine the direction of data flow. 
-	Direction_t direction = mChannel->CHCR->getDirection();
+	Direction_t direction = mChannel->CHCR->getDirection(getContext());
 
 	// Get the main memory address.
-	const u32 physicalAddress = mChannel->MADR->readWord(RAW);
+	const u32 physicalAddress = mChannel->MADR->readWord(getContext());
 
 	// Transfer data to or from the FIFO queue.
 	if (direction == Direction_t::FROM)
@@ -243,7 +243,7 @@ int IOPDmac_s::transferData() const
 			return 0;
 		}
 
-		u32 packet = mChannel->mFIFOQueue->readWord(RAW);
+		u32 packet = mChannel->mFIFOQueue->readWord(getContext());
 		writeDataMemory32(physicalAddress, packet);
 
 		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
@@ -258,7 +258,7 @@ int IOPDmac_s::transferData() const
 		}
 
 		u32 packet = readDataMemory32(physicalAddress);
-		mChannel->mFIFOQueue->writeWord(RAW, packet);
+		mChannel->mFIFOQueue->writeWord(getContext(), packet);
 
 		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
 	}
@@ -268,10 +268,10 @@ int IOPDmac_s::transferData() const
 	}
 
 	// Increment or decrement (depending on CHCR.MAS) the MADR register by a word.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::MAS) == 0)
-		mChannel->MADR->increment();
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::MAS) == 0)
+		mChannel->MADR->increment(getContext());
 	else
-		mChannel->MADR->decrement();
+		mChannel->MADR->decrement(getContext());
 
 	// Update number of word units left (BCR).
 	mChannel->BCR->decrement();
@@ -282,23 +282,23 @@ int IOPDmac_s::transferData() const
 void IOPDmac_s::setStateSuspended() const
 {
 	// Stop channel.
-	mChannel->CHCR->setFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
+	mChannel->CHCR->setFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
 
 	// Emit interrupt stat bit (use ICR0 or ICR1 based on channel index).
 	if (mChannel->getChannelID() < 7)
-		mDMAC->ICR0->setFieldValue(IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID()], 1);
+		mDMAC->ICR0->setFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID()], 1);
 	else
-		mDMAC->ICR1->setFieldValue(IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID() % 7], 1);
+		mDMAC->ICR1->setFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID() % 7], 1);
 }
 
 bool IOPDmac_s::isChannelEnabled() const
 {
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::Start) > 0)
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start) > 0)
 	{
 		if (mChannel->getChannelID() < 7)
-			return (mDMAC->PCR0->getFieldValue(IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID()]) > 0);
+			return (mDMAC->PCR0->getFieldValue(getContext(), IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID()]) > 0);
 		else
-			return (mDMAC->PCR1->getFieldValue(IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID() % 7]) > 0);
+			return (mDMAC->PCR1->getFieldValue(getContext(), IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID() % 7]) > 0);
 	}
 	else
 	{
@@ -308,28 +308,28 @@ bool IOPDmac_s::isChannelEnabled() const
 
 bool IOPDmac_s::isChannelIRQEnabled() const
 {
-	return (mDMAC->ICR1->getFieldValue(IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
+	return (mDMAC->ICR1->getFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
 }
 
 u32 IOPDmac_s::readDataMemory32(u32 PhysicalAddressOffset) const
 {
-	return mIOPPhysicalMMU->readWord(RAW, PhysicalAddressOffset);
+	return mIOPPhysicalMMU->readWord(getContext(), PhysicalAddressOffset);
 }
 
 void IOPDmac_s::writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const
 {
-	mIOPPhysicalMMU->writeWord(RAW, PhysicalAddressOffset, data);
+	mIOPPhysicalMMU->writeWord(getContext(), PhysicalAddressOffset, data);
 }
 
 u128 IOPDmac_s::readDataMemory128(u32 PhysicalAddressOffset) const
 {
-	return mIOPPhysicalMMU->readQword(RAW, PhysicalAddressOffset);
+	return mIOPPhysicalMMU->readQword(getContext(), PhysicalAddressOffset);
 }
 
 bool IOPDmac_s::readChainSourceTag()
 {
 	// Check for space (u128) in the FIFO queue, which depends on if the tag transfer (TTE) option is on (CHCR bit 8 aka "chopping enable" set). See below.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 		{
@@ -339,7 +339,7 @@ bool IOPDmac_s::readChainSourceTag()
 	}
 
 	// Get tag memory address (TADR).
-	const u32 TADR = mChannel->TADR->readWord(RAW);
+	const u32 TADR = mChannel->TADR->readWord(getContext());
 
 	// Read EE tag (128-bits) from TADR.
 	const u128 tag = readDataMemory128(TADR);
@@ -348,15 +348,15 @@ bool IOPDmac_s::readChainSourceTag()
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Check if we need to transfer the tag (CHCR bit 8 aka "chopping enable" set).
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
 		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
 		u128 sendTag = u128(tag.UW[2], tag.UW[3], 0, 0);
-		mChannel->mFIFOQueue->writeQword(RAW, sendTag);
+		mChannel->mFIFOQueue->writeQword(getContext(), sendTag);
 	}
 
 	// Set tag transfer length.
@@ -366,11 +366,11 @@ bool IOPDmac_s::readChainSourceTag()
 	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
 
 	// Increment TADR.
-	mChannel->TADR->increment(0x10);
+	mChannel->TADR->increment(getContext(), 0x10);
 
 	// TODO: look into the tag transfer enable (TTE) option not set (CHCR bit 8 aka "chopping enable" set).
 	//       PCSX2 does not implement anything at all, but wisi might know something. SIF0 has this bit set always. For now, left unimplemented.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
 		throw std::runtime_error("IOP DMAC source chain mode had TTE set to 0 - what is meant to happen?");
 
 	return true;
@@ -386,13 +386,13 @@ bool IOPDmac_s::readChainDestTag()
 	}
 
 	// Read tag (u128) from channel FIFO. Only first 2 u32's are used for the IOP.
-	const u128 tag = mChannel->mFIFOQueue->readQword(RAW);
+	const u128 tag = mChannel->mFIFOQueue->readQword(getContext());
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 	
 	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getInfo()->mMnemonic, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getInfo()->mMnemonic, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 
 	// Set tag transfer length.
@@ -404,7 +404,7 @@ bool IOPDmac_s::readChainDestTag()
 
 	// TODO: look into the tag transfer enable (TTE) option not set (CHCR bit 8 aka "chopping enable").
 	//       PCSX2 does not implement anything at all, but wisi might know something. SIF1 has this bit set always. For now, left unimplemented.
-	if (mChannel->CHCR->getFieldValue(IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
+	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) == 0)
 		throw std::runtime_error("IOP DMAC dest chain mode had TTE set to 0 - what is meant to happen?");
 
 	return true;

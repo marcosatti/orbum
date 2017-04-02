@@ -23,11 +23,11 @@ void EECoreInterpreter_s::PABSH()
 
 	for (auto i = 0; i < Constants::NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		s16 source2Val = static_cast<s16>(source2Reg->readHword(EE, i));
+		s16 source2Val = static_cast<s16>(source2Reg->readHword(getContext(), i));
 		if (source2Val == Constants::VALUE_S16_MIN) // Need to account for when the value is at the minimum for s16, as the absolute value will not fit in an s16. In this case it is set to abs(S16_MIN) - 1 aka S16_MAX.
-			destReg->writeHword(EE, i, Constants::VALUE_S16_MAX);
+			destReg->writeHword(getContext(), i, Constants::VALUE_S16_MAX);
 		else
-			destReg->writeHword(EE, i, std::abs(source2Val));
+			destReg->writeHword(getContext(), i, std::abs(source2Val));
 	}
 }
 
@@ -39,11 +39,11 @@ void EECoreInterpreter_s::PABSW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_QWORD; i++)
 	{
-		s32 source2Val = static_cast<s32>(source2Reg->readWord(EE, i));
+		s32 source2Val = static_cast<s32>(source2Reg->readWord(getContext(), i));
 		if (source2Val == Constants::VALUE_S32_MIN) // Need to account for when the value is at the minimum for s32, as the absolute value will not fit in an s32. In this case it is set to abs(S32_MIN) - 1 aka S32_MAX.
-			destReg->writeWord(EE, i, Constants::VALUE_S32_MAX);
+			destReg->writeWord(getContext(), i, Constants::VALUE_S32_MAX);
 		else
-			destReg->writeWord(EE, i, std::abs(source2Val));
+			destReg->writeWord(getContext(), i, std::abs(source2Val));
 	}
 }
 
@@ -55,9 +55,9 @@ void EECoreInterpreter_s::PLZCW()
 
 	for (auto i = 0; i < Constants::NUMBER_WORDS_IN_DWORD; i++)
 	{
-		u32 source1Val = source1Reg->readWord(EE, i);
+		u32 source1Val = source1Reg->readWord(getContext(), i);
 		u32 leadingBitsCount = MathUtil::countLeadingBits(source1Val) - 1; // Minus 1 as the PS2 spec requires this (exclude the sign bit in the count).
-		destReg->writeWord(EE, i, leadingBitsCount);
+		destReg->writeWord(getContext(), i, leadingBitsCount);
 	}
 }
 
@@ -71,8 +71,8 @@ void EECoreInterpreter_s::ABS_S()
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
-	CSR->clearFlags();
-	destReg->writeFloat(EE, std::abs(source1Reg->readFloat(EE))); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
+	CSR->clearFlags(getContext());
+	destReg->writeFloat(getContext(), std::abs(source1Reg->readFloat(getContext()))); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
 void EECoreInterpreter_s::NEG_S()
@@ -85,8 +85,8 @@ void EECoreInterpreter_s::NEG_S()
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
-	CSR->clearFlags();
-	destReg->writeFloat(EE, -source1Reg->readFloat(EE)); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
+	CSR->clearFlags(getContext());
+	destReg->writeFloat(getContext(), -source1Reg->readFloat(getContext())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
 void EECoreInterpreter_s::RSQRT_S()
@@ -100,20 +100,20 @@ void EECoreInterpreter_s::RSQRT_S()
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
-	f32 source1Val = source1Reg->readFloat(EE);
-	f32 source2Val = source2Reg->readFloat(EE);
+	f32 source1Val = source1Reg->readFloat(getContext());
+	f32 source2Val = source2Reg->readFloat(getContext());
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
-	CSR->clearFlags();
+	CSR->clearFlags(getContext());
 	if (source2Val == 0.0F)
 	{
-		CSR->setFieldValueSticky(EECoreFPURegister_CSR_t::Fields::D, 1);
+		CSR->setFieldValueSticky(getContext(), EECoreFPURegister_CSR_t::Fields::D, 1);
 		result = static_cast<f32>(Constants::EE::EECore::FPU::FMAX_POS);
 	}
 	else if (source2Val < 0.0F)
 	{
-		CSR->setFieldValueSticky(EECoreFPURegister_CSR_t::Fields::I, 1);
+		CSR->setFieldValueSticky(getContext(), EECoreFPURegister_CSR_t::Fields::I, 1);
 		result = source1Val / std::sqrtf(std::abs(source2Val));
 	}
 	else
@@ -124,9 +124,9 @@ void EECoreInterpreter_s::RSQRT_S()
 	// Update flags.
 	FPUFlags_t flags;
 	result = FPUUtil::formatIEEEToPS2Float(result, flags);
-	CSR->updateResultFlags(flags);
+	CSR->updateResultFlags(getContext(), flags);
 
-	destReg->writeFloat(EE, result);
+	destReg->writeFloat(getContext(), result);
 }
 
 void EECoreInterpreter_s::SQRT_S()
@@ -139,30 +139,30 @@ void EECoreInterpreter_s::SQRT_S()
 	auto& destReg = mEECore->FPU->FPR[mEECoreInstruction.getRShamt()]; // Fd
 	auto& CSR = mEECore->FPU->CSR;
 
-	f32 source2Val = source2Reg->readFloat(EE);
+	f32 source2Val = source2Reg->readFloat(getContext());
 	f32 result;
 
 	// Set flags and special values, writes a result to the above variable.
-	CSR->clearFlags();
+	CSR->clearFlags(getContext());
 	if (source2Val == 0.0F && FPUUtil::isNegative(source2Val))
 	{
 		result = -0.0F;
 	}
 	else if (source2Val < 0.0F)
 	{
-		CSR->setFieldValueSticky(EECoreFPURegister_CSR_t::Fields::I, 1);
+		CSR->setFieldValueSticky(getContext(), EECoreFPURegister_CSR_t::Fields::I, 1);
 		result = std::sqrtf(std::abs(source2Val));
 	}
 	else
 	{
-		result = std::sqrtf(source2Reg->readFloat(EE));
+		result = std::sqrtf(source2Reg->readFloat(getContext()));
 	}
 
 	// Update flags.
 	FPUFlags_t flags;
 	result = FPUUtil::formatIEEEToPS2Float(result, flags);
-	CSR->updateResultFlags(flags);
+	CSR->updateResultFlags(getContext(), flags);
 
-	destReg->writeFloat(EE, result);
+	destReg->writeFloat(getContext(), result);
 }
 
