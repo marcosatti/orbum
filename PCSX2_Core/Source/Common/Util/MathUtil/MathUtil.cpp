@@ -49,6 +49,27 @@ u32 MathUtil::insertMaskedValue32(u32 value, u32 insertValue, u8 maskStartPos, u
 	return ((value & ~mask) | insertValueShifted);
 }
 
+u16 MathUtil::constructMask16(u8 startPos, u8 length)
+{
+	// Due to how x86 (and possibly other arch's) shift, we need a solution for the case when length == 16, as it generates a bad mask.
+	// Old method: mask = (1 << param) - 1;
+	// Algorithm from here (thanks to Siu Ching Pong): http://stackoverflow.com/questions/1392059/algorithm-to-generate-bit-mask
+	return (static_cast<u16>(-(length != 0)) & (static_cast<u16>(-1) >> (16 - length))) << startPos;
+}
+
+u16 MathUtil::extractMaskedValue16(u16 value, u8 maskStartPos, u8 maskLength)
+{
+	const u16 mask = constructMask16(maskStartPos, maskLength);
+	return ((value & mask) >> maskStartPos);
+}
+
+u16 MathUtil::insertMaskedValue16(u16 value, u16 insertValue, u8 maskStartPos, u8 maskLength)
+{
+	const u16 mask = constructMask16(maskStartPos, maskLength);
+	const u16 insertValueShifted = (insertValue << maskStartPos) & mask;
+	return ((value & ~mask) | insertValueShifted);
+}
+
 s16 MathUtil::saturateWordToHword(s32 value)
 {
 	if (value > Constants::VALUE_S16_MAX)

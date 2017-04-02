@@ -310,6 +310,7 @@
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister16_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -496,6 +497,7 @@
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_s.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister16_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

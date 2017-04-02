@@ -49,13 +49,13 @@ Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each on
 #endif
 
 /*
-Option of whether to throw a runtime error on index out of bounds access for BitfieldRegister32_t. 
+Option of whether to throw a runtime error on index out of bounds access for BitfieldRegisterXX_t. 
 Turn off if you are sure that no errors will occur and want to debug quicker.
 */
 #if defined(BUILD_DEBUG)
-#define DEBUG_ERROR_BR32_FIELD_INDEX_RANGE 0
+#define DEBUG_ERROR_BR_FIELD_INDEX_RANGE 0
 #else
-#define DEBUG_ERROR_BR32_FIELD_INDEX_RANGE 0
+#define DEBUG_ERROR_BR_FIELD_INDEX_RANGE 0
 #endif
 
 //////////////////////

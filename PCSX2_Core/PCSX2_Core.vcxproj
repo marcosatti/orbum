@@ -429,6 +429,7 @@
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
     <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.h" />
+    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\MIPS\PCRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
@@ -573,6 +574,7 @@
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
     <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\MIPS\PCRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />

@@ -136,7 +136,7 @@ void BitfieldRegister32_t::registerField(const int fieldIndex, const char* field
 
 const u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex) const
 {
-#if DEBUG_ERROR_BR32_FIELD_INDEX_RANGE
+#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
 	if (!(fieldIndex < FIELD_MAP_SIZE))
 		throw std::runtime_error("Invalid map index.");
 #endif
@@ -146,7 +146,7 @@ const u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int 
 
 void BitfieldRegister32_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-#if DEBUG_ERROR_BR32_FIELD_INDEX_RANGE
+#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
 	if (!(fieldIndex < FIELD_MAP_SIZE))
 		throw std::runtime_error("Invalid map index.");
 #endif

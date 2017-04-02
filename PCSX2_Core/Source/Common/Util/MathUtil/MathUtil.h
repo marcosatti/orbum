@@ -30,6 +30,24 @@ public:
 	static u32 insertMaskedValue32(u32 value, u32 insertValue, u8 maskStartPos, u8 maskLength);
 
 	/*
+	Constructs a mask of 1's in a u16 value, starting at bit position startPos with length specified.
+	Thanks to: http://www.coranac.com/documents/working-with-bits-and-bitfields/ for code.
+	*/
+	static u16 constructMask16(u8 startPos, u8 length);
+
+	/*
+	Extracts a masked value from the given, that starts at maskStartPos and has length maskLength.
+	The returned value is shifted right by maskStartPos (ie: becomes its own value).
+	*/
+	static u16 extractMaskedValue16(u16 value, u8 maskStartPos, u8 maskLength);
+
+	/*
+	Inserts insertValue into value by shifting it to maskStartPos with length maskLength.
+	It will override any bits in the position.
+	*/
+	static u16 insertMaskedValue16(u16 value, u16 insertValue, u8 maskStartPos, u8 maskLength);
+
+	/*
 	Saturates/clamps values to the next smallest size, if above the maximum value allowed.
 	Eg: for 0x02345678 to hword, this becomes 0x7FFF;
 	*/
