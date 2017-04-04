@@ -51,7 +51,7 @@ public:
 	Get/set mAbsMappedPageIndex, which are used by the Physical MMU for calculating an offset.
 	*/
 	size_t getAbsMappedPageIndex() const;
-	void setAbsMappedPageIndex(size_t absPageIndex);
+	void setAbsMappedPageIndex(const size_t absPageIndex);
 
 private:
 	/*

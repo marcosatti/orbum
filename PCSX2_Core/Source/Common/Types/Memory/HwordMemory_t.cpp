@@ -10,16 +10,13 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize) :
 #if defined(BUILD_DEBUG)
 	mDebugReads(false), mDebugWrites(false),
 #endif
-	mMemorySize(byteSize),
-	mMemory(new u16[mMemorySize / Constants::NUMBER_BYTES_IN_HWORD]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize / 2, 0),
 	mMnemonic("")
 {
-	// Check that mMemorySize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
-	if ((mMemorySize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
+	// Check that mMemoryByteSize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
+	if ((mMemoryByteSize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
 		throw std::runtime_error("HwordMemory_t was constructed with a bad byteSize parameter (not a multiple of 2).");
-	
-	// Initalise memory to 0.
-	memset(mMemory, 0, mMemorySize);
 
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
@@ -32,16 +29,13 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize, const char * mnemonic) :
 #if defined(BUILD_DEBUG)
 	mDebugReads(false), mDebugWrites(false),
 #endif
-	mMemorySize(byteSize),
-	mMemory(new u16[mMemorySize / Constants::NUMBER_BYTES_IN_HWORD]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize / 2, 0),
 	mMnemonic(mnemonic)
 {
-	// Check that mMemorySize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
-	if ((mMemorySize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
+	// Check that mMemoryByteSize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
+	if ((mMemoryByteSize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
 		throw std::runtime_error("HwordMemory_t was constructed with a bad byteSize parameter (not a multiple of 2).");
-
-	// Initalise storage to 0.
-	memset(mMemory, 0, mMemorySize);
 
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
@@ -53,16 +47,13 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize, const char * mnemonic) :
 #if defined(BUILD_DEBUG)
 HwordMemory_t::HwordMemory_t(const size_t byteSize, const char* mnemonic, bool debugReads, bool debugWrites) :
 	mDebugReads(debugReads), mDebugWrites(debugWrites),
-	mMemorySize(byteSize),
-	mMemory(new u16[mMemorySize / Constants::NUMBER_BYTES_IN_HWORD]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize / 2, 0),
 	mMnemonic(mnemonic)
 {
-	// Check that mMemorySize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
-	if ((mMemorySize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
+	// Check that mMemoryByteSize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
+	if ((mMemoryByteSize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
 		throw std::runtime_error("HwordMemory_t was constructed with a bad byteSize parameter (not a multiple of 2).");
-
-	// Initalise storage to 0.
-	memset(mMemory, 0, mMemorySize);
 
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
@@ -71,12 +62,6 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize, const char* mnemonic, bool d
 #endif
 }
 #endif
-
-HwordMemory_t::~HwordMemory_t()
-{
-	// Deallocate memory.
-	delete[] mMemory;
-}
 
 u16 HwordMemory_t::readHword(const System_t context, size_t hwordOffset)
 {
@@ -243,10 +228,44 @@ void HwordMemory_t::writeQword(const System_t context, size_t hwordOffset, u128 
 
 size_t HwordMemory_t::getSize()
 {
-	return mMemorySize;
+	return mMemoryByteSize;
+}
+
+std::vector<u16>& HwordMemory_t::getContainer()
+{
+	return mMemory;
 }
 
 const char * HwordMemory_t::getMnemonic() const
 {
 	return mMnemonic.c_str();
+}
+
+void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset)
+{
+	// Check it is not too big.
+	if (((mMemoryByteSize / Constants::NUMBER_BYTES_IN_HWORD) - memoryHwordOffset) < (fileHwordLength)) // TODO: check... brain too tired...
+		throw std::runtime_error("readFile() file was too big to read in.");
+
+	// Open file.
+	std::basic_ifstream<u16> file(fileStr, std::ifstream::binary);
+	if (file.fail())
+		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
+
+	// Read file in.
+	std::istreambuf_iterator<u16> start(file);
+	std::advance(start, fileHwordOffset);
+	std::copy_n(start, fileHwordLength, mMemory.begin() + memoryHwordOffset);
+}
+
+void HwordMemory_t::dump(const char * fileStr)
+{
+	// Open file.
+	std::basic_ofstream<u16> file(fileStr, std::ifstream::binary);
+	if (file.fail())
+		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
+
+	// Write file out.
+	std::ostreambuf_iterator<u16> start(file);
+	std::copy(mMemory.begin(), mMemory.end(), start);
 }

@@ -50,7 +50,7 @@ void VM::reset()
 
 	// Initalise Roms.
 	if (!mVMOptions.BOOT_ROM_PATH.empty())
-		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH, 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
+		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH.c_str(), 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
 	// ROM1.
 	// ROM2.
 	// EROM.

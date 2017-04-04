@@ -10,6 +10,12 @@
 #include "Common/Global/Log.h"
 #include "VM/VM.h"
 #include "VM/Types/VMOptions.h"
+#include "Common/Types/Memory/ByteMemory_t.h"
+#include "Common/Types/Memory/HwordMemory_t.h"
+#include "Resources/Resources_t.h"
+#include "Resources/EE/EE_t.h"
+#include "Resources/IOP/IOP_t.h"
+#include "Resources/IOP/SPU2/SPU2_t.h"
 
 std::ofstream logFile;
 bool MTmode = false;
@@ -60,8 +66,12 @@ int main()
 	{
 		VM vm(vmOptions);
 
-		while (true)
+		while (vm.getStatus() == VM::VMStatus::Running)
 			vm.run();
+
+		vm.getResources()->EE->MainMemory->dump("C:\\Shared\\End_Dump_EE.bin");
+		vm.getResources()->IOP->MainMemory->dump("C:\\Shared\\End_Dump_IOP.bin");
+		vm.getResources()->IOP->SPU2->MainMemory->dump("C:\\Shared\\End_Dump_SPU2.bin");
 	}
 	catch (std::exception ex)
 	{

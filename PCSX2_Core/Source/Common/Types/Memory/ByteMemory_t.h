@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
@@ -21,7 +22,7 @@ public:
 	bool mDebugReads, mDebugWrites;
 #endif
 
-	virtual ~ByteMemory_t();
+	virtual ~ByteMemory_t() = default;
 
 	/*
 	Read or write a value of a given type, to the specified byte index (byteOffset).
@@ -43,10 +44,9 @@ public:
 	virtual size_t getSize();
 
 	/*
-	Gets the base host memory address, needed for special VM functions such as loading the BIOS (BootROM).
-	Should not be used in favour of the above read/write functions unless you absolutely have to.
+	Returns a reference to the underlying vector storage.
 	*/
-	void * getHostMemoryAddress() const;
+	std::vector<u8> & getContainer();
 
 	/*
 	Get the storage mnemonic, used for debug.
@@ -56,11 +56,18 @@ public:
 	/*
 	Read in a raw file to the memory (byte copy).
 	*/
-	void readFile(const std::string & fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset) const;
+	void readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset);
+
+#if defined(BUILD_DEBUG)
+	/*
+	Dumps the memory contents to a file.
+	*/
+	void dump(const char * fileStr);
+#endif
 
 private:
-	size_t mMemorySize;
-	u8 * mMemory;
+	size_t mMemoryByteSize;
+	std::vector<u8> mMemory;
 	std::string mMnemonic;
 };
 

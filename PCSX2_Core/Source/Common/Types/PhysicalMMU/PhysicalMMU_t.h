@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
@@ -61,7 +62,6 @@ class PhysicalMMU_t
 {
 public:
 	explicit PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const size_t & directorySizeBytes, const size_t & pageSizeBytes);
-	~PhysicalMMU_t();
 
 	/*
 	Maps the given object into the PS2 physical address space, provided it inherits the PhysicalMapped interface.
@@ -88,32 +88,32 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(const System_t context, u32 PS2PhysicalAddress) const;
-	void writeByte(const System_t context, u32 PS2PhysicalAddress, u8 value) const;
-	u16 readHword(const System_t context, u32 PS2PhysicalAddress) const;
-	void writeHword(const System_t context, u32 PS2PhysicalAddress, u16 value) const;
-	u32 readWord(const System_t context, u32 PS2PhysicalAddress) const;
-	void writeWord(const System_t context, u32 PS2PhysicalAddress, u32 value) const;
-	u64 readDword(const System_t context, u32 PS2PhysicalAddress) const;
-	void writeDword(const System_t context, u32 PS2PhysicalAddress, u64 value) const;
-	u128 readQword(const System_t context, u32 PS2PhysicalAddress) const;
-	void writeQword(const System_t context, u32 PS2PhysicalAddress, u128 value) const;
+	u8 readByte(const System_t context, u32 PS2PhysicalAddress);
+	void writeByte(const System_t context, u32 PS2PhysicalAddress, u8 value);
+	u16 readHword(const System_t context, u32 PS2PhysicalAddress);
+	void writeHword(const System_t context, u32 PS2PhysicalAddress, u16 value);
+	u32 readWord(const System_t context, u32 PS2PhysicalAddress);
+	void writeWord(const System_t context, u32 PS2PhysicalAddress, u32 value);
+	u64 readDword(const System_t context, u32 PS2PhysicalAddress);
+	void writeDword(const System_t context, u32 PS2PhysicalAddress, u64 value);
+	u128 readQword(const System_t context, u32 PS2PhysicalAddress);
+	void writeQword(const System_t context, u32 PS2PhysicalAddress, u128 value);
 
 private:
 	/*
 	Internal parameters calculated in the constructor.
 	*/
-	const size_t MAX_ADDRESSABLE_SIZE_BYTES;
-	const size_t DIRECTORY_SIZE_BYTES;
-	const size_t PAGE_SIZE_BYTES;
-	const size_t DIRECTORY_ENTRIES;
-	const size_t PAGE_ENTRIES;
-	const size_t OFFSET_BITS;
-	const size_t OFFSET_MASK;
-	const size_t DIRECTORY_BITS;
-	const size_t DIRECTORY_MASK;
-	const size_t PAGE_BITS;
-	const size_t PAGE_MASK;
+	size_t MAX_ADDRESSABLE_SIZE_BYTES;
+	size_t DIRECTORY_SIZE_BYTES;
+	size_t PAGE_SIZE_BYTES;
+	size_t DIRECTORY_ENTRIES;
+	size_t PAGE_ENTRIES;
+	size_t OFFSET_BITS;
+	size_t OFFSET_MASK;
+	size_t DIRECTORY_BITS;
+	size_t DIRECTORY_MASK;
+	size_t PAGE_BITS;
+	size_t PAGE_MASK;
 
 	/*
 	The page table which holds all of the page table entries, mapping the addresses.
@@ -121,12 +121,12 @@ private:
 	The individual pages are only allocated on access, thereby saving memory.
 	(An array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
 	*/
-	std::shared_ptr<PhysicalMapped_t>** mPageTable;
+	std::vector<std::vector<std::shared_ptr<PhysicalMapped_t>>> mPageTable;
 
 	/*
 	Translates the given PS2 physical address to the stored memory object by using the page table. The returned object can then be used to read or write to an address.
 	*/
-	std::shared_ptr<PhysicalMapped_t> & getMappedMemory(size_t baseVDN, size_t baseVPN) const;
+	std::shared_ptr<PhysicalMapped_t> & getMappedMemory(size_t baseVDN, size_t baseVPN);
 
 	/*
 	Helper functions for mapObject & others to 
@@ -138,7 +138,6 @@ private:
 	size_t getDirectoryFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
 	size_t getDirPageFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
 	size_t getAbsPageFromDirAndPageOffset(size_t absDirectoryIndex, size_t pageOffset) const;
-	void allocDirectory(size_t directoryIndex) const;
 
 	/*
 	Gets the VDN (virtual directory number) from a given PS2 physical address.

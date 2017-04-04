@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
@@ -22,7 +23,7 @@ public:
 	bool mDebugReads, mDebugWrites;
 #endif
 
-	virtual ~HwordMemory_t();
+	virtual ~HwordMemory_t() = default;
 
 	/*
 	Read or write a value of a given type, to the specified hword index (hwordOffset).
@@ -42,13 +43,30 @@ public:
 	virtual size_t getSize();
 
 	/*
+	Returns a reference to the underlying vector storage.
+	*/
+	std::vector<u16> & getContainer();
+
+	/*
 	Get the storage mnemonic, used for debug.
 	*/
 	virtual const char * getMnemonic() const;
 
+	/*
+	Read in a raw file to the memory (byte copy).
+	*/
+	void readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset);
+
+#if defined(BUILD_DEBUG)
+	/*
+	Dumps the memory contents to a file.
+	*/
+	void dump(const char * fileStr);
+#endif
+
 private:
-	size_t mMemorySize;
-	u16 * mMemory;
+	size_t mMemoryByteSize;
+	std::vector<u16> mMemory;
 	std::string mMnemonic;
 };
 

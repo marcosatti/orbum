@@ -18,7 +18,7 @@ size_t PhysicalMapped_t::getAbsMappedPageIndex() const
 	return mAbsMappedPageIndex;
 }
 
-void PhysicalMapped_t::setAbsMappedPageIndex(size_t absPageIndex)
+void PhysicalMapped_t::setAbsMappedPageIndex(const size_t absPageIndex)
 {
 	mAbsMappedPageIndex = absPageIndex;
 }

@@ -31,22 +31,8 @@ PhysicalMMU_t::PhysicalMMU_t(const size_t & maxAddressableSizeBytes, const size_
 	PAGE_BITS(static_cast<u32>(log2(PAGE_ENTRIES))),
 	PAGE_MASK(PAGE_ENTRIES - 1)
 {
-	// Allocate the page table (directories).
-	mPageTable = new std::shared_ptr<PhysicalMapped_t>*[DIRECTORY_ENTRIES];
-
-	// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
-	// Sets all of the directory to nullptr's.
-	memset(mPageTable, 0, DIRECTORY_ENTRIES * sizeof(mPageTable[0]));
-}
-
-PhysicalMMU_t::~PhysicalMMU_t()
-{
-	// Destroy any allocated pages.
-	for (u32 i = 0; i < DIRECTORY_ENTRIES; i++)
-		if (mPageTable[i] != nullptr) delete[] mPageTable[i];
-	
-	// Destroy the page table (directories).
-	delete[] mPageTable;
+	// Allocate base directories.
+	mPageTable.resize(DIRECTORY_ENTRIES);
 }
 
 void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped_t> & physicalMapped)
@@ -78,8 +64,8 @@ void PhysicalMMU_t::mapObject(const std::shared_ptr<PhysicalMapped_t> & physical
 		absDirectoryIndex = getDirectoryFromPageOffset(absPageStartIndex, i);
 		absPageIndex = getDirPageFromPageOffset(absPageStartIndex, i);
 
-		// Make sure directory is allocated.
-		allocDirectory(absDirectoryIndex);
+		// Allocate pages within directory if needed.
+		mPageTable[absDirectoryIndex].resize(PAGE_ENTRIES);
 
 		// Check that there is no existing map data - log a warning if there is.
 #if defined(BUILD_DEBUG)
@@ -171,31 +157,10 @@ size_t PhysicalMMU_t::getAbsPageFromDirAndPageOffset(size_t absDirectoryIndex, s
 	return absDirectoryIndex * PAGE_ENTRIES + pageOffset;
 }
 
-void PhysicalMMU_t::allocDirectory(size_t directoryIndex) const
-{
-	// Allocate VDN only if empty and set to null initially.
-	if (mPageTable[directoryIndex] == nullptr) {
-		mPageTable[directoryIndex] = new std::shared_ptr<PhysicalMapped_t>[PAGE_ENTRIES];
-		// Ok... VS compiler crashes if we try to do array initalisation above... so try memset to do it? This works...
-		memset(mPageTable[directoryIndex], 0, PAGE_ENTRIES * sizeof(mPageTable[directoryIndex][0]));
-	}
-}
-
-std::shared_ptr<PhysicalMapped_t> & PhysicalMMU_t::getMappedMemory(size_t baseVDN, size_t baseVPN) const
+std::shared_ptr<PhysicalMapped_t> & PhysicalMMU_t::getMappedMemory(size_t baseVDN, size_t baseVPN)
 {
 	// Lookup the page in the page table to get the memory object (aka page frame number (PFN)).
-	// If the directory or memory object comes back as nullptr, throw a runtime exception.
-	std::shared_ptr<PhysicalMapped_t>* tableDirectory = mPageTable[baseVDN];
-#if defined(BUILD_DEBUG)
-	if (tableDirectory == nullptr)
-	{
-		char message[1000];
-		sprintf_s(message, "Not found: Lookup for VA = 0x%08X returned a null VDN. Check input for error, or maybe it has not been mapped in the first place. VDN = %zX, VPN = %zX.", static_cast<u32>((baseVDN << (OFFSET_BITS + PAGE_BITS)) | (baseVPN << (OFFSET_BITS))), baseVDN, baseVPN);
-		throw std::runtime_error(message);
-	}
-#endif
-
-	std::shared_ptr<PhysicalMapped_t> & mappedMemory = tableDirectory[baseVPN];
+	std::shared_ptr<PhysicalMapped_t> & mappedMemory = mPageTable[baseVDN][baseVPN];
 #if defined(BUILD_DEBUG)
 	if (mappedMemory == nullptr)
 	{
@@ -209,7 +174,7 @@ std::shared_ptr<PhysicalMapped_t> & PhysicalMMU_t::getMappedMemory(size_t baseVD
 	return mappedMemory;
 }
 
-u8 PhysicalMMU_t::readByte(const System_t context, u32 PS2PhysicalAddress) const
+u8 PhysicalMMU_t::readByte(const System_t context, u32 PS2PhysicalAddress)
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -225,7 +190,7 @@ u8 PhysicalMMU_t::readByte(const System_t context, u32 PS2PhysicalAddress) const
 	return mappedMemory->readByte(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeByte(const System_t context, u32 PS2PhysicalAddress, u8 value) const
+void PhysicalMMU_t::writeByte(const System_t context, u32 PS2PhysicalAddress, u8 value)
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -241,7 +206,7 @@ void PhysicalMMU_t::writeByte(const System_t context, u32 PS2PhysicalAddress, u8
 	mappedMemory->writeByte(context, storageIndex, value);
 }
 
-u16 PhysicalMMU_t::readHword(const System_t context, u32 PS2PhysicalAddress) const
+u16 PhysicalMMU_t::readHword(const System_t context, u32 PS2PhysicalAddress) 
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -257,7 +222,7 @@ u16 PhysicalMMU_t::readHword(const System_t context, u32 PS2PhysicalAddress) con
 	return mappedMemory->readHword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeHword(const System_t context, u32 PS2PhysicalAddress, u16 value) const
+void PhysicalMMU_t::writeHword(const System_t context, u32 PS2PhysicalAddress, u16 value) 
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -273,7 +238,7 @@ void PhysicalMMU_t::writeHword(const System_t context, u32 PS2PhysicalAddress, u
 	mappedMemory->writeHword(context, storageIndex, value);
 }
 
-u32 PhysicalMMU_t::readWord(const System_t context, u32 PS2PhysicalAddress) const
+u32 PhysicalMMU_t::readWord(const System_t context, u32 PS2PhysicalAddress) 
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -289,7 +254,7 @@ u32 PhysicalMMU_t::readWord(const System_t context, u32 PS2PhysicalAddress) cons
 	return mappedMemory->readWord(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeWord(const System_t context, u32 PS2PhysicalAddress, u32 value) const
+void PhysicalMMU_t::writeWord(const System_t context, u32 PS2PhysicalAddress, u32 value) 
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -305,7 +270,7 @@ void PhysicalMMU_t::writeWord(const System_t context, u32 PS2PhysicalAddress, u3
 	mappedMemory->writeWord(context, storageIndex, value);
 }
 
-u64 PhysicalMMU_t::readDword(const System_t context, u32 PS2PhysicalAddress) const
+u64 PhysicalMMU_t::readDword(const System_t context, u32 PS2PhysicalAddress)
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -321,7 +286,7 @@ u64 PhysicalMMU_t::readDword(const System_t context, u32 PS2PhysicalAddress) con
 	return mappedMemory->readDword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeDword(const System_t context, u32 PS2PhysicalAddress, u64 value) const
+void PhysicalMMU_t::writeDword(const System_t context, u32 PS2PhysicalAddress, u64 value)
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -337,7 +302,7 @@ void PhysicalMMU_t::writeDword(const System_t context, u32 PS2PhysicalAddress, u
 	mappedMemory->writeDword(context, storageIndex, value);
 }
 
-u128 PhysicalMMU_t::readQword(const System_t context, u32 PS2PhysicalAddress) const
+u128 PhysicalMMU_t::readQword(const System_t context, u32 PS2PhysicalAddress) 
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);
@@ -353,7 +318,7 @@ u128 PhysicalMMU_t::readQword(const System_t context, u32 PS2PhysicalAddress) co
 	return mappedMemory->readQword(context, storageIndex);
 }
 
-void PhysicalMMU_t::writeQword(const System_t context, u32 PS2PhysicalAddress, u128 value) const
+void PhysicalMMU_t::writeQword(const System_t context, u32 PS2PhysicalAddress, u128 value)
 {
 	// Get the virtual directory number (VDN), virtual page number (VPN), absolute page number & offset.
 	auto baseVDN = getVDN(PS2PhysicalAddress);

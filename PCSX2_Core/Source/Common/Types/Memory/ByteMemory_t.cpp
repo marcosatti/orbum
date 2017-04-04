@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <fstream>
+#include <iterator>
 
 #include "Common/Global/Globals.h"
 
@@ -10,13 +11,10 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize) :
 #if defined(BUILD_DEBUG)
 	mDebugReads(false), mDebugWrites(false),
 #endif
-	mMemorySize(byteSize),
-	mMemory(new u8[mMemorySize]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize, 0),
 	mMnemonic("")
 {
-	// Initalise storage to 0.
-	memset(mMemory, 0, mMemorySize);
-
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
@@ -28,13 +26,10 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize, const char * mnemonic) :
 #if defined(BUILD_DEBUG)
 	mDebugReads(false), mDebugWrites(false),
 #endif
-	mMemorySize(byteSize),
-	mMemory(new u8[mMemorySize]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize, 0),
 	mMnemonic(mnemonic)
 {
-	// Initalise storage to 0.
-	memset(mMemory, 0, mMemorySize);
-
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
@@ -45,13 +40,10 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize, const char * mnemonic) :
 #if defined(BUILD_DEBUG)
 ByteMemory_t::ByteMemory_t(const size_t byteSize, const char* mnemonic, bool debugReads, bool debugWrites) :
 	mDebugReads(debugReads), mDebugWrites(debugWrites),
-	mMemorySize(byteSize),
-	mMemory(new u8[mMemorySize]),
+	mMemoryByteSize(byteSize),
+	mMemory(mMemoryByteSize, 0),
 	mMnemonic(mnemonic)
 {
-	// Initalise storage to 0.
-	memset(mMemory, 0, mMemorySize);
-
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
 	if (mStorageSize > 0)
@@ -59,12 +51,6 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize, const char* mnemonic, bool deb
 #endif
 }
 #endif
-
-ByteMemory_t::~ByteMemory_t()
-{
-	// Deallocate memory.
-	delete[] mMemory;
-}
 
 u8 ByteMemory_t::readByte(const System_t context, size_t byteOffset)
 {
@@ -271,12 +257,12 @@ void ByteMemory_t::writeQword(const System_t context, size_t byteOffset, u128 va
 
 size_t ByteMemory_t::getSize()
 {
-	return mMemorySize;
+	return mMemoryByteSize;
 }
 
-void * ByteMemory_t::getHostMemoryAddress() const
+std::vector<u8> & ByteMemory_t::getContainer()
 {
-	return reinterpret_cast<void*>(mMemory);
+	return mMemory;
 }
 
 const char * ByteMemory_t::getMnemonic() const
@@ -284,17 +270,31 @@ const char * ByteMemory_t::getMnemonic() const
 	return mMnemonic.c_str();
 }
 
-void ByteMemory_t::readFile(const std::string & fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset) const
+void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset)
 {
 	// Check it is not too big.
-	if ((mMemorySize - memoryByteOffset) < (fileByteLength)) // TODO: check... brain too tired...
-		throw std::runtime_error("Memory_t::readFile() file was too big to read in.");
+	if ((mMemoryByteSize - memoryByteOffset) < (fileByteLength)) // TODO: check... brain too tired...
+		throw std::runtime_error("readFile() file was too big to read in.");
+
+	// Open file.
+	std::basic_ifstream<u8> file(fileStr, std::ifstream::binary);
+	if (file.fail())
+		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
 
 	// Read file in.
-	char * memoryBase = reinterpret_cast<char*>(getHostMemoryAddress());
-	std::ifstream file(fileStr, std::ifstream::binary);
+	std::istreambuf_iterator<u8> start(file);
+	std::advance(start, fileByteOffset);
+	std::copy_n(start, fileByteLength, mMemory.begin() + memoryByteOffset);
+}
+
+void ByteMemory_t::dump(const char * fileStr)
+{
+	// Open file.
+	std::basic_ofstream<u8> file(fileStr, std::ifstream::binary);
 	if (file.fail())
-		throw std::runtime_error("Memory_t::readFile() tried to open file, but it failed! Check file exists and has read permissions.");
-	file.seekg(fileByteOffset);
-	file.read(memoryBase + memoryByteOffset, fileByteLength);
+		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
+
+	// Write file out.
+	std::ostreambuf_iterator<u8> start(file);
+	std::copy(mMemory.begin(), mMemory.end(), start);
 }
