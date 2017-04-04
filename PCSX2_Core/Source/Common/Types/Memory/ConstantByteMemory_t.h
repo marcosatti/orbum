@@ -14,8 +14,8 @@ The parsed size is not allocated (always set to 0 in the underlying Memory_t).
 class ConstantByteMemory_t : public ByteMemory_t
 {
 public:
-	ConstantByteMemory_t(const size_t & size, const u64 D = 0);
-	ConstantByteMemory_t(const size_t & size, const char * mnemonic, const u64 D = 0);
+	ConstantByteMemory_t(const size_t size, const u64 D = 0);
+	ConstantByteMemory_t(const size_t size, const char * mnemonic, const u64 D = 0);
 
 	u8 readByte(const System_t context, size_t byteOffset) override;
 	void writeByte(const System_t context, size_t byteOffset, u8 value) override;

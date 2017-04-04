@@ -9,7 +9,7 @@
 A simple memory object which is constructed to the (byte) size specified, and optional mnemonic which is used for debugging/logging.
 It has hword (16-bit) unit granularity - each address (offset) refers to a hword.
 Warning: the size constructor parameter is still defined in terms of BYTES! This is done in order to support easier debugging (windbg's .writemem). 
-Make sure the byte size input is divisible by 2.
+Make sure the byte size input is divisible by 2 (throws runtime_error otherwise).
 */
 class HwordMemory_t
 {
@@ -49,6 +49,6 @@ public:
 private:
 	size_t mMemorySize;
 	u16 * mMemory;
-	const std::string mMnemonic;
+	std::string mMnemonic;
 };
 

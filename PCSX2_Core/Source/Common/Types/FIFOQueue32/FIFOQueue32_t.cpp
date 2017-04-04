@@ -2,13 +2,13 @@
 
 #include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
 
-FIFOQueue32_t::FIFOQueue32_t(const size_t& maxSize) :
+FIFOQueue32_t::FIFOQueue32_t(const size_t maxSize) :
 	mMnemonic(""),
 	mMaxSize(maxSize)
 {
 }
 
-FIFOQueue32_t::FIFOQueue32_t(const char* mnemonic, const size_t& maxSize) :
+FIFOQueue32_t::FIFOQueue32_t(const char* mnemonic, const size_t maxSize) :
 	mMnemonic(mnemonic),
 	mMaxSize(maxSize)
 {

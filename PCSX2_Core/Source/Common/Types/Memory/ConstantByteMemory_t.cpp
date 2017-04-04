@@ -4,14 +4,14 @@
 
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
-ConstantByteMemory_t::ConstantByteMemory_t(const size_t & size, const u64 D) :
+ConstantByteMemory_t::ConstantByteMemory_t(const size_t size, const u64 D) :
 	ByteMemory_t(0),
 	mSize(size),
 	mConstantValue(D)
 {
 }
 
-ConstantByteMemory_t::ConstantByteMemory_t(const size_t& size, const char* mnemonic, const u64 D) :
+ConstantByteMemory_t::ConstantByteMemory_t(const size_t size, const char* mnemonic, const u64 D) :
 	ByteMemory_t(0, mnemonic),
 	mSize(size),
 	mConstantValue(D)

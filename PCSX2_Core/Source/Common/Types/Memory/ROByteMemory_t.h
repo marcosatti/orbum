@@ -9,7 +9,7 @@ Will not write anything when requested, and instead silently discards the data.
 class ROByteMemory_t : public ByteMemory_t
 {
 public:
-	ROByteMemory_t(const size_t & size);
+	ROByteMemory_t(const size_t size);
 
 	/*
 	All writes are discarded - this is a silent discard!

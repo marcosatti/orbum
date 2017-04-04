@@ -13,8 +13,8 @@ TODO: test perf (use std::queue or own?), add in thread safety.
 class FIFOQueue32_t
 {
 public:
-	explicit FIFOQueue32_t(const size_t & maxSize);
-	explicit FIFOQueue32_t(const char * mnemonic, const size_t & maxSize);
+	explicit FIFOQueue32_t(const size_t maxSize);
+	explicit FIFOQueue32_t(const char * mnemonic, const size_t maxSize);
 	virtual ~FIFOQueue32_t() = default;
 
 	/*
@@ -56,7 +56,7 @@ private:
 	/*
 	The mnemonic.
 	*/
-	const std::string mMnemonic;
+	std::string mMnemonic;
 
 	/*
 	The max number of 32-bit data elements allowed in the queue, set to the constructor paramter.

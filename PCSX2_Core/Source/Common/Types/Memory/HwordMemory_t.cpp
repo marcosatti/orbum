@@ -36,6 +36,10 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize, const char * mnemonic) :
 	mMemory(new u16[mMemorySize / Constants::NUMBER_BYTES_IN_HWORD]),
 	mMnemonic(mnemonic)
 {
+	// Check that mMemorySize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
+	if ((mMemorySize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
+		throw std::runtime_error("HwordMemory_t was constructed with a bad byteSize parameter (not a multiple of 2).");
+
 	// Initalise storage to 0.
 	memset(mMemory, 0, mMemorySize);
 
@@ -53,6 +57,10 @@ HwordMemory_t::HwordMemory_t(const size_t byteSize, const char* mnemonic, bool d
 	mMemory(new u16[mMemorySize / Constants::NUMBER_BYTES_IN_HWORD]),
 	mMnemonic(mnemonic)
 {
+	// Check that mMemorySize is a multiple of 2 (Constants::NUMBER_BYTES_IN_HWORD).
+	if ((mMemorySize % Constants::NUMBER_BYTES_IN_HWORD) != 0)
+		throw std::runtime_error("HwordMemory_t was constructed with a bad byteSize parameter (not a multiple of 2).");
+
 	// Initalise storage to 0.
 	memset(mMemory, 0, mMemorySize);
 

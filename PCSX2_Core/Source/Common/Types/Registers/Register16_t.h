@@ -69,5 +69,5 @@ private:
 	/*
 	The mnemonic.
 	*/
-	const std::string mMnemonic;
+	std::string mMnemonic;
 };

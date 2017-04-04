@@ -61,6 +61,6 @@ public:
 private:
 	size_t mMemorySize;
 	u8 * mMemory;
-	const std::string mMnemonic;
+	std::string mMnemonic;
 };
 

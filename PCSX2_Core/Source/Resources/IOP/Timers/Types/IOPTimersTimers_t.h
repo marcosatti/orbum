@@ -35,7 +35,7 @@ private:
 	/*
 	The ID of this timer.
 	*/
-	const int mTimerID;
+	int mTimerID;
 };
 
 /*
