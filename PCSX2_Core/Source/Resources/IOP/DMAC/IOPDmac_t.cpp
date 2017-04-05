@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 
 #include "Resources/IOP/DMAC/IOPDmac_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"

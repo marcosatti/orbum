@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/Register/Register128_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
 #include "Common/Tables/EECoreSyscallTable.h"
 
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"

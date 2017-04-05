@@ -7,10 +7,10 @@
 #include <Resources/EE/EE_t.h>
 #include <Resources/EE/EECore/EECore_t.h>
 #include <Resources/EE/EECore/Types/EECoreR5900_t.h>
-#include <Common/Types/Registers/Register32_t.h>
-#include <Common/Types/Registers/Register128_t.h>
-#include <Common/Types/PhysicalMMU/PhysicalMMU_t.h>
-#include <Common/Types/Registers/MIPS/PCRegister32_t.h>
+#include <Common/Types/Register/Register32_t.h>
+#include <Common/Types/Register/Register128_t.h>
+#include <Common/Types/ByteMMU/ByteMMU_t.h>
+#include <Common/Types/Register/PCRegister32_t.h>
 #include "Util/MIPSUtil.h"
 
 class TEST_EECoreInterpreter_s : public testing::Test
@@ -693,7 +693,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LB", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeByte(core->getContext(), 0x0, 0xCD);
+		vm->getResources()->EE->ByteMMU->writeByte(core->getContext(), 0x0, 0xCD);
 		core->LB();
 		EXPECT_EQ(0xFFFFFFFFFFFFFFCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -704,7 +704,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LBU", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeByte(core->getContext(), 0x0, 0xAB);
+		vm->getResources()->EE->ByteMMU->writeByte(core->getContext(), 0x0, 0xAB);
 		core->LBU();
 		EXPECT_EQ(0xAB, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -715,7 +715,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LH", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeHword(core->getContext(), 0x0, 0xCDEF);
+		vm->getResources()->EE->ByteMMU->writeHword(core->getContext(), 0x0, 0xCDEF);
 		core->LH();
 		EXPECT_EQ(0xFFFFFFFFFFFFCDEF, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -726,7 +726,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LHU", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeHword(core->getContext(), 0x0, 0xABCD);
+		vm->getResources()->EE->ByteMMU->writeHword(core->getContext(), 0x0, 0xABCD);
 		core->LHU();
 		EXPECT_EQ(0xABCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -737,7 +737,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LW", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x0, 0xF2345678);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x0, 0xF2345678);
 		core->LW();
 		EXPECT_EQ(0xFFFFFFFFF2345678, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -748,7 +748,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LWU", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x0, 0xF2345678);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x0, 0xF2345678);
 		core->LWU();
 		EXPECT_EQ(0xF2345678, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -759,7 +759,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mEECoreInstruction = inst;
 		EXPECT_STREQ("LD", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(core->getContext(), 0x0, 0x12345678ABCDEF0);
+		vm->getResources()->EE->ByteMMU->writeDword(core->getContext(), 0x0, 0x12345678ABCDEF0);
 		core->LD();
 		EXPECT_EQ(0x12345678ABCDEF0, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -772,7 +772,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x1234ABCD);
 		core->SB();
-		EXPECT_EQ(0xCD, vm->getResources()->EE->PhysicalMMU->readByte(core->getContext(), 0x0));
+		EXPECT_EQ(0xCD, vm->getResources()->EE->ByteMMU->readByte(core->getContext(), 0x0));
 	}
 
 	// SH
@@ -783,7 +783,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x1234ABCD);
 		core->SH();
-		EXPECT_EQ(0xABCD, vm->getResources()->EE->PhysicalMMU->readHword(core->getContext(), 0x0));
+		EXPECT_EQ(0xABCD, vm->getResources()->EE->ByteMMU->readHword(core->getContext(), 0x0));
 	}
 
 	// SW
@@ -794,7 +794,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x1234ABCD);
 		core->SW();
-		EXPECT_EQ(0x1234ABCD, vm->getResources()->EE->PhysicalMMU->readWord(core->getContext(), 0x0));
+		EXPECT_EQ(0x1234ABCD, vm->getResources()->EE->ByteMMU->readWord(core->getContext(), 0x0));
 	}
 
 	// LWL
@@ -804,7 +804,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LWL", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x0, 0x01234567);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x0, 0x01234567);
 		core->LWL();
 		EXPECT_EQ(0x4567CDCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -816,7 +816,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LWR", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0xCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x4, 0x89ABCDEF);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x4, 0x89ABCDEF);
 		core->LWR();
 		EXPECT_EQ(0xFFFFFFFFCDCD89AB, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -828,7 +828,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LDL", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0xCDCDCDCDCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(core->getContext(), 0x0, 0x4141414141414141);
+		vm->getResources()->EE->ByteMMU->writeDword(core->getContext(), 0x0, 0x4141414141414141);
 		core->LDL();
 		EXPECT_EQ(0x41414141CDCDCDCD, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -840,7 +840,7 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LDR", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0xCDCDCDCDCDCDCDCD);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
-		vm->getResources()->EE->PhysicalMMU->writeDword(core->getContext(), 0x0, 0x4141414141414141);
+		vm->getResources()->EE->ByteMMU->writeDword(core->getContext(), 0x0, 0x4141414141414141);
 		core->LDR();
 		EXPECT_EQ(0xCDCDCDCD41414141, vm->getResources()->EE->EECore->R5900->GPR[2]->readDword(core->getContext(), 0));
 	}
@@ -852,9 +852,9 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SWL", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x11111111);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x0, 0xABABABAB);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x0, 0xABABABAB);
 		core->SWL();
-		EXPECT_EQ(0xABAB1111, vm->getResources()->EE->PhysicalMMU->readWord(core->getContext(), 0x0));
+		EXPECT_EQ(0xABAB1111, vm->getResources()->EE->ByteMMU->readWord(core->getContext(), 0x0));
 	}
 
 	// SWR
@@ -864,9 +864,9 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SWR", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x11111111);
-		vm->getResources()->EE->PhysicalMMU->writeWord(core->getContext(), 0x4, 0xCDCDCDCD);
+		vm->getResources()->EE->ByteMMU->writeWord(core->getContext(), 0x4, 0xCDCDCDCD);
 		core->SWR();
-		EXPECT_EQ(0x1111CDCD, vm->getResources()->EE->PhysicalMMU->readWord(core->getContext(), 0x4));
+		EXPECT_EQ(0x1111CDCD, vm->getResources()->EE->ByteMMU->readWord(core->getContext(), 0x4));
 	}
 
 	// SDL
@@ -876,9 +876,9 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SDL", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x4141414141414141);
-		vm->getResources()->EE->PhysicalMMU->writeDword(core->getContext(), 0x0, 0xCDCDCDCDCDCDCDCD);
+		vm->getResources()->EE->ByteMMU->writeDword(core->getContext(), 0x0, 0xCDCDCDCDCDCDCDCD);
 		core->SDL();
-		EXPECT_EQ(0xCDCDCDCD41414141, vm->getResources()->EE->PhysicalMMU->readDword(core->getContext(), 0x0));
+		EXPECT_EQ(0xCDCDCDCD41414141, vm->getResources()->EE->ByteMMU->readDword(core->getContext(), 0x0));
 	}
 
 	// SDR
@@ -888,9 +888,9 @@ TEST_F(TEST_EECoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SDR", core->mEECoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->EE->EECore->R5900->GPR[4]->writeDword(core->getContext(), 0, 0xA0000004);
 		vm->getResources()->EE->EECore->R5900->GPR[2]->writeDword(core->getContext(), 0, 0x4141414141414141);
-		vm->getResources()->EE->PhysicalMMU->writeDword(core->getContext(), 0x0, 0xCDCDCDCDCDCDCDCD);
+		vm->getResources()->EE->ByteMMU->writeDword(core->getContext(), 0x0, 0xCDCDCDCDCDCDCDCD);
 		core->SDR();
-		EXPECT_EQ(0x41414141CDCDCDCD, vm->getResources()->EE->PhysicalMMU->readDword(core->getContext(), 0x0));
+		EXPECT_EQ(0x41414141CDCDCDCD, vm->getResources()->EE->ByteMMU->readDword(core->getContext(), 0x0));
 	}
 }
 

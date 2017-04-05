@@ -17,8 +17,8 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize) :
 {
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
-	if (mStorageSize > 0)
-		log(Debug, "(%s, %d) Memory allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mStorage, mStorageSize);
+	if (mMemorySize > 0)
+		log(Debug, "(%s, %d) ByteMemory allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMemory.data(), mMemorySize);
 #endif
 }
 
@@ -32,8 +32,8 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize, const char * mnemonic) :
 {
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
-	if (mStorageSize > 0)
-		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
+	if (mMemorySize > 0)
+		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mMemory.data(), mMemorySize);
 #endif
 }
 
@@ -46,8 +46,8 @@ ByteMemory_t::ByteMemory_t(const size_t byteSize, const char* mnemonic, bool deb
 {
 #if DEBUG_MEMORY_LOG_ALLOCATIONS
 	// Log the storage details if enabled, and if the size is above 0.
-	if (mStorageSize > 0)
-		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mStorage, mStorageSize);
+	if (mMemorySize > 0)
+		log(Debug, "(%s, %d) %s allocated at 0x%p (size = 0x%08zX).", __FILENAME__, __LINE__, mMnemonic.c_str(), mMemory.data(), mMemorySize);
 #endif
 }
 #endif
@@ -61,7 +61,7 @@ u8 ByteMemory_t::readByte(const System_t context, size_t byteOffset)
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -83,7 +83,7 @@ void ByteMemory_t::writeByte(const System_t context, size_t byteOffset, u8 value
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -101,7 +101,7 @@ u16 ByteMemory_t::readHword(const System_t context, size_t byteOffset)
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -123,7 +123,7 @@ void ByteMemory_t::writeHword(const System_t context, size_t byteOffset, u16 val
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -141,7 +141,7 @@ u32 ByteMemory_t::readWord(const System_t context, size_t byteOffset)
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -163,7 +163,7 @@ void ByteMemory_t::writeWord(const System_t context, size_t byteOffset, u32 valu
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -181,7 +181,7 @@ u64 ByteMemory_t::readDword(const System_t context, size_t byteOffset)
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -203,7 +203,7 @@ void ByteMemory_t::writeDword(const System_t context, size_t byteOffset, u64 val
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);
@@ -222,7 +222,7 @@ u128 ByteMemory_t::readQword(const System_t context, size_t byteOffset)
 #if defined(BUILD_DEBUG)
 	if (mDebugReads)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
@@ -246,7 +246,7 @@ void ByteMemory_t::writeQword(const System_t context, size_t byteOffset, u128 va
 #if defined(BUILD_DEBUG)
 	if (mDebugWrites)
 	{
-#if DEBUG_MEMORY_LOG_VALUE_AS_HEX
+#if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", getSystemStr(context), getMnemonic(), byteOffset, *hostMemoryAddress);

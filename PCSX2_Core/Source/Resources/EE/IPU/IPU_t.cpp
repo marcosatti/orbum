@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Resources/EE/IPU/IPU_t.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 IPU_t::IPU_t() :

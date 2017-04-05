@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/EE/GIF/GIF_t.h"

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
-#include "Common/Types/Registers/MIPS/LinkRegister32_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
+#include "Common/Types/Register/ConstantRegister32_t.h"
+#include "Common/Types/Register/LinkRegister32_t.h"
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreR3000_t.h"
 

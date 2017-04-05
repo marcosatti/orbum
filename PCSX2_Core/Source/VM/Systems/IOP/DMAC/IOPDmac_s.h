@@ -8,7 +8,7 @@
 
 class IOPDmac_t;
 class IOPIntc_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 class IOPDmacChannel_t;
 
 /*
@@ -32,7 +32,7 @@ private:
 	Resources.
 	*/
 	std::shared_ptr<IOPDmac_t> mDMAC;
-	std::shared_ptr<PhysicalMMU_t> mIOPPhysicalMMU;
+	std::shared_ptr<ByteMMU_t> mIOPByteMMU;
 	std::shared_ptr<IOPIntc_t> mINTC;
 	IOPDmacChannel_t * mChannel;
 

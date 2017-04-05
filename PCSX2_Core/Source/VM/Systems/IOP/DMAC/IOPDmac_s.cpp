@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Tables/IOPDmacChannelTable.h"
-#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
@@ -28,7 +28,7 @@ IOPDmac_s::IOPDmac_s(VM * vm) :
 	// Set resource pointer variables.
 	mDMAC = getVM()->getResources()->IOP->DMAC;
 	mINTC = getVM()->getResources()->IOP->INTC;
-	mIOPPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
+	mIOPByteMMU = getVM()->getResources()->IOP->ByteMMU;
 }
 
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
@@ -313,17 +313,17 @@ bool IOPDmac_s::isChannelIRQEnabled() const
 
 u32 IOPDmac_s::readDataMemory32(u32 PhysicalAddressOffset) const
 {
-	return mIOPPhysicalMMU->readWord(getContext(), PhysicalAddressOffset);
+	return mIOPByteMMU->readWord(getContext(), PhysicalAddressOffset);
 }
 
 void IOPDmac_s::writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const
 {
-	mIOPPhysicalMMU->writeWord(getContext(), PhysicalAddressOffset, data);
+	mIOPByteMMU->writeWord(getContext(), PhysicalAddressOffset, data);
 }
 
 u128 IOPDmac_s::readDataMemory128(u32 PhysicalAddressOffset) const
 {
-	return mIOPPhysicalMMU->readQword(getContext(), PhysicalAddressOffset);
+	return mIOPByteMMU->readQword(getContext(), PhysicalAddressOffset);
 }
 
 bool IOPDmac_s::readChainSourceTag()

@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
 #include "Common/Tables/IOPCoreInstructionTable.h"
 #include "Common/Tables/IOPCoreExceptionsTable.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VM.h"
@@ -25,7 +25,7 @@ IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	mIOPCoreInstruction(0)
 {
 	mIOPCore = getVM()->getResources()->IOP->IOPCore;
-	mPhysicalMMU = getVM()->getResources()->IOP->PhysicalMMU;
+	mByteMMU = getVM()->getResources()->IOP->ByteMMU;
 }
 
 void IOPCoreInterpreter_s::initalise()
@@ -43,7 +43,7 @@ int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksA
 	const u32 pcAddress = mIOPCore->R3000->PC->readWord(getContext());
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mIOPCoreInstruction = IOPCoreInstruction_t(mPhysicalMMU->readWord(getContext(), physicalAddress));
+	mIOPCoreInstruction = IOPCoreInstruction_t(mByteMMU->readWord(getContext(), physicalAddress));
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x1000000000000;
@@ -256,7 +256,7 @@ bool IOPCoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MM
 		}
 
 		// Undocumented: the IOP seems to access the addresses 0xFFC00000 - 0xFFFFFFFF as if it was trying to access the BIOS (0x1FC00000)... probably related to cache modes.
-		// The IOP's PhysicalMMU has an image mapping to handle this address. From PCSX2 code.
+		// The IOP's ByteMMU has an image mapping to handle this address. From PCSX2 code.
 		if (virtualAddress >= Constants::IOP::IOPCore::MMU::VADDRESS_SPECIAL_2_LOWER_BOUND)
 		{
 			physicalAddress = virtualAddress;

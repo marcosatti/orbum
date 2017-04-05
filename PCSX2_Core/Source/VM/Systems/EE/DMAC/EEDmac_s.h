@@ -7,7 +7,7 @@
 #include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
 class EEDmac_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 class EEDmacChannel_t;
 
 /*
@@ -44,7 +44,7 @@ private:
 	Resources.
 	*/
 	std::shared_ptr<EEDmac_t> mDMAC;
-	std::shared_ptr<PhysicalMMU_t> mEEPhysicalMMU;
+	std::shared_ptr<ByteMMU_t> mEEByteMMU;
 	EEDmacChannel_t * mChannel;
 
 	/////////////////////////////////

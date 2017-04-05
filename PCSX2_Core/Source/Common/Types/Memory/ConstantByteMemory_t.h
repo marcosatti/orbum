@@ -8,7 +8,7 @@
 A constant memory object, where reads return the constant u64 value (downcasted where appropriate) set at creation and writes do nothing.
 For a 128-bit read, the u64 is returned in the lower and upper 64-bits.
 Currently used for 'reserved' memory regions (ie: some EE registers) and debugging purposes.
-The size parameter in the constructor is used only for Physical MMU mapping purposes.
+The size parameter in the constructor is used only for ByteMMU_t mapping purposes.
 The parsed size is not allocated (always set to 0 in the underlying Memory_t).
 */
 class ConstantByteMemory_t : public ByteMemory_t
@@ -29,7 +29,7 @@ public:
 	void writeQword(const System_t context, size_t byteOffset, u128 value) override;
 
 	/*
-	Needed by the Physical MMU handler in order to map it. 
+	Needed by the ByteMMU_t handler in order to map it. 
 	Instead of the normal Memory_t::getSize(), return the size set when the object is created.
 	*/
 	size_t getSize() override;

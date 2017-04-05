@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register8_t.h"
-#include "Common/Types/Registers/Constant/ConstantRegister8_t.h"
+#include "Common/Types/Register/Register8_t.h"
+#include "Common/Types/Register/ConstantRegister8_t.h"
 
 #include "Resources/IOP/CDVD/CDVD_t.h"
 

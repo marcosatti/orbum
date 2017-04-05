@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/Constant/ConstantRegister32_t.h"
-#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/Register/ConstantRegister32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
 
 #include "Resources/Common/Common_t.h"
 #include "Resources/Common/Types/SBUSFIFOQueues_t.h"

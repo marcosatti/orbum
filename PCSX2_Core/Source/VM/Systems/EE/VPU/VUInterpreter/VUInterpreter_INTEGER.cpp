@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register16_t.h"
-#include "Common/Types/Registers/FPRegister128_t.h"
+#include "Common/Types/Register/Register16_t.h"
+#include "Common/Types/Register/Register128_t.h"
 
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 

@@ -126,53 +126,7 @@
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUUtil.h">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.h">
-      <Filter>Source\VM\VMMMUHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister32_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\FPRegister32_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\FPRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Register16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Register32_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\Register64_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\Register128_t.h">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Register8_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\MIPS\LinkRegister32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\MIPS\LinkRegister128_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Common\Types\Registers\MIPS\PCRegister16_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\MIPS\PCRegister32_t.h">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Common\Global\Constants.h">
       <Filter>Source\Common\Global</Filter>
     </ClInclude>
@@ -183,7 +137,6 @@
       <Filter>Source\Common\Global</Filter>
     </ClInclude>
     <ClInclude Include="Source\Common\Global\CompileOptions.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.h" />
     <ClInclude Include="Source\Resources\Clock\Clock_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
@@ -272,7 +225,6 @@
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
-    <ClInclude Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.h" />
     <ClInclude Include="Source\Resources\IOP\SPU2\SPU2_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\HwordMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\ByteMemory_t.h" />
@@ -309,8 +261,48 @@
     <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.h" />
-    <ClInclude Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32_t.h" />
-    <ClInclude Include="Source\Common\Types\Registers\BitfieldRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\BitfieldRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\BitfieldRegister32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\ConstantRegister8_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\ConstantRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\ConstantRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\ConstantRegister128_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\LinkRegister32_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\LinkRegister128_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\PCRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\PCRegister32_t.h">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\Register8_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\Register16_t.h" />
+    <ClInclude Include="Source\Common\Types\Register\Register32_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\Register64_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\Register128_t.h">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\Register\MapperRegister16Register32_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\ByteMMU_t.h">
+      <Filter>Source\VM\VMMMUHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperBaseObjectByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister128ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister64ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister32ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister16ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -322,53 +314,6 @@
     <ClCompile Include="Source\Common\Util\FPUUtil\FPUUtil.cpp">
       <Filter>Source\Common\Util\EECoreCOP1Util</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMMU_t.cpp">
-      <Filter>Source\VM\VMMMUHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister32_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\FPRegister32_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\COP1\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\FPRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Register16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Register32_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\Register64_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\Register128_t.cpp">
-      <Filter>Source\Common\Types\Registers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedMemory_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFPRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Register8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedRegister64_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperF32Register32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Wrapper\WrapperR16Register32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantFPRegister128_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\Constant\ConstantRegister128_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\MIPS\LinkRegister32_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\MIPS\LinkRegister128_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\Registers\MIPS\PCRegister16_t.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\MIPS\PCRegister32_t.cpp">
-      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\PhysicalMapped_t.cpp" />
     <ClCompile Include="Source\Resources\Clock\Clock_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
@@ -471,7 +416,6 @@
     <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
-    <ClCompile Include="Source\Common\Types\FIFOQueue32\FIFOQueue32_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ByteMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ConstantByteMemory_t.cpp" />
@@ -495,9 +439,49 @@
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUCores_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.cpp" />
-    <ClCompile Include="Source\Common\Types\PhysicalMMU\MappedFIFOQueue32.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_s.cpp" />
-    <ClCompile Include="Source\Common\Types\Registers\BitfieldRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\BitfieldRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\BitfieldRegister32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\ConstantRegister8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\ConstantRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\ConstantRegister128_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\LinkRegister32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\LinkRegister128_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\PCRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\PCRegister32_t.cpp">
+      <Filter>Source\Common\PS2 Resources\EE\EECore\R5900\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\Register8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\Register16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\Register\Register32_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\Register64_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\Register128_t.cpp">
+      <Filter>Source\Common\Types\Registers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\Register\MapperRegister16Register32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\ByteMMU_t.cpp">
+      <Filter>Source\VM\VMMMUHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperBaseObjectByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister128ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister64ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister32ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister16ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

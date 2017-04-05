@@ -10,7 +10,7 @@ class SPU2_t;
 class IOPTimers_t;
 class ByteMemory_t;
 class DebugMemory_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 class Register32_t;
 
 /*
@@ -57,7 +57,7 @@ public:
 	/*
 	The IOP physical memory space.
 	*/
-	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
+	std::shared_ptr<ByteMMU_t> ByteMMU;
 
 	/*
 	IOP Main Memory (2MB). Allocated at 0x00000000.

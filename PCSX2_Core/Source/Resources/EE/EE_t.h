@@ -9,7 +9,7 @@ class EETimers_t;
 class IPU_t;
 class GIF_t;
 class VPU_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 class ByteMemory_t;
 class ROByteMemory_t;
 class Register32_t;
@@ -66,7 +66,7 @@ public:
 	/*
 	The EE physical memory space.
 	*/
-	std::shared_ptr<PhysicalMMU_t> PhysicalMMU;
+	std::shared_ptr<ByteMMU_t> ByteMMU;
 
 	/*
 	Main Memory (32MB). Allocated at 0x00000000.

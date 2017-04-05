@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Register/BitfieldRegister32_t.h"
 
 /*
 IOPCore_COP0_Registers_t.h implements the IOP Core specific COP0 control registers. This is used primarily by IOPCoreCOP0_t.h.

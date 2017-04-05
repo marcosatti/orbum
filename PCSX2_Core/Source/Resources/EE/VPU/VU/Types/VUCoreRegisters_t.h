@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Register/BitfieldRegister32_t.h"
 #include "Common/Util/FPUUtil/FPUFlags_t.h"
 
 /*

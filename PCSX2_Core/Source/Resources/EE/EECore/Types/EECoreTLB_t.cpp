@@ -10,7 +10,7 @@ EECoreTLB_t::EECoreTLB_t() :
 {
 }
 
-s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
+int EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 {
 	// Since the VPN can be a number of sizes, we start with the largest page size of 16MB or the most significant 8 bits (which means smallest VPN number) and search for that.
 	// If a match is found, then we get the proper page size from the TLB entry and check to see if the VA is within the page. If not we continue searching.
@@ -49,12 +49,12 @@ s32 EECoreTLB_t::findTLBIndex(u32 PS2VirtualAddress) const
 	return -1;
 }
 
-const EECoreTLBEntry_t & EECoreTLB_t::getTLBEntry(s32 index) const
+const EECoreTLBEntry_t & EECoreTLB_t::getTLBEntry(int index) const
 {
 	return mTLBEntries[index];
 }
 
-s32 EECoreTLB_t::getNewTLBIndex()
+int EECoreTLB_t::getNewTLBIndex()
 {
 #if defined(BUILD_DEBUG)
 	log(Debug, "Warning: getNewTLBIndex() called, but not properly implemented.");
@@ -72,7 +72,7 @@ s32 EECoreTLB_t::getNewTLBIndex()
 	return 0;
 }
 
-void EECoreTLB_t::setTLBEntry(const EECoreTLBEntry_t& entry, const s32& index)
+void EECoreTLB_t::setTLBEntry(const EECoreTLBEntry_t& entry, const int index)
 {
 	mTLBEntries[index] = entry;
 }

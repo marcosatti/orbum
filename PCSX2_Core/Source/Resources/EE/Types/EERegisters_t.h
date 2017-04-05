@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ByteMemory_t.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 
 /*
 EERegisters_t defines SPECIAL EE registers specified in the EE Users Manual from page 21 to 25.

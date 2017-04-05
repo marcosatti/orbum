@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/Registers/MIPS/LinkRegister32_t.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
+#include "Common/Types/Register/LinkRegister32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 

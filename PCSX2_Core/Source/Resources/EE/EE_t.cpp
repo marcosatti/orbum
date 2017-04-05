@@ -4,8 +4,8 @@
 #include "Common/Types/Memory/ByteMemory_t.h"
 #include "Common/Types/Memory/ROByteMemory_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
@@ -26,7 +26,7 @@ EE_t::EE_t() :
 	IPU(std::make_shared<IPU_t>()),
 	GIF(std::make_shared<GIF_t>()),
 	VPU(std::make_shared<VPU_t>()),
-	PhysicalMMU(std::make_shared<PhysicalMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_4B)),
+	ByteMMU(std::make_shared<ByteMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_4B)),
 	MainMemory(std::make_shared<ByteMemory_t>(Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
 	BootROM(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_BOOT_ROM)),
 	ROM1(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_ROM1)),

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/Register64_t.h"
+#include "Common/Types/Register/Register64_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/GS/GS_t.h"

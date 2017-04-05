@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Register/BitfieldRegister32_t.h"
 
 /*
 EECoreCOP0Registers_t.h implements the EE Core specific COP0 control registers.

@@ -13,7 +13,7 @@ class EEDmacChannelRegister_ASR_t;
 class EEDmacChannelRegister_SADR_t;
 class FIFOQueue32_t;
 class ConstantByteMemory_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 class Register32_t;
 
 /*

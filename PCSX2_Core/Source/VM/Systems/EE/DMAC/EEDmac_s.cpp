@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Tables/EEDmacChannelTable.h"
-#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/EE/DMAC/EEDmac_s.h"
@@ -30,7 +30,7 @@ EEDmac_s::EEDmac_s(VM * vm) :
 {
 	// Set resource pointer variables.
 	mDMAC = getVM()->getResources()->EE->DMAC;
-	mEEPhysicalMMU = getVM()->getResources()->EE->PhysicalMMU;
+	mEEByteMMU = getVM()->getResources()->EE->ByteMMU;
 }
 
 int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
@@ -444,18 +444,18 @@ u128 EEDmac_s::readDataMemory(u32 physicalAddress, bool SPRAccess) const
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		return mEEPhysicalMMU->readQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
+		return mEEByteMMU->readQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
 	else
-		return mEEPhysicalMMU->readQword(getContext(), physicalAddress);
+		return mEEByteMMU->readQword(getContext(), physicalAddress);
 }
 
 void EEDmac_s::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) const
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		mEEPhysicalMMU->writeQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
+		mEEByteMMU->writeQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
 	else
-		mEEPhysicalMMU->writeQword(getContext(), physicalAddress, data);
+		mEEByteMMU->writeQword(getContext(), physicalAddress, data);
 }
 
 bool EEDmac_s::readChainSourceTag()

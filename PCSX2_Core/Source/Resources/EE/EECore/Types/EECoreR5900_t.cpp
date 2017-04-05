@@ -3,11 +3,11 @@
 #include "Common/Global/Globals.h"
 
 #include "Resources/EE/EECore/Types/EECoreR5900_t.h"
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/Registers/Constant/ConstantRegister128_t.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
-#include "Common/Types/Registers/MIPS/LinkRegister128_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/Register/Register128_t.h"
+#include "Common/Types/Register/ConstantRegister128_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
+#include "Common/Types/Register/LinkRegister128_t.h"
 
 EECoreR5900_t::EECoreR5900_t() : 
 	PC(std::make_shared<PCRegister32_t>()),

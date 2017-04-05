@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Register/BitfieldRegister32_t.h"
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/Registers/Register16_t.h"
-#include "Common/Types/Registers/FPRegister128_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
+#include "Common/Types/Register/Register16_t.h"
+#include "Common/Types/Register/Register128_t.h"
 
 #include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
 
@@ -104,7 +104,7 @@ void VUInterpreter_s::SQI()
 	// MEM(Ft) = Fs
 	auto& source1Reg = mVUCore->VF[mVUInstruction.getFs()];
 	auto& source2Reg = mVUCore->VI[mVUInstruction.getFt()]; // Mem Addr.
-	auto& Mem = mVUCore->MemPhysicalMMU;
+	auto& Mem = mVUCore->MemByteMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;
@@ -154,7 +154,7 @@ void VUInterpreter_s::ISWR()
 	// MEM(Fs) = Ft.
 	auto& source1Reg = mVUCore->VI[mVUInstruction.getFt()]; // Data.
 	auto& source2Reg = mVUCore->VI[mVUInstruction.getFs()]; // Mem Addr.
-	auto& Mem = mVUCore->MemPhysicalMMU;
+	auto& Mem = mVUCore->MemByteMMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;

@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/Registers/FPRegister32_t.h"
-#include "Common/Types/Registers/FPRegister128_t.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/Register/Register128_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/Register/Register128_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 
@@ -25,7 +25,7 @@ void EECoreInterpreter_s::LB()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s8>(mPhysicalMMU->readByte(getContext(), physicalAddress));
+	auto value = static_cast<s8>(mByteMMU->readByte(getContext(), physicalAddress));
 	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
@@ -41,7 +41,7 @@ void EECoreInterpreter_s::LBU()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readByte(getContext(), physicalAddress);
+	auto value = mByteMMU->readByte(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
@@ -57,7 +57,7 @@ void EECoreInterpreter_s::LD()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s64>(mPhysicalMMU->readDword(getContext(), physicalAddress));
+	auto value = static_cast<s64>(mByteMMU->readDword(getContext(), physicalAddress));
 	destReg->writeDword(getContext(), 0, value);
 }
 
@@ -78,7 +78,7 @@ void EECoreInterpreter_s::LDL()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
+	auto value = mByteMMU->readDword(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, (destReg->readDword(getContext(), 0) & (0x00FFFFFFFFFFFFFF >> shift)) | (value << (56 - shift)));
 }
 
@@ -99,7 +99,7 @@ void EECoreInterpreter_s::LDR()
 	if (getPhysicalAddress(dwordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readDword(getContext(), physicalAddress);
+	auto value = mByteMMU->readDword(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, (destReg->readDword(getContext(), 0) & (0xFFFFFFFFFFFFFF00 << (56 - shift))) | (value >> shift));
 }
 
@@ -115,7 +115,7 @@ void EECoreInterpreter_s::LH()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s16>(mPhysicalMMU->readHword(getContext(), physicalAddress));
+	auto value = static_cast<s16>(mByteMMU->readHword(getContext(), physicalAddress));
 	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
@@ -131,7 +131,7 @@ void EECoreInterpreter_s::LHU()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readHword(getContext(), physicalAddress);
+	auto value = mByteMMU->readHword(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
@@ -158,7 +158,7 @@ void EECoreInterpreter_s::LW()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s32>(mPhysicalMMU->readWord(getContext(), physicalAddress));
+	auto value = static_cast<s32>(mByteMMU->readWord(getContext(), physicalAddress));
 	destReg->writeDword(getContext(), 0, static_cast<s64>(value));
 }
 
@@ -179,7 +179,7 @@ void EECoreInterpreter_s::LWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>((destReg->readWord(getContext(), 0) & (0x00FFFFFF >> shift)) | (value << (24 - shift)))));
 }
 
@@ -200,7 +200,7 @@ void EECoreInterpreter_s::LWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, static_cast<s64>(static_cast<s32>((destReg->readWord(getContext(), 0) & (0xFFFFFF00 << (24 - shift))) | (value >> shift))));
 }
 
@@ -216,7 +216,7 @@ void EECoreInterpreter_s::LWU()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeDword(getContext(), 0, static_cast<u64>(value));
 }
 
@@ -232,7 +232,7 @@ void EECoreInterpreter_s::LQ()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readQword(getContext(), physicalAddress);
+	auto value = mByteMMU->readQword(getContext(), physicalAddress);
 	destReg->writeQword(getContext(), value);
 }
 
@@ -251,7 +251,7 @@ void EECoreInterpreter_s::LWC1()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), value);
 }
 
@@ -270,6 +270,6 @@ void EECoreInterpreter_s::LQC2()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readQword(getContext(), physicalAddress);
+	auto value = mByteMMU->readQword(getContext(), physicalAddress);
 	destReg->writeQword(getContext(), value);
 }

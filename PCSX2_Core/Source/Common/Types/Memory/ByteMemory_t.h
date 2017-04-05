@@ -9,7 +9,7 @@
 /*
 A simple memory object which is constructed to the (byte) size specified, and optional mnemonic which is used for debugging/logging.
 It has byte unit granularity - each address (offset) refers to a byte.
-This is directly compatible with the PhysicalMMU_t read/write functions.
+This is directly compatible with the ByteMMU_t read/write functions.
 */
 class ByteMemory_t
 {

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/FIFOQueue32/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
 
 class SBUSRegister_F300_t;
 

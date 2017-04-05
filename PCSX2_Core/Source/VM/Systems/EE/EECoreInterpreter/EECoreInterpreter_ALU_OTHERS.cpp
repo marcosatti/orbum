@@ -3,8 +3,8 @@
 #include <cmath>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register128_t.h"
-#include "Common/Types/Registers/FPRegister32_t.h"
+#include "Common/Types/Register/Register128_t.h"
+#include "Common/Types/Register/Register32_t.h"
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 

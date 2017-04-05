@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "Common/Global/Globals.h"
 
 #include "Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
@@ -19,17 +21,17 @@ public:
 	Any functions that call this may throw a TLB refill exception if an entry was not found (this function doesn't do this automatically).
 	The process is based on EE Core Users Manual page 120.
 	*/
-	s32 findTLBIndex(u32 PS2VirtualAddress) const;
+	int findTLBIndex(u32 PS2VirtualAddress) const;
 
 	/*
 	Gets the TLB entry at the specified index - use findTLBIndex() to make sure it exists first.
 	*/
-	const EECoreTLBEntry_t & getTLBEntry(s32 index) const;
+	const EECoreTLBEntry_t & getTLBEntry(int index) const;
 
 	/*
 	Copies the TLB entry info to the specified index.
 	*/
-	void setTLBEntry(const EECoreTLBEntry_t & entry, const s32 & index);
+	void setTLBEntry(const EECoreTLBEntry_t & entry, const int index);
 
 	/*
 	Gets an index to a new TLB entry position.
@@ -37,18 +39,13 @@ public:
 	See for example EE Users Manual page 101.
 	TODO: currently not working properly.
 	*/
-	s32 getNewTLBIndex();
-
-	/*
-	A zeroed-TLB entry, pointed to by the MMUHandler initially.
-	*/
-	static constexpr EECoreTLBEntry_t EMPTY_TLB_ENTRY = {0};
+	int getNewTLBIndex();
 
 private:
 	/*
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	EECoreTLBEntry_t mTLBEntries[Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
+	std::array<EECoreTLBEntry_t, Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES> mTLBEntries;
 };
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register128_t.h"
+#include "Common/Types/Register/Register128_t.h"
 
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 

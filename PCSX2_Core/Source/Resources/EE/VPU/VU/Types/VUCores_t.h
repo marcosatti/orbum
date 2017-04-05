@@ -6,9 +6,9 @@
 #include "Common/Types/MIPS/MIPSCoprocessor_t.h"
 
 class ByteMemory_t;
-class PhysicalMMU_t;
-class FPRegister128_t;
-class FPRegister32_t;
+class ByteMMU_t;
+class Register128_t;
+class Register32_t;
 class Register16_t;
 class Register32_t;
 class PCRegister16_t;
@@ -36,38 +36,38 @@ public:
 	VU floating point registers (VF) (128-bit) and integer registers (VI) (16-bit).
 	See VU Users Manual page 18.
 	*/
-	std::shared_ptr<FPRegister128_t> VF[Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];
+	std::shared_ptr<Register128_t> VF[Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];
 	std::shared_ptr<Register16_t> VI[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
 
 	/*
 	ACC register. Used by instructions such as ADDA and MULA.
 	See VU Users Manual page 33.
 	*/
-	std::shared_ptr<FPRegister128_t> ACC;
+	std::shared_ptr<Register128_t> ACC;
 
 	/*
 	I register. Used to store immediate values.
 	See VU Users Manual page 33.
 	*/
-	std::shared_ptr<FPRegister32_t> I;
+	std::shared_ptr<Register32_t> I;
 
 	/*
 	Q register. Used to store division/sqrt values.
 	See VU Users Manual page 34.
 	*/
-	std::shared_ptr<FPRegister32_t> Q;
+	std::shared_ptr<Register32_t> Q;
 
 	/*
 	R register. Used to store random numbers generated.
 	See VU Users Manual page 34.
 	*/
-	std::shared_ptr<FPRegister32_t> R;
+	std::shared_ptr<Register32_t> R;
 
 	/*
 	P register. Used to store EFU result values.
 	See VU Users Manual page 34.
 	*/
-	std::shared_ptr<FPRegister32_t> P;
+	std::shared_ptr<Register32_t> P;
 
 	/*
 	The Flag registers (MAC, Status and Clipping), used to hold special results from calculations.
@@ -97,7 +97,7 @@ public:
 	For VU1, it is just a direct map of its real working space (needed to keep it OOP friendly).
 	See EE Users Manual page 84.
 	*/
-	std::shared_ptr<PhysicalMMU_t> MemPhysicalMMU;
+	std::shared_ptr<ByteMMU_t> MemByteMMU;
 
 	/*
 	VU memory, defined on page 18 of the VU Users Manual.

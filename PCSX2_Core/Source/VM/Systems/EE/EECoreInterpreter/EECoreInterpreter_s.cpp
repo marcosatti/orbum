@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
-#include "Common/Types/Registers/MIPS/PCRegister32_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
+#include "Common/Types/Register/PCRegister32_t.h"
 #include "Common/Tables/EECoreInstructionTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -34,7 +34,7 @@ EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterp
 	mExceptionProperties(nullptr) 
 {
 	mEECore = getVM()->getResources()->EE->EECore;
-	mPhysicalMMU = getVM()->getResources()->EE->PhysicalMMU;
+	mByteMMU = getVM()->getResources()->EE->ByteMMU;
 	mVU0 = getVM()->getResources()->EE->VPU->VU->VU0;
 }
 
@@ -53,7 +53,7 @@ int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAv
 	const u32 pcAddress = mEECore->R5900->PC->readWord(getContext());
 	u32 physicalAddress;
 	bool mmuError = getPhysicalAddress(pcAddress, READ, physicalAddress); // TODO: Add error checking for address bus error.
-	mEECoreInstruction = EECoreInstruction_t(mPhysicalMMU->readWord(getContext(), physicalAddress));
+	mEECoreInstruction = EECoreInstruction_t(mByteMMU->readWord(getContext(), physicalAddress));
 
 #if defined(BUILD_DEBUG)
 	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;

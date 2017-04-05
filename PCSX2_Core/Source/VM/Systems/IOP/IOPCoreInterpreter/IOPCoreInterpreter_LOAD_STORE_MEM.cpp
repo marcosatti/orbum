@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register32_t.h"
-#include "Common/Types/PhysicalMMU/PhysicalMMU_t.h"
+#include "Common/Types/Register/Register32_t.h"
+#include "Common/Types/ByteMMU/ByteMMU_t.h"
 
 #include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
 
@@ -21,7 +21,7 @@ void IOPCoreInterpreter_s::LB()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s8>(mPhysicalMMU->readByte(getContext(), physicalAddress));
+	auto value = static_cast<s8>(mByteMMU->readByte(getContext(), physicalAddress));
 	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
@@ -37,7 +37,7 @@ void IOPCoreInterpreter_s::LBU()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readByte(getContext(), physicalAddress);
+	auto value = mByteMMU->readByte(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), static_cast<u32>(value));
 }
 
@@ -53,7 +53,7 @@ void IOPCoreInterpreter_s::LH()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = static_cast<s16>(mPhysicalMMU->readHword(getContext(), physicalAddress));
+	auto value = static_cast<s16>(mByteMMU->readHword(getContext(), physicalAddress));
 	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
@@ -69,7 +69,7 @@ void IOPCoreInterpreter_s::LHU()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readHword(getContext(), physicalAddress);
+	auto value = mByteMMU->readHword(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), static_cast<u32>(value));
 }
 
@@ -96,7 +96,7 @@ void IOPCoreInterpreter_s::LW()
 	if (getPhysicalAddress(virtualAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), static_cast<s32>(value));
 }
 
@@ -117,7 +117,7 @@ void IOPCoreInterpreter_s::LWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), (destReg->readWord(getContext()) & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
 }
 
@@ -138,7 +138,7 @@ void IOPCoreInterpreter_s::LWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 	destReg->writeWord(getContext(), (destReg->readWord(getContext()) & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
 }
 
@@ -154,7 +154,7 @@ void IOPCoreInterpreter_s::SB()
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeByte(getContext(), physicalAddress, source2Reg->readByte(getContext(), 0));
+	mByteMMU->writeByte(getContext(), physicalAddress, source2Reg->readByte(getContext(), 0));
 }
 
 void IOPCoreInterpreter_s::SH()
@@ -169,7 +169,7 @@ void IOPCoreInterpreter_s::SH()
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeHword(getContext(), physicalAddress, source2Reg->readHword(getContext(), 0));
+	mByteMMU->writeHword(getContext(), physicalAddress, source2Reg->readHword(getContext(), 0));
 }
 
 void IOPCoreInterpreter_s::SW()
@@ -184,7 +184,7 @@ void IOPCoreInterpreter_s::SW()
 	if (getPhysicalAddress(virtualAddress, WRITE, physicalAddress))
 		return;
 
-	mPhysicalMMU->writeWord(getContext(), physicalAddress, source2Reg->readWord(getContext()));
+	mByteMMU->writeWord(getContext(), physicalAddress, source2Reg->readWord(getContext()));
 }
 
 void IOPCoreInterpreter_s::SWL()
@@ -204,12 +204,12 @@ void IOPCoreInterpreter_s::SWL()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) >> (24 - shift))) | (value & (0xFFFFFF00 << shift))); 
+	mByteMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) >> (24 - shift))) | (value & (0xFFFFFF00 << shift))); 
 }
 
 void IOPCoreInterpreter_s::SWR()
@@ -229,11 +229,11 @@ void IOPCoreInterpreter_s::SWR()
 	if (getPhysicalAddress(wordAddress, READ, physicalAddress))
 		return;
 
-	auto value = mPhysicalMMU->readWord(getContext(), physicalAddress);
+	auto value = mByteMMU->readWord(getContext(), physicalAddress);
 
 	if (getPhysicalAddress(wordAddress, WRITE, physicalAddress)) // Need to get phy address again, check for write conditions.
 		return;
 
-	mPhysicalMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
+	mByteMMU->writeWord(getContext(), physicalAddress, ((source2Reg->readWord(getContext()) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 

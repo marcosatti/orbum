@@ -15,7 +15,7 @@ class VM;
 class VUInterpreter_s;
 class EECore_t;
 class VUCore_VU0_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 
 /*
 The EE Core interpreter. Implements the EE Core including the R5900, COP0, FPU (COP1), etc.
@@ -52,7 +52,7 @@ private:
 	Resources.
 	*/
 	std::shared_ptr<EECore_t> mEECore;
-	std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
+	std::shared_ptr<ByteMMU_t> mByteMMU;
 	std::shared_ptr<VUCore_VU0_t> mVU0;
 
 #if defined(BUILD_DEBUG)

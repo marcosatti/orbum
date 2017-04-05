@@ -12,7 +12,7 @@
 
 class VM;
 class IOPCore_t;
-class PhysicalMMU_t;
+class ByteMMU_t;
 struct MIPSInstructionInfo_t;
 
 /*
@@ -48,7 +48,7 @@ private:
 	Resources.
 	*/
 	std::shared_ptr<IOPCore_t> mIOPCore;
-	std::shared_ptr<PhysicalMMU_t> mPhysicalMMU;
+	std::shared_ptr<ByteMMU_t> mByteMMU;
 
 #if defined(BUILD_DEBUG)
 	// Debug loop counter 

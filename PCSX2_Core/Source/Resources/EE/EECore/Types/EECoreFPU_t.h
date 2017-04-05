@@ -4,7 +4,7 @@
 
 #include "Common/Types/MIPS/MIPSCoprocessor_t.h"
 
-class FPRegister32_t;
+class Register32_t;
 class BitfieldRegister32_t;
 class EECoreFPURegister_IRR_t;
 class EECoreFPURegister_CSR_t;
@@ -23,13 +23,13 @@ public:
 	FPU defines 32 general purpose registers, called FPR's.
 	See EE Core Users Manual, page 157.
 	*/
-	std::shared_ptr<FPRegister32_t> FPR[32];
+	std::shared_ptr<Register32_t> FPR[32];
 
 	/*
 	FPU defines an accumulator register, used for multiply-accumulate type instructions.
 	See EE Core Users Manual, page 157.
 	*/
-	std::shared_ptr<FPRegister32_t> ACC;
+	std::shared_ptr<Register32_t> ACC;
 
 	// Bitfield Register Implementations.
 	/*

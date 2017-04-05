@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/Registers/Register32_t.h"
+#include "Common/Types/Register/Register32_t.h"
 
 /*
 SBUS_MSCOM (F200) register.

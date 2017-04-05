@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Types/Registers/BitfieldRegister32_t.h"
+#include "Common/Types/Register/BitfieldRegister32_t.h"
 
 struct FPUFlags_t;
 

@@ -6,7 +6,7 @@
 #include "Common/Util/FPUUtil/FPUUtil.h"
 #include "Common/Global/Globals.h"
 
-f32 FPUUtil::formatIEEEToPS2Float(const f32 & value, FPUFlags_t & flags)
+f32 FPUUtil::formatIEEEToPS2Float(const f32 value, FPUFlags_t & flags)
 {
 	// Intended to format incoming IEEE754 spec values into PS2 spec values.
 	// In the PS2 there is no support for NaN's, +/- Inf, or denormalised (subnormal) values.
@@ -54,19 +54,19 @@ f32 FPUUtil::formatIEEEToPS2Float(const f32 & value, FPUFlags_t & flags)
 	}
 }
 
-u32 FPUUtil::getXORSign(const f32& value1, const f32& value2)
+u32 FPUUtil::getXORSign(const f32 value1, const f32 value2)
 {
 	u32 value1_u32 = static_cast<u32>(value1);
 	u32 value2_u32 = static_cast<u32>(value2);
 	return (value1_u32 ^ value2_u32) & 0x80000000;
 }
 
-bool FPUUtil::isNegative(const f32& value)
+bool FPUUtil::isNegative(const f32 value)
 {
 	return std::signbit(value);
 }
 
-u8 FPUUtil::getExponent(const f32& value)
+u8 FPUUtil::getExponent(const f32 value)
 {
 	s32 exp;
 	std::frexp(value, &exp);
