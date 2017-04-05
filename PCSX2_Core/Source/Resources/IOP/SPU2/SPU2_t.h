@@ -28,4 +28,5 @@ public:
 	The raw byte-addressed memory is still provided, with a wrapper applied for the half-word verison.
 	*/
 	std::shared_ptr<HwordMemory_t> MainMemory;
+	std::shared_ptr<HwordMemory_t> DebugDummy; // Workaround for the optimisation of the hword memory dump function...
 };

@@ -248,24 +248,39 @@ void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset,
 		throw std::runtime_error("readFile() file was too big to read in.");
 
 	// Open file.
-	std::basic_ifstream<u16> file(fileStr, std::ifstream::binary);
+	// MSVC bug? Using std::basic_ifstream<u16> is WAY slower than using ifstream...
+	std::ifstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
 		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
 
 	// Read file in.
+	file.seekg(fileHwordOffset);
+	file.read((char*)&mMemory[memoryHwordOffset], fileHwordLength * Constants::NUMBER_BYTES_IN_HWORD);
+
+	// STL method below super slow for some reason...
+	/*
+	// Read file in.
 	std::istreambuf_iterator<u16> start(file);
 	std::advance(start, fileHwordOffset);
 	std::copy_n(start, fileHwordLength, mMemory.begin() + memoryHwordOffset);
+	*/
 }
 
 void HwordMemory_t::dump(const char * fileStr)
 {
 	// Open file.
-	std::basic_ofstream<u16> file(fileStr, std::ifstream::binary);
+	// MSVC bug? Using std::basic_ofstream<u16> is WAY slower than using ofstream...
+	std::ofstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
-		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
+		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
 
+	// Write file out.
+	file.write((char*)&mMemory[0], mMemoryByteSize);
+
+	// STL method below super slow for some reason...
+	/*
 	// Write file out.
 	std::ostreambuf_iterator<u16> start(file);
 	std::copy(mMemory.begin(), mMemory.end(), start);
+	*/
 }

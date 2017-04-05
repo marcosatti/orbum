@@ -277,24 +277,39 @@ void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, c
 		throw std::runtime_error("readFile() file was too big to read in.");
 
 	// Open file.
-	std::basic_ifstream<u8> file(fileStr, std::ifstream::binary);
+	// MSVC bug? Using std::basic_ifstream<u8> is WAY slower than using ifstream... But they should be the same thing...
+	std::ifstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
 		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
 
 	// Read file in.
+	file.seekg(fileByteOffset);
+	file.read((char*)&mMemory[memoryByteOffset], fileByteLength);
+
+	// STL method below super slow for some reason...
+	/*
+	// Read file in.
 	std::istreambuf_iterator<u8> start(file);
 	std::advance(start, fileByteOffset);
 	std::copy_n(start, fileByteLength, mMemory.begin() + memoryByteOffset);
+	*/
 }
 
 void ByteMemory_t::dump(const char * fileStr)
 {
 	// Open file.
-	std::basic_ofstream<u8> file(fileStr, std::ifstream::binary);
+	// MSVC bug? Using std::basic_ofstream<u8> is WAY slower than using ofstream... But they should be the same thing...
+	std::ofstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
-		throw std::runtime_error("readFile() tried to open file, but it failed! Check file exists and has read permissions.");
+		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
 
+	// Write file out.
+	file.write((char*)&mMemory[0], mMemoryByteSize);
+
+	// STL method below super slow for some reason...
+	/*
 	// Write file out.
 	std::ostreambuf_iterator<u8> start(file);
 	std::copy(mMemory.begin(), mMemory.end(), start);
+	*/
 }

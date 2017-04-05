@@ -69,9 +69,10 @@ int main()
 		while (vm.getStatus() == VM::VMStatus::Running)
 			vm.run();
 
-		vm.getResources()->EE->MainMemory->dump("C:\\Shared\\End_Dump_EE.bin");
-		vm.getResources()->IOP->MainMemory->dump("C:\\Shared\\End_Dump_IOP.bin");
-		vm.getResources()->IOP->SPU2->MainMemory->dump("C:\\Shared\\End_Dump_SPU2.bin");
+		vm.getResources()->EE->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_EE.bin");
+		vm.getResources()->IOP->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_IOP.bin");
+		vm.getResources()->IOP->SPU2->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_SPU2.bin");
+		vm.getResources()->IOP->SPU2->DebugDummy->dump("C:\\Shared\\Dumps\\End_Dump_DebugDummy.bin");
 	}
 	catch (std::exception ex)
 	{

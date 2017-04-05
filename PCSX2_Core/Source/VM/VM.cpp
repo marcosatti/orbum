@@ -165,10 +165,8 @@ void VM::run()
 		// Run through each of the systems separately.
 		for (auto& system : mSystems)
 		{
-			if (system.second == nullptr)
-				continue;
-
-			system.second->run();
+			if (system.second != nullptr)
+				system.second->run();
 		}
 	}
 }

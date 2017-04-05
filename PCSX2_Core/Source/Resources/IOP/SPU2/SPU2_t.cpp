@@ -7,6 +7,7 @@
 
 SPU2_t::SPU2_t() :
 	SPU2_REGISTERS(std::make_shared<ByteMemory_t>(0x800, "SPU2 Registers", false, true)),
-	MainMemory(std::make_shared<HwordMemory_t>(Constants::IOP::SPU2::SIZE_MAIN_MEMORY, "SPU2 Main Memory", false, true))
+	MainMemory(std::make_shared<HwordMemory_t>(Constants::IOP::SPU2::SIZE_MAIN_MEMORY, "SPU2 Main Memory", false, true)),
+	DebugDummy(std::make_shared<HwordMemory_t>(0x2, "DebugDummy", false, false))
 {
 }
