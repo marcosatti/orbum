@@ -173,7 +173,7 @@ void Resources_t::postInit_EE_VPU_VU() const
 		EE->VPU->VU->VU0->MemByteMMU->mapObject(0x4370, EE->VPU->VU->VU1->P);
 		EE->VPU->VU->VU0->MemByteMMU->mapObject(0x43A0, EE->VPU->VU->VU1->PC); // TPC.
 
-																				   // VU1 Memory.
+		// VU1 Memory.
 		EE->VPU->VU->VU1->MemByteMMU->mapObject(0x0000, EE->VPU->VU->VU1->MEMORY_Mem);
 	}
 }

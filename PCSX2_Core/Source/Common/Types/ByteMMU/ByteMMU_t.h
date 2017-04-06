@@ -20,10 +20,6 @@ ByteMMU_t is responsible for converting the PS2's physical memory into host memo
 It is byte-addressable, and can map up to 4GB (full 32-bit space).
 The mapping method is actually just a 2 level (directory and pages) page table!
 
-It will throw different runtime errors when the following conditions occur:
-- range_error exception if more than PAGE_TABLE_MAX_SIZE in the page table is accessed.
-- runtime_error exception if the returned PFN from the page table was null (indicates invalid entry, needs to be mapped first).
-
 * Why is an MapperBaseObjectByteMMU_t object used instead of a raw pointer to a block of memory?
 Some memory regions of the PS2 require special attributes - such as the reserved regions of the EE registers. When writing to these regions, the write is disregarded.
 When a read is performed, an indeterminate value is returned (0 for some registers due to undocumented behaviour).
@@ -53,7 +49,7 @@ By using a directory size of 4MB and a page size of 16B, with a 512 MB max addre
 class ByteMMU_t
 {
 public:
-	explicit ByteMMU_t(const size_t & maxAddressableSizeBytes, const size_t & directorySizeBytes, const size_t & pageSizeBytes);
+	explicit ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const int numOffsetIndexBits);
 
 	/*
 	Maps the given object into the PS2 physical address space, provided it inherits the MapperBaseObjectByteMMU_t interface.
@@ -78,32 +74,34 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
 	*/
-	u8 readByte(const System_t context, u32 PS2PhysicalAddress);
-	void writeByte(const System_t context, u32 PS2PhysicalAddress, u8 value);
-	u16 readHword(const System_t context, u32 PS2PhysicalAddress);
-	void writeHword(const System_t context, u32 PS2PhysicalAddress, u16 value);
-	u32 readWord(const System_t context, u32 PS2PhysicalAddress);
-	void writeWord(const System_t context, u32 PS2PhysicalAddress, u32 value);
-	u64 readDword(const System_t context, u32 PS2PhysicalAddress);
-	void writeDword(const System_t context, u32 PS2PhysicalAddress, u64 value);
-	u128 readQword(const System_t context, u32 PS2PhysicalAddress);
-	void writeQword(const System_t context, u32 PS2PhysicalAddress, u128 value);
+	u8 readByte(const System_t context, u32 physicalAddress);
+	void writeByte(const System_t context, u32 physicalAddress, u8 value);
+	u16 readHword(const System_t context, u32 physicalAddress);
+	void writeHword(const System_t context, u32 physicalAddress, u16 value);
+	u32 readWord(const System_t context, u32 physicalAddress);
+	void writeWord(const System_t context, u32 physicalAddress, u32 value);
+	u64 readDword(const System_t context, u32 physicalAddress);
+	void writeDword(const System_t context, u32 physicalAddress, u64 value);
+	u128 readQword(const System_t context, u32 physicalAddress);
+	void writeQword(const System_t context, u32 physicalAddress, u128 value);
 
 private:
 	/*
-	Internal parameters calculated in the constructor.
+	Internal parameters calculated in the constructor, related to:
+	 - The number of bits the directories, pages and offsets occupy.
+	 - The mask's for extracting these parts.
+	 - The number of entries for each part.
 	*/
-	size_t MAX_ADDRESSABLE_SIZE_BYTES;
-	size_t DIRECTORY_SIZE_BYTES;
-	size_t PAGE_SIZE_BYTES;
-	size_t DIRECTORY_ENTRIES;
-	size_t PAGE_ENTRIES;
-	size_t OFFSET_BITS;
-	size_t OFFSET_MASK;
-	size_t DIRECTORY_BITS;
-	size_t DIRECTORY_MASK;
-	size_t PAGE_BITS;
-	size_t PAGE_MASK;
+	int    mNumAddressBits;
+	int    mNumDirectoryIndexBits;
+	int    mNumPageIndexBits;
+	int    mNumOffsetIndexBits;
+	u32    mDirectoryIndexMask;
+	u32    mPageIndexMask;
+	u32    mOffsetIndexMask;
+	size_t mNumDirectories;
+	size_t mNumPagesPerDirectory;
+	size_t mNumOffsetsPerPage;
 
 	/*
 	The page table which holds all of the page table entries, mapping the addresses.
@@ -114,32 +112,13 @@ private:
 	std::vector<std::vector<std::shared_ptr<MapperBaseObjectByteMMU_t>>> mPageTable;
 
 	/*
-	Translates the given PS2 physical address to the stored memory object by using the page table. The returned object can then be used to read or write to an address.
+	Returns the VDN (virtual directory number/index), VPN (virtual page number/index) and offset properties from a given virtual address, using this MMU context.
 	*/
-	std::shared_ptr<MapperBaseObjectByteMMU_t> & getMappedMemory(size_t baseVDN, size_t baseVPN);
-
-	/*
-	Helper functions for mapObject & others to 
-	 - Determine which directory a page belongs to (if they were layed out end to end).
-	 - The page offset in a directory.
-	 - The absolute page (if they were layed out end to end).
-	*/
-	size_t getDirectoryFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
-	size_t getDirPageFromPageOffset(size_t absPageIndexStart, size_t pageOffset) const;
-	size_t getAbsPageFromDirAndPageOffset(size_t absDirectoryIndex, size_t pageOffset) const;
-
-	/*
-	Gets the VDN (virtual directory number) from a given PS2 physical address.
-	*/
-	size_t getVDN(u32 PS2MemoryAddress) const;
-
-	/*
-	Gets the VPN (virtual page number) from a given PS2 physical address.
-	*/
-	size_t getVPN(u32 PS2MemoryAddress) const;
-
-	/*
-	Gets the offset from a given PS2 physical address.
-	*/
-	size_t getOffset(u32 PS2MemoryAddress) const;
+	struct VAddressProperties_t
+	{
+		size_t mVDN;
+		size_t mVPN;
+		size_t mOffset;
+	};
+	VAddressProperties_t getVAddressProperties(u32 address) const;
 };

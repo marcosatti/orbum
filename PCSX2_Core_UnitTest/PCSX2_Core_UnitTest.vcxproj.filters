@@ -27,13 +27,13 @@
     <ClCompile Include="Source\Tests\Common\TEST_PrimativeTypes.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Tests\Common\TEST_PhysicalMMU_t.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Tests\Common\TEST_MIPSInstruction_t.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Tests\EE\TEST_EECoreInterpreter_s.cpp" />
     <ClCompile Include="Source\Tests\IOP\TEST_IOPCoreInterpreter_s.cpp" />
+    <ClCompile Include="Source\Tests\Common\TEST_ByteMMU_t.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

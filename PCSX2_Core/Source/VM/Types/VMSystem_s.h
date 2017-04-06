@@ -20,18 +20,12 @@ public:
 	/*
 	Returns the VM resources.
 	*/
-	VM * getVM() const 
-	{
-		return mVM;
-	}
+	VM * getVM() const;
 
 	/*
 	Returns the system context type.
 	*/
-	System_t getContext() const
-	{
-		return mSystemContext;
-	}
+	System_t getContext() const;
 
 	/*
 	Initalise the system.

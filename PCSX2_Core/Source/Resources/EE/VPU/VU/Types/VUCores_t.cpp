@@ -32,7 +32,7 @@ VUCore_t::VUCore_t(const int vuCoreID) :
 	Clipping(std::make_shared<VUCoreRegister_Clipping_t>()),
 	PC(std::make_shared<PCRegister16_t>()),
 	CMSAR(std::make_shared<VUCoreRegister_CMSAR_t>()),
-	MemByteMMU(std::make_shared<ByteMMU_t>(Constants::SIZE_32KB, Constants::SIZE_4KB, Constants::SIZE_16B)),
+	MemByteMMU(std::make_shared<ByteMMU_t>(15, 11, 4)),
 	MEMORY_Micro(nullptr),
 	MEMORY_Mem(nullptr)
 {

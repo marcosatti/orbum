@@ -26,7 +26,7 @@ EE_t::EE_t() :
 	IPU(std::make_shared<IPU_t>()),
 	GIF(std::make_shared<GIF_t>()),
 	VPU(std::make_shared<VPU_t>()),
-	ByteMMU(std::make_shared<ByteMMU_t>(Constants::SIZE_4GB, Constants::SIZE_4MB, Constants::SIZE_4B)),
+	ByteMMU(std::make_shared<ByteMMU_t>(32, 22, 2)),
 	MainMemory(std::make_shared<ByteMemory_t>(Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
 	BootROM(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_BOOT_ROM)),
 	ROM1(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_ROM1)),

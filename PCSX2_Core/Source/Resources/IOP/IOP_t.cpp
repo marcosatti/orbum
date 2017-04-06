@@ -22,7 +22,7 @@ IOP_t::IOP_t() :
 	CDVD(std::make_shared<CDVD_t>()),
 	SPU2(std::make_shared<SPU2_t>()),
 	Timers(std::make_shared<IOPTimers_t>()),
-	ByteMMU(std::make_shared<ByteMMU_t>(Constants::SIZE_4GB, Constants::SIZE_8KB, 1)),
+	ByteMMU(std::make_shared<ByteMMU_t>(32, 13, 0)),
 	MainMemory(std::make_shared<ByteMemory_t>(Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
 	ParallelPort(std::make_shared<ByteMemory_t>(Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port")),
 

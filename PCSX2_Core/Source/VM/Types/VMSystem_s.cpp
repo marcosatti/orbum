@@ -14,6 +14,16 @@ VMSystem_s::VMSystem_s(VM * vm, const System_t system) :
 	mClock = getVM()->getResources()->Clock;
 }
 
+VM * VMSystem_s::getVM() const
+{
+	return mVM;
+}
+
+System_t VMSystem_s::getContext() const
+{
+	return mSystemContext;
+}
+
 void VMSystem_s::initalise()
 {
 }

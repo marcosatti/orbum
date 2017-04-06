@@ -350,7 +350,7 @@
     <ClInclude Include="Source\Util\MIPSUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Tests\Common\TEST_PhysicalMMU_t.cpp" />
+    <ClCompile Include="Source\Tests\Common\TEST_ByteMMU_t.cpp" />
     <ClCompile Include="Source\Tests\Common\TEST_MIPSInstruction_t.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\stdafx.cpp">

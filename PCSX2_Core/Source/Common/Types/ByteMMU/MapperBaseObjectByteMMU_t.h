@@ -31,7 +31,7 @@ public:
 	virtual void writeQword(const System_t context, size_t storageIndex, u128 value) = 0;
 
 	/*
-	Gets the base PS2 physical address the mapping starts from.
+	Gets the base physical address the mapping starts from.
 	*/
 	const u32 getMappedPhysicalAddress() const;
 
@@ -45,21 +45,9 @@ public:
 	*/
 	virtual const char * getMnemonic() const = 0;
 
-	/*
-	Get/set mAbsMappedPageIndex, which are used by the ByteMMU_t for calculating an offset.
-	*/
-	size_t getAbsMappedPageIndex() const;
-	void setAbsMappedPageIndex(const size_t absPageIndex);
-
 private:
 	/*
 	The physical address this mapping starts from.
 	*/
-	u32 mPhysicalAddress;
-
-	/*
-	mAbsMappedPageIndex is set by the ByteMMU_t when mapped. This provides a way for the storage object / VM TLB to determine what byte it should start accessing the array from.
-	See the ByteMMU_t -> read/write functions to see how this is calculated. In essence, it is the base page number that it was assigned, which can be used to calulate a storage array index.
-	*/
-	size_t mAbsMappedPageIndex;
+	u32 mMappedPhysicalAddress;
 };
