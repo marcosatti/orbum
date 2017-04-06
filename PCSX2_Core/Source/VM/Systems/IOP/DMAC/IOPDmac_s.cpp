@@ -28,7 +28,7 @@ IOPDmac_s::IOPDmac_s(VM * vm) :
 	// Set resource pointer variables.
 	mDMAC = getVM()->getResources()->IOP->DMAC;
 	mINTC = getVM()->getResources()->IOP->INTC;
-	mIOPByteMMU = getVM()->getResources()->IOP->ByteMMU;
+	mIOPByteMMU = getVM()->getResources()->IOP->MMU;
 }
 
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)

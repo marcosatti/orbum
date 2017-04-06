@@ -104,7 +104,7 @@ void VUInterpreter_s::SQI()
 	// MEM(Ft) = Fs
 	auto& source1Reg = mVUCore->VF[mVUInstruction.getFs()];
 	auto& source2Reg = mVUCore->VI[mVUInstruction.getFt()]; // Mem Addr.
-	auto& Mem = mVUCore->MemByteMMU;
+	auto& Mem = mVUCore->MMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;
@@ -154,7 +154,7 @@ void VUInterpreter_s::ISWR()
 	// MEM(Fs) = Ft.
 	auto& source1Reg = mVUCore->VI[mVUInstruction.getFt()]; // Data.
 	auto& source2Reg = mVUCore->VI[mVUInstruction.getFs()]; // Mem Addr.
-	auto& Mem = mVUCore->MemByteMMU;
+	auto& Mem = mVUCore->MMU;
 
 	// Real address obtained by VI * 16.
 	u32 realPhysicalAddress = source2Reg->readHword(getContext()) * 16;

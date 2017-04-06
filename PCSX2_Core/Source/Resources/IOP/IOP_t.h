@@ -57,7 +57,7 @@ public:
 	/*
 	The IOP physical memory space.
 	*/
-	std::shared_ptr<ByteMMU_t> ByteMMU;
+	std::shared_ptr<ByteMMU_t> MMU;
 
 	/*
 	IOP Main Memory (2MB). Allocated at 0x00000000.

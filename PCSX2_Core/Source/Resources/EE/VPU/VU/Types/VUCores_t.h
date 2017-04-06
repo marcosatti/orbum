@@ -97,7 +97,7 @@ public:
 	For VU1, it is just a direct map of its real working space (needed to keep it OOP friendly).
 	See EE Users Manual page 84.
 	*/
-	std::shared_ptr<ByteMMU_t> MemByteMMU;
+	std::shared_ptr<ByteMMU_t> MMU;
 
 	/*
 	VU memory, defined on page 18 of the VU Users Manual.

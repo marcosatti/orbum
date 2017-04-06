@@ -514,7 +514,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mIOPCoreInstruction = inst;
 		EXPECT_STREQ("LB", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeByte(core->getContext(), 0x0, 0xCD);
+		vm->getResources()->IOP->MMU->writeByte(core->getContext(), 0x0, 0xCD);
 		core->LB();
 		EXPECT_EQ(0xFFFFFFCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -525,7 +525,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mIOPCoreInstruction = inst;
 		EXPECT_STREQ("LBU", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeByte(core->getContext(), 0x0, 0xAB);
+		vm->getResources()->IOP->MMU->writeByte(core->getContext(), 0x0, 0xAB);
 		core->LBU();
 		EXPECT_EQ(0xAB, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -536,7 +536,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mIOPCoreInstruction = inst;
 		EXPECT_STREQ("LH", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeHword(core->getContext(), 0x0, 0xCDEF);
+		vm->getResources()->IOP->MMU->writeHword(core->getContext(), 0x0, 0xCDEF);
 		core->LH();
 		EXPECT_EQ(0xFFFFCDEF, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -547,7 +547,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mIOPCoreInstruction = inst;
 		EXPECT_STREQ("LHU", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeHword(core->getContext(), 0x0, 0xABCD);
+		vm->getResources()->IOP->MMU->writeHword(core->getContext(), 0x0, 0xABCD);
 		core->LHU();
 		EXPECT_EQ(0xABCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -558,7 +558,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		core->mIOPCoreInstruction = inst;
 		EXPECT_STREQ("LW", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeWord(core->getContext(), 0x0, 0x12345678);
+		vm->getResources()->IOP->MMU->writeWord(core->getContext(), 0x0, 0x12345678);
 		core->LW();
 		EXPECT_EQ(0x12345678, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -571,7 +571,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0x1234ABCD);
 		core->SB();
-		EXPECT_EQ(0xCD, vm->getResources()->IOP->ByteMMU->readByte(core->getContext(), 0x0));
+		EXPECT_EQ(0xCD, vm->getResources()->IOP->MMU->readByte(core->getContext(), 0x0));
 	}
 
 	// SH
@@ -582,7 +582,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0x1234ABCD);
 		core->SH();
-		EXPECT_EQ(0xABCD, vm->getResources()->IOP->ByteMMU->readHword(core->getContext(), 0x0));
+		EXPECT_EQ(0xABCD, vm->getResources()->IOP->MMU->readHword(core->getContext(), 0x0));
 	}
 
 	// SW
@@ -593,7 +593,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0x1234ABCD);
 		core->SW();
-		EXPECT_EQ(0x1234ABCD, vm->getResources()->IOP->ByteMMU->readWord(core->getContext(), 0x0));
+		EXPECT_EQ(0x1234ABCD, vm->getResources()->IOP->MMU->readWord(core->getContext(), 0x0));
 	}
 
 	// LWL
@@ -603,7 +603,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LWL", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0xCDCDCDCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeWord(core->getContext(), 0x0, 0x01234567);
+		vm->getResources()->IOP->MMU->writeWord(core->getContext(), 0x0, 0x01234567);
 		core->LWL();
 		EXPECT_EQ(0x4567CDCD, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -615,7 +615,7 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("LWR", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0xCDCDCDCD);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
-		vm->getResources()->IOP->ByteMMU->writeWord(core->getContext(), 0x4, 0x89ABCDEF);
+		vm->getResources()->IOP->MMU->writeWord(core->getContext(), 0x4, 0x89ABCDEF);
 		core->LWR();
 		EXPECT_EQ(0xCDCD89AB, vm->getResources()->IOP->IOPCore->R3000->GPR[2]->readWord(core->getContext()));
 	}
@@ -627,9 +627,9 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SWL", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0x11111111);
-		vm->getResources()->IOP->ByteMMU->writeWord(core->getContext(), 0x0, 0xABABABAB);
+		vm->getResources()->IOP->MMU->writeWord(core->getContext(), 0x0, 0xABABABAB);
 		core->SWL();
-		EXPECT_EQ(0xABAB1111, vm->getResources()->IOP->ByteMMU->readWord(core->getContext(), 0x0));
+		EXPECT_EQ(0xABAB1111, vm->getResources()->IOP->MMU->readWord(core->getContext(), 0x0));
 	}
 
 	// SWR
@@ -639,8 +639,8 @@ TEST_F(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS)
 		EXPECT_STREQ("SWR", core->mIOPCoreInstruction.getInfo()->mMIPSInstructionInfo.mMnemonic);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[4]->writeWord(core->getContext(), 0xA0000004);
 		vm->getResources()->IOP->IOPCore->R3000->GPR[2]->writeWord(core->getContext(), 0x11111111);
-		vm->getResources()->IOP->ByteMMU->writeWord(core->getContext(), 0x4, 0xCDCDCDCD);
+		vm->getResources()->IOP->MMU->writeWord(core->getContext(), 0x4, 0xCDCDCDCD);
 		core->SWR();
-		EXPECT_EQ(0x1111CDCD, vm->getResources()->IOP->ByteMMU->readWord(core->getContext(), 0x4));
+		EXPECT_EQ(0x1111CDCD, vm->getResources()->IOP->MMU->readWord(core->getContext(), 0x4));
 	}
 }

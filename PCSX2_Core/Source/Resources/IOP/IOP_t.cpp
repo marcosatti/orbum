@@ -22,7 +22,7 @@ IOP_t::IOP_t() :
 	CDVD(std::make_shared<CDVD_t>()),
 	SPU2(std::make_shared<SPU2_t>()),
 	Timers(std::make_shared<IOPTimers_t>()),
-	ByteMMU(std::make_shared<ByteMMU_t>(32, 13, 0)),
+	MMU(std::make_shared<ByteMMU_t>(32, 16, 0)), // Number of page index bits optimised for minimum memory usage (Marco Satti).
 	MainMemory(std::make_shared<ByteMemory_t>(Constants::IOP::IOPMemory::SIZE_IOP_MEMORY, "IOP Memory")),
 	ParallelPort(std::make_shared<ByteMemory_t>(Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT, "IOP Parallel Port")),
 

@@ -25,7 +25,7 @@ IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	mIOPCoreInstruction(0)
 {
 	mIOPCore = getVM()->getResources()->IOP->IOPCore;
-	mByteMMU = getVM()->getResources()->IOP->ByteMMU;
+	mByteMMU = getVM()->getResources()->IOP->MMU;
 }
 
 void IOPCoreInterpreter_s::initalise()
@@ -256,7 +256,7 @@ bool IOPCoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MM
 		}
 
 		// Undocumented: the IOP seems to access the addresses 0xFFC00000 - 0xFFFFFFFF as if it was trying to access the BIOS (0x1FC00000)... probably related to cache modes.
-		// The IOP's ByteMMU has an image mapping to handle this address. From PCSX2 code.
+		// The IOP's MMU has an image mapping to handle this address. From PCSX2 code.
 		if (virtualAddress >= Constants::IOP::IOPCore::MMU::VADDRESS_SPECIAL_2_LOWER_BOUND)
 		{
 			physicalAddress = virtualAddress;

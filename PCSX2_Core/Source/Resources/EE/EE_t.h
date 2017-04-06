@@ -66,7 +66,7 @@ public:
 	/*
 	The EE physical memory space.
 	*/
-	std::shared_ptr<ByteMMU_t> ByteMMU;
+	std::shared_ptr<ByteMMU_t> MMU;
 
 	/*
 	Main Memory (32MB). Allocated at 0x00000000.

@@ -9,7 +9,7 @@
 class TEST_ByteMMU_t : public testing::Test 
 {
 public:
-	ByteMMU_t mmu = ByteMMU_t(32, 12, 4);
+	ByteMMU_t mmu = ByteMMU_t(32, 16, 2);
 	u32 address = 0x00017FC4;
 
 	virtual void SetUp() 

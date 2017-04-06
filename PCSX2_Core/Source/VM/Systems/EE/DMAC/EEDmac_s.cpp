@@ -30,7 +30,7 @@ EEDmac_s::EEDmac_s(VM * vm) :
 {
 	// Set resource pointer variables.
 	mDMAC = getVM()->getResources()->EE->DMAC;
-	mEEByteMMU = getVM()->getResources()->EE->ByteMMU;
+	mEEByteMMU = getVM()->getResources()->EE->MMU;
 }
 
 int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)

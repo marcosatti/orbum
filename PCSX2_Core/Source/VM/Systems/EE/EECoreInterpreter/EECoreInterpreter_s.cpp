@@ -34,7 +34,7 @@ EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterp
 	mExceptionProperties(nullptr) 
 {
 	mEECore = getVM()->getResources()->EE->EECore;
-	mByteMMU = getVM()->getResources()->EE->ByteMMU;
+	mByteMMU = getVM()->getResources()->EE->MMU;
 	mVU0 = getVM()->getResources()->EE->VPU->VU->VU0;
 }
 

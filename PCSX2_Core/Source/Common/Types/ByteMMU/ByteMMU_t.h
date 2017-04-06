@@ -36,14 +36,14 @@ However, this works well with the EE physical map, where registers are often clu
 The advantage of keeping a page size of 16B is we have more fine grained control of memory, rather than having to allocate a big block of memory.
 
 * Example of how constructor parameters affects address access.
-By using a directory size of 4MB and a page size of 16B, with a 512 MB max address range:
-- Number of directory entries = 512MB / 4MB = 128. Therefore 7 bits are needed to represent the virtual directory number (0 -> 127).
-- Number of page table entries per directory = 4MB / 16B = 262,144. Therefore 18 bits are needed to represent the virtual page number (0 -> 262,143).
-- The offset (within 16B) requires 4 bits.
-- Total number of bits required = 29, which is correct for addressing 512MB. This is done within a 32-bit integer type (upper bits unused / will throw error).
+By using ByteMMU_t(29, 18, 4) as an example: 
+ - 29 bits for the address space. This corresponds to 512 MB total space.
+ - 4 bits for the offset, ie: 16 bytes.
+ - 18 bits for the page index, ie: 262,144 pages per directory, each representing 16 B.
+ - (29 - 18 - 4) = 7 bits for the directory index, ie: 128 directories, each representing 4 MB.
 =============================================================================================
 | 31                         29 | 28            22 | 21                       4  | 3      0 |
-| (throws error if any bit set) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
+| (undef. behaviour when set. ) | VIRTUAL DIR. NUM |     VIRTUAL PAGE NUMBER     |  OFFSET  |
 =============================================================================================
 */
 class ByteMMU_t
@@ -72,7 +72,7 @@ public:
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
-	You cannot use these functions before an object has been mapped to the parsed address - a runtime_error will be thrown otherwise.
+	No error checking is done as these functions are performance critical. If you try to access an invalid mapping, it will probably crash.
 	*/
 	u8 readByte(const System_t context, u32 physicalAddress);
 	void writeByte(const System_t context, u32 physicalAddress, u8 value);

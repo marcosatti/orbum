@@ -32,7 +32,7 @@ VUCore_t::VUCore_t(const int vuCoreID) :
 	Clipping(std::make_shared<VUCoreRegister_Clipping_t>()),
 	PC(std::make_shared<PCRegister16_t>()),
 	CMSAR(std::make_shared<VUCoreRegister_CMSAR_t>()),
-	MemByteMMU(std::make_shared<ByteMMU_t>(15, 11, 4)),
+	MMU(std::make_shared<ByteMMU_t>(15, 6, 4)), // Number of page index bits optimised for minimum memory usage (Marco Satti).
 	MEMORY_Micro(nullptr),
 	MEMORY_Mem(nullptr)
 {

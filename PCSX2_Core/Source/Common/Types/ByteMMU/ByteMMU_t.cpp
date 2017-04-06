@@ -42,12 +42,16 @@ ByteMMU_t::ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const
 
 void ByteMMU_t::mapObject(const std::shared_ptr<MapperBaseObjectByteMMU_t> & mapperObject)
 {
-	// Get the virtual address properties, including VDN, VPN and offset.
+	// Get the physical address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(mapperObject->getMappedPhysicalAddress());
 
 	// Throw error if the address is not aligned to a page boundary - a single page can only point to one object, not multiple.
 	if (properties.mOffset != 0)
 		throw std::runtime_error("Mapping was not aligned to a page boundary - not supported!");
+
+	// Throw error if the mapped address falls outside of the allowable range.
+	if (properties.mVDN >= mNumDirectories)
+		throw std::runtime_error("Mapping was outside of the allowable address range.");
 
 	// Iterate through the MMU directories and pages to map the object. 
 	// Start at the the VDN and VPN from the VAddress properties above.

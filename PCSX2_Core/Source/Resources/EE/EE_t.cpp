@@ -26,7 +26,7 @@ EE_t::EE_t() :
 	IPU(std::make_shared<IPU_t>()),
 	GIF(std::make_shared<GIF_t>()),
 	VPU(std::make_shared<VPU_t>()),
-	ByteMMU(std::make_shared<ByteMMU_t>(32, 22, 2)),
+	MMU(std::make_shared<ByteMMU_t>(32, 16, 2)), // Number of page index bits optimised for minimum memory usage (Marco Satti).
 	MainMemory(std::make_shared<ByteMemory_t>(Constants::EE::MainMemory::SIZE_MAIN_MEMORY, "Main Memory")),
 	BootROM(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_BOOT_ROM)),
 	ROM1(std::make_shared<ROByteMemory_t>(Constants::EE::ROM::SIZE_ROM1)),
