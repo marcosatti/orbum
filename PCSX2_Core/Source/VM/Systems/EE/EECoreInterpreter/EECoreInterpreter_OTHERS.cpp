@@ -13,22 +13,11 @@
 void EECoreInterpreter_s::SYNC_STYPE()
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
-#if defined(BUILD_DEBUG)
-	// log(Debug, "SYNC_STYPE: Not implemented.");
-	DEBUG_INSTRUCTION_SYNC++;
-#else
-	throw std::runtime_error("SYNC_STYPE: Not implemented.");
-#endif
 }
 
 void EECoreInterpreter_s::PREF()
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
-#if defined(BUILD_DEBUG)
-	// log(Debug, "(%s, %d) PREF: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("PREF: Not implemented.");
-#endif
 }
 
 void EECoreInterpreter_s::DI()
@@ -61,11 +50,7 @@ void EECoreInterpreter_s::EI()
 
 void EECoreInterpreter_s::CACHE()
 {
-#if defined(BUILD_DEBUG)
-	// log(Debug, "(%s, %d) CACHE: Not implemented.", __FILENAME__, __LINE__);
-#else
-	throw std::runtime_error("CACHE: Not implemented.");
-#endif
+	// TODO: Probably dont need to implement, as cache is not implemented in an emulator.
 }
 
 void EECoreInterpreter_s::TLBP()

@@ -2,8 +2,9 @@
 
 #include "Common/Types/Register/PCRegister32_t.h"
 
-PCRegister32_t::PCRegister32_t():
-	mBranchDelayCycles(0),                                       
+PCRegister32_t::PCRegister32_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites),
+	mBranchDelayCycles(0),
 	mBranchDelayPC(0)
 {
 }

@@ -15,7 +15,7 @@ It is assumed that although it is implemented as a 32-bit register-type, the upp
 class EETimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	EETimersTimerRegister_COUNT_t(const char * mnemonic);
+	explicit EETimersTimerRegister_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	void increment(const System_t context, const size_t value);
 	bool isOverflowed();
@@ -59,7 +59,7 @@ public:
 		static constexpr int OVFF = 9;
 	};
 
-	EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
+	explicit EETimersTimerRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count);
 
 	/*
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 

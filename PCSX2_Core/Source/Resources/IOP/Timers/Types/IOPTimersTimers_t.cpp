@@ -19,47 +19,47 @@ int IOPTimersTimer_t::getTimerID() const
 IOPTimersTimer_TIM0_t::IOPTimersTimer_TIM0_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer0 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer0 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer0 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer0 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer0 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer0 Compare", false, false);
 }
 
 IOPTimersTimer_TIM1_t::IOPTimersTimer_TIM1_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer1 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer1 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer1 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer1 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer1 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer1 Compare", false, false);
 }
 
 IOPTimersTimer_TIM2_t::IOPTimersTimer_TIM2_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer2 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer2 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer2 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer2 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer2 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer2 Compare", false, false);
 }
 
 IOPTimersTimer_TIM3_t::IOPTimersTimer_TIM3_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer3 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer3 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer3 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer3 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer3 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer3 Compare", false, false);
 }
 
 IOPTimersTimer_TIM4_t::IOPTimersTimer_TIM4_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer4 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer4 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer4 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer4 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer4 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer4 Compare", false, false);
 }
 
 IOPTimersTimer_TIM5_t::IOPTimersTimer_TIM5_t() :
 	IOPTimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer5 Count");
-	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer5 Mode", TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer5 Compare", false, true);
+	COUNT = std::make_shared<IOPTimersTimerRegister_WORD_COUNT_t>("IOP Timer5 Count", false, false);
+	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer5 Mode", false, false, TIMER_ID, COUNT);
+	COMP = std::make_shared<Register32_t>("IOP Timer5 Compare", false, false);
 }

@@ -76,14 +76,17 @@ struct u128
 	};
 
 	/*
-	Constructor functions for
-	 - Zero value on construction.
-	 - Initalised with 2 x 64-bit values (LSB and MSB).
-	 - Initalised with 4 x 32-bit values (LSB (w0) -> MSB (w3)).
+	Constructor functions for different initalisation values.
 	*/
 	u128() :
 		lo(0),
 		hi(0)
+	{
+	}
+
+	u128(const u64 D) :
+		lo(D),
+		hi(D)
 	{
 	}
 
@@ -100,15 +103,8 @@ struct u128
 
 	/*
 	Operator functions for:
-	 - Copying to this value.
 	 - Comparing this value to another.
 	*/
-	void operator=(const u128 & right)
-	{
-		lo = right.lo;
-		hi = right.hi;
-	}
-
 	bool operator==(const u128 & right) const
 	{
 		return (lo == right.lo) && (hi == right.hi);

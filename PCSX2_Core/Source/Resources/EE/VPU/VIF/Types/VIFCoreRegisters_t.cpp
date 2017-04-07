@@ -2,13 +2,15 @@
 
 #include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
-VIFCoreRegister_CYCLE_t::VIFCoreRegister_CYCLE_t()
+VIFCoreRegister_CYCLE_t::VIFCoreRegister_CYCLE_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CL, "CL", 0, 8, 0);
 	registerField(Fields::WL, "WL", 8, 8, 0);
 }
 
-VIFCoreRegister_MASK_t::VIFCoreRegister_MASK_t()
+VIFCoreRegister_MASK_t::VIFCoreRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::m0, "m0", 0, 2, 0);
 	registerField(Fields::m1, "m1", 2, 2, 0);
@@ -28,59 +30,70 @@ VIFCoreRegister_MASK_t::VIFCoreRegister_MASK_t()
 	registerField(Fields::m15, "m15", 30, 2, 0);
 }
 
-VIFCoreRegister_MODE_t::VIFCoreRegister_MODE_t()
+VIFCoreRegister_MODE_t::VIFCoreRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::MOD, "MOD", 0, 2, 0);
 }
 
-VIFCoreRegister_ITOP_t::VIFCoreRegister_ITOP_t()
+VIFCoreRegister_ITOP_t::VIFCoreRegister_ITOP_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ITOP, "ITOP", 0, 10, 0);
 }
 
-VIFCoreRegister_ITOPS_t::VIFCoreRegister_ITOPS_t()
+VIFCoreRegister_ITOPS_t::VIFCoreRegister_ITOPS_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ITOPS, "ITOPS", 0, 10, 0);
 }
 
-VIFCoreRegister_BASE_t::VIFCoreRegister_BASE_t()
+VIFCoreRegister_BASE_t::VIFCoreRegister_BASE_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::BASE, "BASE", 0, 10, 0);
 }
 
-VIFCoreRegister_OFST_t::VIFCoreRegister_OFST_t()
+VIFCoreRegister_OFST_t::VIFCoreRegister_OFST_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::OFFSET, "OFFSET", 0, 10, 0);
 }
 
-VIFCoreRegister_TOP_t::VIFCoreRegister_TOP_t()
+VIFCoreRegister_TOP_t::VIFCoreRegister_TOP_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::TOP, "TOP", 0, 10, 0);
 }
 
-VIFCoreRegister_TOPS_t::VIFCoreRegister_TOPS_t()
+VIFCoreRegister_TOPS_t::VIFCoreRegister_TOPS_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::TOPS, "TOPS", 0, 10, 0);
 }
 
-VIFCoreRegister_MARK_t::VIFCoreRegister_MARK_t()
+VIFCoreRegister_MARK_t::VIFCoreRegister_MARK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::MARK, "MARK", 0, 16, 0);
 }
 
-VIFCoreRegister_NUM_t::VIFCoreRegister_NUM_t()
+VIFCoreRegister_NUM_t::VIFCoreRegister_NUM_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::NUM, "NUM", 0, 8, 0);
 }
 
-VIFCoreRegister_CODE_t::VIFCoreRegister_CODE_t()
+VIFCoreRegister_CODE_t::VIFCoreRegister_CODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::IMMEDIATE, "IMMEDIATE", 0, 16, 0);
 	registerField(Fields::NUM, "NUM", 16, 8, 0);
 	registerField(Fields::CMD, "CMD", 24, 8, 0);
 }
 
-VIFCoreRegister_STAT_t::VIFCoreRegister_STAT_t()
+VIFCoreRegister_STAT_t::VIFCoreRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::VPS, "VPS", 0, 2, 0);
 	registerField(Fields::VEW, "VEW", 2, 1, 0);
@@ -97,7 +110,8 @@ VIFCoreRegister_STAT_t::VIFCoreRegister_STAT_t()
 	registerField(Fields::FQC, "FQC", 24, 4, 0);
 }
 
-VIFCoreRegister_FBRST_t::VIFCoreRegister_FBRST_t()
+VIFCoreRegister_FBRST_t::VIFCoreRegister_FBRST_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::RST, "RST", 0, 1, 0);
 	registerField(Fields::FBK, "FBK", 1, 1, 0);
@@ -105,7 +119,8 @@ VIFCoreRegister_FBRST_t::VIFCoreRegister_FBRST_t()
 	registerField(Fields::STC, "STC", 3, 1, 0);
 }
 
-VIFCoreRegister_ERR_t::VIFCoreRegister_ERR_t()
+VIFCoreRegister_ERR_t::VIFCoreRegister_ERR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::MII, "MII", 0, 1, 0);
 	registerField(Fields::ME0, "ME0", 1, 1, 0);

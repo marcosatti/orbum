@@ -16,11 +16,6 @@ size_t MapperRegister16ByteMMU_t::getSize()
 	return Constants::NUMBER_BYTES_IN_HWORD;
 }
 
-const char* MapperRegister16ByteMMU_t::getMnemonic() const
-{
-	return mRegister16->getMnemonic();
-}
-
 u8 MapperRegister16ByteMMU_t::readByte(const System_t context, size_t storageIndex)
 {
 	if (storageIndex % 1 != 0)

@@ -2,7 +2,8 @@
 
 #include "Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 
-EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
+EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::DMAE, "DMAE", 0, 1, 0);
 	registerField(Fields::RELE, "RELE", 1, 1, 0);
@@ -12,8 +13,8 @@ EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t()
 	registerField(Fields::RCYC, "RCYC", 8, 3, 0);
 }
 
-EEDmacRegister_STAT_t::EEDmacRegister_STAT_t() :
-	BitfieldRegister32_t("EE DMAC STAT", false, false)
+EEDmacRegister_STAT_t::EEDmacRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CIS0, "CIS0", 0, 1, 0);
 	registerField(Fields::CIS1, "CIS1", 1, 1, 0);
@@ -76,7 +77,8 @@ bool EEDmacRegister_STAT_t::isInterruptPending(const System_t context)
 	return false;
 }
 
-EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()
+EEDmacRegister_PCR_t::EEDmacRegister_PCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CPC0, "CPC0", 0, 1, 0);
 	registerField(Fields::CPC1, "CPC1", 1, 1, 0);
@@ -101,33 +103,39 @@ EEDmacRegister_PCR_t::EEDmacRegister_PCR_t()
 	registerField(Fields::PCE, "PCE", 31, 1, 0);
 }
 
-EEDmacRegister_SWQC_t::EEDmacRegister_SWQC_t() 
+EEDmacRegister_SWQC_t::EEDmacRegister_SWQC_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::SQWC, "SQWC", 0, 8, 0);
 	registerField(Fields::TQWC, "TQWC", 16, 8, 0);
 }
 
-EEDmacRegister_RBOR_t::EEDmacRegister_RBOR_t() 
+EEDmacRegister_RBOR_t::EEDmacRegister_RBOR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 }
 
-EEDmacRegister_RBSR_t::EEDmacRegister_RBSR_t() 
+EEDmacRegister_RBSR_t::EEDmacRegister_RBSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::RMSK, "RMSK", 4, 27, 0);
 }
 
-EEDmacRegister_STADR_t::EEDmacRegister_STADR_t() 
+EEDmacRegister_STADR_t::EEDmacRegister_STADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 }
 
-EEDmacRegister_ENABLEW_t::EEDmacRegister_ENABLEW_t() 
+EEDmacRegister_ENABLEW_t::EEDmacRegister_ENABLEW_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CPND, "CPND", 16, 1, 0);
 }
 
-EEDmacRegister_ENABLER_t::EEDmacRegister_ENABLER_t() 
+EEDmacRegister_ENABLER_t::EEDmacRegister_ENABLER_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CPND, "CPND", 16, 1, 0);
 }

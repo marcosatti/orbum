@@ -2,6 +2,11 @@
 
 #include "Common/Types/Register/PCRegister16_t.h"
 
+PCRegister16_t::PCRegister16_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register16_t(mnemonic, debugReads, debugWrites)
+{
+}
+
 void PCRegister16_t::setPCValueRelative(const System_t context, const s16 relativeLocation)
 {
 	writeHword(context, readHword(context) + relativeLocation);

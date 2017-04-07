@@ -3,8 +3,8 @@
 #include "Resources/EE/Timers/Types/EETimersTimerRegisters_t.h"
 #include "Resources/EE/Timers/EETimers_t.h"
 
-EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemonic) :
-	Register32_t(mnemonic),
+EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites),
 	mIsOverflowed(false),
 	mPrescale(1),
 	mPrescaleCount(0)
@@ -53,8 +53,8 @@ void EETimersTimerRegister_COUNT_t::setPrescale(const int prescale)
 	mPrescaleCount = 0;
 }
 
-EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
-	BitfieldRegister32_t(mnemonic, false, false),
+EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mCount(count),
 	mClockSource(ClockSource_t::EEBusClock)
 {

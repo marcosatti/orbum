@@ -17,11 +17,6 @@ size_t MapperFIFOQueue32ByteMMU_t::getSize()
 	return Constants::NUMBER_BYTES_IN_QWORD; 
 }
 
-const char* MapperFIFOQueue32ByteMMU_t::getMnemonic() const
-{
-	return mFIFOQueue32->getMnemonic();
-}
-
 u8 MapperFIFOQueue32ByteMMU_t::readByte(const System_t context, size_t storageIndex)
 {
 	throw std::runtime_error("Tried to access MappedFIFOQueue_t with invalid function. Not allowed.");

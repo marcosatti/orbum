@@ -5,8 +5,8 @@
 
 #include "Resources/EE/Types/EERegisters_t.h"
 
-EERegister_SIO_t::EERegister_SIO_t() :
-	ByteMemory_t(SIZE_EE_REGISTER_SIO, "EE_REGISTER_SIO")
+EERegister_SIO_t::EERegister_SIO_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	ByteMemory_t(mnemonic, debugReads, debugWrites, SIZE_EE_REGISTER_SIO)
 {
 }
 
@@ -77,8 +77,8 @@ void EERegister_SIO_t::writeWord(const System_t context, size_t storageIndex, u3
 	}
 }
 
-EERegister_MCH_t::EERegister_MCH_t() :
-	ByteMemory_t(SIZE_EE_REGISTER_MCH, "EE_REGISTER_MCH")
+EERegister_MCH_t::EERegister_MCH_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	ByteMemory_t(mnemonic, debugReads, debugWrites, SIZE_EE_REGISTER_MCH)
 {
 }
 

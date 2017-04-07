@@ -10,7 +10,7 @@ Extends a normal 32-bit register to provide convenience functions for manipulati
 class PCRegister32_t : public Register32_t
 {
 public:
-	PCRegister32_t();
+	explicit PCRegister32_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Handles the updating of the PC by either jumping to the branch location or incrementing the PC by 4 (next instruction).

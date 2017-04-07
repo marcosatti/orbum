@@ -13,7 +13,7 @@ A custom FIFO for the SIF2 DMA interface to trigger updates to the Common->SBUS_
 class SBUSFIFOQueue_SIF2_t : public FIFOQueue32_t
 {
 public:
-	explicit SBUSFIFOQueue_SIF2_t(const size_t & maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300);
+	explicit SBUSFIFOQueue_SIF2_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300);
 
 	/*
 	Trigger updates to the SBUS_F300 register (magic values).

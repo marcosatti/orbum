@@ -4,14 +4,15 @@
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
-IOPCoreCOP0Register_System_t::IOPCoreCOP0Register_System_t()
+IOPCoreCOP0Register_Context_t::IOPCoreCOP0Register_Context_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::BadVPN2, "BadVPN2", 2, 19, 0);
 	registerField(Fields::PTEBase, "PTEBase", 21, 11, 0);
 }
 
-IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t() :
-	BitfieldRegister32_t("IOP COP0 Status")
+IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::IEc, "IEc", 0, 1, 0);
 	registerField(Fields::KUc, "KUc", 1, 1, 0);
@@ -60,7 +61,8 @@ bool IOPCoreCOP0Register_Status_t::isIRQMasked(const System_t context, const int
 	return !((getFieldValue(context, Fields::IM) & (1 << irq)) > 0);
 }
 
-IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t()
+IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ExcCode, "ExcCode", 2, 5, 0);
 	registerField(Fields::IP, "IP", 8, 8, 0);
@@ -85,7 +87,8 @@ void IOPCoreCOP0Register_Cause_t::clearIRQLine(const System_t context, const int
 	setFieldValue(context, Fields::IP, temp);
 }
 
-IOPCoreCOP0Register_PRId_t::IOPCoreCOP0Register_PRId_t()
+IOPCoreCOP0Register_PRId_t::IOPCoreCOP0Register_PRId_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::Rev, "Rev", 0, 8, 0x1F); // Same as old PCSX2.
 	registerField(Fields::Imp, "Imp", 8, 8, 0x00);

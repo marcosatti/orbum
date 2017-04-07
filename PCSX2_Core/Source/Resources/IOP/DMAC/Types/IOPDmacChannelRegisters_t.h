@@ -29,7 +29,7 @@ public:
 		static constexpr int ILinkAR = 11;
 	};
 
-	IOPDmacChannelRegister_CHCR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Returns the channel runtime logical mode its operating in.
@@ -75,7 +75,7 @@ public:
 		static constexpr int BA = 1;
 	};
 
-	IOPDmacChannelRegister_BCR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_BCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Upon writing, stores the transfer size to be used by the DMAC.
@@ -110,7 +110,7 @@ Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi an
 class IOPDmacChannelRegister_MADR_t : public Register32_t
 {
 public:
-	IOPDmacChannelRegister_MADR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
@@ -126,7 +126,7 @@ Based off the nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi an
 class IOPDmacChannelRegister_TADR_t : public Register32_t
 {
 public:
-	IOPDmacChannelRegister_TADR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_TADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments or decrements the register by a default of 0x4 (1 DMA unit) or the specified size.
@@ -142,7 +142,7 @@ Sets the constant direction (TO) upon writes, as the bios overwrites this (hardw
 class IOPDmacChannelRegister_TO_CHCR_t : public IOPDmacChannelRegister_CHCR_t
 {
 public:
-	explicit IOPDmacChannelRegister_TO_CHCR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_TO_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
@@ -157,7 +157,7 @@ Sets the constant direction (FROM) upon writes, as the bios overwrites this (har
 class IOPDmacChannelRegister_FROM_CHCR_t : public IOPDmacChannelRegister_CHCR_t
 {
 public:
-	explicit IOPDmacChannelRegister_FROM_CHCR_t(const char * mnemonic);
+	explicit IOPDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
@@ -174,7 +174,7 @@ TODO: Look into properly RE'ing the SBUS.
 class IOPDmacChannelRegister_SIF0_CHCR_t : public IOPDmacChannelRegister_TO_CHCR_t
 {
 public:
-	explicit IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
+	explicit IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
@@ -206,7 +206,7 @@ TODO: Look into properly RE'ing the SBUS.
 class IOPDmacChannelRegister_SIF1_CHCR_t : public IOPDmacChannelRegister_FROM_CHCR_t
 {
 public:
-	explicit IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
+	explicit IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	(IOP context only.) Upon writes, sets the chain mode bit (bit 10) to 1.
@@ -238,7 +238,7 @@ TODO: Look into properly RE'ing the SBUS.
 class IOPDmacChannelRegister_SIF2_CHCR_t : public IOPDmacChannelRegister_CHCR_t
 {
 public:
-	IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t> & sbusF240);
+	explicit IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. 

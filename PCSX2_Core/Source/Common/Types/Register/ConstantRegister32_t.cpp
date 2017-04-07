@@ -3,7 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/ConstantRegister32_t.h"
 
-ConstantRegister32_t::ConstantRegister32_t(const u32 W)
+ConstantRegister32_t::ConstantRegister32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u32 W) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 	UW = W;
 }

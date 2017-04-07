@@ -2,8 +2,8 @@
 
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t() :
-	BitfieldRegister32_t("IOP INTC: STAT", false, false)
+IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
@@ -42,8 +42,8 @@ void IOPIntcRegister_STAT_t::writeWord(const System_t context, u32 value)
 	BitfieldRegister32_t::writeWord(context, value);
 }
 
-IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
-	BitfieldRegister32_t("IOP INTC: MASK", false, false)
+IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
@@ -73,8 +73,8 @@ IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t() :
 	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
 }
 
-IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t() : 
-	Register32_t("IOP INTC: CTRL")
+IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 

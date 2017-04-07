@@ -2,7 +2,8 @@
 
 #include "Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h"
 
-VUCoreRegister_Status_t::VUCoreRegister_Status_t()
+VUCoreRegister_Status_t::VUCoreRegister_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::Z, "Z", 0, 1, 0);
 	registerField(Fields::S, "S", 1, 1, 0);
@@ -41,7 +42,8 @@ void VUCoreRegister_Status_t::clearFlags(const System_t context)
 	setFieldValueSticky(context, Fields::D, 0);
 }
 
-VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status) :
+VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<VUCoreRegister_Status_t> & status) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mStatus(status)
 {
 	registerField(Fields::Zw, "Zw", 0, 1, 0);
@@ -101,7 +103,8 @@ void VUCoreRegister_MAC_t::clearVectorField(const System_t context, const int fi
 		setFieldValueStatus(context, FIELD_FLAGS_SET[i], 0);
 }
 
-VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t()
+VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::NegX_0, "NegX_0", 0, 1, 0);
 	registerField(Fields::PosX_0, "PosX_0", 1, 1, 0);
@@ -134,7 +137,8 @@ void VUCoreRegister_Clipping_t::shiftJudgement(const System_t context)
 	writeWord(context, (readWord(context) << 6) & 0x00FFFFFF);
 }
 
-VUCoreRegister_CMSAR_t::VUCoreRegister_CMSAR_t()
+VUCoreRegister_CMSAR_t::VUCoreRegister_CMSAR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::CMSAR, "CMSAR", 0, 16, 0);
 }

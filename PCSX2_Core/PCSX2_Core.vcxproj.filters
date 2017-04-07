@@ -303,6 +303,7 @@
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.h" />
+    <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">

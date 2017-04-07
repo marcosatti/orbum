@@ -7,7 +7,7 @@
 #include "Common/Types/MIPS/MIPSOperatingContext_t.h"
 
 class Register32_t;
-class IOPCoreCOP0Register_System_t;
+class IOPCoreCOP0Register_Context_t;
 class IOPCoreCOP0Register_Status_t;
 class IOPCoreCOP0Register_Cause_t;
 class IOPCoreCOP0Register_PRId_t;
@@ -46,7 +46,7 @@ public:
 	std::shared_ptr<Register32_t>                  RAND;    // r1: RAND.
 	std::shared_ptr<Register32_t>                  TLBL;    // r2: TLBL.
 	std::shared_ptr<Register32_t>                  BPC;     // r3: BPC.
-	std::shared_ptr<IOPCoreCOP0Register_System_t> Context; // r4: Context.
+	std::shared_ptr<IOPCoreCOP0Register_Context_t> Context; // r4: Context.
 	std::shared_ptr<Register32_t>                  BDA;     // r5: BDA.
 	std::shared_ptr<Register32_t>                  PIDMASK; // r6: PIDMASK.
 	std::shared_ptr<Register32_t>                  DCIC;    // r7: DCIC.

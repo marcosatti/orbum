@@ -5,24 +5,18 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
+#include "Common/Types/DebugBaseObject_t.h"
 
 /*
 A simple memory object which is constructed to the (byte) size specified, and optional mnemonic which is used for debugging/logging.
 It has hword (16-bit) unit granularity - each address (offset) refers to a hword.
-Warning: the size constructor parameter is still defined in terms of BYTES! This is done in order to support easier debugging (windbg's .writemem). 
+Warning: the size constructor parameter is still defined in terms of BYTES!
 Make sure the byte size input is divisible by 2 (throws runtime_error otherwise).
 */
-class HwordMemory_t
+class HwordMemory_t : public DebugBaseObject_t
 {
 public:
-	explicit HwordMemory_t(const size_t byteSize);
-	explicit HwordMemory_t(const size_t byteSize, const char * mnemonic);
-
-#if defined(BUILD_DEBUG)
-	explicit HwordMemory_t(const size_t byteSize, const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
-	bool mDebugReads, mDebugWrites;
-#endif
-
+	explicit HwordMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize);
 	virtual ~HwordMemory_t() = default;
 
 	/*
@@ -48,25 +42,24 @@ public:
 	std::vector<u16> & getContainer();
 
 	/*
-	Get the storage mnemonic, used for debug.
-	*/
-	virtual const char * getMnemonic() const;
-
-	/*
 	Read in a raw file to the memory (byte copy).
 	*/
 	void readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset);
 
-#if defined(BUILD_DEBUG)
 	/*
 	Dumps the memory contents to a file.
 	*/
 	void dump(const char * fileStr);
-#endif
 
 private:
+	/*
+	Total size of the hword memory, used for mapping (size in bytes).
+	*/
 	size_t mMemoryByteSize;
+
+	/*
+	The backend for the hword memory.
+	*/
 	std::vector<u16> mMemory;
-	std::string mMnemonic;
 };
 

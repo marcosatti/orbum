@@ -7,11 +7,10 @@
 ConstantRegister128_t is used as a register with a constant value. Any writes are discarded, and any reads are the value set at creation.
 By default set to all 0.
 */
-
 class ConstantRegister128_t : public Register128_t
 {
 public:
-	ConstantRegister128_t(const u64 D0 = 0, const u64 D1 = 0);
+	ConstantRegister128_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u128 Q = 0);
 
 	/*
 	Overwritten write functions that discard any value.

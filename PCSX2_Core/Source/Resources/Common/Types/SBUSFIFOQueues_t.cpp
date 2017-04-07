@@ -5,8 +5,8 @@
 #include "Resources/Common/Types/SBUSFIFOQueues_t.h"
 #include "Resources/Common/Types/SBUSRegisters_t.h"
 
-SBUSFIFOQueue_SIF2_t::SBUSFIFOQueue_SIF2_t(const size_t& maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300) :
-	FIFOQueue32_t("FIFO: SIF2", maxSize),
+SBUSFIFOQueue_SIF2_t::SBUSFIFOQueue_SIF2_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300) :
+	FIFOQueue32_t(mnemonic, debugReads, debugWrites, maxSize),
 	mSBUSF300(sbusF300)
 {
 }

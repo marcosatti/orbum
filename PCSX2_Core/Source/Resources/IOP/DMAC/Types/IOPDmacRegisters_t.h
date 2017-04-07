@@ -38,7 +38,7 @@ public:
 		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable0, Enable1, Enable2, Enable3, Enable4, Enable5, Enable6 };
 	};
 
-	IOPDmacRegister_PCR0_t(const char * mnemonic);
+	explicit IOPDmacRegister_PCR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -86,7 +86,7 @@ public:
 		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI0, TCI1, TCI2, TCI3, TCI4, TCI5, TCI6 };
 	};
 
-	IOPDmacRegister_ICR0_t(const char * mnemonic);
+	explicit IOPDmacRegister_ICR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(IOP context) Reset any FL bits written to.
@@ -130,7 +130,7 @@ public:
 		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable7, Enable8, Enable9, Enable10, Enable11, Enable12, Enable13 };
 	};
 
-	IOPDmacRegister_PCR1_t(const char * mnemonic);
+	explicit IOPDmacRegister_PCR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -180,7 +180,7 @@ public:
 		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI7, TCI8, TCI9, TCI10, TCI11, TCI12, TCI13 };
 	};
 
-	IOPDmacRegister_ICR1_t(const char * mnemonic, const std::shared_ptr<IOPDmacRegister_ICR0_t> & ICR0);
+	explicit IOPDmacRegister_ICR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<IOPDmacRegister_ICR0_t> & ICR0);
 
 	/*
 	(IOP context) Reset any FL bits written to.

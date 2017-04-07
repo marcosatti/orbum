@@ -105,22 +105,22 @@ void Resources_t::postInit_EE_VPU_VU() const
 	// Initalise VU0 & the CCR registers.
 	{
 		EE->VPU->VU->VU0 = std::make_shared<VUCore_VU0_t>(EE->EECore->COP0);
-		EE->VPU->VU->VU0->CCR[0] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[0]);
-		EE->VPU->VU->VU0->CCR[1] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[1]);
-		EE->VPU->VU->VU0->CCR[2] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[2]);
-		EE->VPU->VU->VU0->CCR[3] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[3]);
-		EE->VPU->VU->VU0->CCR[4] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[4]);
-		EE->VPU->VU->VU0->CCR[5] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[5]);
-		EE->VPU->VU->VU0->CCR[6] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[6]);
-		EE->VPU->VU->VU0->CCR[7] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[7]);
-		EE->VPU->VU->VU0->CCR[8] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[8]);
-		EE->VPU->VU->VU0->CCR[9] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[9]);
-		EE->VPU->VU->VU0->CCR[10] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[10]);
-		EE->VPU->VU->VU0->CCR[11] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[11]);
-		EE->VPU->VU->VU0->CCR[12] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[12]);
-		EE->VPU->VU->VU0->CCR[13] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[13]);
-		EE->VPU->VU->VU0->CCR[14] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[14]);
-		EE->VPU->VU->VU0->CCR[15] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->VI[15]);
+		EE->VPU->VU->VU0->CCR[0] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[0]);
+		EE->VPU->VU->VU0->CCR[1] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[1]);
+		EE->VPU->VU->VU0->CCR[2] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[2]);
+		EE->VPU->VU->VU0->CCR[3] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[3]);
+		EE->VPU->VU->VU0->CCR[4] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[4]);
+		EE->VPU->VU->VU0->CCR[5] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[5]);
+		EE->VPU->VU->VU0->CCR[6] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[6]);
+		EE->VPU->VU->VU0->CCR[7] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[7]);
+		EE->VPU->VU->VU0->CCR[8] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[8]);
+		EE->VPU->VU->VU0->CCR[9] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[9]);
+		EE->VPU->VU->VU0->CCR[10] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[10]);
+		EE->VPU->VU->VU0->CCR[11] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[11]);
+		EE->VPU->VU->VU0->CCR[12] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[12]);
+		EE->VPU->VU->VU0->CCR[13] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[13]);
+		EE->VPU->VU->VU0->CCR[14] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[14]);
+		EE->VPU->VU->VU0->CCR[15] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[15]);
 		EE->VPU->VU->VU0->CCR[16] = EE->VPU->VU->VU0->Status;
 		EE->VPU->VU->VU0->CCR[17] = EE->VPU->VU->VU0->MAC;
 		EE->VPU->VU->VU0->CCR[18] = EE->VPU->VU->VU0->Clipping;
@@ -131,7 +131,7 @@ void Resources_t::postInit_EE_VPU_VU() const
 		EE->VPU->VU->VU0->CCR[23] = nullptr;
 		EE->VPU->VU->VU0->CCR[24] = nullptr;
 		EE->VPU->VU->VU0->CCR[25] = nullptr;
-		EE->VPU->VU->VU0->CCR[26] = std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU0->PC); // TPC.
+		EE->VPU->VU->VU0->CCR[26] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->PC); // TPC.
 		EE->VPU->VU->VU0->CCR[27] = EE->VPU->VU->VU0->CMSAR;
 		EE->VPU->VU->VU0->CCR[28] = EE->VPU->VU->FBRST;
 		EE->VPU->VU->VU0->CCR[29] = EE->VPU->STAT;
@@ -161,7 +161,7 @@ void Resources_t::postInit_EE_VPU_VU() const
 		// NOT mapped as the true register size of 16-bit (need to do a Register32_t wrapping)! 
 		// See EE Users Manual page 84.
 		for (auto i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
-			EE->VPU->VU->VU0->MMU->mapObject(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, std::make_shared<MapperRegister16Register32_t>(EE->VPU->VU->VU1->VI[i]));
+			EE->VPU->VU->VU0->MMU->mapObject(0x4200 + i * Constants::NUMBER_BYTES_IN_QWORD, std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU1->VI[i]));
 
 		// Misc Registers.
 		EE->VPU->VU->VU0->MMU->mapObject(0x4300, EE->VPU->VU->VU1->Status);

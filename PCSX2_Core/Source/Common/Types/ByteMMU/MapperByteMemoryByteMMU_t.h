@@ -34,11 +34,6 @@ public:
 	*/
 	size_t getSize() override;
 
-	/*
-	Get the underlying storage mnemonic, used for debug.
-	*/
-	const char * getMnemonic() const override;
-
 private:
 	/*
 	The underlying memory this class maps to.

@@ -44,7 +44,7 @@ void Clock_t::setSystemClockBiases(const std::map<System_t, double> & biases)
 #if defined(BUILD_DEBUG)
 			log(Warning, "Bias for system %s is set to %f - are you sure?", getSystemStr(system.first), system.second.bias);
 #else
-			system.bias = 1.0;
+			system.second.bias = 1.0;
 #endif
 		}
 	}

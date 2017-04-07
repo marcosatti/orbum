@@ -16,11 +16,6 @@ size_t MapperByteMemoryByteMMU_t::getSize()
 	return mMemory->getSize();
 }
 
-const char* MapperByteMemoryByteMMU_t::getMnemonic() const
-{
-	return mMemory->getMnemonic();
-}
-
 u8 MapperByteMemoryByteMMU_t::readByte(const System_t context, size_t storageIndex)
 {
 	return mMemory->readByte(context, storageIndex);

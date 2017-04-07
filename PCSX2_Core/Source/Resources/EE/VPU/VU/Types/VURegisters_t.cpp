@@ -2,7 +2,8 @@
 
 #include "Resources/EE/VPU/VU/Types/VURegisters_t.h"
 
-VURegister_FBRST_t::VURegister_FBRST_t()
+VURegister_FBRST_t::VURegister_FBRST_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::FB0, "FB0", 0, 1, 0);
 	registerField(Fields::RS0, "RS0", 1, 1, 0);

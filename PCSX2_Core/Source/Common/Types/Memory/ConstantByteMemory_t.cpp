@@ -4,16 +4,9 @@
 
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
-ConstantByteMemory_t::ConstantByteMemory_t(const size_t size, const u64 D) :
-	ByteMemory_t(0),
-	mSize(size),
-	mConstantValue(D)
-{
-}
-
-ConstantByteMemory_t::ConstantByteMemory_t(const size_t size, const char* mnemonic, const u64 D) :
-	ByteMemory_t(0, mnemonic),
-	mSize(size),
+ConstantByteMemory_t::ConstantByteMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize, const u64 D) :
+	ByteMemory_t(mnemonic, debugReads, debugWrites, 0),
+	mSize(byteSize),
 	mConstantValue(D)
 {
 }

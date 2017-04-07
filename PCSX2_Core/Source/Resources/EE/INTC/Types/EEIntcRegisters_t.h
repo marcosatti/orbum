@@ -31,7 +31,7 @@ public:
 		static constexpr int VU0WD = 14;
 	};
 
-	EEIntcRegister_MASK_t();
+	explicit EEIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(EE) Reverses any bits written to.
@@ -70,7 +70,7 @@ public:
 		static constexpr int TIM_KEYS[Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 	};
 
-	explicit EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask);
+	explicit EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EEIntcRegister_MASK_t> & mask);
 
 	/*
 	(EE context) Clears any bits written to.

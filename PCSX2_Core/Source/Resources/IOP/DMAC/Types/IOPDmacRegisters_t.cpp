@@ -2,8 +2,8 @@
 
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
-IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::Priority0, "Priority0", 0, 3, 0);
 	registerField(Fields::Enable0, "Enable0", 3, 1, 0);
@@ -24,8 +24,8 @@ IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char* mnemonic) :
 
 }
 
-IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::IRM0, "IRM0", 0, 1, 0);
 	registerField(Fields::IRM1, "IRM1", 1, 1, 0);
@@ -78,8 +78,8 @@ bool IOPDmacRegister_ICR0_t::isInterruptPending(const System_t context)
 	return false;
 }
 
-IOPDmacRegister_PCR1_t::IOPDmacRegister_PCR1_t(const char* mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+IOPDmacRegister_PCR1_t::IOPDmacRegister_PCR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::Priority7, "Priority7", 0, 3, 0);
 	registerField(Fields::Enable7, "Enable7", 3, 1, 0);
@@ -97,8 +97,8 @@ IOPDmacRegister_PCR1_t::IOPDmacRegister_PCR1_t(const char* mnemonic) :
 	registerField(Fields::Enable13, "Enable13", 27, 1, 0);
 }
 
-IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char* mnemonic, const std::shared_ptr<IOPDmacRegister_ICR0_t>& ICR0) :
-	BitfieldRegister32_t(mnemonic, false, false),
+IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<IOPDmacRegister_ICR0_t>& ICR0) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mICR0(ICR0)
 {
 	registerField(Fields::IQE0, "IQE0", 0, 1, 0);

@@ -9,7 +9,7 @@ class PCRegister32_t;
 class LinkRegister128_t : public Register128_t
 {
 public:
-	explicit LinkRegister128_t(const std::shared_ptr<PCRegister32_t> & pcRegister);
+	explicit LinkRegister128_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<PCRegister32_t> & pcRegister);
 
 	/*
 	Sets the return (link) address, which is equal to the current PC + 8. Only the lower 64-bits are used, with the MSB's being 0 (ie: 32-bits effective).

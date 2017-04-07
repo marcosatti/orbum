@@ -3,10 +3,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/ConstantRegister128_t.h"
 
-ConstantRegister128_t::ConstantRegister128_t(const u64 D0, const u64 D1)
+ConstantRegister128_t::ConstantRegister128_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u128 Q) :
+	Register128_t(mnemonic, debugReads, debugWrites)
 {
-	UD[0] = D0;
-	UD[1] = D1;
+	UQ = Q;
 }
 
 void ConstantRegister128_t::writeByte(const System_t context, size_t arrayIndex, u8 value)

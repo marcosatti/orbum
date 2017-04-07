@@ -10,7 +10,7 @@ By default set to all 0.
 class ConstantRegister8_t : public Register8_t
 {
 public:
-	ConstantRegister8_t(const u8 B = 0);
+	ConstantRegister8_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u8 B = 0);
 	
 	/*
 	Overwritten write functions that discard any value.

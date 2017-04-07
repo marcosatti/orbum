@@ -59,12 +59,12 @@ struct IOPDMAtag_t
 		return static_cast<u32>(mTag1 & 0x00FFFFFF);
 	}
 
-#if defined(BUILD_DEBUG)
 	void logDebugAllFields() const
 	{
+#if defined(BUILD_DEBUG)
 		log(Debug, "IOP DMA tag info: Length = 0x%X, IRQ = 0x%X, ERT = 0x%x, ADDR = 0x%X.", getLength(), getIRQ(), getERT(), getADDR());
-	}
 #endif
+	}
 
 private:
 	/*

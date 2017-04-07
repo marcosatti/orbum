@@ -40,11 +40,6 @@ public:
 	*/
 	virtual size_t getSize() = 0;
 
-	/*
-	Get the map mnemonic, used for debug.
-	*/
-	virtual const char * getMnemonic() const = 0;
-
 private:
 	/*
 	The physical address this mapping starts from.

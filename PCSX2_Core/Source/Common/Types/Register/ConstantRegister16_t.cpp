@@ -3,7 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/ConstantRegister16_t.h"
 
-ConstantRegister16_t::ConstantRegister16_t(const u16 H)
+ConstantRegister16_t::ConstantRegister16_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u16 H) :
+	Register16_t(mnemonic, debugReads, debugWrites)
 {
 	UH = H;
 }

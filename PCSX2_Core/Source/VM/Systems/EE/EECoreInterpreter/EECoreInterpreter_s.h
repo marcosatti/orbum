@@ -64,11 +64,6 @@ private:
 	// Instruction Functionality //
 	///////////////////////////////
 
-#if defined(BUILD_DEBUG)
-	// SYNC instruction counter.
-	u64 DEBUG_INSTRUCTION_SYNC = 0;
-#endif
-
 	/*
 	Checks the COP0.Count register against the COP0.Compare register.
 	If the Count value == Compare value, an interrupt is generated.

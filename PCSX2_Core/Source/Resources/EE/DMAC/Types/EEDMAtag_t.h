@@ -77,12 +77,12 @@ struct EEDMAtag_t
 		return static_cast<u8>((mTag1 >> 31) & 0x1);
 	}
 
-#if defined(BUILD_DEBUG)
 	void logDebugAllFields() const
 	{
+#if defined(BUILD_DEBUG)
 		log(Debug, "EE DMA tag info: QWC = 0x%X, PCE = 0x%X, ID = 0x%X, IRQ = 0x%X, ADDR = 0x%X, SPR = 0x%X.", getQWC(), getPCE(), getID(), getIRQ(), getADDR(), getSPR());
-	}
 #endif
+	}
 
 private:
 	/*
@@ -94,5 +94,3 @@ private:
 	u32 mTag0;
 	u32 mTag1;
 };
-
-

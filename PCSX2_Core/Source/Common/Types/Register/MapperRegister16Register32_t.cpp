@@ -3,13 +3,8 @@
 #include "Common/Types/Register/MapperRegister16Register32_t.h"
 #include "Common/Types/Register/Register16_t.h"
 
-MapperRegister16Register32_t::MapperRegister16Register32_t(const std::shared_ptr<Register16_t>& register16) :
-	mRegister16(register16)
-{
-}
-
-MapperRegister16Register32_t::MapperRegister16Register32_t(const char* mnemonic, const std::shared_ptr<Register16_t>& register16) :
-	Register32_t(mnemonic),
+MapperRegister16Register32_t::MapperRegister16Register32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register16_t>& register16) :
+	Register32_t(mnemonic, debugReads, debugWrites),
 	mRegister16(register16)
 {
 }

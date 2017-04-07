@@ -16,8 +16,7 @@ public:
 		static constexpr int WL = 1;
 	};
 
-	VIFCoreRegister_CYCLE_t();
-
+	explicit VIFCoreRegister_CYCLE_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -47,7 +46,7 @@ public:
 		static constexpr int m15 = 15;
 	};
 
-	VIFCoreRegister_MASK_t();
+	explicit VIFCoreRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 };
 
@@ -63,8 +62,7 @@ public:
 		static constexpr int MOD = 0;
 	};
 
-	VIFCoreRegister_MODE_t();
-
+	explicit VIFCoreRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -79,8 +77,7 @@ public:
 		static constexpr int ITOP = 0;
 	};
 
-	VIFCoreRegister_ITOP_t();
-
+	explicit VIFCoreRegister_ITOP_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -95,8 +92,7 @@ public:
 		static constexpr int ITOPS = 0;
 	};
 
-	VIFCoreRegister_ITOPS_t();
-
+	explicit VIFCoreRegister_ITOPS_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -111,8 +107,7 @@ public:
 		static constexpr int BASE = 0;
 	};
 
-	VIFCoreRegister_BASE_t();
-
+	explicit VIFCoreRegister_BASE_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -127,8 +122,7 @@ public:
 		static constexpr int OFFSET = 0;
 	};
 
-	VIFCoreRegister_OFST_t();
-
+	explicit VIFCoreRegister_OFST_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -143,8 +137,7 @@ public:
 		static constexpr int TOP = 0;
 	};
 
-	VIFCoreRegister_TOP_t();
-
+	explicit VIFCoreRegister_TOP_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -159,8 +152,7 @@ public:
 		static constexpr int TOPS = 0;
 	};
 
-	VIFCoreRegister_TOPS_t();
-
+	explicit VIFCoreRegister_TOPS_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -175,8 +167,7 @@ public:
 		static constexpr int MARK = 0;
 	};
 
-	VIFCoreRegister_MARK_t();
-
+	explicit VIFCoreRegister_MARK_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -191,8 +182,7 @@ public:
 		static constexpr int NUM = 0;
 	};
 
-	VIFCoreRegister_NUM_t();
-
+	explicit VIFCoreRegister_NUM_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -209,8 +199,7 @@ public:
 		static constexpr int CMD = 2;
 	};
 
-	VIFCoreRegister_CODE_t();
-
+	explicit VIFCoreRegister_CODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -238,8 +227,7 @@ public:
 		static constexpr int FQC = 12;
 	};
 
-	VIFCoreRegister_STAT_t();
-
+	VIFCoreRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -257,8 +245,7 @@ public:
 		static constexpr int STC = 3;
 	};
 
-	VIFCoreRegister_FBRST_t();
-
+	explicit VIFCoreRegister_FBRST_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -275,6 +262,5 @@ public:
 		static constexpr int ME1 = 2;
 	};
 
-	VIFCoreRegister_ERR_t();
-
+	explicit VIFCoreRegister_ERR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

@@ -6,8 +6,8 @@
 IOPIntc_t::IOPIntc_t() :
 
 	// Registers
-	CTRL(std::make_shared<IOPIntcRegister_CTRL_t>()),
-	MASK(std::make_shared<IOPIntcRegister_MASK_t>()),
-	STAT(std::make_shared<IOPIntcRegister_STAT_t>())
+	CTRL(std::make_shared<IOPIntcRegister_CTRL_t>("IOP INTC CTRL", false, false)),
+	MASK(std::make_shared<IOPIntcRegister_MASK_t>("IOP INTC MASK", false, false)),
+	STAT(std::make_shared<IOPIntcRegister_STAT_t>("IOP INTC STAT", false, false))
 {
 }

@@ -7,8 +7,8 @@
 
 EEIntc_t::EEIntc_t() :
 	// Registers
-	MASK(std::make_shared<EEIntcRegister_MASK_t>()),
-	STAT(std::make_shared<EEIntcRegister_STAT_t>(MASK)),
-	MEMORY_F020(std::make_shared<ConstantByteMemory_t>(0xE0, "INTC: INTC_f020 (reserved)"))
+	MASK(std::make_shared<EEIntcRegister_MASK_t>("EE INTC MASK", false, false)),
+	STAT(std::make_shared<EEIntcRegister_STAT_t>("EE INTC STAT", false, false, MASK)),
+	MEMORY_F020(std::make_shared<ConstantByteMemory_t>("EE INTC F020", false, false, 0xE0))
 {
 }

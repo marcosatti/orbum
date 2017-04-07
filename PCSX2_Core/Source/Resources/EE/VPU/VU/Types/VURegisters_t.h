@@ -23,6 +23,6 @@ public:
 		static constexpr int TE1 = 7;
 	};
 
-	VURegister_FBRST_t();
+	explicit VURegister_FBRST_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 

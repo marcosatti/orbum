@@ -6,10 +6,10 @@
 
 IPU_t::IPU_t() :
 	// Registers
-	CMD(std::make_shared<Register32_t>()),
-	CTRL(std::make_shared<Register32_t>()),
-	BP(std::make_shared<Register32_t>()),
-	TOP(std::make_shared<Register32_t>()),
-	MEMORY_2040(std::make_shared<ConstantByteMemory_t>(0xFC0, "IPU: IPU_2040 (reserved)"))
+	CMD(std::make_shared<Register32_t>("IPU CMD", false, false)),
+	CTRL(std::make_shared<Register32_t>("IPU CTRL", false, false)),
+	BP(std::make_shared<Register32_t>("IPU BP", false, false)),
+	TOP(std::make_shared<Register32_t>("IPU TOP", false, false)),
+	MEMORY_2040(std::make_shared<ConstantByteMemory_t>("IPU 2040", false, false, 0xFC0))
 {
 }

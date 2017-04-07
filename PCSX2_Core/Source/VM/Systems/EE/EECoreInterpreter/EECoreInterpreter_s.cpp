@@ -470,12 +470,14 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MMU
 	auto& COP0 = mEECore->COP0;
 	auto& TLB = mEECore->TLB;
 
+#if defined(BUILD_DEBUG)
 	static u32 DEBUG_VA_BREAKPOINT = 0xFFFFFFFF;
 	if (virtualAddress == DEBUG_VA_BREAKPOINT)
 	{
 		log(Debug, "EE MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).",
 			DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(getContext()), DEBUG_VA_BREAKPOINT, (access == READ) ? "READ" : "WRITE");
 	}
+#endif
 
 	// Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
 	// Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.

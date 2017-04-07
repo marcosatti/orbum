@@ -31,11 +31,6 @@ public:
 	*/
 	size_t getSize() override;
 
-	/*
-	Get the storage mnemonic, used for debug.
-	*/
-	const char * getMnemonic() const override;
-
 private:
 	/*
 	The underlying FIFO queue this class maps to.

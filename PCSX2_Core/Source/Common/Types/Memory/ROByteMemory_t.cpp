@@ -3,8 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROByteMemory_t.h"
 
-ROByteMemory_t::ROByteMemory_t(const size_t size) :
-	ByteMemory_t(size)
+ROByteMemory_t::ROByteMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize) :
+	ByteMemory_t(mnemonic, debugReads, debugWrites, byteSize)
 {
 }
 

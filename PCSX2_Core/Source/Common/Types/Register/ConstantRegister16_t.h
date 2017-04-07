@@ -10,7 +10,7 @@ By default set to all 0.
 class ConstantRegister16_t : public Register16_t
 {
 public:
-	ConstantRegister16_t(const u16 H = 0);
+	ConstantRegister16_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u16 H = 0);
 
 	/*
 	Overwritten write functions that discard any value.

@@ -4,33 +4,10 @@
 #include "Common/Types/Register/BitfieldRegister32_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
-BitfieldRegister32_t::BitfieldRegister32_t() :
-#if defined(BUILD_DEBUG)
-	mDebugReads(false), 
-	mDebugWrites(false)
-#endif
-{
-}
-
-BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic) :
-#if defined(BUILD_DEBUG)
-	Register32_t(mnemonic),
-	mDebugReads(false),
-	mDebugWrites(false)
-#else
-	Register32_t(mnemonic)
-#endif
-{
-}
-
-#if defined(BUILD_DEBUG)
 BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debugReads, bool debugWrites) :
-	Register32_t(mnemonic, debugReads, debugWrites),
-	mDebugReads(debugReads),
-	mDebugWrites(debugWrites)
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
-#endif
 
 void BitfieldRegister32_t::initalise()
 {
@@ -38,16 +15,12 @@ void BitfieldRegister32_t::initalise()
 	initaliseAllFields();
 }
 
-#if defined(BUILD_DEBUG)
-void BitfieldRegister32_t::logDebugAllFields() const
+void BitfieldRegister32_t::initaliseAllFields()
 {
 	for (auto& field : mFields)
 	{
-#if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), field.mValue);
-#else
-		log(Debug, "\t%s = %d.", field.mMnemonic, field.mValue);
-#endif
+		field.mValue = field.mInitialValue;
+		UW = MathUtil::insertMaskedValue32(UW, field.mValue, field.mStartPosition, field.mLength);
 	}
 }
 
@@ -55,57 +28,62 @@ u8 BitfieldRegister32_t::readByte(const System_t context, size_t arrayIndex)
 {
 	auto temp = Register32_t::readByte(context, arrayIndex);
 
+#if defined(BUILD_DEBUG)
 	if (mDebugReads)
 		logDebugAllFields();
+#endif
 
 	return temp;
+}
+
+void BitfieldRegister32_t::writeByte(const System_t context, size_t arrayIndex, u8 value)
+{
+	Register32_t::writeByte(context, arrayIndex, value);
+
+	for (auto& field : mFields)
+		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
+
+#if defined(BUILD_DEBUG)
+	if (mDebugWrites)
+		logDebugAllFields();
+#endif
 }
 
 u16 BitfieldRegister32_t::readHword(const System_t context, size_t arrayIndex)
 {
 	auto temp = Register32_t::readHword(context, arrayIndex);
 
+#if defined(BUILD_DEBUG)
 	if (mDebugReads)
 		logDebugAllFields();
+#endif
 
 	return temp;
+}
+
+void BitfieldRegister32_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
+{
+	Register32_t::writeHword(context, arrayIndex, value);
+
+	for (auto& field : mFields)
+		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
+
+#if defined(BUILD_DEBUG)
+	if (mDebugWrites)
+		logDebugAllFields();
+#endif
 }
 
 u32 BitfieldRegister32_t::readWord(const System_t context)
 {
 	auto temp = Register32_t::readWord(context);
 
+#if defined(BUILD_DEBUG)
 	if (mDebugReads)
 		logDebugAllFields();
+#endif
 
 	return temp;
-}
-#endif
-
-void BitfieldRegister32_t::writeByte(const System_t context, size_t arrayIndex, u8 value)
-{
-	Register32_t::writeByte(context, arrayIndex, value);
-	
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
-
-#if defined(BUILD_DEBUG)
-	if (mDebugWrites)
-		logDebugAllFields();
-#endif
-}
-
-void BitfieldRegister32_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
-{
-	Register32_t::writeHword(context, arrayIndex, value);
-	
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
-
-#if defined(BUILD_DEBUG)
-	if (mDebugWrites)
-		logDebugAllFields();
-#endif
 }
 
 void BitfieldRegister32_t::writeWord(const System_t context, u32 value)
@@ -148,11 +126,14 @@ void BitfieldRegister32_t::setFieldValue(const System_t context, const int field
 	UW = MathUtil::insertMaskedValue32(UW, value, field.mStartPosition, field.mLength);
 }
 
-void BitfieldRegister32_t::initaliseAllFields()
+void BitfieldRegister32_t::logDebugAllFields() const
 {
 	for (auto& field : mFields)
 	{
-		field.mValue = field.mInitialValue;
-		UW = MathUtil::insertMaskedValue32(UW, field.mValue, field.mStartPosition, field.mLength);
+#if DEBUG_LOG_VALUE_AS_HEX
+		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), field.mValue);
+#else
+		log(Debug, "\t%s = %d.", field.mMnemonic, field.mValue);
+#endif
 	}
 }

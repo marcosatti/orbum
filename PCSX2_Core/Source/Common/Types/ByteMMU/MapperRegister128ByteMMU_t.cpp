@@ -16,11 +16,6 @@ size_t MapperRegister128ByteMMU_t::getSize()
 	return Constants::NUMBER_BYTES_IN_QWORD;
 }
 
-const char* MapperRegister128ByteMMU_t::getMnemonic() const
-{
-	return mRegister128->getMnemonic();
-}
-
 u8 MapperRegister128ByteMMU_t::readByte(const System_t context, size_t storageIndex)
 {
 	if (storageIndex % 1 != 0)

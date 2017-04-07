@@ -25,7 +25,7 @@ See here where you can find more information: http://hitmen.c02.at/files/docs/ps
 The Context register of the IOP.
 TODO: Finish documentation.
 */
-class IOPCoreCOP0Register_System_t : public BitfieldRegister32_t
+class IOPCoreCOP0Register_Context_t : public BitfieldRegister32_t
 {
 public:
 	struct Fields
@@ -35,7 +35,7 @@ public:
 
 	};
 
-	explicit IOPCoreCOP0Register_System_t();
+	explicit IOPCoreCOP0Register_Context_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -65,7 +65,7 @@ public:
 		static constexpr int CU = 15;
 	};
 
-	explicit IOPCoreCOP0Register_Status_t();
+	explicit IOPCoreCOP0Register_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level (similar to a stack).
@@ -113,7 +113,7 @@ public:
 		static constexpr int BD = 3;
 	};
 
-	explicit IOPCoreCOP0Register_Cause_t();
+	explicit IOPCoreCOP0Register_Cause_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
@@ -147,5 +147,5 @@ public:
 		static constexpr int Imp = 1;
 	};
 
-	explicit IOPCoreCOP0Register_PRId_t();
+	explicit IOPCoreCOP0Register_PRId_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

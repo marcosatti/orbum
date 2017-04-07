@@ -3,8 +3,8 @@
 #include "Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
 
-IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnemonic) :
-	Register32_t(mnemonic, false, false),
+IOPTimersTimerRegister_COUNT_t::IOPTimersTimerRegister_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites),
 	mIsOverflowed(false),
 	mPrescale(1),
 	mPrescaleCount(0)
@@ -34,8 +34,8 @@ void IOPTimersTimerRegister_COUNT_t::setPrescale(const int prescale)
 	mPrescaleCount = 0;
 }
 
-IOPTimersTimerRegister_HWORD_COUNT_t::IOPTimersTimerRegister_HWORD_COUNT_t(const char* mnemonic) :
-	IOPTimersTimerRegister_COUNT_t(mnemonic)
+IOPTimersTimerRegister_HWORD_COUNT_t::IOPTimersTimerRegister_HWORD_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	IOPTimersTimerRegister_COUNT_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -63,8 +63,8 @@ void IOPTimersTimerRegister_HWORD_COUNT_t::increment(const System_t context, con
 	}
 }
 
-IOPTimersTimerRegister_WORD_COUNT_t::IOPTimersTimerRegister_WORD_COUNT_t(const char* mnemonic) : 
-	IOPTimersTimerRegister_COUNT_t(mnemonic)
+IOPTimersTimerRegister_WORD_COUNT_t::IOPTimersTimerRegister_WORD_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	IOPTimersTimerRegister_COUNT_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -92,8 +92,8 @@ void IOPTimersTimerRegister_WORD_COUNT_t::increment(const System_t context, cons
 	}
 }
 
-IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
-	BitfieldRegister32_t(mnemonic, false, false),
+IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mTimerIndex(timerIndex),
 	mIsEnabled(false),
 	mClockSource(ClockSource_t::IOPBusClock),

@@ -2,8 +2,8 @@
 
 #include "Resources/Common/Types/SBUSRegisters_t.h"
 
-SBUSRegister_MSCOM_t::SBUSRegister_MSCOM_t() :
-	Register32_t("SBUS: MSCOM")
+SBUSRegister_MSCOM_t::SBUSRegister_MSCOM_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -13,8 +13,8 @@ void SBUSRegister_MSCOM_t::writeWord(const System_t context, u32 value)
 		Register32_t::writeWord(context, value);
 }
 
-SBUSRegister_MSFLG_t::SBUSRegister_MSFLG_t() :
-	Register32_t("SBUS: MSFLG")
+SBUSRegister_MSFLG_t::SBUSRegister_MSFLG_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -28,8 +28,8 @@ void SBUSRegister_MSFLG_t::writeWord(const System_t context, u32 value)
 		Register32_t::writeWord(context, value);
 }
 
-SBUSRegister_SMFLG_t::SBUSRegister_SMFLG_t() :
-	Register32_t("SBUS: SMFLG")
+SBUSRegister_SMFLG_t::SBUSRegister_SMFLG_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -43,8 +43,8 @@ void SBUSRegister_SMFLG_t::writeWord(const System_t context, u32 value)
 		Register32_t::writeWord(context, value);
 }
 
-SBUSRegister_F240_t::SBUSRegister_F240_t() :
-	Register32_t("SBUS: F240")
+SBUSRegister_F240_t::SBUSRegister_F240_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -116,8 +116,8 @@ void SBUSRegister_F240_t::writeWord(const System_t context, u32 value)
 	}
 }
 
-SBUSRegister_F300_t::SBUSRegister_F300_t() :
-	Register32_t("SBUS: F300")
+SBUSRegister_F300_t::SBUSRegister_F300_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 

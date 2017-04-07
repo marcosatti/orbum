@@ -4,13 +4,15 @@
 
 #include "Resources/EE/EECore/Types/EECoreFPURegisters_t.h"
 
-EECoreFPURegister_IRR_t::EECoreFPURegister_IRR_t()
+EECoreFPURegister_IRR_t::EECoreFPURegister_IRR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::Rev, "Rev", 0, 8, 0);
 	registerField(Fields::Imp, "Imp", 8, 8, 0x2E);
 }
 
-EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t()
+EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::SU, "SU", 3, 1, 0);
 	registerField(Fields::SO, "SO", 4, 1, 0);

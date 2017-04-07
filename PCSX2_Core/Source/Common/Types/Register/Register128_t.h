@@ -4,10 +4,12 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
+#include "Common/Types/DebugBaseObject_t.h"
 
 /*
 Register type and size definitions.
 Register8, Register16, Register32, Register64 and Register128 define the base register sizes used thoughout the emulator.
+Upon initalisation, set to 0.
 
 These registers are implemented (at core) as a union of the unsigned sums (to the register size) of these types.
 However, they should be accessed by the read/write functions instead to account for overriden functionality.
@@ -30,18 +32,10 @@ In particular, the floats do not support:
 - 'NaN' (not a number) representation.
 Use the FPUUtil static class functions to help with conversion.
 */
-class Register128_t
+class Register128_t : public DebugBaseObject_t
 {
 public:
-	// Initialise union with 0 value.
-	explicit Register128_t();
-	explicit Register128_t(const char * mnemonic);
-
-#if defined(BUILD_DEBUG)
-	explicit Register128_t(const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
-	bool mDebugReads, mDebugWrites;
-#endif
-
+	explicit Register128_t(const char * mnemonic, bool debugReads, bool debugWrites); 
 	virtual ~Register128_t() = default;
 
 	/*
@@ -62,11 +56,6 @@ public:
 	virtual void writeFloat(const System_t context, size_t arrayIndex, f32 value);
 
 	/*
-	Get the mnemonic of this register. Used for debug/logging.
-	*/
-	const char * getMnemonic() const;
-
-	/*
 	Initalise register (set back to default value).
 	*/
 	virtual void initalise();
@@ -84,10 +73,4 @@ protected:
 		u8   UB[Constants::NUMBER_BYTES_IN_QWORD];
 		f32  F[Constants::NUMBER_WORDS_IN_QWORD];
 	};
-
-private:
-	/*
-	The mnemonic.
-	*/
-	std::string mMnemonic;
 };

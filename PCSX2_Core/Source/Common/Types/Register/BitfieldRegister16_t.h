@@ -12,14 +12,7 @@ Setting bitfields using setFieldValue() will also automatically sync with the re
 class BitfieldRegister16_t : public Register16_t
 {
 public:
-	explicit BitfieldRegister16_t();
-	explicit BitfieldRegister16_t(const char * mnemonic);
-
-#if defined(BUILD_DEBUG)
-	explicit BitfieldRegister16_t(const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
-	bool mDebugReads, mDebugWrites;
-#endif
-
+	explicit BitfieldRegister16_t(const char * mnemonic, bool debugReads, bool debugWrites);
 	virtual ~BitfieldRegister16_t() = default;
 
 	/*
@@ -27,24 +20,18 @@ public:
 	*/
 	void initalise() override;
 
-#if defined(BUILD_DEBUG)
 	/*
-	Debug logs all bitfield mnemonics with values.
+	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
 	*/
-	void logDebugAllFields() const;
-
-	/*
-	If enabled, log all field contents on read.
-	*/
-	u8 readByte(const System_t context, size_t arrayIndex) override;
-	u16 readHword(const System_t context) override;
-#endif
+	void initaliseAllFields();
 
 	/*
 	Override write functions to sync with the bitfield map.
-	If enabled, log all field contents on write.
+	If enabled, log all field contents on read/write.
 	*/
+	u8 readByte(const System_t context, size_t arrayIndex) override;
 	void writeByte(const System_t context, size_t arrayIndex, u8 value) override;
+	u16 readHword(const System_t context) override;
 	void writeHword(const System_t context, u16 value) override;
 
 	/*
@@ -64,9 +51,9 @@ public:
 	virtual void setFieldValue(const System_t context, const int fieldIndex, const u16 value);
 
 	/*
-	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
+	Debug logs all bitfield mnemonics with values.
 	*/
-	void initaliseAllFields();
+	void logDebugAllFields() const;
 
 private:
 	friend class EECoreInterpreter_s;

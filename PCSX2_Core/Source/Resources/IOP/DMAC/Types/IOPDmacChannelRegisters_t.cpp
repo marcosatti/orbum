@@ -5,8 +5,8 @@
 using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
-IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false),
+IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mTagExit(false),
 	mTagIRQ(false),
 	mTagTransferLength(0)
@@ -42,8 +42,8 @@ void IOPDmacChannelRegister_CHCR_t::resetChainState()
 	mTagTransferLength = 0;
 }
 
-IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false),
+IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mBS(0),
 	mBA(0)
 {
@@ -87,8 +87,8 @@ bool IOPDmacChannelRegister_BCR_t::isFinished(bool checkBS) const
 		return (mBS == 0);
 }
 
-IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char* mnemonic) :
-	Register32_t(mnemonic)
+IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -102,8 +102,8 @@ void IOPDmacChannelRegister_MADR_t::decrement(const System_t context, const size
 	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
 
-IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char* mnemonic) :
-	Register32_t(mnemonic, false, false)
+IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -117,8 +117,8 @@ void IOPDmacChannelRegister_TADR_t::decrement(const System_t context, const size
 	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
 
-IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :
-	IOPDmacChannelRegister_CHCR_t(mnemonic)
+IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	IOPDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -130,8 +130,8 @@ void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, u32 val
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
-IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const char* mnemonic) :
-	IOPDmacChannelRegister_CHCR_t(mnemonic)
+IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	IOPDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -143,8 +143,8 @@ void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, u32 v
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
-IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t>& sbusF240) :
-	IOPDmacChannelRegister_TO_CHCR_t(mnemonic),
+IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t>& sbusF240) :
+	IOPDmacChannelRegister_TO_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }
@@ -189,8 +189,8 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart(const System_t co
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x2000);
 }
 
-IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	IOPDmacChannelRegister_FROM_CHCR_t(mnemonic),
+IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240) :
+	IOPDmacChannelRegister_FROM_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }
@@ -239,8 +239,8 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish(const System_t c
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x4000));
 }
 
-IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const std::shared_ptr<Register32_t>& sbusF240) :
-	IOPDmacChannelRegister_CHCR_t(mnemonic),
+IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t>& sbusF240) :
+	IOPDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }

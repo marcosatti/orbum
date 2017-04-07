@@ -14,7 +14,7 @@ public:
 
 	virtual void SetUp() 
 	{
-		std::shared_ptr<ByteMemory_t> mem = std::make_shared<ByteMemory_t>(1024, "Test of ByteMMU_t");
+		std::shared_ptr<ByteMemory_t> mem = std::make_shared<ByteMemory_t>("", false, false, 1024);
 		mmu.mapObject(address, mem);
 	}
 

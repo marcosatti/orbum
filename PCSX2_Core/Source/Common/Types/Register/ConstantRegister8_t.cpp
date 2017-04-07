@@ -3,7 +3,8 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/ConstantRegister8_t.h"
 
-ConstantRegister8_t::ConstantRegister8_t(const u8 B)
+ConstantRegister8_t::ConstantRegister8_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const u8 B) :
+	Register8_t(mnemonic, debugReads, debugWrites)
 {
 	UB = B;
 }

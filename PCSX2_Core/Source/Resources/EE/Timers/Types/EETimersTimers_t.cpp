@@ -20,8 +20,8 @@ int EETimersTimer_t::getTimerID() const
 EETimersTimer_TIM0_t::EETimersTimer_TIM0_t() :
 	EETimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer0 Count");
-	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer0 Mode", COUNT);
+	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer0 Count", false, false);
+	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer0 Mode", false, false, COUNT);
 	COMP = std::make_shared<Register32_t>("EE Timer0 Compare", false, false);
 	HOLD = std::make_shared<Register32_t>("EE Timer0 Hold", false, false);
 }
@@ -29,8 +29,8 @@ EETimersTimer_TIM0_t::EETimersTimer_TIM0_t() :
 EETimersTimer_TIM1_t::EETimersTimer_TIM1_t() :
 	EETimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer1 Count");
-	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer1 Mode", COUNT);
+	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer1 Count", false, false);
+	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer1 Mode", false, false, COUNT);
 	COMP = std::make_shared<Register32_t>("EE Timer1 Compare", false, false);
 	HOLD = std::make_shared<Register32_t>("EE Timer1 Hold", false, false);
 }
@@ -38,15 +38,15 @@ EETimersTimer_TIM1_t::EETimersTimer_TIM1_t() :
 EETimersTimer_TIM2_t::EETimersTimer_TIM2_t() :
 	EETimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer2 Count");
-	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer2 Mode", COUNT);
+	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer2 Count", false, false);
+	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer2 Mode", false, false, COUNT);
 	COMP = std::make_shared<Register32_t>("EE Timer2 Compare", false, false);
 }
 
 EETimersTimer_TIM3_t::EETimersTimer_TIM3_t() :
 	EETimersTimer_t(TIMER_ID)
 {
-	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer3 Count");
-	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer3 Mode", COUNT);
-	COMP = std::make_shared<Register32_t>("EE Timer3 Compare", false, true);
+	COUNT = std::make_shared<EETimersTimerRegister_COUNT_t>("EE Timer3 Count", false, false);
+	MODE = std::make_shared<EETimersTimerRegister_MODE_t>("EE Timer3 Mode", false, false, COUNT);
+	COMP = std::make_shared<Register32_t>("EE Timer3 Compare", false, false);
 }

@@ -31,7 +31,7 @@ public:
 		static constexpr int DS = 11;
 	};
 
-	VUCoreRegister_Status_t();
+	explicit VUCoreRegister_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Overriden write functions to trigger the update of the sticky bit flags.
@@ -79,7 +79,7 @@ public:
 		static constexpr int W_FLAGS[] = { Zw, Sw, Uw, Ow };
 	};
 
-	VUCoreRegister_MAC_t(const std::shared_ptr<VUCoreRegister_Status_t> & status);
+	explicit VUCoreRegister_MAC_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<VUCoreRegister_Status_t> & status);
 
 	/*
 	Set bit field function to trigger changes to the associated VU status register.
@@ -145,7 +145,7 @@ public:
 		static constexpr int PosZ_3 = 23;
 	};
 
-	VUCoreRegister_Clipping_t();
+	explicit VUCoreRegister_Clipping_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Shifts the register 6-bits (judgement) right, evicting the MSB 6-bits (LSB's set to 0).
@@ -170,5 +170,5 @@ public:
 		static constexpr int CMSAR = 0;
 	};
 
-	VUCoreRegister_CMSAR_t();
+	explicit VUCoreRegister_CMSAR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

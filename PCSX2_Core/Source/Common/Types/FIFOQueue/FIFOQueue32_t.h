@@ -4,17 +4,17 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
+#include "Common/Types/DebugBaseObject_t.h"
 
 /*
 Represents a FIFO queue used in (for example) the EE/IOP DMAC channels.
 The minimum sized data unit that can be read/written to the queue is 32-bit, however 128-bit read/writes are also allowed.
 TODO: test perf (use std::queue or own?), add in thread safety.
 */
-class FIFOQueue32_t
+class FIFOQueue32_t : public DebugBaseObject_t
 {
 public:
-	explicit FIFOQueue32_t(const size_t maxSize);
-	explicit FIFOQueue32_t(const char * mnemonic, const size_t maxSize);
+	explicit FIFOQueue32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxByteSize);
 	virtual ~FIFOQueue32_t() = default;
 
 	/*
@@ -47,21 +47,11 @@ public:
 	*/
 	size_t getMaxSize() const;
 
-	/*
-	Gets the mnemonic of this register. Used for debug/logging.
-	*/
-	const char * getMnemonic() const;
-
 private:
-	/*
-	The mnemonic.
-	*/
-	std::string mMnemonic;
-
 	/*
 	The max number of 32-bit data elements allowed in the queue, set to the constructor paramter.
 	*/
-	size_t mMaxSize;
+	size_t mMaxByteSize;
 
 	/*
 	The backend for the FIFO queue.

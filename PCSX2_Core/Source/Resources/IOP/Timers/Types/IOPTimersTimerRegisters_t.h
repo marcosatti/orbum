@@ -15,7 +15,7 @@ The flag can be checked with isOverflowed().
 class IOPTimersTimerRegister_COUNT_t : public Register32_t
 {
 public:
-	IOPTimersTimerRegister_COUNT_t(const char * mnemonic);
+	explicit IOPTimersTimerRegister_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments the timer by the amount specified (controlling prescalling when required).
@@ -57,7 +57,7 @@ The 16-bit (hword) version of the IOP Timers Count register.
 class IOPTimersTimerRegister_HWORD_COUNT_t : public IOPTimersTimerRegister_COUNT_t
 {
 public:
-	IOPTimersTimerRegister_HWORD_COUNT_t(const char * mnemonic);
+	explicit IOPTimersTimerRegister_HWORD_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Checks for 16-bit overflow.
@@ -71,7 +71,7 @@ The 16-bit (word) version of the IOP Timers Count register.
 class IOPTimersTimerRegister_WORD_COUNT_t : public IOPTimersTimerRegister_COUNT_t
 {
 public:
-	IOPTimersTimerRegister_WORD_COUNT_t(const char * mnemonic);
+	explicit IOPTimersTimerRegister_WORD_COUNT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Checks for 32-bit overflow.
@@ -105,7 +105,7 @@ public:
 		static constexpr int Prescale1 = 12;
 	};
 
-	IOPTimersTimerRegister_MODE_t(const char * mnemonic, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
+	explicit IOPTimersTimerRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const int timerIndex, const std::shared_ptr<IOPTimersTimerRegister_COUNT_t> & count);
 
 	/*
 	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.

@@ -5,8 +5,8 @@
 using LogicalMode_t = EEDmacChannelTable::LogicalMode_t;
 using Direction_t = EEDmacChannelTable::Direction_t;
 
-EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false),
+EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mTagExit(false),
 	mTagStallControl(false),
 	mTagIRQ(false)
@@ -37,8 +37,8 @@ void EEDmacChannelRegister_CHCR_t::resetChainState()
 	mTagIRQ = false;
 }
 
-EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
@@ -49,8 +49,8 @@ void EEDmacChannelRegister_MADR_t::increment(const System_t context)
 	setFieldValue(context, Fields::ADDR, getFieldValue(context, Fields::ADDR) + 0x10);
 }
 
-EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic) :
-	Register32_t(mnemonic, false, false)
+EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -59,8 +59,8 @@ void EEDmacChannelRegister_QWC_t::decrement(const System_t context)
 	writeWord(context, readWord(context) - 1);
 }
 
-EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
@@ -71,15 +71,15 @@ void EEDmacChannelRegister_TADR_t::increment(const System_t context)
 	setFieldValue(context, Fields::ADDR, getFieldValue(context, Fields::ADDR) + 0x10);
 }
 
-EEDmacChannelRegister_ASR_t::EEDmacChannelRegister_ASR_t(const char * mnemonic) :
-	BitfieldRegister32_t(mnemonic, false, false)
+EEDmacChannelRegister_ASR_t::EEDmacChannelRegister_ASR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::ADDR, "ADDR", 0, 31, 0);
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
-EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic) :
-	Register32_t(mnemonic, false, false)
+EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	Register32_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -88,8 +88,8 @@ void EEDmacChannelRegister_SADR_t::increment(const System_t context)
 	writeWord(context, readWord(context) + 0x10);
 }
 
-EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char* mnemonic) :
-	EEDmacChannelRegister_CHCR_t(mnemonic)
+EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	EEDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -101,8 +101,8 @@ void EEDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, u32 valu
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
-EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char* mnemonic) :
-	EEDmacChannelRegister_CHCR_t(mnemonic)
+EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	EEDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites)
 {
 }
 
@@ -114,8 +114,8 @@ void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, u32 va
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 }
 
-EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	EEDmacChannelRegister_FROM_CHCR_t(mnemonic),
+EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_FROM_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }
@@ -161,8 +161,8 @@ void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish(const System_t co
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x2000));
 }
 
-EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	EEDmacChannelRegister_TO_CHCR_t(mnemonic),
+EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_TO_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }
@@ -207,8 +207,8 @@ void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart(const System_t con
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x4000);
 }
 
-EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char* mnemonic, const std::shared_ptr<Register32_t> & sbusF240) :
-	EEDmacChannelRegister_CHCR_t(mnemonic),
+EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240) :
+	EEDmacChannelRegister_CHCR_t(mnemonic, debugReads, debugWrites),
 	mSbusF240(sbusF240)
 {
 }

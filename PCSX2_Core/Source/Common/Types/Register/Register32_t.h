@@ -4,10 +4,12 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System_t.h"
+#include "Common/Types/DebugBaseObject_t.h"
 
 /*
 Register type and size definitions.
 Register8, Register16, Register32, Register64 and Register128 define the base register sizes used thoughout the emulator.
+Upon initalisation, set to 0.
 
 These registers are implemented (at core) as a union of the unsigned sums (to the register size) of these types.
 However, they should be accessed by the read/write functions instead to account for overriden functionality.
@@ -30,23 +32,14 @@ In particular, the floats do not support:
 - 'NaN' (not a number) representation.
 Use the FPUUtil static class functions to help with conversion.
 */
-class Register32_t
+class Register32_t : public DebugBaseObject_t
 {
 public:
-	// Initialise union with 0 value.
-	explicit Register32_t();
-	explicit Register32_t(const char * mnemonic);
-
-#if defined(BUILD_DEBUG)
-	explicit Register32_t(const char * mnemonic, bool debugReads, bool debugWrites); // Turn on/off debugging functionality.
-	bool mDebugReads, mDebugWrites;
-#endif
-
+	explicit Register32_t(const char * mnemonic, bool debugReads, bool debugWrites); 
 	virtual ~Register32_t() = default;
 
 	/*
 	Read/write functions to access the register, with subclassed functionality.
-	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	*/
 	virtual u8 readByte(const System_t context, size_t arrayIndex);
 	virtual void writeByte(const System_t context, size_t arrayIndex, u8 value);
@@ -56,11 +49,6 @@ public:
 	virtual void writeWord(const System_t context, u32 value);
 	virtual f32 readFloat(const System_t context);
 	virtual void writeFloat(const System_t context, f32 value);
-
-	/*
-	Gets the mnemonic of this register. Used for debug/logging.
-	*/
-	const char * getMnemonic() const;
 
 	/*
 	Initalise register (set back to default value).
@@ -78,10 +66,4 @@ protected:
 		u8   UB[Constants::NUMBER_BYTES_IN_WORD];
 		f32  F;
 	};
-
-private:
-	/*
-	The mnemonic.
-	*/
-	std::string mMnemonic;
 };

@@ -2,8 +2,8 @@
 
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
-	BitfieldRegister32_t("EE INTC STAT", false, false)
+EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
 	registerField(Fields::SBUS, "SBUS", 1, 1, 0);
@@ -30,7 +30,8 @@ void EEIntcRegister_STAT_t::writeWord(const System_t context, u32 value)
 	BitfieldRegister32_t::writeWord(context, value);
 }
 
-EEIntcRegister_MASK_t::EEIntcRegister_MASK_t() 
+EEIntcRegister_MASK_t::EEIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);
 	registerField(Fields::SBUS, "SBUS", 1, 1, 0);

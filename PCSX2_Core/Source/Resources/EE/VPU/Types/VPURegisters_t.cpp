@@ -2,7 +2,8 @@
 
 #include "Resources/EE/VPU/Types/VPURegisters_t.h"
 
-VPURegister_STAT_t::VPURegister_STAT_t()
+VPURegister_STAT_t::VPURegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::VBS0, "VBS0", 0, 1, 0);
 	registerField(Fields::VDS0, "VDS0", 1, 1, 0);
