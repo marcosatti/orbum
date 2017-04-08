@@ -31,7 +31,7 @@ TODO: Speedups can be done here:
 class EEDmac_s : public VMSystem_s
 {
 public:
-	explicit EEDmac_s(VM * vm);
+	EEDmac_s(VM * vm);
 	virtual ~EEDmac_s() = default;
 
 	/*

@@ -24,7 +24,7 @@ No official documentation, but there is resources available on the internet docu
 class IOPCoreInterpreter_s : public VMSystem_s
 {
 public:
-	explicit IOPCoreInterpreter_s(VM * vm);
+	IOPCoreInterpreter_s(VM * vm);
 	virtual ~IOPCoreInterpreter_s() = default;
 
 	/*

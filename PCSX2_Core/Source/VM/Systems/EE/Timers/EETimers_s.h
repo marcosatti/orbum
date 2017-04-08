@@ -18,7 +18,7 @@ The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 
 class EETimers_s : public VMSystem_s
 {
 public:
-	explicit EETimers_s(VM * vm);
+	EETimers_s(VM * vm);
 	virtual ~EETimers_s() = default;
 
 	/*

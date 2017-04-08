@@ -11,18 +11,12 @@ struct MIPSInstruction_t {
 	/*
 	Construct the instruction with the raw value.
 	*/
-	explicit MIPSInstruction_t(const u32 value) : 
-		mValue(value) 
-	{
-	}
+	MIPSInstruction_t(const u32 value);
 
 	/*
 	Returns the instruction value.
 	*/
-	u32 getValue() const
-	{
-		return mValue;
-	}
+	u32 getValue() const;
 
 	/*
 	Get functions for common instruction fields:
@@ -30,18 +24,9 @@ struct MIPSInstruction_t {
 	- Rs					@ bits 21-25.
 	- Rt					@ bits 16-20.
 	*/
-	u8 getOpcode() const
-	{
-		return static_cast<u8>((mValue >> 26) & 0x3F);
-	}
-	u8 getRs() const
-	{
-		return static_cast<u8>((mValue >> 21) & 0x1F);
-	}
-	u8 getRt() const
-	{
-		return static_cast<u8>((mValue >> 16) & 0x1F);
-	}
+	u8 getOpcode() const;
+	u8 getRs() const;
+	u8 getRt() const;
 
 	/*
 	Get functions for the various R instruction fields:
@@ -49,27 +34,15 @@ struct MIPSInstruction_t {
 	- shamt (shift amount)  @ bits 6-10.
 	- funct (function)		@ bits 0-5.
 	*/
-	u8 getRRd() const
-	{
-		return static_cast<u8>((mValue >> 11) & 0x1F);
-	}
-	u8 getRShamt() const
-	{
-		return static_cast<u8>((mValue >> 6) & 0x1F);
-	}
-	u8 getRFunct() const
-	{
-		return static_cast<u8>((mValue) & 0x3F);
-	}
+	u8 getRRd() const;
+	u8 getRShamt() const;
+	u8 getRFunct() const;
 	
 	/*
 	Get functions for the various J instruction fields:
 	- Region-address	    @ bits 0-25.
 	*/
-	u32 MIPSInstruction_t::getJRegionAddress() const
-	{
-		return (mValue & 0x03ffffff);
-	}
+	u32 MIPSInstruction_t::getJRegionAddress() const;
 
 	/*
 	Get functions for the various I instruction fields:
@@ -77,22 +50,10 @@ struct MIPSInstruction_t {
 	- Trap code				 @ bits 6-15.
 	- Imm (immediate value)  @ bits 0-15.
 	*/
-	u16 getITrapCode() const
-	{
-		return static_cast<u16>((getIImmU() >> 6) & 0x3FF);
-	}
-	u8 getIImmSignBit() const
-	{
-		return static_cast<u8>((mValue >> 15) & 0x1);
-	}
-	u16 getIImmU() const
-	{
-		return static_cast<u16>(mValue & 0xFFFF);
-	}
-	s16 getIImmS() const
-	{
-		return (static_cast<s16>(mValue) & 0xFFFF);
-	}
+	u16 getITrapCode() const;
+	u8  getIImmSignBit() const;
+	u16 getIImmU() const;
+	s16 getIImmS() const;
 
 protected:
 	/*

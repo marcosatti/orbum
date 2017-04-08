@@ -13,7 +13,7 @@ Only read/writeWord and Qword is allowed on non-zero storage indexes - all other
 class MapperFIFOQueue32ByteMMU_t : public MapperBaseObjectByteMMU_t
 {
 public:
-	explicit MapperFIFOQueue32ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue32);
+	MapperFIFOQueue32ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue32);
 
 	u8 readByte(const System_t context, size_t storageIndex) override;
 	void writeByte(const System_t context, size_t storageIndex, u8 value) override;

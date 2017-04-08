@@ -9,7 +9,7 @@ class PCRegister32_t;
 class LinkRegister32_t : public Register32_t
 {
 public:
-	explicit LinkRegister32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<PCRegister32_t> & pcRegister);
+	LinkRegister32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<PCRegister32_t> & pcRegister);
 
 	/*
 	Sets the return (link) address, which is equal to the current PC + 8.

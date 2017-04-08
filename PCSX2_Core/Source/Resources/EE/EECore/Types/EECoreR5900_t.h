@@ -18,7 +18,7 @@ It uses a little-endian configuration.
 class EECoreR5900_t
 {
 public:
-	explicit EECoreR5900_t();
+	EECoreR5900_t();
 
 	/*
 	The 32-bit Program Counter (PC) register. See EE Core Users manual, pg 61.

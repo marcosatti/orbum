@@ -49,7 +49,7 @@ By using ByteMMU_t(29, 18, 4) as an example:
 class ByteMMU_t
 {
 public:
-	explicit ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const int numOffsetIndexBits);
+	ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const int numOffsetIndexBits);
 
 	/*
 	Maps the given object into the PS2 physical address space, provided it inherits the MapperBaseObjectByteMMU_t interface.

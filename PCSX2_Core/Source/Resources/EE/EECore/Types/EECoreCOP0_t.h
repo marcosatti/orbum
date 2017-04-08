@@ -45,7 +45,7 @@ See EE Core Users Manual page 62 onwards.
 class EECoreCOP0_t : public MIPSCoprocessor0_t
 {
 public:
-	explicit EECoreCOP0_t();
+	EECoreCOP0_t();
 
 	/*
 	Checks if the EECore COP0 coprocessor is usable. 

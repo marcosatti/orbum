@@ -14,7 +14,7 @@ Base class for a VM system component.
 class VMSystem_s
 {
 public:
-	explicit VMSystem_s(VM * vm, const System_t system);
+	VMSystem_s(VM * vm, const System_t system);
 	virtual ~VMSystem_s() = default;
 
 	/*

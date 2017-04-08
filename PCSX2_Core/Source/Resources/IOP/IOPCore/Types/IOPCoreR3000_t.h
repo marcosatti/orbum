@@ -20,7 +20,7 @@ There are many user-submitted documents about the PSX architecture, which has be
 class IOPCoreR3000_t
 {
 public:
-	explicit IOPCoreR3000_t();
+	IOPCoreR3000_t();
 
 	/*
 	The 32-bit Program Counter (PC) register.

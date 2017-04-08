@@ -12,11 +12,7 @@ struct EECoreInstruction_t : public MIPSInstruction_t
 	Construct the instruction with the raw value.
 	Performs a lookup and stores the instruction info for use.
 	*/
-	EECoreInstruction_t(const u32 value) : 
-		MIPSInstruction_t(value) 
-	{ 
-		mInfo = EECoreInstructionTable::getInfo(this); 
-	}
+	EECoreInstruction_t(const u32 value);
 
 	/*
 	Gets the various COP2/VU instruction fields. Prefixed with getV*.
@@ -25,30 +21,15 @@ struct EECoreInstruction_t : public MIPSInstruction_t
 	- Dest @ bits 21-24.
 	- CO   @ bits 25.
 	*/
-	u8 getVI() const
-	{
-		return static_cast<u8>(mValue & 0x1);
-	}
-	u8 getVBC() const
-	{
-		return static_cast<u8>(mValue & 0x3);
-	}
-	u8 getVDest() const
-	{
-		return (static_cast<u8>(mValue >> 21) & 0xF);
-	}
-	u8 getVCO() const
-	{
-		return (static_cast<u8>(mValue >> 25) & 0x1);
-	}
+	u8 getVI() const;
+	u8 getVBC() const;
+	u8 getVDest() const;
+	u8 getVCO() const;
 
 	/*
 	Returns the constant EECore instruction information.
 	*/
-	const EECoreInstructionTable::EECoreInstructionInfo_t * getInfo()
-	{
-		return mInfo;
-	}
+	const EECoreInstructionTable::EECoreInstructionInfo_t * getInfo() const;
 
 private:
 	/*

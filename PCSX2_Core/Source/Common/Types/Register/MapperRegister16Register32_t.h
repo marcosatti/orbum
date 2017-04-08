@@ -18,7 +18,7 @@ TODO: Currently the underlying Register32_t is allocated memory.. Need to separa
 class MapperRegister16Register32_t : public Register32_t
 {
 public:
-	explicit MapperRegister16Register32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register16_t> & register16);
+	MapperRegister16Register32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register16_t> & register16);
 
 	u8 readByte(const System_t context, size_t arrayIndex) override;
 	void writeByte(const System_t context, size_t arrayIndex, u8 value) override;

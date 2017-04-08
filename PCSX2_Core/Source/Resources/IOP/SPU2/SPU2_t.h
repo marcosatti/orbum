@@ -14,7 +14,7 @@ The registers are assigned to the 0x1F900000 -> 0x1F900800 space.
 class SPU2_t
 {
 public:
-	explicit SPU2_t();
+	SPU2_t();
 
 	/*
 	SPU2 Registers.

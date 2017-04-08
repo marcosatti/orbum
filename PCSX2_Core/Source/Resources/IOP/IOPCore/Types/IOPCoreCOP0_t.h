@@ -21,7 +21,7 @@ TODO: Finish implementing 'Register32_t' registers? IOP COP0 registers that are 
 class IOPCoreCOP0_t : public MIPSCoprocessor0_t
 {
 public:
-	explicit IOPCoreCOP0_t();
+	IOPCoreCOP0_t();
 
 	/*
 	Checks if the IOP COP0 coprocessor is usable. 

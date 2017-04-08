@@ -14,7 +14,7 @@ The registers are assigned to the 0x1F402000 -> 0x1F402FFF space, mirrored acros
 class CDVD_t
 {
 public:
-	explicit CDVD_t();
+	CDVD_t();
 
 	/*
 	CDVD Registers.

@@ -18,7 +18,7 @@ Contains common resources needed between the EE/GS/IOP.
 class Common_t
 {
 public:
-	explicit Common_t();
+	Common_t();
 
 	/*
 	The SBUS/SIF resources (sub-system interface).

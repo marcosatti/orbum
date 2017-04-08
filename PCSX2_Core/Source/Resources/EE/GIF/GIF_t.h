@@ -8,7 +8,7 @@ class ConstantByteMemory_t;
 class GIF_t
 {
 public:
-	explicit GIF_t();
+	GIF_t();
 
 	/*
 	GIF memory mapped registers. See page 21 of EE Users Manual.

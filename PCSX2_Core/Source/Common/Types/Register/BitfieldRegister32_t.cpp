@@ -102,26 +102,17 @@ void BitfieldRegister32_t::writeWord(const System_t context, u32 value)
 void BitfieldRegister32_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u32 fieldInitialValue)
 {
 	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
-	UW = MathUtil::insertMaskedValue32(UW, fieldInitialValue, fieldStartPosition, fieldLength);
+	initaliseAllFields();
 }
 
 u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex) const
 {
-#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
-	return mFields.at(fieldIndex).mValue;
-#else
 	return mFields[fieldIndex].mValue;
-#endif
 }
 
 void BitfieldRegister32_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
-	auto& field = mFields.at(fieldIndex);
-#else
 	auto& field = mFields[fieldIndex];
-#endif
-
 	field.mValue = value;
 	UW = MathUtil::insertMaskedValue32(UW, value, field.mStartPosition, field.mLength);
 }

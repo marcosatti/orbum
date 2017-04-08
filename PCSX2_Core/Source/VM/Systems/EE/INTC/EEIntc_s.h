@@ -13,7 +13,7 @@ Therefore it should be included with the BUSCLK events in the main emulation loo
 class EEIntc_s : public VMSystem_s
 {
 public:
-	explicit EEIntc_s(VM * vm);
+	EEIntc_s(VM * vm);
 	virtual ~EEIntc_s() = default;
 
 	/*

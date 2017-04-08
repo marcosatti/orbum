@@ -19,7 +19,7 @@ Allocated at base PS2 physical memory address 0x1000F100.
 class EERegister_SIO_t : public ByteMemory_t
 {
 public:
-	explicit EERegister_SIO_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EERegister_SIO_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	static constexpr u32 PADDRESS_EE_REGISTER_SIO = 0x1000F100;
 	static constexpr size_t SIZE_EE_REGISTER_SIO = 0x00000100;
@@ -47,7 +47,7 @@ Allocated at base PS2 physical memory address 0x1000F430 (from MCH_RICM).
 class EERegister_MCH_t : public ByteMemory_t
 {
 public:
-	explicit EERegister_MCH_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EERegister_MCH_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	static constexpr u32 PADDRESS_EE_REGISTER_MCH = 0x1000F430;
 	static constexpr size_t SIZE_EE_REGISTER_MCH = 0x00000020;

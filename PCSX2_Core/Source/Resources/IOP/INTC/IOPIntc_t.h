@@ -12,7 +12,7 @@ IOP INTC resources.
 class IOPIntc_t
 {
 public:
-	explicit IOPIntc_t();
+	IOPIntc_t();
 
 	std::shared_ptr<IOPIntcRegister_CTRL_t> CTRL; // Register "CTRL" @ 0x1F801078 -> 0x1F80107B.
 	std::shared_ptr<IOPIntcRegister_MASK_t> MASK; // Register "MASK" @ 0x1F801074 -> 0x1F801077.

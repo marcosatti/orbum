@@ -17,7 +17,7 @@ See EE Core Users Manual, chapter 8.
 class EECoreFPU_t : public MIPSCoprocessor_t
 {
 public:
-	explicit EECoreFPU_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
+	EECoreFPU_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	/*
 	FPU defines 32 general purpose registers, called FPR's.

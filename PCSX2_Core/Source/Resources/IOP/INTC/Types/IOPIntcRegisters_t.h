@@ -15,7 +15,7 @@ See https://fossies.org/linux/audacious-plugins/src/psf/peops2/registers.h (line
 class IOPIntcRegister_CTRL_t : public Register32_t
 {
 public:
-	explicit IOPIntcRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	IOPIntcRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Returns the register value, and sets it to 0 after (IOP context only).
@@ -60,7 +60,7 @@ public:
 		static constexpr int FDMA = 25;
 	};
 
-	explicit IOPIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	IOPIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -104,7 +104,7 @@ public:
 		static constexpr int TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 	};
 
-	explicit IOPIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	IOPIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	AND's the new value with old value (IOP context only).

@@ -12,7 +12,7 @@ GS_t defines the structure needed for the GS (graphics synthesiser unit).
 class GS_t
 {
 public:
-	explicit GS_t();
+	GS_t();
 
 	/*
 	PCRTC resources.

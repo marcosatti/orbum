@@ -37,7 +37,7 @@ public:
 		static constexpr int Imp = 1;
 	};
 
-	explicit EECoreFPURegister_IRR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreFPURegister_IRR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -78,7 +78,7 @@ public:
 		static constexpr int C = 8;
 	};
 
-	explicit EECoreFPURegister_CSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreFPURegister_CSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).

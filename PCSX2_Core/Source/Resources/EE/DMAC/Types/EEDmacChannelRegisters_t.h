@@ -24,7 +24,7 @@ public:
 		static constexpr int TAG = 6;
 	};
 
-	explicit EEDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Returns the channel runtime logical mode its operating in.
@@ -72,7 +72,7 @@ public:
 		static constexpr int SPR = 1;
 	};
 
-	explicit EEDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
@@ -86,7 +86,7 @@ The DMAC D_QWC register, aka quadword count register (holds remaining transfer q
 class EEDmacChannelRegister_QWC_t : public Register32_t
 {
 public:
-	explicit EEDmacChannelRegister_QWC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_QWC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Decrements the QWC counter by 1. Should be called when a data unit has been transferred.
@@ -106,7 +106,7 @@ public:
 		static constexpr int SPR = 1;
 	};
 
-	explicit EEDmacChannelRegister_TADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_TADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
@@ -126,7 +126,7 @@ public:
 		static constexpr int SPR = 1;
 	};
 
-	explicit EEDmacChannelRegister_ASR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_ASR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -135,7 +135,7 @@ The DMAC D_SADR register, aka SPR (scratchpad ram) transfer address register.
 class EEDmacChannelRegister_SADR_t : public Register32_t
 {
 public:
-	explicit EEDmacChannelRegister_SADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_SADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
@@ -150,7 +150,7 @@ Sets the constant direction (TO) upon writes, as the bios overwrites this (hardw
 class EEDmacChannelRegister_TO_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	explicit EEDmacChannelRegister_TO_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_TO_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
@@ -165,7 +165,7 @@ Sets the constant direction (FROM) upon writes, as the bios overwrites this (har
 class EEDmacChannelRegister_FROM_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	explicit EEDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
@@ -183,7 +183,7 @@ TODO: SIF0 direction is IOP -> EE, so need to move the SBUS start update into th
 class EEDmacChannelRegister_SIF0_CHCR_t : public EEDmacChannelRegister_FROM_CHCR_t
 {
 public:
-	explicit EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
@@ -214,7 +214,7 @@ TODO: Look into properly RE'ing the SBUS.
 class EEDmacChannelRegister_SIF1_CHCR_t : public EEDmacChannelRegister_TO_CHCR_t
 {
 public:
-	explicit EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF1_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
@@ -245,7 +245,7 @@ TODO: Look into properly RE'ing the SBUS.
 class EEDmacChannelRegister_SIF2_CHCR_t : public EEDmacChannelRegister_CHCR_t
 {
 public:
-	explicit EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannelRegister_SIF2_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240);
 
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. See PCSX2's "sif2.cpp".

@@ -13,7 +13,7 @@ VPU_t declares the collective VIF structure and collective VU structure of the E
 class VPU_t
 {
 public:
-	explicit VPU_t();
+	VPU_t();
 
 	// VIF structure.
 	std::shared_ptr<VIF_t> VIF;

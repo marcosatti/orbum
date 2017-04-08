@@ -8,7 +8,7 @@
 ////////////////////////////////////////////
 
 /*
-Define if the emulator should log host Memory_t allocations or not. 
+Define if the emulator should log host *Memory_t allocations or not. 
 Only enabled when a debug build is selected.
 */
 #if defined(BUILD_DEBUG)
@@ -45,16 +45,6 @@ Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each on
 #else
  #define DEBUG_EE_SYSCALL_LOG 0
  #define DEBUG_IOP_SYSCALL_LOG 0
-#endif
-
-/*
-Option of whether to throw a runtime error on index out of bounds access for BitfieldRegisterXX_t. 
-Turn off if you are sure that no errors will occur and want to debug quicker.
-*/
-#if defined(BUILD_DEBUG)
- #define DEBUG_ERROR_BR_FIELD_INDEX_RANGE 0
-#else
- #define DEBUG_ERROR_BR_FIELD_INDEX_RANGE 0
 #endif
 
 //////////////////////

@@ -20,7 +20,7 @@ public:
 		static constexpr int RCYC = 5;
 	};
 
-	explicit EEDmacRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -64,7 +64,7 @@ public:
 		static constexpr int CHANNEL_IRQ_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
 	};
 
-	explicit EEDmacRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(EE context only.)
@@ -110,7 +110,7 @@ public:
 		static constexpr int PCE = 20;
 	};
 
-	explicit EEDmacRegister_PCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_PCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -125,7 +125,7 @@ public:
 		static constexpr int TQWC = 1;
 	};
 
-	explicit EEDmacRegister_SWQC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_SWQC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -139,7 +139,7 @@ public:
 		static constexpr int ADDR = 0;
 	};
 
-	explicit EEDmacRegister_RBOR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_RBOR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -153,7 +153,7 @@ public:
 		static constexpr int RMSK = 0;
 	};
 
-	explicit EEDmacRegister_RBSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_RBSR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -167,7 +167,7 @@ public:
 		static constexpr int ADDR = 0;
 	};
 
-	explicit EEDmacRegister_STADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_STADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -181,7 +181,7 @@ public:
 		static constexpr int CPND = 0;
 	};
 
-	explicit EEDmacRegister_ENABLEW_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_ENABLEW_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -195,5 +195,5 @@ public:
 		static constexpr int CPND = 0;
 	};
 
-	explicit EEDmacRegister_ENABLER_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EEDmacRegister_ENABLER_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

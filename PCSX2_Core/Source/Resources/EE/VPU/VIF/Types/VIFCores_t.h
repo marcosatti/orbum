@@ -28,7 +28,7 @@ Extended by EEVpuVif0_t and EEVpuVif1_t.
 class VIFCore_t
 {
 public:
-	explicit VIFCore_t(const int vifCoreID);
+	VIFCore_t(const int vifCoreID);
 
 	/*
 	ID of the VIF unit. Currently used for debug.
@@ -71,7 +71,7 @@ All registers are defined for VIF0 except for BASE, OFST, TOP and TOPS.
 class VIFCore_VIF0_t : public VIFCore_t
 {
 public:
-	explicit VIFCore_VIF0_t();
+	VIFCore_VIF0_t();
 
 	static constexpr int CORE_ID = 0;
 };
@@ -83,7 +83,7 @@ All registers are defined for VIF1.
 class VIFCore_VIF1_t : public VIFCore_t
 {
 public:
-	explicit VIFCore_VIF1_t();
+	VIFCore_VIF1_t();
 
 	static constexpr int CORE_ID = 1;
 };

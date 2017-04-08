@@ -13,7 +13,7 @@ Clock_t helps with synchronisation across components.
 class Clock_t
 {
 public:
-	explicit Clock_t();
+	Clock_t();
 
 	/*
 	Sets the system biases, used when adding ticks to a source.

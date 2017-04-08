@@ -25,7 +25,7 @@ Extended by VUCore_VU0_t and VUCore_VU1_t.
 class VUCore_t
 {
 public:
-	explicit VUCore_t(const int vuCoreID);
+	VUCore_t(const int vuCoreID);
 
 	/*
 	ID of the VU. Currently used for debug.
@@ -81,8 +81,7 @@ public:
 
 	/*
 	PC (program counter) register for micro subroutines.
-	Also known as the TPC (termination PC).
-	See VU Users Manual page 202 for the TPC definition, although there is no explicit definition for the PC register.
+	Also known as the TPC (termination PC), treated as the same thing.
 	*/
 	std::shared_ptr<PCRegister16_t> PC;
 
@@ -114,7 +113,7 @@ It is attached as a MIPS coprocessor to the EE Core, as COP2.
 class VUCore_VU0_t : public VUCore_t, public MIPSCoprocessor_t
 {
 public:
-	explicit VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
+	VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0);
 
 	static constexpr int CORE_ID = 0;
 
@@ -148,7 +147,7 @@ Represents VU1.
 class VUCore_VU1_t : public VUCore_t
 {
 public:
-	explicit VUCore_VU1_t();
+	VUCore_VU1_t();
 
 	static constexpr int CORE_ID = 1;
 };

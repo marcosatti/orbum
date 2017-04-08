@@ -15,7 +15,7 @@ VIF_t declares the VIF units of the EE (VIF0 and VIF1).
 class VIF_t
 {
 public:
-	explicit VIF_t();
+	VIF_t();
 
 	// VIF units.
 	std::shared_ptr<VIFCore_VIF0_t> VIF0;

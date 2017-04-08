@@ -13,7 +13,7 @@ See the EE Core Users Manual, chapter 5.
 class EECoreTLB_t
 {
 public:
-	explicit EECoreTLB_t();
+	EECoreTLB_t();
 
 	/*
 	Performs an iterative lookup on the TLB for the given VPN contained in the PS2VirtualAddress.

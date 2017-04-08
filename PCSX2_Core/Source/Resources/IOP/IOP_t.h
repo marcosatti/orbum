@@ -22,7 +22,7 @@ Big props to the PCSX2 team here - most of the implementation is based off their
 class IOP_t
 {
 public:
-	explicit IOP_t();
+	IOP_t();
 
 	/*
 	The IOP core.

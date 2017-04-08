@@ -16,7 +16,7 @@ If the timer contains a Hold register, set the constructor parameter to true. Ho
 class EETimersTimer_t
 {
 public:
-	explicit EETimersTimer_t(const int timerID);
+	EETimersTimer_t(const int timerID);
 
 	/*
 	EE Timers timer registers.

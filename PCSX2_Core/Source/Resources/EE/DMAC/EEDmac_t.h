@@ -35,7 +35,7 @@ EE DMAC Resources. See page 41 onwards of the EE Users Manual.
 class EEDmac_t
 {
 public:
-	explicit EEDmac_t();
+	EEDmac_t();
 
 	/*
 	DMA Channels. See page 42 of the EE Users Manual.

@@ -15,7 +15,7 @@ This is directly compatible with the ByteMMU_t read/write functions.
 class ByteMemory_t : public DebugBaseObject_t
 {
 public:
-	explicit ByteMemory_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t byteSize);
+	ByteMemory_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t byteSize);
 	virtual ~ByteMemory_t() = default;
 
 	/*

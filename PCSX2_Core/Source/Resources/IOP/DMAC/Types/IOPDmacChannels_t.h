@@ -22,7 +22,7 @@ A base type representing an IOP DMAC Channel.
 class IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 	virtual ~IOPDmacChannel_t() = default;
 
 	/*
@@ -67,7 +67,7 @@ The fromMDEC channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_fromMDEC_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_fromMDEC_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_fromMDEC_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 0;
 };
@@ -79,7 +79,7 @@ The toMDEC channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_toMDEC_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_toMDEC_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_toMDEC_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 1;
 };
@@ -92,7 +92,7 @@ The SIF2/GPU channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_SIF2_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	IOPDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 2;
 };
@@ -105,7 +105,7 @@ TODO: is this the same as CDVD?
 class IOPDmacChannel_CDROM_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_CDROM_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_CDROM_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 3;
 };
@@ -118,7 +118,7 @@ Also contains a TADR register.
 class IOPDmacChannel_SPU2c1_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_SPU2c1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_SPU2c1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 4;
 };
@@ -130,7 +130,7 @@ This channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_PIO_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_PIO_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_PIO_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 5;
 };
@@ -143,7 +143,7 @@ TODO: what is this???
 class IOPDmacChannel_OTClear_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_OTClear_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_OTClear_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 6;
 };
@@ -155,7 +155,7 @@ The SPU2c2 channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_SPU2c2_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_SPU2c2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_SPU2c2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 7;
 };
@@ -167,7 +167,7 @@ The DEV9 channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_DEV9_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_DEV9_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_DEV9_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 8;
 };
@@ -180,7 +180,7 @@ Also contains a TADR register.
 class IOPDmacChannel_SIF0_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	IOPDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 9;
 };
@@ -192,7 +192,7 @@ The SIF1 channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_SIF1_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	IOPDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 10;
 };
@@ -204,7 +204,7 @@ The fromSIO2 channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_fromSIO2_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_fromSIO2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_fromSIO2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 11;
 };
@@ -216,7 +216,7 @@ The toSIO2 channel inherits a base IOP DMAC channel.
 class IOPDmacChannel_toSIO2_t : public IOPDmacChannel_t
 {
 public:
-	explicit IOPDmacChannel_toSIO2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_toSIO2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 12;
 };

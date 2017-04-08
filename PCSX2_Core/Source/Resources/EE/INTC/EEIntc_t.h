@@ -9,7 +9,7 @@ class EEIntcRegister_MASK_t;
 class EEIntc_t
 {
 public:
-	explicit EEIntc_t();
+	EEIntc_t();
 
 	/*
 	EE INTC memory mapped registers. See page 24 of EE Users Manual.

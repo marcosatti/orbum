@@ -19,59 +19,22 @@ struct VUInstruction_t
 	Construct the instruction with the raw value.
 	Performs a lookup and stores the code info for use.
 	*/
-	VUInstruction_t(const u32 value) :
-		mValue(value)
-	{
-		// mInfo = VUInstructionTable::getInfo(this);
-	}
+	VUInstruction_t(const u32 value);
 
 	/*
 	Get functions for the VU instruction field values.
 	*/
-	u8 getMSB7() const
-	{
-		return static_cast<u8>((mValue >> 25) & 0x7F);
-	}
-	u8 getDest() const
-	{
-		return static_cast<u8>((mValue >> 21) & 0xF);
-	}
-	u8 getFt() const
-	{
-		return static_cast<u8>((mValue >> 16) & 0x1F);
-	}
-	u8 getFs() const
-	{
-		return static_cast<u8>((mValue >> 11) & 0x1F);
-	}
-	u8 getFd() const
-	{
-		return static_cast<u8>((mValue >> 6) & 0x1F);
-	}
-	u8 getOpcode() const
-	{
-		return static_cast<u8>((mValue) & 0x3F);
-	}
-	u8 getBc() const
-	{
-		return static_cast<u8>((mValue) & 0x3);
-	}
-	u8 getFtf() const
-	{
-		return static_cast<u8>((mValue >> 23) & 0x3);
-	}
-	u8 getFsf() const
-	{
-		return static_cast<u8>((mValue >> 21) & 0x3);
-	}
-	u16 getImm11() const
-	{
-		return static_cast<u8>((mValue) & 0x7FF);
-	}
-	u32 getImm24() const
-	{
-		return static_cast<u8>((mValue) & 0xFFFFFF);
-	}
+	u8  getMSB7() const;
+	u8  getDest() const;
+	u8  getFt() const;
+	u8  getFs() const;
+	u8  getFd() const;
+	u8  getOpcode() const;
+	u8  getBc() const;
+	u8  getFtf() const;
+	u8  getFsf() const;
+	u16 getImm11() const;
+	u32 getImm24() const;
 
 	/*
 	Test functions for the subfields of the dest field (x, y, z, w).
@@ -85,43 +48,17 @@ struct VUInstruction_t
 
 	See VU Users Manual page 61.
 	*/
-	bool testDestField(const int index) const
-	{
-#if defined(BUILD_DEBUG)
-		if (index >= 4)
-			throw std::runtime_error("VUInstruction_t testDestField index not valid");
-#endif
-		return ((mValue >> (24 - index)) & 0x1);
-	}
-
-	bool testDestX() const
-	{
-		return ((mValue >> 24) & 0x1);
-	}
-
-	bool testDestY() const
-	{
-		return ((mValue >> 23) & 0x1);
-	}
-
-	bool testDestZ() const
-	{
-		return ((mValue >> 22) & 0x1);
-	}
-
-	bool testDestW() const
-	{
-		return ((mValue >> 21) & 0x1);
-	}
+	bool testDestField(const int index) const;
+	bool testDestX() const;
+	bool testDestY() const;
+	bool testDestZ() const;
+	bool testDestW() const;
 
 	/*
 	Returns the constant VU instruction information.
 	*/
 	/*
-	const VUInstructionTable::VUInstructionInfo_t * getInfo()
-	{
-		return mInfo;
-	}
+	const VUInstructionTable::VUInstructionInfo_t * getInfo() const;
 	*/
 
 private:

@@ -10,7 +10,7 @@ CRTC resources.
 class CRTC_t
 {
 public:
-	explicit CRTC_t();
+	CRTC_t();
 
 };
 

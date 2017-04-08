@@ -25,7 +25,7 @@ public:
 		Stopped
 	};
 
-	explicit VM(const VMOptions & vmOptions);
+	VM(const VMOptions & vmOptions);
 	~VM();
 	
 	void reset();

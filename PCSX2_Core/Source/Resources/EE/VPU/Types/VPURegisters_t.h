@@ -28,5 +28,5 @@ public:
 		static constexpr int EFU1 = 12;
 	};
 
-	explicit VPURegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	VPURegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

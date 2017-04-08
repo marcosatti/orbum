@@ -14,7 +14,7 @@ TODO: test perf (use std::queue or own?), add in thread safety.
 class FIFOQueue32_t : public DebugBaseObject_t
 {
 public:
-	explicit FIFOQueue32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxByteSize);
+	FIFOQueue32_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxByteSize);
 	virtual ~FIFOQueue32_t() = default;
 
 	/*

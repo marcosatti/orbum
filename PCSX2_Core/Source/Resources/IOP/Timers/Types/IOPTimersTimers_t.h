@@ -15,7 +15,7 @@ Documentation taken from PCSX2 and No$PSX docs.
 class IOPTimersTimer_t
 {
 public:
-	explicit IOPTimersTimer_t(const int timerID);
+	IOPTimersTimer_t(const int timerID);
 
 	/*
 	IOP Timers timer registers.

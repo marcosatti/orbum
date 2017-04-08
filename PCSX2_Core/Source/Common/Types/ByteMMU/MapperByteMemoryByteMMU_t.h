@@ -13,7 +13,7 @@ The API between ByteMMU_t and ByteMemory_t is directly compatible, so this class
 class MapperByteMemoryByteMMU_t : public MapperBaseObjectByteMMU_t
 {
 public:
-	explicit MapperByteMemoryByteMMU_t(const u32 physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
+	MapperByteMemoryByteMMU_t(const u32 physicalAddress, const std::shared_ptr<ByteMemory_t> & memory);
 
 	/*
 	Read or Write to the underlying memory.

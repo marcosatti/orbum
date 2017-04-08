@@ -27,7 +27,7 @@ See the Memory type for the counter-example.
 class Register64_t : public DebugBaseObject_t
 {
 public:
-	explicit Register64_t(const char * mnemonic, bool debugReads, bool debugWrites);
+	Register64_t(const char * mnemonic, bool debugReads, bool debugWrites);
 	virtual ~Register64_t() = default;
 
 	/*

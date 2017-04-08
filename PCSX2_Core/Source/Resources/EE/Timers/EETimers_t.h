@@ -17,7 +17,7 @@ Defines the 4 timers within the EE, as listed on page 33 onwards of the EE Users
 class EETimers_t
 {
 public:
-	explicit EETimers_t();
+	EETimers_t();
 
 	/*
 	EE Timers resources. There are 4 timers in total.

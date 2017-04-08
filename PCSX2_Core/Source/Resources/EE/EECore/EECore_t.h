@@ -18,7 +18,7 @@ For reference documentation, see:
 class EECore_t
 {
 public:
-	explicit EECore_t();
+	EECore_t();
 
 	/*
 	R5900 CPU.

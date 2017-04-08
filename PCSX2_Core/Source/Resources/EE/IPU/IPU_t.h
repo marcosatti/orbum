@@ -8,7 +8,7 @@ class ConstantByteMemory_t;
 class IPU_t
 {
 public:
-	explicit IPU_t();
+	IPU_t();
 
 	/*
 	IPU memory mapped registers. See page 21 of EE Users Manual.

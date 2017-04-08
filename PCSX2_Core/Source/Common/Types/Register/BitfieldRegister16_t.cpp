@@ -77,26 +77,17 @@ void BitfieldRegister16_t::writeHword(const System_t context, u16 value)
 void BitfieldRegister16_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u16 fieldInitialValue)
 {
 	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
-	UH = MathUtil::insertMaskedValue16(UH, fieldInitialValue, fieldStartPosition, fieldLength);
+	initaliseAllFields();
 }
 
 u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex) const
 {
-#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
-	return mFields.at(fieldIndex).mValue;
-#else
 	return mFields[fieldIndex].mValue;
-#endif
 }
 
 void BitfieldRegister16_t::setFieldValue(const System_t context, const int fieldIndex, const u16 value)
 {
-#if DEBUG_ERROR_BR_FIELD_INDEX_RANGE
-	auto& field = mFields.at(fieldIndex);
-#else
 	auto& field = mFields[fieldIndex];
-#endif
-
 	field.mValue = value;
 	UH = MathUtil::insertMaskedValue16(UH, value, field.mStartPosition, field.mLength);
 }

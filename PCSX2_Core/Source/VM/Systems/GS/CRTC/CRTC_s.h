@@ -21,7 +21,7 @@ TODO: I have no idea how this works, it is based of guessed logic and pixel cloc
 class CRTC_s : public VMSystem_s
 {
 public:
-	explicit CRTC_s(VM * vm);
+	CRTC_s(VM * vm);
 	virtual ~CRTC_s() = default;
 
 	/*

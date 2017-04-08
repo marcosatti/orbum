@@ -13,19 +13,12 @@ struct VIFcodeInstruction_t
 	Construct the instruction with the raw value.
 	Performs a lookup and stores the code info for use.
 	*/
-	VIFcodeInstruction_t(const u32 value) : 
-		mValue(value)
-	{
-		mInstructionInfo = VIFcodeTable::getInfo(this);
-	}
+	VIFcodeInstruction_t(const u32 value);
 
 	/*
 	Returns the instruction value.
 	*/
-	u32 getValue() const
-	{
-		return mValue;
-	}
+	u32 getValue() const;
 
 	/*
 	Get functions for the VIFcode field values.
@@ -34,26 +27,14 @@ struct VIFcodeInstruction_t
 	- Bits 16-23 (length 8): "NUM" (Amount of data to be written to the VU memory).
 	- Bits 24-31 (length 8): "CMD" (Operation of the VIF to perform).
 	*/
-	u16 getIMMEDIATE() const
-	{
-		return static_cast<u16>(mValue & 0xFFFF);
-	}
-	u8 getNUM() const
-	{
-		return static_cast<u8>((mValue >> 16) & 0xFF);
-	}
-	u8 getCMD() const
-	{
-		return static_cast<u8>((mValue >> 24) & 0xFF);
-	}
+	u16 getIMMEDIATE() const;
+	u8  getNUM() const;
+	u8  getCMD() const;
 
 	/*
 	Returns the constant VIFcode instruction information.
 	*/
-	const VIFcodeTable::VIFcodeInstructionInfo_t * getInstructionInfo()
-	{
-		return mInstructionInfo;
-	}
+	const VIFcodeTable::VIFcodeInstructionInfo_t * getInstructionInfo() const;
 
 private:
 	/*

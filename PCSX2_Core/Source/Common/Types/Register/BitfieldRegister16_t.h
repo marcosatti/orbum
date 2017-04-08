@@ -12,7 +12,7 @@ Setting bitfields using setFieldValue() will also automatically sync with the re
 class BitfieldRegister16_t : public Register16_t
 {
 public:
-	explicit BitfieldRegister16_t(const char * mnemonic, bool debugReads, bool debugWrites);
+	BitfieldRegister16_t(const char * mnemonic, bool debugReads, bool debugWrites);
 	virtual ~BitfieldRegister16_t() = default;
 
 	/*

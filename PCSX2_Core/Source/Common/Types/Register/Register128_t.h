@@ -35,7 +35,7 @@ Use the FPUUtil static class functions to help with conversion.
 class Register128_t : public DebugBaseObject_t
 {
 public:
-	explicit Register128_t(const char * mnemonic, bool debugReads, bool debugWrites); 
+	Register128_t(const char * mnemonic, bool debugReads, bool debugWrites); 
 	virtual ~Register128_t() = default;
 
 	/*

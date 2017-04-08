@@ -483,6 +483,11 @@
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\MIPS\MIPSInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

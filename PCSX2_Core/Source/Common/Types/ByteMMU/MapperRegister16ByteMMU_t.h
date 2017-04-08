@@ -18,7 +18,7 @@ TODO: look into size conditions - the EE manual mentions "... only accessible by
 class MapperRegister16ByteMMU_t : public MapperBaseObjectByteMMU_t
 {
 public:
-	explicit MapperRegister16ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<Register16_t> & register16);
+	MapperRegister16ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<Register16_t> & register16);
 
 	u8 readByte(const System_t context, size_t storageIndex) override;
 	void writeByte(const System_t context, size_t storageIndex, u8 value) override;

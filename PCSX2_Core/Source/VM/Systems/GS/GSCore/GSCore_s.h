@@ -13,7 +13,7 @@ GS system logic.
 class GSCore_s : public VMSystem_s
 {
 public:
-	explicit GSCore_s(VM * vm);
+	GSCore_s(VM * vm);
 	virtual ~GSCore_s() = default;
 
 	/*

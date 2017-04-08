@@ -13,7 +13,7 @@ The read write functions expect the index to be a byte index (offset), not a siz
 class MapperBaseObjectByteMMU_t
 {
 public:
-	explicit MapperBaseObjectByteMMU_t(const u32 physicalAddress);
+	MapperBaseObjectByteMMU_t(const u32 physicalAddress);
 	virtual ~MapperBaseObjectByteMMU_t() = default;
 
 	/*

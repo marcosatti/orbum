@@ -17,7 +17,7 @@ VU0 is connected to the EE Core as COP2.
 class VU_t
 {
 public:
-	explicit VU_t();
+	VU_t();
 
 	// VU units.
 	std::shared_ptr<VUCore_VU0_t> VU0;

@@ -29,7 +29,7 @@ public:
 		static constexpr int P = 1;
 	};
 
-	explicit EECoreCOP0Register_Index_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Index_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -48,7 +48,7 @@ public:
 		static constexpr int Random = 0;
 	};
 
-	explicit EECoreCOP0Register_Random_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Random_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -77,7 +77,7 @@ public:
 		static constexpr int S = 5;
 	};
 
-	explicit EECoreCOP0Register_EntryLo0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_EntryLo0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -104,7 +104,7 @@ public:
 		static constexpr int PFN = 4;
 	};
 
-	explicit EECoreCOP0Register_EntryLo1_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_EntryLo1_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -125,7 +125,7 @@ public:
 		static constexpr int PTEBase = 1;
 	};
 
-	explicit EECoreCOP0Register_System_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_System_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -145,7 +145,7 @@ public:
 		static constexpr int MASK = 0;
 	};
 
-	explicit EECoreCOP0Register_PageMask_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_PageMask_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -164,7 +164,7 @@ public:
 		static constexpr int Wired = 0;
 	};
 
-	explicit EECoreCOP0Register_Wired_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Wired_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -174,7 +174,7 @@ See EE Core Users Manual page 70.
 class EECoreCOP0Register_Count_t : public Register32_t
 {
 public:
-	explicit EECoreCOP0Register_Count_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Count_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	// Convenience function that increments the count field value by the specified amount. 
 	void increment(const System_t context, const size_t value);
@@ -198,7 +198,7 @@ public:
 		static constexpr int VPN2 = 1;
 	};
 
-	explicit EECoreCOP0Register_EntryHi_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_EntryHi_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -230,7 +230,7 @@ public:
 		static constexpr int BD = 5;
 	};
 
-	explicit EECoreCOP0Register_Cause_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Cause_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
@@ -288,7 +288,7 @@ public:
 		static constexpr int CU = 10;
 	};
 
-	explicit EECoreCOP0Register_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
@@ -315,7 +315,7 @@ public:
 		static constexpr int Imp = 1;
 	};
 
-	explicit EECoreCOP0Register_PRId_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_PRId_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -353,7 +353,7 @@ public:
 		static constexpr int EC = 8;
 	};
 
-	explicit EECoreCOP0Register_Config_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_Config_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -372,7 +372,7 @@ public:
 		static constexpr int BadPAddr = 0;
 	};
 
-	explicit EECoreCOP0Register_BadPAddr_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_BadPAddr_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -427,7 +427,7 @@ public:
 		static constexpr int IAE = 17;
 	};
 
-	explicit EECoreCOP0Register_BPC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_BPC_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -468,7 +468,7 @@ public:
 		static constexpr int CTE = 10;
 	};
 
-	explicit EECoreCOP0Register_PCCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_PCCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -488,7 +488,7 @@ public:
 		static constexpr int OVFL = 1;
 	};
 
-	explicit EECoreCOP0Register_PCR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_PCR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -508,7 +508,7 @@ public:
 		static constexpr int OVFL = 1;
 	};
 
-	explicit EECoreCOP0Register_PCR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_PCR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -538,7 +538,7 @@ public:
 		static constexpr int PTagLo = 4;
 	};
 
-	explicit EECoreCOP0Register_TagLo_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_TagLo_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
 
 /*
@@ -568,5 +568,5 @@ public:
 		static constexpr int PTagHi = 4;
 	};
 
-	explicit EECoreCOP0Register_TagHi_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	EECoreCOP0Register_TagHi_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };

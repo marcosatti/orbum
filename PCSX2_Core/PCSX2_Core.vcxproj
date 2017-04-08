@@ -579,6 +579,7 @@
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister16ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister128ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.cpp" />
+    <ClCompile Include="Source\Common\Types\MIPS\MIPSInstruction_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\BitfieldRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\ConstantRegister8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\PCRegister16_t.cpp" />
@@ -587,6 +588,9 @@
     <ClCompile Include="Source\Common\Types\Register\ConstantRegister16_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\DMAC\IOPDmac_t.cpp" />
     <ClCompile Include="Source\Resources\EE\DMAC\Types\EEDmacChannels_t.cpp" />
@@ -610,6 +614,7 @@
     <ClCompile Include="Source\Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0Registers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreR3000_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\LinkRegister32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\ConstantRegister32_t.cpp" />

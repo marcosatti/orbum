@@ -26,7 +26,7 @@ It encompasses everything seen on the diagram on page 22 of the EE Overview Manu
 class EE_t
 {
 public:
-	explicit EE_t();
+	EE_t();
 
 	/*
 	EE Core resources.

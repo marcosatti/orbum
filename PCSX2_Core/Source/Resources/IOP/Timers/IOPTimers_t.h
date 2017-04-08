@@ -20,7 +20,7 @@ TODO: double check and fill in.
 class IOPTimers_t
 {
 public:
-	explicit IOPTimers_t();
+	IOPTimers_t();
 
 	/*
 	IOP timers.

@@ -9,7 +9,7 @@ class ByteMemory_t;
 class IOPCore_t
 {
 public:
-	explicit IOPCore_t();
+	IOPCore_t();
 
 	/*
 	The R3000 CPU.

@@ -31,7 +31,7 @@ IOP DMAC resources.
 class IOPDmac_t
 {
 public:
-	explicit IOPDmac_t();
+	IOPDmac_t();
 	
 	/*
 	IOP DMA Channels. 

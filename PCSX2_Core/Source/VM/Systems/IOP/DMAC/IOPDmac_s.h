@@ -19,7 +19,7 @@ Logic adapted from PCSX2, nocash PSX docs (http://problemkaputt.de/psx-spx.htm),
 class IOPDmac_s : public VMSystem_s
 {
 public:
-	explicit IOPDmac_s(VM * vm);
+	IOPDmac_s(VM * vm);
 	virtual ~IOPDmac_s() = default;
 
 	/*

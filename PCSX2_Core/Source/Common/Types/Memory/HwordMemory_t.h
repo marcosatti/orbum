@@ -16,7 +16,7 @@ Make sure the byte size input is divisible by 2 (throws runtime_error otherwise)
 class HwordMemory_t : public DebugBaseObject_t
 {
 public:
-	explicit HwordMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize);
+	HwordMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize);
 	virtual ~HwordMemory_t() = default;
 
 	/*

@@ -11,7 +11,7 @@ Currently used as the PC register for the VU units.
 class PCRegister16_t : public Register16_t
 {
 public:
-	explicit PCRegister16_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+	PCRegister16_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Set the PC to a relative value.

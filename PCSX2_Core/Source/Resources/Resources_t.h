@@ -32,7 +32,7 @@ In order to reduce compile times, try to use forward delarations where possible.
 class Resources_t
 {
 public:
-	explicit Resources_t();
+	Resources_t();
 
 	/*
 	The Clock class, used to control timing accross components.
