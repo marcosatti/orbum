@@ -2,8 +2,8 @@
 
 #include <memory>
 
-class ByteMemory_t;
 class HwordMemory_t;
+class SPU2Core_t;
 
 /*
 Describes the SPU2 (sound) resources that is attached through the IOP.
@@ -17,10 +17,9 @@ public:
 	SPU2_t();
 
 	/*
-	SPU2 Registers.
-	DEBUG.
+	SPU2 Cores.
 	*/
-	std::shared_ptr<ByteMemory_t> SPU2_REGISTERS; // Register "" @ 0x1F900000. Mirrored at 0x1F900800.
+	std::shared_ptr<SPU2Core_t> CORES[Constants::IOP::SPU2::NUMBER_CORES];
 
 	/*
 	SPU2 Local Memory (2MB).
@@ -28,5 +27,5 @@ public:
 	The raw byte-addressed memory is still provided, with a wrapper applied for the half-word verison.
 	*/
 	std::shared_ptr<HwordMemory_t> MainMemory;
-	std::shared_ptr<HwordMemory_t> DebugDummy; // Workaround for the optimisation of the hword memory dump function...
+	std::shared_ptr<HwordMemory_t> DebugDummy; // Workaround to undo the optimisation of the hword memory dump function when using link time optimisation...
 };

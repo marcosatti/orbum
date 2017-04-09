@@ -278,6 +278,8 @@ struct Constants
 		struct SPU2
 		{
 			static constexpr size_t SIZE_MAIN_MEMORY = SIZE_2MB;
+			static constexpr int NUMBER_CORES = 2;
+			static constexpr int NUMBER_CORE_VOICES = 24;
 		};
 
 		struct Timers

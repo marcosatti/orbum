@@ -304,6 +304,10 @@
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -488,6 +492,10 @@
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

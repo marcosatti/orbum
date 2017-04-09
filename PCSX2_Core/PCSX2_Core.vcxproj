@@ -452,6 +452,10 @@
     <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.h" />
     <ClInclude Include="Source\Resources\IOP\SPU2\SPU2_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.h" />
+    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
@@ -623,6 +627,10 @@
     <ClCompile Include="Source\Common\Types\Register\Register16_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister32ByteMMU_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.cpp" />
+    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
