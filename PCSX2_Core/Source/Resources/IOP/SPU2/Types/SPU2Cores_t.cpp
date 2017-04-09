@@ -4,6 +4,7 @@
 #include "Common/Types/Memory/ByteMemory_t.h"
 
 #include "Resources/IOP/SPU2/Types/SPU2Cores_t.h"
+#include "Resources/IOP/SPU2/Types/SPU2CoreRegisters_t.h"
 #include "Resources/IOP/SPU2/Types/SPU2CoreVoices_t.h"
 
 SPU2Core_t::SPU2Core_t() :
@@ -166,7 +167,7 @@ SPU2Core_C0_t::SPU2Core_C0_t()
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C0 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C0 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C0 STATX", false, true);
-	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0X46", false, true, 0xBA);
+	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0346", false, true, 0xBA);
 	VOICES[0] = std::make_shared<SPU2CoreVoice_C0V0_t>();
 	VOICES[1] = std::make_shared<SPU2CoreVoice_C0V1_t>();
 	VOICES[2] = std::make_shared<SPU2CoreVoice_C0V2_t>();
@@ -271,7 +272,7 @@ SPU2Core_C1_t::SPU2Core_C1_t()
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C1 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C1 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C1 STATX", false, true);
-	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C1 MEMORY_0X46", false, true, 0xBA);
+	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C1 MEMORY_0746", false, true, 0xBA);
 	VOICES[0] = std::make_shared<SPU2CoreVoice_C1V0_t>();
 	VOICES[1] = std::make_shared<SPU2CoreVoice_C1V1_t>();
 	VOICES[2] = std::make_shared<SPU2CoreVoice_C1V2_t>();
