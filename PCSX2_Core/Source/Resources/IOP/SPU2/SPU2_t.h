@@ -3,7 +3,10 @@
 #include <memory>
 
 class HwordMemory_t;
+class SPU2Core_C0_t;
+class SPU2Core_C1_t;
 class SPU2Core_t;
+class Register16_t;
 
 /*
 Describes the SPU2 (sound) resources that is attached through the IOP.
@@ -19,7 +22,20 @@ public:
 	/*
 	SPU2 Cores.
 	*/
-	std::shared_ptr<SPU2Core_t> CORES[Constants::IOP::SPU2::NUMBER_CORES];
+	std::shared_ptr<SPU2Core_C0_t> CORE_0;
+	std::shared_ptr<SPU2Core_C1_t> CORE_1;
+	std::shared_ptr<SPU2Core_t>    CORES[Constants::IOP::SPU2::NUMBER_CORES];
+
+	/*
+	SPDIF Registers.
+	*/
+	std::shared_ptr<Register16_t> SPDIF_OUT;
+	std::shared_ptr<Register16_t> SPDIF_IRQINFO;
+	std::shared_ptr<Register16_t> SPDIF_07C4;
+	std::shared_ptr<Register16_t> SPDIF_MODE;
+	std::shared_ptr<Register16_t> SPDIF_MEDIA;
+	std::shared_ptr<Register16_t> SPDIF_07CA;
+	std::shared_ptr<Register16_t> SPDIF_PROTECT;
 
 	/*
 	SPU2 Local Memory (2MB).

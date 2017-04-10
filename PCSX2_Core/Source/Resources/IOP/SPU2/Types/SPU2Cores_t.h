@@ -9,8 +9,10 @@ class SPU2CoreRegister_CHAN0_t;
 class SPU2CoreRegister_CHAN1_t;
 class SPU2CoreRegister_MMIX_t;
 class SPU2CoreRegister_ATTR_t;
+class SPU2CoreRegister_VOL_t;
 class ByteMemory_t;
 class Register16_t;
+class SPU2CoreVoice_C0V0_t;
 
 /*
 Base class representing a SPU2 core.
@@ -100,20 +102,66 @@ public:
 	std::shared_ptr<Register16_t>             ENDX0;
 	std::shared_ptr<Register16_t>             ENDX1;
 	std::shared_ptr<Register16_t>             STATX;
-	std::shared_ptr<ByteMemory_t>             MEMORY_0X46; // Memory for the rest of the mapped address space (unknown registers). 
-	                                                       // For core 0, this is at 0x346 -> 0x3FF. For core 1, this is at 0x746 -> 0x7FF. Both are of size 0xBA.
-	                                                       // Also for core 0, this is mirrored, starting at 0xB46 (unconfirmed, from PCSX2, BIOS also accesses this address).
+	std::shared_ptr<SPU2CoreRegister_VOL_t>   MVOLL;
+	std::shared_ptr<SPU2CoreRegister_VOL_t>   MVOLR;
+	std::shared_ptr<Register16_t>             EVOLL;
+	std::shared_ptr<Register16_t>             EVOLR;
+	std::shared_ptr<Register16_t>             AVOLL;
+	std::shared_ptr<Register16_t>             AVOLR;
+	std::shared_ptr<Register16_t>             BVOLL;
+	std::shared_ptr<Register16_t>             BVOLR;
+	std::shared_ptr<Register16_t>             MVOLXL;
+	std::shared_ptr<Register16_t>             MVOLXR;
+	std::shared_ptr<Register16_t>             IIR_VOL;
+	std::shared_ptr<Register16_t>             COMB1_VOL;
+	std::shared_ptr<Register16_t>             COMB2_VOL;
+	std::shared_ptr<Register16_t>             COMB3_VOL;
+	std::shared_ptr<Register16_t>             COMB4_VOL;
+	std::shared_ptr<Register16_t>             WALL_VOL;
+	std::shared_ptr<Register16_t>             APF1_VOL;
+	std::shared_ptr<Register16_t>             APF2_VOL;
+	std::shared_ptr<Register16_t>             IN_COEF_L;
+	std::shared_ptr<Register16_t>             IN_COEF_R;
 
 	/*
 	SPU2 Core voice channels.
 	*/
-	std::shared_ptr<SPU2CoreVoice_t>          VOICES[Constants::IOP::SPU2::NUMBER_CORE_VOICES];
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_0;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_1;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_2;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_3;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_4;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_5;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_6;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_7;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_8;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_9;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_10;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_11;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_12;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_13;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_14;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_15;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_16;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_17;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_18;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_19;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_20;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_21;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_22;
+	std::shared_ptr<SPU2CoreVoice_t> VOICE_23;
+	std::shared_ptr<SPU2CoreVoice_t> VOICES[Constants::IOP::SPU2::NUMBER_CORE_VOICES];
 };
 
 class SPU2Core_C0_t : public SPU2Core_t
 {
 public:
 	SPU2Core_C0_t();
+
+	/*
+	Unknown memory/registers.
+	*/
+	std::shared_ptr<ByteMemory_t> MEMORY_0346;
 
 	static constexpr int CORE_ID = 0;
 };

@@ -6,6 +6,24 @@
 #include "Common/Types/Register/BitfieldRegister16_t.h"
 
 /*
+The SPU2 Core (Voice) VOL general purpose bitfield register.
+*/
+class SPU2CoreRegister_VOL_t : public BitfieldRegister16_t
+{
+public:
+	struct Fields
+	{
+		static constexpr int ConstValue = 0;
+		static constexpr int ConstToggle = 1;
+		static constexpr int LinExpMode = 2;
+		static constexpr int X = 3;
+		static constexpr int LinExpValue = 4;
+	};
+
+	SPU2CoreRegister_VOL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+};
+
+/*
 The SPU2 Core "CHAN0" general purpose bitfield register.
 */
 class SPU2CoreRegister_CHAN0_t : public BitfieldRegister16_t
@@ -88,11 +106,13 @@ class SPU2CoreRegister_ATTR_t : public BitfieldRegister16_t
 public:
 	struct Fields
 	{
-		static constexpr int DMA = 0;
-		static constexpr int IRQ = 1;
-		static constexpr int ReverbEn = 2;
-		static constexpr int NoiseClock = 3;
-		static constexpr int Mute = 4;
+		static constexpr int DMABits = 0;
+		static constexpr int DMAMode = 1;
+		static constexpr int IRQEnable = 2;
+		static constexpr int FxEnable = 3;
+		static constexpr int NoiseClock = 4;
+		static constexpr int Mute = 5;
+		static constexpr int CoreEnable = 6;
 	};
 
 	SPU2CoreRegister_ATTR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);

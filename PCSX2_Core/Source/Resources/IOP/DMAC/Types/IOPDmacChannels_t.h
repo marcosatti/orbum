@@ -220,3 +220,15 @@ public:
 
 	static constexpr int CHANNEL_ID = 12;
 };
+
+/*
+Represents IOP DMAC channel 13 - a dummy channel.
+The 13th channel inherits a base IOP DMAC channel.
+*/
+class IOPDmacChannel_CH13_t : public IOPDmacChannel_t
+{
+public:
+	IOPDmacChannel_CH13_t();
+
+	static constexpr int CHANNEL_ID = 12;
+};

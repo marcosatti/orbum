@@ -131,3 +131,11 @@ IOPDmacChannel_toSIO2_t::IOPDmacChannel_toSIO2_t(const std::shared_ptr<FIFOQueue
 	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_toSIO2 BCR", false, false);
 	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP DMAC CH_toSIO2 CHCR", false, false);
 }
+
+IOPDmacChannel_CH13_t::IOPDmacChannel_CH13_t() :
+	IOPDmacChannel_t(CHANNEL_ID, nullptr)
+{
+	MADR = std::make_shared<IOPDmacChannelRegister_MADR_t>("IOP DMAC CH_13 MADR", false, false);
+	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_13 BCR", false, false);
+	CHCR = std::make_shared<IOPDmacChannelRegister_CHCR_t>("IOP DMAC CH_13 CHCR", false, false);
+}

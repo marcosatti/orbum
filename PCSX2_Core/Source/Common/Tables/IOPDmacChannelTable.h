@@ -43,6 +43,7 @@ struct IOPDmacChannelTable
 		{ "SIF1"     },
 		{ "fromSIO2" },
 		{ "toSIO2"   },
+		{ "DUMMY PLEASE FIX" }
 	};
 
 	/*

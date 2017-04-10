@@ -2,16 +2,6 @@
 
 #include "Resources/IOP/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
-SPU2CoreVoiceRegister_VOL_t::SPU2CoreVoiceRegister_VOL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
-	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
-{
-	registerField(Fields::ConstValue, "ConstValue", 0, 15, 0);
-	registerField(Fields::ConstToggle, "ConstToggle", 15, 1, 0);
-	registerField(Fields::LinExpMode, "LinExpMode", 13, 2, 0);
-	registerField(Fields::X, "X", 12, 1, 0);
-	registerField(Fields::LinExpValue, "LinExpValue", 0, 7, 0);
-}
-
 SPU2CoreVoiceRegister_ADSR1_t::SPU2CoreVoiceRegister_ADSR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
 {

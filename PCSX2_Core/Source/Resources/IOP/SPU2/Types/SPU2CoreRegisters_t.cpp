@@ -2,6 +2,16 @@
 
 #include "Resources/IOP/SPU2/Types/SPU2CoreRegisters_t.h"
 
+SPU2CoreRegister_VOL_t::SPU2CoreRegister_VOL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
+	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
+{
+	registerField(Fields::ConstValue, "ConstValue", 0, 15, 0);
+	registerField(Fields::ConstToggle, "ConstToggle", 15, 1, 0);
+	registerField(Fields::LinExpMode, "LinExpMode", 13, 2, 0);
+	registerField(Fields::X, "X", 12, 1, 0);
+	registerField(Fields::LinExpValue, "LinExpValue", 0, 7, 0);
+}
+
 SPU2CoreRegister_CHAN0_t::SPU2CoreRegister_CHAN0_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
 {
@@ -56,9 +66,11 @@ SPU2CoreRegister_MMIX_t::SPU2CoreRegister_MMIX_t(const char * mnemonic, const bo
 SPU2CoreRegister_ATTR_t::SPU2CoreRegister_ATTR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
 {
-	registerField(Fields::DMA, "DMA", 4, 2, 0);
-	registerField(Fields::IRQ, "IRQ", 6, 1, 0);
-	registerField(Fields::ReverbEn, "ReverbEn", 7, 1, 0);
+	registerField(Fields::DMABits, "DMABits", 1, 3, 0);
+	registerField(Fields::DMAMode, "DMAMode", 4, 2, 0);
+	registerField(Fields::IRQEnable, "IRQEnable", 6, 1, 0);
+	registerField(Fields::FxEnable, "FxEnable", 7, 1, 0);
 	registerField(Fields::NoiseClock, "NoiseClock", 8, 6, 0);
 	registerField(Fields::Mute, "Mute", 14, 1, 0);
+	registerField(Fields::CoreEnable, "CoreEnable", 15, 1, 0);
 }

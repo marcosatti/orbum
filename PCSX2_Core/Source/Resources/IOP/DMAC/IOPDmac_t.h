@@ -18,7 +18,8 @@ class IOPDmacChannel_DEV9_t;
 class IOPDmacChannel_SIF0_t;
 class IOPDmacChannel_SIF1_t;
 class IOPDmacChannel_fromSIO2_t;
-class IOPDmacChannel_toSIO2_t; 
+class IOPDmacChannel_toSIO2_t;
+class IOPDmacChannel_CH13_t;
 class IOPDmacRegister_PCR0_t; 
 class IOPDmacRegister_ICR0_t;
 class IOPDmacRegister_PCR1_t; 
@@ -50,7 +51,8 @@ public:
 	std::shared_ptr<IOPDmacChannel_SIF1_t>     CHANNEL_SIF1;
 	std::shared_ptr<IOPDmacChannel_fromSIO2_t> CHANNEL_fromSIO2;
 	std::shared_ptr<IOPDmacChannel_toSIO2_t>   CHANNEL_toSIO2;
-	std::shared_ptr<IOPDmacChannel_t> CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS - 1]; 
+	std::shared_ptr<IOPDmacChannel_CH13_t>     CHANNEL_13;
+	std::shared_ptr<IOPDmacChannel_t> CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
 
 	/*
 	DMAC Common Registers.

@@ -84,12 +84,56 @@ SPU2Core_t::SPU2Core_t() :
 	ENDX0(nullptr),
 	ENDX1(nullptr),
 	STATX(nullptr),
-	MEMORY_0X46(nullptr),
+	MVOLL(nullptr),
+	MVOLR(nullptr),
+	EVOLL(nullptr),
+	EVOLR(nullptr),
+	AVOLL(nullptr),
+	AVOLR(nullptr),
+	BVOLL(nullptr),
+	BVOLR(nullptr),
+	MVOLXL(nullptr),
+	MVOLXR(nullptr),
+	IIR_VOL(nullptr),
+	COMB1_VOL(nullptr),
+	COMB2_VOL(nullptr),
+	COMB3_VOL(nullptr),
+	COMB4_VOL(nullptr),
+	WALL_VOL(nullptr),
+	APF1_VOL(nullptr),
+	APF2_VOL(nullptr),
+	IN_COEF_L(nullptr),
+	IN_COEF_R(nullptr),
+	VOICE_0(nullptr),
+	VOICE_1(nullptr),
+	VOICE_2(nullptr),
+	VOICE_3(nullptr),
+	VOICE_4(nullptr),
+	VOICE_5(nullptr),
+	VOICE_6(nullptr),
+	VOICE_7(nullptr),
+	VOICE_8(nullptr),
+	VOICE_9(nullptr),
+	VOICE_10(nullptr),
+	VOICE_11(nullptr),
+	VOICE_12(nullptr),
+	VOICE_13(nullptr),
+	VOICE_14(nullptr),
+	VOICE_15(nullptr),
+	VOICE_16(nullptr),
+	VOICE_17(nullptr),
+	VOICE_18(nullptr),
+	VOICE_19(nullptr),
+	VOICE_20(nullptr),
+	VOICE_21(nullptr),
+	VOICE_22(nullptr),
+	VOICE_23(nullptr),
 	VOICES{ nullptr }
 {
 }
 
-SPU2Core_C0_t::SPU2Core_C0_t()
+SPU2Core_C0_t::SPU2Core_C0_t() :
+	MEMORY_0346(std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0346", false, true, 0xBA))
 {
 	PMON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 PMON0", false, true);
 	PMON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 PMON1", false, true);
@@ -167,31 +211,74 @@ SPU2Core_C0_t::SPU2Core_C0_t()
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C0 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C0 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C0 STATX", false, true);
-	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0346", false, true, 0xBA);
-	VOICES[0] = std::make_shared<SPU2CoreVoice_C0V0_t>();
-	VOICES[1] = std::make_shared<SPU2CoreVoice_C0V1_t>();
-	VOICES[2] = std::make_shared<SPU2CoreVoice_C0V2_t>();
-	VOICES[3] = std::make_shared<SPU2CoreVoice_C0V3_t>();
-	VOICES[4] = std::make_shared<SPU2CoreVoice_C0V4_t>();
-	VOICES[5] = std::make_shared<SPU2CoreVoice_C0V5_t>();
-	VOICES[6] = std::make_shared<SPU2CoreVoice_C0V6_t>();
-	VOICES[7] = std::make_shared<SPU2CoreVoice_C0V7_t>();
-	VOICES[8] = std::make_shared<SPU2CoreVoice_C0V8_t>();
-	VOICES[9] = std::make_shared<SPU2CoreVoice_C0V9_t>();
-	VOICES[10] = std::make_shared<SPU2CoreVoice_C0V10_t>();
-	VOICES[11] = std::make_shared<SPU2CoreVoice_C0V11_t>();
-	VOICES[12] = std::make_shared<SPU2CoreVoice_C0V12_t>();
-	VOICES[13] = std::make_shared<SPU2CoreVoice_C0V13_t>();
-	VOICES[14] = std::make_shared<SPU2CoreVoice_C0V14_t>();
-	VOICES[15] = std::make_shared<SPU2CoreVoice_C0V15_t>();
-	VOICES[16] = std::make_shared<SPU2CoreVoice_C0V16_t>();
-	VOICES[17] = std::make_shared<SPU2CoreVoice_C0V17_t>();
-	VOICES[18] = std::make_shared<SPU2CoreVoice_C0V18_t>();
-	VOICES[19] = std::make_shared<SPU2CoreVoice_C0V19_t>();
-	VOICES[20] = std::make_shared<SPU2CoreVoice_C0V20_t>();
-	VOICES[21] = std::make_shared<SPU2CoreVoice_C0V21_t>();
-	VOICES[22] = std::make_shared<SPU2CoreVoice_C0V22_t>();
-	VOICES[23] = std::make_shared<SPU2CoreVoice_C0V23_t>();
+	MVOLL = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C0 MVOLL", false, true);
+	MVOLR = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C0 MVOLR", false, true);
+	EVOLL = std::make_shared<Register16_t>("SPU2 C0 EVOLL", false, true);
+	EVOLR = std::make_shared<Register16_t>("SPU2 C0 EVOLR", false, true);
+	AVOLL = std::make_shared<Register16_t>("SPU2 C0 AVOLL", false, true);
+	AVOLR = std::make_shared<Register16_t>("SPU2 C0 AVOLR", false, true);
+	BVOLL = std::make_shared<Register16_t>("SPU2 C0 BVOLL", false, true);
+	BVOLR = std::make_shared<Register16_t>("SPU2 C0 BVOLR", false, true);
+	MVOLXL = std::make_shared<Register16_t>("SPU2 C0 MVOLXL", false, true);
+	MVOLXR = std::make_shared<Register16_t>("SPU2 C0 MVOLXR", false, true);
+	IIR_VOL = std::make_shared<Register16_t>("SPU2 C0 IIR_VOL", false, true);
+	COMB1_VOL = std::make_shared<Register16_t>("SPU2 C0 COMB1_VOL", false, true);
+	COMB2_VOL = std::make_shared<Register16_t>("SPU2 C0 COMB2_VOL", false, true);
+	COMB3_VOL = std::make_shared<Register16_t>("SPU2 C0 COMB3_VOL", false, true);
+	COMB4_VOL = std::make_shared<Register16_t>("SPU2 C0 COMB4_VOL", false, true);
+	WALL_VOL = std::make_shared<Register16_t>("SPU2 C0 WALL_VOL", false, true);
+	APF1_VOL = std::make_shared<Register16_t>("SPU2 C0 APF1_VOL", false, true);
+	APF2_VOL = std::make_shared<Register16_t>("SPU2 C0 APF2_VOL", false, true);
+	IN_COEF_L = std::make_shared<Register16_t>("SPU2 C0 IN_COEF_L", false, true);
+	IN_COEF_R = std::make_shared<Register16_t>("SPU2 C0 IN_COEF_R", false, true);
+	VOICE_0 = std::make_shared<SPU2CoreVoice_C0V0_t>();
+	VOICE_1 = std::make_shared<SPU2CoreVoice_C0V1_t>();
+	VOICE_2 = std::make_shared<SPU2CoreVoice_C0V2_t>();
+	VOICE_3 = std::make_shared<SPU2CoreVoice_C0V3_t>();
+	VOICE_4 = std::make_shared<SPU2CoreVoice_C0V4_t>();
+	VOICE_5 = std::make_shared<SPU2CoreVoice_C0V5_t>();
+	VOICE_6 = std::make_shared<SPU2CoreVoice_C0V6_t>();
+	VOICE_7 = std::make_shared<SPU2CoreVoice_C0V7_t>();
+	VOICE_8 = std::make_shared<SPU2CoreVoice_C0V8_t>();
+	VOICE_9 = std::make_shared<SPU2CoreVoice_C0V9_t>();
+	VOICE_10 = std::make_shared<SPU2CoreVoice_C0V10_t>();
+	VOICE_11 = std::make_shared<SPU2CoreVoice_C0V11_t>();
+	VOICE_12 = std::make_shared<SPU2CoreVoice_C0V12_t>();
+	VOICE_13 = std::make_shared<SPU2CoreVoice_C0V13_t>();
+	VOICE_14 = std::make_shared<SPU2CoreVoice_C0V14_t>();
+	VOICE_15 = std::make_shared<SPU2CoreVoice_C0V15_t>();
+	VOICE_16 = std::make_shared<SPU2CoreVoice_C0V16_t>();
+	VOICE_17 = std::make_shared<SPU2CoreVoice_C0V17_t>();
+	VOICE_18 = std::make_shared<SPU2CoreVoice_C0V18_t>();
+	VOICE_19 = std::make_shared<SPU2CoreVoice_C0V19_t>();
+	VOICE_20 = std::make_shared<SPU2CoreVoice_C0V20_t>();
+	VOICE_21 = std::make_shared<SPU2CoreVoice_C0V21_t>();
+	VOICE_22 = std::make_shared<SPU2CoreVoice_C0V22_t>();
+	VOICE_23 = std::make_shared<SPU2CoreVoice_C0V23_t>();
+	VOICES[0] = VOICE_0;
+	VOICES[1] = VOICE_1;
+	VOICES[2] = VOICE_2;
+	VOICES[3] = VOICE_3;
+	VOICES[4] = VOICE_4;
+	VOICES[5] = VOICE_5;
+	VOICES[6] = VOICE_6;
+	VOICES[7] = VOICE_7;
+	VOICES[8] = VOICE_8;
+	VOICES[9] = VOICE_9;
+	VOICES[10] = VOICE_10;
+	VOICES[11] = VOICE_11;
+	VOICES[12] = VOICE_12;
+	VOICES[13] = VOICE_13;
+	VOICES[14] = VOICE_14;
+	VOICES[15] = VOICE_15;
+	VOICES[16] = VOICE_16;
+	VOICES[17] = VOICE_17;
+	VOICES[18] = VOICE_18;
+	VOICES[19] = VOICE_19;
+	VOICES[20] = VOICE_20;
+	VOICES[21] = VOICE_21;
+	VOICES[22] = VOICE_22;
+	VOICES[23] = VOICE_23;
 }
 
 SPU2Core_C1_t::SPU2Core_C1_t()
@@ -272,29 +359,72 @@ SPU2Core_C1_t::SPU2Core_C1_t()
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C1 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C1 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C1 STATX", false, true);
-	MEMORY_0X46 = std::make_shared<ByteMemory_t>("SPU2 C1 MEMORY_0746", false, true, 0xBA);
-	VOICES[0] = std::make_shared<SPU2CoreVoice_C1V0_t>();
-	VOICES[1] = std::make_shared<SPU2CoreVoice_C1V1_t>();
-	VOICES[2] = std::make_shared<SPU2CoreVoice_C1V2_t>();
-	VOICES[3] = std::make_shared<SPU2CoreVoice_C1V3_t>();
-	VOICES[4] = std::make_shared<SPU2CoreVoice_C1V4_t>();
-	VOICES[5] = std::make_shared<SPU2CoreVoice_C1V5_t>();
-	VOICES[6] = std::make_shared<SPU2CoreVoice_C1V6_t>();
-	VOICES[7] = std::make_shared<SPU2CoreVoice_C1V7_t>();
-	VOICES[8] = std::make_shared<SPU2CoreVoice_C1V8_t>();
-	VOICES[9] = std::make_shared<SPU2CoreVoice_C1V9_t>();
-	VOICES[10] = std::make_shared<SPU2CoreVoice_C1V10_t>();
-	VOICES[11] = std::make_shared<SPU2CoreVoice_C1V11_t>();
-	VOICES[12] = std::make_shared<SPU2CoreVoice_C1V12_t>();
-	VOICES[13] = std::make_shared<SPU2CoreVoice_C1V13_t>();
-	VOICES[14] = std::make_shared<SPU2CoreVoice_C1V14_t>();
-	VOICES[15] = std::make_shared<SPU2CoreVoice_C1V15_t>();
-	VOICES[16] = std::make_shared<SPU2CoreVoice_C1V16_t>();
-	VOICES[17] = std::make_shared<SPU2CoreVoice_C1V17_t>();
-	VOICES[18] = std::make_shared<SPU2CoreVoice_C1V18_t>();
-	VOICES[19] = std::make_shared<SPU2CoreVoice_C1V19_t>();
-	VOICES[20] = std::make_shared<SPU2CoreVoice_C1V20_t>();
-	VOICES[21] = std::make_shared<SPU2CoreVoice_C1V21_t>();
-	VOICES[22] = std::make_shared<SPU2CoreVoice_C1V22_t>();
-	VOICES[23] = std::make_shared<SPU2CoreVoice_C1V23_t>();
+	MVOLL = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C1 MVOLL", false, true);
+	MVOLR = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C1 MVOLR", false, true);
+	EVOLL = std::make_shared<Register16_t>("SPU2 C1 EVOLL", false, true);
+	EVOLR = std::make_shared<Register16_t>("SPU2 C1 EVOLR", false, true);
+	AVOLL = std::make_shared<Register16_t>("SPU2 C1 AVOLL", false, true);
+	AVOLR = std::make_shared<Register16_t>("SPU2 C1 AVOLR", false, true);
+	BVOLL = std::make_shared<Register16_t>("SPU2 C1 BVOLL", false, true);
+	BVOLR = std::make_shared<Register16_t>("SPU2 C1 BVOLR", false, true);
+	MVOLXL = std::make_shared<Register16_t>("SPU2 C1 MVOLXL", false, true);
+	MVOLXR = std::make_shared<Register16_t>("SPU2 C1 MVOLXR", false, true);
+	IIR_VOL = std::make_shared<Register16_t>("SPU2 C1 IIR_VOL", false, true);
+	COMB1_VOL = std::make_shared<Register16_t>("SPU2 C1 COMB1_VOL", false, true);
+	COMB2_VOL = std::make_shared<Register16_t>("SPU2 C1 COMB2_VOL", false, true);
+	COMB3_VOL = std::make_shared<Register16_t>("SPU2 C1 COMB3_VOL", false, true);
+	COMB4_VOL = std::make_shared<Register16_t>("SPU2 C1 COMB4_VOL", false, true);
+	WALL_VOL = std::make_shared<Register16_t>("SPU2 C1 WALL_VOL", false, true);
+	APF1_VOL = std::make_shared<Register16_t>("SPU2 C1 APF1_VOL", false, true);
+	APF2_VOL = std::make_shared<Register16_t>("SPU2 C1 APF2_VOL", false, true);
+	IN_COEF_L = std::make_shared<Register16_t>("SPU2 C1 IN_COEF_L", false, true);
+	IN_COEF_R = std::make_shared<Register16_t>("SPU2 C1 IN_COEF_R", false, true);
+	VOICE_0 = std::make_shared<SPU2CoreVoice_C1V0_t>();
+	VOICE_1 = std::make_shared<SPU2CoreVoice_C1V1_t>();
+	VOICE_2 = std::make_shared<SPU2CoreVoice_C1V2_t>();
+	VOICE_3 = std::make_shared<SPU2CoreVoice_C1V3_t>();
+	VOICE_4 = std::make_shared<SPU2CoreVoice_C1V4_t>();
+	VOICE_5 = std::make_shared<SPU2CoreVoice_C1V5_t>();
+	VOICE_6 = std::make_shared<SPU2CoreVoice_C1V6_t>();
+	VOICE_7 = std::make_shared<SPU2CoreVoice_C1V7_t>();
+	VOICE_8 = std::make_shared<SPU2CoreVoice_C1V8_t>();
+	VOICE_9 = std::make_shared<SPU2CoreVoice_C1V9_t>();
+	VOICE_10 = std::make_shared<SPU2CoreVoice_C1V10_t>();
+	VOICE_11 = std::make_shared<SPU2CoreVoice_C1V11_t>();
+	VOICE_12 = std::make_shared<SPU2CoreVoice_C1V12_t>();
+	VOICE_13 = std::make_shared<SPU2CoreVoice_C1V13_t>();
+	VOICE_14 = std::make_shared<SPU2CoreVoice_C1V14_t>();
+	VOICE_15 = std::make_shared<SPU2CoreVoice_C1V15_t>();
+	VOICE_16 = std::make_shared<SPU2CoreVoice_C1V16_t>();
+	VOICE_17 = std::make_shared<SPU2CoreVoice_C1V17_t>();
+	VOICE_18 = std::make_shared<SPU2CoreVoice_C1V18_t>();
+	VOICE_19 = std::make_shared<SPU2CoreVoice_C1V19_t>();
+	VOICE_20 = std::make_shared<SPU2CoreVoice_C1V20_t>();
+	VOICE_21 = std::make_shared<SPU2CoreVoice_C1V21_t>();
+	VOICE_22 = std::make_shared<SPU2CoreVoice_C1V22_t>();
+	VOICE_23 = std::make_shared<SPU2CoreVoice_C1V23_t>();
+	VOICES[0] = VOICE_0;
+	VOICES[1] = VOICE_1;
+	VOICES[2] = VOICE_2;
+	VOICES[3] = VOICE_3;
+	VOICES[4] = VOICE_4;
+	VOICES[5] = VOICE_5;
+	VOICES[6] = VOICE_6;
+	VOICES[7] = VOICE_7;
+	VOICES[8] = VOICE_8;
+	VOICES[9] = VOICE_9;
+	VOICES[10] = VOICE_10;
+	VOICES[11] = VOICE_11;
+	VOICES[12] = VOICE_12;
+	VOICES[13] = VOICE_13;
+	VOICES[14] = VOICE_14;
+	VOICES[15] = VOICE_15;
+	VOICES[16] = VOICE_16;
+	VOICES[17] = VOICE_17;
+	VOICES[18] = VOICE_18;
+	VOICES[19] = VOICE_19;
+	VOICES[20] = VOICE_20;
+	VOICES[21] = VOICE_21;
+	VOICES[22] = VOICE_22;
+	VOICES[23] = VOICE_23;
 }

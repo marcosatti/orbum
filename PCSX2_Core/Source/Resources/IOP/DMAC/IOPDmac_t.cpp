@@ -20,7 +20,8 @@ IOPDmac_t::IOPDmac_t() :
 	CHANNEL_SIF1(nullptr),
 	CHANNEL_fromSIO2(nullptr),
 	CHANNEL_toSIO2(nullptr),
-	CHANNELS{ },
+	CHANNEL_13(nullptr),
+	CHANNELS{ nullptr },
 
 	PCR0(std::make_shared<IOPDmacRegister_PCR0_t>("IOP DMAC PCR0", false, false)),
 	ICR0(std::make_shared<IOPDmacRegister_ICR0_t>("IOP DMAC ICR0", false, false)),

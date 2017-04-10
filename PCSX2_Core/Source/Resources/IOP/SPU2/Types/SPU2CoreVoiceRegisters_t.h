@@ -6,24 +6,6 @@
 #include "Common/Types/Register/BitfieldRegister16_t.h"
 
 /*
-The SPU2 Core Voice VOL general purpose bitfield register.
-*/
-class SPU2CoreVoiceRegister_VOL_t : public BitfieldRegister16_t
-{
-public:
-	struct Fields
-	{
-		static constexpr int ConstValue = 0;
-		static constexpr int ConstToggle = 1;
-		static constexpr int LinExpMode = 2;
-		static constexpr int X = 3;
-		static constexpr int LinExpValue = 4;
-	};
-
-	SPU2CoreVoiceRegister_VOL_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-};
-
-/*
 The SPU2 ADSR1 register.
 */
 class SPU2CoreVoiceRegister_ADSR1_t : public BitfieldRegister16_t

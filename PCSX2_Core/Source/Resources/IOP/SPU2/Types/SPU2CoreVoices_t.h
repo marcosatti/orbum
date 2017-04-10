@@ -3,7 +3,7 @@
 #include <memory>
 
 class Register16_t;
-class SPU2CoreVoiceRegister_VOL_t;
+class SPU2CoreRegister_VOL_t;
 class SPU2CoreVoiceRegister_ADSR1_t;
 class SPU2CoreVoiceRegister_ADSR2_t;
 
@@ -16,8 +16,8 @@ class SPU2CoreVoice_t
 public:
 	SPU2CoreVoice_t();
 
-	std::shared_ptr<SPU2CoreVoiceRegister_VOL_t>   VOLL;
-	std::shared_ptr<SPU2CoreVoiceRegister_VOL_t>   VOLR;
+	std::shared_ptr<SPU2CoreRegister_VOL_t>        VOLL;
+	std::shared_ptr<SPU2CoreRegister_VOL_t>        VOLR;
 	std::shared_ptr<Register16_t>                  PITCH;
 	std::shared_ptr<SPU2CoreVoiceRegister_ADSR1_t> ADSR1;
 	std::shared_ptr<SPU2CoreVoiceRegister_ADSR2_t> ADSR2;
