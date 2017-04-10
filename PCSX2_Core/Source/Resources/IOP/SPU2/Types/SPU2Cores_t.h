@@ -50,7 +50,7 @@ public:
 	std::shared_ptr<Register16_t>             TSAL;
 	std::shared_ptr<Register16_t>             DATA0;
 	std::shared_ptr<Register16_t>             DATA1;
-	std::shared_ptr<Register16_t>             DATA2;
+	std::shared_ptr<Register16_t>             ADMAS; // "AutoDMA Status".
 	std::shared_ptr<Register16_t>             ESAH;
 	std::shared_ptr<Register16_t>             ESAL;
 	std::shared_ptr<Register16_t>             APF1_SIZEH;

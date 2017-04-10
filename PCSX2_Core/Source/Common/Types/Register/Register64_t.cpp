@@ -11,7 +11,7 @@ Register64_t::Register64_t(const char* mnemonic, bool debugReads, bool debugWrit
 
 u8 Register64_t::readByte(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -29,7 +29,7 @@ void Register64_t::writeByte(const System_t context, size_t arrayIndex, u8 value
 {
 	UB[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -43,7 +43,7 @@ void Register64_t::writeByte(const System_t context, size_t arrayIndex, u8 value
 
 u16 Register64_t::readHword(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -61,7 +61,7 @@ void Register64_t::writeHword(const System_t context, size_t arrayIndex, u16 val
 {
 	UH[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -75,7 +75,7 @@ void Register64_t::writeHword(const System_t context, size_t arrayIndex, u16 val
 
 u32 Register64_t::readWord(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -93,7 +93,7 @@ void Register64_t::writeWord(const System_t context, size_t arrayIndex, u32 valu
 {
 	UW[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -107,7 +107,7 @@ void Register64_t::writeWord(const System_t context, size_t arrayIndex, u32 valu
 
 u64 Register64_t::readDword(const System_t context)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -125,7 +125,7 @@ void Register64_t::writeDword(const System_t context, u64 value)
 {
 	UD = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX

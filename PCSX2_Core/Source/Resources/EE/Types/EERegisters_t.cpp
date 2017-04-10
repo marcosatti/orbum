@@ -16,7 +16,7 @@ void EERegister_SIO_t::writeByte(const System_t context, size_t storageIndex, u8
 	{
 	case OFFSET_SIO_TXFIFO: // "SIO_TXFIFO"
 	{
-#if DEBUG_SIO_LOG_MESSAGES
+#if DEBUG_LOG_SIO_MESSAGES
 		// Below logic adapted from the old PCSX2 code (see HwWrite.cpp).
 		if (value == '\r')
 		{

@@ -11,7 +11,7 @@ Register128_t::Register128_t(const char* mnemonic, bool debugReads, bool debugWr
 
 u8 Register128_t::readByte(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -29,7 +29,7 @@ void Register128_t::writeByte(const System_t context, size_t arrayIndex, u8 valu
 {
 	UB[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -43,7 +43,7 @@ void Register128_t::writeByte(const System_t context, size_t arrayIndex, u8 valu
 
 u16 Register128_t::readHword(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -61,7 +61,7 @@ void Register128_t::writeHword(const System_t context, size_t arrayIndex, u16 va
 {
 	UH[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -75,7 +75,7 @@ void Register128_t::writeHword(const System_t context, size_t arrayIndex, u16 va
 
 u32 Register128_t::readWord(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -93,7 +93,7 @@ void Register128_t::writeWord(const System_t context, size_t arrayIndex, u32 val
 {
 	UW[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -107,7 +107,7 @@ void Register128_t::writeWord(const System_t context, size_t arrayIndex, u32 val
 
 u64 Register128_t::readDword(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -125,7 +125,7 @@ void Register128_t::writeDword(const System_t context, size_t arrayIndex, u64 va
 {
 	UD[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -139,7 +139,7 @@ void Register128_t::writeDword(const System_t context, size_t arrayIndex, u64 va
 
 u128 Register128_t::readQword(const System_t context)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -157,7 +157,7 @@ void Register128_t::writeQword(const System_t context, u128 value)
 {
 	UQ = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -171,7 +171,7 @@ void Register128_t::writeQword(const System_t context, u128 value)
 
 f32 Register128_t::readFloat(const System_t context, size_t arrayIndex)
 {
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -189,7 +189,7 @@ void Register128_t::writeFloat(const System_t context, size_t arrayIndex, f32 va
 {
 	F[arrayIndex] = value;
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX

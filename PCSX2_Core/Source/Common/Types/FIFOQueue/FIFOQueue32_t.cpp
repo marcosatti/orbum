@@ -13,11 +13,11 @@ u32 FIFOQueue32_t::readWord(const System_t context)
 	auto temp = mFIFOQueue.front();
 	mFIFOQueue.pop();
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_FIFOQUEUE_READ_WRITE)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u32, Size = %d, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
+		log(Debug, "%s: %s Read u32, Size = %d, Value = 0x%08X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #else
 		log(Debug, "%s: %s Read u32, Size = %d, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #endif
@@ -44,11 +44,11 @@ void FIFOQueue32_t::writeWord(const System_t context, const u32 data)
 
 	mFIFOQueue.push(data);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_FIFOQUEUE_READ_WRITE)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u32, Size = %d, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u32, Size = %d, Value = 0x%08X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #else
 		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #endif

@@ -111,14 +111,14 @@ public:
 };
 
 /*
-Represents IOP DMAC channel 4 - the SPU2c1 channel.
-The SPU2c1 channel inherits a base IOP DMAC channel.
+Represents IOP DMAC channel 4 - the SPU2C0 channel.
+The SPU2C0 channel inherits a base IOP DMAC channel.
 Also contains a TADR register.
 */
-class IOPDmacChannel_SPU2c1_t : public IOPDmacChannel_t
+class IOPDmacChannel_SPU2C0_t : public IOPDmacChannel_t
 {
 public:
-	IOPDmacChannel_SPU2c1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_SPU2C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 4;
 };
@@ -149,13 +149,13 @@ public:
 };
 
 /*
-Represents IOP DMAC channel 7 - the SPU2c2 channel.
-The SPU2c2 channel inherits a base IOP DMAC channel.
+Represents IOP DMAC channel 7 - the SPU2C1 channel.
+The SPU2C1 channel inherits a base IOP DMAC channel.
 */
-class IOPDmacChannel_SPU2c2_t : public IOPDmacChannel_t
+class IOPDmacChannel_SPU2C1_t : public IOPDmacChannel_t
 {
 public:
-	IOPDmacChannel_SPU2c2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	IOPDmacChannel_SPU2C1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 7;
 };

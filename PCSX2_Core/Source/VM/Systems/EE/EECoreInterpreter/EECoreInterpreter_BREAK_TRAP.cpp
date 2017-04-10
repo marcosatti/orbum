@@ -21,7 +21,7 @@ void EECoreInterpreter_s::BREAK()
 
 void EECoreInterpreter_s::SYSCALL()
 {
-#if DEBUG_EE_SYSCALL_LOG
+#if DEBUG_LOG_EE_SYSCALLS
 	// Debug print the syscall mnemonic.
 	// The convention is to store the syscall number in register $v1 ($3), then use the syscall instruction (the 'code' field within the syscall instruction is apparently unused).
 	// When the syscall number is loaded into $v1, it is done so through

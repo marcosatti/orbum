@@ -40,6 +40,7 @@ public:
 	FIFO Queue registers, attached to both the EE and IOP DMAC channels.
 	SIF2 has a custom FIFO to trigger updates to the SBUS_REGISTER_F3000 defined above (dependency).
 	*/
+	static constexpr int DEBUG_FIFO_SIZE = 4 * 128;
 	std::shared_ptr<FIFOQueue32_t>          FIFO_VIF0;
 	std::shared_ptr<FIFOQueue32_t>          FIFO_VIF1;
 	std::shared_ptr<FIFOQueue32_t>          FIFO_GIF;
@@ -47,7 +48,16 @@ public:
 	std::shared_ptr<FIFOQueue32_t>          FIFO_toIPU;
 	std::shared_ptr<FIFOQueue32_t>          FIFO_SIF0;
 	std::shared_ptr<FIFOQueue32_t>          FIFO_SIF1;
-	std::shared_ptr<SBUSFIFOQueue_SIF2_t> FIFO_SIF2;
-	std::shared_ptr<FIFOQueue32_t>          FIFO_DEBUG;    // DEBUG / NULL FIFO queue.
+	std::shared_ptr<SBUSFIFOQueue_SIF2_t>   FIFO_SIF2;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_fromMDEC;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_toMDEC;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_CDROM;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_SPU2C0;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_PIO;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_OTClear;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_SPU2C1;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_DEV9;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_fromSIO2;
+	std::shared_ptr<FIFOQueue32_t>          FIFO_toSIO2;
 };
 

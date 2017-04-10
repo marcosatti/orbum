@@ -31,7 +31,7 @@ public:
 	void writeWord(const System_t context, size_t storageIndex, u32 value) override;
 
 private:
-#if DEBUG_SIO_LOG_MESSAGES
+#if DEBUG_LOG_SIO_MESSAGES
 	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
 	static constexpr char * SIO_BUFFER_PREFIX = "EE SIO Message";
 	std::string sioBuffer;

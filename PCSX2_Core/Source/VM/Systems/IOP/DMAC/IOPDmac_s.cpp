@@ -238,29 +238,27 @@ int IOPDmac_s::transferData() const
 	{
 		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() < 1)
-		{
-			//log(Warning, "IOP DMAC tried to read u32 from FIFO queue (channel %s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return 0;
-		}
 
 		u32 packet = mChannel->mFIFOQueue->readWord(getContext());
 		writeDataMemory32(physicalAddress, packet);
 
-		//log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+#if DEBUG_LOG_IOP_DMAC_XFERS
+		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+#endif
 	}
 	else if (direction == Direction_t::TO)
 	{
 		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - 1))
-		{
-			//log(Warning, "IOP DMAC tried to write u32 to FIFO queue (channel %s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return 0;
-		}
 
 		u32 packet = readDataMemory32(physicalAddress);
 		mChannel->mFIFOQueue->writeWord(getContext(), packet);
 
-		//log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+#if DEBUG_LOG_IOP_DMAC_XFERS
+		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+#endif
 	}
 	else
 	{
@@ -332,10 +330,7 @@ bool IOPDmac_s::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
 		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
-		{
-			//log(Warning, "IOP DMAC tried to write EE tag (u128) to FIFO queue (%s), but it was full! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 			return false;
-		}
 	}
 
 	// Get tag memory address (TADR).
@@ -347,9 +342,11 @@ bool IOPDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the LSB 64-bits of tag.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 
+#if DEBUG_LOG_IOP_DMAC_TAGS
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
 		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
+#endif
 
 	// Check if we need to transfer the tag (CHCR bit 8 aka "chopping enable" set).
 	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
@@ -380,10 +377,7 @@ bool IOPDmac_s::readChainDestTag()
 {
 	// Check first if there is tag data available.
 	if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
-	{
-		//log(Warning, "IOP DMAC tried to read tag (u128) from FIFO queue (%s), but it was empty! Trying again next cycle, but there could be a problem somewhere else!", mChannel->getChannelInfo()->mMnemonic);
 		return false;
-	}
 
 	// Read tag (u128) from channel FIFO. Only first 2 u32's are used for the IOP.
 	const u128 tag = mChannel->mFIFOQueue->readQword(getContext());
@@ -391,9 +385,11 @@ bool IOPDmac_s::readChainDestTag()
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 	
+#if DEBUG_LOG_IOP_DMAC_TAGS
 	log(Debug, "IOP tag (dest chain mode) read on channel %s. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
 		mChannel->getInfo()->mMnemonic, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
+#endif
 
 	// Set tag transfer length.
 	// The maximum supported length is 1MB - 16 bytes.

@@ -436,29 +436,29 @@ void Resources_t::postInit_EE() const
 
 void Resources_t::postInit_IOP_DMAC() const
 {
-	IOP->DMAC->CHANNEL_fromMDEC = std::make_shared<IOPDmacChannel_fromMDEC_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_toMDEC = std::make_shared<IOPDmacChannel_toMDEC_t>(Common->FIFO_DEBUG);
+	IOP->DMAC->CHANNEL_fromMDEC = std::make_shared<IOPDmacChannel_fromMDEC_t>(Common->FIFO_fromMDEC);
+	IOP->DMAC->CHANNEL_toMDEC = std::make_shared<IOPDmacChannel_toMDEC_t>(Common->FIFO_toMDEC);
 	IOP->DMAC->CHANNEL_SIF2 = std::make_shared<IOPDmacChannel_SIF2_t>(Common->FIFO_SIF2, Common->SBUS_F240);
-	IOP->DMAC->CHANNEL_CDROM = std::make_shared<IOPDmacChannel_CDROM_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_SPU2c1 = std::make_shared<IOPDmacChannel_SPU2c1_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_PIO = std::make_shared<IOPDmacChannel_PIO_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_OTClear = std::make_shared<IOPDmacChannel_OTClear_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_SPU2c2 = std::make_shared<IOPDmacChannel_SPU2c2_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_DEV9 = std::make_shared<IOPDmacChannel_DEV9_t>(Common->FIFO_DEBUG);
+	IOP->DMAC->CHANNEL_CDROM = std::make_shared<IOPDmacChannel_CDROM_t>(Common->FIFO_CDROM);
+	IOP->DMAC->CHANNEL_SPU2C0 = std::make_shared<IOPDmacChannel_SPU2C0_t>(Common->FIFO_SPU2C0);
+	IOP->DMAC->CHANNEL_PIO = std::make_shared<IOPDmacChannel_PIO_t>(Common->FIFO_PIO);
+	IOP->DMAC->CHANNEL_OTClear = std::make_shared<IOPDmacChannel_OTClear_t>(Common->FIFO_OTClear);
+	IOP->DMAC->CHANNEL_SPU2C1 = std::make_shared<IOPDmacChannel_SPU2C1_t>(Common->FIFO_SPU2C1);
+	IOP->DMAC->CHANNEL_DEV9 = std::make_shared<IOPDmacChannel_DEV9_t>(Common->FIFO_DEV9);
 	IOP->DMAC->CHANNEL_SIF0 = std::make_shared<IOPDmacChannel_SIF0_t>(Common->FIFO_SIF0, Common->SBUS_F240);
 	IOP->DMAC->CHANNEL_SIF1 = std::make_shared<IOPDmacChannel_SIF1_t>(Common->FIFO_SIF1, Common->SBUS_F240);
-	IOP->DMAC->CHANNEL_fromSIO2 = std::make_shared<IOPDmacChannel_fromSIO2_t>(Common->FIFO_DEBUG);
-	IOP->DMAC->CHANNEL_toSIO2 = std::make_shared<IOPDmacChannel_toSIO2_t>(Common->FIFO_DEBUG);
+	IOP->DMAC->CHANNEL_fromSIO2 = std::make_shared<IOPDmacChannel_fromSIO2_t>(Common->FIFO_fromSIO2);
+	IOP->DMAC->CHANNEL_toSIO2 = std::make_shared<IOPDmacChannel_toSIO2_t>(Common->FIFO_toSIO2);
 	IOP->DMAC->CHANNEL_13 = std::make_shared<IOPDmacChannel_CH13_t>();
 
 	IOP->DMAC->CHANNELS[0] = IOP->DMAC->CHANNEL_fromMDEC;
 	IOP->DMAC->CHANNELS[1] = IOP->DMAC->CHANNEL_toMDEC;
 	IOP->DMAC->CHANNELS[2] = IOP->DMAC->CHANNEL_SIF2;
 	IOP->DMAC->CHANNELS[3] = IOP->DMAC->CHANNEL_CDROM;
-	IOP->DMAC->CHANNELS[4] = IOP->DMAC->CHANNEL_SPU2c1;
+	IOP->DMAC->CHANNELS[4] = IOP->DMAC->CHANNEL_SPU2C0;
 	IOP->DMAC->CHANNELS[5] = IOP->DMAC->CHANNEL_PIO;
 	IOP->DMAC->CHANNELS[6] = IOP->DMAC->CHANNEL_OTClear;
-	IOP->DMAC->CHANNELS[7] = IOP->DMAC->CHANNEL_SPU2c2;
+	IOP->DMAC->CHANNELS[7] = IOP->DMAC->CHANNEL_SPU2C1;
 	IOP->DMAC->CHANNELS[8] = IOP->DMAC->CHANNEL_DEV9;
 	IOP->DMAC->CHANNELS[9] = IOP->DMAC->CHANNEL_SIF0;
 	IOP->DMAC->CHANNELS[10] = IOP->DMAC->CHANNEL_SIF1;
@@ -529,19 +529,19 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F8010B0, IOP->DMAC->CHANNEL_CDROM->MADR);
 			IOP->MMU->mapObject(0x1F8010B4, IOP->DMAC->CHANNEL_CDROM->BCR);
 			IOP->MMU->mapObject(0x1F8010B8, IOP->DMAC->CHANNEL_CDROM->CHCR);
-			IOP->MMU->mapObject(0x1F8010C0, IOP->DMAC->CHANNEL_SPU2c1->MADR);
-			IOP->MMU->mapObject(0x1F8010C4, IOP->DMAC->CHANNEL_SPU2c1->BCR);
-			IOP->MMU->mapObject(0x1F8010C8, IOP->DMAC->CHANNEL_SPU2c1->CHCR);
-			IOP->MMU->mapObject(0x1F8010CC, IOP->DMAC->CHANNEL_SPU2c1->TADR);
+			IOP->MMU->mapObject(0x1F8010C0, IOP->DMAC->CHANNEL_SPU2C0->MADR);
+			IOP->MMU->mapObject(0x1F8010C4, IOP->DMAC->CHANNEL_SPU2C0->BCR);
+			IOP->MMU->mapObject(0x1F8010C8, IOP->DMAC->CHANNEL_SPU2C0->CHCR);
+			IOP->MMU->mapObject(0x1F8010CC, IOP->DMAC->CHANNEL_SPU2C0->TADR);
 			IOP->MMU->mapObject(0x1F8010D0, IOP->DMAC->CHANNEL_PIO->MADR);
 			IOP->MMU->mapObject(0x1F8010D4, IOP->DMAC->CHANNEL_PIO->BCR);
 			IOP->MMU->mapObject(0x1F8010D8, IOP->DMAC->CHANNEL_PIO->CHCR);
 			IOP->MMU->mapObject(0x1F8010E0, IOP->DMAC->CHANNEL_OTClear->MADR);
 			IOP->MMU->mapObject(0x1F8010E4, IOP->DMAC->CHANNEL_OTClear->BCR);
 			IOP->MMU->mapObject(0x1F8010E8, IOP->DMAC->CHANNEL_OTClear->CHCR);
-			IOP->MMU->mapObject(0x1F801500, IOP->DMAC->CHANNEL_SPU2c2->MADR);
-			IOP->MMU->mapObject(0x1F801504, IOP->DMAC->CHANNEL_SPU2c2->BCR);
-			IOP->MMU->mapObject(0x1F801508, IOP->DMAC->CHANNEL_SPU2c2->CHCR);
+			IOP->MMU->mapObject(0x1F801500, IOP->DMAC->CHANNEL_SPU2C1->MADR);
+			IOP->MMU->mapObject(0x1F801504, IOP->DMAC->CHANNEL_SPU2C1->BCR);
+			IOP->MMU->mapObject(0x1F801508, IOP->DMAC->CHANNEL_SPU2C1->CHCR);
 			IOP->MMU->mapObject(0x1F801510, IOP->DMAC->CHANNEL_DEV9->MADR);
 			IOP->MMU->mapObject(0x1F801514, IOP->DMAC->CHANNEL_DEV9->BCR);
 			IOP->MMU->mapObject(0x1F801518, IOP->DMAC->CHANNEL_DEV9->CHCR);
@@ -822,7 +822,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F9001AA, IOP->SPU2->CORE_0->TSAL);
 			IOP->MMU->mapObject(0x1F9001AC, IOP->SPU2->CORE_0->DATA0);
 			IOP->MMU->mapObject(0x1F9001AE, IOP->SPU2->CORE_0->DATA1);
-			IOP->MMU->mapObject(0x1F9001B0, IOP->SPU2->CORE_0->DATA2);
+			IOP->MMU->mapObject(0x1F9001B0, IOP->SPU2->CORE_0->ADMAS);
 			IOP->MMU->mapObject(0x1F9001C0, IOP->SPU2->CORE_0->VOICE_0->SSAH);
 			IOP->MMU->mapObject(0x1F9001C2, IOP->SPU2->CORE_0->VOICE_0->SSAL);
 			IOP->MMU->mapObject(0x1F9001C4, IOP->SPU2->CORE_0->VOICE_0->LSAXH);
@@ -1235,7 +1235,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F9005AA, IOP->SPU2->CORE_1->TSAL);
 			IOP->MMU->mapObject(0x1F9005AC, IOP->SPU2->CORE_1->DATA0);
 			IOP->MMU->mapObject(0x1F9005AE, IOP->SPU2->CORE_1->DATA1);
-			IOP->MMU->mapObject(0x1F9005B0, IOP->SPU2->CORE_1->DATA2);
+			IOP->MMU->mapObject(0x1F9005B0, IOP->SPU2->CORE_1->ADMAS);
 			IOP->MMU->mapObject(0x1F9005C0, IOP->SPU2->CORE_1->VOICE_0->SSAH);
 			IOP->MMU->mapObject(0x1F9005C2, IOP->SPU2->CORE_1->VOICE_0->SSAL);
 			IOP->MMU->mapObject(0x1F9005C4, IOP->SPU2->CORE_1->VOICE_0->LSAXH);

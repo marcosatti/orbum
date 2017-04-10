@@ -28,7 +28,7 @@ u8 BitfieldRegister32_t::readByte(const System_t context, size_t arrayIndex)
 {
 	auto temp = Register32_t::readByte(context, arrayIndex);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 		logDebugAllFields();
 #endif
@@ -43,7 +43,7 @@ void BitfieldRegister32_t::writeByte(const System_t context, size_t arrayIndex, 
 	for (auto& field : mFields)
 		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 		logDebugAllFields();
 #endif
@@ -53,7 +53,7 @@ u16 BitfieldRegister32_t::readHword(const System_t context, size_t arrayIndex)
 {
 	auto temp = Register32_t::readHword(context, arrayIndex);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 		logDebugAllFields();
 #endif
@@ -68,7 +68,7 @@ void BitfieldRegister32_t::writeHword(const System_t context, size_t arrayIndex,
 	for (auto& field : mFields)
 		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 		logDebugAllFields();
 #endif
@@ -78,7 +78,7 @@ u32 BitfieldRegister32_t::readWord(const System_t context)
 {
 	auto temp = Register32_t::readWord(context);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
 		logDebugAllFields();
 #endif
@@ -93,7 +93,7 @@ void BitfieldRegister32_t::writeWord(const System_t context, u32 value)
 	for (auto& field : mFields)
 		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
 
-#if defined(BUILD_DEBUG)
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 		logDebugAllFields();
 #endif

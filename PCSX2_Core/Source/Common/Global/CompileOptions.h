@@ -9,16 +9,15 @@
 
 /*
 Define if the emulator should log host *Memory_t allocations or not. 
-Only enabled when a debug build is selected.
 */
 #if defined(BUILD_DEBUG)
- #define DEBUG_MEMORY_LOG_ALLOCATIONS 0
+ #define DEBUG_LOG_MEMORY_ALLOCATIONS 0
 #else
- #define DEBUG_MEMORY_LOG_ALLOCATIONS 0
+ #define DEBUG_LOG_MEMORY_ALLOCATIONS 0
 #endif
 
 /*
-When debugging memory accesses, choose if to log values read/written as hex instead of decimal.
+When outputting values, choose if to log values read/written as hex instead of decimal.
 */
 #if defined(BUILD_DEBUG)
  #define DEBUG_LOG_VALUE_AS_HEX 1
@@ -27,24 +26,51 @@ When debugging memory accesses, choose if to log values read/written as hex inst
 #endif
 
 /*
+Define if the emulator should log a combination of Memory_t, Register_t and FIFOQueue_t read and writes (global enable). 
+Parameters still need to be set upon constructing the object.
+*/
+#if defined(BUILD_DEBUG)
+ #define DEBUG_LOG_MEMORY_READ_WRITE 1
+ #define DEBUG_LOG_REGISTER_READ_WRITE 1
+ #define DEBUG_LOG_FIFOQUEUE_READ_WRITE 1
+#else
+ #define DEBUG_LOG_MEMORY_READ_WRITE 0
+ #define DEBUG_LOG_REGISTER_READ_WRITE 0
+ #define DEBUG_LOG_FIFOQUEUE_READ_WRITE 0
+#endif
+
+/*
+Define if the emulator should log EE and IOP DMAC transfer and/or tag activity (source/chain/list modes).
+*/
+#if defined(BUILD_DEBUG)
+#define DEBUG_LOG_EE_DMAC_XFERS 0
+#define DEBUG_LOG_IOP_DMAC_XFERS 0
+ #define DEBUG_LOG_EE_DMAC_TAGS 0
+ #define DEBUG_LOG_IOP_DMAC_TAGS 0
+#else
+ #define DEBUG_LOG_EE_DMA_TAGS 0
+ #define DEBUG_LOG_IOP_DMA_TAGS 0
+#endif
+
+/*
 Define if the emulator should log EE SIO messages (serial I/O port). 
 See Resources/EE/Types/EERegsiters_t/EERegister_SIO_t for where the SIO is implemented.
 */
 #if defined(BUILD_DEBUG)
- #define DEBUG_SIO_LOG_MESSAGES 1
+ #define DEBUG_LOG_SIO_MESSAGES 1
 #else
- #define DEBUG_SIO_LOG_MESSAGES 0
+ #define DEBUG_LOG_SIO_MESSAGES 0
 #endif
 
 /*
 Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each one.
 */
 #if defined(BUILD_DEBUG)
- #define DEBUG_EE_SYSCALL_LOG 0
- #define DEBUG_IOP_SYSCALL_LOG 0
+ #define DEBUG_LOG_EE_SYSCALLS 0
+ #define DEBUG_LOG_IOP_SYSCALLS 0
 #else
- #define DEBUG_EE_SYSCALL_LOG 0
- #define DEBUG_IOP_SYSCALL_LOG 0
+ #define DEBUG_LOG_EE_SYSCALLS 0
+ #define DEBUG_LOG_IOP_SYSCALLS 0
 #endif
 
 //////////////////////
