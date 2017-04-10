@@ -22,65 +22,65 @@ SPU2Core_t::SPU2Core_t() :
 	VMIXER1(nullptr),
 	MMIX(nullptr),
 	ATTR(nullptr),
-	IRQAL(nullptr),
 	IRQAH(nullptr),
+	IRQAL(nullptr),
 	KON0(nullptr),
 	KON1(nullptr),
 	KOF0(nullptr),
 	KOF1(nullptr),
-	TSAL(nullptr),
 	TSAH(nullptr),
+	TSAL(nullptr),
 	DATA0(nullptr),
 	DATA1(nullptr),
 	DATA2(nullptr),
-	ESAL(nullptr),
 	ESAH(nullptr),
-	APF1_SIZEL(nullptr),
+	ESAL(nullptr),
 	APF1_SIZEH(nullptr),
-	APF2_SIZEL(nullptr),
+	APF1_SIZEL(nullptr),
 	APF2_SIZEH(nullptr),
-	SAME_L_DSTL(nullptr),
+	APF2_SIZEL(nullptr),
 	SAME_L_DSTH(nullptr),
-	SAME_R_DSTL(nullptr),
+	SAME_L_DSTL(nullptr),
 	SAME_R_DSTH(nullptr),
-	COMB1_L_SRCL(nullptr),
+	SAME_R_DSTL(nullptr),
 	COMB1_L_SRCH(nullptr),
-	COMB1_R_SRCL(nullptr),
+	COMB1_L_SRCL(nullptr),
 	COMB1_R_SRCH(nullptr),
-	COMB2_L_SRCL(nullptr),
+	COMB1_R_SRCL(nullptr),
 	COMB2_L_SRCH(nullptr),
-	COMB2_R_SRCL(nullptr),
+	COMB2_L_SRCL(nullptr),
 	COMB2_R_SRCH(nullptr),
-	SAME_L_SRCL(nullptr),
+	COMB2_R_SRCL(nullptr),
 	SAME_L_SRCH(nullptr),
-	SAME_R_SRCL(nullptr),
+	SAME_L_SRCL(nullptr),
 	SAME_R_SRCH(nullptr),
-	DIFF_L_DSTL(nullptr),
+	SAME_R_SRCL(nullptr),
 	DIFF_L_DSTH(nullptr),
-	DIFF_R_DSTL(nullptr),
+	DIFF_L_DSTL(nullptr),
 	DIFF_R_DSTH(nullptr),
-	COMB3_L_SRCL(nullptr),
+	DIFF_R_DSTL(nullptr),
 	COMB3_L_SRCH(nullptr),
-	COMB3_R_SRCL(nullptr),
+	COMB3_L_SRCL(nullptr),
 	COMB3_R_SRCH(nullptr),
-	COMB4_L_SRCL(nullptr),
+	COMB3_R_SRCL(nullptr),
 	COMB4_L_SRCH(nullptr),
-	COMB4_R_SRCL(nullptr),
+	COMB4_L_SRCL(nullptr),
 	COMB4_R_SRCH(nullptr),
-	DIFF_L_SRCL(nullptr),
+	COMB4_R_SRCL(nullptr),
 	DIFF_L_SRCH(nullptr),
-	DIFF_R_SRCL(nullptr),
+	DIFF_L_SRCL(nullptr),
 	DIFF_R_SRCH(nullptr),
-	APF1_L_DSTL(nullptr),
+	DIFF_R_SRCL(nullptr),
 	APF1_L_DSTH(nullptr),
-	APF1_R_DSTL(nullptr),
+	APF1_L_DSTL(nullptr),
 	APF1_R_DSTH(nullptr),
-	APF2_L_DSTL(nullptr),
+	APF1_R_DSTL(nullptr),
 	APF2_L_DSTH(nullptr),
-	APF2_R_DSTL(nullptr),
+	APF2_L_DSTL(nullptr),
 	APF2_R_DSTH(nullptr),
-	EEAL(nullptr),
+	APF2_R_DSTL(nullptr),
 	EEAH(nullptr),
+	EEAL(nullptr),
 	ENDX0(nullptr),
 	ENDX1(nullptr),
 	STATX(nullptr),
@@ -105,65 +105,65 @@ SPU2Core_C0_t::SPU2Core_C0_t()
 	VMIXER1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 VMIXER1", false, true);
 	MMIX = std::make_shared<SPU2CoreRegister_MMIX_t>("SPU2 C0 MMIX", false, true);
 	ATTR = std::make_shared<SPU2CoreRegister_ATTR_t>("SPU2 C0 ATTR", false, true);
-	IRQAL = std::make_shared<Register16_t>("SPU2 C0 IRQAL", false, true);
 	IRQAH = std::make_shared<Register16_t>("SPU2 C0 IRQAH", false, true);
+	IRQAL = std::make_shared<Register16_t>("SPU2 C0 IRQAL", false, true);
 	KON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 KON0", false, true);
 	KON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 KON1", false, true);
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 KOF0", false, true);
 	KOF1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 KOF1", false, true);
-	TSAL = std::make_shared<Register16_t>("SPU2 C0 TSAL", false, true);
 	TSAH = std::make_shared<Register16_t>("SPU2 C0 TSAH", false, true);
+	TSAL = std::make_shared<Register16_t>("SPU2 C0 TSAL", false, true);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C0 DATA0", false, true);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C0 DATA1", false, true);
 	DATA2 = std::make_shared<Register16_t>("SPU2 C0 DATA2", false, true);
-	ESAL = std::make_shared<Register16_t>("SPU2 C0 ESAL", false, true);
 	ESAH = std::make_shared<Register16_t>("SPU2 C0 ESAH", false, true);
-	APF1_SIZEL = std::make_shared<Register16_t>("SPU2 C0 APF1_SIZEL", false, true);
+	ESAL = std::make_shared<Register16_t>("SPU2 C0 ESAL", false, true);
 	APF1_SIZEH = std::make_shared<Register16_t>("SPU2 C0 APF1_SIZEH", false, true);
-	APF2_SIZEL = std::make_shared<Register16_t>("SPU2 C0 APF2_SIZEL", false, true);
+	APF1_SIZEL = std::make_shared<Register16_t>("SPU2 C0 APF1_SIZEL", false, true);
 	APF2_SIZEH = std::make_shared<Register16_t>("SPU2 C0 APF2_SIZEH", false, true);
-	SAME_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 SAME_L_DSTL", false, true);
+	APF2_SIZEL = std::make_shared<Register16_t>("SPU2 C0 APF2_SIZEL", false, true);
 	SAME_L_DSTH = std::make_shared<Register16_t>("SPU2 C0 SAME_L_DSTH", false, true);
-	SAME_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 SAME_R_DSTL", false, true);
+	SAME_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 SAME_L_DSTL", false, true);
 	SAME_R_DSTH = std::make_shared<Register16_t>("SPU2 C0 SAME_R_DSTH", false, true);
-	COMB1_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB1_L_SRCL", false, true);
+	SAME_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 SAME_R_DSTL", false, true);
 	COMB1_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB1_L_SRCH", false, true);
-	COMB1_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB1_R_SRCL", false, true);
+	COMB1_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB1_L_SRCL", false, true);
 	COMB1_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB1_R_SRCH", false, true);
-	COMB2_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB2_L_SRCL", false, true);
+	COMB1_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB1_R_SRCL", false, true);
 	COMB2_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB2_L_SRCH", false, true);
-	COMB2_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB2_R_SRCL", false, true);
+	COMB2_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB2_L_SRCL", false, true);
 	COMB2_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB2_R_SRCH", false, true);
-	SAME_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 SAME_L_SRCL", false, true);
+	COMB2_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB2_R_SRCL", false, true);
 	SAME_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 SAME_L_SRCH", false, true);
-	SAME_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 SAME_R_SRCL", false, true);
+	SAME_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 SAME_L_SRCL", false, true);
 	SAME_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 SAME_R_SRCH", false, true);
-	DIFF_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_DSTL", false, true);
+	SAME_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 SAME_R_SRCL", false, true);
 	DIFF_L_DSTH = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_DSTH", false, true);
-	DIFF_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_DSTL", false, true);
+	DIFF_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_DSTL", false, true);
 	DIFF_R_DSTH = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_DSTH", false, true);
-	COMB3_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB3_L_SRCL", false, true);
+	DIFF_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_DSTL", false, true);
 	COMB3_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB3_L_SRCH", false, true);
-	COMB3_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB3_R_SRCL", false, true);
+	COMB3_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB3_L_SRCL", false, true);
 	COMB3_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB3_R_SRCH", false, true);
-	COMB4_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB4_L_SRCL", false, true);
+	COMB3_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB3_R_SRCL", false, true);
 	COMB4_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB4_L_SRCH", false, true);
-	COMB4_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB4_R_SRCL", false, true);
+	COMB4_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB4_L_SRCL", false, true);
 	COMB4_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 COMB4_R_SRCH", false, true);
-	DIFF_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_SRCL", false, true);
+	COMB4_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 COMB4_R_SRCL", false, true);
 	DIFF_L_SRCH = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_SRCH", false, true);
-	DIFF_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_SRCL", false, true);
+	DIFF_L_SRCL = std::make_shared<Register16_t>("SPU2 C0 DIFF_L_SRCL", false, true);
 	DIFF_R_SRCH = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_SRCH", false, true);
-	APF1_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF1_L_DSTL", false, true);
+	DIFF_R_SRCL = std::make_shared<Register16_t>("SPU2 C0 DIFF_R_SRCL", false, true);
 	APF1_L_DSTH = std::make_shared<Register16_t>("SPU2 C0 APF1_L_DSTH", false, true);
-	APF1_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF1_R_DSTL", false, true);
+	APF1_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF1_L_DSTL", false, true);
 	APF1_R_DSTH = std::make_shared<Register16_t>("SPU2 C0 APF1_R_DSTH", false, true);
-	APF2_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF2_L_DSTL", false, true);
+	APF1_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF1_R_DSTL", false, true);
 	APF2_L_DSTH = std::make_shared<Register16_t>("SPU2 C0 APF2_L_DSTH", false, true);
-	APF2_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF2_R_DSTL", false, true);
+	APF2_L_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF2_L_DSTL", false, true);
 	APF2_R_DSTH = std::make_shared<Register16_t>("SPU2 C0 APF2_R_DSTH", false, true);
-	EEAL = std::make_shared<Register16_t>("SPU2 C0 EEAL", false, true);
+	APF2_R_DSTL = std::make_shared<Register16_t>("SPU2 C0 APF2_R_DSTL", false, true);
 	EEAH = std::make_shared<Register16_t>("SPU2 C0 EEAH", false, true);
+	EEAL = std::make_shared<Register16_t>("SPU2 C0 EEAL", false, true);
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C0 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C0 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C0 STATX", false, true);
@@ -210,65 +210,65 @@ SPU2Core_C1_t::SPU2Core_C1_t()
 	VMIXER1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 VMIXER1", false, true);
 	MMIX = std::make_shared<SPU2CoreRegister_MMIX_t>("SPU2 C1 MMIX", false, true);
 	ATTR = std::make_shared<SPU2CoreRegister_ATTR_t>("SPU2 C1 ATTR", false, true);
-	IRQAL = std::make_shared<Register16_t>("SPU2 C1 IRQAL", false, true);
 	IRQAH = std::make_shared<Register16_t>("SPU2 C1 IRQAH", false, true);
+	IRQAL = std::make_shared<Register16_t>("SPU2 C1 IRQAL", false, true);
 	KON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 KON0", false, true);
 	KON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 KON1", false, true);
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 KOF0", false, true);
 	KOF1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 KOF1", false, true);
-	TSAL = std::make_shared<Register16_t>("SPU2 C1 TSAL", false, true);
 	TSAH = std::make_shared<Register16_t>("SPU2 C1 TSAH", false, true);
+	TSAL = std::make_shared<Register16_t>("SPU2 C1 TSAL", false, true);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C1 DATA0", false, true);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C1 DATA1", false, true);
 	DATA2 = std::make_shared<Register16_t>("SPU2 C1 DATA2", false, true);
-	ESAL = std::make_shared<Register16_t>("SPU2 C1 ESAL", false, true);
 	ESAH = std::make_shared<Register16_t>("SPU2 C1 ESAH", false, true);
-	APF1_SIZEL = std::make_shared<Register16_t>("SPU2 C1 APF1_SIZEL", false, true);
+	ESAL = std::make_shared<Register16_t>("SPU2 C1 ESAL", false, true);
 	APF1_SIZEH = std::make_shared<Register16_t>("SPU2 C1 APF1_SIZEH", false, true);
-	APF2_SIZEL = std::make_shared<Register16_t>("SPU2 C1 APF2_SIZEL", false, true);
+	APF1_SIZEL = std::make_shared<Register16_t>("SPU2 C1 APF1_SIZEL", false, true);
 	APF2_SIZEH = std::make_shared<Register16_t>("SPU2 C1 APF2_SIZEH", false, true);
-	SAME_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 SAME_L_DSTL", false, true);
+	APF2_SIZEL = std::make_shared<Register16_t>("SPU2 C1 APF2_SIZEL", false, true);
 	SAME_L_DSTH = std::make_shared<Register16_t>("SPU2 C1 SAME_L_DSTH", false, true);
-	SAME_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 SAME_R_DSTL", false, true);
+	SAME_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 SAME_L_DSTL", false, true);
 	SAME_R_DSTH = std::make_shared<Register16_t>("SPU2 C1 SAME_R_DSTH", false, true);
-	COMB1_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB1_L_SRCL", false, true);
+	SAME_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 SAME_R_DSTL", false, true);
 	COMB1_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB1_L_SRCH", false, true);
-	COMB1_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB1_R_SRCL", false, true);
+	COMB1_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB1_L_SRCL", false, true);
 	COMB1_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB1_R_SRCH", false, true);
-	COMB2_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB2_L_SRCL", false, true);
+	COMB1_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB1_R_SRCL", false, true);
 	COMB2_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB2_L_SRCH", false, true);
-	COMB2_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB2_R_SRCL", false, true);
+	COMB2_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB2_L_SRCL", false, true);
 	COMB2_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB2_R_SRCH", false, true);
-	SAME_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 SAME_L_SRCL", false, true);
+	COMB2_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB2_R_SRCL", false, true);
 	SAME_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 SAME_L_SRCH", false, true);
-	SAME_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 SAME_R_SRCL", false, true);
+	SAME_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 SAME_L_SRCL", false, true);
 	SAME_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 SAME_R_SRCH", false, true);
-	DIFF_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_DSTL", false, true);
+	SAME_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 SAME_R_SRCL", false, true);
 	DIFF_L_DSTH = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_DSTH", false, true);
-	DIFF_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_DSTL", false, true);
+	DIFF_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_DSTL", false, true);
 	DIFF_R_DSTH = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_DSTH", false, true);
-	COMB3_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB3_L_SRCL", false, true);
+	DIFF_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_DSTL", false, true);
 	COMB3_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB3_L_SRCH", false, true);
-	COMB3_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB3_R_SRCL", false, true);
+	COMB3_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB3_L_SRCL", false, true);
 	COMB3_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB3_R_SRCH", false, true);
-	COMB4_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB4_L_SRCL", false, true);
+	COMB3_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB3_R_SRCL", false, true);
 	COMB4_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB4_L_SRCH", false, true);
-	COMB4_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB4_R_SRCL", false, true);
+	COMB4_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB4_L_SRCL", false, true);
 	COMB4_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 COMB4_R_SRCH", false, true);
-	DIFF_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_SRCL", false, true);
+	COMB4_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 COMB4_R_SRCL", false, true);
 	DIFF_L_SRCH = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_SRCH", false, true);
-	DIFF_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_SRCL", false, true);
+	DIFF_L_SRCL = std::make_shared<Register16_t>("SPU2 C1 DIFF_L_SRCL", false, true);
 	DIFF_R_SRCH = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_SRCH", false, true);
-	APF1_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF1_L_DSTL", false, true);
+	DIFF_R_SRCL = std::make_shared<Register16_t>("SPU2 C1 DIFF_R_SRCL", false, true);
 	APF1_L_DSTH = std::make_shared<Register16_t>("SPU2 C1 APF1_L_DSTH", false, true);
-	APF1_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF1_R_DSTL", false, true);
+	APF1_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF1_L_DSTL", false, true);
 	APF1_R_DSTH = std::make_shared<Register16_t>("SPU2 C1 APF1_R_DSTH", false, true);
-	APF2_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF2_L_DSTL", false, true);
+	APF1_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF1_R_DSTL", false, true);
 	APF2_L_DSTH = std::make_shared<Register16_t>("SPU2 C1 APF2_L_DSTH", false, true);
-	APF2_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF2_R_DSTL", false, true);
+	APF2_L_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF2_L_DSTL", false, true);
 	APF2_R_DSTH = std::make_shared<Register16_t>("SPU2 C1 APF2_R_DSTH", false, true);
-	EEAL = std::make_shared<Register16_t>("SPU2 C1 EEAL", false, true);
+	APF2_R_DSTL = std::make_shared<Register16_t>("SPU2 C1 APF2_R_DSTL", false, true);
 	EEAH = std::make_shared<Register16_t>("SPU2 C1 EEAH", false, true);
+	EEAL = std::make_shared<Register16_t>("SPU2 C1 EEAL", false, true);
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C1 ENDX0", false, true);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C1 ENDX1", false, true);
 	STATX = std::make_shared<Register16_t>("SPU2 C1 STATX", false, true);

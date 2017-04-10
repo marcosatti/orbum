@@ -24,12 +24,12 @@ public:
 	std::shared_ptr<Register16_t>                  ENVX;
 	std::shared_ptr<Register16_t>                  VOLXL;
 	std::shared_ptr<Register16_t>                  VOLXR;
-	std::shared_ptr<Register16_t>                  SSAL;
 	std::shared_ptr<Register16_t>                  SSAH;
-	std::shared_ptr<Register16_t>                  LSAXL;
+	std::shared_ptr<Register16_t>                  SSAL;
 	std::shared_ptr<Register16_t>                  LSAXH;
-	std::shared_ptr<Register16_t>                  NAXL;
+	std::shared_ptr<Register16_t>                  LSAXL;
 	std::shared_ptr<Register16_t>                  NAXH;
+	std::shared_ptr<Register16_t>                  NAXL;
 };
 
 class SPU2CoreVoice_C0V0_t : public SPU2CoreVoice_t

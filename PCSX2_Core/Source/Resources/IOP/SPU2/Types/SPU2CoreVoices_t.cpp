@@ -14,12 +14,12 @@ SPU2CoreVoice_t::SPU2CoreVoice_t() :
 	ENVX(nullptr),
 	VOLXL(nullptr),
 	VOLXR(nullptr),
-	SSAL(nullptr),
 	SSAH(nullptr),
-	LSAXL(nullptr),
+	SSAL(nullptr),
 	LSAXH(nullptr),
-	NAXL(nullptr),
-	NAXH(nullptr)
+	LSAXL(nullptr),
+	NAXH(nullptr),
+	NAXL(nullptr)
 {
 }
 
@@ -33,12 +33,12 @@ SPU2CoreVoice_C0V0_t::SPU2CoreVoice_C0V0_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V0 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V0 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V0 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V0 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V0 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V0 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V0 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V0 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V0 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V0 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V0 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V0 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V1_t::SPU2CoreVoice_C0V1_t()
@@ -51,12 +51,12 @@ SPU2CoreVoice_C0V1_t::SPU2CoreVoice_C0V1_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V1 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V1 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V1 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V1 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V1 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V1 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V1 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V1 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V1 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V1 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V1 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V1 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V2_t::SPU2CoreVoice_C0V2_t()
@@ -69,12 +69,12 @@ SPU2CoreVoice_C0V2_t::SPU2CoreVoice_C0V2_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V2 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V2 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V2 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V2 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V2 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V2 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V2 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V2 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V2 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V2 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V2 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V2 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V3_t::SPU2CoreVoice_C0V3_t()
@@ -87,12 +87,12 @@ SPU2CoreVoice_C0V3_t::SPU2CoreVoice_C0V3_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V3 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V3 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V3 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V3 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V3 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V3 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V3 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V3 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V3 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V3 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V3 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V3 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V4_t::SPU2CoreVoice_C0V4_t()
@@ -105,12 +105,12 @@ SPU2CoreVoice_C0V4_t::SPU2CoreVoice_C0V4_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V4 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V4 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V4 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V4 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V4 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V4 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V4 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V4 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V4 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V4 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V4 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V4 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V5_t::SPU2CoreVoice_C0V5_t()
@@ -123,12 +123,12 @@ SPU2CoreVoice_C0V5_t::SPU2CoreVoice_C0V5_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V5 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V5 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V5 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V5 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V5 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V5 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V5 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V5 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V5 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V5 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V5 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V5 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V6_t::SPU2CoreVoice_C0V6_t()
@@ -141,12 +141,12 @@ SPU2CoreVoice_C0V6_t::SPU2CoreVoice_C0V6_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V6 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V6 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V6 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V6 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V6 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V6 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V6 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V6 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V6 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V6 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V6 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V6 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V7_t::SPU2CoreVoice_C0V7_t()
@@ -159,12 +159,12 @@ SPU2CoreVoice_C0V7_t::SPU2CoreVoice_C0V7_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V7 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V7 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V7 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V7 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V7 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V7 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V7 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V7 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V7 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V7 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V7 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V7 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V8_t::SPU2CoreVoice_C0V8_t()
@@ -177,12 +177,12 @@ SPU2CoreVoice_C0V8_t::SPU2CoreVoice_C0V8_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V8 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V8 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V8 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V8 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V8 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V8 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V8 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V8 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V8 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V8 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V8 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V8 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V9_t::SPU2CoreVoice_C0V9_t()
@@ -195,12 +195,12 @@ SPU2CoreVoice_C0V9_t::SPU2CoreVoice_C0V9_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V9 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V9 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V9 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V9 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V9 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V9 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V9 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V9 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V9 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V9 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V9 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V9 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V10_t::SPU2CoreVoice_C0V10_t()
@@ -213,12 +213,12 @@ SPU2CoreVoice_C0V10_t::SPU2CoreVoice_C0V10_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V10 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V10 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V10 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V10 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V10 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V10 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V10 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V10 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V10 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V10 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V10 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V10 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V11_t::SPU2CoreVoice_C0V11_t()
@@ -231,12 +231,12 @@ SPU2CoreVoice_C0V11_t::SPU2CoreVoice_C0V11_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V11 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V11 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V11 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V11 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V11 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V11 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V11 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V11 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V11 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V11 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V11 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V11 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V12_t::SPU2CoreVoice_C0V12_t()
@@ -249,12 +249,12 @@ SPU2CoreVoice_C0V12_t::SPU2CoreVoice_C0V12_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V12 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V12 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V12 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V12 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V12 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V12 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V12 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V12 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V12 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V12 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V12 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V12 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V13_t::SPU2CoreVoice_C0V13_t()
@@ -267,12 +267,12 @@ SPU2CoreVoice_C0V13_t::SPU2CoreVoice_C0V13_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V13 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V13 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V13 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V13 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V13 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V13 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V13 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V13 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V13 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V13 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V13 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V13 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V14_t::SPU2CoreVoice_C0V14_t()
@@ -285,12 +285,12 @@ SPU2CoreVoice_C0V14_t::SPU2CoreVoice_C0V14_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V14 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V14 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V14 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V14 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V14 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V14 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V14 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V14 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V14 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V14 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V14 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V14 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V15_t::SPU2CoreVoice_C0V15_t()
@@ -303,12 +303,12 @@ SPU2CoreVoice_C0V15_t::SPU2CoreVoice_C0V15_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V15 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V15 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V15 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V15 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V15 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V15 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V15 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V15 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V15 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V15 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V15 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V15 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V16_t::SPU2CoreVoice_C0V16_t()
@@ -321,12 +321,12 @@ SPU2CoreVoice_C0V16_t::SPU2CoreVoice_C0V16_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V16 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V16 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V16 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V16 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V16 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V16 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V16 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V16 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V16 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V16 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V16 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V16 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V17_t::SPU2CoreVoice_C0V17_t()
@@ -339,12 +339,12 @@ SPU2CoreVoice_C0V17_t::SPU2CoreVoice_C0V17_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V17 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V17 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V17 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V17 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V17 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V17 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V17 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V17 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V17 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V17 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V17 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V17 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V18_t::SPU2CoreVoice_C0V18_t()
@@ -357,12 +357,12 @@ SPU2CoreVoice_C0V18_t::SPU2CoreVoice_C0V18_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V18 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V18 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V18 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V18 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V18 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V18 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V18 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V18 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V18 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V18 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V18 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V18 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V19_t::SPU2CoreVoice_C0V19_t()
@@ -375,12 +375,12 @@ SPU2CoreVoice_C0V19_t::SPU2CoreVoice_C0V19_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V19 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V19 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V19 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V19 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V19 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V19 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V19 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V19 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V19 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V19 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V19 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V19 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V20_t::SPU2CoreVoice_C0V20_t()
@@ -393,12 +393,12 @@ SPU2CoreVoice_C0V20_t::SPU2CoreVoice_C0V20_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V20 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V20 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V20 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V20 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V20 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V20 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V20 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V20 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V20 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V20 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V20 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V20 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V21_t::SPU2CoreVoice_C0V21_t()
@@ -411,12 +411,12 @@ SPU2CoreVoice_C0V21_t::SPU2CoreVoice_C0V21_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V21 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V21 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V21 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V21 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V21 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V21 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V21 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V21 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V21 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V21 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V21 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V21 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V22_t::SPU2CoreVoice_C0V22_t()
@@ -429,12 +429,12 @@ SPU2CoreVoice_C0V22_t::SPU2CoreVoice_C0V22_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V22 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V22 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V22 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V22 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V22 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V22 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V22 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V22 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V22 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V22 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V22 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V22 NAXL", false, true);
 }
 
 SPU2CoreVoice_C0V23_t::SPU2CoreVoice_C0V23_t()
@@ -447,12 +447,12 @@ SPU2CoreVoice_C0V23_t::SPU2CoreVoice_C0V23_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C0V23 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C0V23 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C0V23 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C0V23 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C0V23 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C0V23 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C0V23 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C0V23 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C0V23 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C0V23 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C0V23 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C0V23 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V0_t::SPU2CoreVoice_C1V0_t()
@@ -465,12 +465,12 @@ SPU2CoreVoice_C1V0_t::SPU2CoreVoice_C1V0_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V0 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V0 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V0 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V0 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V0 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V0 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V0 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V0 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V0 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V0 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V0 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V0 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V1_t::SPU2CoreVoice_C1V1_t()
@@ -483,12 +483,12 @@ SPU2CoreVoice_C1V1_t::SPU2CoreVoice_C1V1_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V1 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V1 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V1 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V1 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V1 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V1 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V1 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V1 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V1 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V1 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V1 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V1 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V2_t::SPU2CoreVoice_C1V2_t()
@@ -501,12 +501,12 @@ SPU2CoreVoice_C1V2_t::SPU2CoreVoice_C1V2_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V2 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V2 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V2 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V2 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V2 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V2 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V2 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V2 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V2 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V2 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V2 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V2 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V3_t::SPU2CoreVoice_C1V3_t()
@@ -519,12 +519,12 @@ SPU2CoreVoice_C1V3_t::SPU2CoreVoice_C1V3_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V3 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V3 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V3 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V3 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V3 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V3 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V3 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V3 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V3 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V3 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V3 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V3 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V4_t::SPU2CoreVoice_C1V4_t()
@@ -537,12 +537,12 @@ SPU2CoreVoice_C1V4_t::SPU2CoreVoice_C1V4_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V4 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V4 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V4 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V4 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V4 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V4 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V4 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V4 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V4 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V4 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V4 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V4 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V5_t::SPU2CoreVoice_C1V5_t()
@@ -555,12 +555,12 @@ SPU2CoreVoice_C1V5_t::SPU2CoreVoice_C1V5_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V5 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V5 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V5 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V5 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V5 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V5 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V5 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V5 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V5 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V5 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V5 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V5 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V6_t::SPU2CoreVoice_C1V6_t()
@@ -573,12 +573,12 @@ SPU2CoreVoice_C1V6_t::SPU2CoreVoice_C1V6_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V6 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V6 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V6 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V6 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V6 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V6 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V6 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V6 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V6 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V6 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V6 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V6 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V7_t::SPU2CoreVoice_C1V7_t()
@@ -591,12 +591,12 @@ SPU2CoreVoice_C1V7_t::SPU2CoreVoice_C1V7_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V7 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V7 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V7 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V7 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V7 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V7 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V7 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V7 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V7 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V7 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V7 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V7 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V8_t::SPU2CoreVoice_C1V8_t()
@@ -609,12 +609,12 @@ SPU2CoreVoice_C1V8_t::SPU2CoreVoice_C1V8_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V8 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V8 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V8 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V8 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V8 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V8 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V8 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V8 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V8 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V8 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V8 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V8 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V9_t::SPU2CoreVoice_C1V9_t()
@@ -627,12 +627,12 @@ SPU2CoreVoice_C1V9_t::SPU2CoreVoice_C1V9_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V9 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V9 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V9 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V9 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V9 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V9 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V9 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V9 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V9 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V9 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V9 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V9 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V10_t::SPU2CoreVoice_C1V10_t()
@@ -645,12 +645,12 @@ SPU2CoreVoice_C1V10_t::SPU2CoreVoice_C1V10_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V10 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V10 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V10 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V10 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V10 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V10 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V10 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V10 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V10 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V10 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V10 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V10 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V11_t::SPU2CoreVoice_C1V11_t()
@@ -663,12 +663,12 @@ SPU2CoreVoice_C1V11_t::SPU2CoreVoice_C1V11_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V11 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V11 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V11 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V11 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V11 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V11 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V11 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V11 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V11 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V11 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V11 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V11 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V12_t::SPU2CoreVoice_C1V12_t()
@@ -681,12 +681,12 @@ SPU2CoreVoice_C1V12_t::SPU2CoreVoice_C1V12_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V12 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V12 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V12 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V12 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V12 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V12 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V12 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V12 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V12 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V12 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V12 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V12 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V13_t::SPU2CoreVoice_C1V13_t()
@@ -699,12 +699,12 @@ SPU2CoreVoice_C1V13_t::SPU2CoreVoice_C1V13_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V13 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V13 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V13 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V13 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V13 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V13 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V13 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V13 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V13 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V13 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V13 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V13 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V14_t::SPU2CoreVoice_C1V14_t()
@@ -717,12 +717,12 @@ SPU2CoreVoice_C1V14_t::SPU2CoreVoice_C1V14_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V14 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V14 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V14 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V14 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V14 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V14 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V14 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V14 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V14 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V14 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V14 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V14 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V15_t::SPU2CoreVoice_C1V15_t()
@@ -735,12 +735,12 @@ SPU2CoreVoice_C1V15_t::SPU2CoreVoice_C1V15_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V15 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V15 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V15 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V15 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V15 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V15 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V15 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V15 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V15 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V15 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V15 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V15 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V16_t::SPU2CoreVoice_C1V16_t()
@@ -753,12 +753,12 @@ SPU2CoreVoice_C1V16_t::SPU2CoreVoice_C1V16_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V16 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V16 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V16 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V16 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V16 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V16 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V16 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V16 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V16 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V16 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V16 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V16 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V17_t::SPU2CoreVoice_C1V17_t()
@@ -771,12 +771,12 @@ SPU2CoreVoice_C1V17_t::SPU2CoreVoice_C1V17_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V17 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V17 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V17 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V17 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V17 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V17 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V17 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V17 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V17 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V17 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V17 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V17 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V18_t::SPU2CoreVoice_C1V18_t()
@@ -789,12 +789,12 @@ SPU2CoreVoice_C1V18_t::SPU2CoreVoice_C1V18_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V18 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V18 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V18 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V18 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V18 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V18 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V18 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V18 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V18 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V18 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V18 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V18 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V19_t::SPU2CoreVoice_C1V19_t()
@@ -807,12 +807,12 @@ SPU2CoreVoice_C1V19_t::SPU2CoreVoice_C1V19_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V19 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V19 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V19 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V19 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V19 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V19 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V19 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V19 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V19 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V19 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V19 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V19 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V20_t::SPU2CoreVoice_C1V20_t()
@@ -825,12 +825,12 @@ SPU2CoreVoice_C1V20_t::SPU2CoreVoice_C1V20_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V20 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V20 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V20 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V20 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V20 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V20 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V20 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V20 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V20 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V20 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V20 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V20 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V21_t::SPU2CoreVoice_C1V21_t()
@@ -843,12 +843,12 @@ SPU2CoreVoice_C1V21_t::SPU2CoreVoice_C1V21_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V21 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V21 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V21 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V21 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V21 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V21 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V21 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V21 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V21 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V21 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V21 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V21 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V22_t::SPU2CoreVoice_C1V22_t()
@@ -861,12 +861,12 @@ SPU2CoreVoice_C1V22_t::SPU2CoreVoice_C1V22_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V22 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V22 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V22 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V22 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V22 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V22 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V22 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V22 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V22 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V22 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V22 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V22 NAXL", false, true);
 }
 
 SPU2CoreVoice_C1V23_t::SPU2CoreVoice_C1V23_t()
@@ -879,10 +879,10 @@ SPU2CoreVoice_C1V23_t::SPU2CoreVoice_C1V23_t()
 	ENVX = std::make_shared<Register16_t>("SPU2 C1V23 ENVX", false, true);
 	VOLXL = std::make_shared<Register16_t>("SPU2 C1V23 VOLXL", false, true);
 	VOLXR = std::make_shared<Register16_t>("SPU2 C1V23 VOLXR", false, true);
-	SSAL = std::make_shared<Register16_t>("SPU2 C1V23 SSAL", false, true);
 	SSAH = std::make_shared<Register16_t>("SPU2 C1V23 SSAH", false, true);
-	LSAXL = std::make_shared<Register16_t>("SPU2 C1V23 LSAXL", false, true);
+	SSAL = std::make_shared<Register16_t>("SPU2 C1V23 SSAL", false, true);
 	LSAXH = std::make_shared<Register16_t>("SPU2 C1V23 LSAXH", false, true);
-	NAXL = std::make_shared<Register16_t>("SPU2 C1V23 NAXL", false, true);
+	LSAXL = std::make_shared<Register16_t>("SPU2 C1V23 LSAXL", false, true);
 	NAXH = std::make_shared<Register16_t>("SPU2 C1V23 NAXH", false, true);
+	NAXL = std::make_shared<Register16_t>("SPU2 C1V23 NAXL", false, true);
 }
