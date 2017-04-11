@@ -93,7 +93,7 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 		u32 imStatus = COP0->Status->getFieldValue(getContext(), IOPCoreCOP0Register_Status_t::Fields::IM);
 		if (ipCause & imStatus)
 		{
-#if defined(BUILD_DEBUG)
+#if DEBUG_LOG_IOP_INTERRUPTS
 			auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
 			auto& STAT = getVM()->getResources()->IOP->INTC->STAT;
 			auto& MASK = getVM()->getResources()->IOP->INTC->MASK;

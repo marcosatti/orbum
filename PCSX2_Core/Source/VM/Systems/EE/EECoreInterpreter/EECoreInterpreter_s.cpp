@@ -107,8 +107,7 @@ void EECoreInterpreter_s::handleInterruptCheck()
 		u32 imStatus = COP0->Status->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::IM);
 		if (ipCause & imStatus)
 		{
-#if defined(BUILD_DEBUG)
-			
+#if DEBUG_LOG_EE_INTERRUPTS
 			auto& STAT = getVM()->getResources()->EE->INTC->STAT;
 			auto& MASK = getVM()->getResources()->EE->INTC->MASK;
 			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",

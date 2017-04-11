@@ -70,7 +70,7 @@ public:
 		static constexpr int TIM_KEYS[Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 	};
 
-	EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EEIntcRegister_MASK_t> & mask);
+	EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	(EE context) Clears any bits written to.

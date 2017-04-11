@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Resources/IOP/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
 SPU2CoreVoiceRegister_ADSR1_t::SPU2CoreVoiceRegister_ADSR1_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)

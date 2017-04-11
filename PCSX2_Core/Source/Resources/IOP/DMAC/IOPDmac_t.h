@@ -28,6 +28,7 @@ class Register32_t;
 
 /*
 IOP DMAC resources.
+See the no$psx docs and wisi and SP193's DMA docs for information.
 */
 class IOPDmac_t
 {
@@ -52,15 +53,15 @@ public:
 	std::shared_ptr<IOPDmacChannel_fromSIO2_t> CHANNEL_fromSIO2;
 	std::shared_ptr<IOPDmacChannel_toSIO2_t>   CHANNEL_toSIO2;
 	std::shared_ptr<IOPDmacChannel_CH13_t>     CHANNEL_13;
-	std::shared_ptr<IOPDmacChannel_t> CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
+	std::shared_ptr<IOPDmacChannel_t>          CHANNELS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
 
 	/*
 	DMAC Common Registers.
 	*/
-	std::shared_ptr<IOPDmacRegister_PCR0_t> PCR0;  // Register "PCR0 (Primary Control Register)"   @ 0x1F8010F0 -> 0x1F8010F3. Responsible for DMA channels 0 -> 6.
-	std::shared_ptr<IOPDmacRegister_ICR0_t> ICR0;  // Register "ICR0 (Interrupt Control Register)" @ 0x1F8010F4 -> 0x1F8010F7. Responsible for DMA channels 0 -> 6.
-	std::shared_ptr<IOPDmacRegister_PCR1_t> PCR1;  // Register "PCR1 (Primary Control Register)"   @ 0x1F801570 -> 0x1F801573. Responsible for DMA channels 7 -> 13. (Channel 13 is undefined.)
-	std::shared_ptr<IOPDmacRegister_ICR1_t> ICR1;  // Register "ICR1 (Interrupt Control Register)" @ 0x1F801574 -> 0x1F801577. Responsible for DMA channels 7 -> 13. (Channel 13 is undefined.)
-	std::shared_ptr<Register32_t>           GCTRL; // Register "GCTRL (Global Control Register)"   @ 0x1F801578 -> 0x1F80157B. From wisi and SP193's DMA docs.
+	std::shared_ptr<IOPDmacRegister_PCR0_t> PCR0;  
+	std::shared_ptr<IOPDmacRegister_ICR0_t> ICR0;  
+	std::shared_ptr<IOPDmacRegister_PCR1_t> PCR1;  
+	std::shared_ptr<IOPDmacRegister_ICR1_t> ICR1;  
+	std::shared_ptr<Register32_t>           GCTRL; 
 };
 

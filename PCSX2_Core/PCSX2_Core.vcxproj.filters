@@ -185,7 +185,6 @@
       <Filter>Source\Common\PS2 Resources\EE</Filter>
     </ClInclude>
     <ClInclude Include="Source\Resources\GS\GS_t.h" />
-    <ClInclude Include="Source\Resources\IOP\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\Resources\IOP\INTC\Types\IOPIntcRegisters_t.h" />
     <ClInclude Include="Source\Resources\IOP\INTC\IOPIntc_t.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
@@ -225,7 +224,6 @@
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Resources\EE\DMAC\Types\EEDMAtag_t.h" />
-    <ClInclude Include="Source\Resources\IOP\SPU2\SPU2_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\HwordMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\ByteMemory_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\ConstantByteMemory_t.h" />
@@ -304,10 +302,12 @@
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
-    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
-    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.h" />
-    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.h" />
-    <ClInclude Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.h" />
+    <ClInclude Include="Source\Resources\CDVD\CDVD_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreRegisters_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\Types\SPU2Cores_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\SPU2_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -356,7 +356,6 @@
     <ClCompile Include="Source\Resources\EE\VPU\VPU_t.cpp" />
     <ClCompile Include="Source\Resources\EE\EE_t.cpp" />
     <ClCompile Include="Source\Resources\GS\GS_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\CDVD\CDVD_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\INTC\Types\IOPIntcRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\INTC\IOPIntc_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.cpp" />
@@ -421,7 +420,6 @@
     <ClCompile Include="Source\Resources\GS\CRTC\CRTC_t.cpp" />
     <ClCompile Include="Source\VM\Systems\GS\CRTC\CRTC_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
-    <ClCompile Include="Source\Resources\IOP\SPU2\SPU2_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ByteMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ConstantByteMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\ROByteMemory_t.cpp" />
@@ -492,10 +490,12 @@
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2Cores_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreRegisters_t.cpp" />
-    <ClCompile Include="Source\Resources\IOP\SPU2\Types\SPU2CoreVoices_t.cpp" />
+    <ClCompile Include="Source\Resources\CDVD\CDVD_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\Types\SPU2Cores_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\SPU2_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

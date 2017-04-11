@@ -69,7 +69,7 @@ public:
 	std::shared_ptr<ByteMMU_t> MMU;
 
 	/*
-	Main Memory (32MB). Allocated at 0x00000000.
+	Main Memory (32MB).
 	*/
 	std::shared_ptr<ByteMemory_t> MainMemory;
 
@@ -95,10 +95,10 @@ public:
 	The registers listed here are for any miscellaneous systems that are too small to have its own category.
 	Any unknown or undocumented memory/registers have comments listed next to them.
 	*/
-	std::shared_ptr<EERegister_SIO_t> MEMORY_SIO;         // Register "SIO"                @ 0x1000F100 -> 0x1000F1FF. Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
-	std::shared_ptr<Register32_t>     REGISTER_F400;      // Register "Undocumented: F400" @ 0x1000F400 -> 0x1000F403.
-	std::shared_ptr<ConstantByteMemory_t> MEMORY_F410;        // Register "Undocumented: F410" @ 0x1000F410 -> 0x1000F41F. Needs to be a dead storage (by BIOS).
-	std::shared_ptr<Register32_t>     REGISTER_F420;      // Register "Undocumented: F420" @ 0x1000F420 -> 0x1000F423.
-	std::shared_ptr<EERegister_MCH_t> MEMORY_MCH;		  // Register "MCH"                @ 0x1000F430 -> 0x1000F44F. No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation?
-	std::shared_ptr<ByteMemory_t>         MEMORY_F450;        // Register "Undocumented: F450" @ 0x1000F450 -> 0x1000F4FF.  
+	std::shared_ptr<EERegister_SIO_t>     MEMORY_SIO;    // Some information can be found in the Toshiba Tx79 architecture manual (similar to the EE).
+	std::shared_ptr<Register32_t>         REGISTER_F400;
+	std::shared_ptr<ConstantByteMemory_t> MEMORY_F410;   // Needs to be constant value (by BIOS).
+	std::shared_ptr<Register32_t>         REGISTER_F420; 
+	std::shared_ptr<EERegister_MCH_t>     MEMORY_MCH;    // No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation.
+	std::shared_ptr<ByteMemory_t>         MEMORY_F450;      
 };

@@ -2,9 +2,9 @@
 
 #include "Common/Types/Register/Register16_t.h"
 
-#include "Resources/IOP/SPU2/Types/SPU2CoreVoices_t.h"
-#include "Resources/IOP/SPU2/Types/SPU2CoreRegisters_t.h"
-#include "Resources/IOP/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
+#include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
 SPU2CoreVoice_t::SPU2CoreVoice_t() :
 	VOLL(nullptr),

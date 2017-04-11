@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Resources/IOP/SPU2/Types/SPU2CoreRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
 
 SPU2CoreRegister_VOL_t::SPU2CoreRegister_VOL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)

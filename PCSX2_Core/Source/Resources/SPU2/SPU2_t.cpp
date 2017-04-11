@@ -3,8 +3,8 @@
 #include "Common/Types/Memory/HwordMemory_t.h"
 #include "Common/Types/Register/Register16_t.h"
 
-#include "Resources/IOP/SPU2/SPU2_t.h"
-#include "Resources/IOP/SPU2/Types/SPU2Cores_t.h"
+#include "Resources/SPU2/SPU2_t.h"
+#include "Resources/SPU2/Types/SPU2Cores_t.h"
 
 SPU2_t::SPU2_t() :
 	CORE_0(std::make_shared<SPU2Core_C0_t>()),

@@ -63,14 +63,20 @@ See Resources/EE/Types/EERegsiters_t/EERegister_SIO_t for where the SIO is imple
 #endif
 
 /*
-Debug log EECore and IOPCore syscalls. See the SYSCALL() instructions in each one.
+Debug log options for the EECore and IOPCore, including:
+ - Syscall logging (see SYSCALL() instructions).
+ - Interrupt logging.
 */
 #if defined(BUILD_DEBUG)
  #define DEBUG_LOG_EE_SYSCALLS 0
  #define DEBUG_LOG_IOP_SYSCALLS 0
+ #define DEBUG_LOG_EE_INTERRUPTS 0
+ #define DEBUG_LOG_IOP_INTERRUPTS 0
 #else
  #define DEBUG_LOG_EE_SYSCALLS 0
  #define DEBUG_LOG_IOP_SYSCALLS 0
+ #define DEBUG_LOG_EE_INTERRUPTS 0
+ #define DEBUG_LOG_IOP_INTERRUPTS 0
 #endif
 
 //////////////////////

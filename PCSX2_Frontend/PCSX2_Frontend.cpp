@@ -15,7 +15,7 @@
 #include "Resources/Resources_t.h"
 #include "Resources/EE/EE_t.h"
 #include "Resources/IOP/IOP_t.h"
-#include "Resources/IOP/SPU2/SPU2_t.h"
+#include "Resources/SPU2/SPU2_t.h"
 
 std::ofstream logFile;
 bool MTmode = false;
@@ -71,8 +71,8 @@ int main()
 
 		vm.getResources()->EE->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_EE.bin");
 		vm.getResources()->IOP->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_IOP.bin");
-		vm.getResources()->IOP->SPU2->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_SPU2.bin");
-		vm.getResources()->IOP->SPU2->DebugDummy->dump("C:\\Shared\\Dumps\\End_Dump_DebugDummy.bin");
+		vm.getResources()->SPU2->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_SPU2.bin");
+		vm.getResources()->SPU2->DebugDummy->dump("C:\\Shared\\Dumps\\End_Dump_DebugDummy.bin");
 	}
 	catch (std::exception ex)
 	{

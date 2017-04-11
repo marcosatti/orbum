@@ -2,7 +2,7 @@
 
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
-EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EEIntcRegister_MASK_t> & mask) :
+EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
 	registerField(Fields::GS, "GS", 0, 1, 0);

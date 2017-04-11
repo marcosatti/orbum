@@ -3,9 +3,9 @@
 #include "Common/Types/Register/Register16_t.h"
 #include "Common/Types/Memory/ByteMemory_t.h"
 
-#include "Resources/IOP/SPU2/Types/SPU2Cores_t.h"
-#include "Resources/IOP/SPU2/Types/SPU2CoreRegisters_t.h"
-#include "Resources/IOP/SPU2/Types/SPU2CoreVoices_t.h"
+#include "Resources/SPU2/Types/SPU2Cores_t.h"
+#include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
 
 SPU2Core_t::SPU2Core_t() :
 	PMON0(nullptr),

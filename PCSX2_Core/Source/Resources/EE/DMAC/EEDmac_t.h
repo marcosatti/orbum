@@ -66,7 +66,7 @@ public:
 	std::shared_ptr<EEDmacRegister_RBOR_t>    RBOR;
 	std::shared_ptr<EEDmacRegister_STADR_t>   STADR;
 	std::shared_ptr<ConstantByteMemory_t>     MEMORY_E070;
-	std::shared_ptr<ByteMemory_t>             MEMORY_F500; // Memory "Undocumented: F500" @ 0x1000F500 -> 0x1000F51F.
+	std::shared_ptr<ByteMemory_t>             MEMORY_F500; 
 	std::shared_ptr<EEDmacRegister_ENABLER_t> ENABLER;
 	std::shared_ptr<ConstantByteMemory_t>     MEMORY_F530;
 	std::shared_ptr<EEDmacRegister_ENABLEW_t> ENABLEW;
