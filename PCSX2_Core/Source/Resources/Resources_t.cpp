@@ -191,16 +191,16 @@ void Resources_t::postInit_EE() const
 		// EE Memory.
 		{
 			// Main Memory.
-			EE->MMU->mapObject(Constants::EE::MainMemory::PADDRESS_MAIN_MEMORY, EE->MainMemory);
+			EE->MMU->mapObject(0x00000000, EE->MainMemory);
 
 			// Scratchpad Memory.
-			EE->MMU->mapObject(Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY, EE->EECore->ScratchpadMemory);
+			EE->MMU->mapObject(0x70000000, EE->EECore->ScratchpadMemory);
 
 			// Various ROMs.
-			EE->MMU->mapObject(Constants::EE::ROM::PADDRESS_BOOT_ROM, EE->BootROM);
-			EE->MMU->mapObject(Constants::EE::ROM::PADDRESS_ROM1, EE->ROM1);
-			EE->MMU->mapObject(Constants::EE::ROM::PADDRESS_EROM, EE->EROM);
-			EE->MMU->mapObject(Constants::EE::ROM::PADDRESS_ROM2, EE->ROM2);
+			EE->MMU->mapObject(0x1FC00000, EE->BootROM);
+			EE->MMU->mapObject(0x1E000000, EE->ROM1);
+			EE->MMU->mapObject(0x1E040000, EE->EROM);
+			EE->MMU->mapObject(0x1E400000, EE->ROM2);
 
 			// Unknown memory.
 			EE->MMU->mapObject(0x1A000000, EE->UNKNOWN_1A000000);
@@ -476,17 +476,17 @@ void Resources_t::postInit_IOP() const
 		// IOP Memory.
 		{
 			// Main Memory.
-			IOP->MMU->mapObject(Constants::IOP::IOPMemory::PADDRESS_IOP_MEMORY, IOP->MainMemory);
+			IOP->MMU->mapObject(0x00000000, IOP->MainMemory);
 
 			// Various ROMs.
-			IOP->MMU->mapObject(Constants::EE::ROM::PADDRESS_BOOT_ROM, EE->BootROM);
-			IOP->MMU->mapObject(Constants::EE::ROM::PADDRESS_ROM1, EE->ROM1);
+			IOP->MMU->mapObject(0x1FC00000, EE->BootROM);
+			IOP->MMU->mapObject(0x1E000000, EE->ROM1);
 
 			// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation. TODO: related to cache control (this is probably very wrong), investigate.
 			IOP->MMU->mapObject(0xFFC00000, EE->BootROM);
 
 			// Scratchpad Memory.
-			IOP->MMU->mapObject(Constants::IOP::IOPCore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY, IOP->IOPCore->ScratchpadMemory);
+			IOP->MMU->mapObject(0x1F800000, IOP->IOPCore->ScratchpadMemory);
 		}
 
 		// IOP Registers.
@@ -1503,7 +1503,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F8014A8, IOP->Timers->TIMER_5->COMP);
 
 			// Parallel Port.
-			IOP->MMU->mapObject(Constants::IOP::ParallelPort::PADDRESS_PARALLEL_PORT, IOP->ParallelPort);
+			IOP->MMU->mapObject(0x1F000000, IOP->ParallelPort);
 		}
 
 		// SIF Registers

@@ -120,7 +120,6 @@ struct Constants
 		{
 			struct ScratchpadMemory
 			{
-				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x70000000;
 				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = SIZE_16KB;
 			};
 
@@ -185,26 +184,21 @@ struct Constants
 
 		struct MainMemory
 		{
-			static constexpr u32 PADDRESS_MAIN_MEMORY = 0x00000000;
 			static constexpr size_t SIZE_MAIN_MEMORY = SIZE_32MB;
 		};
 
 		struct ROM
 		{
 			// BootROM. See EE Users Manual page 20.
-			static constexpr u32 PADDRESS_BOOT_ROM = 0x1FC00000;
 			static constexpr size_t SIZE_BOOT_ROM = SIZE_4MB;
 
 			// ROM1. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
-			static constexpr u32 PADDRESS_ROM1 = 0x1E000000;
 			static constexpr size_t SIZE_ROM1 = SIZE_256KB;
 
 			// EROM. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
-			static constexpr u32 PADDRESS_EROM = 0x1E040000;
 			static constexpr size_t SIZE_EROM = 0x001C0000; // 1792 kB.
 
 			// ROM2. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp").
-			static constexpr u32 PADDRESS_ROM2 = 0x1E400000;
 			static constexpr size_t SIZE_ROM2 = SIZE_512KB;
 		};
 
@@ -250,7 +244,6 @@ struct Constants
 			struct ScratchpadMemory
 			{
 				// IOP scratchpad memory - see http://www.psxdev.net/forum/viewtopic.php?f=49&t=147
-				static constexpr u32 PADDRESS_SCRATCHPAD_MEMORY = 0x1F800000;
 				static constexpr size_t SIZE_SCRATCHPAD_MEMORY = SIZE_1KB;
 			};
 
@@ -295,14 +288,12 @@ struct Constants
 		struct IOPMemory
 		{
 			// IOP Memory. No official documentation - from PCSX2. 
-			static constexpr u32 PADDRESS_IOP_MEMORY = 0x00000000;
 			static constexpr size_t SIZE_IOP_MEMORY = SIZE_2MB;
 		};
 
 		struct ParallelPort
 		{
 			// IOP Parallel Port. No official documentation - from online PSX docs.
-			static constexpr u32 PADDRESS_PARALLEL_PORT = 0x1F000000;
 			static constexpr size_t SIZE_PARALLEL_PORT = SIZE_64KB;
 		};
 

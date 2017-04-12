@@ -445,7 +445,7 @@ u128 EEDmac_s::readDataMemory(u32 physicalAddress, bool SPRAccess) const
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		return mEEByteMMU->readQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress);
+		return mEEByteMMU->readQword(getContext(), 0x70000000 + physicalAddress);
 	else
 		return mEEByteMMU->readQword(getContext(), physicalAddress);
 }
@@ -454,7 +454,7 @@ void EEDmac_s::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) c
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
-		mEEByteMMU->writeQword(getContext(), Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + physicalAddress, data);
+		mEEByteMMU->writeQword(getContext(), 0x70000000 + physicalAddress, data);
 	else
 		mEEByteMMU->writeQword(getContext(), physicalAddress, data);
 }

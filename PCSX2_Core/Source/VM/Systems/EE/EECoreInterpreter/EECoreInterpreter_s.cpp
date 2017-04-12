@@ -562,7 +562,7 @@ bool EECoreInterpreter_s::getPhysicalAddress(const u32 virtualAddress, const MMU
 		// As mentioned in the TLB implementation (see the class EECoreTLB_t), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
 		// This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
 		u32 offset16KB = virtualAddress & Constants::MASK_16KB;
-		physicalAddress = Constants::EE::EECore::ScratchpadMemory::PADDRESS_SCRATCHPAD_MEMORY + offset16KB;
+		physicalAddress = 0x70000000 + offset16KB;
 		return false;
 	}
 
