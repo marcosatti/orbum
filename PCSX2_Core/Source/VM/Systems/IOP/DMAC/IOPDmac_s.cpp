@@ -31,6 +31,26 @@ IOPDmac_s::IOPDmac_s(VM * vm) :
 	mIOPByteMMU = getVM()->getResources()->IOP->MMU;
 }
 
+void IOPDmac_s::initalise()
+{
+	// Reset channels.
+	for (auto& channel : mDMAC->CHANNELS)
+	{
+		if (channel->CHCR != nullptr) channel->CHCR->initalise();
+		if (channel->MADR != nullptr) channel->MADR->initalise();
+		if (channel->BCR != nullptr) channel->BCR->initalise();
+		if (channel->TADR != nullptr) channel->TADR->initalise();
+		if (channel->mFIFOQueue != nullptr) channel->mFIFOQueue->initalise();
+	}
+
+	// Reset DMAC.
+	mDMAC->PCR0->initalise();
+	mDMAC->ICR0->initalise();
+	mDMAC->PCR1->initalise();
+	mDMAC->ICR1->initalise();
+	mDMAC->GCTRL->initalise();
+}
+
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK

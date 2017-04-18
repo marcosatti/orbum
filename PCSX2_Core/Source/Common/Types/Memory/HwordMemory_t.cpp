@@ -22,6 +22,11 @@ HwordMemory_t::HwordMemory_t(const char* mnemonic, bool debugReads, bool debugWr
 #endif
 }
 
+void HwordMemory_t::initalise()
+{
+	std::vector<u16>(mMemoryByteSize / 2, 0).swap(mMemory);
+}
+
 u16 HwordMemory_t::readHword(const System_t context, size_t hwordOffset)
 {
 	// Get host storage address.

@@ -17,6 +17,10 @@ VUInterpreter_s::VUInterpreter_s(VM * vm, const int vuCoreIndex) :
 	mVUCore = getVM()->getResources()->EE->VPU->VU->VU_CORES[vuCoreIndex];
 }
 
+void VUInterpreter_s::initalise()
+{
+}
+
 int VUInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// TODO: Implement.

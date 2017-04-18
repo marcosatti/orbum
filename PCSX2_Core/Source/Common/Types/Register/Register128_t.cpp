@@ -3,9 +3,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/Register128_t.h"
 
-Register128_t::Register128_t(const char* mnemonic, bool debugReads, bool debugWrites) :
+Register128_t::Register128_t(const char* mnemonic, bool debugReads, bool debugWrites, const u128 initalisationValue) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	UQ(0)
+	UQ(initalisationValue),
+	mInitalisationValue(initalisationValue)
 {
 }
 
@@ -203,5 +204,5 @@ void Register128_t::writeFloat(const System_t context, size_t arrayIndex, f32 va
 
 void Register128_t::initalise()
 {
-	UQ = u128(0, 0);
+	UQ = mInitalisationValue;
 }

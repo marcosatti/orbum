@@ -2,15 +2,17 @@
 
 #include "Common/Types/Register/Register8_t.h"
 #include "Common/Types/Register/ConstantRegister8_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue8_t.h"
 
 #include "Resources/CDVD/CDVD_t.h"
 
 CDVD_t::CDVD_t() :
-	N_COMMAND(std::make_shared<Register8_t>("CDVD N_COMMAND", true, true)),
-	N_READY(std::make_shared<Register8_t>("CDVD N_READY", true, true)),
-	ERROR(std::make_shared<Register8_t>("CDVD ERROR", true, true)),
-	BREAK(std::make_shared<ConstantRegister8_t>("CDVD BREAK", true, true)),
-	STATUS(std::make_shared<Register8_t>("CDVD STATUS", true, true)),
+	N_2004(std::make_shared<Register8_t>("CDVD N_2004", true, true)),
+	N_2005(std::make_shared<Register8_t>("CDVD N_2005", true, true, 0x4E)),
+	N_2006(std::make_shared<Register8_t>("CDVD N_2006", true, true)),
+	BREAK(std::make_shared<Register8_t>("CDVD BREAK", true, true)),
+	INTR_STAT(std::make_shared<Register8_t>("CDVD INTR_STAT", true, true)),
+	STATUS(std::make_shared<Register8_t>("CDVD STATUS", true, true, 0xA)),
 	TRAY_STATE(std::make_shared<Register8_t>("CDVD TRAY_STATE", true, true)),
 	CRT_MINUTE(std::make_shared<Register8_t>("CDVD CRT_MINUTE", true, true)),
 	CRT_SECOND(std::make_shared<Register8_t>("CDVD CRT_SECOND", true, true)),
@@ -18,9 +20,9 @@ CDVD_t::CDVD_t() :
 	TYPE(std::make_shared<Register8_t>("CDVD TYPE", true, true)),
 	REGISTER_2013(std::make_shared<Register8_t>("CDVD REGISTER_2013", true, true)),
 	RSV(std::make_shared<Register8_t>("CDVD RSV", true, true)),
-	S_COMMAND(std::make_shared<Register8_t>("CDVD S_COMMAND", true, true)),
-	S_READY(std::make_shared<Register8_t>("CDVD S_READY", true, true)),
-	S_DATA_OUT(std::make_shared<Register8_t>("CDVD S_DATA_OUT", true, true)),
+	S_2016(std::make_shared<Register8_t>("CDVD S_2016", true, true)),
+	S_2017(std::make_shared<Register8_t>("CDVD S_2017", true, true, 16)),
+	S_2018(std::make_shared<Register8_t>("CDVD S_2018", true, true, 16)),
 	KEY_20(std::make_shared<Register8_t>("CDVD KEY_20", true, true)),
 	KEY_21(std::make_shared<Register8_t>("CDVD KEY_21", true, true)),
 	KEY_22(std::make_shared<Register8_t>("CDVD KEY_22", true, true)),

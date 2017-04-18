@@ -22,6 +22,16 @@ IOPTimers_s::IOPTimers_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
+void IOPTimers_s::initalise()
+{
+	for (auto& timer : mTimers->TIMERS)
+	{
+		if (timer->COUNT != nullptr) timer->COUNT->initalise();
+		if (timer->MODE != nullptr) timer->MODE->initalise();
+		if (timer->COMP != nullptr) timer->COMP->initalise();
+	}
+}
+
 int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK

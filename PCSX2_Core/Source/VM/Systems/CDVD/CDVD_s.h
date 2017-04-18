@@ -1,20 +1,17 @@
 #pragma once
 
-#include "Common/Global/Globals.h"
-
-#include "VM/VM.h"
 #include "VM/Types/VMSystem_s.h"
 
-#include "Resources/GS/GS_t.h"
+class CDVD_t;
 
 /*
-GS system logic.
+CDVD handler logic.
 */
-class GSCore_s : public VMSystem_s
+class CDVD_s : public VMSystem_s
 {
 public:
-	GSCore_s(VM * vm);
-	virtual ~GSCore_s() = default;
+	CDVD_s(VM * vm);
+	virtual ~CDVD_s() = default;
 
 	/*
 	Initalisation.
@@ -22,6 +19,7 @@ public:
 	void initalise() override;
 
 	/*
+	Checks the CDVD state for any actions to be performed, and steps through if needed.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
@@ -29,5 +27,6 @@ private:
 	/*
 	Resources.
 	*/
-	std::shared_ptr<GS_t> mGS;
+	std::shared_ptr<CDVD_t> mINTC;
 };
+

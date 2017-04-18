@@ -20,6 +20,11 @@ public:
 	virtual ~IOPTimers_s() = default;
 
 	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
+	/*
 	Updates the timers with the specified clock source type.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;

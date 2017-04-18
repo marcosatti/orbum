@@ -19,6 +19,11 @@ public:
 	virtual ~ByteMemory_t() = default;
 
 	/*
+	Initalise byte memory (set to 0's).
+	*/
+	virtual void initalise();
+
+	/*
 	Read or write a value of a given type, to the specified byte index (byteOffset).
 	*/
 	virtual u8 readByte(const System_t context, size_t byteOffset);
@@ -36,11 +41,6 @@ public:
 	Gets the storage length.
 	*/
 	virtual size_t getSize();
-
-	/*
-	Returns a reference to the underlying vector storage.
-	*/
-	std::vector<u8> & getContainer();
 
 	/*
 	Read in a raw file to the memory (byte copy).

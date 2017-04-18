@@ -30,7 +30,8 @@ public:
 	/*
 	Initalise the system.
 	*/
-	virtual void initalise();
+	virtual void initalise() = 0;
+
 	/*
 	Runs the system logic for each clock source event by looping through the step function.
 	*/

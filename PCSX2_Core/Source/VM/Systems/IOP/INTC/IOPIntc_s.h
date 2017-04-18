@@ -17,6 +17,11 @@ public:
 	IOPIntc_s(VM * vm);
 	virtual ~IOPIntc_s() = default;
 
+	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:

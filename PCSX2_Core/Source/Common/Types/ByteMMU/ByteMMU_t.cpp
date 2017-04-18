@@ -14,6 +14,7 @@
 #include "Common/Types/ByteMMU/MapperRegister32ByteMMU_t.h"
 #include "Common/Types/ByteMMU/MapperRegister64ByteMMU_t.h"
 #include "Common/Types/ByteMMU/MapperRegister128ByteMMU_t.h"
+#include "Common/Types/ByteMMU/MapperFIFOQueue8ByteMMU_t.h"
 #include "Common/Types/ByteMMU/MapperFIFOQueue32ByteMMU_t.h"
 
 ByteMMU_t::ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const int numOffsetIndexBits) :
@@ -112,6 +113,11 @@ void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<Regis
 void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<Register128_t>& register128)
 {
 	mapObject(std::make_shared<MapperRegister128ByteMMU_t>(physicalAddress, register128));
+}
+
+void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue8_t>& fifoQueue8)
+{
+	mapObject(std::make_shared<MapperFIFOQueue8ByteMMU_t>(physicalAddress, fifoQueue8));
 }
 
 void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t>& fifoQueue32)

@@ -2,9 +2,10 @@
 
 #include "Common/Types/Register/Register8_t.h"
 
-Register8_t::Register8_t(const char* mnemonic, bool debugReads, bool debugWrites) :
+Register8_t::Register8_t(const char* mnemonic, bool debugReads, bool debugWrites, const u8 initalisationValue) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	UB(0)
+	UB(initalisationValue),
+	mInitalisationValue(initalisationValue)
 {
 }
 
@@ -42,5 +43,5 @@ void Register8_t::writeByte(const System_t context, u8 value)
 
 void Register8_t::initalise()
 {
-	UB = 0;
+	UB = mInitalisationValue;
 }

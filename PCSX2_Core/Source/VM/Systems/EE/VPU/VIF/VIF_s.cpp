@@ -18,6 +18,10 @@ VIF_s::VIF_s(VM * vm, const int vifCoreIndex) :
 {
 }
 
+void VIF_s::initalise()
+{
+}
+
 int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	return ticksAvailable; // not yet completed.

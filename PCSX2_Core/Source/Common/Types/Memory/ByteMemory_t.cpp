@@ -19,6 +19,11 @@ ByteMemory_t::ByteMemory_t(const char * mnemonic, const bool debugReads, const b
 #endif
 }
 
+void ByteMemory_t::initalise()
+{
+	std::vector<u8>(mMemoryByteSize, 0).swap(mMemory);
+}
+
 u8 ByteMemory_t::readByte(const System_t context, size_t byteOffset)
 {
 	// Get host storage address.
@@ -225,11 +230,6 @@ void ByteMemory_t::writeQword(const System_t context, size_t byteOffset, u128 va
 size_t ByteMemory_t::getSize()
 {
 	return mMemoryByteSize;
-}
-
-std::vector<u8> & ByteMemory_t::getContainer()
-{
-	return mMemory;
 }
 
 void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset)

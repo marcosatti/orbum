@@ -19,6 +19,11 @@ public:
 	virtual ~VIF_s() = default;
 
 	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
+	/*
 	Check the FIFO queue and process data if available.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;

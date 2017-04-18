@@ -35,6 +35,11 @@ public:
 	virtual ~EEDmac_s() = default;
 
 	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
+	/*
 	Check through the channels and initate data transfers.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;

@@ -18,6 +18,11 @@ public:
 	virtual ~VUInterpreter_s() = default;
 
 	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
+	/*
 	TODO: implement.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;

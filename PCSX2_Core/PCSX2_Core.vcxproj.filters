@@ -308,6 +308,10 @@
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.h" />
     <ClInclude Include="Source\Resources\SPU2\SPU2_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.h" />
+    <ClInclude Include="Source\VM\Systems\CDVD\CDVD_s.h" />
+    <ClInclude Include="Source\Resources\CDVD\Types\CDVDRegisters_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -496,6 +500,10 @@
     <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.cpp" />
     <ClCompile Include="Source\Resources\SPU2\SPU2_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\CDVD\CDVD_s.cpp" />
+    <ClCompile Include="Source\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

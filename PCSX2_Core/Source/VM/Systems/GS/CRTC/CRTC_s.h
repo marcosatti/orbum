@@ -25,6 +25,11 @@ public:
 	virtual ~CRTC_s() = default;
 
 	/*
+	Initalisation.
+	*/
+	void initalise() override;
+
+	/*
 	Steps through the CRTC, incrementing the number of pixels based on the CRTC configuration.
 	When a row of pixels has been completed (scanline), copy's the row to the VM buffer and sends a HBlank clock event to EE/IOP Timers.
 	When a whole frame/field has been completed, calls the VM render function and sends a VBlank start/end interrupt to the EE/IOP Intc.

@@ -33,6 +33,33 @@ EEDmac_s::EEDmac_s(VM * vm) :
 	mEEByteMMU = getVM()->getResources()->EE->MMU;
 }
 
+void EEDmac_s::initalise()
+{
+	// Reset channels.
+	for (auto& channel : mDMAC->CHANNELS)
+	{
+		if (channel->CHCR != nullptr) channel->CHCR->initalise();
+		if (channel->MADR != nullptr) channel->MADR->initalise();
+		if (channel->QWC != nullptr) channel->QWC->initalise();
+		if (channel->TADR != nullptr) channel->TADR->initalise();
+		if (channel->ASR0 != nullptr) channel->ASR0->initalise();
+		if (channel->ASR1 != nullptr) channel->ASR1->initalise();
+		if (channel->SADR != nullptr) channel->SADR->initalise();
+		if (channel->mFIFOQueue != nullptr) channel->mFIFOQueue->initalise();
+	}
+
+	// Reset DMAC.
+	mDMAC->CTRL->initalise();
+	mDMAC->STAT->initalise();
+	mDMAC->PCR->initalise();
+	mDMAC->SQWC->initalise();
+	mDMAC->RBSR->initalise();
+	mDMAC->RBOR->initalise();
+	mDMAC->STADR->initalise();
+	mDMAC->ENABLER->initalise();
+	mDMAC->ENABLEW->initalise();
+}
+
 int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK

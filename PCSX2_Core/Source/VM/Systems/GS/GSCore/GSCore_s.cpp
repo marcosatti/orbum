@@ -9,6 +9,10 @@ GSCore_s::GSCore_s(VM * vm) :
 {
 }
 
+void GSCore_s::initalise()
+{
+}
+
 int GSCore_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	return ticksAvailable;

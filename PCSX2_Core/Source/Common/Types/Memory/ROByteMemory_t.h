@@ -5,6 +5,7 @@
 /*
 Read-only mapped memory, used for eg: the EE BIOS.
 Will not write anything when requested, and instead silently discards the data.
+You can still load in a file (through readFile()), which is the intended purpose.
 */
 class ROByteMemory_t : public ByteMemory_t
 {

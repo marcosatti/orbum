@@ -18,6 +18,11 @@ public:
 	virtual ~FIFOQueue32_t() = default;
 
 	/*
+	Initalise FIFO queue (set to empty).
+	*/
+	virtual void initalise();
+
+	/*
 	Read 32-bits of data out of the FIFO queue, and removes it.
 	*/
 	virtual u32 readWord(const System_t context);

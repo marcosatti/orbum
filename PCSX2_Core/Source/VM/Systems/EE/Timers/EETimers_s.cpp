@@ -24,6 +24,17 @@ EETimers_s::EETimers_s(VM * vm) :
 	mGS = getVM()->getResources()->GS;
 }
 
+void EETimers_s::initalise()
+{
+	for (auto& timer : mTimers->TIMERS)
+	{
+		if (timer->COUNT != nullptr) timer->COUNT->initalise();
+		if (timer->MODE != nullptr) timer->MODE->initalise();
+		if (timer->COMP != nullptr) timer->COMP->initalise();
+		if (timer->HOLD != nullptr) timer->HOLD->initalise();
+	}
+}
+
 int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK

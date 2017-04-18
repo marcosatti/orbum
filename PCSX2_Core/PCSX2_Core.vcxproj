@@ -212,19 +212,26 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MinimalRebuild>false</MinimalRebuild>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -303,19 +310,26 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MinimalRebuild>false</MinimalRebuild>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -429,7 +443,9 @@
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable.h" />
     <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
     <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\HwordMemory_t.h" />
     <ClInclude Include="Source\Common\Types\MIPS\MIPSOperatingContext_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperBaseObjectByteMMU_t.h" />
@@ -447,6 +463,7 @@
     <ClInclude Include="Source\Common\Types\Register\MapperRegister16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Register\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
+    <ClInclude Include="Source\Resources\CDVD\Types\CDVDRegisters_t.h" />
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
     <ClInclude Include="Source\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
@@ -456,6 +473,7 @@
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreRegisters_t.h" />
+    <ClInclude Include="Source\VM\Systems\CDVD\CDVD_s.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\System_t.h" />
     <ClInclude Include="Source\Resources\Common\Types\SBUSRegisters_t.h" />
@@ -574,7 +592,9 @@
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.cpp" />
     <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\HwordMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperBaseObjectByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.cpp" />
@@ -590,6 +610,7 @@
     <ClCompile Include="Source\Common\Types\Register\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\MapperRegister16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
@@ -634,6 +655,7 @@
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\CDVD\CDVD_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />

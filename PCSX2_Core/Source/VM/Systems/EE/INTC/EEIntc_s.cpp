@@ -20,6 +20,12 @@ EEIntc_s::EEIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->EE->INTC;
 }
 
+void EEIntc_s::initalise()
+{
+	mINTC->STAT->initalise();
+	mINTC->MASK->initalise();
+}
+
 int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the interrupt status on the stat register.

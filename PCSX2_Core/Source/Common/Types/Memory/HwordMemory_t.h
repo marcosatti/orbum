@@ -20,6 +20,11 @@ public:
 	virtual ~HwordMemory_t() = default;
 
 	/*
+	Initalise byte memory (set to 0's).
+	*/
+	virtual void initalise();
+
+	/*
 	Read or write a value of a given type, to the specified hword index (hwordOffset).
 	*/
 	virtual u16 readHword(const System_t context, size_t hwordOffset);

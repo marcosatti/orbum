@@ -20,6 +20,13 @@ IOPIntc_s::IOPIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
+void IOPIntc_s::initalise()
+{
+	mINTC->CTRL->initalise();
+	mINTC->STAT->initalise();
+	mINTC->MASK->initalise();
+}
+
 int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 {
 	// Check the master CTRL register and STAT register.

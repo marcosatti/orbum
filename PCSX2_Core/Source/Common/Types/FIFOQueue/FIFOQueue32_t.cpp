@@ -8,6 +8,12 @@ FIFOQueue32_t::FIFOQueue32_t(const char * mnemonic, const bool debugReads, const
 {
 }
 
+void FIFOQueue32_t::initalise()
+{
+	// Reset (clear) FIFO queue.
+	std::queue<u32>().swap(mFIFOQueue);
+}
+
 u32 FIFOQueue32_t::readWord(const System_t context)
 {
 	auto temp = mFIFOQueue.front();

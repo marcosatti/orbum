@@ -17,6 +17,7 @@
 #include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
 #include "VM/Systems/IOP/Timers/IOPTimers_s.h"
 #include "VM/Systems/IOP/INTC/IOPIntc_s.h"
+#include "VM/Systems/CDVD/CDVD_s.h"
 #include "VM/Systems/GS/GSCore/GSCore_s.h"
 #include "VM/Systems/GS/CRTC/CRTC_s.h"
 
@@ -75,7 +76,7 @@ void VM::reset()
 		std::make_shared<IOPDmac_s>(this),
 		std::make_shared<IOPTimers_s>(this),
 		std::make_shared<IOPIntc_s>(this),
-		nullptr,
+		std::make_shared<CDVD_s>(this),
 		std::make_shared<GSCore_s>(this),
 		std::make_shared<CRTC_s>(this)
 	};

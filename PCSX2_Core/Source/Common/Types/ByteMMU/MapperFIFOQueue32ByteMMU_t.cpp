@@ -13,8 +13,7 @@ MapperFIFOQueue32ByteMMU_t::MapperFIFOQueue32ByteMMU_t(const u32 physicalAddress
 
 size_t MapperFIFOQueue32ByteMMU_t::getSize()
 {
-	// TODO: check if return size is always 16 bytes (128-bits) regardless of max fifo size listed? Should be as this is for the mem-map size, not the fifo size.
-	return Constants::NUMBER_BYTES_IN_QWORD; 
+	return Constants::NUMBER_BYTES_IN_WORD; 
 }
 
 u8 MapperFIFOQueue32ByteMMU_t::readByte(const System_t context, size_t storageIndex)
