@@ -30,7 +30,7 @@ void Register8_t::writeByte(const System_t context, u8 value)
 	UB = value;
 
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
-	if (mDebugReads)
+	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u8, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), UB);

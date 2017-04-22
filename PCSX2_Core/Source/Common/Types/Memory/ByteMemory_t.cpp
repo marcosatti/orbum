@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iterator>
+#include <cstring>
 
 #include "Common/Global/Globals.h"
 
@@ -232,6 +233,42 @@ size_t ByteMemory_t::getSize()
 	return mMemoryByteSize;
 }
 
+void ByteMemory_t::read(const System_t context, u8 * buffer, const size_t byteLength, const size_t byteOffset) const
+{
+	// STL method generates security error on MSVC, so use memcpy instead.
+	// std::copy_n(mMemory.begin() + byteOffset, byteLength, buffer);
+	memcpy(buffer, &mMemory[byteOffset], byteLength);
+
+#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+	if (mDebugReads)
+	{
+#if DEBUG_LOG_VALUE_AS_HEX
+		log(Debug, "%s: %s Read u8[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+#else
+		log(Debug, "%s: %s Read u8[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+#endif
+	}
+#endif
+}
+
+void ByteMemory_t::write(const System_t context, const u8 * buffer, const size_t byteLength, const size_t byteOffset)
+{
+	// STL method generates security error on MSVC, so use memcpy instead.
+	// std::copy_n(buffer, byteLength, mMemory.begin() + byteOffset);
+	memcpy(&mMemory[byteOffset], buffer, byteLength);
+
+#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+	if (mDebugWrites)
+	{
+#if DEBUG_LOG_VALUE_AS_HEX
+		log(Debug, "%s: %s Write u8[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+#else
+		log(Debug, "%s: %s Write u8[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+#endif
+	}
+#endif
+}
+
 void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset)
 {
 	// Check it is not too big.
@@ -246,7 +283,7 @@ void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, c
 
 	// Read file in.
 	file.seekg(fileByteOffset);
-	file.read((char*)&mMemory[memoryByteOffset], fileByteLength);
+	file.read(reinterpret_cast<char*>(&mMemory[memoryByteOffset]), fileByteLength);
 
 	// STL method below super slow for some reason...
 	/*
@@ -266,7 +303,7 @@ void ByteMemory_t::dump(const char * fileStr)
 		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
 
 	// Write file out.
-	file.write((char*)&mMemory[0], mMemoryByteSize);
+	file.write(reinterpret_cast<char*>(&mMemory[0]), mMemoryByteSize);
 
 	// STL method below super slow for some reason...
 	/*

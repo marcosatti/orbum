@@ -33,6 +33,18 @@ public:
 	virtual void writeByte(const System_t context, const u8 data);
 
 	/*
+	Reads bytes to the buffer given.
+	This is a wrapper around the readByte function, and should not be treated as a separate interface.
+	*/
+	void read(const System_t context, u8 * buffer, const size_t length);
+
+	/*
+	Writes bytes from the buffer given.
+	This is a wrapper around the writeByte function, and should not be treated as a separate interface.
+	*/
+	void write(const System_t context, const u8 * buffer, const size_t length);
+
+	/*
 	Gets the current number of 8-bit data elements in the queue.
 	*/
 	size_t getCurrentSize() const;

@@ -25,7 +25,7 @@ The naming convention is based off the component. For cases where for example th
 the source files are prefixed with EE or IOP.
 
 You should only ever need to create an object of the Resources_t type from which you can access everything,
-which is ordered by components in the documentation groups, such as PS2Resources->EE->EECore->R5900->GPR[1]->readWord().
+which is ordered by components in the documentation groups, such as Resources->EE->EECore->R5900->GPR[1]->readWord().
 
 If you can't initalise a component due to a dependency, put the initalisation in the Resources_t constructor instead.
 

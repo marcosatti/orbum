@@ -29,21 +29,21 @@ struct Constants
 	static constexpr s64 VALUE_S64_MAX = 9223372036854775807;
 	static constexpr s64 VALUE_S64_MIN = -9223372036854775807 - 1; // Same reason as above.
 
-	static constexpr size_t SIZE_4GB   = 0x100000000;
+	static constexpr size_t SIZE_4GB = 0x100000000;
 	static constexpr size_t SIZE_512MB = 0x20000000;
-	static constexpr size_t SIZE_32MB  = 0x2000000;
-	static constexpr size_t SIZE_4MB   = 0x400000;
-	static constexpr size_t SIZE_2MB   = 0x200000;
+	static constexpr size_t SIZE_32MB = 0x2000000;
+	static constexpr size_t SIZE_4MB = 0x400000;
+	static constexpr size_t SIZE_2MB = 0x200000;
 	static constexpr size_t SIZE_512KB = 0x80000;
 	static constexpr size_t SIZE_256KB = 0x40000;
-	static constexpr size_t SIZE_64KB  = 0x10000;
-	static constexpr size_t SIZE_32KB  = 0x8000;
-	static constexpr size_t SIZE_16KB  = 0x4000;
-	static constexpr size_t SIZE_8KB   = 0x2000;
-	static constexpr size_t SIZE_4KB   = 0x1000;
-	static constexpr size_t SIZE_1KB   = 0x400;
-	static constexpr size_t SIZE_16B   = 0x10;
-	static constexpr size_t SIZE_4B    = 0x4;
+	static constexpr size_t SIZE_64KB = 0x10000;
+	static constexpr size_t SIZE_32KB = 0x8000;
+	static constexpr size_t SIZE_16KB = 0x4000;
+	static constexpr size_t SIZE_8KB = 0x2000;
+	static constexpr size_t SIZE_4KB = 0x1000;
+	static constexpr size_t SIZE_1KB = 0x400;
+	static constexpr size_t SIZE_16B = 0x10;
+	static constexpr size_t SIZE_4B = 0x4;
 
 	static constexpr u32 MASK_16KB = 0x00003FFF;
 
@@ -331,10 +331,18 @@ struct Constants
 			{
 			};
 
-			static constexpr double PCRTC_CLK_SPEED_DEFAULT = 1 / ((1/15734.0) / 2 / 640); // ~20 MHz, guess based on NTSC defaults of resX = 640 @ 15.734 kHz. Working: period of 1 cycle, divided by half (actual render vs. hblank), divided by number of resX pixels, all inversed for Hz.
+			static constexpr double PCRTC_CLK_SPEED_DEFAULT = 1 / ((1 / 15734.0) / 2 / 640); // ~20 MHz, guess based on NTSC defaults of resX = 640 @ 15.734 kHz. Working: period of 1 cycle, divided by half (actual render vs. hblank), divided by number of resX pixels, all inversed for Hz.
 		};
 
 	};
 
-	
+	struct CDVD
+	{
+		static constexpr int NUMBER_NCMD_INSTRUCTIONS = 256;
+		static constexpr int NUMBER_SCMD_INSTRUCTIONS = 256;
+
+		static constexpr size_t SIZE_NVRAM = SIZE_1KB;
+
+		static constexpr double CDVD_CLK_SPEED = 346250.0; // ~346 kHz, guess based off DVD 1x speed (1,385 kB/s) over a 32-bit bus.
+	};
 };

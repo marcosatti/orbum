@@ -43,6 +43,18 @@ public:
 	virtual void writeQword(const System_t context, const u128 data);
 
 	/*
+	Reads words to the buffer given.
+	This is a wrapper around the readWord function, and should not be treated as a separate interface.
+	*/
+	void read(const System_t context, u32 * buffer, const size_t length);
+
+	/*
+	Writes words from the buffer given.
+	This is a wrapper around the writeWord function, and should not be treated as a separate interface.
+	*/
+	void write(const System_t context, const u32 * buffer, const size_t length);
+
+	/*
 	Gets the current number of 32-bit data elements in the queue.
 	*/
 	size_t getCurrentSize() const;

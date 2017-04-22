@@ -13,6 +13,7 @@ enum class ClockSource_t
 	PixelClock,
 	HBlankClock,
 	VBlankClock,
+	CDVDClock,
 
 	COUNT
 };
@@ -31,7 +32,8 @@ static constexpr char * CLOCKSOURCE_STR[static_cast<int>(ClockSource_t::COUNT)] 
 	"GSCoreClock",
 	"PixelClock",
 	"HBlankClock",
-	"VBlankClock"
+	"VBlankClock",
+	"CDVDClock"
 };
 static const char* getClockSourceStr(const ClockSource_t & system)
 {

@@ -83,6 +83,9 @@ void Clock_t::addSystemClockTicksAll(const double time)
 	// Produce PixelClock ticks.
 	mSystemTickState[System_t::CRTC].state[ClockSource_t::PixelClock] += time / 1.0e6 * mPixelClockSpeed * mSystemTickState[System_t::CRTC].bias;
 	mSystemTickState[System_t::IOPTimers].state[ClockSource_t::PixelClock] += time / 1.0e6 * mPixelClockSpeed * mSystemTickState[System_t::IOPTimers].bias;
+
+	// Produce CDVDClock ticks.
+	mSystemTickState[System_t::CDVD].state[ClockSource_t::CDVDClock] += time / 1.0e6 * Constants::CDVD::CDVD_CLK_SPEED * mSystemTickState[System_t::CDVD].bias;
 }
 
 void Clock_t::addSystemClockTicks(const System_t system, const ClockSource_t clockSource, const int ticks)

@@ -50,7 +50,6 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
-#include "Resources/CDVD/CDVD_t.h"
 #include "Resources/SPU2/SPU2_t.h"
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
 #include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
@@ -61,6 +60,10 @@
 #include "Resources/IOP/Timers/IOPTimers_t.h"
 #include "Resources/IOP/Timers/Types/IOPTimersTimers_t.h"
 #include "Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
+
+#include "Resources/CDVD/CDVD_t.h"
+#include "Resources/CDVD/Types/CDVDRegisters_t.h"
+#include "Resources/CDVD/Types/CDVDFIFOQueues_t.h"
 
 Resources_t::Resources_t() :
 	Clock(std::make_shared<Clock_t>()),
@@ -572,9 +575,9 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F801078, IOP->INTC->CTRL);
 
 			// CDVD Registers.
-			IOP->MMU->mapObject(0x1F402004, CDVD->N_2004);
-			IOP->MMU->mapObject(0x1F402005, CDVD->N_2005);
-			IOP->MMU->mapObject(0x1F402006, CDVD->N_2006);
+			IOP->MMU->mapObject(0x1F402004, CDVD->N_COMMAND);
+			IOP->MMU->mapObject(0x1F402005, CDVD->N_RDY_DIN);
+			IOP->MMU->mapObject(0x1F402006, CDVD->N_DATA_OUT);
 			IOP->MMU->mapObject(0x1F402007, CDVD->BREAK);
 			IOP->MMU->mapObject(0x1F402008, CDVD->INTR_STAT);
 			IOP->MMU->mapObject(0x1F40200A, CDVD->STATUS);
@@ -585,9 +588,9 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F40200F, CDVD->TYPE);
 			IOP->MMU->mapObject(0x1F402013, CDVD->REGISTER_2013);
 			IOP->MMU->mapObject(0x1F402015, CDVD->RSV);
-			IOP->MMU->mapObject(0x1F402016, CDVD->S_2016);
-			IOP->MMU->mapObject(0x1F402017, CDVD->S_2017);
-			IOP->MMU->mapObject(0x1F402018, CDVD->S_2018);
+			IOP->MMU->mapObject(0x1F402016, CDVD->S_COMMAND);
+			IOP->MMU->mapObject(0x1F402017, CDVD->S_RDY_DIN);
+			IOP->MMU->mapObject(0x1F402018, CDVD->S_DATA_OUT);
 			IOP->MMU->mapObject(0x1F402020, CDVD->KEY_20);
 			IOP->MMU->mapObject(0x1F402021, CDVD->KEY_21);
 			IOP->MMU->mapObject(0x1F402022, CDVD->KEY_22);

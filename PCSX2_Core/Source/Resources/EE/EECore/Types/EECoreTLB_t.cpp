@@ -6,7 +6,7 @@
 #include "Resources/EE/EECore/Types/EECoreTLBEntry_t.h"
 
 EECoreTLB_t::EECoreTLB_t() : 
-	mTLBEntries{ 0 }
+	mTLBEntries(Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES)
 {
 }
 

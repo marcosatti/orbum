@@ -1,6 +1,6 @@
 #pragma once
 
-#include <array>
+#include <vector>
 
 #include "Common/Global/Globals.h"
 
@@ -46,6 +46,6 @@ private:
 	TLB entries. See EE Core Users Manual page 120.
 	In total there are 48 entries.
 	*/
-	std::array<EECoreTLBEntry_t, Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES> mTLBEntries;
+	std::vector<EECoreTLBEntry_t> mTLBEntries;
 };
 

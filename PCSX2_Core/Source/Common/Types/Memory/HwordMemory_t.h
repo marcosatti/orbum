@@ -42,9 +42,14 @@ public:
 	virtual size_t getSize();
 
 	/*
-	Returns a reference to the underlying vector storage.
+	Reads hwords to the buffer given.
 	*/
-	std::vector<u16> & getContainer();
+	virtual void read(const System_t context, u16 * buffer, const size_t hwordLength, const size_t hwordOffset) const;
+
+	/*
+	Writes hwords from the buffer given.
+	*/
+	virtual void write(const System_t context, const u16 * buffer, const size_t hwordLength, const size_t hwordOffset);
 
 	/*
 	Read in a raw file to the memory (byte copy).

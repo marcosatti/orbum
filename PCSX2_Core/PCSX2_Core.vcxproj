@@ -46,8 +46,8 @@
     <ProjectGuid>{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PCSX2_Core</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <ProjectName>PCSX2_Core</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -463,6 +463,8 @@
     <ClInclude Include="Source\Common\Types\Register\MapperRegister16Register32_t.h" />
     <ClInclude Include="Source\Common\Types\Register\ConstantRegister16_t.h" />
     <ClInclude Include="Source\Common\Util\FPUUtil\FPUFlags_t.h" />
+    <ClInclude Include="Source\Resources\CDVD\Types\CDVDFIFOQueues_t.h" />
+    <ClInclude Include="Source\Resources\CDVD\Types\CDVDNvrams_t.h" />
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDRegisters_t.h" />
     <ClInclude Include="Source\Resources\GS\CRTC\CRTC_t.h" />
     <ClInclude Include="Source\Common\Types\ClockSource_t.h" />
@@ -610,6 +612,8 @@
     <ClCompile Include="Source\Common\Types\Register\Register8_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\MapperRegister16Register32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\ConstantRegister16_t.cpp" />
+    <ClCompile Include="Source\Resources\CDVD\Types\CDVDFIFOQueues_t.cpp" />
+    <ClCompile Include="Source\Resources\CDVD\Types\CDVDNvrams_t.cpp" />
     <ClCompile Include="Source\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSFIFOQueues_t.cpp" />
     <ClCompile Include="Source\Resources\Common\Types\SBUSRegisters_t.cpp" />
@@ -656,6 +660,7 @@
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_s.cpp" />
+    <ClCompile Include="Source\VM\Systems\CDVD\CDVD_SCMD.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_s.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\VPU\VIF\VIF_s.cpp" />

@@ -1,18 +1,19 @@
 #include "stdafx.h"
 
 #include "Common/Types/Register/Register8_t.h"
-#include "Common/Types/Register/ConstantRegister8_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue8_t.h"
 
 #include "Resources/CDVD/CDVD_t.h"
+#include "Resources/CDVD/Types/CDVDRegisters_t.h"
+#include "Resources/CDVD/Types/CDVDNvrams_t.h"
+#include "Resources/CDVD/Types/CDVDFIFOQueues_t.h"
 
 CDVD_t::CDVD_t() :
-	N_2004(std::make_shared<Register8_t>("CDVD N_2004", true, true)),
-	N_2005(std::make_shared<Register8_t>("CDVD N_2005", true, true, 0x4E)),
-	N_2006(std::make_shared<Register8_t>("CDVD N_2006", true, true)),
+	N_COMMAND(std::make_shared<CDVDRegister_NS_COMMAND_t>("CDVD N_COMMAND", true, true)),
+	N_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD N_READY", "CDVD N_DATA_IN", true, true, 16)),
+	N_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD N_DATA_OUT", true, true, 16, N_RDY_DIN)),
 	BREAK(std::make_shared<Register8_t>("CDVD BREAK", true, true)),
 	INTR_STAT(std::make_shared<Register8_t>("CDVD INTR_STAT", true, true)),
-	STATUS(std::make_shared<Register8_t>("CDVD STATUS", true, true, 0xA)),
+	STATUS(std::make_shared<Register8_t>("CDVD STATUS", true, true)),
 	TRAY_STATE(std::make_shared<Register8_t>("CDVD TRAY_STATE", true, true)),
 	CRT_MINUTE(std::make_shared<Register8_t>("CDVD CRT_MINUTE", true, true)),
 	CRT_SECOND(std::make_shared<Register8_t>("CDVD CRT_SECOND", true, true)),
@@ -20,9 +21,9 @@ CDVD_t::CDVD_t() :
 	TYPE(std::make_shared<Register8_t>("CDVD TYPE", true, true)),
 	REGISTER_2013(std::make_shared<Register8_t>("CDVD REGISTER_2013", true, true)),
 	RSV(std::make_shared<Register8_t>("CDVD RSV", true, true)),
-	S_2016(std::make_shared<Register8_t>("CDVD S_2016", true, true)),
-	S_2017(std::make_shared<Register8_t>("CDVD S_2017", true, true, 16)),
-	S_2018(std::make_shared<Register8_t>("CDVD S_2018", true, true, 16)),
+	S_COMMAND(std::make_shared<CDVDRegister_NS_COMMAND_t>("CDVD S_COMMAND", true, true)),
+	S_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD S_READY", "CDVD S_DATA_IN", true, true, 16)),
+	S_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD S_DATA_OUT", true, true, 16, S_RDY_DIN)),
 	KEY_20(std::make_shared<Register8_t>("CDVD KEY_20", true, true)),
 	KEY_21(std::make_shared<Register8_t>("CDVD KEY_21", true, true)),
 	KEY_22(std::make_shared<Register8_t>("CDVD KEY_22", true, true)),
@@ -40,6 +41,10 @@ CDVD_t::CDVD_t() :
 	KEY_34(std::make_shared<Register8_t>("CDVD KEY_34", true, true)),
 	KEY_38(std::make_shared<Register8_t>("CDVD KEY_38", true, true)),
 	KEY_XOR(std::make_shared<Register8_t>("CDVD KEY_XOR", true, true)),
-	DEC_SET(std::make_shared<Register8_t>("CDVD DEC_SET", true, true))
+	DEC_SET(std::make_shared<Register8_t>("CDVD DEC_SET", true, true)),
+	NVRAM(nullptr)
 {
+	// Initalise CDVD NVRAM, based upon bios version loaded.
+	// TODO: implement version checking, for now, assumed v0.00 <= x < v1.70.
+	NVRAM = std::make_shared<CDVDNvram_000_t>();
 }

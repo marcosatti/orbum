@@ -46,7 +46,7 @@
     <ProjectGuid>{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PCSX2_Frontend</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -155,8 +155,8 @@
     <IncludePath>$(SolutionDir)\PCSX2_Core\Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|Win32'">
-    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\PCSX2_Core\Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -171,8 +171,8 @@
     <IncludePath>$(SolutionDir)\PCSX2_Core\Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised|x64'">
-    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)\PCSX2_Core\Source;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Optimised_More|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -309,6 +309,7 @@
       <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
       <FloatingPointExceptions>true</FloatingPointExceptions>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

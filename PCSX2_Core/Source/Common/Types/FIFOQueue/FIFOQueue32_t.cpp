@@ -68,6 +68,18 @@ void FIFOQueue32_t::writeQword(const System_t context, const u128 data)
 		writeWord(context, data.UW[i]); 
 }
 
+void FIFOQueue32_t::read(const System_t context, u32* buffer, const size_t length)
+{
+	for (size_t i = 0; i < length; i++)
+		buffer[i] = readWord(context);
+}
+
+void FIFOQueue32_t::write(const System_t context, const u32* buffer, const size_t length)
+{
+	for (size_t i = 0; i < length; i++)
+		writeWord(context, buffer[i]);
+}
+
 size_t FIFOQueue32_t::getCurrentSize() const
 {
 	return mFIFOQueue.size();

@@ -23,7 +23,7 @@ u8 FIFOQueue8_t::readByte(const System_t context)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8, Size = %d, Value = 0x%08X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
+		log(Debug, "%s: %s Read u8, Size = %d, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #else
 		log(Debug, "%s: %s Read u8, Size = %d, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #endif
@@ -44,12 +44,24 @@ void FIFOQueue8_t::writeByte(const System_t context, const u8 data)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%08X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #else
 		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #endif
 	}
 #endif
+}
+
+void FIFOQueue8_t::read(const System_t context, u8* buffer, const size_t length)
+{
+	for (size_t i = 0; i < length; i++)
+		buffer[i] = readByte(context);
+}
+
+void FIFOQueue8_t::write(const System_t context, const u8* buffer, const size_t length)
+{
+	for (size_t i = 0; i < length; i++)
+		writeByte(context, buffer[i]);
 }
 
 size_t FIFOQueue8_t::getCurrentSize() const

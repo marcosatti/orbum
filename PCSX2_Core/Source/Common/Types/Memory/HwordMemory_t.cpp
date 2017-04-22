@@ -195,9 +195,40 @@ size_t HwordMemory_t::getSize()
 	return mMemoryByteSize;
 }
 
-std::vector<u16>& HwordMemory_t::getContainer()
+void HwordMemory_t::read(const System_t context, u16 * buffer, const size_t hwordLength, const size_t hwordOffset) const
 {
-	return mMemory;
+	// STL method generates security error on MSVC, so use memcpy instead.
+	// std::copy_n(mMemory.begin() + hwordOffset, hwordLength, buffer);
+	memcpy(buffer, &mMemory[hwordOffset], hwordLength * Constants::NUMBER_BYTES_IN_HWORD);
+
+#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+	if (mDebugReads)
+	{
+#if DEBUG_LOG_VALUE_AS_HEX
+		log(Debug, "%s: %s Read u16[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), hwordLength, hwordOffset);
+#else
+		log(Debug, "%s: %s Read u16[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), hwordLength, hwordOffset);
+#endif
+	}
+#endif
+}
+
+void HwordMemory_t::write(const System_t context, const u16 * buffer, const size_t hwordLength, const size_t hwordOffset)
+{
+	// STL method generates security error on MSVC, so use memcpy instead.
+	// std::copy_n(buffer, hwordLength, mMemory.begin() + hwordOffset);
+	memcpy(&mMemory[hwordOffset], buffer, hwordLength * Constants::NUMBER_BYTES_IN_HWORD);
+
+#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+	if (mDebugWrites)
+	{
+#if DEBUG_LOG_VALUE_AS_HEX
+		log(Debug, "%s: %s Write u16[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), hwordLength, hwordOffset);
+#else
+		log(Debug, "%s: %s Write u16[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), hwordLength, hwordOffset);
+#endif
+	}
+#endif
 }
 
 void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset)
@@ -214,7 +245,7 @@ void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset,
 
 	// Read file in.
 	file.seekg(fileHwordOffset);
-	file.read((char*)&mMemory[memoryHwordOffset], fileHwordLength * Constants::NUMBER_BYTES_IN_HWORD);
+	file.read(reinterpret_cast<char*>(&mMemory[memoryHwordOffset]), fileHwordLength * Constants::NUMBER_BYTES_IN_HWORD);
 
 	// STL method below super slow for some reason...
 	/*
@@ -234,7 +265,7 @@ void HwordMemory_t::dump(const char * fileStr)
 		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
 
 	// Write file out.
-	file.write((char*)&mMemory[0], mMemoryByteSize);
+	file.write(reinterpret_cast<char*>(&mMemory[0]), mMemoryByteSize);
 
 	// STL method below super slow for some reason...
 	/*
