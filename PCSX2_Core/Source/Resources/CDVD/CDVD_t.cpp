@@ -9,8 +9,8 @@
 
 CDVD_t::CDVD_t() :
 	N_COMMAND(std::make_shared<CDVDRegister_NS_COMMAND_t>("CDVD N_COMMAND", true, true)),
-	N_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD N_READY", "CDVD N_DATA_IN", true, true, 16)),
-	N_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD N_DATA_OUT", true, true, 16, N_RDY_DIN)),
+	N_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD N_READY", "CDVD N_DATA_IN", false, false, 16)),
+	N_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD N_DATA_OUT", false, false, 16, N_RDY_DIN)),
 	BREAK(std::make_shared<Register8_t>("CDVD BREAK", true, true)),
 	INTR_STAT(std::make_shared<Register8_t>("CDVD INTR_STAT", true, true)),
 	STATUS(std::make_shared<Register8_t>("CDVD STATUS", true, true)),
@@ -21,9 +21,9 @@ CDVD_t::CDVD_t() :
 	TYPE(std::make_shared<Register8_t>("CDVD TYPE", true, true)),
 	REGISTER_2013(std::make_shared<Register8_t>("CDVD REGISTER_2013", true, true)),
 	RSV(std::make_shared<Register8_t>("CDVD RSV", true, true)),
-	S_COMMAND(std::make_shared<CDVDRegister_NS_COMMAND_t>("CDVD S_COMMAND", true, true)),
-	S_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD S_READY", "CDVD S_DATA_IN", true, true, 16)),
-	S_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD S_DATA_OUT", true, true, 16, S_RDY_DIN)),
+	S_COMMAND(std::make_shared<CDVDRegister_NS_COMMAND_t>("CDVD S_COMMAND", false, false)),
+	S_RDY_DIN(std::make_shared<CDVDRegister_NS_RDY_DIN_t>("CDVD S_READY", "CDVD S_DATA_IN", false, false, 16)),
+	S_DATA_OUT(std::make_shared<CDVDFIFOQueue_NS_DATA_OUT_t>("CDVD S_DATA_OUT", false, false, 16, S_RDY_DIN)),
 	KEY_20(std::make_shared<Register8_t>("CDVD KEY_20", true, true)),
 	KEY_21(std::make_shared<Register8_t>("CDVD KEY_21", true, true)),
 	KEY_22(std::make_shared<Register8_t>("CDVD KEY_22", true, true)),
@@ -46,5 +46,5 @@ CDVD_t::CDVD_t() :
 {
 	// Initalise CDVD NVRAM, based upon bios version loaded.
 	// TODO: implement version checking, for now, assumed v0.00 <= x < v1.70.
-	NVRAM = std::make_shared<CDVDNvram_000_t>();
+	NVRAM = std::make_shared<CDVDNvram_000_t>("CDVD NVRAM v0.00", false, false);
 }

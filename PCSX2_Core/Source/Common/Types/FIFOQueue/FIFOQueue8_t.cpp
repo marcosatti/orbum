@@ -46,7 +46,7 @@ void FIFOQueue8_t::writeByte(const System_t context, const u8 data)
 #if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #else
-		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u8, Size = %d, Value = %d.", getSystemStr(context), mMnemonic.c_str(), mFIFOQueue.size(), data);
 #endif
 	}
 #endif

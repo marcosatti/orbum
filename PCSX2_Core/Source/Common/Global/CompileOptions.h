@@ -70,8 +70,8 @@ Debug log options for the EECore and IOPCore, including:
 #if defined(BUILD_DEBUG)
  #define DEBUG_LOG_EE_SYSCALLS 0
  #define DEBUG_LOG_IOP_SYSCALLS 0
- #define DEBUG_LOG_EE_INTERRUPTS 0
- #define DEBUG_LOG_IOP_INTERRUPTS 0
+ #define DEBUG_LOG_EE_INTERRUPTS 1
+ #define DEBUG_LOG_IOP_INTERRUPTS 1
 #else
  #define DEBUG_LOG_EE_SYSCALLS 0
  #define DEBUG_LOG_IOP_SYSCALLS 0

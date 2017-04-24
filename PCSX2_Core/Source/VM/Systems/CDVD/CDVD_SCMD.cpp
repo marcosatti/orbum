@@ -34,3 +34,21 @@ void CDVD_s::SCMD_INSTRUCTION_41()
 	mCDVD->NVRAM->readConfigBlock(getContext(), buffer);
 	mCDVD->S_DATA_OUT->write(getContext(), reinterpret_cast<u8*>(buffer), 16);
 }
+
+void CDVD_s::SCMD_INSTRUCTION_42()
+{
+	// Write config data block and return success.
+	// A block is 16 bytes / 8 hwords long.
+	// TODO: check for endianess problems.
+	u16 buffer[8];
+	mCDVD->S_RDY_DIN->DATA_IN->read(getContext(), reinterpret_cast<u8*>(buffer), 16);
+	mCDVD->NVRAM->writeConfigBlock(getContext(), buffer);
+	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
+}
+
+void CDVD_s::SCMD_INSTRUCTION_43()
+{
+	// Reset config parameters and return success.
+	mCDVD->NVRAM->setConfigAccessParams(0, 0, 0, 0);
+	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
+}

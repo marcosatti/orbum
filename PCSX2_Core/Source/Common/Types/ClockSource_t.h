@@ -9,11 +9,12 @@ enum class ClockSource_t
 	VUClock,
 	IOPCoreClock,
 	IOPBusClock,
+	CDVDClock,
+	SPU2Clock,
 	GSCoreClock,
 	PixelClock,
 	HBlankClock,
 	VBlankClock,
-	CDVDClock,
 
 	COUNT
 };
@@ -29,11 +30,12 @@ static constexpr char * CLOCKSOURCE_STR[static_cast<int>(ClockSource_t::COUNT)] 
 	"VUClock",
 	"IOPCoreClock",
 	"IOPBusClock",
+	"CDVDClock",
+	"SPU2Clock",
 	"GSCoreClock",
 	"PixelClock",
 	"HBlankClock",
-	"VBlankClock",
-	"CDVDClock"
+	"VBlankClock"
 };
 static const char* getClockSourceStr(const ClockSource_t & system)
 {

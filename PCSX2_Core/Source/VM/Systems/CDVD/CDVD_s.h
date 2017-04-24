@@ -304,6 +304,8 @@ private:
 	void SCMD_INSTRUCTION_UNKNOWN();
 	void SCMD_INSTRUCTION_40();      // "sceCdOpenConfig" (3:1).
 	void SCMD_INSTRUCTION_41();      // "sceCdReadConfig" (0:16).
+	void SCMD_INSTRUCTION_42();      // "sceCdWriteConfig" (16:1).
+	void SCMD_INSTRUCTION_43();      // "sceCdCloseConfig" (0:1).
 	void(CDVD_s::* SCMD_INSTRUCTION_TABLE[Constants::CDVD::NUMBER_SCMD_INSTRUCTIONS])() =
 	{ 
 		/* 0x00 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
@@ -372,8 +374,8 @@ private:
 		/* 0x3F */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x40 */ &CDVD_s::SCMD_INSTRUCTION_40,
 		/* 0x41 */ &CDVD_s::SCMD_INSTRUCTION_41,
-		/* 0x42 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
-		/* 0x43 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
+		/* 0x42 */ &CDVD_s::SCMD_INSTRUCTION_42,
+		/* 0x43 */ &CDVD_s::SCMD_INSTRUCTION_43,
 		/* 0x44 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x45 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x46 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,

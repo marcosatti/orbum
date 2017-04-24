@@ -24,7 +24,7 @@ public:
 	*/
 	std::shared_ptr<SPU2Core_C0_t> CORE_0;
 	std::shared_ptr<SPU2Core_C1_t> CORE_1;
-	std::shared_ptr<SPU2Core_t>    CORES[Constants::IOP::SPU2::NUMBER_CORES];
+	std::shared_ptr<SPU2Core_t>    CORES[Constants::SPU2::NUMBER_CORES];
 
 	/*
 	SPDIF Registers.

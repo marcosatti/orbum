@@ -243,9 +243,9 @@ void ByteMemory_t::read(const System_t context, u8 * buffer, const size_t byteLe
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+		log(Debug, "%s: %s Read u8[0x%X], Size = 0x%X.", getSystemStr(context), mMnemonic.c_str(), byteOffset, byteLength);
 #else
-		log(Debug, "%s: %s Read u8[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+		log(Debug, "%s: %s Read u8[%d], Size = %d.", getSystemStr(context), mMnemonic.c_str(), byteOffset, byteLength);
 #endif
 	}
 #endif
@@ -261,9 +261,9 @@ void ByteMemory_t::write(const System_t context, const u8 * buffer, const size_t
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8[0x%X] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+		log(Debug, "%s: %s Write u8[0x%X], Size = 0x%X.", getSystemStr(context), mMnemonic.c_str(), byteOffset, byteLength);
 #else
-		log(Debug, "%s: %s Write u8[%d] @ 0x%08X.", getSystemStr(context), mMnemonic.c_str(), byteLength, byteOffset);
+		log(Debug, "%s: %s Write u8[%d], Size = %d.", getSystemStr(context), mMnemonic.c_str(), byteOffset, byteLength);
 #endif
 	}
 #endif

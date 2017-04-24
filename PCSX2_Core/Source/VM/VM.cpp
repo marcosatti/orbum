@@ -18,6 +18,7 @@
 #include "VM/Systems/IOP/Timers/IOPTimers_s.h"
 #include "VM/Systems/IOP/INTC/IOPIntc_s.h"
 #include "VM/Systems/CDVD/CDVD_s.h"
+#include "VM/Systems/SPU2/SPU2_s.h"
 #include "VM/Systems/GS/GSCore/GSCore_s.h"
 #include "VM/Systems/GS/CRTC/CRTC_s.h"
 
@@ -77,8 +78,9 @@ void VM::reset()
 		std::make_shared<IOPTimers_s>(this),
 		std::make_shared<IOPIntc_s>(this),
 		std::make_shared<CDVD_s>(this),
+		std::make_shared<SPU2_s>(this),
 		std::make_shared<GSCore_s>(this),
-		std::make_shared<CRTC_s>(this)
+		std::make_shared<CRTC_s>(this),
 	};
 
 	// Initalise components.

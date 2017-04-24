@@ -515,6 +515,7 @@
     <ClInclude Include="Source\VM\Systems\IOP\INTC\IOPIntc_s.h" />
     <ClInclude Include="Source\VM\Systems\IOP\Timers\IOPTimers_s.h" />
     <ClInclude Include="Source\VM\Systems\EE\VPU\VUInterpreter\VUInterpreter_s.h" />
+    <ClInclude Include="Source\VM\Systems\SPU2\SPU2_s.h" />
     <ClInclude Include="Source\VM\Types\VMOptions.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreException_t.h" />
     <ClInclude Include="Source\Resources\IOP\IOPCore\Types\IOPCoreCOP0_t.h" />
@@ -733,6 +734,7 @@
     <ClCompile Include="Source\Common\Types\Register\BitfieldRegister32_t.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\ByteMMU_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\SPU2\SPU2_s.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_s.cpp" />
     <ClCompile Include="Source\VM\VM.cpp" />
     <ClCompile Include="Source\Common\Types\Register\Register32_t.cpp" />

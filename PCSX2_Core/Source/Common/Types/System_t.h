@@ -22,6 +22,7 @@ enum class System_t
 	IOPTimers,
 	IOPIntc,
 	CDVD,
+	SPU2,
 	GSCore,
 	CRTC,
 
@@ -49,6 +50,7 @@ static constexpr char * SYSTEM_STR[static_cast<int>(System_t::COUNT)] =
 	"IOPTimers",
 	"IOPIntc",
 	"CDVD",
+	"SPU2"
 	"GSCore",
 	"PCRTC"
 };

@@ -150,7 +150,7 @@ public:
 	std::shared_ptr<SPU2CoreVoice_t> VOICE_21;
 	std::shared_ptr<SPU2CoreVoice_t> VOICE_22;
 	std::shared_ptr<SPU2CoreVoice_t> VOICE_23;
-	std::shared_ptr<SPU2CoreVoice_t> VOICES[Constants::IOP::SPU2::NUMBER_CORE_VOICES];
+	std::shared_ptr<SPU2CoreVoice_t> VOICES[Constants::SPU2::NUMBER_CORE_VOICES];
 };
 
 class SPU2Core_C0_t : public SPU2Core_t

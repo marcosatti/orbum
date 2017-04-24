@@ -23,9 +23,9 @@ void CDVDNvram_t::setConfigAccessParams(const int readWrite, const int areaIndex
 	mConfigBlockIndex = blockIndex;
 }
 
-CDVDNvram_000_t::CDVDNvram_000_t()
+CDVDNvram_000_t::CDVDNvram_000_t(const char * mnemonic, const bool debugReads, const bool debugWrites)
 {
-	Memory = std::make_shared<HwordMemory_t>("CDVD NVRAM v0.00", true, true, Constants::CDVD::SIZE_NVRAM);
+	Memory = std::make_shared<HwordMemory_t>(mnemonic, debugReads, debugWrites, Constants::CDVD::SIZE_NVRAM);
 }
 
 void CDVDNvram_000_t::readConfigBlock(const System_t context, u16 * buffer)

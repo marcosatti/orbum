@@ -314,6 +314,7 @@
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDRegisters_t.h" />
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDNvrams_t.h" />
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDFIFOQueues_t.h" />
+    <ClInclude Include="Source\VM\Systems\SPU2\SPU2_s.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -509,6 +510,7 @@
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_SCMD.cpp" />
     <ClCompile Include="Source\Resources\CDVD\Types\CDVDNvrams_t.cpp" />
     <ClCompile Include="Source\Resources\CDVD\Types\CDVDFIFOQueues_t.cpp" />
+    <ClCompile Include="Source\VM\Systems\SPU2\SPU2_s.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

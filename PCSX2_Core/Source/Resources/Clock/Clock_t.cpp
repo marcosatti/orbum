@@ -7,7 +7,9 @@
 #include "Resources/Clock/Clock_t.h"
 
 Clock_t::Clock_t() :
-	mPixelClockSpeed(Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT)
+	mPixelClockSpeed(Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT), 
+	DEBUG_TIME_ELAPSED_CURRENT(0), 
+	DEBUG_TIME_ELAPSED_LAST(0)
 {
 	// Set default system biases of 1.0.
 	for (auto& system : mSystemTickState)
@@ -77,6 +79,12 @@ void Clock_t::addSystemClockTicksAll(const double time)
 	mSystemTickState[System_t::IOPTimers].state[ClockSource_t::IOPBusClock] += time / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * mSystemTickState[System_t::IOPTimers].bias;
 	mSystemTickState[System_t::IOPIntc].state[ClockSource_t::IOPBusClock] += time / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * mSystemTickState[System_t::IOPIntc].bias;
 
+	// Produce CDVDClock ticks.
+	mSystemTickState[System_t::CDVD].state[ClockSource_t::CDVDClock] += time / 1.0e6 * Constants::CDVD::CDVD_CLK_SPEED * mSystemTickState[System_t::CDVD].bias;
+
+	// Produce SPU2Clock ticks.
+	mSystemTickState[System_t::SPU2].state[ClockSource_t::SPU2Clock] += time / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * mSystemTickState[System_t::SPU2].bias;
+
 	// Produce GSCoreClock ticks.
 	mSystemTickState[System_t::GSCore].state[ClockSource_t::GSCoreClock] += time / 1.0e6 * Constants::GS::GSCore::GSCORE_CLK_SPEED * mSystemTickState[System_t::GSCore].bias;
 
@@ -84,8 +92,13 @@ void Clock_t::addSystemClockTicksAll(const double time)
 	mSystemTickState[System_t::CRTC].state[ClockSource_t::PixelClock] += time / 1.0e6 * mPixelClockSpeed * mSystemTickState[System_t::CRTC].bias;
 	mSystemTickState[System_t::IOPTimers].state[ClockSource_t::PixelClock] += time / 1.0e6 * mPixelClockSpeed * mSystemTickState[System_t::IOPTimers].bias;
 
-	// Produce CDVDClock ticks.
-	mSystemTickState[System_t::CDVD].state[ClockSource_t::CDVDClock] += time / 1.0e6 * Constants::CDVD::CDVD_CLK_SPEED * mSystemTickState[System_t::CDVD].bias;
+	// Debug log time elapsed every second.
+	DEBUG_TIME_ELAPSED_CURRENT += time;
+	if ((DEBUG_TIME_ELAPSED_CURRENT - DEBUG_TIME_ELAPSED_LAST) > 1.0e6)
+	{
+		log(Info, "Emulator time elapsed = %.2fs.", (DEBUG_TIME_ELAPSED_CURRENT - DEBUG_TIME_ELAPSED_LAST) / 1.0e6);
+		DEBUG_TIME_ELAPSED_LAST = DEBUG_TIME_ELAPSED_CURRENT;
+	}
 }
 
 void Clock_t::addSystemClockTicks(const System_t system, const ClockSource_t clockSource, const int ticks)

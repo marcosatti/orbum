@@ -72,5 +72,9 @@ private:
 	Pixel clock current speed.
 	*/
 	double mPixelClockSpeed;
+
+	// DEBUG: time elapsed counter (us).
+	double DEBUG_TIME_ELAPSED_CURRENT;
+	double DEBUG_TIME_ELAPSED_LAST;
 };
 

@@ -133,7 +133,7 @@ Class representing the NVRAM for bios versions v0.00 <= x < 1.70.
 class CDVDNvram_000_t : public CDVDNvram_t
 {
 public:
-	CDVDNvram_000_t();
+	CDVDNvram_000_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
 	Implementation of the NVRAM virtual functions.
