@@ -66,7 +66,7 @@ public:
 };
 
 /*
-The 16-bit (word) version of the IOP Timers Count register.
+The 32-bit (word) version of the IOP Timers Count register.
 */
 class IOPTimersTimerRegister_WORD_COUNT_t : public IOPTimersTimerRegister_COUNT_t
 {

@@ -7,9 +7,9 @@
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
 
 SPU2_t::SPU2_t() :
-	CORE_0(std::make_shared<SPU2Core_C0_t>()),
-	CORE_1(std::make_shared<SPU2Core_C1_t>()),
-	CORES{ CORE_0,  CORE_1 },
+	CORE_0(nullptr),
+	CORE_1(nullptr),
+	CORES{},
 	SPDIF_OUT(std::make_shared<Register16_t>("SPU2 SPDIF_OUT", false, false)),
 	SPDIF_IRQINFO(std::make_shared<Register16_t>("SPU2 SPDIF_IRQINFO", false, false)),
 	SPDIF_07C4(std::make_shared<Register16_t>("SPU2 SPDIF_07C4", false, false)),

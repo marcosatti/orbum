@@ -1,47 +1,50 @@
 #pragma once
 
-#include <type_traits>
-#include <vector>
+#include <iterator>
 #include <initializer_list>
 
 /*
-An enum 'map' type, but using a std::vector as the underlying container for performance.
-This will only compile if used with an enum and enumKey_t::COUNT exists.
+An enum 'map' type, but using a C array as the underlying container for performance.
+This will only work if used with an enum and enumKey_t::COUNT exists.
 It is up to the user to provide a sequential enum with no gaps, and COUNT will be the last enum entry.
 Can be used with enum classes or regular enums.
-Assumes int as the underlying storage format.
+Assumes int as the underlying storage & enum format.
 
 TODO: Move into solution global types.
 */
-template<typename enumKey_t, typename value_t>
+template<typename EnumKey_t, typename Value_t>
 class EnumMap_t
 {
 public:
-	static_assert(std::is_enum<enumKey_t>::value, "Supplied template argument was not of enum type.");
+	static_assert(std::is_enum<EnumKey_t>::value, "Supplied template argument EnumKey_t was not of enum type.");
 
 	/*
-	Constructs the map, allocating space for enumKey_t::COUNT values and setting the key values.
-	Optionally with an initaliser list that must be same size as enumKey_t::COUNT.
+	Uses own version of std::pair<K,V> as Visual Studio doesn't like it for whatever reason (intelisense errors)... still compiles fine however.
 	*/
-	EnumMap_t()
+	struct Element_t
 	{
-		mMap.resize(static_cast<int>(enumKey_t::COUNT));
-		for (int i = 0; i < mMap.size(); i++)
+		EnumKey_t first;
+		Value_t second;
+	};
+
+	/*
+	Construct the map using default initalised values or with a initaliser list.
+	*/
+	constexpr EnumMap_t() : mMap{}
+	{
+		for (int i = 0; i < static_cast<int>(EnumKey_t::COUNT); i++)
 		{
-			auto& entry = mMap[i];
-			entry.first = static_cast<enumKey_t>(i);
+			Element_t & entry = mMap[i];
+			entry.first = static_cast<EnumKey_t>(i);
+			entry.second = Value_t();
 		}
 	}
-	EnumMap_t(const std::initializer_list<value_t> & list)
+	constexpr EnumMap_t(const std::initializer_list<Value_t> & list) : mMap{}
 	{
-		if (list.size() != static_cast<int>(enumKey_t::COUNT)) 
-			throw std::exception("(EnumMap_t) Supplied initaliser list was not the required size.");
-
-		mMap.resize(static_cast<int>(enumKey_t::COUNT));
-		for (int i = 0; i < mMap.size(); i++)
+		for (int i = 0; i < static_cast<int>(EnumKey_t::COUNT); i++)
 		{
-			auto& entry = mMap[i];
-			entry.first = static_cast<enumKey_t>(i);
+			Element_t & entry = mMap[i];
+			entry.first = static_cast<EnumKey_t>(i);
 			entry.second = list.begin()[i];
 		}
 	}
@@ -49,11 +52,11 @@ public:
 	/*
 	Returns a value reference for the given key.
 	*/
-	value_t & operator[](const enumKey_t & key)
+	Value_t & operator[](const EnumKey_t & key)
 	{
 		return mMap[static_cast<int>(key)].second;
 	}
-	const value_t & operator[](const enumKey_t & key) const
+	constexpr const Value_t & operator[](const EnumKey_t & key) const
 	{
 		return mMap[static_cast<int>(key)].second;
 	}
@@ -61,26 +64,26 @@ public:
 	/*
 	Iterator functions.
 	*/
-	typename std::vector<std::pair<enumKey_t, value_t>>::iterator begin()
+	Element_t * begin()
 	{
-		return mMap.begin();
+		return std::begin(mMap);
 	}
-	typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator begin() const
+	constexpr const Element_t * begin() const
 	{
-		return mMap.begin();
+		return std::begin(mMap);
 	}
-	typename std::vector<std::pair<enumKey_t, value_t>>::iterator end()
+	Element_t * end()
 	{
-		return mMap.end();
+		return std::end(mMap);
 	}
-	typename std::vector<std::pair<enumKey_t, value_t>>::const_iterator end() const
+	constexpr const Element_t * end() const
 	{
-		return mMap.end();
+		return std::end(mMap);
 	}
 
 private:
 	/*
-	Underlying vector used as the map.
+	Underlying array for map.
 	*/
-	std::vector<std::pair<enumKey_t, value_t>> mMap;
+	Element_t mMap[static_cast<int>(EnumKey_t::COUNT)];
 };

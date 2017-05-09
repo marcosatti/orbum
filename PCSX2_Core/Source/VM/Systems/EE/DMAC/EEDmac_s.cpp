@@ -45,7 +45,7 @@ void EEDmac_s::initalise()
 		if (channel->ASR0 != nullptr) channel->ASR0->initalise();
 		if (channel->ASR1 != nullptr) channel->ASR1->initalise();
 		if (channel->SADR != nullptr) channel->SADR->initalise();
-		if (channel->mFIFOQueue != nullptr) channel->mFIFOQueue->initalise();
+		if (channel->FIFOQueue != nullptr) channel->FIFOQueue->initalise();
 	}
 
 	// Reset DMAC.
@@ -188,10 +188,10 @@ int EEDmac_s::transferData() const
 		if (direction == Direction_t::FROM)
 		{
 			// Check if channel does not have data ready (at least 4 x u32's) - need to try again next cycle.
-			if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+			if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
 				return 0;
 
-			u128 packet = mChannel->mFIFOQueue->readQword(getContext());
+			u128 packet = mChannel->FIFOQueue->readQword(getContext());
 			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
 
 #if DEBUG_LOG_EE_DMAC_XFERS
@@ -202,11 +202,11 @@ int EEDmac_s::transferData() const
 		else if (direction == Direction_t::TO)
 		{
 			// Check if channel is full (we need at least 4 x u32 spaces) - need to try again next cycle.
-			if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+			if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 				return 0;
 
 			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
-			mChannel->mFIFOQueue->writeQword(getContext(), packet);
+			mChannel->FIFOQueue->writeQword(getContext(), packet);
 
 #if DEBUG_LOG_EE_DMAC_XFERS
 			log(Debug, "EE DMAC Write u128 channel %s, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X <- MemAddr = 0x%08X",
@@ -491,7 +491,7 @@ bool EEDmac_s::readChainSourceTag()
 	// Check first if we need to transfer the tag - return false if the channel queue is full.
 	if (mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
-		if (mChannel->mFIFOQueue->getCurrentSize() > (mChannel->mFIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 			return false;
 	}
 
@@ -516,7 +516,7 @@ bool EEDmac_s::readChainSourceTag()
 	{
 		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
 		u128 sendTag = u128(tag.UW[2], tag.UW[3], 0, 0);
-		mChannel->mFIFOQueue->writeQword(getContext(), sendTag);
+		mChannel->FIFOQueue->writeQword(getContext(), sendTag);
 	}
 
 	return true;
@@ -525,11 +525,11 @@ bool EEDmac_s::readChainSourceTag()
 bool EEDmac_s::readChainDestTag()
 {
 	// Check first if there is data available.
-	if (mChannel->mFIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
 		return false;
 
 	// Read tag from channel FIFO.
-	const u128 tag = mChannel->mFIFOQueue->readQword(getContext());
+	const u128 tag = mChannel->FIFOQueue->readQword(getContext());
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag = EEDMAtag_t(tag.UW[0], tag.UW[1]);

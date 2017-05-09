@@ -50,7 +50,7 @@ public:
 	/*
 	A reference to the associated FIFO queue, set at creation.
 	*/
-	std::shared_ptr<FIFOQueue32_t> mFIFOQueue;
+	std::shared_ptr<FIFOQueue32_t> FIFOQueue;
 
 	/*
 	Returns the ID of this channel.
@@ -60,7 +60,7 @@ public:
 	/*
 	Returns the constant properties for this channel.
 	*/
-	const EEDmacChannelTable::EEDmacChannelInfo_t * getInfo();
+	const EEDmacChannelTable::EEDmacChannelInfo_t * getInfo() const;
 
 private:
 	/*

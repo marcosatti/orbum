@@ -74,3 +74,17 @@ SPU2CoreRegister_ATTR_t::SPU2CoreRegister_ATTR_t(const char * mnemonic, const bo
 	registerField(Fields::Mute, "Mute", 14, 1, 0);
 	registerField(Fields::CoreEnable, "CoreEnable", 15, 1, 0);
 }
+
+SPU2CoreRegister_ADMAS_t::SPU2CoreRegister_ADMAS_t(const char* mnemonic, bool debugReads, bool debugWrites) : 
+	Register16_t(mnemonic, debugReads, debugWrites),
+	mCount(0)
+{
+}
+
+void SPU2CoreRegister_ADMAS_t::writeHword(const System_t context, u16 value)
+{
+	if (context == System_t::IOPCore)
+		mCount = 0;
+
+	Register16_t::writeHword(context, value);
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/EnumMap_t.h"
 
 enum class ClockSource_t
 {
@@ -23,7 +24,7 @@ enum class ClockSource_t
 /*
 Static array of names used for debug logging.
 */
-static constexpr char * CLOCKSOURCE_STR[static_cast<int>(ClockSource_t::COUNT)] =
+static constexpr EnumMap_t<ClockSource_t, const char *> CLOCKSOURCE_STR =
 {
 	"EECoreClock",
 	"EEBusClock",
@@ -37,8 +38,4 @@ static constexpr char * CLOCKSOURCE_STR[static_cast<int>(ClockSource_t::COUNT)] 
 	"HBlankClock",
 	"VBlankClock"
 };
-static const char* getClockSourceStr(const ClockSource_t & system)
-{
-	return CLOCKSOURCE_STR[static_cast<int>(system)];
-}
 #endif

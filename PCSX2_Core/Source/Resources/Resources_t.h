@@ -74,10 +74,12 @@ public:
 private:
 	/*
 	Post initalisation functions.
+	Initalises any resources that are dependant on another.
 	*/
 	void postInit_EE() const;
 	void postInit_EE_DMAC() const;
 	void postInit_EE_VPU_VU() const;
 	void postInit_IOP() const;
 	void postInit_IOP_DMAC() const;
+	void postInit_SPU2() const;
 };

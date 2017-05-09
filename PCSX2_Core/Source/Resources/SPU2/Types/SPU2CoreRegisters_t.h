@@ -3,7 +3,9 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/Register/Register16_t.h"
 #include "Common/Types/Register/BitfieldRegister16_t.h"
+#include "Common/Tables/SPU2CoreTable.h"
 
 /*
 The SPU2 Core (Voice) VOL general purpose bitfield register.
@@ -116,4 +118,25 @@ public:
 	};
 
 	SPU2CoreRegister_ATTR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+};
+
+/*
+The SPU2 Core "ADMAS" (auto DMA status) register.
+Contains the transfer state parameters, such as current length, updated when a data unit is sent/recieved through ADMA.
+See also the SPU2 system logic.
+*/
+class SPU2CoreRegister_ADMAS_t : public Register16_t
+{
+public:
+	SPU2CoreRegister_ADMAS_t(const char* mnemonic, bool debugReads, bool debugWrites);
+
+	/*
+	When this register is written to, resets the transfer count state.
+	*/
+	void writeHword(const System_t context, u16 value) override;
+
+	/*
+	ADMA transfer count state, updated by the SPU2 logic.
+	*/
+	size_t mCount;
 };

@@ -16,9 +16,9 @@ u8 Register16_t::readByte(const System_t context, size_t arrayIndex)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #else
-		log(Debug, "%s: %s Read u8[%d], Value = %d.", getSystemStr(context), mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #endif
 	}
 #endif
@@ -34,9 +34,9 @@ void Register16_t::writeByte(const System_t context, size_t arrayIndex, u8 value
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #else
-		log(Debug, "%s: %s Write u8[%d], Value = %d.", getSystemStr(context), mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #endif
 	}
 #endif
@@ -48,9 +48,9 @@ u16 Register16_t::readHword(const System_t context)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u16, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), UH);
+		log(Debug, "%s: %s Read u16, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UH);
 #else
-		log(Debug, "%s: %s Read u16, Value = %d.", getSystemStr(context), mMnemonic.c_str(), UH);
+		log(Debug, "%s: %s Read u16, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UH);
 #endif
 	}
 #endif
@@ -66,9 +66,9 @@ void Register16_t::writeHword(const System_t context, u16 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u16, Value = 0x%X.", getSystemStr(context), mMnemonic.c_str(), UH);
+		log(Debug, "%s: %s Write u16, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UH);
 #else
-		log(Debug, "%s: %s Write u16, Value = %d.", getSystemStr(context), mMnemonic.c_str(), UH);
+		log(Debug, "%s: %s Write u16, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UH);
 #endif
 	}
 #endif

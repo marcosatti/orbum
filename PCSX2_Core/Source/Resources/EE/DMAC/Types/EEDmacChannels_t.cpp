@@ -14,7 +14,7 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID) :
 	ASR1(nullptr),
 	SADR(nullptr),
 	ASR{ },
-	mFIFOQueue(nullptr),
+	FIFOQueue(nullptr),
 	mChannelID(channelID)
 {
 	// Perform lookup for constant channel info.
@@ -30,7 +30,7 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFO
 	ASR1(nullptr),
 	SADR(nullptr),
 	ASR{ },
-	mFIFOQueue(fifoQueue),
+	FIFOQueue(fifoQueue),
 	mChannelID(channelID)
 {
 	// Perform lookup for constant channel info.
@@ -42,7 +42,7 @@ int EEDmacChannel_t::getChannelID() const
 	return mChannelID;
 }
 
-const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getInfo()
+const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getInfo() const
 {
 	return mInfo;
 }

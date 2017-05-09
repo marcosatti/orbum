@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Common/Global/Globals.h"
+#include "Common/Tables/SPU2CoreTable.h"
 
 class SPU2CoreVoice_t;
 class SPU2CoreRegister_CHAN0_t;
@@ -10,9 +11,11 @@ class SPU2CoreRegister_CHAN1_t;
 class SPU2CoreRegister_MMIX_t;
 class SPU2CoreRegister_ATTR_t;
 class SPU2CoreRegister_VOL_t;
+class SPU2CoreRegister_ADMAS_t;
 class ByteMemory_t;
 class Register16_t;
 class SPU2CoreVoice_C0V0_t;
+class FIFOQueue32_t;
 
 /*
 Base class representing a SPU2 core.
@@ -21,7 +24,7 @@ There are 2 individual cores in the SPU2, each with 24 voice channels.
 class SPU2Core_t
 {
 public:
-	SPU2Core_t();
+	SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	/*
 	SPU2 Core registers.
@@ -50,7 +53,7 @@ public:
 	std::shared_ptr<Register16_t>             TSAL;
 	std::shared_ptr<Register16_t>             DATA0;
 	std::shared_ptr<Register16_t>             DATA1;
-	std::shared_ptr<Register16_t>             ADMAS; // "AutoDMA Status".
+	std::shared_ptr<SPU2CoreRegister_ADMAS_t> ADMAS; // "AutoDMA Status".
 	std::shared_ptr<Register16_t>             ESAH;
 	std::shared_ptr<Register16_t>             ESAL;
 	std::shared_ptr<Register16_t>             APF1_SIZEH;
@@ -151,12 +154,40 @@ public:
 	std::shared_ptr<SPU2CoreVoice_t> VOICE_22;
 	std::shared_ptr<SPU2CoreVoice_t> VOICE_23;
 	std::shared_ptr<SPU2CoreVoice_t> VOICES[Constants::SPU2::NUMBER_CORE_VOICES];
+
+	/*
+	Associated DMA FIFO queue attached to this core.
+	*/
+	std::shared_ptr<FIFOQueue32_t> FIFOQueue;
+	
+	/*
+	Returns the core ID.	
+	*/
+	int getCoreID() const;
+
+	/*
+	Returns the constant properties for this core.
+	*/
+	const SPU2CoreTable::SPU2CoreInfo_t * getInfo() const;
+
+	/*
+	Returns if the core is enabled for auto DMA transfers, by checking that ((coreIdx + 1) & ADMAS) > 0.
+	From PCSX2's SPU2-X dma.cpp.
+	TODO: Investigate more, this does not make much sense to me. The SPU2 overview manual mentions ADMA reads and writes, but only writes are ever used it seems.
+	*/
+	bool isADMAEnabled(const System_t context) const;
+
+private:
+	/*
+	Core ID.
+	*/
+	int mCoreID;
 };
 
 class SPU2Core_C0_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C0_t();
+	SPU2Core_C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	/*
 	Unknown memory/registers.
@@ -169,7 +200,7 @@ public:
 class SPU2Core_C1_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C1_t();
+	SPU2Core_C1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
 
 	static constexpr int CORE_ID = 1;
 };

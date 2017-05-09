@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Global/Globals.h"
+#include "Common/Types/EnumMap_t.h"
 
 /*
 Represents a list of systems included in the PS2.
@@ -33,7 +34,7 @@ enum class System_t
 /*
 Static array of names used for debug logging.
 */
-static constexpr char * SYSTEM_STR[static_cast<int>(System_t::COUNT)] = 
+static constexpr EnumMap_t<System_t, const char *> SYSTEM_STR = 
 { 
 	"EECore", 
 	"EEDmac", 
@@ -50,12 +51,8 @@ static constexpr char * SYSTEM_STR[static_cast<int>(System_t::COUNT)] =
 	"IOPTimers",
 	"IOPIntc",
 	"CDVD",
-	"SPU2"
+	"SPU2",
 	"GSCore",
 	"PCRTC"
 };
-static const char* getSystemStr(const System_t & system)
-{
-	return SYSTEM_STR[static_cast<int>(system)];
-}
 #endif
