@@ -102,6 +102,7 @@ public:
 
 /*
 The SPU2 Core "ATTR" (attributes) register.
+Contains the DMA transfer state parameters, see below for information.
 */
 class SPU2CoreRegister_ATTR_t : public BitfieldRegister16_t
 {
@@ -118,26 +119,23 @@ public:
 	};
 
 	SPU2CoreRegister_ATTR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-};
-
-/*
-The SPU2 Core "ADMAS" (auto DMA status) register.
-Contains the transfer state parameters, such as current count, incremented when a data unit is sent/recieved through ADMA.
-See also the SPU2 system logic.
-*/
-class SPU2CoreRegister_ADMAS_t : public Register16_t
-{
-public:
-	SPU2CoreRegister_ADMAS_t(const char* mnemonic, bool debugReads, bool debugWrites);
 
 	/*
-	When this register is written to, resets the transfer count state.
+	When this register is written to, resets the DMA transfer state.
 	*/
 	void writeHword(const System_t context, u16 value) override;
 
 	/*
-	ADMA transfer count state, updated by the SPU2 logic.
-  This is the count in terms of words, not hwords (a word is one DMA data unit in the IOP <-> SPU2 context)!
+	Current auto/manual DMA transfer count state, in terms of hwords.
+	Reset upon the register being written to.
 	*/
-	size_t mCount;
+	size_t mDMACount;
+
+	/*
+	Current auto/manual DMA transfer addresses for the left and right channels.
+	Each time a DMA data unit is transferred, one of these addresses will be incremented to point to the next available space in memory. 
+	Reset upon the register being written to.
+	*/
+	u32 mDMATransferAddressLeft;
+	u32 mDMATransferAddressRight;
 };

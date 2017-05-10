@@ -292,7 +292,7 @@ int IOPDmac_s::transferData() const
 		mChannel->MADR->decrement(getContext());
 
 	// Update number of word units left (BCR).
-	mChannel->BCR->decrement();
+	mChannel->BCR->decrement(getContext());
 
 	return 1;
 }

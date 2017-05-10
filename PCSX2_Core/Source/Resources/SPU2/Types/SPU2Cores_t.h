@@ -12,7 +12,6 @@ class SPU2CoreRegister_CHAN1_t;
 class SPU2CoreRegister_MMIX_t;
 class SPU2CoreRegister_ATTR_t;
 class SPU2CoreRegister_VOL_t;
-class SPU2CoreRegister_ADMAS_t;
 class ByteMemory_t;
 class Register16_t;
 class PairRegister16_t;
@@ -55,7 +54,7 @@ public:
 	std::shared_ptr<PairRegister16_t>         TSAL;
 	std::shared_ptr<Register16_t>             DATA0;
 	std::shared_ptr<Register16_t>             DATA1;
-	std::shared_ptr<SPU2CoreRegister_ADMAS_t> ADMAS; // "AutoDMA Status".
+	std::shared_ptr<Register16_t>             ADMAS; // "AutoDMA Status".
 	std::shared_ptr<Register16_t>             ESAH;
 	std::shared_ptr<Register16_t>             ESAL;
 	std::shared_ptr<Register16_t>             APF1_SIZEH;

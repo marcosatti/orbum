@@ -85,8 +85,9 @@ public:
 
 	/*
 	Decrements the tag transfer size by 1.
+	If we are in slice mode (using both BS and BA), it will decrement automatically BA and set BS back to the original value.
 	*/
-	void decrement();
+	void decrement(const System_t context);
 
 	/*
 	Returns if the tag transfer size is finished.

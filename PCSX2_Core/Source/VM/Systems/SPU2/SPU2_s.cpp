@@ -80,7 +80,7 @@ bool SPU2_s::handleDMATransfer()
 		throw std::runtime_error("SPU2 ATTR DMABits field set to non-zero. What is this for?");
 
 	bool dmaPerformed = false;
-	switch (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMAMode > 0))
+	switch (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMAMode))
 	{
 	case 0:
 		// Auto DMA write mode.
@@ -126,44 +126,47 @@ int SPU2_s::transferData_ADMA_Write() const
 	// Only transfer if data is available.
 	if (mCore->FIFOQueue->getCurrentSize() > 0)
 	{
-		// Get the source or destination transfer start address (TSAL/H). The address is always relative to the base addresses in the SPU2 memory.
+		// Get the source or destination transfer start address (TSAL/H). The address is always relative to the defined base addresses in the SPU2 memory.
 		// See page 28 of the SPU2 Overview manual for these base addresses.
 		u32 TSA = mCore->TSAL->readPairWord(getContext());
 
-    // Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
-    if (mCore->ADMAS->mCount < (0x100 / 2))
-    {
-      // Left sound block.
-      u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA;
+		// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
+		// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
+		if (((mCore->ATTR->mDMACount / 0x100) % 2) == 0)
+		{
+			// Left sound block.
+			// Get left channel address.
+			u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA + mCore->ATTR->mDMATransferAddressLeft;
 
-      // Perform write from FIFO to left channel memory.
-      u32 data = mCore->FIFOQueue->readWord(getContext());
-      mSPU2->MainMemory->writeWord(getContext(), leftAddr, data);
+			// Perform word write from FIFO to left channel memory (2 hwords).
+			u32 data = mCore->FIFOQueue->readWord(getContext());
+			mSPU2->MainMemory->writeWord(getContext(), leftAddr, data);
 
-      // Increment the transfer count.
-      mCore->ADMAS->mCount += 1;
-    }
-    else
-    {
-      // Right sound block.
-      u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA;
+			// Update the DMA transfer address (move forward 2 hwords).
+			mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
+		}
+		else
+		{
+			// Right sound block.
+			// Get right channel address.
+			u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA + mCore->ATTR->mDMATransferAddressRight;
 
-      // Perform write from FIFO to left channel memory.
-      u32 data = mCore->FIFOQueue->readWord(getContext());
-      mSPU2->MainMemory->writeWord(getContext(), rightAddr, data);
+			// Perform word write from FIFO to right channel memory (2 hwords).
+			u32 data = mCore->FIFOQueue->readWord(getContext());
+			mSPU2->MainMemory->writeWord(getContext(), rightAddr, data);
 
-      // Increment the transfer count.
-      mCore->ADMAS->mCount += 1;
-    }
-    
-    // Update TSA to point to the next transfer location (move forward 2 hwords == 1 word aka DMA unit).
-    mCore->TSAL->writePairWord(getContext(), mCore->TSAL->readPairWord(getContext()) + 2);
+			// Update the DMA transfer address (move forward 2 hwords).
+			mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
+		}
+
+		// Increment the transfer count (2 hwords).
+		mCore->ATTR->mDMACount += Constants::NUMBER_HWORDS_IN_WORD;
 		
-    // ADMA has completed one transfer.
+		// ADMA has completed one transfer.
 		return 1;
 	}
 
-  // No data to process.
+	// No data to process.
 	return 0;
 }
 

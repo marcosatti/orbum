@@ -69,14 +69,18 @@ void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, u32 value)
 	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
-void IOPDmacChannelRegister_BCR_t::decrement()
+void IOPDmacChannelRegister_BCR_t::decrement(const System_t context)
 {
 	// If BS was set to 0 and we are in normal transfer mode (ie: transfer 0x10000 words), we rely on underflow to get us to the proper value (0xFFFF).
 	mBS--;
 
 	// Only decrement BA if there is blocks remaining, otherwise we are at the end of a transfer for chain/linked-list mode (there is no 0xFFFF thing like BS).
+	// BS is set back to the original value when a new block is being transferred.
 	if (mBS == 0 && mBA > 0)
+	{
+		mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
 		mBA--;
+	}
 }
 
 bool IOPDmacChannelRegister_BCR_t::isFinished(bool checkBS) const
