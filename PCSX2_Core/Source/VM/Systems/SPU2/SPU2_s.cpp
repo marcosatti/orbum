@@ -4,6 +4,8 @@
 #include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
 #include "Common/Types/Memory/HwordMemory_t.h"
 #include "Common/Tables/SPU2CoreTable.h"
+#include "Common/Types/Register/Register16_t.h"
+#include "Common/Types/Register/PairRegister16_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/SPU2/SPU2_s.h"
@@ -126,25 +128,43 @@ int SPU2_s::transferData_ADMA_Write() const
 	{
 		// Get the source or destination transfer start address (TSAL/H). The address is always relative to the base addresses in the SPU2 memory.
 		// See page 28 of the SPU2 Overview manual for these base addresses.
-		u32 TSA = ((mCore->TSAH->readHword(getContext()) << 16) | mCore->TSAL->readHword(getContext()));
+		u32 TSA = mCore->TSAL->readPairWord(getContext());
 
-		// ADMA write data is split up into the left and right sound channels, and stored at different locations.
-		u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA;
-		u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA;
+    // Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
+    if (mCore->ADMAS->mCount < (0x100 / 2))
+    {
+      // Left sound block.
+      u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA;
 
-		// Perform write from FIFO to memory for left then right channels.
-		u32 data = mCore->FIFOQueue->readWord(getContext());
-		mSPU2->MainMemory->writeWord(getContext(), leftAddr, data);
+      // Perform write from FIFO to left channel memory.
+      u32 data = mCore->FIFOQueue->readWord(getContext());
+      mSPU2->MainMemory->writeWord(getContext(), leftAddr, data);
 
-		// Reduce the transfer count.
-		mCore->ADMAS->mCount -= 1;
+      // Increment the transfer count.
+      mCore->ADMAS->mCount += 1;
+    }
+    else
+    {
+      // Right sound block.
+      u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA;
 
+      // Perform write from FIFO to left channel memory.
+      u32 data = mCore->FIFOQueue->readWord(getContext());
+      mSPU2->MainMemory->writeWord(getContext(), rightAddr, data);
+
+      // Increment the transfer count.
+      mCore->ADMAS->mCount += 1;
+    }
+    
+    // Update TSA to point to the next transfer location (move forward 2 hwords == 1 word aka DMA unit).
+    mCore->TSAL->writePairWord(getContext(), mCore->TSAL->readPairWord(getContext()) + 2);
+		
+    // ADMA has completed one transfer.
 		return 1;
 	}
-	else
-	{
-		return 0;
-	}
+
+  // No data to process.
+	return 0;
 }
 
 int SPU2_s::transferData_ADMA_Read() const

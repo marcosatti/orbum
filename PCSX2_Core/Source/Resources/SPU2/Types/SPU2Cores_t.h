@@ -4,6 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/SPU2CoreTable.h"
+#include "Common/Types/System_t.h"
 
 class SPU2CoreVoice_t;
 class SPU2CoreRegister_CHAN0_t;
@@ -14,6 +15,7 @@ class SPU2CoreRegister_VOL_t;
 class SPU2CoreRegister_ADMAS_t;
 class ByteMemory_t;
 class Register16_t;
+class PairRegister16_t;
 class SPU2CoreVoice_C0V0_t;
 class FIFOQueue32_t;
 
@@ -50,7 +52,7 @@ public:
 	std::shared_ptr<SPU2CoreRegister_CHAN0_t> KOF0;
 	std::shared_ptr<SPU2CoreRegister_CHAN1_t> KOF1;
 	std::shared_ptr<Register16_t>             TSAH;
-	std::shared_ptr<Register16_t>             TSAL;
+	std::shared_ptr<PairRegister16_t>         TSAL;
 	std::shared_ptr<Register16_t>             DATA0;
 	std::shared_ptr<Register16_t>             DATA1;
 	std::shared_ptr<SPU2CoreRegister_ADMAS_t> ADMAS; // "AutoDMA Status".
@@ -179,7 +181,7 @@ public:
 
 private:
 	/*
-	Core ID.
+	SPU2 Core ID.
 	*/
 	int mCoreID;
 };

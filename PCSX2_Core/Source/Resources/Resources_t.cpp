@@ -7,6 +7,7 @@
 #include "Common/Types/Register/PCRegister16_t.h"
 #include "Common/Types/Register/ConstantRegister8_t.h"
 #include "Common/Types/Register/ConstantRegister32_t.h"
+#include "Common/Types/Register/PairRegister16_t.h"
 #include "Common/Types/Memory/ByteMemory_t.h"
 #include "Common/Types/Memory/ROByteMemory_t.h"
 #include "Common/Types/Memory/ConstantByteMemory_t.h"

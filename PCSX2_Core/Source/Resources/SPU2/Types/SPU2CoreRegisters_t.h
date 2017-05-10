@@ -122,7 +122,7 @@ public:
 
 /*
 The SPU2 Core "ADMAS" (auto DMA status) register.
-Contains the transfer state parameters, such as current length, updated when a data unit is sent/recieved through ADMA.
+Contains the transfer state parameters, such as current count, incremented when a data unit is sent/recieved through ADMA.
 See also the SPU2 system logic.
 */
 class SPU2CoreRegister_ADMAS_t : public Register16_t
@@ -137,6 +137,7 @@ public:
 
 	/*
 	ADMA transfer count state, updated by the SPU2 logic.
+  This is the count in terms of words, not hwords (a word is one DMA data unit in the IOP <-> SPU2 context)!
 	*/
 	size_t mCount;
 };

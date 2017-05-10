@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Types/Register/Register16_t.h"
+#include "Common/Types/Register/PairRegister16_t.h"
 #include "Common/Types/Memory/ByteMemory_t.h"
 
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
@@ -174,7 +175,7 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 KOF0", false, false);
 	KOF1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 KOF1", false, false);
 	TSAH = std::make_shared<Register16_t>("SPU2 C0 TSAH", true, true);
-	TSAL = std::make_shared<Register16_t>("SPU2 C0 TSAL", true, true);
+	TSAL = std::make_shared<PairRegister16_t>("SPU2 C0 TSAL", true, true, TSAH);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C0 DATA0", false, false);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C0 DATA1", false, false);
 	ADMAS = std::make_shared<SPU2CoreRegister_ADMAS_t>("SPU2 C0 ADMAS", false, true);
@@ -323,7 +324,7 @@ SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue):
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 KOF0", false, false);
 	KOF1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 KOF1", false, false);
 	TSAH = std::make_shared<Register16_t>("SPU2 C1 TSAH", true, true);
-	TSAL = std::make_shared<Register16_t>("SPU2 C1 TSAL", true, true);
+	TSAL = std::make_shared<PairRegister16_t>("SPU2 C1 TSAL", true, true, TSAH);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C1 DATA0", false, false);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C1 DATA1", false, false);
 	ADMAS = std::make_shared<SPU2CoreRegister_ADMAS_t>("SPU2 C1 ADMAS", false, true);
