@@ -48,12 +48,13 @@ void log(const LogLevel_t level, const std::string message)
 
 int main()
 {
-	logFile.open("C:\\Shared\\PCSX2_Rewrite.txt");
-
+	std::string workspace("..\\Workspace\\");
+	logFile.open(workspace + "PCSX2_Rewrite_Log.txt");
+	
 	VMOptions vmOptions = 
 	{
 		log,
-		"C:\\Shared\\scph10000.bin",
+		workspace + "scph10000.bin",
 		"",
 		"",
 		"",
@@ -69,10 +70,10 @@ int main()
 		while (vm.getStatus() == VM::VMStatus::Running)
 			vm.run();
 
-		vm.getResources()->EE->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_EE.bin");
-		vm.getResources()->IOP->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_IOP.bin");
-		vm.getResources()->SPU2->MainMemory->dump("C:\\Shared\\Dumps\\End_Dump_SPU2.bin");
-		vm.getResources()->SPU2->DebugDummy->dump("C:\\Shared\\Dumps\\End_Dump_DebugDummy.bin");
+		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
+		vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
+		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
+		vm.getResources()->SPU2->DebugDummy->dump(std::string(workspace + "End_Dump_DebugDummy.bin").c_str());
 	}
 	catch (std::exception ex)
 	{

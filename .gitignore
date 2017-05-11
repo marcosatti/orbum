@@ -254,3 +254,6 @@ paket-files/
 
 # Atom tags
 .tags*
+
+# Workspace
+[Ww]orkspace/
