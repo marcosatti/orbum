@@ -28,9 +28,9 @@ public:
 	System_t getContext() const;
 
 	/*
-	Initalise the system.
+	Initialise the system.
 	*/
-	virtual void initalise() = 0;
+	virtual void initialise() = 0;
 
 	/*
 	Runs the system logic for each clock source event by looping through the step function.

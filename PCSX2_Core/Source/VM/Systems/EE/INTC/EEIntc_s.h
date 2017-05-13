@@ -19,7 +19,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.

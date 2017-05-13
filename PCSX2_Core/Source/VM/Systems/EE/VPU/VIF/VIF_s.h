@@ -21,7 +21,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Check the FIFO queue and process data if available.

@@ -22,7 +22,7 @@ public:
 	EE Timers timer registers.
 	See EE Users Manual page 35.
 	The MODE, COUNT and COMP registers are always defined for each timer, and HOLD only for timers 0 and 1.
-	COUNT must be initalised before MODE due to dependency.
+	COUNT must be initialised before MODE due to dependency.
 	*/
 	std::shared_ptr<EETimersTimerRegister_COUNT_t> COUNT;
 	std::shared_ptr<EETimersTimerRegister_MODE_t>  MODE;

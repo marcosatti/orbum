@@ -18,8 +18,8 @@ public:
 	void writeByte(const System_t context, u8 value) override;
 
 	/*
-	Initalise register (set to do nothing).
+	Initialise register (set to do nothing).
 	*/
-	void initalise() override;
+	void initialise() override;
 };
 

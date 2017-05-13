@@ -20,7 +20,7 @@ public:
 	/*
 	IOP Timers timer registers.
 	The Mode, Count and Compare registers are defined for each timer.
-	Count must be initalised before Mode due to dependency.
+	Count must be initialised before Mode due to dependency.
 	*/
 	std::shared_ptr<IOPTimersTimerRegister_COUNT_t> COUNT;
 	std::shared_ptr<IOPTimersTimerRegister_MODE_t>  MODE;

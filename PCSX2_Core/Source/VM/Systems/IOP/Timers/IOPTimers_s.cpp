@@ -22,13 +22,13 @@ IOPTimers_s::IOPTimers_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-void IOPTimers_s::initalise()
+void IOPTimers_s::initialise()
 {
 	for (auto& timer : mTimers->TIMERS)
 	{
-		if (timer->COUNT != nullptr) timer->COUNT->initalise();
-		if (timer->MODE != nullptr) timer->MODE->initalise();
-		if (timer->COMP != nullptr) timer->COMP->initalise();
+		if (timer->COUNT != nullptr) timer->COUNT->initialise();
+		if (timer->MODE != nullptr) timer->MODE->initialise();
+		if (timer->COMP != nullptr) timer->COMP->initialise();
 	}
 }
 

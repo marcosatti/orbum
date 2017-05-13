@@ -17,7 +17,7 @@ VUInterpreter_s::VUInterpreter_s(VM * vm, const int vuCoreIndex) :
 	mVUCore = getVM()->getResources()->EE->VPU->VU->VU_CORES[vuCoreIndex];
 }
 
-void VUInterpreter_s::initalise()
+void VUInterpreter_s::initialise()
 {
 }
 

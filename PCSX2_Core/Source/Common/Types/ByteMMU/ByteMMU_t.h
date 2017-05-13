@@ -13,8 +13,8 @@ class Register16_t;
 class Register32_t;
 class Register64_t;
 class Register128_t;
-class FIFOQueue8_t;
-class FIFOQueue32_t;
+class FIFOQueue_t;
+class FIFOQueue_t;
 
 /*
 ByteMMU_t is responsible for converting the PS2's physical memory into host memory.
@@ -68,8 +68,8 @@ public:
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register32_t> & register32);
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register64_t> & register64);
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register128_t> & register128);
-	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue8_t> & fifoQueue32);
-	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue32);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue32);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue32);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.

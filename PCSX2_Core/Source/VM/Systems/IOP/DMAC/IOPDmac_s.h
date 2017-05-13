@@ -25,7 +25,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Check through the channels and initate data transfers.

@@ -24,7 +24,7 @@ System_t VMSystem_s::getContext() const
 	return mSystemContext;
 }
 
-void VMSystem_s::initalise()
+void VMSystem_s::initialise()
 {
 }
 

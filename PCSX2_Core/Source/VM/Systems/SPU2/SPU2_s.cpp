@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 #include "Common/Types/Memory/HwordMemory_t.h"
 #include "Common/Tables/SPU2CoreTable.h"
 #include "Common/Types/Register/Register16_t.h"
@@ -28,7 +28,7 @@ SPU2_s::SPU2_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-void SPU2_s::initalise()
+void SPU2_s::initialise()
 {
 
 }

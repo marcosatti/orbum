@@ -44,7 +44,7 @@ CDVD_t::CDVD_t() :
 	DEC_SET(std::make_shared<Register8_t>("CDVD DEC_SET", true, true)),
 	NVRAM(nullptr)
 {
-	// Initalise CDVD NVRAM, based upon bios version loaded.
+	// Initialise CDVD NVRAM, based upon bios version loaded.
 	// TODO: implement version checking, for now, assumed v0.00 <= x < v1.70.
 	NVRAM = std::make_shared<CDVDNvram_000_t>("CDVD NVRAM v0.00", false, false);
 }

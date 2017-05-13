@@ -9,13 +9,13 @@ BitfieldRegister32_t::BitfieldRegister32_t(const char* mnemonic, bool debugReads
 {
 }
 
-void BitfieldRegister32_t::initalise()
+void BitfieldRegister32_t::initialise()
 {
-	Register32_t::initalise();
-	initaliseAllFields();
+	Register32_t::initialise();
+	initialiseAllFields();
 }
 
-void BitfieldRegister32_t::initaliseAllFields()
+void BitfieldRegister32_t::initialiseAllFields()
 {
 	for (auto& field : mFields)
 	{
@@ -102,7 +102,7 @@ void BitfieldRegister32_t::writeWord(const System_t context, u32 value)
 void BitfieldRegister32_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u32 fieldInitialValue)
 {
 	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
-	initaliseAllFields();
+	initialiseAllFields();
 }
 
 u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex) const

@@ -6,34 +6,34 @@
 #include "Resources/Common/Types/SBUSRegisters_t.h"
 
 SBUSFIFOQueue_SIF2_t::SBUSFIFOQueue_SIF2_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxSize, const std::shared_ptr<SBUSRegister_F300_t> & sbusF300) :
-	FIFOQueue32_t(mnemonic, debugReads, debugWrites, maxSize),
+	FIFOQueue_t(mnemonic, debugReads, debugWrites, maxSize),
 	mSBUSF300(sbusF300)
 {
 }
 
 u32 SBUSFIFOQueue_SIF2_t::readWord(const System_t context)
 {
-	u32 temp = FIFOQueue32_t::readWord(context);
+	u32 temp = FIFOQueue_t::readWord(context);
 	handleSBUSUpdate(context);
 	return temp;
 }
 
 u128 SBUSFIFOQueue_SIF2_t::readQword(const System_t context)
 {
-	u128 temp = FIFOQueue32_t::readQword(context);
+	u128 temp = FIFOQueue_t::readQword(context);
 	handleSBUSUpdate(context);
 	return temp;
 }
 
 void SBUSFIFOQueue_SIF2_t::writeWord(const System_t context, const u32 data)
 {
-	FIFOQueue32_t::writeWord(context, data);
+	FIFOQueue_t::writeWord(context, data);
 	handleSBUSUpdate(context);
 }
 
 void SBUSFIFOQueue_SIF2_t::writeQword(const System_t context, const u128 data)
 {
-	FIFOQueue32_t::writeQword(context, data);
+	FIFOQueue_t::writeQword(context, data);
 	handleSBUSUpdate(context);
 }
 

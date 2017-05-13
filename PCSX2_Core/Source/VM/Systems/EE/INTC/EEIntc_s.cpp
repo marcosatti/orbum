@@ -20,10 +20,10 @@ EEIntc_s::EEIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->EE->INTC;
 }
 
-void EEIntc_s::initalise()
+void EEIntc_s::initialise()
 {
-	mINTC->STAT->initalise();
-	mINTC->MASK->initalise();
+	mINTC->STAT->initialise();
+	mINTC->MASK->initialise();
 }
 
 int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)

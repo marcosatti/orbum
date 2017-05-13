@@ -34,7 +34,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.

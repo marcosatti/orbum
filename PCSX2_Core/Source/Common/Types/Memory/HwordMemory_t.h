@@ -20,9 +20,9 @@ public:
 	virtual ~HwordMemory_t() = default;
 
 	/*
-	Initalise byte memory (set to 0's).
+	Initialise byte memory (set to 0's).
 	*/
-	virtual void initalise();
+	virtual void initialise();
 
 	/*
 	Read or write a value of a given type, to the specified hword index (hwordOffset).

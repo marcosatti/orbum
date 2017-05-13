@@ -22,7 +22,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Updates the timers with the specified clock source type.

@@ -28,9 +28,9 @@ public:
 	void writeWord(const System_t context, u32 value) override;
 
 	/*
-	Initalise register (initalise underlying register).
+	Initialise register (initialise underlying register).
 	*/
-	void initalise() override;
+	void initialise() override;
 
 private:
 	/*

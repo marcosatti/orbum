@@ -58,7 +58,7 @@ public:
 	void writeWord(const System_t context, size_t storageIndex, u32 value) override;
 
 private:
-	// Variables below needed by logic. Used by the BIOS to initalise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
+	// Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
 	s32 rdram_sdevid = 0;
 	const s32 rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 };

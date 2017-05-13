@@ -16,7 +16,7 @@ CDVD_s::CDVD_s(VM * vm) :
 	mCDVD = getVM()->getResources()->CDVD;
 }
 
-void CDVD_s::initalise()
+void CDVD_s::initialise()
 {
 	// Reset CDVD registers.
 	

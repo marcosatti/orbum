@@ -4,16 +4,16 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/ByteMMU/MapperBaseObjectByteMMU_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 /*
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
 Only read/writeWord and Qword is allowed on non-zero storage indexes - all other combinations throw a runtime error.
 */
-class MapperFIFOQueue32ByteMMU_t : public MapperBaseObjectByteMMU_t
+class MapperFIFOQueueByteMMU_t : public MapperBaseObjectByteMMU_t
 {
 public:
-	MapperFIFOQueue32ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t> & fifoQueue32);
+	MapperFIFOQueueByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue8);
 
 	u8 readByte(const System_t context, size_t storageIndex) override;
 	void writeByte(const System_t context, size_t storageIndex, u8 value) override;
@@ -35,5 +35,5 @@ private:
 	/*
 	The underlying FIFO queue this class maps to.
 	*/
-	std::shared_ptr<FIFOQueue32_t> mFIFOQueue32;
+	std::shared_ptr<FIFOQueue_t> mFIFOQueue;
 };

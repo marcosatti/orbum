@@ -18,7 +18,7 @@ VIF_s::VIF_s(VM * vm, const int vifCoreIndex) :
 {
 }
 
-void VIF_s::initalise()
+void VIF_s::initialise()
 {
 }
 

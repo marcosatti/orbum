@@ -19,7 +19,7 @@ class VUCoreRegister_CMSAR_t;
 class EECoreCOP0_t;
 
 /*
-A base class for an implementation of a VU unit resource. Common resources are initalised, all others set to nullptr (see below).
+A base class for an implementation of a VU unit resource. Common resources are initialised, all others set to nullptr (see below).
 Extended by VUCore_VU0_t and VUCore_VU1_t.
 */
 class VUCore_t
@@ -100,7 +100,7 @@ public:
 
 	/*
 	VU memory, defined on page 18 of the VU Users Manual.
-	Initalised by subclasses; different for VU0 (4KB) and VU1 (16KB).
+	Initialised by subclasses; different for VU0 (4KB) and VU1 (16KB).
 	*/
 	std::shared_ptr<ByteMemory_t> MEMORY_Micro;
 	std::shared_ptr<ByteMemory_t> MEMORY_Mem;

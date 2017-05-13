@@ -24,6 +24,6 @@ void ConstantRegister32_t::writeWord(const System_t context, u32 value)
 	// Do not write value (zero register).
 }
 
-void ConstantRegister32_t::initalise()
+void ConstantRegister32_t::initialise()
 {
 }

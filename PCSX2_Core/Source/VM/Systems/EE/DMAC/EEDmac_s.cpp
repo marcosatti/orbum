@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Tables/EEDmacChannelTable.h"
-#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/EE/DMAC/EEDmac_s.h"
@@ -33,31 +33,31 @@ EEDmac_s::EEDmac_s(VM * vm) :
 	mEEByteMMU = getVM()->getResources()->EE->MMU;
 }
 
-void EEDmac_s::initalise()
+void EEDmac_s::initialise()
 {
 	// Reset channels.
 	for (auto& channel : mDMAC->CHANNELS)
 	{
-		if (channel->CHCR != nullptr) channel->CHCR->initalise();
-		if (channel->MADR != nullptr) channel->MADR->initalise();
-		if (channel->QWC != nullptr) channel->QWC->initalise();
-		if (channel->TADR != nullptr) channel->TADR->initalise();
-		if (channel->ASR0 != nullptr) channel->ASR0->initalise();
-		if (channel->ASR1 != nullptr) channel->ASR1->initalise();
-		if (channel->SADR != nullptr) channel->SADR->initalise();
-		if (channel->FIFOQueue != nullptr) channel->FIFOQueue->initalise();
+		if (channel->CHCR != nullptr) channel->CHCR->initialise();
+		if (channel->MADR != nullptr) channel->MADR->initialise();
+		if (channel->QWC != nullptr) channel->QWC->initialise();
+		if (channel->TADR != nullptr) channel->TADR->initialise();
+		if (channel->ASR0 != nullptr) channel->ASR0->initialise();
+		if (channel->ASR1 != nullptr) channel->ASR1->initialise();
+		if (channel->SADR != nullptr) channel->SADR->initialise();
+		if (channel->FIFOQueue != nullptr) channel->FIFOQueue->initialise();
 	}
 
 	// Reset DMAC.
-	mDMAC->CTRL->initalise();
-	mDMAC->STAT->initalise();
-	mDMAC->PCR->initalise();
-	mDMAC->SQWC->initalise();
-	mDMAC->RBSR->initalise();
-	mDMAC->RBOR->initalise();
-	mDMAC->STADR->initalise();
-	mDMAC->ENABLER->initalise();
-	mDMAC->ENABLEW->initalise();
+	mDMAC->CTRL->initialise();
+	mDMAC->STAT->initialise();
+	mDMAC->PCR->initialise();
+	mDMAC->SQWC->initialise();
+	mDMAC->RBSR->initialise();
+	mDMAC->RBOR->initialise();
+	mDMAC->STADR->initialise();
+	mDMAC->ENABLER->initialise();
+	mDMAC->ENABLEW->initialise();
 }
 
 int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)

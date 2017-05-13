@@ -18,7 +18,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Checks the CDVD state for any actions to be performed, and steps through if needed.

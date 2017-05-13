@@ -16,14 +16,14 @@ public:
 	virtual ~BitfieldRegister32_t() = default;
 
 	/*
-	Initalise register with default field values.
+	Initialise register with default field values.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
 	*/
-	void initaliseAllFields();
+	void initialiseAllFields();
 
 	/*
 	Override write functions to sync with the bitfield map.

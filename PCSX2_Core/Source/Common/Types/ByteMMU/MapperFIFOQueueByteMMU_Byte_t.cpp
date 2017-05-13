@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/ByteMMU/MapperFIFOQueue8ByteMMU_t.h"
 
-MapperFIFOQueue8ByteMMU_t::MapperFIFOQueue8ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue8_t> & fifoQueue8) :
+MapperFIFOQueue8ByteMMU_t::MapperFIFOQueue8ByteMMU_t(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue8) :
 	MapperBaseObjectByteMMU_t(physicalAddress),
 	mFIFOQueue8(fifoQueue8)
 {

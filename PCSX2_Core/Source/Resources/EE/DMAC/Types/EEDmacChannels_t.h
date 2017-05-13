@@ -11,7 +11,7 @@ class EEDmacChannelRegister_QWC_t;
 class EEDmacChannelRegister_TADR_t;
 class EEDmacChannelRegister_ASR_t;
 class EEDmacChannelRegister_SADR_t;
-class FIFOQueue32_t;
+class FIFOQueue_t;
 class ConstantByteMemory_t;
 class ByteMMU_t;
 class Register32_t;
@@ -26,13 +26,13 @@ Not all of the registers are implemented in this base class for each channel.
 class EEDmacChannel_t
 {
 public:
-	EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue); // Default constructor for most channels.
+	EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue); // Default constructor for most channels.
 	EEDmacChannel_t(const int channelID); // Provided for the to/fromSPR channels where a FIFO queue is not used (set to nullptr).
 
 	/*
 	EE DMAC channel registers. See EE Users Manual page 73.
 	CHCR, MADR and QWC are always defined for each channel.
-	TADR, ASR0/1 and SADR are initalised by sub-classes when required.
+	TADR, ASR0/1 and SADR are initialised by sub-classes when required.
 	*/
 	std::shared_ptr<EEDmacChannelRegister_CHCR_t> CHCR;
 	std::shared_ptr<EEDmacChannelRegister_MADR_t> MADR;
@@ -50,7 +50,7 @@ public:
 	/*
 	A reference to the associated FIFO queue, set at creation.
 	*/
-	std::shared_ptr<FIFOQueue32_t> FIFOQueue;
+	std::shared_ptr<FIFOQueue_t> FIFOQueue;
 
 	/*
 	Returns the ID of this channel.
@@ -82,14 +82,14 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF0_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 0;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_8060;
 };
@@ -102,14 +102,14 @@ The SADR register is left undefined.
 class EEDmacChannel_VIF1_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 1;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_9060;
 };
@@ -122,14 +122,14 @@ The SADR register is left undefined.
 class EEDmacChannel_GIF_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 2;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_A060;
 };
@@ -142,14 +142,14 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_fromIPU_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 3;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_B030;
 };
@@ -162,14 +162,14 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_toIPU_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CHANNEL_ID = 4;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_B440;
 };
@@ -182,14 +182,14 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF0_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 5;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_C030;
 };
@@ -202,14 +202,14 @@ The ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF1_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 6;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_C440;
 };
@@ -222,14 +222,14 @@ The TADR, ASR0/1 and SADR registers are left undefined.
 class EEDmacChannel_SIF2_t : public EEDmacChannel_t
 {
 public:
-	EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
+	EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240);
 
 	static constexpr int CHANNEL_ID = 7;
 
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_C830;
 };
@@ -250,7 +250,7 @@ public:
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_D030;
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_D090;
@@ -272,7 +272,7 @@ public:
 	/*
 	Mapped memory that is present at the end of this channel.
 	See page 23 onwards of the EE Users Manual.
-	This needs to be initalised into the EE memory map.
+	This needs to be initialised into the EE memory map.
 	*/
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_D440;
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_D490;

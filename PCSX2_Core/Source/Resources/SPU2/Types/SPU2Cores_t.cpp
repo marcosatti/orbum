@@ -8,7 +8,7 @@
 #include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
 #include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
 
-SPU2Core_t::SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+SPU2Core_t::SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	PMON0(nullptr),
 	PMON1(nullptr),
 	NON0(nullptr),
@@ -150,7 +150,7 @@ bool SPU2Core_t::isADMAEnabled(const System_t context) const
 	return ((getCoreID() + 1) & ADMAS->readHword(context)) > 0;
 }
 
-SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	SPU2Core_t(CORE_ID, fifoQueue),
 	MEMORY_0346(std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0346", false, false, 0xBA))
 {
@@ -300,7 +300,7 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
 	VOICES[23] = VOICE_23;
 }
 
-SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue):
+SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue):
 	SPU2Core_t(CORE_ID, fifoQueue)
 {
 	PMON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 PMON0", false, false);

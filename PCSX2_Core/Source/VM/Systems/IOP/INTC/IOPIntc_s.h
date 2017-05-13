@@ -20,7 +20,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 

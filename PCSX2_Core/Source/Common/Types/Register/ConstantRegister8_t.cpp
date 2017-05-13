@@ -14,6 +14,6 @@ void ConstantRegister8_t::writeByte(const System_t context, u8 value)
 	// Do not write value (zero register).
 }
 
-void ConstantRegister8_t::initalise()
+void ConstantRegister8_t::initialise()
 {
 }

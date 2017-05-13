@@ -29,7 +29,7 @@
 VM::VM(const VMOptions & vmOptions) : 
 	mVMOptions(vmOptions),
 	mStatus(Stopped),
-	mSystemThreadsInitalised(false)
+	mSystemThreadsInitialised(false)
 {
 	// Initialise everything.
 	reset();
@@ -40,24 +40,24 @@ void VM::reset()
 	// Set to running.
 	mStatus = Running;
 
-	// Initalise logging.
+	// Initialise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
 	log(Info, "VM reset started...");
 
-	// Initalise resources and set system bias speeds.
+	// Initialise resources and set system bias speeds.
 	mResources = std::make_shared<Resources_t>();
 	mResources->Clock->setSystemClockBiases(mVMOptions.SYSTEM_BIASES);
 
-	log(Info, "VM resources initalised.");
+	log(Info, "VM resources initialised.");
 
-	// Initalise Roms.
+	// Initialise Roms.
 	if (!mVMOptions.BOOT_ROM_PATH.empty())
 		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH.c_str(), 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
 	// ROM1.
 	// ROM2.
 	// EROM.
 
-	log(Info, "VM roms initalised.");
+	log(Info, "VM roms initialised.");
 
 	// Create components.
 	auto vu0temp = std::make_shared<VUInterpreter_s>(this, 0);
@@ -83,12 +83,12 @@ void VM::reset()
 		std::make_shared<CRTC_s>(this),
 	};
 
-	// Initalise components.
+	// Initialise components.
 	for (auto& system : mSystems)
 		if (system.second != nullptr) 
-			system.second->initalise();
+			system.second->initialise();
 
-	log(Info, "VM systems initalised.");
+	log(Info, "VM systems initialised.");
 
 	// Use multithreaded systems if enabled.
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
@@ -96,7 +96,7 @@ void VM::reset()
 		// Clear any existing threads... could be dangerous since we have detached them... TODO: look into this.
 		mSystemThreads.empty();
 
-		// Initalise threads.
+		// Initialise threads.
 		for (auto& system : mSystems)
 			if (system.second != nullptr)
 				mSystemThreads.push_back(std::thread(&VMSystem_s::threadLoop, &(*system.second)));
@@ -105,12 +105,12 @@ void VM::reset()
 		for (auto& thread : mSystemThreads)
 			thread.detach();
 
-		// Set threaded state to initalised.
-		mSystemThreadsInitalised = true;
+		// Set threaded state to initialised.
+		mSystemThreadsInitialised = true;
 	}
 	else
 	{
-		mSystemThreadsInitalised = false;
+		mSystemThreadsInitialised = false;
 	}
 
 	log(Info, "VM reset done.");
@@ -129,7 +129,7 @@ void VM::run()
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
 	{
 		// Running in multithreaded mode.
-		if (!mSystemThreadsInitalised)
+		if (!mSystemThreadsInitialised)
 			throw std::runtime_error("VM MT mode was not setup before running!");
 
 		// Aquire all mutex locks first (common sync point).
@@ -179,8 +179,8 @@ void VM::stop()
 	// Set to stopped.
 	mStatus = Stopped;
 
-	// Set system threads state to not initalised.
-	mSystemThreadsInitalised = false;
+	// Set system threads state to not initialised.
+	mSystemThreadsInitialised = false;
 
 	log(Info, "VM stopped ok.");
 }

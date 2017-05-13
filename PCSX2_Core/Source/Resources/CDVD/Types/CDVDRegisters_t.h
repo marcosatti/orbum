@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Common/Types/Register/Register8_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue8_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 /*
 CDVD Register N/S_COMMAND.
@@ -30,7 +30,7 @@ public:
 /*
 CDVD register / FIFO queue hybrid "register".
 Read: Register8_t: {N/S}_READY.
-Write: FIFOQueue8_t: {N/S}_DATA_IN.
+Write: FIFOQueue_t: {N/S}_DATA_IN.
 */
 class CDVDRegister_NS_RDY_DIN_t : public Register8_t
 {
@@ -47,5 +47,5 @@ public:
 	Resources.
 	*/
 	std::shared_ptr<Register8_t> READY;
-	std::shared_ptr<FIFOQueue8_t> DATA_IN;
+	std::shared_ptr<FIFOQueue_t> DATA_IN;
 };

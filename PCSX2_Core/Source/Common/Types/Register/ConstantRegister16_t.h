@@ -19,8 +19,8 @@ public:
 	void writeHword(const System_t context, u16 value) override;
 
 	/*
-	Initalise register (set to do nothing).
+	Initialise register (set to do nothing).
 	*/
-	void initalise() override;
+	void initialise() override;
 };
 

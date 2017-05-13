@@ -138,7 +138,7 @@ void Register32_t::writeFloat(const System_t context, f32 value)
 #endif
 }
 
-void Register32_t::initalise()
+void Register32_t::initialise()
 {
 	UW = mInitalisationValue;
 }

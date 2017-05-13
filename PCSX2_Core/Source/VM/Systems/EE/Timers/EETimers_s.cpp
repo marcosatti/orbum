@@ -24,14 +24,14 @@ EETimers_s::EETimers_s(VM * vm) :
 	mGS = getVM()->getResources()->GS;
 }
 
-void EETimers_s::initalise()
+void EETimers_s::initialise()
 {
 	for (auto& timer : mTimers->TIMERS)
 	{
-		if (timer->COUNT != nullptr) timer->COUNT->initalise();
-		if (timer->MODE != nullptr) timer->MODE->initalise();
-		if (timer->COMP != nullptr) timer->COMP->initalise();
-		if (timer->HOLD != nullptr) timer->HOLD->initalise();
+		if (timer->COUNT != nullptr) timer->COUNT->initialise();
+		if (timer->MODE != nullptr) timer->MODE->initialise();
+		if (timer->COMP != nullptr) timer->COMP->initialise();
+		if (timer->HOLD != nullptr) timer->HOLD->initialise();
 	}
 }
 

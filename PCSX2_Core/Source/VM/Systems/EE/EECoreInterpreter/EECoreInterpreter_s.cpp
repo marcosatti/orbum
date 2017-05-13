@@ -38,7 +38,7 @@ EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterp
 	mVU0 = getVM()->getResources()->EE->VPU->VU->VU0;
 }
 
-void EECoreInterpreter_s::initalise()
+void EECoreInterpreter_s::initialise()
 {
 	// An EE Core reset is done according to the Reset signal/exception defined on page 95 of the EE Core Users Manual.
 	handleException(EECoreException_t::EX_RESET);
@@ -241,7 +241,7 @@ void EECoreInterpreter_s::handleException(const EECoreException_t& exception)
 	// For Reset and NMI's, need some additional processing before calling the general handlers.
 	if (mException == EECoreException_t::EX_RESET)
 	{
-		COP0->initalise();
+		COP0->initialise();
 	}
 	else if (mException == EECoreException_t::EX_NMI)
 	{

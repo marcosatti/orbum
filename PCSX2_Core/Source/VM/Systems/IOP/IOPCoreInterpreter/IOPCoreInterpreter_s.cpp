@@ -28,7 +28,7 @@ IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	mByteMMU = getVM()->getResources()->IOP->MMU;
 }
 
-void IOPCoreInterpreter_s::initalise()
+void IOPCoreInterpreter_s::initialise()
 {
 	// An IOP reset is done by raising a Reset exception.
 	handleException(IOPCoreException_t::EX_RESET);
@@ -166,10 +166,10 @@ void IOPCoreInterpreter_s::handleException(const IOPCoreException_t & exception)
 	log(Debug, "IOPCore ExceptionHandler called! Type = %s", exceptionProperties->mMnemonic);
 #endif
 
-	// If its a reset exception, initalise COP0 registers and set PC to reset vector then return.
+	// If its a reset exception, initialise COP0 registers and set PC to reset vector then return.
 	if (exception == IOPCoreException_t::EX_RESET)
 	{
-		COP0->initalise();
+		COP0->initialise();
 		PC->setPCValueAbsolute(getContext(), Constants::MIPS::Exceptions::Imp0::VADDRESS_EXCEPTION_BASE_V_RESET_NMI);
 		return;
 	}

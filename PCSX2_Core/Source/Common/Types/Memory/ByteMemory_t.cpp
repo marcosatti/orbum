@@ -20,7 +20,7 @@ ByteMemory_t::ByteMemory_t(const char * mnemonic, const bool debugReads, const b
 #endif
 }
 
-void ByteMemory_t::initalise()
+void ByteMemory_t::initialise()
 {
 	std::vector<u8>(mMemoryByteSize, 0).swap(mMemory);
 }

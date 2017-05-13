@@ -20,11 +20,11 @@ IOPIntc_s::IOPIntc_s(VM * vm) :
 	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-void IOPIntc_s::initalise()
+void IOPIntc_s::initialise()
 {
-	mINTC->CTRL->initalise();
-	mINTC->STAT->initalise();
-	mINTC->MASK->initalise();
+	mINTC->CTRL->initialise();
+	mINTC->STAT->initialise();
+	mINTC->MASK->initialise();
 }
 
 int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)

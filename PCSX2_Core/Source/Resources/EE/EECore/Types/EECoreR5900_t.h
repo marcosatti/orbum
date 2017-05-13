@@ -23,7 +23,7 @@ public:
 	/*
 	The 32-bit Program Counter (PC) register. See EE Core Users manual, pg 61.
 	Points to the current instruction virtual address.
-	Must be initalised before LinkRegister and BD below due to dependency.
+	Must be initialised before LinkRegister and BD below due to dependency.
 	*/
 	std::shared_ptr<PCRegister32_t> PC;
 

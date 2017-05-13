@@ -28,7 +28,7 @@ public:
 	};
 
 	/*
-	Construct the map using default initalised values or with a initaliser list.
+	Construct the map using default initialised values or with a initialiser list.
 	*/
 	constexpr EnumMap_t() : mMap{}
 	{

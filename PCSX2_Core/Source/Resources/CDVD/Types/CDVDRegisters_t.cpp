@@ -21,7 +21,7 @@ void CDVDRegister_NS_COMMAND_t::writeByte(const System_t context, u8 value)
 CDVDRegister_NS_RDY_DIN_t::CDVDRegister_NS_RDY_DIN_t(const char * mnemonic_READY, const char * mnemonic_DATA_IN, bool debugReads, bool debugWrites, const size_t fifoQueueSize) :
 	Register8_t("NOT USED", false, false),
 	READY(std::make_shared<Register8_t>(mnemonic_READY, debugReads, debugWrites)),
-	DATA_IN(std::make_shared<FIFOQueue8_t>(mnemonic_DATA_IN, debugReads, debugWrites, fifoQueueSize))
+	DATA_IN(std::make_shared<FIFOQueue_t>(mnemonic_DATA_IN, debugReads, debugWrites, fifoQueueSize))
 {
 }
 

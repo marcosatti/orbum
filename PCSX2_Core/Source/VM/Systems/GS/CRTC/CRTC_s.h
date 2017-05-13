@@ -27,7 +27,7 @@ public:
 	/*
 	Initalisation.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Steps through the CRTC, incrementing the number of pixels based on the CRTC configuration.

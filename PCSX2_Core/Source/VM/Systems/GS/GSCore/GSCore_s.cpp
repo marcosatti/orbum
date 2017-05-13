@@ -9,7 +9,7 @@ GSCore_s::GSCore_s(VM * vm) :
 {
 }
 
-void GSCore_s::initalise()
+void GSCore_s::initialise()
 {
 }
 

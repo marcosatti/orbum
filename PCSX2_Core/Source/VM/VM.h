@@ -60,6 +60,6 @@ private:
 	Threading resources.
 	*/
 	std::vector<std::thread> mSystemThreads;
-	bool mSystemThreadsInitalised;
+	bool mSystemThreadsInitialised;
 };
 

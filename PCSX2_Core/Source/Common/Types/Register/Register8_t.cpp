@@ -41,7 +41,7 @@ void Register8_t::writeByte(const System_t context, u8 value)
 #endif
 }
 
-void Register8_t::initalise()
+void Register8_t::initialise()
 {
 	UB = mInitalisationValue;
 }

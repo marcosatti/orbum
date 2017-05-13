@@ -39,10 +39,10 @@ bool IOPCoreCOP0_t::isCoprocessorUsable(const System_t context) const
 		return false;
 }
 
-void IOPCoreCOP0_t::initalise()
+void IOPCoreCOP0_t::initialise()
 {	
 	for (auto& reg : Registers)
-		if (reg != nullptr) reg->initalise();
+		if (reg != nullptr) reg->initialise();
 }
 
 MIPSCPUOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext(const System_t context) const

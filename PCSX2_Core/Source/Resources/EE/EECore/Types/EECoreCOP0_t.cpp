@@ -63,13 +63,13 @@ bool EECoreCOP0_t::isCoprocessorUsable(const System_t context) const
 		return false;
 }
 
-void EECoreCOP0_t::initalise()
+void EECoreCOP0_t::initialise()
 {
 	for (auto& reg : Registers)
-		if (reg != nullptr) reg->initalise();
+		if (reg != nullptr) reg->initialise();
 
 	for (auto& reg : PCRRegisters)
-		if (reg != nullptr) reg->initalise();
+		if (reg != nullptr) reg->initialise();
 }
 
 MIPSCPUOperatingContext_t EECoreCOP0_t::getCPUOperatingContext(const System_t context) const

@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Tables/IOPDmacChannelTable.h"
-#include "Common/Types/FIFOQueue/FIFOQueue32_t.h"
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
 
 #include "VM/VM.h"
 #include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
@@ -31,24 +31,24 @@ IOPDmac_s::IOPDmac_s(VM * vm) :
 	mIOPByteMMU = getVM()->getResources()->IOP->MMU;
 }
 
-void IOPDmac_s::initalise()
+void IOPDmac_s::initialise()
 {
 	// Reset channels.
 	for (auto& channel : mDMAC->CHANNELS)
 	{
-		if (channel->CHCR != nullptr) channel->CHCR->initalise();
-		if (channel->MADR != nullptr) channel->MADR->initalise();
-		if (channel->BCR != nullptr) channel->BCR->initalise();
-		if (channel->TADR != nullptr) channel->TADR->initalise();
-		if (channel->FIFOQueue != nullptr) channel->FIFOQueue->initalise();
+		if (channel->CHCR != nullptr) channel->CHCR->initialise();
+		if (channel->MADR != nullptr) channel->MADR->initialise();
+		if (channel->BCR != nullptr) channel->BCR->initialise();
+		if (channel->TADR != nullptr) channel->TADR->initialise();
+		if (channel->FIFOQueue != nullptr) channel->FIFOQueue->initialise();
 	}
 
 	// Reset DMAC.
-	mDMAC->PCR0->initalise();
-	mDMAC->ICR0->initalise();
-	mDMAC->PCR1->initalise();
-	mDMAC->ICR1->initalise();
-	mDMAC->GCTRL->initalise();
+	mDMAC->PCR0->initialise();
+	mDMAC->ICR0->initialise();
+	mDMAC->PCR1->initialise();
+	mDMAC->ICR1->initialise();
+	mDMAC->GCTRL->initialise();
 }
 
 int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)

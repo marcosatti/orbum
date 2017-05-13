@@ -138,7 +138,7 @@ void Register64_t::writeDword(const System_t context, u64 value)
 #endif
 }
 
-void Register64_t::initalise()
+void Register64_t::initialise()
 {
 	UD = mInitalisationValue;
 }

@@ -259,7 +259,6 @@
     <ClInclude Include="Source\Resources\EE\VPU\VU\Types\VUInstruction_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.h" />
     <ClInclude Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.h" />
-    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.h" />
     <ClInclude Include="Source\Common\Types\Register\BitfieldRegister16_t.h" />
     <ClInclude Include="Source\Common\Types\Register\BitfieldRegister32_t.h">
       <Filter>Source\Common\Types\Registers</Filter>
@@ -300,7 +299,6 @@
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister16ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.h" />
-    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
     <ClInclude Include="Source\Resources\CDVD\CDVD_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreRegisters_t.h" />
@@ -308,8 +306,6 @@
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.h" />
     <ClInclude Include="Source\Resources\SPU2\SPU2_t.h" />
-    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.h" />
-    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.h" />
     <ClInclude Include="Source\VM\Systems\CDVD\CDVD_s.h" />
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDRegisters_t.h" />
     <ClInclude Include="Source\Resources\CDVD\Types\CDVDNvrams_t.h" />
@@ -317,6 +313,8 @@
     <ClInclude Include="Source\VM\Systems\SPU2\SPU2_s.h" />
     <ClInclude Include="Source\Common\Tables\SPU2CoreTable.h" />
     <ClInclude Include="Source\Common\Types\Register\PairRegister16_t.h" />
+    <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_Byte_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -452,7 +450,6 @@
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCores_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFCoreRegisters_t.cpp" />
     <ClCompile Include="Source\VM\Types\VMSystem_s.cpp" />
-    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue32_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\BitfieldRegister16_t.cpp" />
     <ClCompile Include="Source\Common\Types\Register\BitfieldRegister32_t.cpp">
       <Filter>Source\Common\Types\Registers</Filter>
@@ -493,7 +490,6 @@
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister16ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperRegister8ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperByteMemoryByteMMU_t.cpp" />
-    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue32ByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\MIPS\MIPSInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\EE\EECore\Types\EECoreInstruction_t.cpp" />
     <ClCompile Include="Source\Resources\EE\VPU\VIF\Types\VIFcodeInstruction_t.cpp" />
@@ -505,8 +501,6 @@
     <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.cpp" />
     <ClCompile Include="Source\Resources\SPU2\SPU2_t.cpp" />
-    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue8_t.cpp" />
-    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueue8ByteMMU_t.cpp" />
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_s.cpp" />
     <ClCompile Include="Source\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_SCMD.cpp" />
@@ -515,6 +509,8 @@
     <ClCompile Include="Source\VM\Systems\SPU2\SPU2_s.cpp" />
     <ClCompile Include="Source\Common\Tables\SPU2CoreTable.cpp" />
     <ClCompile Include="Source\Common\Types\Register\PairRegister16_t.cpp" />
+    <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_Byte_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

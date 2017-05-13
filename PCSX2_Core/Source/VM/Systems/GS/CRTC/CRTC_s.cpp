@@ -24,7 +24,7 @@ CRTC_s::CRTC_s(VM * vm) :
 	mIOPINTC = getVM()->getResources()->IOP->INTC;
 }
 
-void CRTC_s::initalise()
+void CRTC_s::initialise()
 {
 }
 

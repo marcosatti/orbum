@@ -25,7 +25,7 @@ ByteMMU_t::ByteMMU_t(const int numAddressBits, const int numPageIndexBits, const
 	// Check the paramters are valid for a u32 space, and calculate number of directory bits.
 	mNumDirectoryIndexBits = mNumAddressBits - (mNumPageIndexBits + mNumOffsetIndexBits);
 	if (mNumDirectoryIndexBits < 0)
-		throw std::runtime_error("ByteMMU_t initalised with invalid parameters.");
+		throw std::runtime_error("ByteMMU_t initialised with invalid parameters.");
 	
 	// Calculate directory, page and offset entries (for offset, this is the same thing as a page size in bytes).
 	mNumDirectories = (static_cast<size_t>(1) << mNumDirectoryIndexBits);
@@ -115,12 +115,12 @@ void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<Regis
 	mapObject(std::make_shared<MapperRegister128ByteMMU_t>(physicalAddress, register128));
 }
 
-void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue8_t>& fifoQueue8)
+void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t>& fifoQueue8)
 {
 	mapObject(std::make_shared<MapperFIFOQueue8ByteMMU_t>(physicalAddress, fifoQueue8));
 }
 
-void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue32_t>& fifoQueue32)
+void ByteMMU_t::mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t>& fifoQueue32)
 {
 	mapObject(std::make_shared<MapperFIFOQueue32ByteMMU_t>(physicalAddress, fifoQueue32));
 }

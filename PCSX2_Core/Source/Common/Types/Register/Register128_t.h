@@ -40,7 +40,6 @@ public:
 
 	/*
 	Read/write functions to access the register, with subclassed functionality.
-	TODO: can get small speedup by separating the VM context into own direct function ( readTypeRaw() / writeTypeRaw() ) if needed.
 	*/
 	virtual u8 readByte(const System_t context, size_t arrayIndex);
 	virtual void writeByte(const System_t context, size_t arrayIndex, u8 value);
@@ -56,9 +55,9 @@ public:
 	virtual void writeFloat(const System_t context, size_t arrayIndex, f32 value);
 
 	/*
-	Initalise register (set back to default value).
+	Initialise register (set back to default value).
 	*/
-	virtual void initalise();
+	virtual void initialise();
 
 protected:
 	/*

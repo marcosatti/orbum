@@ -37,9 +37,9 @@ public:
 	virtual void writeByte(const System_t context, u8 value);
 
 	/*
-	Initalise register (set back to default value).
+	Initialise register (set back to default value).
 	*/
-	virtual void initalise();
+	virtual void initialise();
 
 protected:
 	/*

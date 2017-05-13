@@ -22,7 +22,7 @@ HwordMemory_t::HwordMemory_t(const char* mnemonic, bool debugReads, bool debugWr
 #endif
 }
 
-void HwordMemory_t::initalise()
+void HwordMemory_t::initialise()
 {
 	std::vector<u16>(mMemoryByteSize / 2, 0).swap(mMemory);
 }

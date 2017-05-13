@@ -74,7 +74,7 @@ void Register16_t::writeHword(const System_t context, u16 value)
 #endif
 }
 
-void Register16_t::initalise()
+void Register16_t::initialise()
 {
 	UH = mInitalisationValue;
 }

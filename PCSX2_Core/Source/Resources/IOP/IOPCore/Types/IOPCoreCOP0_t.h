@@ -30,9 +30,9 @@ public:
 	bool isCoprocessorUsable(const System_t context) const override;
 
 	/*
-	Initalises the IOP COP0 registers.
+	Initialises the IOP COP0 registers.
 	*/
-	void initalise() override;
+	void initialise() override;
 
 	/*
 	Determine the CPU context. Uses the Status register.

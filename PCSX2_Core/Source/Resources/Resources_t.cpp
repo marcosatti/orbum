@@ -80,14 +80,14 @@ Resources_t::Resources_t() :
 	postInit_SPU2();
 	postInit_IOP_DMAC();
 
-	// Put these last - they are dependant on the resources initalised from the other init functions (due to memory mappings).
+	// Put these last - they are dependant on the resources initialised from the other init functions (due to memory mappings).
 	postInit_EE();
 	postInit_IOP();
 }
 
 void Resources_t::postInit_EE_DMAC() const
 {
-	// Initalise DMAC channels.
+	// Initialise DMAC channels.
 	{
 		EE->DMAC->CHANNEL_VIF0 = std::make_shared<EEDmacChannel_VIF0_t>(Common->FIFO_VIF0);
 		EE->DMAC->CHANNEL_VIF1 = std::make_shared<EEDmacChannel_VIF1_t>(Common->FIFO_VIF1);
@@ -115,7 +115,7 @@ void Resources_t::postInit_EE_DMAC() const
 
 void Resources_t::postInit_EE_VPU_VU() const
 {
-	// Initalise VU0 & the CCR registers.
+	// Initialise VU0 & the CCR registers.
 	{
 		EE->VPU->VU->VU0 = std::make_shared<VUCore_VU0_t>(EE->EECore->COP0);
 		EE->VPU->VU->VU0->CCR[0] = std::make_shared<MapperRegister16Register32_t>("N/A", false, false, EE->VPU->VU->VU0->VI[0]);
@@ -152,13 +152,13 @@ void Resources_t::postInit_EE_VPU_VU() const
 		EE->VPU->VU->VU0->CCR[31] = EE->VPU->VU->VU1->CMSAR;
 	}
 
-	// Initalise VU units array.
+	// Initialise VU units array.
 	{
 		EE->VPU->VU->VU_CORES[0] = EE->VPU->VU->VU0;
 		EE->VPU->VU->VU_CORES[1] = EE->VPU->VU->VU1;
 	}
 
-	// Initalise VU0 and VU1 physical memory map.
+	// Initialise VU0 and VU1 physical memory map.
 	{
 		// VU0 Memory.
 		EE->VPU->VU->VU0->MMU->mapObject(0x0000, EE->VPU->VU->VU0->MEMORY_Mem);
@@ -193,7 +193,7 @@ void Resources_t::postInit_EE_VPU_VU() const
 
 void Resources_t::postInit_EE() const
 {
-	// Initalise physical memory map of EE.
+	// Initialise physical memory map of EE.
 	{
 		// EE Memory.
 		{
@@ -478,7 +478,7 @@ void Resources_t::postInit_IOP_DMAC() const
 
 void Resources_t::postInit_IOP() const
 {
-	// Initalise physical memory map of IOP.
+	// Initialise physical memory map of IOP.
 	{
 		// IOP Memory.
 		{

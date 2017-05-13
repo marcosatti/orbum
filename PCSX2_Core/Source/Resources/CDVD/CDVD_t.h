@@ -5,7 +5,7 @@
 class Register8_t;
 class CDVDRegister_NS_COMMAND_t;
 class CDVDRegister_NS_RDY_DIN_t;
-class FIFOQueue8_t;
+class FIFOQueue_t;
 class CDVDNvram_t;
 class CDVDFIFOQueue_NS_DATA_OUT_t;
 

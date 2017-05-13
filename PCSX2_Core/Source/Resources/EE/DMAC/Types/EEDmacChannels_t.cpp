@@ -21,7 +21,7 @@ EEDmacChannel_t::EEDmacChannel_t(const int channelID) :
 	mInfo = EEDmacChannelTable::getInfo(this);
 }
 
-EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_t::EEDmacChannel_t(const int channelID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	CHCR(nullptr),
 	MADR(nullptr),
 	QWC(nullptr),
@@ -47,7 +47,7 @@ const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannel_t::getInfo() const
 	return mInfo;
 }
 
-EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_8060(std::make_shared<ConstantByteMemory_t>("EE DMAC 8060", false, false, 0xFA0))
 {
@@ -61,7 +61,7 @@ EEDmacChannel_VIF0_t::EEDmacChannel_VIF0_t(const std::shared_ptr<FIFOQueue32_t> 
 	ASR[1] = ASR1;
 }
 
-EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_9060(std::make_shared<ConstantByteMemory_t>("EE DMAC 9060", false, false, 0xFA0))
 {
@@ -75,7 +75,7 @@ EEDmacChannel_VIF1_t::EEDmacChannel_VIF1_t(const std::shared_ptr<FIFOQueue32_t> 
 	ASR[1] = ASR1;
 }
 
-EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_A060(std::make_shared<ConstantByteMemory_t>("EE DMAC A060", false, false, 0xFA0))
 {
@@ -89,7 +89,7 @@ EEDmacChannel_GIF_t::EEDmacChannel_GIF_t(const std::shared_ptr<FIFOQueue32_t> & 
 	ASR[1] = ASR1;
 }
 
-EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_B030(std::make_shared<ConstantByteMemory_t>("EE DMAC B030", false, false, 0x3D0))
 {
@@ -98,7 +98,7 @@ EEDmacChannel_fromIPU_t::EEDmacChannel_fromIPU_t(const std::shared_ptr<FIFOQueue
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE DMAC CH_fromIPU QWC", false, false);
 }
 
-EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue) :
+EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_B440(std::make_shared<ConstantByteMemory_t>("EE DMAC B440", false, false, 0xBC0))
 {
@@ -108,7 +108,7 @@ EEDmacChannel_toIPU_t::EEDmacChannel_toIPU_t(const std::shared_ptr<FIFOQueue32_t
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE DMAC CH_toIPU TADR", false, false);
 }
 
-EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C030(std::make_shared<ConstantByteMemory_t>("EE DMAC C030", false, false, 0x3D0))
 {
@@ -117,7 +117,7 @@ EEDmacChannel_SIF0_t::EEDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue32_t> 
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE DMAC CH_SIF0 QWC", false, false);
 }
 
-EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C440(std::make_shared<ConstantByteMemory_t>("EE DMAC C440", false, false, 0x3C0))
 {
@@ -127,7 +127,7 @@ EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue32_t> 
 	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE DMAC CH_SIF1 TADR", false, false);
 }
 
-EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
+EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
 	EEDmacChannel_t(CHANNEL_ID, fifoQueue),
 	MEMORY_C830(std::make_shared<ConstantByteMemory_t>("EE DMAC C830", false, false, 0x7D0))
 {

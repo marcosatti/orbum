@@ -19,5 +19,5 @@ public:
 	/*
 	An initalisation function for the coprocessor state.
 	*/
-	virtual void initalise() { }
+	virtual void initialise() { }
 };

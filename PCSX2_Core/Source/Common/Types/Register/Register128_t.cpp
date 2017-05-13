@@ -202,7 +202,7 @@ void Register128_t::writeFloat(const System_t context, size_t arrayIndex, f32 va
 #endif
 }
 
-void Register128_t::initalise()
+void Register128_t::initialise()
 {
 	UQ = mInitalisationValue;
 }

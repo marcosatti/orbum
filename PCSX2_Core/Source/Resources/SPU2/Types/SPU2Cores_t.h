@@ -16,7 +16,7 @@ class ByteMemory_t;
 class Register16_t;
 class PairRegister16_t;
 class SPU2CoreVoice_C0V0_t;
-class FIFOQueue32_t;
+class FIFOQueue_t;
 
 /*
 Base class representing a SPU2 core.
@@ -25,7 +25,7 @@ There are 2 individual cores in the SPU2, each with 24 voice channels.
 class SPU2Core_t
 {
 public:
-	SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
 	SPU2 Core registers.
@@ -159,7 +159,7 @@ public:
 	/*
 	Associated DMA FIFO queue attached to this core.
 	*/
-	std::shared_ptr<FIFOQueue32_t> FIFOQueue;
+	std::shared_ptr<FIFOQueue_t> FIFOQueue;
 	
 	/*
 	Returns the core ID.	
@@ -188,7 +188,7 @@ private:
 class SPU2Core_C0_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C0_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
 	Unknown memory/registers.
@@ -201,7 +201,7 @@ public:
 class SPU2Core_C1_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C1_t(const std::shared_ptr<FIFOQueue32_t> & fifoQueue);
+	SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	static constexpr int CORE_ID = 1;
 };

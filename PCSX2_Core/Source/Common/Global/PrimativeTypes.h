@@ -56,7 +56,7 @@ typedef float f32;
 128-bit type. Note that the PS2 never operates on pure 128-bit values - rather it operates on sub sections of this value, such as 4 x 32-bit (words) or 8 x 16-bit (halfwords). 
 Therefore we do not need a signed and unsigned 128-bit value, as it is meaningless to the PS2 (but we just call it unsigned).
 Mnemonic: UD stands for value (64-bit), UW stands for value (32-bit), etc.
-TODO: Check alignment & endianess. Currently it is assumed that in memory, for example, hi preceedes low, and for the arrays, it is layed out (MSB to LSB) [3]->[2]->[1]->[0].
+TODO: Check alignment & endianess. Currently it is assumed that a u128 is stored in memory as little endian.
 TODO: Compiler does not guarantee that the struct order in memory will be the same as the declared order... Need a more portable way.
 */
 struct u128
@@ -99,19 +99,5 @@ struct u128
 	u128(const u32 w0, const u32 w1, const u32 w2, const u32 w3) :
 		UW{ w0, w1, w2, w3 }
 	{
-	}
-
-	/*
-	Operator functions for:
-	 - Comparing this value to another.
-	*/
-	bool operator==(const u128 & right) const
-	{
-		return (lo == right.lo) && (hi == right.hi);
-	}
-
-	bool operator!=(const u128 & right) const
-	{
-		return (lo != right.lo) || (hi != right.hi);
 	}
 };

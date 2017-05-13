@@ -9,13 +9,13 @@ BitfieldRegister16_t::BitfieldRegister16_t(const char* mnemonic, bool debugReads
 {
 }
 
-void BitfieldRegister16_t::initalise()
+void BitfieldRegister16_t::initialise()
 {
-	Register16_t::initalise();
-	initaliseAllFields();
+	Register16_t::initialise();
+	initialiseAllFields();
 }
 
-void BitfieldRegister16_t::initaliseAllFields()
+void BitfieldRegister16_t::initialiseAllFields()
 {
 	for (auto& field : mFields)
 	{
@@ -77,7 +77,7 @@ void BitfieldRegister16_t::writeHword(const System_t context, u16 value)
 void BitfieldRegister16_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u16 fieldInitialValue)
 {
 	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
-	initaliseAllFields();
+	initialiseAllFields();
 }
 
 u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex) const
