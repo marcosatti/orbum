@@ -32,7 +32,7 @@ public:
 	virtual ~EECoreInterpreter_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

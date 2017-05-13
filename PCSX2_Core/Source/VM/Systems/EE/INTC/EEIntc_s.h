@@ -17,7 +17,7 @@ public:
 	virtual ~EEIntc_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

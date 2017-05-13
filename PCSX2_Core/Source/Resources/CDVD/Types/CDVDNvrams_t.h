@@ -28,7 +28,7 @@ class CDVDNvram_t
 public:
 	/*
 	Static NVRAM information:
-	 - Magic values for the iLink data section (written to NVRAM upon initalisation by CDVD logic).
+	 - Magic values for the iLink data section (written to NVRAM upon initialisation by CDVD logic).
 	*/
 	static constexpr u8 ILINK_DATA_MAGIC[8] = { 0x00, 0xAC, 0xFF, 0xFF, 0xFF, 0xFF, 0xB9, 0x86 };
 

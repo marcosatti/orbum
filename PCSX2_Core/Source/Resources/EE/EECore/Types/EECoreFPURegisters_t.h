@@ -7,7 +7,7 @@ struct FPUFlags_t;
 /*
 FPURegisters_t.h implements all of the bitfields in each of the FPU control registers. This is used primarily by EECoreFPU_t.h.
 Each register will have documentation attached to it, and is prefixed by COP1Register.
-Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
+Note: where register fields have a constant 0, this is already done due to the base classes initialisation code.
 
 It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
 All of the fields available within each register are defined within the Fields struct located inside.

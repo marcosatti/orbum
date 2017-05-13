@@ -19,10 +19,8 @@ public:
 	Trigger updates to the SBUS_F300 register (magic values).
 	Based upon PCSX2's "sif2.cpp".
 	*/
-	u32 readWord(const System_t context) override;
-	u128 readQword(const System_t context) override;
-	void writeWord(const System_t context, const u32 data) override;
-	void writeQword(const System_t context, const u128 data) override;
+	u8 readByte(const System_t context) override;
+	void writeByte(const System_t context, const u8 data) override;
 
 private:
 	/*

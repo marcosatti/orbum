@@ -8,7 +8,7 @@
 
 /*
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
-Only read/writeWord and Qword is allowed on non-zero storage indexes - all other combinations throw a runtime error.
+This wrapper maps the FIFO queue to a single byte of the address space and acts like a port.
 */
 class MapperFIFOQueueByteMMU_t : public MapperBaseObjectByteMMU_t
 {

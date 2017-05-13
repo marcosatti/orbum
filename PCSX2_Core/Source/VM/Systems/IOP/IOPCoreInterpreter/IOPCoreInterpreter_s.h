@@ -28,7 +28,7 @@ public:
 	virtual ~IOPCoreInterpreter_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

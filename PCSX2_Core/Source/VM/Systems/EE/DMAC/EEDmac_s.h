@@ -35,7 +35,7 @@ public:
 	virtual ~EEDmac_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 
@@ -107,13 +107,13 @@ private:
 	Reads a qword from memory using the address given.
 	SPRAccess controls if the read is through the EE main memory or the EE Core scratchpad.
 	*/
-	u128 readDataMemory(u32 PhysicalAddressOffset, bool SPRAccess) const;
+	u128 readQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess) const;
 
 	/*
 	Writes a qword to memory using the address given.
 	SPRAccess controls if the write is through the EE main memory or the EE Core scratchpad.
 	*/
-	void writeDataMemory(u32 PhysicalAddressOffset, bool SPRAccess, u128 data) const;
+	void writeQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess, const u128 data) const;
 
 	////////////////////////////////////
 	// Stall Control Helper Functions //

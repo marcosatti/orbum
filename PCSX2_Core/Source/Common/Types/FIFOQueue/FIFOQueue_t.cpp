@@ -38,7 +38,7 @@ u8 FIFOQueue_t::readByte(const System_t context)
 
 void FIFOQueue_t::writeByte(const System_t context, const u8 data)
 {
-	if (getCurrentSize() >= mMaxByteSize)
+	if (getCurrentSize() == mMaxByteSize)
 		throw std::runtime_error("FIFO Queue full, but tried to write. Please fix.");
 
 	mFIFOQueue.push(data);

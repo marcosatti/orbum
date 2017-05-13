@@ -3,10 +3,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/Register64_t.h"
 
-Register64_t::Register64_t(const char* mnemonic, bool debugReads, bool debugWrites, const u64 initalisationValue) :
+Register64_t::Register64_t(const char* mnemonic, bool debugReads, bool debugWrites, const u64 initialisationValue) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	UD(initalisationValue),
-	mInitalisationValue(initalisationValue)
+	UD(initialisationValue),
+	mInitialisationValue(initialisationValue)
 {
 }
 
@@ -140,5 +140,5 @@ void Register64_t::writeDword(const System_t context, u64 value)
 
 void Register64_t::initialise()
 {
-	UD = mInitalisationValue;
+	UD = mInitialisationValue;
 }

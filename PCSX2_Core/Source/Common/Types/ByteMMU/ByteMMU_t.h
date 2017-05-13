@@ -68,8 +68,7 @@ public:
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register32_t> & register32);
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register64_t> & register64);
 	void mapObject(const u32 physicalAddress, const std::shared_ptr<Register128_t> & register128);
-	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue32);
-	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue32);
+	void mapObject(const u32 physicalAddress, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
 	/*
 	These functions, given a PS2 physical address, will read or write a value from/to the address.

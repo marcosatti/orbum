@@ -261,7 +261,7 @@ int IOPDmac_s::transferData() const
 			return 0;
 
 		u32 packet = mChannel->FIFOQueue->readWord(getContext());
-		writeDataMemory32(physicalAddress, packet);
+		writeWordMemory(physicalAddress, packet);
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
 		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
@@ -273,7 +273,7 @@ int IOPDmac_s::transferData() const
 		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - 1))
 			return 0;
 
-		u32 packet = readDataMemory32(physicalAddress);
+		u32 packet = readWordMemory(physicalAddress);
 		mChannel->FIFOQueue->writeWord(getContext(), packet);
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
@@ -330,17 +330,17 @@ bool IOPDmac_s::isChannelIRQEnabled() const
 	return (mDMAC->ICR1->getFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
 }
 
-u32 IOPDmac_s::readDataMemory32(u32 PhysicalAddressOffset) const
+u32 IOPDmac_s::readWordMemory(const u32 bytePhysicalAddress) const
 {
 	return mIOPByteMMU->readWord(getContext(), PhysicalAddressOffset);
 }
 
-void IOPDmac_s::writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const
+void IOPDmac_s::writeWordMemory(const u32 bytePhysicalAddress, const u32 data) const
 {
 	mIOPByteMMU->writeWord(getContext(), PhysicalAddressOffset, data);
 }
 
-u128 IOPDmac_s::readDataMemory128(u32 PhysicalAddressOffset) const
+u128 IOPDmac_s::readQwordMemory(const u32 bytePhysicalAddress) const
 {
 	return mIOPByteMMU->readQword(getContext(), PhysicalAddressOffset);
 }
@@ -358,7 +358,7 @@ bool IOPDmac_s::readChainSourceTag()
 	const u32 TADR = mChannel->TADR->readWord(getContext());
 
 	// Read EE tag (128-bits) from TADR.
-	const u128 tag = readDataMemory128(TADR);
+	const u128 tag = readQwordMemory(TADR);
 
 	// Set mDMAtag based upon the LSB 64-bits of tag.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);

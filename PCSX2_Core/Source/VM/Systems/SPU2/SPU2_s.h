@@ -19,10 +19,16 @@ public:
 	virtual ~SPU2_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 
+	/*
+	Steps through the SPU2 state, performing the following tasks:
+	 - Check and process incoming/outgoing DMA data transfers.
+	 - Do sound generation and interfacing with the VM / user.
+	 - Check for any IRQ's pending and notify the IOP INTC.
+	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
@@ -33,19 +39,21 @@ private:
 	std::shared_ptr<IOPIntc_t> mINTC;
 	SPU2Core_t * mCore;
 
+	///////////////////////////
+	// SPU2 Helper Functions //
+	///////////////////////////
+
+	/*
+	Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the IOP Core (through the INTC).
+	*/
+	void handleInterruptCheck() const;
+
 	/*
 	Checks the DMA status, and initiates transfers if enabled and data is ready.
 	An IOP interrupt is generated after a buffer has been filled - this is 256 hwords in stereo mode, 512 hwords in mono mode.
 	Return value indicates if one or more DMA transfers occurred.
 	*/
 	bool handleDMATransfer();
-
-	/*
-	Handles the sound generation by processing data in the SPU2.
-	Interfaces with the emulator to play sound.
-	Return value indicates if sound was generated (always true, except if core is disabled).
-	*/
-	bool handleSoundGeneration();
 
 	/*
 	Transfers data between the SPU2 FIFO and the SPU2 memory.
@@ -57,5 +65,25 @@ private:
 	int transferData_ADMA_Read() const;
 	int transferData_MDMA_Write() const;
 	int transferData_MDMA_Read() const;
+
+	/*
+	Read or write hwords to the SPU2 memory, while automatically setting the core IRQ status if the address is the same as the IRQA register.
+	Careful: the address supplied is in terms of a hword offset, not byte offset.
+	See SPU2 Overview manual page 36 for more info.
+	TODO: Very basic IRQ condition checking. Probably needs work.
+	*/
+	u16 readHwordMemory(const u32 hwordPhysicalAddress) const;
+	void writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) const;
+
+	///////////////////////////////////////
+	// Sound Generation Helper Functions //
+	///////////////////////////////////////
+
+	/*
+	Handles the sound generation by processing data in the SPU2.
+	Interfaces with the emulator to play sound.
+	Return value indicates if sound was generated (always true, except if core is disabled).
+	*/
+	bool handleSoundGeneration();
 };
 

@@ -17,7 +17,7 @@ public:
 	virtual bool isCoprocessorUsable(const System_t context) const = 0;
 
 	/*
-	An initalisation function for the coprocessor state.
+	An initialisation function for the coprocessor state.
 	*/
 	virtual void initialise() { }
 };

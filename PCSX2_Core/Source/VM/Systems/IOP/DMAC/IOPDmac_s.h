@@ -23,7 +23,7 @@ public:
 	virtual ~IOPDmac_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 
@@ -98,17 +98,17 @@ private:
 	/*
 	Reads a word from memory using the address given.
 	*/
-	u32 readDataMemory32(u32 PhysicalAddressOffset) const;
+	u32 readWordMemory(const u32 bytePhysicalAddress) const;
 
 	/*
 	Writes a word to memory using the address given.
 	*/
-	void writeDataMemory32(u32 PhysicalAddressOffset, u32 data) const;
+	void writeWordMemory(const u32 bytePhysicalAddress, const u32 data) const;
 
 	/*
 	Reads a qword from memory using the address given.
 	*/
-	u128 readDataMemory128(u32 PhysicalAddressOffset) const;
+	u128 readQwordMemory(u32 bytePhysicalAddress) const;
 
 	/////////////////////////////////
 	// Chain Mode Helper Functions //

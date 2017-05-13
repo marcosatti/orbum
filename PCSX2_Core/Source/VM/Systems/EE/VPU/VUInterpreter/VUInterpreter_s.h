@@ -18,7 +18,7 @@ public:
 	virtual ~VUInterpreter_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

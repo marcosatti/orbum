@@ -11,29 +11,17 @@ SBUSFIFOQueue_SIF2_t::SBUSFIFOQueue_SIF2_t(const char * mnemonic, const bool deb
 {
 }
 
-u32 SBUSFIFOQueue_SIF2_t::readWord(const System_t context)
+u8 SBUSFIFOQueue_SIF2_t::readByte(const System_t context)
 {
-	u32 temp = FIFOQueue_t::readWord(context);
+	// Must read from the FIFO first - SBUS update calls FIFOQueue::getCurrentSize().
+	u32 temp = FIFOQueue_t::readByte(context);
 	handleSBUSUpdate(context);
 	return temp;
 }
 
-u128 SBUSFIFOQueue_SIF2_t::readQword(const System_t context)
+void SBUSFIFOQueue_SIF2_t::writeByte(const System_t context, const u8 data)
 {
-	u128 temp = FIFOQueue_t::readQword(context);
-	handleSBUSUpdate(context);
-	return temp;
-}
-
-void SBUSFIFOQueue_SIF2_t::writeWord(const System_t context, const u32 data)
-{
-	FIFOQueue_t::writeWord(context, data);
-	handleSBUSUpdate(context);
-}
-
-void SBUSFIFOQueue_SIF2_t::writeQword(const System_t context, const u128 data)
-{
-	FIFOQueue_t::writeQword(context, data);
+	FIFOQueue_t::writeByte(context, data);
 	handleSBUSUpdate(context);
 }
 

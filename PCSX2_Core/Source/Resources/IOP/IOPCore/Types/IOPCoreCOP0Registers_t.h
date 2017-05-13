@@ -7,7 +7,7 @@
 /*
 IOPCore_COP0_Registers_t.h implements the IOP Core specific COP0 control registers. This is used primarily by IOPCoreCOP0_t.h.
 Each register will have documentation attached to it, and is prefixed with IOPCore_COP0Register.
-Note: where register fields have a constant 0, this is already done due to the base classes initalisation code.
+Note: where register fields have a constant 0, this is already done due to the base classes initialisation code.
 
 It is recommended that you read the documentation of the BitfieldRegister32_t class, which documents how to access bitfields.
 All of the fields available within each register are defined within the Fields struct located inside.

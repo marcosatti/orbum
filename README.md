@@ -43,9 +43,9 @@ As of 2017/03/08:
 Some debug data:
 ```
 [Info] VM reset started...
-[Info] VM resources initalised.
-[Info] VM roms initalised.
-[Info] VM systems initalised.
+[Info] VM resources initialised.
+[Info] VM roms initialised.
+[Info] VM systems initialised.
 [Info] VM reset done.
 [Debug] EE SIO Message: # Initialize memory (rev:3.17, ctm:393Mhz, cpuclk:295Mhz )
 [Debug] EE SIO Message: # Total accessable memory size: 32 MB (B:2:8:0)

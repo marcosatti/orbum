@@ -3,7 +3,8 @@
 #include <memory>
 
 #include "Common/Types/Register/Register8_t.h"
-#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+
+class FIFOQueue_t;
 
 /*
 CDVD Register N/S_COMMAND.

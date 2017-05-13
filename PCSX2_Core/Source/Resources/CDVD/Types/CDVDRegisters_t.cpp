@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Common/Types/FIFOQueue/FIFOQueue_t.h"
+
 #include "Resources/CDVD/Types/CDVDRegisters_t.h"
 
 CDVDRegister_NS_COMMAND_t::CDVDRegister_NS_COMMAND_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :

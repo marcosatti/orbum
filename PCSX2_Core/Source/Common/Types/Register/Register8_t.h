@@ -9,7 +9,7 @@
 /*
 Register type and size definitions.
 Register8, Register16, Register32, Register64 and Register128 define the base register sizes used thoughout the emulator.
-Upon initalisation, set to the user defined value if provided (defualt 0).
+Upon initialisation, set to the user defined value if provided (defualt 0).
 
 These registers are implemented (at core) as a union of the unsigned sums (to the register size) of these types.
 However, they should be accessed by the read/write functions instead to account for overriden functionality.
@@ -27,7 +27,7 @@ See the Memory type for the counter-example.
 class Register8_t : public DebugBaseObject_t
 {
 public:
-	Register8_t(const char * mnemonic, bool debugReads, bool debugWrites, const u8 initalisationValue = 0);
+	Register8_t(const char * mnemonic, bool debugReads, bool debugWrites, const u8 initialisationValue = 0);
 	virtual ~Register8_t() = default;
 
 	/*
@@ -51,7 +51,7 @@ protected:
 	};
 
 	/*
-	Default initalisation value.
+	Default initialisation value.
 	*/
-	u8 mInitalisationValue;
+	u8 mInitialisationValue;
 };

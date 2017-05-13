@@ -76,7 +76,7 @@ struct u128
 	};
 
 	/*
-	Constructor functions for different initalisation values.
+	Constructor functions for different initialisation values.
 	*/
 	u128() :
 		lo(0),

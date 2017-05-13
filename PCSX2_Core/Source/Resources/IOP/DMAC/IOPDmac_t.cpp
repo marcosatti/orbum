@@ -6,7 +6,7 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
 IOPDmac_t::IOPDmac_t() :
-	// Channels (defined on post resources initalisation).
+	// Channels (defined on post resources initialisation).
 	CHANNEL_fromMDEC(nullptr),
 	CHANNEL_toMDEC(nullptr),
 	CHANNEL_SIF2(nullptr),

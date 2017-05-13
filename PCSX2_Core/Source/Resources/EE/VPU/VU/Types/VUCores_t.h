@@ -124,7 +124,7 @@ public:
 	See VU Users Manual page 200 & 201.
 
 	The first 16 registers are allocated to the VU0 VI registers, with the last 16 registers allocated to various control registers.
-	Due to dependency on registers outside this class, initalisation is done on post PS2Resources initalsation.
+	Due to dependency on registers outside this class, initialisation is done on post PS2Resources initalsation.
 	*/
 	std::shared_ptr<Register32_t> CCR[Constants::EE::VPU::VU::NUMBER_VU0_CCR_REGISTERS];
 

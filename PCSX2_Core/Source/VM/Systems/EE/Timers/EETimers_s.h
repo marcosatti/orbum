@@ -22,7 +22,7 @@ public:
 	virtual ~EETimers_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

@@ -21,7 +21,7 @@ public:
 	void initialise() override;
 
 	/*
-	Reset the bitfield register by initalising all fields to its initial value defined in the BitfieldProperties_t.
+	Reset the bitfield register by initialising all fields to its initial value defined in the BitfieldProperties_t.
 	*/
 	void initialiseAllFields();
 

@@ -7,12 +7,14 @@ class SPU2Core_C0_t;
 class SPU2Core_C1_t;
 class SPU2Core_t;
 class Register16_t;
+class SPU2Register_SPDIF_IRQINFO_t;
 
 /*
 Describes the SPU2 (sound) resources that is attached through the IOP.
-No official documentation - everything comes from PCSX2. Thanks to everyone involved!
+No official documentation, except for the SPU2 Overview manual which does help.
+Most of the implementation comes from PCSX2. Thanks to everyone involved!
 
-The registers are assigned to the 0x1F900000 -> 0x1F900800 space.
+The registers are assigned to the 0x1F900000 -> 0x1F900800 space in the IOP.
 */
 class SPU2_t
 {
@@ -29,13 +31,13 @@ public:
 	/*
 	SPDIF Registers.
 	*/
-	std::shared_ptr<Register16_t> SPDIF_OUT;
-	std::shared_ptr<Register16_t> SPDIF_IRQINFO;
-	std::shared_ptr<Register16_t> SPDIF_07C4;
-	std::shared_ptr<Register16_t> SPDIF_MODE;
-	std::shared_ptr<Register16_t> SPDIF_MEDIA;
-	std::shared_ptr<Register16_t> SPDIF_07CA;
-	std::shared_ptr<Register16_t> SPDIF_PROTECT;
+	std::shared_ptr<Register16_t>                 SPDIF_OUT;
+	std::shared_ptr<SPU2Register_SPDIF_IRQINFO_t> SPDIF_IRQINFO;
+	std::shared_ptr<Register16_t>                 SPDIF_07C4;
+	std::shared_ptr<Register16_t>                 SPDIF_MODE;
+	std::shared_ptr<Register16_t>                 SPDIF_MEDIA;
+	std::shared_ptr<Register16_t>                 SPDIF_07CA;
+	std::shared_ptr<Register16_t>                 SPDIF_PROTECT;
 
 	/*
 	SPU2 Local Memory (2MB).
@@ -43,5 +45,4 @@ public:
 	The raw byte-addressed memory is still provided, with a wrapper applied for the half-word verison.
 	*/
 	std::shared_ptr<HwordMemory_t> MainMemory;
-	std::shared_ptr<HwordMemory_t> DebugDummy; // Workaround to undo the optimisation of the hword memory dump function when using link time optimisation...
 };

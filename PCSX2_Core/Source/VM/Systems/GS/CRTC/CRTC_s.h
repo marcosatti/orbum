@@ -25,7 +25,7 @@ public:
 	virtual ~CRTC_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

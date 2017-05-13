@@ -3,10 +3,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/Register32_t.h"
 
-Register32_t::Register32_t(const char* mnemonic, bool debugReads, bool debugWrites, const u32 initalisationValue) :
+Register32_t::Register32_t(const char* mnemonic, bool debugReads, bool debugWrites, const u32 initialisationValue) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	UW(initalisationValue),
-	mInitalisationValue(initalisationValue)
+	UW(initialisationValue),
+	mInitialisationValue(initialisationValue)
 {
 }
 
@@ -140,5 +140,5 @@ void Register32_t::writeFloat(const System_t context, f32 value)
 
 void Register32_t::initialise()
 {
-	UW = mInitalisationValue;
+	UW = mInitialisationValue;
 }

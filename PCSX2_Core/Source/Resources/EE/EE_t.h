@@ -99,6 +99,6 @@ public:
 	std::shared_ptr<Register32_t>         REGISTER_F400;
 	std::shared_ptr<ConstantByteMemory_t> MEMORY_F410;   // Needs to be constant value (by BIOS).
 	std::shared_ptr<Register32_t>         REGISTER_F420; 
-	std::shared_ptr<EERegister_MCH_t>     MEMORY_MCH;    // No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initalisation.
+	std::shared_ptr<EERegister_MCH_t>     MEMORY_MCH;    // No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initialisation.
 	std::shared_ptr<ByteMemory_t>         MEMORY_F450;      
 };

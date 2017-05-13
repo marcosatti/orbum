@@ -45,7 +45,7 @@ public:
 	std::shared_ptr<SPU2CoreRegister_MMIX_t>  MMIX;
 	std::shared_ptr<SPU2CoreRegister_ATTR_t>  ATTR;
 	std::shared_ptr<Register16_t>             IRQAH;
-	std::shared_ptr<Register16_t>             IRQAL;
+	std::shared_ptr<PairRegister16_t>         IRQAL;
 	std::shared_ptr<SPU2CoreRegister_CHAN0_t> KON0;
 	std::shared_ptr<SPU2CoreRegister_CHAN1_t> KON1;
 	std::shared_ptr<SPU2CoreRegister_CHAN0_t> KOF0;

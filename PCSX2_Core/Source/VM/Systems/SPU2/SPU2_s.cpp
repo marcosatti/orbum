@@ -16,6 +16,7 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include "Resources/IOP/IOP_t.h"
 #include "Resources/SPU2/SPU2_t.h"
+#include "Resources/SPU2/Types/SPU2Registers_t.h"
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
 #include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
 #include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
@@ -140,7 +141,8 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to left channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->writeWord(getContext(), leftAddr, data);
+			writeHword(getContext(), leftAddr, reinterpret_cast<u16*>(&data)[0]);
+			writeHword(getContext(), leftAddr + 1, reinterpret_cast<u16*>(&data)[1]);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
@@ -153,7 +155,8 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to right channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->writeWord(getContext(), rightAddr, data);
+			writeHword(getContext(), rightAddr, reinterpret_cast<u16*>(&data)[0]);
+			writeHword(getContext(), rightAddr + 1, reinterpret_cast<u16*>(&data)[1]);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
@@ -183,4 +186,37 @@ int SPU2_s::transferData_MDMA_Write() const
 int SPU2_s::transferData_MDMA_Read() const
 {
 	throw std::runtime_error("SPU2 MDMA read not yet implemented. Look into the ATTR.DMAMode bits, as this might be incorrectly called.");
+}
+
+u16 SPU2_s::readHwordMemory(const u32 hwordPhysicalAddress) const
+{
+	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
+	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
+	if (irqAddr == hwordPhysicalAddress)
+		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
+
+	return mSPU2->MainMemory->readHword(getContext(), hwordPhysicalAddress);
+}
+
+void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) const
+{
+	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
+	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
+	if (irqAddr == hwordPhysicalAddress)
+		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
+
+	mSPU2->MainMemory->writeHword(getContext(), hwordPhysicalAddress, value);
+}
+
+void SPU2_s::handleInterruptCheck() const
+{
+	// Check through the SPDIF_IRQINFO register for any core bits set.
+	for (auto& key : SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS)
+	{
+		if (mSPU2->SPDIF_IRQINFO->getFieldInfo(getContext(), key) > 0)
+		{
+			// IRQ was set, notify the IOP INTC.
+			mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::SPU, 1);
+		}
+	}
 }

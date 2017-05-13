@@ -169,7 +169,7 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	MMIX = std::make_shared<SPU2CoreRegister_MMIX_t>("SPU2 C0 MMIX", false, false);
 	ATTR = std::make_shared<SPU2CoreRegister_ATTR_t>("SPU2 C0 ATTR", false, true);
 	IRQAH = std::make_shared<Register16_t>("SPU2 C0 IRQAH", false, false);
-	IRQAL = std::make_shared<Register16_t>("SPU2 C0 IRQAL", false, false);
+	IRQAL = std::make_shared<PairRegister16_t>("SPU2 C0 IRQAL", false, false, IRQAH);
 	KON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 KON0", false, false);
 	KON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 KON1", false, false);
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 KOF0", false, false);
@@ -318,7 +318,7 @@ SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue):
 	MMIX = std::make_shared<SPU2CoreRegister_MMIX_t>("SPU2 C1 MMIX", false, false);
 	ATTR = std::make_shared<SPU2CoreRegister_ATTR_t>("SPU2 C1 ATTR", false, true);
 	IRQAH = std::make_shared<Register16_t>("SPU2 C1 IRQAH", false, false);
-	IRQAL = std::make_shared<Register16_t>("SPU2 C1 IRQAL", false, false);
+	IRQAL = std::make_shared<PairRegister16_t>("SPU2 C1 IRQAL", false, false, IRQAH);
 	KON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 KON0", false, false);
 	KON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 KON1", false, false);
 	KOF0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 KOF0", false, false);

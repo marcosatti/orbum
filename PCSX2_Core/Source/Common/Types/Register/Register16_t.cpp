@@ -3,10 +3,10 @@
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/Register16_t.h"
 
-Register16_t::Register16_t(const char* mnemonic, bool debugReads, bool debugWrites, const u8 initalisationValue) :
+Register16_t::Register16_t(const char* mnemonic, bool debugReads, bool debugWrites, const u8 initialisationValue) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	UH(initalisationValue),
-	mInitalisationValue(initalisationValue)
+	UH(initialisationValue),
+	mInitialisationValue(initialisationValue)
 {
 }
 
@@ -76,5 +76,5 @@ void Register16_t::writeHword(const System_t context, u16 value)
 
 void Register16_t::initialise()
 {
-	UH = mInitalisationValue;
+	UH = mInitialisationValue;
 }

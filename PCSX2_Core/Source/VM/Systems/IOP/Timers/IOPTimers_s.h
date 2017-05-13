@@ -20,7 +20,7 @@ public:
 	virtual ~IOPTimers_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

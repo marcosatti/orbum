@@ -19,7 +19,7 @@ public:
 	virtual ~VIF_s() = default;
 
 	/*
-	Initalisation.
+	Initialisation.
 	*/
 	void initialise() override;
 

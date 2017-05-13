@@ -152,8 +152,8 @@ int EEDmac_s::transferData() const
 
 		if (direction == Direction_t::FROM)
 		{
-			u128 packet = readDataMemory(SPRPhysicalAddressOffset, true);
-			writeDataMemory(PhysicalAddressOffset, false, packet);
+			u128 packet = readQwordMemory(SPRPhysicalAddressOffset, true);
+			writeQwordMemory(PhysicalAddressOffset, false, packet);
 
 #if DEBUG_LOG_EE_DMAC_XFERS
 			log(Debug, "EE DMAC Read u128 channel %s, SPRAddr = 0x%08llX, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X -> MemAddr = 0x%08X", 
@@ -162,8 +162,8 @@ int EEDmac_s::transferData() const
 		}
 		else if (direction == Direction_t::TO)
 		{
-			u128 packet = readDataMemory(PhysicalAddressOffset, false);
-			writeDataMemory(SPRPhysicalAddressOffset, true, packet);
+			u128 packet = readQwordMemory(PhysicalAddressOffset, false);
+			writeQwordMemory(SPRPhysicalAddressOffset, true, packet);
 			
 #if DEBUG_LOG_EE_DMAC_XFERS
 			log(Debug, "EE DMAC Write u128 channel %s, SPRAddr = 0x%08llX, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X <- MemAddr = 0x%08X",
@@ -192,7 +192,7 @@ int EEDmac_s::transferData() const
 				return 0;
 
 			u128 packet = mChannel->FIFOQueue->readQword(getContext());
-			writeDataMemory(PhysicalAddressOffset, SPRFlag, packet);
+			writeQwordMemory(PhysicalAddressOffset, SPRFlag, packet);
 
 #if DEBUG_LOG_EE_DMAC_XFERS
 			log(Debug, "EE DMAC Read u128 channel %s, w0 = 0x%08X, w1 = 0x%08X, w2 = 0x%08X, w3 = 0x%08X -> MemAddr = 0x%08X", 
@@ -205,7 +205,7 @@ int EEDmac_s::transferData() const
 			if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
 				return 0;
 
-			u128 packet = readDataMemory(PhysicalAddressOffset, SPRFlag);
+			u128 packet = readQwordMemory(PhysicalAddressOffset, SPRFlag);
 			mChannel->FIFOQueue->writeQword(getContext(), packet);
 
 #if DEBUG_LOG_EE_DMAC_XFERS
@@ -468,7 +468,7 @@ bool EEDmac_s::isDrainStallControlWaiting() const
 	return false;
 }
 
-u128 EEDmac_s::readDataMemory(u32 physicalAddress, bool SPRAccess) const
+u128 EEDmac_s::readQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess) const
 {
 	// Read mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
@@ -477,7 +477,7 @@ u128 EEDmac_s::readDataMemory(u32 physicalAddress, bool SPRAccess) const
 		return mEEByteMMU->readQword(getContext(), physicalAddress);
 }
 
-void EEDmac_s::writeDataMemory(u32 physicalAddress, bool SPRAccess, u128 data) const
+void EEDmac_s::writeQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess, const u128 data) const
 {
 	// Write mem[addr] or spr[addr] (128-bits).
 	if (SPRAccess)
@@ -500,7 +500,7 @@ bool EEDmac_s::readChainSourceTag()
 	const bool SPRFlag = (mChannel->TADR->getFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR) != 0);
 
 	// Read EE tag (128-bits) from TADR.
-	const u128 tag = readDataMemory(TADR, SPRFlag);
+	const u128 tag = readQwordMemory(TADR, SPRFlag);
 
 	// Set mDMAtag based upon the LSB 64-bits of tag.
 	mDMAtag = EEDMAtag_t(tag.UW[0], tag.UW[1]);

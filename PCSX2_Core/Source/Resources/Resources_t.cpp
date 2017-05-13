@@ -489,7 +489,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1FC00000, EE->BootROM);
 			IOP->MMU->mapObject(0x1E000000, EE->ROM1);
 
-			// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initalisation. TODO: related to cache control (this is probably very wrong), investigate.
+			// Mirror of the Boot ROM at 0xFFC00000. Needed by IOP bios initialisation. TODO: related to cache control (this is probably very wrong), investigate.
 			IOP->MMU->mapObject(0xFFC00000, EE->BootROM);
 
 			// Scratchpad Memory.

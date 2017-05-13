@@ -9,7 +9,7 @@
 /*
 Register type and size definitions.
 Register8, Register16, Register32, Register64 and Register128 define the base register sizes used thoughout the emulator.
-Upon initalisation, set to the user defined value if provided (defualt 0).
+Upon initialisation, set to the user defined value if provided (defualt 0).
 
 These registers are implemented (at core) as a union of the unsigned sums (to the register size) of these types.
 However, they should be accessed by the read/write functions instead to account for overriden functionality.
@@ -35,7 +35,7 @@ Use the FPUUtil static class functions to help with conversion.
 class Register128_t : public DebugBaseObject_t
 {
 public:
-	Register128_t(const char * mnemonic, bool debugReads, bool debugWrites, const u128 initalisationValue = 0); 
+	Register128_t(const char * mnemonic, bool debugReads, bool debugWrites, const u128 initialisationValue = 0); 
 	virtual ~Register128_t() = default;
 
 	/*
@@ -74,7 +74,7 @@ protected:
 	};
 
 	/*
-	Default initalisation value.
+	Default initialisation value.
 	*/
-	u128 mInitalisationValue;
+	u128 mInitialisationValue;
 };
