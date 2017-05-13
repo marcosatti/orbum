@@ -187,8 +187,8 @@ int EEDmac_s::transferData() const
 		// Else transfer data normally.
 		if (direction == Direction_t::FROM)
 		{
-			// Check if channel does not have data ready (at least 4 x u32's) - need to try again next cycle.
-			if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+			// Check if channel does not have data ready (at least 1 qword) - need to try again next cycle.
+			if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_QWORD)
 				return 0;
 
 			u128 packet = mChannel->FIFOQueue->readQword(getContext());
@@ -201,8 +201,8 @@ int EEDmac_s::transferData() const
 		}
 		else if (direction == Direction_t::TO)
 		{
-			// Check if channel is full (we need at least 4 x u32 spaces) - need to try again next cycle.
-			if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+			// Check if channel is full (we need at least 1 qword space) - need to try again next cycle.
+			if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_QWORD))
 				return 0;
 
 			u128 packet = readQwordMemory(PhysicalAddressOffset, SPRFlag);
@@ -470,20 +470,20 @@ bool EEDmac_s::isDrainStallControlWaiting() const
 
 u128 EEDmac_s::readQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess) const
 {
-	// Read mem[addr] or spr[addr] (128-bits).
+	// Read mem[addr] or spr[addr] (128-bits). SPR is at offset 0x70000000.
 	if (SPRAccess)
-		return mEEByteMMU->readQword(getContext(), 0x70000000 + physicalAddress);
+		return mEEByteMMU->readQword(getContext(), 0x70000000 + bytePhysicalAddress);
 	else
-		return mEEByteMMU->readQword(getContext(), physicalAddress);
+		return mEEByteMMU->readQword(getContext(), bytePhysicalAddress);
 }
 
 void EEDmac_s::writeQwordMemory(const u32 bytePhysicalAddress, const bool SPRAccess, const u128 data) const
 {
-	// Write mem[addr] or spr[addr] (128-bits).
+	// Write mem[addr] or spr[addr] (128-bits). SPR is at offset 0x70000000.
 	if (SPRAccess)
-		mEEByteMMU->writeQword(getContext(), 0x70000000 + physicalAddress, data);
+		mEEByteMMU->writeQword(getContext(), 0x70000000 + bytePhysicalAddress, data);
 	else
-		mEEByteMMU->writeQword(getContext(), physicalAddress, data);
+		mEEByteMMU->writeQword(getContext(), bytePhysicalAddress, data);
 }
 
 bool EEDmac_s::readChainSourceTag()
@@ -491,7 +491,7 @@ bool EEDmac_s::readChainSourceTag()
 	// Check first if we need to transfer the tag - return false if the channel queue is full.
 	if (mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
-		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_QWORD))
 			return false;
 	}
 
@@ -525,7 +525,7 @@ bool EEDmac_s::readChainSourceTag()
 bool EEDmac_s::readChainDestTag()
 {
 	// Check first if there is data available.
-	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_QWORD)
 		return false;
 
 	// Read tag from channel FIFO.

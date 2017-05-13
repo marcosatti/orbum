@@ -39,7 +39,7 @@ public:
 	NVRAM memory space.
 	1KB of space total, Hword addressable.
 	*/
-	std::shared_ptr<HwordMemory_t> Memory;
+	std::shared_ptr<HwordMemory_t> MainMemory;
 
 	/*
 	Sets the NVRAM config access paramters below, used for reading/writing to config areas.

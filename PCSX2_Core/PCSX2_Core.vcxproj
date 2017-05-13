@@ -442,9 +442,9 @@
     <ClInclude Include="Source\Common\Tables\EECoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPCoreSyscallTable.h" />
     <ClInclude Include="Source\Common\Tables\IOPDmacChannelTable.h" />
+    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_t.h" />
     <ClInclude Include="Source\Common\Types\DebugBaseObject_t.h" />
     <ClInclude Include="Source\Common\Types\EnumMap_t.h" />
-    <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_Byte_t.h" />
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\Memory\HwordMemory_t.h" />
     <ClInclude Include="Source\Common\Types\MIPS\MIPSOperatingContext_t.h" />
@@ -475,6 +475,7 @@
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoiceRegisters_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreVoices_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2CoreRegisters_t.h" />
+    <ClInclude Include="Source\Resources\SPU2\Types\SPU2Registers_t.h" />
     <ClInclude Include="Source\VM\Systems\CDVD\CDVD_s.h" />
     <ClInclude Include="Source\VM\Systems\GS\CRTC\CRTC_s.h" />
     <ClInclude Include="Source\Common\Types\System_t.h" />
@@ -596,7 +597,7 @@
     <ClCompile Include="Source\Common\Tables\IOPCoreSyscallTable.cpp" />
     <ClCompile Include="Source\Common\Tables\IOPDmacChannelTable.cpp" />
     <ClCompile Include="Source\Common\Tables\VIFcodeInstructionTable.cpp" />
-    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_Byte_t.cpp" />
+    <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_t.cpp" />
     <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Types\Memory\HwordMemory_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperBaseObjectByteMMU_t.cpp" />
@@ -660,6 +661,7 @@
     <ClCompile Include="Source\Resources\IOP\Timers\IOPTimers_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimerRegisters_t.cpp" />
     <ClCompile Include="Source\Resources\IOP\Timers\Types\IOPTimersTimers_t.cpp" />
+    <ClCompile Include="Source\Resources\SPU2\Types\SPU2Registers_t.cpp" />
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_s.cpp" />
     <ClCompile Include="Source\VM\Systems\CDVD\CDVD_SCMD.cpp" />
     <ClCompile Include="Source\VM\Systems\EE\DMAC\EEDmac_CHAIN.cpp" />

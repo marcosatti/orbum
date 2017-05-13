@@ -57,6 +57,9 @@ int SPU2_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 #endif
 	}
 
+	// Do an interrupt check, and send signal to the IOP INTC if needed.
+	handleInterruptCheck();
+
 	// SPU2 has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
@@ -141,8 +144,8 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to left channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			writeHword(getContext(), leftAddr, reinterpret_cast<u16*>(&data)[0]);
-			writeHword(getContext(), leftAddr + 1, reinterpret_cast<u16*>(&data)[1]);
+			mSPU2->MainMemory->writeHword(getContext(), leftAddr, reinterpret_cast<u16*>(&data)[0]);
+			mSPU2->MainMemory->writeHword(getContext(), leftAddr + 1, reinterpret_cast<u16*>(&data)[1]);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
@@ -155,8 +158,8 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to right channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			writeHword(getContext(), rightAddr, reinterpret_cast<u16*>(&data)[0]);
-			writeHword(getContext(), rightAddr + 1, reinterpret_cast<u16*>(&data)[1]);
+			mSPU2->MainMemory->writeHword(getContext(), rightAddr, reinterpret_cast<u16*>(&data)[0]);
+			mSPU2->MainMemory->writeHword(getContext(), rightAddr + 1, reinterpret_cast<u16*>(&data)[1]);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
@@ -210,13 +213,9 @@ void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) c
 
 void SPU2_s::handleInterruptCheck() const
 {
-	// Check through the SPDIF_IRQINFO register for any core bits set.
-	for (auto& key : SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS)
+	if (mSPU2->SPDIF_IRQINFO->isInterrupted(getContext()))
 	{
-		if (mSPU2->SPDIF_IRQINFO->getFieldInfo(getContext(), key) > 0)
-		{
-			// IRQ was set, notify the IOP INTC.
-			mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::SPU, 1);
-		}
+		// IRQ was set, notify the IOP INTC.
+		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::SPU, 1);
 	}
 }

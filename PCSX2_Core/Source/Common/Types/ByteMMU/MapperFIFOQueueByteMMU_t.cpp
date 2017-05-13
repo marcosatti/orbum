@@ -84,5 +84,5 @@ void MapperFIFOQueueByteMMU_t::writeQword(const System_t context, size_t storage
 {
 	if (storageIndex != 0)
 		throw std::runtime_error("Tried to access MappedFIFOQueueByteMMU_t with non-zero index. Not allowed.");
-	mFIFOQueue->writeDword(context, value);
+	mFIFOQueue->writeQword(context, value);
 }

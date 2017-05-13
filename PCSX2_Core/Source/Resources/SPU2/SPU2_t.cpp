@@ -18,6 +18,6 @@ SPU2_t::SPU2_t() :
 	SPDIF_MEDIA(std::make_shared<Register16_t>("SPU2 SPDIF_MEDIA", false, false)),
 	SPDIF_07CA(std::make_shared<Register16_t>("SPU2 SPDIF_07CA", false, false)),
 	SPDIF_PROTECT(std::make_shared<Register16_t>("SPU2 SPDIF_PROTECT", false, false)),
-	MainMemory(std::make_shared<HwordMemory_t>("SPU2 MainMem", false, false, Constants::SPU2::SIZE_MAIN_MEMORY)),
+	MainMemory(std::make_shared<HwordMemory_t>("SPU2 MainMem", false, false, Constants::SPU2::SIZE_MAIN_MEMORY))
 {
 }

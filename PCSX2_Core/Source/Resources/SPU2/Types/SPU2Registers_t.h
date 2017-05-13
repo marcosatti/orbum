@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/BitfieldRegister16_t.h"
 #include "Common/Types/System_t.h"
@@ -16,7 +14,7 @@ Weird how general IRQ's not related to SPDIF use this register...
 class SPU2Register_SPDIF_IRQINFO_t : public BitfieldRegister16_t
 {
 public:
-struct Fields
+	struct Fields
 	{
 		static constexpr int IrqCore0 = 0;
 		static constexpr int IrqCore1 = 1;
@@ -29,6 +27,5 @@ struct Fields
     /*
     Returns if any of the core IRQ's are set.
     */
-    bool isInterrupted(const System_t context) const;
-
+    bool isInterrupted(const System_t context);
 };

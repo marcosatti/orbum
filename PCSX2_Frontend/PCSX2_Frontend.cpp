@@ -16,6 +16,8 @@
 #include "Resources/EE/EE_t.h"
 #include "Resources/IOP/IOP_t.h"
 #include "Resources/SPU2/SPU2_t.h"
+#include "Resources/CDVD/CDVD_t.h"
+#include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
 std::ofstream logFile;
 bool MTmode = false;
@@ -73,7 +75,7 @@ int main()
 		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
 		vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
 		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
-		vm.getResources()->SPU2->DebugDummy->dump(std::string(workspace + "End_Dump_DebugDummy.bin").c_str());
+		vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
 	}
 	catch (std::exception ex)
 	{

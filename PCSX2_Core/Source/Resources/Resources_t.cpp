@@ -51,11 +51,6 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 #include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
-#include "Resources/SPU2/SPU2_t.h"
-#include "Resources/SPU2/Types/SPU2Cores_t.h"
-#include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
-#include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
-#include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
@@ -65,6 +60,13 @@
 #include "Resources/CDVD/CDVD_t.h"
 #include "Resources/CDVD/Types/CDVDRegisters_t.h"
 #include "Resources/CDVD/Types/CDVDFIFOQueues_t.h"
+
+#include "Resources/SPU2/SPU2_t.h"
+#include "Resources/SPU2/Types/SPU2Registers_t.h"
+#include "Resources/SPU2/Types/SPU2Cores_t.h"
+#include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
+#include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
 Resources_t::Resources_t() :
 	Clock(std::make_shared<Clock_t>()),

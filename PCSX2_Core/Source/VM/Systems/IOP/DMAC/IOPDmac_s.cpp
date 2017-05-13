@@ -257,7 +257,7 @@ int IOPDmac_s::transferData() const
 	if (direction == Direction_t::FROM)
 	{
 		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
-		if (mChannel->FIFOQueue->getCurrentSize() < 1)
+		if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_WORD)
 			return 0;
 
 		u32 packet = mChannel->FIFOQueue->readWord(getContext());
@@ -270,7 +270,7 @@ int IOPDmac_s::transferData() const
 	else if (direction == Direction_t::TO)
 	{
 		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
-		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - 1))
+		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_WORD))
 			return 0;
 
 		u32 packet = readWordMemory(physicalAddress);
@@ -332,17 +332,17 @@ bool IOPDmac_s::isChannelIRQEnabled() const
 
 u32 IOPDmac_s::readWordMemory(const u32 bytePhysicalAddress) const
 {
-	return mIOPByteMMU->readWord(getContext(), PhysicalAddressOffset);
+	return mIOPByteMMU->readWord(getContext(), bytePhysicalAddress);
 }
 
 void IOPDmac_s::writeWordMemory(const u32 bytePhysicalAddress, const u32 data) const
 {
-	mIOPByteMMU->writeWord(getContext(), PhysicalAddressOffset, data);
+	mIOPByteMMU->writeWord(getContext(), bytePhysicalAddress, data);
 }
 
 u128 IOPDmac_s::readQwordMemory(const u32 bytePhysicalAddress) const
 {
-	return mIOPByteMMU->readQword(getContext(), PhysicalAddressOffset);
+	return mIOPByteMMU->readQword(getContext(), bytePhysicalAddress);
 }
 
 bool IOPDmac_s::readChainSourceTag()
@@ -350,7 +350,7 @@ bool IOPDmac_s::readChainSourceTag()
 	// Check for space (u128) in the FIFO queue, which depends on if the tag transfer (TTE) option is on (CHCR bit 8 aka "chopping enable" set). See below.
 	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
-		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_WORDS_IN_QWORD))
+		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_QWORD))
 			return false;
 	}
 
@@ -397,7 +397,7 @@ bool IOPDmac_s::readChainSourceTag()
 bool IOPDmac_s::readChainDestTag()
 {
 	// Check first if there is tag data available.
-	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_WORDS_IN_QWORD)
+	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_QWORD)
 		return false;
 
 	// Read tag (u128) from channel FIFO. Only first 2 u32's are used for the IOP.
