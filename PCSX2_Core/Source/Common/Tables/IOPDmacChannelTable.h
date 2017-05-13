@@ -43,12 +43,17 @@ struct IOPDmacChannelTable
 		{ "SIF1"     },
 		{ "fromSIO2" },
 		{ "toSIO2"   },
-		{ "DUMMY PLEASE FIX" }
+		{ "PLS FIX!" }
 	};
 
 	/*
-	Returns the channel properties given the index.
+	Returns the channel properties given the channel.
 	*/
 	static const IOPDmacChannelInfo_t * getInfo(const IOPDmacChannel_t * channel);
+
+	/*
+	Returns the mnemonic only for the given channel index.
+	*/
+	static const char * getMnemonic(const int channelIdx);
 };
 

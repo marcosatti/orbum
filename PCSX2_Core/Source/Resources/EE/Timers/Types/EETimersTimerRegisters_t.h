@@ -65,7 +65,7 @@ public:
 	Writing 1 to the Equal flag or Overflow flag will clear it (bits 10 and 11), 
 	 will also reset the count register if CUE is 1 (both EE context only).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.

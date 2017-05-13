@@ -27,7 +27,7 @@ void HwordMemory_t::initialise()
 	std::vector<u16>(mMemoryByteSize / 2, 0).swap(mMemory);
 }
 
-u16 HwordMemory_t::readHword(const System_t context, size_t hwordOffset)
+u16 HwordMemory_t::readHword(const System_t context, const size_t hwordOffset)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[hwordOffset]);
@@ -47,7 +47,7 @@ u16 HwordMemory_t::readHword(const System_t context, size_t hwordOffset)
 	return *hostMemoryAddress;
 }
 
-void HwordMemory_t::writeHword(const System_t context, size_t hwordOffset, u16 value)
+void HwordMemory_t::writeHword(const System_t context, const size_t hwordOffset, const u16 value)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[hwordOffset]);
@@ -67,7 +67,7 @@ void HwordMemory_t::writeHword(const System_t context, size_t hwordOffset, u16 v
 #endif
 }
 
-u32 HwordMemory_t::readWord(const System_t context, size_t hwordOffset)
+u32 HwordMemory_t::readWord(const System_t context, const size_t hwordOffset)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[hwordOffset]);
@@ -87,7 +87,7 @@ u32 HwordMemory_t::readWord(const System_t context, size_t hwordOffset)
 	return *hostMemoryAddress;
 }
 
-void HwordMemory_t::writeWord(const System_t context, size_t hwordOffset, u32 value)
+void HwordMemory_t::writeWord(const System_t context, const size_t hwordOffset, const u32 value)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[hwordOffset]);
@@ -107,7 +107,7 @@ void HwordMemory_t::writeWord(const System_t context, size_t hwordOffset, u32 va
 #endif
 }
 
-u64 HwordMemory_t::readDword(const System_t context, size_t hwordOffset)
+u64 HwordMemory_t::readDword(const System_t context, const size_t hwordOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[hwordOffset]);
@@ -127,7 +127,7 @@ u64 HwordMemory_t::readDword(const System_t context, size_t hwordOffset)
 	return *hostMemoryAddress;
 }
 
-void HwordMemory_t::writeDword(const System_t context, size_t hwordOffset, u64 value)
+void HwordMemory_t::writeDword(const System_t context, const size_t hwordOffset, const u64 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[hwordOffset]);
@@ -147,7 +147,7 @@ void HwordMemory_t::writeDword(const System_t context, size_t hwordOffset, u64 v
 #endif
 }
 
-u128 HwordMemory_t::readQword(const System_t context, size_t hwordOffset)
+u128 HwordMemory_t::readQword(const System_t context, const size_t hwordOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[hwordOffset]);
@@ -168,7 +168,7 @@ u128 HwordMemory_t::readQword(const System_t context, size_t hwordOffset)
 	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
 }
 
-void HwordMemory_t::writeQword(const System_t context, size_t hwordOffset, u128 value)
+void HwordMemory_t::writeQword(const System_t context, const size_t hwordOffset, const u128 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[hwordOffset]);

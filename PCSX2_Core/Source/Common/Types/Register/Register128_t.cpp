@@ -10,7 +10,7 @@ Register128_t::Register128_t(const char* mnemonic, bool debugReads, bool debugWr
 {
 }
 
-u8 Register128_t::readByte(const System_t context, size_t arrayIndex)
+u8 Register128_t::readByte(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -26,7 +26,7 @@ u8 Register128_t::readByte(const System_t context, size_t arrayIndex)
 	return UB[arrayIndex];
 }
 
-void Register128_t::writeByte(const System_t context, size_t arrayIndex, u8 value)
+void Register128_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
 {
 	UB[arrayIndex] = value;
 
@@ -42,7 +42,7 @@ void Register128_t::writeByte(const System_t context, size_t arrayIndex, u8 valu
 #endif
 }
 
-u16 Register128_t::readHword(const System_t context, size_t arrayIndex)
+u16 Register128_t::readHword(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -58,7 +58,7 @@ u16 Register128_t::readHword(const System_t context, size_t arrayIndex)
 	return UH[arrayIndex];
 }
 
-void Register128_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
+void Register128_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
 {
 	UH[arrayIndex] = value;
 
@@ -74,7 +74,7 @@ void Register128_t::writeHword(const System_t context, size_t arrayIndex, u16 va
 #endif
 }
 
-u32 Register128_t::readWord(const System_t context, size_t arrayIndex)
+u32 Register128_t::readWord(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -90,7 +90,7 @@ u32 Register128_t::readWord(const System_t context, size_t arrayIndex)
 	return UW[arrayIndex];
 }
 
-void Register128_t::writeWord(const System_t context, size_t arrayIndex, u32 value)
+void Register128_t::writeWord(const System_t context, const size_t arrayIndex, const u32 value)
 {
 	UW[arrayIndex] = value;
 
@@ -106,7 +106,7 @@ void Register128_t::writeWord(const System_t context, size_t arrayIndex, u32 val
 #endif
 }
 
-u64 Register128_t::readDword(const System_t context, size_t arrayIndex)
+u64 Register128_t::readDword(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -122,7 +122,7 @@ u64 Register128_t::readDword(const System_t context, size_t arrayIndex)
 	return UD[arrayIndex];
 }
 
-void Register128_t::writeDword(const System_t context, size_t arrayIndex, u64 value)
+void Register128_t::writeDword(const System_t context, const size_t arrayIndex, const u64 value)
 {
 	UD[arrayIndex] = value;
 
@@ -154,7 +154,7 @@ u128 Register128_t::readQword(const System_t context)
 	return UQ;
 }
 
-void Register128_t::writeQword(const System_t context, u128 value)
+void Register128_t::writeQword(const System_t context, const u128 value)
 {
 	UQ = value;
 
@@ -170,7 +170,7 @@ void Register128_t::writeQword(const System_t context, u128 value)
 #endif
 }
 
-f32 Register128_t::readFloat(const System_t context, size_t arrayIndex)
+f32 Register128_t::readFloat(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -186,7 +186,7 @@ f32 Register128_t::readFloat(const System_t context, size_t arrayIndex)
 	return F[arrayIndex];
 }
 
-void Register128_t::writeFloat(const System_t context, size_t arrayIndex, f32 value)
+void Register128_t::writeFloat(const System_t context, const size_t arrayIndex, const f32 value)
 {
 	F[arrayIndex] = value;
 

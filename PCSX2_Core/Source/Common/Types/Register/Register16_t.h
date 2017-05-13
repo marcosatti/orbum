@@ -33,10 +33,10 @@ public:
 	/*
 	Read/write functions to access the register, with subclassed functionality.
 	*/
-	virtual u8 readByte(const System_t context, size_t arrayIndex);
-	virtual void writeByte(const System_t context, size_t arrayIndex, u8 value);
+	virtual u8 readByte(const System_t context, const size_t arrayIndex);
+	virtual void writeByte(const System_t context, const size_t arrayIndex, const u8 value);
 	virtual u16 readHword(const System_t context);
-	virtual void writeHword(const System_t context, u16 value);
+	virtual void writeHword(const System_t context, const u16 value);
 
 	/*
 	Initialise register (set back to default value).

@@ -10,7 +10,7 @@ EERegister_SIO_t::EERegister_SIO_t(const char * mnemonic, const bool debugReads,
 {
 }
 
-void EERegister_SIO_t::writeByte(const System_t context, size_t storageIndex, u8 value)
+void EERegister_SIO_t::writeByte(const System_t context, const size_t storageIndex, const u8 value)
 {
 	switch (storageIndex)
 	{
@@ -42,7 +42,7 @@ void EERegister_SIO_t::writeByte(const System_t context, size_t storageIndex, u8
 	}
 }
 
-u32 EERegister_SIO_t::readWord(const System_t context, size_t storageIndex)
+u32 EERegister_SIO_t::readWord(const System_t context, const size_t storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -58,7 +58,7 @@ u32 EERegister_SIO_t::readWord(const System_t context, size_t storageIndex)
 	}
 }
 
-void EERegister_SIO_t::writeWord(const System_t context, size_t storageIndex, u32 value)
+void EERegister_SIO_t::writeWord(const System_t context, const size_t storageIndex, const u32 value)
 {
 	switch (storageIndex)
 	{
@@ -66,7 +66,7 @@ void EERegister_SIO_t::writeWord(const System_t context, size_t storageIndex, u3
 	{
 		// Below logic is from the old PCSX2. I guess it writes a message transmitted through the SIO_TXFIFO register..
 		for (auto i = 0; i < Constants::NUMBER_BYTES_IN_WORD; i++)
-			writeByte(context, storageIndex, reinterpret_cast<u8*>(&value)[i]);
+			writeByte(context, storageIndex, reinterpret_cast<const u8*>(&value)[i]);
 		break;
 	}
 	default:
@@ -82,7 +82,7 @@ EERegister_MCH_t::EERegister_MCH_t(const char * mnemonic, const bool debugReads,
 {
 }
 
-u32 EERegister_MCH_t::readWord(const System_t context, size_t storageIndex)
+u32 EERegister_MCH_t::readWord(const System_t context, const size_t storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -125,7 +125,7 @@ u32 EERegister_MCH_t::readWord(const System_t context, size_t storageIndex)
 	}
 }
 
-void EERegister_MCH_t::writeWord(const System_t context, size_t storageIndex, u32 value)
+void EERegister_MCH_t::writeWord(const System_t context, const size_t storageIndex, const u32 value)
 {
 	switch (storageIndex)
 	{

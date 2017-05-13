@@ -31,7 +31,7 @@ public:
 	Read or write a 32-bit value, which is automatically combined/split across the two 16-bit registers (high and low).
 	*/
 	virtual u32 readPairWord(const System_t context);
-	virtual void writePairWord(const System_t context, u32 value);
+	virtual void writePairWord(const System_t context, const u32 value);
 
 private:
 	/*

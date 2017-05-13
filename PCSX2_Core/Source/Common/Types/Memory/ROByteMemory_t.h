@@ -15,9 +15,9 @@ public:
 	/*
 	All writes are discarded - this is a silent discard!
 	*/
-	void writeByte(const System_t context, size_t byteOffset, u8 value) override;
-	void writeHword(const System_t context, size_t byteOffset, u16 value) override;
-	void writeWord(const System_t context, size_t byteOffset, u32 value) override;
-	void writeDword(const System_t context, size_t byteOffset, u64 value) override;
-	void writeQword(const System_t context, size_t byteOffset, u128 value) override;
+	void writeByte(const System_t context, const size_t byteOffset, const u8 value) override;
+	void writeHword(const System_t context, const size_t byteOffset, const u16 value) override;
+	void writeWord(const System_t context, const size_t byteOffset, const u32 value) override;
+	void writeDword(const System_t context, const size_t byteOffset, const u64 value) override;
+	void writeQword(const System_t context, const size_t byteOffset, const u128 value) override;
 };

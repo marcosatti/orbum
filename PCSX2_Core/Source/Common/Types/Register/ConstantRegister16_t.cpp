@@ -9,12 +9,12 @@ ConstantRegister16_t::ConstantRegister16_t(const char * mnemonic, const bool deb
 	UH = H;
 }
 
-void ConstantRegister16_t::writeByte(const System_t context, size_t arrayIndex, u8 value)
+void ConstantRegister16_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
 {
 	// Do not write value (zero register).
 }
 
-void ConstantRegister16_t::writeHword(const System_t context, u16 value)
+void ConstantRegister16_t::writeHword(const System_t context, const u16 value)
 {
 	// Do not write value (zero register).
 }

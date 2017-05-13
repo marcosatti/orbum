@@ -51,7 +51,7 @@ IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic
 	registerField(Fields::BA, "BA", 16, 16, 0);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
+void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
@@ -60,7 +60,7 @@ void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, size_t arr
 	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
-void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, const u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
@@ -126,12 +126,13 @@ IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char * 
 {
 }
 
-void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::IOPCore)
-		value |= (1 << 0);
+		temp |= (1 << 0);
 
-	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
+	IOPDmacChannelRegister_CHCR_t::writeWord(context, temp);
 }
 
 IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -139,12 +140,13 @@ IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::IOPCore)
-		value &= ~(1 << 0);
+		temp &= ~(1 << 0);
 
-	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
+	IOPDmacChannelRegister_CHCR_t::writeWord(context, temp);
 }
 
 IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t>& sbusF240) :
@@ -172,7 +174,7 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const u32 value)
 {
 	IOPDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
@@ -218,12 +220,13 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::IOPCore)
-		value |= (1 << 10);
+		temp |= (1 << 10);
 
-	IOPDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
+	IOPDmacChannelRegister_FROM_CHCR_t::writeWord(context, temp);
 
 	auto start = getFieldValue(context, Fields::Start);
 	auto direction = getDirection(context);
@@ -268,7 +271,7 @@ void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, u32 value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const u32 value)
 {
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
 

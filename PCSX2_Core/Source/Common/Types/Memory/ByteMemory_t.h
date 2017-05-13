@@ -26,16 +26,16 @@ public:
 	/*
 	Read or write a value of a given type, to the specified byte index (byteOffset).
 	*/
-	virtual u8 readByte(const System_t context, size_t byteOffset);
-	virtual void writeByte(const System_t context, size_t byteOffset, u8 value);
-	virtual u16 readHword(const System_t context, size_t byteOffset);
-	virtual void writeHword(const System_t context, size_t byteOffset, u16 value);
-	virtual u32 readWord(const System_t context, size_t byteOffset);
-	virtual void writeWord(const System_t context, size_t byteOffset, u32 value);
-	virtual u64 readDword(const System_t context, size_t byteOffset);
-	virtual void writeDword(const System_t context, size_t byteOffset, u64 value);
-	virtual u128 readQword(const System_t context, size_t byteOffset);
-	virtual void writeQword(const System_t context, size_t byteOffset, u128 value);
+	virtual u8 readByte(const System_t context, const size_t byteOffset);
+	virtual void writeByte(const System_t context, const size_t byteOffset, const u8 value);
+	virtual u16 readHword(const System_t context, const size_t byteOffset);
+	virtual void writeHword(const System_t context, const size_t byteOffset, const u16 value);
+	virtual u32 readWord(const System_t context, const size_t byteOffset);
+	virtual void writeWord(const System_t context, const size_t byteOffset, const u32 value);
+	virtual u64 readDword(const System_t context, const size_t byteOffset);
+	virtual void writeDword(const System_t context, const size_t byteOffset, const u64 value);
+	virtual u128 readQword(const System_t context, const size_t byteOffset);
+	virtual void writeQword(const System_t context, const size_t byteOffset, const u128 value);
 
 	/*
 	Gets the storage length.

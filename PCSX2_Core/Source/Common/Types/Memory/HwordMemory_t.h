@@ -27,14 +27,14 @@ public:
 	/*
 	Read or write a value of a given type, to the specified hword index (hwordOffset).
 	*/
-	virtual u16 readHword(const System_t context, size_t hwordOffset);
-	virtual void writeHword(const System_t context, size_t hwordOffset, u16 value);
-	virtual u32 readWord(const System_t context, size_t hwordOffset);
-	virtual void writeWord(const System_t context, size_t hwordOffset, u32 value);
-	virtual u64 readDword(const System_t context, size_t hwordOffset);
-	virtual void writeDword(const System_t context, size_t hwordOffset, u64 value);
-	virtual u128 readQword(const System_t context, size_t hwordOffset);
-	virtual void writeQword(const System_t context, size_t hwordOffset, u128 value);
+	virtual u16 readHword(const System_t context, const size_t hwordOffset);
+	virtual void writeHword(const System_t context, const size_t hwordOffset, const u16 value);
+	virtual u32 readWord(const System_t context, const size_t hwordOffset);
+	virtual void writeWord(const System_t context, const size_t hwordOffset, const u32 value);
+	virtual u64 readDword(const System_t context, const size_t hwordOffset);
+	virtual void writeDword(const System_t context, const size_t hwordOffset, const u64 value);
+	virtual u128 readQword(const System_t context, const size_t hwordOffset);
+	virtual void writeQword(const System_t context, const size_t hwordOffset, const u128 value);
 
 	/*
 	Gets the storage length.

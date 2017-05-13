@@ -35,7 +35,7 @@ public:
 		static constexpr int VBLANK = 0;
 		static constexpr int GPU = 1;
 		static constexpr int CDROM = 2;
-		static constexpr int DMA = 3;
+		static constexpr int DMAC = 3;
 		static constexpr int TMR0 = 4;
 		static constexpr int TMR1 = 5;
 		static constexpr int TMR2 = 6;
@@ -76,7 +76,7 @@ public:
 		static constexpr int VBLANK = 0;
 		static constexpr int GPU = 1;
 		static constexpr int CDROM = 2;
-		static constexpr int DMA = 3;
+		static constexpr int DMAC = 3;
 		static constexpr int TMR0 = 4;
 		static constexpr int TMR1 = 5;
 		static constexpr int TMR2 = 6;
@@ -100,7 +100,7 @@ public:
 		static constexpr int FWRE = 24;
 		static constexpr int FDMA = 25;
 
-		static constexpr int IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLANK, GPU, CDROM, DMA, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
+		static constexpr int IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES] = { VBLANK, GPU, CDROM, DMAC, TMR0, TMR1, TMR2, SIO0, SIO1, SPU, PIO, EVBLANK, DVD, PCMCIA, TMR3, TMR4, TMR5, SIO2, HTR0, HTR1, HTR2, HTR3, USB, EXTR, FWRE, FDMA };
 		static constexpr int TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 	};
 
@@ -109,5 +109,5 @@ public:
 	/*
 	AND's the new value with old value (IOP context only).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 };

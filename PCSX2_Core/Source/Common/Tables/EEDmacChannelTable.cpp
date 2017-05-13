@@ -9,6 +9,11 @@ const EEDmacChannelTable::EEDmacChannelInfo_t * EEDmacChannelTable::getInfo(cons
 	return &EEDMAC_CHANNEL_TABLE[channel->getChannelID()];
 }
 
+const char* EEDmacChannelTable::getMnemonic(const int channelIdx)
+{
+	return EEDMAC_CHANNEL_TABLE[channelIdx].mMnemonic;
+}
+
 int EEDmacChannelTable::getSTSChannelIndex(const int STS)
 {
 	return STS_MAP[STS];

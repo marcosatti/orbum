@@ -8,3 +8,8 @@ const IOPDmacChannelTable::IOPDmacChannelInfo_t * IOPDmacChannelTable::getInfo(c
 {
 	return &IOPDMAC_CHANNEL_TABLE[channel->getChannelID()];
 }
+
+const char* IOPDmacChannelTable::getMnemonic(const int channelIdx)
+{
+	return IOPDMAC_CHANNEL_TABLE[channelIdx].mMnemonic;
+}

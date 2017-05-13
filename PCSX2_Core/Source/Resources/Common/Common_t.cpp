@@ -29,10 +29,10 @@ Common_t::Common_t() :
 	FIFO_fromMDEC(std::make_shared<FIFOQueue_t>("FIFO fromMDEC", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_toMDEC(std::make_shared<FIFOQueue_t>("FIFO toMDEC", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_CDROM(std::make_shared<FIFOQueue_t>("FIFO CDROM", false, false, DEBUG_FIFO_SIZE)),
-	FIFO_SPU2C0(std::make_shared<FIFOQueue_t>("FIFO SPU2C0", true, true, DEBUG_FIFO_SIZE)),
+	FIFO_SPU2C0(std::make_shared<FIFOQueue_t>("FIFO SPU2C0", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_PIO(std::make_shared<FIFOQueue_t>("FIFO PIO", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_OTClear(std::make_shared<FIFOQueue_t>("FIFO OTClear", false, false, DEBUG_FIFO_SIZE)),
-	FIFO_SPU2C1(std::make_shared<FIFOQueue_t>("FIFO SPU2C1", true, true, DEBUG_FIFO_SIZE)),
+	FIFO_SPU2C1(std::make_shared<FIFOQueue_t>("FIFO SPU2C1", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_DEV9(std::make_shared<FIFOQueue_t>("FIFO DEV9", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_fromSIO2(std::make_shared<FIFOQueue_t>("FIFO fromSIO2", false, false, DEBUG_FIFO_SIZE)),
 	FIFO_toSIO2(std::make_shared<FIFOQueue_t>("FIFO toSIO2", false, false, DEBUG_FIFO_SIZE))

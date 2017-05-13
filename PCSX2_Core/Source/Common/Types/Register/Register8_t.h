@@ -34,7 +34,7 @@ public:
 	Read/write functions to access the register, with subclassed functionality. 
 	*/
 	virtual u8 readByte(const System_t context);
-	virtual void writeByte(const System_t context, u8 value);
+	virtual void writeByte(const System_t context, const u8 value);
 
 	/*
 	Initialise register (set back to default value).

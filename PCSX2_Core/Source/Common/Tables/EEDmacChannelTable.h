@@ -53,6 +53,11 @@ struct EEDmacChannelTable
 	static const EEDmacChannelInfo_t * getInfo(const EEDmacChannel_t * channel);
 
 	/*
+	Returns the mnemonic only for the given channel index.
+	*/
+	static const char * getMnemonic(const int channelIdx);
+
+	/*
 	Converts the D_CTRL.STS and STD fields to the proper channel id's.
 	A return value of 0 means "Non-specified" for STS, "No stall control" for STD. 
 	See EE Users Manual page 64.

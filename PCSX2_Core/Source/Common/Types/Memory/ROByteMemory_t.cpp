@@ -8,27 +8,27 @@ ROByteMemory_t::ROByteMemory_t(const char * mnemonic, bool debugReads, bool debu
 {
 }
 
-void ROByteMemory_t::writeByte(const System_t context, size_t byteOffset, u8 value)
+void ROByteMemory_t::writeByte(const System_t context, const size_t byteOffset, const u8 value)
 {
 	// Do not write (read only).
 }
 
-void ROByteMemory_t::writeHword(const System_t context, size_t byteOffset, u16 value)
+void ROByteMemory_t::writeHword(const System_t context, const size_t byteOffset, const u16 value)
 {
 	// Do not write (read only).
 }
 
-void ROByteMemory_t::writeWord(const System_t context, size_t byteOffset, u32 value)
+void ROByteMemory_t::writeWord(const System_t context, const size_t byteOffset, const u32 value)
 {
 	// Do not write (read only).
 }
 
-void ROByteMemory_t::writeDword(const System_t context, size_t byteOffset, u64 value)
+void ROByteMemory_t::writeDword(const System_t context, const size_t byteOffset, const u64 value)
 {
 	// Do not write (read only).
 }
 
-void ROByteMemory_t::writeQword(const System_t context, size_t byteOffset, u128 value)
+void ROByteMemory_t::writeQword(const System_t context, const size_t byteOffset, const u128 value)
 {
 	// Do not write (read only).
 }

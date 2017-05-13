@@ -4,6 +4,7 @@
 #include "Common/Types/Register/PCRegister32_t.h"
 #include "Common/Tables/IOPCoreInstructionTable.h"
 #include "Common/Tables/IOPCoreExceptionsTable.h"
+#include "Common/Tables/IOPDmacChannelTable.h"
 #include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
@@ -19,6 +20,8 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
+#include "Resources/IOP/DMAC/IOPDmac_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
 IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
 	VMSystem_s(vm, System_t::IOPCore),
@@ -94,21 +97,68 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 		if (ipCause & imStatus)
 		{
 #if DEBUG_LOG_IOP_INTERRUPTS
-			auto& IOPCore = getVM()->getResources()->IOP->IOPCore;
-			auto& STAT = getVM()->getResources()->IOP->INTC->STAT;
-			auto& MASK = getVM()->getResources()->IOP->INTC->MASK;
-			log(Debug, "IOP interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.", 
-				DEBUG_LOOP_COUNTER, IOPCore->R3000->PC->readWord(getContext()), IOPCore->R3000->PC->isBranchPending());
-			log(Debug, "Printing list of interrupt sources...");
-			for (auto& irqField : IOPIntcRegister_STAT_t::Fields::IRQ_KEYS)
-			{
-				if (STAT->getFieldValue(getContext(), irqField) & MASK->getFieldValue(getContext(), irqField))
-					log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
-			}
+			// Debug: print interrupt sources.
+			printInterruptInfo();
 #endif
 			// Handle the interrupt immediately.
 			handleException(IOPCoreException_t::EX_INTERRUPT);
 		}
+	}
+}
+
+void IOPCoreInterpreter_s::printInterruptInfo() const
+{
+	auto& INTC = getVM()->getResources()->IOP->INTC;
+	auto& STAT = INTC->STAT;
+	auto& MASK = INTC->MASK;
+
+	log(Debug, "IOPCore interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d. Printing interrupt sources:",
+		DEBUG_LOOP_COUNTER, mIOPCore->R3000->PC->readWord(getContext()), mIOPCore->R3000->PC->isBranchPending());
+
+	// Check the INTC.
+	for (auto& irqField : IOPIntcRegister_STAT_t::Fields::IRQ_KEYS)
+	{
+		if (STAT->getFieldValue(getContext(), irqField) & MASK->getFieldValue(getContext(), irqField))
+			log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
+	}
+
+	// Print DMAC sources if it was a source.
+	if (STAT->getFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMAC) 
+		& MASK->getFieldValue(getContext(), IOPIntcRegister_MASK_t::Fields::DMAC))
+	{
+		auto& DMAC = getVM()->getResources()->IOP->DMAC;
+		auto& ICR0 = DMAC->ICR0;
+		auto& ICR1 = DMAC->ICR1;
+
+		log(Debug, "Printing IOP DMAC interrupt sources:");
+
+		const int half = Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2;
+		bool dmacSourceTriggered = false;
+
+		// Check first half of channels (ICR0).
+		for(int i = 0; i < half; i++)
+		{
+			if (ICR0->getFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[i])
+				&& ICR0->getFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCM_KEYS[i]))
+			{
+				log(Debug, IOPDmacChannelTable::getMnemonic(i));
+				dmacSourceTriggered = true;
+			}
+		}
+		// Check second half of channels (ICR0).
+		for (int i = 0; i < half; i++)
+		{
+			if (ICR1->getFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[i])
+				&& ICR1->getFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCM_KEYS[i]))
+			{
+				log(Debug, IOPDmacChannelTable::getMnemonic(half + i));
+				dmacSourceTriggered = true;
+			}
+		}
+
+		// Maybe we missed it? :(
+		if (!dmacSourceTriggered)
+			log(Debug, "IOP DMAC did not have any sources triggered! Too slow, buddy? Look into this!");
 	}
 }
 

@@ -111,8 +111,8 @@ public:
 	When written to, will cache if the timer is enabled and the correct emulator clock source that the system logic should use.
 	Also resets the count register on write.
 	*/
-	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Returns if the timer is "enabled" by returning if either of the interrupt bits have been set (otherwise the timer is useless).

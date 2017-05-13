@@ -155,7 +155,7 @@ public:
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 };
 
 /*
@@ -170,7 +170,7 @@ public:
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 };
 
 /*
@@ -190,7 +190,7 @@ public:
 	See PCSX2's "sif0.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*
@@ -221,7 +221,7 @@ public:
 	See PCSX2's "sif1.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*
@@ -251,7 +251,7 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. See PCSX2's "sif2.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*

@@ -13,7 +13,7 @@ u32 PairRegister16_t::readPairWord(const System_t context)
 	return (mHighRegister16->readHword(context) << 16) | readHword(context);
 }
 
-void PairRegister16_t::writePairWord(const System_t context, u32 value)
+void PairRegister16_t::writePairWord(const System_t context, const u32 value)
 {
 	mHighRegister16->writeHword(context, static_cast<u16>(value >> 16));
 	writeHword(context, static_cast<u16>(value));

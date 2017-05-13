@@ -15,7 +15,7 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByte(const System_t context, u8 value) override;
+	void writeByte(const System_t context, const u8 value) override;
 
 	/*
 	Initialise register (set to do nothing).

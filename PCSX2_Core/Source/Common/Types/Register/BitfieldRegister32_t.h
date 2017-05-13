@@ -29,12 +29,12 @@ public:
 	Override write functions to sync with the bitfield map.
 	If enabled, log all field contents on read/write.
 	*/
-	u8 readByte(const System_t context, size_t arrayIndex) override;
-	void writeByte(const System_t context, size_t arrayIndex, u8 value) override;
-	u16 readHword(const System_t context, size_t arrayIndex) override;
-	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
+	u8 readByte(const System_t context, const size_t arrayIndex) override;
+	void writeByte(const System_t context, const size_t arrayIndex, const u8 value) override;
+	u16 readHword(const System_t context, const size_t arrayIndex) override;
+	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
 	u32 readWord(const System_t context) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
@@ -58,6 +58,7 @@ public:
 	void logDebugAllFields() const;
 
 private:
+	// For debug purposes.
 	friend class EECoreInterpreter_s;
 	friend class IOPCoreInterpreter_s;
 

@@ -7,7 +7,7 @@ MapperBaseObjectByteMMU_t::MapperBaseObjectByteMMU_t(const u32 physicalAddress) 
 {
 }
 
-const u32 MapperBaseObjectByteMMU_t::getMappedPhysicalAddress() const
+u32 MapperBaseObjectByteMMU_t::getMappedPhysicalAddress() const
 {
 	return mMappedPhysicalAddress;
 }

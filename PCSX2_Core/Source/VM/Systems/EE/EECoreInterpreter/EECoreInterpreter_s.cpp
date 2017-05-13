@@ -4,6 +4,7 @@
 #include "Common/Types/ByteMMU/ByteMMU_t.h"
 #include "Common/Types/Register/PCRegister32_t.h"
 #include "Common/Tables/EECoreInstructionTable.h"
+#include "Common/Tables/EEDmacChannelTable.h"
 #include "Common/Util/MathUtil/MathUtil.h"
 
 #include "VM/VM.h"
@@ -25,6 +26,8 @@
 #include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
+#include "Resources/EE/DMAC/EEDmac_t.h"
+#include "Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 
 EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
 	VMSystem_s(vm, System_t::EECore),
@@ -108,27 +111,63 @@ void EECoreInterpreter_s::handleInterruptCheck()
 		if (ipCause & imStatus)
 		{
 #if DEBUG_LOG_EE_INTERRUPTS
-			auto& STAT = getVM()->getResources()->EE->INTC->STAT;
-			auto& MASK = getVM()->getResources()->EE->INTC->MASK;
-			log(Debug, "EE interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d.",
-				DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(getContext()), mEECore->R5900->PC->isBranchPending());
-			log(Debug, "Printing list of interrupt sources...");
-			if ((ipCause & imStatus) & 0x4) // INTC
-			{
-				for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
-				{
-					if (STAT->getFieldValue(getContext(), irqField) & MASK->getFieldValue(getContext(), irqField))
-						log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
-				}
-			}
-			if ((ipCause & imStatus) & 0x8) // DMAC
-			{
-				log(Debug, "DMAC");
-			}
+			// Debug: print interrupt sources.
+			printInterruptInfo();
 #endif
 			// Handle the interrupt immediately.
 			handleException(EECoreException_t::EX_INTERRUPT);
 		}
+	}
+}
+
+void EECoreInterpreter_s::printInterruptInfo() const
+{
+	auto& COP0 = mEECore->COP0;
+	auto& STAT = getVM()->getResources()->EE->INTC->STAT;
+	auto& MASK = getVM()->getResources()->EE->INTC->MASK;
+
+	u32 ipCause = COP0->Cause->getFieldValue(getContext(), EECoreCOP0Register_Cause_t::Fields::IP);
+	u32 imStatus = COP0->Status->getFieldValue(getContext(), EECoreCOP0Register_Status_t::Fields::IM);
+
+	log(Debug, "EECore interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d. Printing interrupt sources:",
+		DEBUG_LOOP_COUNTER, mEECore->R5900->PC->readWord(getContext()), mEECore->R5900->PC->isBranchPending());
+
+	// Check the INTC.
+	if ((ipCause & imStatus) & 0x4)
+	{
+		for (auto& irqField : EEIntcRegister_STAT_t::Fields::IRQ_KEYS)
+		{
+			if (STAT->getFieldValue(getContext(), irqField) & MASK->getFieldValue(getContext(), irqField))
+				log(Debug, STAT->mFields[irqField].mMnemonic.c_str());
+		}
+	}
+
+	// Check the DMAC.
+	if ((ipCause & imStatus) & 0x8)
+	{
+		log(Debug, "DMAC");
+
+		auto& DMAC = getVM()->getResources()->EE->DMAC;
+		auto& STAT = DMAC->STAT;
+
+		log(Debug, "Printing EE DMAC interrupt sources:");
+
+		bool dmacSourceTriggered = false;
+
+		// Check through STAT for triggered channels.
+		for (int i = 0; i < Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; i++)
+		{
+			if (STAT->getFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_CIS_KEYS[i])
+				&& STAT->getFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_CIM_KEYS[i]))
+			{
+				log(Debug, EEDmacChannelTable::getMnemonic(i));
+				dmacSourceTriggered = true;
+			}
+		}
+
+		// Maybe we missed it? :(
+		if (!dmacSourceTriggered)
+			log(Debug, "EE DMAC did not have any sources triggered! Too slow, buddy? Look into this!");
 	}
 }
 

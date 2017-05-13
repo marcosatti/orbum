@@ -9,7 +9,7 @@ ConstantRegister8_t::ConstantRegister8_t(const char * mnemonic, const bool debug
 	UB = B;
 }
 
-void ConstantRegister8_t::writeByte(const System_t context, u8 value)
+void ConstantRegister8_t::writeByte(const System_t context, const u8 value)
 {
 	// Do not write value (zero register).
 }

@@ -41,18 +41,18 @@ public:
 	/*
 	Read/write functions to access the register, with subclassed functionality.
 	*/
-	virtual u8 readByte(const System_t context, size_t arrayIndex);
-	virtual void writeByte(const System_t context, size_t arrayIndex, u8 value);
-	virtual u16 readHword(const System_t context, size_t arrayIndex);
-	virtual void writeHword(const System_t context, size_t arrayIndex, u16 value);
-	virtual u32 readWord(const System_t context, size_t arrayIndex);
-	virtual void writeWord(const System_t context, size_t arrayIndex, u32 value);
-	virtual u64 readDword(const System_t context, size_t arrayIndex);
-	virtual void writeDword(const System_t context, size_t arrayIndex, u64 value);
+	virtual u8 readByte(const System_t context, const size_t arrayIndex);
+	virtual void writeByte(const System_t context, const size_t arrayIndex, const u8 value);
+	virtual u16 readHword(const System_t context, const size_t arrayIndex);
+	virtual void writeHword(const System_t context, const size_t arrayIndex, const u16 value);
+	virtual u32 readWord(const System_t context, const size_t arrayIndex);
+	virtual void writeWord(const System_t context, const size_t arrayIndex, const u32 value);
+	virtual u64 readDword(const System_t context, const size_t arrayIndex);
+	virtual void writeDword(const System_t context, const size_t arrayIndex, const u64 value);
 	virtual u128 readQword(const System_t context);
-	virtual void writeQword(const System_t context, u128 value);
-	virtual f32 readFloat(const System_t context, size_t arrayIndex);
-	virtual void writeFloat(const System_t context, size_t arrayIndex, f32 value);
+	virtual void writeQword(const System_t context, const u128 value);
+	virtual f32 readFloat(const System_t context, const size_t arrayIndex);
+	virtual void writeFloat(const System_t context, const size_t arrayIndex, const f32 value);
 
 	/*
 	Initialise register (set back to default value).

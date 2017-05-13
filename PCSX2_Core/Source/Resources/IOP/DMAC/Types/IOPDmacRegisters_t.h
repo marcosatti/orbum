@@ -83,6 +83,7 @@ public:
 		static constexpr int MasterInterrupt = 23;
 
 		static constexpr int CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { IRM0, IRM1, IRM2, IRM3, IRM4, IRM5, IRM6 };
+		static constexpr int CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCM0, TCM1, TCM2, TCM3, TCM4, TCM5, TCM6 };
 		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI0, TCI1, TCI2, TCI3, TCI4, TCI5, TCI6 };
 	};
 
@@ -91,7 +92,7 @@ public:
 	/*
 	(IOP context) Reset any FL bits written to.
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised, and sets the master interrupt bit appropriately.
@@ -177,6 +178,7 @@ public:
 		static constexpr int TCI13 = 27;
 
 		static constexpr int CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] = { IQE0, IQE1, IQE2, IQE3, IQE4, IQE5, IQE6, IQE7, IQE8, IQE9, IQE10, IQE11, IQE12, IQE13 };
+		static constexpr int CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCM7, TCM8, TCM9, TCM10, TCM11, TCM12, TCM13 };
 		static constexpr int CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { TCI7, TCI8, TCI9, TCI10, TCI11, TCI12, TCI13 };
 	};
 
@@ -185,7 +187,7 @@ public:
 	/*
 	(IOP context) Reset any FL bits written to.
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised, and sets the master interrupt bit in ICR0 appropriately.

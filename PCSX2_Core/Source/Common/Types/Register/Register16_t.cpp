@@ -10,7 +10,7 @@ Register16_t::Register16_t(const char* mnemonic, bool debugReads, bool debugWrit
 {
 }
 
-u8 Register16_t::readByte(const System_t context, size_t arrayIndex)
+u8 Register16_t::readByte(const System_t context, const size_t arrayIndex)
 {
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugReads)
@@ -26,7 +26,7 @@ u8 Register16_t::readByte(const System_t context, size_t arrayIndex)
 	return UB[arrayIndex];
 }
 
-void Register16_t::writeByte(const System_t context, size_t arrayIndex, u8 value)
+void Register16_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
 {
 	UB[arrayIndex] = value;
 
@@ -58,7 +58,7 @@ u16 Register16_t::readHword(const System_t context)
 	return UH;
 }
 
-void Register16_t::writeHword(const System_t context, u16 value)
+void Register16_t::writeHword(const System_t context, const u16 value)
 {
 	UH = value;
 

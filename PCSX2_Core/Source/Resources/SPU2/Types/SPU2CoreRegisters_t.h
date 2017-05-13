@@ -123,7 +123,7 @@ public:
 	/*
 	When this register is written to, resets the DMA transfer state.
 	*/
-	void writeHword(const System_t context, u16 value) override;
+	void writeHword(const System_t context, const u16 value) override;
 
 	/*
 	Current auto/manual DMA transfer count state, in terms of hwords.

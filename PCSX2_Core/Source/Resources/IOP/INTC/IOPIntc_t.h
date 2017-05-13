@@ -16,6 +16,6 @@ public:
 
 	std::shared_ptr<IOPIntcRegister_CTRL_t> CTRL; 
 	std::shared_ptr<IOPIntcRegister_MASK_t> MASK; 
-	std::shared_ptr<IOPIntcRegister_STAT_t> STAT; 
+	std::shared_ptr<IOPIntcRegister_STAT_t> STAT;
 };
 

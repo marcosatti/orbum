@@ -129,7 +129,7 @@ ByteMMU_t::VAddressProperties_t ByteMMU_t::getVAddressProperties(u32 address) co
 	};
 }
 
-u8 ByteMMU_t::readByte(const System_t context, u32 physicalAddress)
+u8 ByteMMU_t::readByte(const System_t context, const u32 physicalAddress)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -142,7 +142,7 @@ u8 ByteMMU_t::readByte(const System_t context, u32 physicalAddress)
 	return mappedObject->readByte(context, objectIndex);
 }
 
-void ByteMMU_t::writeByte(const System_t context, u32 physicalAddress, u8 value)
+void ByteMMU_t::writeByte(const System_t context, const u32 physicalAddress, const u8 value)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -155,7 +155,7 @@ void ByteMMU_t::writeByte(const System_t context, u32 physicalAddress, u8 value)
 	mappedObject->writeByte(context, objectIndex, value);
 }
 
-u16 ByteMMU_t::readHword(const System_t context, u32 physicalAddress) 
+u16 ByteMMU_t::readHword(const System_t context, const u32 physicalAddress) 
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -168,7 +168,7 @@ u16 ByteMMU_t::readHword(const System_t context, u32 physicalAddress)
 	return mappedObject->readHword(context, objectIndex);
 }
 
-void ByteMMU_t::writeHword(const System_t context, u32 physicalAddress, u16 value) 
+void ByteMMU_t::writeHword(const System_t context, const u32 physicalAddress, const u16 value) 
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -181,7 +181,7 @@ void ByteMMU_t::writeHword(const System_t context, u32 physicalAddress, u16 valu
 	mappedObject->writeHword(context, objectIndex, value);
 }
 
-u32 ByteMMU_t::readWord(const System_t context, u32 physicalAddress) 
+u32 ByteMMU_t::readWord(const System_t context, const u32 physicalAddress) 
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -194,7 +194,7 @@ u32 ByteMMU_t::readWord(const System_t context, u32 physicalAddress)
 	return mappedObject->readWord(context, objectIndex);
 }
 
-void ByteMMU_t::writeWord(const System_t context, u32 physicalAddress, u32 value) 
+void ByteMMU_t::writeWord(const System_t context, const u32 physicalAddress, const u32 value) 
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -207,7 +207,7 @@ void ByteMMU_t::writeWord(const System_t context, u32 physicalAddress, u32 value
 	mappedObject->writeWord(context, objectIndex, value);
 }
 
-u64 ByteMMU_t::readDword(const System_t context, u32 physicalAddress)
+u64 ByteMMU_t::readDword(const System_t context, const u32 physicalAddress)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -220,7 +220,7 @@ u64 ByteMMU_t::readDword(const System_t context, u32 physicalAddress)
 	return mappedObject->readDword(context, objectIndex);
 }
 
-void ByteMMU_t::writeDword(const System_t context, u32 physicalAddress, u64 value)
+void ByteMMU_t::writeDword(const System_t context, const u32 physicalAddress, const u64 value)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -233,7 +233,7 @@ void ByteMMU_t::writeDword(const System_t context, u32 physicalAddress, u64 valu
 	mappedObject->writeDword(context, objectIndex, value);
 }
 
-u128 ByteMMU_t::readQword(const System_t context, u32 physicalAddress) 
+u128 ByteMMU_t::readQword(const System_t context, const u32 physicalAddress) 
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
@@ -246,7 +246,7 @@ u128 ByteMMU_t::readQword(const System_t context, u32 physicalAddress)
 	return mappedObject->readQword(context, objectIndex);
 }
 
-void ByteMMU_t::writeQword(const System_t context, u32 physicalAddress, u128 value)
+void ByteMMU_t::writeQword(const System_t context, const u32 physicalAddress, const u128 value)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);

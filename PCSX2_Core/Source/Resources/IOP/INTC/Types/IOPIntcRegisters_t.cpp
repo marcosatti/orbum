@@ -8,7 +8,7 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const char * mnemonic, const bool
 	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
 	registerField(Fields::CDROM, "CDROM", 2, 1, 0);
-	registerField(Fields::DMA, "DMA", 3, 1, 0);
+	registerField(Fields::DMAC, "DMAC", 3, 1, 0);
 	registerField(Fields::TMR0, "TMR0", 4, 1, 0);
 	registerField(Fields::TMR1, "TMR1", 5, 1, 0);
 	registerField(Fields::TMR2, "TMR2", 6, 1, 0);
@@ -33,13 +33,14 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const char * mnemonic, const bool
 	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
 }
 
-void IOPIntcRegister_STAT_t::writeWord(const System_t context, u32 value)
+void IOPIntcRegister_STAT_t::writeWord(const System_t context, const u32 value)
 {
 	// Preprocessing for IOP: AND with old value (acknowledge bits).
+	u32 temp = value;
 	if (context == System_t::IOPCore)
-		value = readWord(context) & value;
+		temp = readWord(context) & value;
 
-	BitfieldRegister32_t::writeWord(context, value);
+	BitfieldRegister32_t::writeWord(context, temp);
 }
 
 IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -48,7 +49,7 @@ IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t(const char * mnemonic, const bool
 	registerField(Fields::VBLANK, "VBLANK", 0, 1, 0);
 	registerField(Fields::GPU, "GPU", 1, 1, 0);
 	registerField(Fields::CDROM, "CDROM", 2, 1, 0);
-	registerField(Fields::DMA, "DMA", 3, 1, 0);
+	registerField(Fields::DMAC, "DMAC", 3, 1, 0);
 	registerField(Fields::TMR0, "TMR0", 4, 1, 0);
 	registerField(Fields::TMR1, "TMR1", 5, 1, 0);
 	registerField(Fields::TMR2, "TMR2", 6, 1, 0);

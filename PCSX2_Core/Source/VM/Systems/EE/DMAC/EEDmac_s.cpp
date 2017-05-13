@@ -229,7 +229,7 @@ int EEDmac_s::transferData() const
 void EEDmac_s::setStateSuspended() const
 {
 	// Emit the interrupt status bit.
-	mDMAC->STAT->setFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_IRQ_KEYS[mChannel->getChannelID()], 1);
+	mDMAC->STAT->setFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_CIS_KEYS[mChannel->getChannelID()], 1);
 
 	// Change CHCR.STR to 0.
 	mChannel->CHCR->setFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::STR, 0);

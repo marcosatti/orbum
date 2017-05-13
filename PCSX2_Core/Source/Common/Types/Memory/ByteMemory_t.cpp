@@ -25,7 +25,7 @@ void ByteMemory_t::initialise()
 	std::vector<u8>(mMemoryByteSize, 0).swap(mMemory);
 }
 
-u8 ByteMemory_t::readByte(const System_t context, size_t byteOffset)
+u8 ByteMemory_t::readByte(const System_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mMemory[byteOffset]);
@@ -45,7 +45,7 @@ u8 ByteMemory_t::readByte(const System_t context, size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeByte(const System_t context, size_t byteOffset, u8 value)
+void ByteMemory_t::writeByte(const System_t context, const size_t byteOffset, const u8 value)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mMemory[byteOffset]);
@@ -65,7 +65,7 @@ void ByteMemory_t::writeByte(const System_t context, size_t byteOffset, u8 value
 #endif
 }
 
-u16 ByteMemory_t::readHword(const System_t context, size_t byteOffset)
+u16 ByteMemory_t::readHword(const System_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[byteOffset]);
@@ -85,7 +85,7 @@ u16 ByteMemory_t::readHword(const System_t context, size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeHword(const System_t context, size_t byteOffset, u16 value)
+void ByteMemory_t::writeHword(const System_t context, const size_t byteOffset, const u16 value)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[byteOffset]);
@@ -105,7 +105,7 @@ void ByteMemory_t::writeHword(const System_t context, size_t byteOffset, u16 val
 #endif
 }
 
-u32 ByteMemory_t::readWord(const System_t context, size_t byteOffset)
+u32 ByteMemory_t::readWord(const System_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[byteOffset]);
@@ -125,7 +125,7 @@ u32 ByteMemory_t::readWord(const System_t context, size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeWord(const System_t context, size_t byteOffset, u32 value)
+void ByteMemory_t::writeWord(const System_t context, const size_t byteOffset, const u32 value)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[byteOffset]);
@@ -145,7 +145,7 @@ void ByteMemory_t::writeWord(const System_t context, size_t byteOffset, u32 valu
 #endif
 }
 
-u64 ByteMemory_t::readDword(const System_t context, size_t byteOffset)
+u64 ByteMemory_t::readDword(const System_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -165,7 +165,7 @@ u64 ByteMemory_t::readDword(const System_t context, size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeDword(const System_t context, size_t byteOffset, u64 value)
+void ByteMemory_t::writeDword(const System_t context, const size_t byteOffset, const u64 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -185,7 +185,7 @@ void ByteMemory_t::writeDword(const System_t context, size_t byteOffset, u64 val
 #endif
 }
 
-u128 ByteMemory_t::readQword(const System_t context, size_t byteOffset)
+u128 ByteMemory_t::readQword(const System_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -206,7 +206,7 @@ u128 ByteMemory_t::readQword(const System_t context, size_t byteOffset)
 	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
 }
 
-void ByteMemory_t::writeQword(const System_t context, size_t byteOffset, u128 value)
+void ByteMemory_t::writeQword(const System_t context, const size_t byteOffset, const u128 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[byteOffset]);

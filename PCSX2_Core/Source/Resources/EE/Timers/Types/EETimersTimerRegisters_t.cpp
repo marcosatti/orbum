@@ -70,16 +70,17 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_MODE_t::writeWord(const System_t context, u32 value)
+void EETimersTimerRegister_MODE_t::writeWord(const System_t context, const u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
+	u32 temp = value;
 	if (context == System_t::EECore)
 	{
 		u32 regValue = readWord(context);
-		value = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
+		temp = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
 	}
 	
-	BitfieldRegister32_t::writeWord(context, value);
+	BitfieldRegister32_t::writeWord(context, temp);
 	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
 	if (context == System_t::EECore)

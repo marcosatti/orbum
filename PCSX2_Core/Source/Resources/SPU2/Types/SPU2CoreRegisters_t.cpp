@@ -78,7 +78,7 @@ SPU2CoreRegister_ATTR_t::SPU2CoreRegister_ATTR_t(const char * mnemonic, const bo
 	registerField(Fields::CoreEnable, "CoreEnable", 15, 1, 0);
 }
 
-void SPU2CoreRegister_ATTR_t::writeHword(const System_t context, u16 value)
+void SPU2CoreRegister_ATTR_t::writeHword(const System_t context, const u16 value)
 {
 	if (context == System_t::IOPCore)
 	{

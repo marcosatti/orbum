@@ -237,11 +237,11 @@ void IOPDmac_s::handleInterruptCheck() const
 {
 	// Check ICR0 and ICR1 for interrupt status, else clear the master interrupt and INTC bits.
 	if (mDMAC->ICR0->isInterruptPending(getContext()) || mDMAC->ICR1->isInterruptPending(getContext()))
-		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMA, 1);
+		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMAC, 1);
 	else
 	{
 		mDMAC->ICR0->setFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 0);
-		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMA, 0);
+		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMAC, 0);
 	}
 }
 

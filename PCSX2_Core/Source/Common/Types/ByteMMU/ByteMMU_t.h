@@ -54,8 +54,8 @@ public:
 
 	/*
 	Maps the given object into the PS2 physical address space, provided it inherits the MapperBaseObjectByteMMU_t interface.
-	Once this has been executed sucesfully, you will be able to use the read and write functions below to read/write to the PS2 physical addresses defined in the object.
-	Once the correct object has been retreived, a call will be made to the same function of that object.
+	Once this has been executed successfully, you will be able to use the read and write functions below to read/write to the PS2 physical addresses defined in the object.
+	Once the correct object has been retrieved, a call will be made to the same function of that object.
 
 	Note that this function simply remaps the memory in a linear fashion, meaning that for example, a PS2 physical address of 0x00000400 - 0x00000600 will map directly to 0x1234A000 - 0x1234A200.
 	
@@ -75,16 +75,16 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	No error checking is done as these functions are performance critical. If you try to access an invalid mapping, it will probably crash.
 	*/
-	u8 readByte(const System_t context, u32 physicalAddress);
-	void writeByte(const System_t context, u32 physicalAddress, u8 value);
-	u16 readHword(const System_t context, u32 physicalAddress);
-	void writeHword(const System_t context, u32 physicalAddress, u16 value);
-	u32 readWord(const System_t context, u32 physicalAddress);
-	void writeWord(const System_t context, u32 physicalAddress, u32 value);
-	u64 readDword(const System_t context, u32 physicalAddress);
-	void writeDword(const System_t context, u32 physicalAddress, u64 value);
-	u128 readQword(const System_t context, u32 physicalAddress);
-	void writeQword(const System_t context, u32 physicalAddress, u128 value);
+	u8 readByte(const System_t context, const u32 physicalAddress);
+	void writeByte(const System_t context, const u32 physicalAddress, const u8 value);
+	u16 readHword(const System_t context, const u32 physicalAddress);
+	void writeHword(const System_t context, const u32 physicalAddress, const u16 value);
+	u32 readWord(const System_t context, const u32 physicalAddress);
+	void writeWord(const System_t context, const u32 physicalAddress, const u32 value);
+	u64 readDword(const System_t context, const u32 physicalAddress);
+	void writeDword(const System_t context, const u32 physicalAddress, const u64 value);
+	u128 readQword(const System_t context, const u32 physicalAddress);
+	void writeQword(const System_t context, const u32 physicalAddress, const u128 value);
 
 private:
 	/*

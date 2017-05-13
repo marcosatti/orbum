@@ -61,7 +61,8 @@ public:
 		static constexpr int SIM = 23;
 		static constexpr int MEIM = 24;
 
-		static constexpr int CHANNEL_IRQ_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS]{ CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
+		static constexpr int CHANNEL_CIS_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] = { CIS0, CIS1, CIS2, CIS3, CIS4, CIS5, CIS6, CIS7, CIS8, CIS9 };
+		static constexpr int CHANNEL_CIM_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] = { CIM0, CIM1, CIM2, CIM3, CIM4, CIM5, CIM6, CIM7, CIM8, CIM9 };
 	};
 
 	EEDmacRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
@@ -71,7 +72,7 @@ public:
 	When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
 	When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised.

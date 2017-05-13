@@ -66,7 +66,7 @@ public:
 
 private:
 	/*
-	The max number of 8-bit data elements allowed in the queue, set to the constructor paramter.
+	The max number of 8-bit data elements allowed in the queue, set to the constructor parameter.
 	*/
 	size_t mMaxByteSize;
 

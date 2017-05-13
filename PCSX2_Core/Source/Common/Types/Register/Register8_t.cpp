@@ -25,7 +25,7 @@ u8 Register8_t::readByte(const System_t context)
 	return UB;
 }
 
-void Register8_t::writeByte(const System_t context, u8 value)
+void Register8_t::writeByte(const System_t context, const u8 value)
 {
 	UB = value;
 

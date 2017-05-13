@@ -7,7 +7,7 @@ SBUSRegister_MSCOM_t::SBUSRegister_MSCOM_t(const char * mnemonic, const bool deb
 {
 }
 
-void SBUSRegister_MSCOM_t::writeWord(const System_t context, u32 value)
+void SBUSRegister_MSCOM_t::writeWord(const System_t context, const u32 value)
 {
 	if (context == System_t::EECore)
 		Register32_t::writeWord(context, value);
@@ -18,7 +18,7 @@ SBUSRegister_MSFLG_t::SBUSRegister_MSFLG_t(const char * mnemonic, const bool deb
 {
 }
 
-void SBUSRegister_MSFLG_t::writeWord(const System_t context, u32 value)
+void SBUSRegister_MSFLG_t::writeWord(const System_t context, const u32 value)
 {
 	if (context == System_t::EECore)
 		Register32_t::writeWord(context, readWord(context) | value);
@@ -33,7 +33,7 @@ SBUSRegister_SMFLG_t::SBUSRegister_SMFLG_t(const char * mnemonic, const bool deb
 {
 }
 
-void SBUSRegister_SMFLG_t::writeWord(const System_t context, u32 value)
+void SBUSRegister_SMFLG_t::writeWord(const System_t context, const u32 value)
 {
 	if (context == System_t::EECore)
 		Register32_t::writeWord(context, readWord(context) & (~value));
@@ -48,7 +48,7 @@ SBUSRegister_F240_t::SBUSRegister_F240_t(const char * mnemonic, const bool debug
 {
 }
 
-u16 SBUSRegister_F240_t::readHword(const System_t context, size_t arrayIndex)
+u16 SBUSRegister_F240_t::readHword(const System_t context, const size_t arrayIndex)
 {
 	if (context == System_t::IOPCore && arrayIndex == 0)
 		return (Register32_t::readHword(context, arrayIndex) | 0x2);
@@ -66,7 +66,7 @@ u32 SBUSRegister_F240_t::readWord(const System_t context)
 		return Register32_t::readWord(context);
 }
 
-void SBUSRegister_F240_t::writeHword(const System_t context, size_t arrayIndex, u16 value)
+void SBUSRegister_F240_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
 {
 	if (context == System_t::IOPCore && arrayIndex == 0)
 	{
@@ -88,7 +88,7 @@ void SBUSRegister_F240_t::writeHword(const System_t context, size_t arrayIndex, 
 	}
 }
 
-void SBUSRegister_F240_t::writeWord(const System_t context, u32 value)
+void SBUSRegister_F240_t::writeWord(const System_t context, const u32 value)
 {
 	if (context == System_t::EECore)
 	{
@@ -126,7 +126,7 @@ u32 SBUSRegister_F300_t::readWord(const System_t context)
 	throw std::runtime_error("SBUS_F300 not implemented.");
 }
 
-void SBUSRegister_F300_t::writeWord(const System_t context, u32 value)
+void SBUSRegister_F300_t::writeWord(const System_t context, const u32 value)
 {
 	throw std::runtime_error("SBUS_F300 not implemented.");
 }

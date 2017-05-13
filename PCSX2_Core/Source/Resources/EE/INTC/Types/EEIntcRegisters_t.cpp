@@ -22,12 +22,13 @@ EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const char * mnemonic, const bool d
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
-void EEIntcRegister_STAT_t::writeWord(const System_t context, u32 value)
+void EEIntcRegister_STAT_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::EECore)
-		value = readWord(context) & (~value);
+		temp = readWord(context) & (~value);
 		
-	BitfieldRegister32_t::writeWord(context, value);
+	BitfieldRegister32_t::writeWord(context, temp);
 }
 
 EEIntcRegister_MASK_t::EEIntcRegister_MASK_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -50,7 +51,7 @@ EEIntcRegister_MASK_t::EEIntcRegister_MASK_t(const char * mnemonic, const bool d
 	registerField(Fields::VU0WD, "VU0WD", 14, 1, 0);
 }
 
-void EEIntcRegister_MASK_t::writeWord(const System_t context, u32 value)
+void EEIntcRegister_MASK_t::writeWord(const System_t context, const u32 value)
 {
 	if (context == System_t::EECore)
 		BitfieldRegister32_t::writeWord(context, readWord(context) ^ value);

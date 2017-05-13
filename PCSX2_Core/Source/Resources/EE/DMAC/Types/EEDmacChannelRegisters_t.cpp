@@ -93,12 +93,13 @@ EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char * mn
 {
 }
 
-void EEDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, u32 value)
+void EEDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::EECore)
-		value |= (1 << 0);
+		temp |= (1 << 0);
 
-	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, temp);
 }
 
 EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -106,12 +107,13 @@ EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char 
 {
 }
 
-void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, u32 value)
+void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, const u32 value)
 {
+	u32 temp = value;
 	if (context == System_t::EECore)
-		value &= ~(1 << 0);
+		temp &= ~(1 << 0);
 
-	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
+	EEDmacChannelRegister_CHCR_t::writeWord(context, temp);
 }
 
 EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<Register32_t> & sbusF240) :
@@ -139,7 +141,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, u32 value)
+void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const u32 value)
 {
 	EEDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 
@@ -186,7 +188,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, u32 value)
+void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const u32 value)
 {
 	EEDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
@@ -232,7 +234,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, u32 value)
+void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const u32 value)
 {
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 	

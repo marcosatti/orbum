@@ -15,9 +15,9 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByte(const System_t context, size_t arrayIndex, u8 value) override;
-	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeByte(const System_t context, const size_t arrayIndex, const u8 value) override;
+	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Initialise register (set to do nothing).

@@ -55,6 +55,13 @@ private:
 	u64 DEBUG_LOOP_COUNTER = 0;
 #endif
 
+#if defined(BUILD_DEBUG)
+	/*
+	Prints debug information about interrupt sources.
+	*/
+	void printInterruptInfo() const;
+#endif
+
 	///////////////////////////////
 	// Instruction Functionality //
 	///////////////////////////////

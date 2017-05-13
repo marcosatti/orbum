@@ -80,8 +80,8 @@ public:
 	/*
 	Upon writing, stores the transfer size to be used by the DMAC.
 	*/
-	void writeHword(const System_t context, size_t arrayIndex, u16 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 	/*
 	Decrements the tag transfer size by 1.
@@ -148,7 +148,7 @@ public:
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 };
 
 /*
@@ -163,7 +163,7 @@ public:
 	/*
 	(IOP context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 };
 
 /*
@@ -182,7 +182,7 @@ public:
 	See PCSX2's "sif0.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*
@@ -215,7 +215,7 @@ public:
 	See PCSX2's "sif1.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*
@@ -246,7 +246,7 @@ public:
 	See PCSX2's "sif2.cpp".
 	*/
 	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, u32 value) override;
+	void writeWord(const System_t context, const u32 value) override;
 
 private:
 	/*
