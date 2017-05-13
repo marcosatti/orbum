@@ -105,14 +105,6 @@ private:
 	size_t mNumOffsetsPerPage;
 
 	/*
-	The page table which holds all of the page table entries, mapping the addresses.
-	The directories are kept in this, which point to individual pages.
-	The individual pages are only allocated on access, thereby saving memory.
-	(An array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
-	*/
-	std::vector<std::vector<std::shared_ptr<MapperBaseObjectByteMMU_t>>> mPageTable;
-
-	/*
 	Returns the VDN (virtual directory number/index), VPN (virtual page number/index) and offset properties from a given virtual address, using this MMU context.
 	*/
 	struct VAddressProperties_t
@@ -122,4 +114,18 @@ private:
 		size_t mOffset;
 	};
 	VAddressProperties_t getVAddressProperties(u32 address) const;
+
+	/*
+	The page table which holds all of the page table entries, mapping the addresses.
+	The directories are kept in this, which point to individual pages.
+	The individual pages are only allocated on access, thereby saving memory.
+	(An array of directories, each directory pointing to an mComponents of pages, each page pointing to some memory.)
+	*/
+	std::vector<std::vector<std::shared_ptr<MapperBaseObjectByteMMU_t>>> mPageTable;
+
+	/*
+	Given the address properties, performs a lookup in the page table and returns the mapped object.
+	On a nullptr object being retrieved, a runtime_error is thrown (debug builds only).
+	*/
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & getMappedObject(const System_t context, const VAddressProperties_t & properties);
 };

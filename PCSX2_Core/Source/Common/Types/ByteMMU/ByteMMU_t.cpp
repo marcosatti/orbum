@@ -3,6 +3,8 @@
 #include <memory>
 #include <stdexcept>
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
 #include "Common/Global/Globals.h"
 
@@ -129,13 +131,31 @@ ByteMMU_t::VAddressProperties_t ByteMMU_t::getVAddressProperties(u32 address) co
 	};
 }
 
+const std::shared_ptr<MapperBaseObjectByteMMU_t>& ByteMMU_t::getMappedObject(const System_t context, const VAddressProperties_t& properties)
+{
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & object = mPageTable[properties.mVDN][properties.mVPN];
+
+#if defined(BUILD_DEBUG)
+	// Throw runtime_error on nullptr object.
+	if (object == nullptr)
+	{
+		std::stringstream stringStream;
+		u32 address = (static_cast<u32>(properties.mVDN) << (mNumOffsetIndexBits + mNumPageIndexBits)) | (static_cast<u32>(properties.mVPN) << mNumOffsetIndexBits) | static_cast<u32>(properties.mOffset);
+		stringStream << SYSTEM_STR[context] << ": ByteMMU lookup failed (nullptr). Address (inc. offset) = 0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << address << ".";
+		throw std::runtime_error(stringStream.str());
+	}
+#endif
+
+	return object;
+}
+
 u8 ByteMMU_t::readByte(const System_t context, const u32 physicalAddress)
 {
 	// Get the virtual address properties, including VDN, VPN and offset.
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the read on the storage object at the specified index.
@@ -148,7 +168,7 @@ void ByteMMU_t::writeByte(const System_t context, const u32 physicalAddress, con
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the write on the storage object at the specified index.
@@ -161,7 +181,7 @@ u16 ByteMMU_t::readHword(const System_t context, const u32 physicalAddress)
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the read on the storage object at the specified index.
@@ -174,7 +194,7 @@ void ByteMMU_t::writeHword(const System_t context, const u32 physicalAddress, co
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the write on the storage object at the specified index.
@@ -187,7 +207,7 @@ u32 ByteMMU_t::readWord(const System_t context, const u32 physicalAddress)
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the read on the storage object at the specified index.
@@ -200,7 +220,7 @@ void ByteMMU_t::writeWord(const System_t context, const u32 physicalAddress, con
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the write on the storage object at the specified index.
@@ -213,7 +233,7 @@ u64 ByteMMU_t::readDword(const System_t context, const u32 physicalAddress)
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the read on the storage object at the specified index.
@@ -226,7 +246,7 @@ void ByteMMU_t::writeDword(const System_t context, const u32 physicalAddress, co
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the write on the storage object at the specified index.
@@ -239,7 +259,7 @@ u128 ByteMMU_t::readQword(const System_t context, const u32 physicalAddress)
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the read on the storage object at the specified index.
@@ -252,7 +272,7 @@ void ByteMMU_t::writeQword(const System_t context, const u32 physicalAddress, co
 	auto properties = getVAddressProperties(physicalAddress);
 
 	// Get host storage object and calculate the object index to access.
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = mPageTable[properties.mVDN][properties.mVPN];
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & mappedObject = getMappedObject(context, properties);
 	const size_t objectIndex = physicalAddress - mappedObject->getMappedPhysicalAddress();
 
 	// Perform the write on the storage object at the specified index.
