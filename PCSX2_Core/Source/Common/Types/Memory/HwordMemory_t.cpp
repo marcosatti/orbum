@@ -195,40 +195,16 @@ size_t HwordMemory_t::getSize()
 	return mMemoryByteSize;
 }
 
-void HwordMemory_t::read(const System_t context, u16 * buffer, const size_t hwordLength, const size_t hwordOffset) const
+void HwordMemory_t::read(const System_t context, const size_t hwordOffset, u16 * buffer, const size_t hwordLength)
 {
-	// STL method generates security error on MSVC, so use memcpy instead.
-	// std::copy_n(mMemory.begin() + hwordOffset, hwordLength, buffer);
-	memcpy(buffer, &mMemory[hwordOffset], hwordLength * Constants::NUMBER_BYTES_IN_HWORD);
-
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
-	if (mDebugReads)
-	{
-#if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u16[0x%X] @ 0x%08X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordLength, hwordOffset);
-#else
-		log(Debug, "%s: %s Read u16[%d] @ 0x%08X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordLength, hwordOffset);
-#endif
-	}
-#endif
+	for (size_t i = 0; i < hwordLength; i++)
+		buffer[i] = readHword(context, hwordOffset + i);
 }
 
-void HwordMemory_t::write(const System_t context, const u16 * buffer, const size_t hwordLength, const size_t hwordOffset)
+void HwordMemory_t::write(const System_t context, const size_t hwordOffset, const u16 * buffer, const size_t hwordLength)
 {
-	// STL method generates security error on MSVC, so use memcpy instead.
-	// std::copy_n(buffer, hwordLength, mMemory.begin() + hwordOffset);
-	memcpy(&mMemory[hwordOffset], buffer, hwordLength * Constants::NUMBER_BYTES_IN_HWORD);
-
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
-	if (mDebugWrites)
-	{
-#if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u16[0x%X] @ 0x%08X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordLength, hwordOffset);
-#else
-		log(Debug, "%s: %s Write u16[%d] @ 0x%08X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordLength, hwordOffset);
-#endif
-	}
-#endif
+	for (size_t i = 0; i < hwordLength; i++)
+		writeHword(context, hwordOffset + i, buffer[i]);
 }
 
 void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset)

@@ -29,7 +29,7 @@ public:
 	Reads pop byte(s) from the FIFO queue, and cannot be accessed again.
 	Writes push bytes(s) to the end of the FIFO queue.
 	Upon reading or writing to the queue when there is no data left or it is full, a runtime error is thrown.
-	The provided hword/word/dword/qword functions are wrappers around the byte functions, and should not be treated as a separate interface (not made virtual).
+	The provided hword/word/dword/qword functions are wrappers around the byte functions, and should not be treated as separate interfaces (not made virtual).
 	*/
 	virtual u8 readByte(const System_t context);
 	virtual void writeByte(const System_t context, const u8 data);

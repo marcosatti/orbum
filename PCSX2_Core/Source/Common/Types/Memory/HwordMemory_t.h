@@ -43,21 +43,25 @@ public:
 
 	/*
 	Reads hwords to the buffer given.
+	This is a wrapper around the readHword function, and should not be treated as a separate interface (not made virtual).
 	*/
-	virtual void read(const System_t context, u16 * buffer, const size_t hwordLength, const size_t hwordOffset) const;
+	void read(const System_t context, const size_t hwordOffset, u16 * buffer, const size_t hwordLength);
 
 	/*
 	Writes hwords from the buffer given.
+	This is a wrapper around the writeHword function, and should not be treated as a separate interface (not made virtual).
 	*/
-	virtual void write(const System_t context, const u16 * buffer, const size_t hwordLength, const size_t hwordOffset);
+	void write(const System_t context, const size_t hwordOffset, const u16 * buffer, const size_t hwordLength);
 
 	/*
 	Read in a raw file to the memory (byte copy).
+	For VM use only! Do not use within the system logic.
 	*/
 	void readFile(const char * fileStr, const size_t fileHwordOffset, const size_t fileHwordLength, const size_t memoryHwordOffset);
 
 	/*
 	Dumps the memory contents to a file.
+	For VM use only! Do not use within the system logic.
 	*/
 	void dump(const char * fileStr);
 

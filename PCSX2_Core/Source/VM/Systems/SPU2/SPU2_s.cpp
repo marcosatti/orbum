@@ -144,8 +144,7 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to left channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->writeHword(getContext(), leftAddr, reinterpret_cast<u16*>(&data)[0]);
-			mSPU2->MainMemory->writeHword(getContext(), leftAddr + 1, reinterpret_cast<u16*>(&data)[1]);
+			mSPU2->MainMemory->write(getContext(), leftAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
@@ -158,8 +157,7 @@ int SPU2_s::transferData_ADMA_Write() const
 
 			// Perform word write from FIFO to right channel memory (2 hwords).
 			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->writeHword(getContext(), rightAddr, reinterpret_cast<u16*>(&data)[0]);
-			mSPU2->MainMemory->writeHword(getContext(), rightAddr + 1, reinterpret_cast<u16*>(&data)[1]);
+			mSPU2->MainMemory->write(getContext(), rightAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
 
 			// Update the DMA transfer address (move forward 2 hwords).
 			mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;

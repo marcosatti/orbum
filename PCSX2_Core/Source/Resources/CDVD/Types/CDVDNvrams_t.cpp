@@ -47,21 +47,22 @@ void CDVDNvram_000_t::readConfigBlock(const System_t context, u16 * buffer)
 			throw std::runtime_error("CDVD read config block was outside of max block parameter set... What is meant to happen?");
 		}
 
-		// Ok to read a block.
+		// Ok to read a block. Remember, there are 8 hwords to a block (which is 16 bytes).
+		// The addresses come from PCSX2/CDVD.cpp (transformed from a byte address to a hword address).
 		switch (mConfigAreaIndex)
 		{
 		case 0:
-			MainMemory->read(context, buffer, 8, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->read(context, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		case 1:
-			MainMemory->read(context, buffer, 8, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->read(context, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		case 2:
-			MainMemory->read(context, buffer, 8, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->read(context, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		default:
 			throw std::runtime_error("CDVD read config block tried to read from invalid config area. Please fix.");
 		}
 
 		// Increment block index.
-		mConfigBlockIndex++;
+		mConfigBlockIndex += 1;
 	}
 	else
 	{
@@ -90,21 +91,22 @@ void CDVDNvram_000_t::writeConfigBlock(const System_t context, const u16 * buffe
 			throw std::runtime_error("CDVD read config block was outside of max block parameter set... What is meant to happen?");
 		}
 
-		// Ok to read a block.
+		// Ok to read a block. Remember, there are 8 hwords to a block (which is 16 bytes).
+		// The addresses come from PCSX2/CDVD.cpp (transformed from a byte address to a hword address).
 		switch (mConfigAreaIndex)
 		{
 		case 0:
-			MainMemory->write(context, buffer, 8, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->write(context, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		case 1:
-			MainMemory->write(context, buffer, 8, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->write(context, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		case 2:
-			MainMemory->write(context, buffer, 8, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8); break;
+			MainMemory->write(context, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
 		default:
 			throw std::runtime_error("CDVD read config block tried to read from invalid config area. Please fix.");
 		}
 
 		// Increment block index.
-		mConfigBlockIndex++;
+		mConfigBlockIndex += 1;
 	}
 	else
 	{
@@ -116,50 +118,50 @@ void CDVDNvram_000_t::writeConfigBlock(const System_t context, const u16 * buffe
 
 void CDVDNvram_000_t::readConsoleID(const System_t context, u16 * buffer) const
 {
-	MainMemory->read(context, buffer, 4, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->read(context, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::writeConsoleID(const System_t context, const u16 * buffer)
 {
-	MainMemory->write(context, buffer, 4, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->write(context, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::readILinkID(const System_t context, u16 * buffer) const
 {
-	MainMemory->read(context, buffer, 4, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->read(context, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::writeILinkID(const System_t context, const u16 * buffer)
 {
-	MainMemory->write(context, buffer, 4, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->write(context, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::readModelNumber(const System_t context, u16 * buffer) const
 {
-	MainMemory->read(context, buffer, 4, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->read(context, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::writeModelNumber(const System_t context, const u16 * buffer)
 {
-	MainMemory->write(context, buffer, 4, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->write(context, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::readRegionParams(const System_t context, u16 * buffer) const
 {
-	MainMemory->read(context, buffer, 4, 0x180 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->read(context, 0x180 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::writeRegionParams(const System_t context, const u16 * buffer)
 {
-	MainMemory->write(context, buffer, 4, 0x180 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->write(context, 0x180 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::readMAC(const System_t context, u16 * buffer) const
 {
-	MainMemory->read(context, buffer, 4, 0x198 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->read(context, 0x198 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
 void CDVDNvram_000_t::writeMAC(const System_t context, const u16 * buffer)
 {
-	MainMemory->write(context, buffer, 4, 0x198 / Constants::NUMBER_BYTES_IN_HWORD);
+	MainMemory->write(context, 0x198 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }

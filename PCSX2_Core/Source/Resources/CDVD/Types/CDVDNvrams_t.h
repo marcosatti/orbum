@@ -11,7 +11,7 @@ Contains information about the CDVD NVRAM state, used to store various data.
 Undocumented - see PCSX2's CDVD.h/cpp.
 
 There are 6 pieces of important information the NVRAM holds, in addition to the raw memory space it provides:
- - Config areas ("0"/"1"/"2"), accessed by blocks (16 bytes).
+ - Config areas ("0"/"1"/"2"), accessed by blocks (a block is 16 bytes).
  - Console ID (8 bytes).
  - iLink ID (8 bytes).
  - Model Number (8 bytes).

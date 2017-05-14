@@ -44,21 +44,25 @@ public:
 
 	/*
 	Reads bytes to the buffer given.
+	This is a wrapper around the readByte function, and should not be treated as a separate interface (not made virtual).
 	*/
-	virtual void read(const System_t context, u8 * buffer, const size_t byteLength, const size_t byteOffset) const;
+	void read(const System_t context, const size_t byteOffset, u8 * buffer, const size_t byteLength);
 
 	/*
 	Writes bytes from the buffer given.
+	This is a wrapper around the writeByte function, and should not be treated as a separate interface (not made virtual).
 	*/
-	virtual void write(const System_t context, const u8 * buffer, const size_t byteLength, const size_t byteOffset);
+	void write(const System_t context, const size_t byteOffset, const u8 * buffer, const size_t byteLength);
 
 	/*
 	Read in a raw file to the memory (byte copy).
+	For VM use only! Do not use within the system logic.
 	*/
 	void readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset);
 	
 	/*
 	Dumps the memory contents to a file.
+	For VM use only! Do not use within the system logic.
 	*/
 	void dump(const char * fileStr);
 

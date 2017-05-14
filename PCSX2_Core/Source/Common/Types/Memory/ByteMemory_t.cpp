@@ -233,40 +233,16 @@ size_t ByteMemory_t::getSize()
 	return mMemoryByteSize;
 }
 
-void ByteMemory_t::read(const System_t context, u8 * buffer, const size_t byteLength, const size_t byteOffset) const
+void ByteMemory_t::read(const System_t context, const size_t byteOffset, u8 * buffer, const size_t byteLength)
 {
-	// STL method generates security error on MSVC, so use memcpy instead.
-	// std::copy_n(mMemory.begin() + byteOffset, byteLength, buffer);
-	memcpy(buffer, &mMemory[byteOffset], byteLength);
-
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
-	if (mDebugReads)
-	{
-#if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8[0x%X], Size = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, byteLength);
-#else
-		log(Debug, "%s: %s Read u8[%d], Size = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, byteLength);
-#endif
-	}
-#endif
+	for (size_t i = 0; i < byteLength; i++)
+		buffer[i] = readByte(context, byteOffset + i);
 }
 
-void ByteMemory_t::write(const System_t context, const u8 * buffer, const size_t byteLength, const size_t byteOffset)
+void ByteMemory_t::write(const System_t context, const size_t byteOffset, const u8 * buffer, const size_t byteLength)
 {
-	// STL method generates security error on MSVC, so use memcpy instead.
-	// std::copy_n(buffer, byteLength, mMemory.begin() + byteOffset);
-	memcpy(&mMemory[byteOffset], buffer, byteLength);
-
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
-	if (mDebugWrites)
-	{
-#if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8[0x%X], Size = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, byteLength);
-#else
-		log(Debug, "%s: %s Write u8[%d], Size = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, byteLength);
-#endif
-	}
-#endif
+	for (size_t i = 0; i < byteLength; i++)
+		writeByte(context, byteOffset + i, buffer[i]);
 }
 
 void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, const size_t fileByteLength, const size_t memoryByteOffset)
