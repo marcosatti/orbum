@@ -96,7 +96,7 @@ void Clock_t::addSystemClockTicksAll(const double time)
 	DEBUG_TIME_ELAPSED_CURRENT += time;
 	if ((DEBUG_TIME_ELAPSED_CURRENT - DEBUG_TIME_ELAPSED_LAST) > 1.0e6)
 	{
-		log(Info, "Emulator time elapsed = %.2fs.", (DEBUG_TIME_ELAPSED_CURRENT - DEBUG_TIME_ELAPSED_LAST) / 1.0e6);
+		log(Info, "Emulator time elapsed = %.2fs.", DEBUG_TIME_ELAPSED_CURRENT / 1.0e6);
 		DEBUG_TIME_ELAPSED_LAST = DEBUG_TIME_ELAPSED_CURRENT;
 	}
 }

@@ -68,6 +68,8 @@
 #include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
 #include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
+#include "Resources/SIO2/SIO2_t.h"
+
 Resources_t::Resources_t() :
 	Clock(std::make_shared<Clock_t>()),
 	Common(std::make_shared<Common_t>()),
@@ -75,7 +77,8 @@ Resources_t::Resources_t() :
 	EE(std::make_shared<EE_t>()),
 	IOP(std::make_shared<IOP_t>()),
 	CDVD(std::make_shared<CDVD_t>()),
-	SPU2(std::make_shared<SPU2_t>())
+	SPU2(std::make_shared<SPU2_t>()),
+	SIO2(std::make_shared<SIO2_t>())
 {
 	postInit_EE_DMAC();
 	postInit_EE_VPU_VU();
@@ -1513,6 +1516,12 @@ void Resources_t::postInit_IOP() const
 
 			// Parallel Port.
 			IOP->MMU->mapObject(0x1F000000, IOP->ParallelPort);
+
+			// SIO2 Registers.
+			IOP->MMU->mapObject(0x1F808268, SIO2->CTRL);
+			IOP->MMU->mapObject(0x1F808278, SIO2->REGISTER_8278);
+			IOP->MMU->mapObject(0x1F80827C, SIO2->REGISTER_827C);
+			IOP->MMU->mapObject(0x1F808280, SIO2->INTR);
 		}
 
 		// SIF Registers

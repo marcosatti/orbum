@@ -316,6 +316,8 @@
     <ClInclude Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_t.h" />
     <ClInclude Include="Source\Resources\SPU2\Types\SPU2Registers_t.h" />
+    <ClInclude Include="Source\Resources\SIO2\Types\SIO2Packet_t.h" />
+    <ClInclude Include="Source\Resources\SIO2\SIO2_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\stdafx.cpp">
@@ -513,6 +515,7 @@
     <ClCompile Include="Source\Common\Types\FIFOQueue\FIFOQueue_t.cpp" />
     <ClCompile Include="Source\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_t.cpp" />
     <ClCompile Include="Source\Resources\SPU2\Types\SPU2Registers_t.cpp" />
+    <ClCompile Include="Source\Resources\SIO2\SIO2_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Docs\Memory Mappings.xlsx">

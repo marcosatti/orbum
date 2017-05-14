@@ -7,6 +7,7 @@ class EE_t;
 class GS_t;
 class IOP_t;
 class SPU2_t;
+class SIO2_t;
 class CDVD_t;
 class Common_t;
 
@@ -70,6 +71,11 @@ public:
 	SPU2 Resources.
 	*/
 	std::shared_ptr<SPU2_t> SPU2;
+
+	/*
+	SIO2 Resources.
+	*/
+	std::shared_ptr<SIO2_t> SIO2;
 
 private:
 	/*

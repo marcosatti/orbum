@@ -142,8 +142,9 @@ public:
 
 /*
 The SPU2 Core STATX register.
-TODO: I don't fully understand this, the PCSX2 code is hard to read. Seems to be related to a "need data for processing" thing.
+TODO: I don't fully understand this, the PCSX2 code is hard to read. Seems to be related to a "need data for processing" thing. 
       Set to 0x80 on "need data", set to 0 otherwise?
+	  Might actually be a "ready" flag - IOPCore loops on reading this register if set to 0x80...
 */
 class SPU2CoreRegister_STATX_t : public BitfieldRegister16_t
 {
