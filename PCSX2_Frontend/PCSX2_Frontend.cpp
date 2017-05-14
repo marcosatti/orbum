@@ -39,6 +39,8 @@ void log(const LogLevel_t level, const std::string message)
 		prefix = "[Info] "; break;
 	case Warning:
 		prefix = "[Warning] "; break;
+	case Fatal:
+		prefix = "[Fatal] "; break;
 	}
 
 	logFile << prefix << message << std::endl;
@@ -79,9 +81,7 @@ int main()
 	}
 	catch (std::exception ex)
 	{
-		std::string msg("EXCEPTION: ");
-		msg += ex.what();
-		log(Debug, msg.c_str());
+		log(Fatal, ex.what());
 	}
 
 	logFile.close();

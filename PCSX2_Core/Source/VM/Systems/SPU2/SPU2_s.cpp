@@ -83,32 +83,32 @@ bool SPU2_s::handleDMATransfer()
 	if (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMABits > 0))
 		throw std::runtime_error("SPU2 ATTR DMABits field set to non-zero. What is this for?");
 
-	bool dmaPerformed = false;
+	int dmaCount = 0;
 	switch (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMAMode))
 	{
 	case 0:
 		// Auto DMA write mode.
 		if (mCore->isADMAEnabled(getContext())) 
-			dmaPerformed = transferData_ADMA_Write(); 
+			dmaCount = transferData_ADMA_Write(); 
 		break;
 	case 1:
 		// Auto DMA read mode. 
 		if (mCore->isADMAEnabled(getContext()))
-			dmaPerformed = transferData_ADMA_Read();
+			dmaCount = transferData_ADMA_Read();
 		break;
 	case 2:
 		// Manual DMA write mode.
-		dmaPerformed = transferData_MDMA_Write(); 
+		dmaCount = transferData_MDMA_Write();
 		break;
 	case 3:
 		// Manual DMA read mode.
-		dmaPerformed = transferData_MDMA_Read(); 
+		dmaCount = transferData_MDMA_Read();
 		break;
 	default:
 		throw std::runtime_error("SPU2 could not determine DMA mode. Please fix.");
 	}
 
-	return dmaPerformed;
+	return (dmaCount > 0);
 }
 
 bool SPU2_s::handleSoundGeneration()
@@ -116,6 +116,18 @@ bool SPU2_s::handleSoundGeneration()
 	// Check if core is enabled and do sound generation.
 	if (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::CoreEnable))
 	{
+		// Check if we are running out of data - that the end of data is less than 0x200 hwords away. Set STATX on this condition and send an interrupt (or clear it otherwise).
+		// TODO: Check the logic and implement. Might need to set the IOP DMAC interrupt bit for the current core (a bit weird)? See SPU2-X/ReadInput.cpp (V_Core::ReadInput()).
+		if (false) 
+		{
+			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
+			// mDMAC->ICR{0,1}->setFieldValue(getContext(), IOPDmacRegister_ICR{0,1}_t::Fields::TCI{...}, 1);
+		}
+		else
+		{
+			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
+		}
+
 		return false; 
 	}
 	else
@@ -170,7 +182,7 @@ int SPU2_s::transferData_ADMA_Write() const
 		return 1;
 	}
 
-	// No data to process.
+	// ADMA did not transfer anything.
 	return 0;
 }
 

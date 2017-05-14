@@ -10,7 +10,8 @@ enum LogLevel_t
 {
 	Info,
 	Warning,
-	Debug
+	Debug,
+	Fatal
 };
 
 /*

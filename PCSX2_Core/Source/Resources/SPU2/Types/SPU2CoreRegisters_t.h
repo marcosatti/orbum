@@ -139,3 +139,19 @@ public:
 	u32 mDMATransferAddressLeft;
 	u32 mDMATransferAddressRight;
 };
+
+/*
+The SPU2 Core STATX register.
+TODO: I don't fully understand this, the PCSX2 code is hard to read. Seems to be related to a "need data for processing" thing.
+      Set to 0x80 on "need data", set to 0 otherwise?
+*/
+class SPU2CoreRegister_STATX_t : public BitfieldRegister16_t
+{
+public:
+	struct Fields
+	{
+		static constexpr int NeedData = 0;
+	};
+
+	SPU2CoreRegister_STATX_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
+};

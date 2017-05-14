@@ -12,10 +12,10 @@ class SPU2CoreRegister_CHAN1_t;
 class SPU2CoreRegister_MMIX_t;
 class SPU2CoreRegister_ATTR_t;
 class SPU2CoreRegister_VOL_t;
+class SPU2CoreRegister_STATX_t;
 class ByteMemory_t;
 class Register16_t;
 class PairRegister16_t;
-class SPU2CoreVoice_C0V0_t;
 class FIFOQueue_t;
 
 /*
@@ -105,7 +105,7 @@ public:
 	std::shared_ptr<Register16_t>             EEAL;
 	std::shared_ptr<Register16_t>             ENDX0;
 	std::shared_ptr<Register16_t>             ENDX1;
-	std::shared_ptr<Register16_t>             STATX;
+	std::shared_ptr<SPU2CoreRegister_STATX_t> STATX;
 	std::shared_ptr<SPU2CoreRegister_VOL_t>   MVOLL;
 	std::shared_ptr<SPU2CoreRegister_VOL_t>   MVOLR;
 	std::shared_ptr<Register16_t>             EVOLL;
