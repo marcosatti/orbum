@@ -29,12 +29,12 @@ public:
 	/*
 	Returns the channel runtime logical mode its operating in.
 	*/
-	EEDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context) const;
+	EEDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context);
 
 	/*
 	Returns the runtime direction. Useful for channels where it can be either way.
 	*/
-	EEDmacChannelTable::Direction_t getDirection(const System_t context) const;
+	EEDmacChannelTable::Direction_t getDirection(const System_t context);
 
 	/*
 	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.

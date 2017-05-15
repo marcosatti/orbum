@@ -34,12 +34,12 @@ public:
 	/*
 	Returns the channel runtime logical mode its operating in.
 	*/
-	IOPDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context) const;
+	IOPDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context);
 
 	/*
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
-	IOPDmacChannelTable::Direction_t getDirection(const System_t context) const;
+	IOPDmacChannelTable::Direction_t getDirection(const System_t context);
 
 	/*
 	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.

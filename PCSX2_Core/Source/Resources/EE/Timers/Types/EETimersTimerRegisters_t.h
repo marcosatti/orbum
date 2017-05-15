@@ -70,7 +70,7 @@ public:
 	/*
 	Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.
 	*/
-	bool isGateHBLNKSpecial(const System_t context) const;
+	bool isGateHBLNKSpecial(const System_t context);
 
 	/*
 	Returns the cached emulator clock source.

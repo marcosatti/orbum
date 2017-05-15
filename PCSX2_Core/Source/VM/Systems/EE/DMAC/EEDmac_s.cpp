@@ -133,7 +133,7 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 
 int EEDmac_s::transferData() const
 {
-	// Determine the direction of data flow. If set to BOTH (true for VIF1 and SIF2 channels), get the runtime direction by checking the CHCR.DIR field.
+	// Determine the runtime direction of data flow by checking the CHCR.DIR field.
 	Direction_t direction = mChannel->CHCR->getDirection(getContext());
 
 	// Get the main memory or SPR address we are reading or writing from. 

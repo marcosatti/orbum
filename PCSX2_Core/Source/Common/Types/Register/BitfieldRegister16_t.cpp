@@ -17,11 +17,9 @@ void BitfieldRegister16_t::initialise()
 
 void BitfieldRegister16_t::initialiseAllFields()
 {
+	// Using UH directly is OK here - it can only ever be called from within a VM "context".
 	for (auto& field : mFields)
-	{
-		field.mValue = field.mInitialValue;
-		UH = MathUtil::insertMaskedValue16(UH, field.mValue, field.mStartPosition, field.mLength);
-	}
+		UH = MathUtil::insertMaskedValue16(UH, field.mInitialValue, field.mStartPosition, field.mLength);
 }
 
 u8 BitfieldRegister16_t::readByte(const System_t context, const size_t arrayIndex)
@@ -39,9 +37,6 @@ u8 BitfieldRegister16_t::readByte(const System_t context, const size_t arrayInde
 void BitfieldRegister16_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
 {
 	Register16_t::writeByte(context, arrayIndex, value);
-
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue16(UH, field.mStartPosition, field.mLength);
 
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
@@ -64,9 +59,6 @@ u16 BitfieldRegister16_t::readHword(const System_t context)
 void BitfieldRegister16_t::writeHword(const System_t context, const u16 value)
 {
 	Register16_t::writeHword(context, value);
-	
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue16(UH, field.mStartPosition, field.mLength);
 
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
@@ -76,30 +68,41 @@ void BitfieldRegister16_t::writeHword(const System_t context, const u16 value)
 
 void BitfieldRegister16_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u16 fieldInitialValue)
 {
-	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
+	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue });
 	initialiseAllFields();
 }
 
-u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex) const
+u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex)
 {
-	return mFields[fieldIndex].mValue;
+	u16 temp = MathUtil::extractMaskedValue16(readHword(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
+	
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+	if (mDebugReads)
+		logDebugAllFields();
+#endif
+
+	return temp;
 }
 
 void BitfieldRegister16_t::setFieldValue(const System_t context, const int fieldIndex, const u16 value)
 {
-	auto& field = mFields[fieldIndex];
-	field.mValue = value;
-	UH = MathUtil::insertMaskedValue16(UH, value, field.mStartPosition, field.mLength);
+	writeHword(context, MathUtil::insertMaskedValue16(readHword(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
+
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+  if (mDebugWrites)
+    logDebugAllFields();
+#endif
 }
 
 void BitfieldRegister16_t::logDebugAllFields() const
 {
+	// Using UH directly is OK here - we are not modifying anything, and it can only ever be called from within a VM "context" (ie: always called from get/setFieldValue()).
 	for (auto& field : mFields)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), field.mValue);
+		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue16(UH, field.mStartPosition, field.mLength));
 #else
-		log(Debug, "\t%s = %d.", field.mMnemonic, field.mValue);
+		log(Debug, "\t%s = %d.", field.mMnemonic, MathUtil::extractMaskedValue16(UH, field.mStartPosition, field.mLength));
 #endif
 	}
 }

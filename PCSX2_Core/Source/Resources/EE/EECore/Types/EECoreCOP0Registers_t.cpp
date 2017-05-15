@@ -88,7 +88,7 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t(const char * mnemonic, 
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-bool EECoreCOP0Register_Status_t::isInterruptsMasked(const System_t context) const
+bool EECoreCOP0Register_Status_t::isInterruptsMasked(const System_t context)
 {
 	return !((getFieldValue(context, Fields::ERL) == 0)
 		&& (getFieldValue(context, Fields::EXL) == 0)

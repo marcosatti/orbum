@@ -83,19 +83,19 @@ public:
 	Returns if all exceptions are currently masked ( = NOT ENABLED).
 	TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
 	*/
-	bool isExceptionsMasked(const System_t context) const;
+	bool isExceptionsMasked(const System_t context);
 
 	/*
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master IEc bit.
 	*/
-	bool isInterruptsMasked(const System_t context) const;
+	bool isInterruptsMasked(const System_t context);
 
 	/*
 	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
 	Does so by checking the IM[irq] bit.
 	*/
-	bool isIRQMasked(const System_t context, const int irq) const;
+	bool isIRQMasked(const System_t context, const int irq);
 };
 
 /*

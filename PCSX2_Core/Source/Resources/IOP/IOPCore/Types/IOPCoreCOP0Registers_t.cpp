@@ -46,17 +46,17 @@ void IOPCoreCOP0Register_Status_t::popExceptionStack(const System_t context)
 	writeWord(context, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
 }
 
-bool IOPCoreCOP0Register_Status_t::isExceptionsMasked(const System_t context) const
+bool IOPCoreCOP0Register_Status_t::isExceptionsMasked(const System_t context)
 {
 	return false;
 }
 
-bool IOPCoreCOP0Register_Status_t::isInterruptsMasked(const System_t context) const
+bool IOPCoreCOP0Register_Status_t::isInterruptsMasked(const System_t context)
 {
 	return !(getFieldValue(context, Fields::IEc) > 0);
 }
 
-bool IOPCoreCOP0Register_Status_t::isIRQMasked(const System_t context, const int irq) const
+bool IOPCoreCOP0Register_Status_t::isIRQMasked(const System_t context, const int irq)
 {
 	return !((getFieldValue(context, Fields::IM) & (1 << irq)) > 0);
 }

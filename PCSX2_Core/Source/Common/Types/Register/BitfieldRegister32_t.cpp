@@ -17,11 +17,9 @@ void BitfieldRegister32_t::initialise()
 
 void BitfieldRegister32_t::initialiseAllFields()
 {
+	// Using UW directly is OK here - it can only ever be called from within a VM "context" (ie: always called from initialise()).
 	for (auto& field : mFields)
-	{
-		field.mValue = field.mInitialValue;
-		UW = MathUtil::insertMaskedValue32(UW, field.mValue, field.mStartPosition, field.mLength);
-	}
+		UW = MathUtil::insertMaskedValue32(UW, field.mInitialValue, field.mStartPosition, field.mLength);
 }
 
 u8 BitfieldRegister32_t::readByte(const System_t context, const size_t arrayIndex)
@@ -39,9 +37,6 @@ u8 BitfieldRegister32_t::readByte(const System_t context, const size_t arrayInde
 void BitfieldRegister32_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
 {
 	Register32_t::writeByte(context, arrayIndex, value);
-
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
 
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
@@ -65,9 +60,6 @@ void BitfieldRegister32_t::writeHword(const System_t context, const size_t array
 {
 	Register32_t::writeHword(context, arrayIndex, value);
 
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
-
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
 		logDebugAllFields();
@@ -89,9 +81,6 @@ u32 BitfieldRegister32_t::readWord(const System_t context)
 void BitfieldRegister32_t::writeWord(const System_t context, const u32 value)
 {
 	Register32_t::writeWord(context, value);
-	
-	for (auto& field : mFields)
-		field.mValue = MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength);
 
 #if defined(DEBUG_LOG_REGISTER_READ_WRITE)
 	if (mDebugWrites)
@@ -101,30 +90,41 @@ void BitfieldRegister32_t::writeWord(const System_t context, const u32 value)
 
 void BitfieldRegister32_t::registerField(const int fieldIndex, const char* fieldMnemonic, const int fieldStartPosition, const int fieldLength, const u32 fieldInitialValue)
 {
-	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue, fieldInitialValue });
+	mFields.insert(mFields.begin() + fieldIndex, { fieldMnemonic, fieldStartPosition, fieldLength, fieldInitialValue });
 	initialiseAllFields();
 }
 
-u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex) const
+u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex)
 {
-	return mFields[fieldIndex].mValue;
+	u32 temp = MathUtil::extractMaskedValue32(readWord(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
+	
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+	if (mDebugReads)
+		logDebugAllFields();
+#endif
+
+	return temp;
 }
 
 void BitfieldRegister32_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
-	auto& field = mFields[fieldIndex];
-	field.mValue = value;
-	UW = MathUtil::insertMaskedValue32(UW, value, field.mStartPosition, field.mLength);
+	writeWord(context, MathUtil::insertMaskedValue32(readWord(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
+
+#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+  if (mDebugWrites)
+    logDebugAllFields();
+#endif
 }
 
 void BitfieldRegister32_t::logDebugAllFields() const
 {
+	// Using UW directly is OK here - we are not modifying anything, and it can only ever be called from within a VM "context" (ie: always called from get/setFieldValue()).
 	for (auto& field : mFields)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), field.mValue);
+		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue16(UW, field.mStartPosition, field.mLength));
 #else
-		log(Debug, "\t%s = %d.", field.mMnemonic, field.mValue);
+		log(Debug, "\t%s = %d.", field.mMnemonic, MathUtil::extractMaskedValue16(UW, field.mStartPosition, field.mLength));
 #endif
 	}
 }

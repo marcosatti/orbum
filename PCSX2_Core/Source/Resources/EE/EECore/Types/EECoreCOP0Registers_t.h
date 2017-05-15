@@ -294,7 +294,7 @@ public:
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master EIE and IE bit.
 	*/
-	bool isInterruptsMasked(const System_t context) const;
+	bool isInterruptsMasked(const System_t context);
 };
 
 /*

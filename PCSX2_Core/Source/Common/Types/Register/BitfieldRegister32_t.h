@@ -45,7 +45,7 @@ public:
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsistent state and undefined results may happen.
 	*/
-	virtual u32 getFieldValue(const System_t context, const int fieldIndex) const;
+	virtual u32 getFieldValue(const System_t context, const int fieldIndex);
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.

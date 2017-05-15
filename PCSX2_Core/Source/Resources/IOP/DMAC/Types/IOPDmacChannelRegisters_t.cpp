@@ -25,12 +25,12 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 	registerField(Fields::ILinkAR, "ILinkAR", 31, 1, 0);
 }
 
-LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context) const
+LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context) 
 {
 	return static_cast<LogicalMode_t>(getFieldValue(context, Fields::SM));
 }
 
-Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const System_t context) const
+Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const System_t context)
 {
 	return static_cast<Direction_t>(getFieldValue(context, Fields::TD));
 }

@@ -90,7 +90,7 @@ void EETimersTimerRegister_MODE_t::writeWord(const System_t context, const u32 v
 	}
 }
 
-bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const System_t context) const
+bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const System_t context)
 {
 	return ((getFieldValue(context, Fields::CLKS) == 3) && (getFieldValue(context, Fields::GATS) == 0));
 }

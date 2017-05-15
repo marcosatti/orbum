@@ -20,12 +20,12 @@ EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic
 	registerField(Fields::TAG, "TAG", 16, 16, 0);
 }
 
-EEDmacChannelTable::LogicalMode_t EEDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context) const
+EEDmacChannelTable::LogicalMode_t EEDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context)
 {
 	return static_cast<EEDmacChannelTable::LogicalMode_t>(getFieldValue(context, Fields::MOD));
 }
 
-EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection(const System_t context) const
+EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection(const System_t context)
 {
 	return static_cast<EEDmacChannelTable::Direction_t>(getFieldValue(context, Fields::DIR));
 }
