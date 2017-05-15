@@ -96,24 +96,12 @@ void BitfieldRegister32_t::registerField(const int fieldIndex, const char* field
 
 u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex)
 {
-	u32 temp = MathUtil::extractMaskedValue32(readWord(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
-	
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
-	if (mDebugReads)
-		logDebugAllFields();
-#endif
-
-	return temp;
+	return MathUtil::extractMaskedValue32(readWord(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
 void BitfieldRegister32_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
 {
 	writeWord(context, MathUtil::insertMaskedValue32(readWord(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
-
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
-  if (mDebugWrites)
-    logDebugAllFields();
-#endif
 }
 
 void BitfieldRegister32_t::logDebugAllFields() const
@@ -122,9 +110,9 @@ void BitfieldRegister32_t::logDebugAllFields() const
 	for (auto& field : mFields)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue16(UW, field.mStartPosition, field.mLength));
+		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength));
 #else
-		log(Debug, "\t%s = %d.", field.mMnemonic, MathUtil::extractMaskedValue16(UW, field.mStartPosition, field.mLength));
+		log(Debug, "\t%s = %d.", field.mMnemonic, MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength));
 #endif
 	}
 }

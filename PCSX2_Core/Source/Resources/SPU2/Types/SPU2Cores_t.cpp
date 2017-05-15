@@ -229,7 +229,7 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	EEAL = std::make_shared<Register16_t>("SPU2 C0 EEAL", false, false);
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C0 ENDX0", false, false);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C0 ENDX1", false, false);
-	STATX = std::make_shared<SPU2CoreRegister_STATX_t>("SPU2 C0 STATX", true, true);
+	STATX = std::make_shared<SPU2CoreRegister_STATX_t>("SPU2 C0 STATX", false, false);
 	MVOLL = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C0 MVOLL", false, false);
 	MVOLR = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C0 MVOLR", false, false);
 	EVOLL = std::make_shared<Register16_t>("SPU2 C0 EVOLL", false, false);
@@ -378,7 +378,7 @@ SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue):
 	EEAL = std::make_shared<Register16_t>("SPU2 C1 EEAL", false, false);
 	ENDX0 = std::make_shared<Register16_t>("SPU2 C1 ENDX0", false, false);
 	ENDX1 = std::make_shared<Register16_t>("SPU2 C1 ENDX1", false, false);
-	STATX = std::make_shared<SPU2CoreRegister_STATX_t>("SPU2 C1 STATX", true, true);
+	STATX = std::make_shared<SPU2CoreRegister_STATX_t>("SPU2 C1 STATX", false, false);
 	MVOLL = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C1 MVOLL", false, false);
 	MVOLR = std::make_shared<SPU2CoreRegister_VOL_t>("SPU2 C1 MVOLR", false, false);
 	EVOLL = std::make_shared<Register16_t>("SPU2 C1 EVOLL", false, false);

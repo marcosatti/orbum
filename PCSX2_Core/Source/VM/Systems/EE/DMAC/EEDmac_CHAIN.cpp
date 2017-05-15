@@ -38,7 +38,7 @@ void EEDmac_s::CHAIN_SRC_NEXT()
 
 	// Set next tag.
 	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getADDR());
-	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::ADDR, mDMAtag.getSPR());
+	mChannel->TADR->setFieldValue(getContext(), EEDmacChannelRegister_TADR_t::Fields::SPR, mDMAtag.getSPR());
 }
 
 void EEDmac_s::CHAIN_SRC_REF()

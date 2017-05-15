@@ -45,7 +45,7 @@ Define if the emulator should log EE and IOP DMAC transfer and/or tag activity (
 #if defined(BUILD_DEBUG)
 #define DEBUG_LOG_EE_DMAC_XFERS 0
 #define DEBUG_LOG_IOP_DMAC_XFERS 0
- #define DEBUG_LOG_EE_DMAC_TAGS 1
+ #define DEBUG_LOG_EE_DMAC_TAGS 0
  #define DEBUG_LOG_IOP_DMAC_TAGS 0
 #else
  #define DEBUG_LOG_EE_DMA_TAGS 0

@@ -70,7 +70,6 @@ private:
 		std::string mMnemonic;
 		int mStartPosition;
 		int mLength;
-		u32 mValue;
 		u32 mInitialValue;
 	};
 	std::vector<BitfieldProperties32_t> mFields;

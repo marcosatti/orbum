@@ -74,24 +74,12 @@ void BitfieldRegister16_t::registerField(const int fieldIndex, const char* field
 
 u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex)
 {
-	u16 temp = MathUtil::extractMaskedValue16(readHword(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
-	
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
-	if (mDebugReads)
-		logDebugAllFields();
-#endif
-
-	return temp;
+	return MathUtil::extractMaskedValue16(readHword(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
 void BitfieldRegister16_t::setFieldValue(const System_t context, const int fieldIndex, const u16 value)
 {
 	writeHword(context, MathUtil::insertMaskedValue16(readHword(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
-
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
-  if (mDebugWrites)
-    logDebugAllFields();
-#endif
 }
 
 void BitfieldRegister16_t::logDebugAllFields() const

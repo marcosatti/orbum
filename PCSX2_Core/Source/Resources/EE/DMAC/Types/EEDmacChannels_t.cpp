@@ -124,7 +124,7 @@ EEDmacChannel_SIF1_t::EEDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> & 
 	CHCR = std::make_shared<EEDmacChannelRegister_SIF1_CHCR_t>("EE DMAC CH_SIF1 CHCR", false, false, sbusF240);
 	MADR = std::make_shared<EEDmacChannelRegister_MADR_t>("EE DMAC CH_SIF1 MADR", false, false);
 	QWC = std::make_shared<EEDmacChannelRegister_QWC_t>("EE DMAC CH_SIF1 QWC", false, false);
-	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE DMAC CH_SIF1 TADR", false, true);
+	TADR = std::make_shared<EEDmacChannelRegister_TADR_t>("EE DMAC CH_SIF1 TADR", false, false);
 }
 
 EEDmacChannel_SIF2_t::EEDmacChannel_SIF2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue, const std::shared_ptr<Register32_t> & sbusF240) :
