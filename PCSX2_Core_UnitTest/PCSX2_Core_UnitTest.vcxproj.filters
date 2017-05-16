@@ -9,31 +9,22 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\targetver.h">
+    <ClCompile Include="src\Tests\Common\TEST_ByteMMU_t.cpp">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\stdafx.h">
+    </ClCompile>
+    <ClCompile Include="src\Tests\Common\TEST_MIPSInstruction_t.cpp">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Util\MIPSUtil.h" />
+    </ClCompile>
+    <ClCompile Include="src\Tests\Common\TEST_PrimativeTypes.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tests\EE\TEST_EECoreInterpreter_s.cpp" />
+    <ClCompile Include="src\Tests\IOP\TEST_IOPCoreInterpreter_s.cpp" />
+    <ClCompile Include="src\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\stdafx.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tests\Common\TEST_PrimativeTypes.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tests\Common\TEST_MIPSInstruction_t.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Tests\EE\TEST_EECoreInterpreter_s.cpp" />
-    <ClCompile Include="Source\Tests\IOP\TEST_IOPCoreInterpreter_s.cpp" />
-    <ClCompile Include="Source\Tests\Common\TEST_ByteMMU_t.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
+    <ClInclude Include="src\Util\MIPSUtil.h" />
   </ItemGroup>
 </Project>

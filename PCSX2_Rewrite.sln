@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core", "PCSX2_Core\PCSX2_Core.vcxproj", "{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTestLibrary", "GoogleTestLibrary\GoogleTestLibrary.vcxproj", "{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{DFE250AB-2868-4197-885A-31E81165E3D6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{69D468DB-F5D3-4F0E-82F6-CDC24C11E194}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Frontend", "PCSX2_Frontend\PCSX2_Frontend.vcxproj", "{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -121,8 +119,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E} = {69D468DB-F5D3-4F0E-82F6-CDC24C11E194}
-		{7421784C-922A-47F7-8ED7-86AE3A0F8E64} = {69D468DB-F5D3-4F0E-82F6-CDC24C11E194}
 		{BB19A4C8-C662-41B0-8399-EAB7536F4F3D} = {DFE250AB-2868-4197-885A-31E81165E3D6}
 	EndGlobalSection
 EndGlobal
