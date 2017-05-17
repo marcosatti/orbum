@@ -10,7 +10,7 @@ Register32_t::Register32_t(const char* mnemonic, bool debugReads, bool debugWrit
 
 u8 Register32_t::readByte(const System_t context, const size_t arrayIndex)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -28,7 +28,7 @@ void Register32_t::writeByte(const System_t context, const size_t arrayIndex, co
 {
 	UB[arrayIndex] = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -42,7 +42,7 @@ void Register32_t::writeByte(const System_t context, const size_t arrayIndex, co
 
 u16 Register32_t::readHword(const System_t context, const size_t arrayIndex)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -60,7 +60,7 @@ void Register32_t::writeHword(const System_t context, const size_t arrayIndex, c
 {
 	UH[arrayIndex] = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -74,7 +74,7 @@ void Register32_t::writeHword(const System_t context, const size_t arrayIndex, c
 
 u32 Register32_t::readWord(const System_t context)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -92,7 +92,7 @@ void Register32_t::writeWord(const System_t context, const u32 value)
 {
 	UW = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -106,7 +106,7 @@ void Register32_t::writeWord(const System_t context, const u32 value)
 
 f32 Register32_t::readFloat(const System_t context)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -124,7 +124,7 @@ void Register32_t::writeFloat(const System_t context, const f32 value)
 {
 	F = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX

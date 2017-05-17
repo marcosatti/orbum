@@ -24,7 +24,7 @@ u8 BitfieldRegister16_t::readByte(const System_t context, const size_t arrayInde
 {
 	auto temp = Register16_t::readByte(context, arrayIndex);
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 		logDebugAllFields();
 #endif
@@ -36,7 +36,7 @@ void BitfieldRegister16_t::writeByte(const System_t context, const size_t arrayI
 {
 	Register16_t::writeByte(context, arrayIndex, value);
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 		logDebugAllFields();
 #endif
@@ -46,7 +46,7 @@ u16 BitfieldRegister16_t::readHword(const System_t context)
 {
 	auto temp = Register16_t::readHword(context);
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 		logDebugAllFields();
 #endif
@@ -58,7 +58,7 @@ void BitfieldRegister16_t::writeHword(const System_t context, const u16 value)
 {
 	Register16_t::writeHword(context, value);
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 		logDebugAllFields();
 #endif

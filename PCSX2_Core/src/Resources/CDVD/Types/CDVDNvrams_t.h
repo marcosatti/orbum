@@ -48,62 +48,62 @@ public:
 	void setConfigAccessParams(const int readWrite, const int areaIndex, const int maxBlockIndex, const int blockIndex);
 
 	/*
-	Reads the next block (const System_t context, 16 bytes / 8 hwords) to the buffer given, based upon the config access parameters set.
+	Reads the next block (16 bytes / 8 hwords) to the buffer given, based upon the config access parameters set.
 	*/
 	virtual void readConfigBlock(const System_t context, u16 * buffer) = 0;
 
 	/*
-	Writes the next block (const System_t context, 16 bytes / 8 hwords) from the buffer given, based upon the config access parameters set.
+	Writes the next block (16 bytes / 8 hwords) from the buffer given, based upon the config access parameters set.
 	*/
 	virtual void writeConfigBlock(const System_t context, const u16 * buffer) = 0;
 
 	/*
-	Reads the console ID to the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Reads the console ID to the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void readConsoleID(const System_t context, u16 * buffer) const = 0;
 
 	/*
-	Writes the console ID from the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Writes the console ID from the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void writeConsoleID(const System_t context, const u16 * buffer) = 0;
 	
 	/*
-	Reads the iLink ID to the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Reads the iLink ID to the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void readILinkID(const System_t context, u16 * buffer) const = 0;
 
 	/*
-	Writes the iLink ID from the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Writes the iLink ID from the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void writeILinkID(const System_t context, const u16 * buffer) = 0;
 
 	/*
-	Reads the model number to the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Reads the model number to the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void readModelNumber(const System_t context, u16 * buffer) const = 0;
 
 	/*
-	Writes the model number from of the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Writes the model number from of the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void writeModelNumber(const System_t context, const u16 * buffer) = 0;
 
 	/*
-	Reads the region params to the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Reads the region params to the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void readRegionParams(const System_t context, u16 * buffer) const = 0;
 
 	/*
-	Writes the region params from of the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Writes the region params from of the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void writeRegionParams(const System_t context, const u16 * buffer) = 0;
 
 	/*
-	Reads the MAC to the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Reads the MAC to the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void readMAC(const System_t context, u16 * buffer) const = 0;
 
 	/*
-	Writes the MAC from of the buffer given (const System_t context, 8 bytes / 4 hwords).
+	Writes the MAC from of the buffer given (8 bytes / 4 hwords).
 	*/
 	virtual void writeMAC(const System_t context, const u16 * buffer) = 0;
 

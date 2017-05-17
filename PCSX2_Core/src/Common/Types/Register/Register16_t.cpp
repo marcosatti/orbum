@@ -10,7 +10,7 @@ Register16_t::Register16_t(const char* mnemonic, bool debugReads, bool debugWrit
 
 u8 Register16_t::readByte(const System_t context, const size_t arrayIndex)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -28,7 +28,7 @@ void Register16_t::writeByte(const System_t context, const size_t arrayIndex, co
 {
 	UB[arrayIndex] = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -42,7 +42,7 @@ void Register16_t::writeByte(const System_t context, const size_t arrayIndex, co
 
 u16 Register16_t::readHword(const System_t context)
 {
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -60,7 +60,7 @@ void Register16_t::writeHword(const System_t context, const u16 value)
 {
 	UH = value;
 
-#if defined(DEBUG_LOG_REGISTER_READ_WRITE)
+#if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
