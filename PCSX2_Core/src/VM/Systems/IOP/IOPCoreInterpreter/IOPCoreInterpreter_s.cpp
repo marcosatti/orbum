@@ -104,6 +104,7 @@ void IOPCoreInterpreter_s::handleInterruptCheck()
 	}
 }
 
+#if defined(BUILD_DEBUG)
 void IOPCoreInterpreter_s::printInterruptInfo() const
 {
 	auto& INTC = getVM()->getResources()->IOP->INTC;
@@ -159,6 +160,7 @@ void IOPCoreInterpreter_s::printInterruptInfo() const
 			log(Debug, "IOP DMAC did not have any sources triggered! Too slow, buddy? Look into this!");
 	}
 }
+#endif
 
 bool IOPCoreInterpreter_s::handleCOP0Usable()
 {

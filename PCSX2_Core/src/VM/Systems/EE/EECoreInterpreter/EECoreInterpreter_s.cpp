@@ -118,6 +118,7 @@ void EECoreInterpreter_s::handleInterruptCheck()
 	}
 }
 
+#if defined(BUILD_DEBUG)
 void EECoreInterpreter_s::printInterruptInfo() const
 {
 	auto& COP0 = mEECore->COP0;
@@ -168,6 +169,7 @@ void EECoreInterpreter_s::printInterruptInfo() const
 			log(Debug, "EE DMAC did not have any sources triggered! Too slow, buddy? Look into this!");
 	}
 }
+#endif
 
 void EECoreInterpreter_s::handleCountEventCheck() const
 {

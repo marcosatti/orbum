@@ -20,7 +20,7 @@ u8 FIFOQueue_t::readByte(const System_t context)
 	auto temp = mFIFOQueue.front();
 	mFIFOQueue.pop();
 
-#if defined(DEBUG_LOG_FIFOQUEUE_READ_WRITE)
+#if DEBUG_LOG_FIFOQUEUE_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -41,7 +41,7 @@ void FIFOQueue_t::writeByte(const System_t context, const u8 data)
 
 	mFIFOQueue.push(data);
 
-#if defined(DEBUG_LOG_FIFOQUEUE_READ_WRITE)
+#if DEBUG_LOG_FIFOQUEUE_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
