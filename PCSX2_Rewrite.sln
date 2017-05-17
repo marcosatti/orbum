@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -11,9 +10,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Core_UnitTest", "PCSX
 		{CF82B3F7-90AF-4CBF-B9DD-A03DE358208E} = {CF82B3F7-90AF-4CBF-B9DD-A03DE358208E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTestLibrary", "GoogleTestLibrary\GoogleTestLibrary.vcxproj", "{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTestLibrary", "external\GoogleTestLibrary\GoogleTestLibrary.vcxproj", "{BB19A4C8-C662-41B0-8399-EAB7536F4F3D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Util", "Util", "{DFE250AB-2868-4197-885A-31E81165E3D6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{DFE250AB-2868-4197-885A-31E81165E3D6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PCSX2_Frontend", "PCSX2_Frontend\PCSX2_Frontend.vcxproj", "{44296059-0A9E-4ADC-A8B8-9B23CE108AF3}"
 	ProjectSection(ProjectDependencies) = postProject

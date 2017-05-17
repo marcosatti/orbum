@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <gtest/gtest_prod.h>
 
 #include "Common/Global/Globals.h"
 
@@ -38,7 +37,9 @@ public:
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
-	FRIEND_TEST(TEST_IOPCoreInterpreter_s, MIPS_INSTRUCTION_IMPLEMENTATIONS);
+	// UnitTest friend classes (use non-macro defined friend statements to remove the dependency on the GoogleTestLibrary). 
+	// "FRIEND_TEST(Foo, Bar)" equivilant to "friend class Foo_Bar_Test".
+	friend class TEST_IOPCoreInterpreter_s_MIPS_INSTRUCTION_IMPLEMENTATIONS_Test;
 
 	//////////////////////////
 	// Common Functionality //
