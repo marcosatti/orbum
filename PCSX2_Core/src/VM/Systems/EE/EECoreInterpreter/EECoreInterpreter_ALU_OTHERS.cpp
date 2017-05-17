@@ -112,11 +112,11 @@ void EECoreInterpreter_s::RSQRT_S()
 	else if (source2Val < 0.0F)
 	{
 		CSR->setFieldValueSticky(getContext(), EECoreFPURegister_CSR_t::Fields::I, 1);
-		result = source1Val / std::sqrtf(std::abs(source2Val));
+		result = source1Val / std::sqrt(std::abs(source2Val));
 	}
 	else
 	{
-		result = source1Val / std::sqrtf(source2Val);
+		result = source1Val / std::sqrt(source2Val);
 	}
 
 	// Update flags.
@@ -149,11 +149,11 @@ void EECoreInterpreter_s::SQRT_S()
 	else if (source2Val < 0.0F)
 	{
 		CSR->setFieldValueSticky(getContext(), EECoreFPURegister_CSR_t::Fields::I, 1);
-		result = std::sqrtf(std::abs(source2Val));
+		result = std::sqrt(std::abs(source2Val));
 	}
 	else
 	{
-		result = std::sqrtf(source2Reg->readFloat(getContext()));
+		result = std::sqrt(source2Reg->readFloat(getContext()));
 	}
 
 	// Update flags.

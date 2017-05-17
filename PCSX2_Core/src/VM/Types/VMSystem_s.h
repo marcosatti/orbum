@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <condition_variable>
 
 #include "Common/Types/System_t.h"
 #include "Common/Types/ClockSource_t.h"

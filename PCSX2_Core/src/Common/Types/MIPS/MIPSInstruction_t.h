@@ -42,7 +42,7 @@ struct MIPSInstruction_t {
 	Get functions for the various J instruction fields:
 	- Region-address	    @ bits 0-25.
 	*/
-	u32 MIPSInstruction_t::getJRegionAddress() const;
+	u32 getJRegionAddress() const;
 
 	/*
 	Get functions for the various I instruction fields:

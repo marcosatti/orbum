@@ -184,7 +184,7 @@ void HwordMemory_t::writeQword(const System_t context, const size_t hwordOffset,
 #if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
-		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #endif
 	}
 #endif

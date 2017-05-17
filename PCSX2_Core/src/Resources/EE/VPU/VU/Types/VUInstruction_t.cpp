@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
 VUInstruction_t::VUInstruction_t(const u32 value) :
