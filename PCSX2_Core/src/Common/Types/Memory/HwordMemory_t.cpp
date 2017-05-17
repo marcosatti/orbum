@@ -33,7 +33,7 @@ u16 HwordMemory_t::readHword(const System_t context, const size_t hwordOffset)
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[hwordOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -55,7 +55,7 @@ void HwordMemory_t::writeHword(const System_t context, const size_t hwordOffset,
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -73,7 +73,7 @@ u32 HwordMemory_t::readWord(const System_t context, const size_t hwordOffset)
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[hwordOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -95,7 +95,7 @@ void HwordMemory_t::writeWord(const System_t context, const size_t hwordOffset, 
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -113,7 +113,7 @@ u64 HwordMemory_t::readDword(const System_t context, const size_t hwordOffset)
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[hwordOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -135,7 +135,7 @@ void HwordMemory_t::writeDword(const System_t context, const size_t hwordOffset,
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -154,7 +154,7 @@ u128 HwordMemory_t::readQword(const System_t context, const size_t hwordOffset)
 	u64 * hostMemoryAddressMSB = reinterpret_cast<u64*>(&mMemory[hwordOffset + Constants::NUMBER_BYTES_IN_DWORD]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -178,7 +178,7 @@ void HwordMemory_t::writeQword(const System_t context, const size_t hwordOffset,
 	*hostMemoryAddressLSB = value.lo;
 	*hostMemoryAddressMSB = value.hi;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX

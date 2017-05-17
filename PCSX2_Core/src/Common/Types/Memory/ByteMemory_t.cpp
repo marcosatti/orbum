@@ -30,7 +30,7 @@ u8 ByteMemory_t::readByte(const System_t context, const size_t byteOffset)
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mMemory[byteOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -52,7 +52,7 @@ void ByteMemory_t::writeByte(const System_t context, const size_t byteOffset, co
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -70,7 +70,7 @@ u16 ByteMemory_t::readHword(const System_t context, const size_t byteOffset)
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[byteOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -92,7 +92,7 @@ void ByteMemory_t::writeHword(const System_t context, const size_t byteOffset, c
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -110,7 +110,7 @@ u32 ByteMemory_t::readWord(const System_t context, const size_t byteOffset)
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[byteOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -132,7 +132,7 @@ void ByteMemory_t::writeWord(const System_t context, const size_t byteOffset, co
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -150,7 +150,7 @@ u64 ByteMemory_t::readDword(const System_t context, const size_t byteOffset)
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[byteOffset]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -172,7 +172,7 @@ void ByteMemory_t::writeDword(const System_t context, const size_t byteOffset, c
 	// Write the value.
 	*hostMemoryAddress = value;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -191,7 +191,7 @@ u128 ByteMemory_t::readQword(const System_t context, const size_t byteOffset)
 	u64 * hostMemoryAddressMSB = reinterpret_cast<u64*>(&mMemory[byteOffset + Constants::NUMBER_BYTES_IN_DWORD]);
 
 	// Read the value.
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
@@ -215,7 +215,7 @@ void ByteMemory_t::writeQword(const System_t context, const size_t byteOffset, c
 	*hostMemoryAddressLSB = value.lo;
 	*hostMemoryAddressMSB = value.hi;
 
-#if defined(DEBUG_LOG_MEMORY_READ_WRITE)
+#if DEBUG_LOG_MEMORY_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
