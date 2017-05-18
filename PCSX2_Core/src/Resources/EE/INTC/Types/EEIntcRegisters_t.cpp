@@ -1,5 +1,10 @@
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
 
+constexpr int IRQ_KEYS[Constants::EE::INTC::NUMBER_IRQ_LINES];
+constexpr int VIF_KEYS[Constants::EE::VPU::VIF::NUMBER_VIF_CORES];
+constexpr int VU_KEYS[Constants::EE::VPU::VU::NUMBER_VU_CORES];
+constexpr int TIM_KEYS[Constants::EE::Timers::NUMBER_TIMERS];
+
 EEIntcRegister_STAT_t::EEIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {

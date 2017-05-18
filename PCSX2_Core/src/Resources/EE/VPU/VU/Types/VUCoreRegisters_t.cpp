@@ -1,5 +1,10 @@
 #include "Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h"
 
+constexpr int VUCoreRegister_MAC_t::Fields::X_FLAGS[4];
+constexpr int VUCoreRegister_MAC_t::Fields::Y_FLAGS[4];
+constexpr int VUCoreRegister_MAC_t::Fields::Z_FLAGS[4];
+constexpr int VUCoreRegister_MAC_t::Fields::W_FLAGS[4];
+
 VUCoreRegister_Status_t::VUCoreRegister_Status_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {

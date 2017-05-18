@@ -2,6 +2,9 @@
 
 #include "Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h"
 
+constexpr VIFcodeTable::VIFcodeInstructionInfo_t VIFcodeTable::VIFCODE_BASE_TABLE[128];
+constexpr VIFcodeTable::VIFcodeInstructionInfo_t VIFcodeTable::VIFCODE_UNPACK_TABLE[16];
+
 const VIFcodeTable::VIFcodeInstructionInfo_t * VIFcodeTable::getInfo(const VIFcodeInstruction_t * vifCode)
 {
 	u8 CMD = vifCode->getCMD();

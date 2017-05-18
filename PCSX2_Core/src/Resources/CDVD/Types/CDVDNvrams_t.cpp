@@ -4,6 +4,8 @@
 
 #include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
+constexpr u8 CDVDNvram_t::ILINK_DATA_MAGIC[8];
+
 CDVDNvram_t::CDVDNvram_t() :
 	MainMemory(nullptr),
 	mConfigReadWrite(0),

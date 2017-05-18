@@ -73,10 +73,10 @@ public:
 		static constexpr int Oy = 14;
 		static constexpr int Ox = 15;
 
-		static constexpr int X_FLAGS[] = { Zx, Sx, Ux, Ox };
-		static constexpr int Y_FLAGS[] = { Zy, Sy, Uy, Oy };
-		static constexpr int Z_FLAGS[] = { Zz, Sz, Uz, Oz };
-		static constexpr int W_FLAGS[] = { Zw, Sw, Uw, Ow };
+		static constexpr int X_FLAGS[4] = { Zx, Sx, Ux, Ox };
+		static constexpr int Y_FLAGS[4] = { Zy, Sy, Uy, Oy };
+		static constexpr int Z_FLAGS[4] = { Zz, Sz, Uz, Oz };
+		static constexpr int W_FLAGS[4] = { Zw, Sw, Uw, Ow };
 	};
 
 	VUCoreRegister_MAC_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<VUCoreRegister_Status_t> & status);

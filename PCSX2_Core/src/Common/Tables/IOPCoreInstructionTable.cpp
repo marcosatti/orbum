@@ -2,6 +2,13 @@
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreInstruction_t.h"
 
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_OPCODE_TABLE[64];
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_SPECIAL_TABLE[64];
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_REGIMM_TABLE[32];
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_COP0_TABLE[32];
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_COP2_TABLE[64];
+constexpr IOPCoreInstructionTable::IOPCoreInstructionInfo_t IOPCoreInstructionTable::IOPCORE_CP2BSC_TABLE[32];
+
 const IOPCoreInstructionTable::IOPCoreInstructionInfo_t * IOPCoreInstructionTable::IOPCORE_INSTRUCTION_OPCODE_LOOKUP(const IOPCoreInstruction_t * instruction)
 {
 	return &IOPCORE_OPCODE_TABLE[instruction->getOpcode()];

@@ -2,6 +2,30 @@
 
 #include "Resources/EE/EECore/Types/EECoreInstruction_t.h"
 
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_OPCODE_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_SPECIAL_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_REGIMM_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI0_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI1_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI2_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_MMI3_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP0_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC0_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_C0_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP1_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC1_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_S_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_W_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_COP2_TABLE[2];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_CO0_TABLE[16];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_BC2_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_CO1_TABLE[64];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT0_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT1_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT2_TABLE[32];
+constexpr EECoreInstructionTable::EECoreInstructionInfo_t EECoreInstructionTable::EECORE_VEXT3_TABLE[32];
+
 const EECoreInstructionTable::EECoreInstructionInfo_t * EECoreInstructionTable::EECORE_INSTRUCTION_OPCODE_LOOKUP(const EECoreInstruction_t * instruction)
 {
 	return &EECORE_OPCODE_TABLE[instruction->getOpcode()];

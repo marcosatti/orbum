@@ -1,5 +1,8 @@
 #include "Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 
+constexpr int EEDmacRegister_STAT_t::Fields::CHANNEL_CIS_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS];
+constexpr int EEDmacRegister_STAT_t::Fields::CHANNEL_CIM_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS];
+
 EEDmacRegister_CTRL_t::EEDmacRegister_CTRL_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
