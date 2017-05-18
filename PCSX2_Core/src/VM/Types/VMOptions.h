@@ -18,7 +18,7 @@ struct VMOptions
 	// General options. //
 	//////////////////////
 
-	/* Log function pointer.           */ void                       (*LOG_CALLBACK_FUNCPTR)(const LogLevel_t level, const std::string message);
+	/* Log function pointer.           */ void                       (*LOG_CALLBACK_FUNCPTR)(const LogLevel_t level, const std::string & message);
 
 	/* Boot ROM file path.             */ std::string                BOOT_ROM_PATH;
 	/* ROM1 file path.                 */ std::string                ROM1_PATH;

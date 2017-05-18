@@ -17,7 +17,7 @@
 std::ofstream logFile;
 bool MTmode = false;
 
-void log(const LogLevel_t level, const std::string message)
+void log(const LogLevel_t level, const std::string & message)
 {
 	if (MTmode)
 	{
@@ -47,7 +47,7 @@ void log(const LogLevel_t level, const std::string message)
 
 int main()
 {
-	std::string workspace("..\\Workspace\\");
+	std::string workspace("../Workspace/");
 	logFile.open(workspace + "PCSX2_Rewrite_Log.txt");
 	
 	VMOptions vmOptions = 
@@ -74,7 +74,7 @@ int main()
 		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
 		vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
 	}
-	catch (std::exception ex)
+	catch (const std::exception & ex)
 	{
 		log(Fatal, ex.what());
 	}

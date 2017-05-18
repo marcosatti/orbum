@@ -1,5 +1,8 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
+constexpr int IOPIntcRegister_STAT_t::Fields::IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES];
+constexpr int IOPIntcRegister_STAT_t::Fields::TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS];
+
 IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {

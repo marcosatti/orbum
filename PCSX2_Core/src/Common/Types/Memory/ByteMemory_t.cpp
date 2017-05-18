@@ -248,7 +248,7 @@ void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, c
 {
 	// Check it is not too big.
 	if ((mMemoryByteSize - memoryByteOffset) < (fileByteLength)) // TODO: check... brain too tired...
-		throw std::runtime_error("readFile() file was too big to read in.");
+		throw std::runtime_error("ByteMemory_t::readFile() file \"" + std::string(fileStr) + "\" was too big to read in.");
 
 	// Open file.
 	// MSVC bug? Using std::basic_ifstream<u8> is WAY slower than using ifstream... But they should be the same thing...
@@ -256,7 +256,7 @@ void ByteMemory_t::readFile(const char * fileStr, const size_t fileByteOffset, c
 	if (file.fail())
 	{
 		std::stringstream stringStream;
-		stringStream << "readFile() tried to open file " + std::string(fileStr) + " , but it failed! Check file exists and has read permissions.";
+		stringStream << "ByteMemory_t::readFile() tried to open file \"" + std::string(fileStr) + "\", but it failed! Check file exists and has read permissions.";
 		throw std::runtime_error(stringStream.str());
 	}
 
@@ -279,7 +279,7 @@ void ByteMemory_t::dump(const char * fileStr)
 	// MSVC bug? Using std::basic_ofstream<u8> is WAY slower than using ofstream... But they should be the same thing...
 	std::ofstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
-		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
+		throw std::runtime_error("ByteMemory_t::dump() tried to open file \"" + std::string(fileStr) + "\", but it failed! Check file has write permissions.");
 
 	// Write file out.
 	file.write(reinterpret_cast<char*>(&mMemory[0]), mMemoryByteSize);

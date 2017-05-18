@@ -1,5 +1,14 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
+constexpr int IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
+constexpr int IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+
 IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {

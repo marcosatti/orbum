@@ -211,7 +211,7 @@ void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset,
 {
 	// Check it is not too big.
 	if (((mMemoryByteSize / Constants::NUMBER_BYTES_IN_HWORD) - memoryHwordOffset) < (fileHwordLength)) // TODO: check... brain too tired...
-		throw std::runtime_error("readFile() file was too big to read in.");
+		throw std::runtime_error("HwordMemory_t::readFile() file \"" + std::string(fileStr) + "\" was too big to read in.");
 
 	// Open file.
 	// MSVC bug? Using std::basic_ifstream<u16> is WAY slower than using ifstream...
@@ -219,7 +219,7 @@ void HwordMemory_t::readFile(const char * fileStr, const size_t fileHwordOffset,
 	if (file.fail())
 	{
 		std::stringstream stringStream;
-		stringStream << "readFile() tried to open file " + std::string(fileStr) + " , but it failed! Check file exists and has read permissions.";
+		stringStream << "HwordMemory_t::readFile() tried to open file \"" + std::string(fileStr) + "\", but it failed! Check file exists and has read permissions.";
 		throw std::runtime_error(stringStream.str());
 	}
 	
@@ -242,7 +242,7 @@ void HwordMemory_t::dump(const char * fileStr)
 	// MSVC bug? Using std::basic_ofstream<u16> is WAY slower than using ofstream...
 	std::ofstream file(fileStr, std::ios_base::binary);
 	if (file.fail())
-		throw std::runtime_error("dump() tried to open file, but it failed! Check file exists and has read permissions.");
+		throw std::runtime_error("HwordMemory_t::dump() tried to open file \"" + std::string(fileStr) + "\", but it failed! Check file has write permissions.");
 
 	// Write file out.
 	file.write(reinterpret_cast<char*>(&mMemory[0]), mMemoryByteSize);
