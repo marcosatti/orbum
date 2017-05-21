@@ -22,7 +22,7 @@ using Direction_t = EEDmacChannelTable::Direction_t;
 using PhysicalMode_t = EEDmacChannelTable::PhysicalMode_t;
 
 EEDmac_s::EEDmac_s(VM * vm) :
-	VMSystem_s(vm, System_t::EEDmac),
+	VMSystem_t(vm, System_t::EEDmac),
 	mChannel(nullptr),
 	mDMAtag(0, 0)
 {

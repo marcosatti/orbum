@@ -14,7 +14,7 @@
 #include "Resources/GS/CRTC/CRTC_t.h"
 
 CRTC_s::CRTC_s(VM * vm) :
-	VMSystem_s(vm, System_t::CRTC)
+	VMSystem_t(vm, System_t::CRTC)
 {
 	mCRTC = getVM()->getResources()->GS->CRTC;
 	mClock = getVM()->getResources()->Clock;

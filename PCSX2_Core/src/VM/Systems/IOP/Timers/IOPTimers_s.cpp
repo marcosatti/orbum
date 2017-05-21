@@ -12,7 +12,7 @@
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
 IOPTimers_s::IOPTimers_s(VM * vm) :
-	VMSystem_s(vm, System_t::IOPTimers),
+	VMSystem_t(vm, System_t::IOPTimers),
 	mTimer(nullptr)
 {
 	// Set resource pointer variables.

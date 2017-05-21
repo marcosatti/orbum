@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/EE/VPU/VU/Types/VUInstruction_t.h"
 
@@ -11,7 +11,7 @@ class VUCore_t;
 /*
 The VU0/1 interpreter.
 */
-class VUInterpreter_s : public VMSystem_s
+class VUInterpreter_s : public VMSystem_t
 {
 public:
 	VUInterpreter_s(VM * vm, const int vuCoreIndex);

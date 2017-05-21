@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class CDVD_t;
 
@@ -9,7 +9,7 @@ CDVD handler logic.
 HLE-ish approach - emulates bios function calls made? There is near no documentation otherwise.
 Everything from PCSX2. See CDVD.cpp etc.
 */
-class CDVD_s : public VMSystem_s
+class CDVD_s : public VMSystem_t
 {
 public:
 	CDVD_s(VM * vm);

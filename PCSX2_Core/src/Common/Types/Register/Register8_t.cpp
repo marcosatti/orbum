@@ -13,7 +13,7 @@ u8 Register8_t::readByte(const System_t context)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UB);
+		log(Debug, "%s: %s Read u8, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), UB);
 #else
 		log(Debug, "%s: %s Read u8, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UB);
 #endif
@@ -31,7 +31,7 @@ void Register8_t::writeByte(const System_t context, const u8 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UB);
+		log(Debug, "%s: %s Write u8, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), UB);
 #else
 		log(Debug, "%s: %s Write u8, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UB);
 #endif

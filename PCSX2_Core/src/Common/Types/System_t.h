@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common/Global/Globals.h"
 #include "Common/Types/EnumMap_t.h"
 
 /*
@@ -34,7 +33,7 @@ enum class System_t
 /*
 Static array of names used for debug logging.
 */
-static constexpr EnumMap_t<System_t, const char *> SYSTEM_STR = 
+static constexpr EnumMap_t<System_t, const char *> DEBUG_SYSTEM_STRINGS = 
 { 
 	"EECore", 
 	"EEDmac", 

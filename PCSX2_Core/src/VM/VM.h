@@ -7,7 +7,7 @@
 #include "Common/Types/EnumMap_t.h"
 
 #include "VM/Types/VMOptions.h"
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class Resources_t;
 
@@ -21,26 +21,51 @@ public:
 	enum VMStatus
 	{
 		Running,
-		Exception,
+		Paused,
 		Stopped
 	};
 
-	VM(const VMOptions & vmOptions);
+	/*
+	Constructs the VM through a call to reset().
+	*/
+	explicit VM(const VMOptions & vmOptions);
+
+	/*
+	Deconstructs the VM through a call to stop().
+	*/
 	~VM();
 	
+	/*
+	Resets the VM by setting up logging, resources and system threads.
+	After a reset, the VM state is set to paused and is ready to run.
+	*/
 	void reset();
 	void reset(const VMOptions & options);
+
+	/*
+	Runs through one time step (set in the VM options), and then pauses the VM state.
+	If a call to run is made while the VM state is in the stopped state, a runtime_error will be thrown.
+	*/
 	void run();
+
+	/*
+	Stops the VM by deconstructing the logging, resources and system threads.
+	After calling stop, the VM state will need to be reset again before calling run.
+	*/
 	void stop();
 
 	/*
-	VM state functions.
+	Returns the VM state.
 	*/
-	const VMStatus & getStatus() const;
-	void setStatus(const VMStatus & status);
+	VMStatus getStatus() const;
+
+	/*
+	Returns a reference to the PS2 resources.
+	*/
 	const std::shared_ptr<Resources_t> & getResources() const;
 
 private:
+	// Friend classes for the unit test functions.
 	friend class TEST_EECoreInterpreter_s;
 	friend class TEST_IOPCoreInterpreter_s;
 
@@ -50,16 +75,11 @@ private:
 	VMOptions mVMOptions;
 	VMStatus mStatus;
 	std::shared_ptr<Resources_t> mResources;
-
-	/*
-	PS2 systems / components.
-	*/
-	EnumMap_t<System_t, std::shared_ptr<VMSystem_s>> mSystems;
-
-	/*
-	Threading resources.
-	*/
 	std::vector<std::thread> mSystemThreads;
-	bool mSystemThreadsInitialised;
+
+	/*
+	PS2 System logic engines.
+	*/
+	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
 };
 

@@ -24,7 +24,7 @@ u8 FIFOQueue_t::readByte(const System_t context)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8, Size = %d, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), temp);
+		log(Debug, "%s: %s Read u8, Size = %d, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #else
 		log(Debug, "%s: %s Read u8, Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), temp);
 #endif
@@ -45,7 +45,7 @@ void FIFOQueue_t::writeByte(const System_t context, const u8 data)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), mFIFOQueue.size(), data);
 #else
 		log(Debug, "%s: %s Write u8, Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), data);
 #endif

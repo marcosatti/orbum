@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class EEIntc_t;
 class EETimers_t;
@@ -15,7 +15,7 @@ If interrupt conditions are met, sets the corresponding interrupt bit in the EE 
 
 The EE Timers are dynamic and can be updated on the BUSCLK, BUSCLK16, BUSCLK256 or HBLNK clocks.
 */
-class EETimers_s : public VMSystem_s
+class EETimers_s : public VMSystem_t
 {
 public:
 	EETimers_s(VM * vm);

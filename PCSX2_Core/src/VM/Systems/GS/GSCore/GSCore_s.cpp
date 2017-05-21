@@ -3,7 +3,7 @@
 #include "VM/Systems/GS/GSCore/GSCore_s.h"
 
 GSCore_s::GSCore_s(VM * vm) :
-	VMSystem_s(vm, System_t::GSCore)
+	VMSystem_t(vm, System_t::GSCore)
 {
 }
 

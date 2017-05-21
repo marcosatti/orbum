@@ -26,21 +26,35 @@
 
 VM::VM(const VMOptions & vmOptions) : 
 	mVMOptions(vmOptions),
-	mStatus(Stopped),
-	mSystemThreadsInitialised(false)
+	mStatus(Stopped)
 {
 	// Initialise everything.
 	reset();
 }
 
+VM::~VM()
+{
+	// Call stop to handle thread cleanup.
+	stop();
+}
+
 void VM::reset()
 {
-	// Set to running.
-	mStatus = Running;
-
 	// Initialise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
 	log(Info, "VM reset started...");
+
+	// Set status to stopped.
+	mStatus = Stopped;
+
+	// Wait for any existing system threads.
+	for (auto& thread : mSystemThreads)
+		thread.join();
+
+	// Destroy the old threads.
+	mSystemThreads.empty();
+
+	log(Info, "VM system threads state reset.");
 
 	// Initialise resources and set system bias speeds.
 	mResources = std::make_shared<Resources_t>();
@@ -65,8 +79,8 @@ void VM::reset()
 		std::make_shared<EEDmac_s>(this),
 		std::make_shared<EETimers_s>(this),
 		std::make_shared<EEIntc_s>(this),
-		nullptr,
-		nullptr,
+		// std::make_shared<GIF_s>(this),
+		// std::make_shared<IPU_s>(this),
 		std::make_shared<VIF_s>(this, 0),
 		vu0temp,
 		std::make_shared<VIF_s>(this, 1),
@@ -81,37 +95,21 @@ void VM::reset()
 		std::make_shared<CRTC_s>(this),
 	};
 
-	// Initialise components.
+	// Initialise systems.
 	for (auto& system : mSystems)
-		if (system.second != nullptr) 
-			system.second->initialise();
+		system->initialise();
 
 	log(Info, "VM systems initialised.");
 
-	// Use multithreaded systems if enabled.
-	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
-	{
-		// Clear any existing threads... could be dangerous since we have detached them... TODO: look into this.
-		mSystemThreads.empty();
+	// Reset done, set status to paused now (threads created will exit otherwise).
+	mStatus = Paused;
 
-		// Initialise threads.
-		for (auto& system : mSystems)
-			if (system.second != nullptr)
-				mSystemThreads.push_back(std::thread(&VMSystem_s::threadLoop, &(*system.second)));
+	// Create system threads.
+	for (auto& system : mSystems)
+		mSystemThreads.push_back(std::thread(&VMSystem_t::run, system.get()));
 
-		// Detach threads.
-		for (auto& thread : mSystemThreads)
-			thread.detach();
-
-		// Set threaded state to initialised.
-		mSystemThreadsInitialised = true;
-	}
-	else
-	{
-		mSystemThreadsInitialised = false;
-	}
-
-	log(Info, "VM reset done.");
+	log(Info, "VM system threads initialised.");
+	log(Info, "VM reset done, now paused.");
 }
 
 void VM::reset(const VMOptions& options)
@@ -122,54 +120,47 @@ void VM::reset(const VMOptions& options)
 
 void VM::run()
 {
-	auto& Clock = getResources()->Clock;
+	// Reset() must have been called before attempting to run.
+	if (mStatus == Stopped)
+		throw std::runtime_error("VM needs to be reset first before running!");
+
+	// Produce ticks (independent clock sources) for the systems to use.
+	getResources()->Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
+
+	// Set to running.
+	mStatus = Running;
 
 	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
 	{
-		// Running in multithreaded mode.
-		if (!mSystemThreadsInitialised)
-			throw std::runtime_error("VM MT mode was not setup before running!");
+		// Run through each of the systems simultaneously.
+		for (auto& system : mSystems)
+			system->notify();
 
-		// Aquire all mutex locks first (common sync point).
+		// Re-synchonise the threads (lock), check for any exceptions.
 		for (auto& system : mSystems)
 		{
-			if (system.second != nullptr) 
-				system.second->mThreadMutex.lock();
-		}
-
-		// Produce ticks (independent clock sources) for the systems to use.
-		Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
-
-		// Unlock the mutexes.
-		for (auto& system : mSystems)
-		{
-			if (system.second != nullptr)
-			{
-				system.second->mThreadRun = true;
-				system.second->mThreadMutex.unlock();
-			}
-		}
-
-		// Notify them.
-		for (auto& system : mSystems)
-		{
-			if (system.second != nullptr)
-				system.second->mThreadSync.notify_all();
+			system->mThreadMutex.lock();
+			if (system->mIsExcepted)
+				throw std::runtime_error(system->mExceptionMessage);
 		}
 	}
 	else
 	{
-		// Running in single threaded mode.
-		// Produce ticks (independent clock sources) for the systems to use.
-		Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
-
-		// Run through each of the systems separately.
+		// Run through each of the systems sequentially.
 		for (auto& system : mSystems)
 		{
-			if (system.second != nullptr)
-				system.second->run();
+			// Notify system.
+			system->notify();
+
+			// Re-synchonise the threads (lock), check for any exceptions.
+			system->mThreadMutex.lock();
+			if (system->mIsExcepted)
+				throw std::runtime_error(system->mExceptionMessage);
 		}
 	}
+
+	// Set to paused.
+	mStatus = Paused;
 }
 
 void VM::stop()
@@ -177,24 +168,27 @@ void VM::stop()
 	// Set to stopped.
 	mStatus = Stopped;
 
-	// Set system threads state to not initialised.
-	mSystemThreadsInitialised = false;
+	// Notify systems.
+	for (auto& system : mSystems)
+		system->notify();
+
+	// Join existing system threads.
+	for (auto& thread : mSystemThreads)
+		thread.join();
+
+	// Destroy the old threads.
+	mSystemThreads.empty();
+
+	// Destroy the resources.
+	mResources.reset();
 
 	log(Info, "VM stopped ok.");
+	LOG_CALLBACK_FUNCPTR = nullptr;
 }
 
-VM::~VM()
-{
-}
-
-const VM::VMStatus& VM::getStatus() const
+VM::VMStatus VM::getStatus() const
 {
 	return mStatus;
-}
-
-void VM::setStatus(const VMStatus& status)
-{
-	mStatus = status;
 }
 
 const std::shared_ptr<Resources_t> & VM::getResources() const

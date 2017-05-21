@@ -37,7 +37,7 @@ u16 HwordMemory_t::readHword(const System_t context, const size_t hwordOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -59,7 +59,7 @@ void HwordMemory_t::writeHword(const System_t context, const size_t hwordOffset,
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -77,7 +77,7 @@ u32 HwordMemory_t::readWord(const System_t context, const size_t hwordOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -99,7 +99,7 @@ void HwordMemory_t::writeWord(const System_t context, const size_t hwordOffset, 
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -117,7 +117,7 @@ u64 HwordMemory_t::readDword(const System_t context, const size_t hwordOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -139,7 +139,7 @@ void HwordMemory_t::writeDword(const System_t context, const size_t hwordOffset,
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddress);
 #endif
@@ -158,7 +158,7 @@ u128 HwordMemory_t::readQword(const System_t context, const size_t hwordOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #endif
@@ -182,7 +182,7 @@ void HwordMemory_t::writeQword(const System_t context, const size_t hwordOffset,
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), hwordOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #endif

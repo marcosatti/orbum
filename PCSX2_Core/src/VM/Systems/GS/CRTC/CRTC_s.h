@@ -3,7 +3,7 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/VM.h"
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class CRTC_t;
 class Clock_t;
@@ -18,7 +18,7 @@ SCPH-39001 service manual.
 
 TODO: I have no idea how this works, it is based of guessed logic and pixel clock speed from resX and fH. Read through the GS mode selector docs above / general info on CRTC's.
 */
-class CRTC_s : public VMSystem_s
+class CRTC_s : public VMSystem_t
 {
 public:
 	CRTC_s(VM * vm);

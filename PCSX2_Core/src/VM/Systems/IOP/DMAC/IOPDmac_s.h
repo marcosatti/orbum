@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/IOP/DMAC/Types/IOPDMAtag_t.h"
 
@@ -16,7 +16,7 @@ The IOP DMAC system logic.
 It operates using 32-bit data units and can operate in burst, slice, linked-list or chain modes.
 Logic adapted from PCSX2, nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
 */
-class IOPDmac_s : public VMSystem_s
+class IOPDmac_s : public VMSystem_t
 {
 public:
 	IOPDmac_s(VM * vm);

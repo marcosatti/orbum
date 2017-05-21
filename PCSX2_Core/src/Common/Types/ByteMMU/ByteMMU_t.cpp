@@ -139,7 +139,7 @@ const std::shared_ptr<MapperBaseObjectByteMMU_t>& ByteMMU_t::getMappedObject(con
 	{
 		std::stringstream stringStream;
 		u32 address = (static_cast<u32>(properties.mVDN) << (mNumOffsetIndexBits + mNumPageIndexBits)) | (static_cast<u32>(properties.mVPN) << mNumOffsetIndexBits) | static_cast<u32>(properties.mOffset);
-		stringStream << SYSTEM_STR[context] << ": ByteMMU lookup failed (nullptr). Address (inc. offset) = 0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << address << ".";
+		stringStream << DEBUG_SYSTEM_STRINGS[context] << ": ByteMMU lookup failed (nullptr). Address (inc. offset) = 0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << address << ".";
 		throw std::runtime_error(stringStream.str());
 	}
 #endif

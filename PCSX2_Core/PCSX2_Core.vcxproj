@@ -574,7 +574,8 @@
     <ClInclude Include="src\Common\Types\MIPS\MIPSInstruction_t.h" />
     <ClInclude Include="src\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.h" />
     <ClInclude Include="src\Common\Types\ByteMMU\ByteMMU_t.h" />
-    <ClInclude Include="src\VM\Types\VMSystem_s.h" />
+    <ClInclude Include="src\VM\Types\VMSystem_t.h" />
+    <ClInclude Include="src\VM\Types\ThreadableObject_t.h" />
     <ClInclude Include="src\VM\VM.h" />
     <ClInclude Include="src\Resources\EE\EECore\Types\EECoreException_t.h" />
     <ClInclude Include="src\Common\Types\Register\Register32_t.h" />
@@ -738,7 +739,8 @@
     <ClCompile Include="src\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.cpp" />
     <ClCompile Include="src\Common\Types\ByteMMU\ByteMMU_t.cpp" />
     <ClCompile Include="src\VM\Systems\SPU2\SPU2_s.cpp" />
-    <ClCompile Include="src\VM\Types\VMSystem_s.cpp" />
+    <ClCompile Include="src\VM\Types\VMSystem_t.cpp" />
+    <ClCompile Include="src\VM\Types\ThreadableObject_t.cpp" />
     <ClCompile Include="src\VM\VM.cpp" />
     <ClCompile Include="src\Common\Types\Register\Register32_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\ConstantRegister128_t.cpp" />

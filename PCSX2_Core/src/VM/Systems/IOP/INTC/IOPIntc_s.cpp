@@ -12,7 +12,7 @@
 #include "Resources/IOP/IOPCore/Types/IOPCoreCOP0Registers_t.h"
 
 IOPIntc_s::IOPIntc_s(VM * vm) : 
-	VMSystem_s(vm, System_t::IOPIntc)
+	VMSystem_t(vm, System_t::IOPIntc)
 {
 	mIOPCOP0 = getVM()->getResources()->IOP->IOPCore->COP0;
 	mINTC = getVM()->getResources()->IOP->INTC;

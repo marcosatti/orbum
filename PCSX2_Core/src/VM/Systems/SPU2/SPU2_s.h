@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class SPU2_t;
 class IOPIntc_t;
@@ -12,7 +12,7 @@ SPU2 system logic.
  1. Check through the DMA channels, and send/recieve data as necessary.
  2. Process audio and play samples at 44.1 or 48.0 kHz.
 */
-class SPU2_s : public VMSystem_s
+class SPU2_s : public VMSystem_t
 {
 public:
 	SPU2_s(VM * vm);
