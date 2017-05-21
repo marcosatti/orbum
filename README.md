@@ -49,7 +49,7 @@ marco@pc:/PCSX2_rewrite/PCSX2_Frontend$ g++ -std=c++14 -g -O3 -D_DEBUG -pthread 
 ### Clang/LLVM
 ```
 Typical build command:
-marco@pc:/PCSX2_rewrite/PCSX2_Frontend$ clang++ -std=c++1z -g -O3 -D_DEBUG -pthread -I../PCSX2_Core/src src/PCSX2_Frontend.cpp `find ../PCSX2_Core/src -name *.cpp` -o pcsx2_frontend
-(Note the -std=c++1z option, -std=c++14 doesnt work unlike GCC, a bug report has been submitted about this.)
+marco@pc:/PCSX2_rewrite/PCSX2_Frontend$ clang++-4.0 -std=c++1z -g -O3 -D_DEBUG -pthread -I../PCSX2_Core/src src/PCSX2_Frontend.cpp `find ../PCSX2_Core/src -name *.cpp` -o pcsx2_frontend
+(Note the clang++4.0 and -std=c++1z option, using either clang 3.8 or the -std=c++14 causes it to fail, a bug report has been submitted about this.)
 (No build script yet.)
 ```
