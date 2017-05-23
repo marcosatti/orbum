@@ -1,13 +1,12 @@
 #pragma once
 
 /*
-Globals.h is to be included with every file (except for the files that this includes), giving access to:
+Globals.h is a single include for the most commonly used items, giving access to:
  - Macros
- - Base Types
- - Logging functions.
- - Constants.
- - Compile Time Options.
- - Enums.
+ - Base Types (u8, u16, u32, u64, u128, f32)
+ - Logging functions
+ - Constants
+ - Compile Time Options
 */
 
 #include "Common/Global/Macros.h"

@@ -15,7 +15,7 @@ enum class ClockSource_t
 	PixelClock,
 	HBlankClock,
 	VBlankClock,
-
+    
 	COUNT
 };
 

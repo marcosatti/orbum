@@ -48,8 +48,11 @@ void VM::reset()
 	mStatus = Stopped;
 
 	// Notify systems.
-	for (auto& system : mSystems)
-		system->notify(Runnable_t::Status::Stop);
+    for (auto& system : mSystems)
+    {
+        system->notify(Runnable_t::Status::Stop);
+        system->synchronise();
+    }
 
 	// Join existing system threads.
 	for (auto& thread : mSystemThreads)
@@ -106,7 +109,7 @@ void VM::reset()
 
 	// Create system threads.
 	for (auto& system : mSystems)
-		mSystemThreads.push_back(std::thread(&VMSystem_t::runMain, system.get()));
+		mSystemThreads.push_back(std::thread(&VMSystem_t::threadMain, system.get()));
 
 	log(Info, "VM system threads initialised.");
 
@@ -140,13 +143,9 @@ void VM::run()
 		for (auto& system : mSystems)
 			system->notify(Runnable_t::Status::Run);
 
-		// Re-synchonise the threads (lock), check for any exceptions.
-		for (auto& system : mSystems)
-		{
-			std::unique_lock<std::mutex> lock(system->State.mLock);
-			if (system->State.mStatus == Runnable_t::Status::Exception)
-				if (system->State.mException) std::rethrow_exception(system->State.mException);
-		}
+		// Re-synchronise the system (lock), check for any exceptions.
+        for (auto& system : mSystems)
+            system->synchronise();
 	}
 	else
 	{
@@ -154,12 +153,12 @@ void VM::run()
 		for (auto& system : mSystems)
 		{
 			// Notify system.
+            log(Debug, "Calling notify for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
 			system->notify(Runnable_t::Status::Run);
 
-			// Re-synchonise the threads (lock), check for any exceptions.
-			std::unique_lock<std::mutex> lock(system->State.mLock);
-			if (system->State.mStatus == Runnable_t::Status::Exception)
-				if (system->State.mException) std::rethrow_exception(system->State.mException);
+			// Re-synchronise the system (lock), check for any exceptions.
+            log(Debug, "Calling synchronise for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
+            system->synchronise();
 		}
 	}
 
@@ -171,7 +170,10 @@ void VM::stop()
 {
 	// Notify systems.
 	for (auto& system : mSystems)
-		system->notify(Runnable_t::Status::Stop);
+	{
+        system->notify(Runnable_t::Status::Stop);
+        system->synchronise();
+	}
 
 	// Join existing system threads.
 	for (auto& thread : mSystemThreads)

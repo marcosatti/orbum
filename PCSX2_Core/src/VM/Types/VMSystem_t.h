@@ -25,7 +25,11 @@ public:
 	/*
 	Returns the system context type.
 	*/
-	System_t getContext() const;
+#if defined(BUILD_DEBUG)
+	System_t getContext() const override;
+#else
+    System_t getContext() const;
+#endif
 
 	/*
 	Runs the system logic for each clock source event by looping through the step function.
