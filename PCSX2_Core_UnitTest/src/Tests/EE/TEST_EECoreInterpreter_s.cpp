@@ -34,7 +34,7 @@ public:
 		};
 		
 		vm = new VM(vmOptions);
-		core = dynamic_cast<EECoreInterpreter_s*>(vm->mSystems[System_t::EECore].get());
+    core = vm->mSystemEECore.get();
 	}
 
 	virtual void TearDown() 

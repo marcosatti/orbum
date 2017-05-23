@@ -10,6 +10,20 @@
 #include "VM/Types/VMSystem_t.h"
 
 class Resources_t;
+class EECoreInterpreter_s;
+class EEDmac_s;
+class EETimers_s;
+class EEIntc_s;
+class VIF_s;
+class VUInterpreter_s;
+class IOPCoreInterpreter_s;
+class IOPDmac_s;
+class IOPTimers_s;
+class IOPIntc_s;
+class CDVD_s;
+class SPU2_s;
+class GSCore_s;
+class CRTC_s;
 
 /*
 Entry point into all PCSX2 core emulation.
@@ -80,6 +94,22 @@ private:
 	/*
 	PS2 System logic engines.
 	*/
+	std::shared_ptr<EECoreInterpreter_s> mSystemEECore;
+	std::shared_ptr<EEDmac_s> mSystemEEDmac;
+	std::shared_ptr<EETimers_s> mSystemEETimers;
+	std::shared_ptr<EEIntc_s> mSystemEEIntc;
+	std::shared_ptr<VIF_s> mSystemVIF0;
+	std::shared_ptr<VIF_s> mSystemVIF1;
+	std::shared_ptr<VUInterpreter_s> mSystemVU0;
+	std::shared_ptr<VUInterpreter_s> mSystemVU1;
+	std::shared_ptr<IOPCoreInterpreter_s> mSystemIOPCore;
+	std::shared_ptr<IOPDmac_s> mSystemIOPDmac;
+	std::shared_ptr<IOPTimers_s> mSystemIOPTimers;
+	std::shared_ptr<IOPIntc_s> mSystemIOPIntc;
+	std::shared_ptr<CDVD_s> mSystemCDVD;
+	std::shared_ptr<SPU2_s> mSystemSPU2;
+	std::shared_ptr<GSCore_s> mSystemGSCore;
+	std::shared_ptr<CRTC_s> mSystemCRTC;
 	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
 };
 

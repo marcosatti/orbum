@@ -47,7 +47,11 @@ void VM::reset()
 	// Set status to stopped.
 	mStatus = Stopped;
 
-	// Wait for any existing system threads.
+	// Notify systems.
+	for (auto& system : mSystems)
+		system->notify(Runnable_t::Status::Stop);
+
+	// Join existing system threads.
 	for (auto& thread : mSystemThreads)
 		thread.join();
 
@@ -72,28 +76,27 @@ void VM::reset()
 	log(Info, "VM roms initialised.");
 
 	// Create components.
-	auto vu0temp = std::make_shared<VUInterpreter_s>(this, 0);
-	mSystems =
-	{
-		std::make_shared<EECoreInterpreter_s>(this, vu0temp),
-		std::make_shared<EEDmac_s>(this),
-		std::make_shared<EETimers_s>(this),
-		std::make_shared<EEIntc_s>(this),
-		// std::make_shared<GIF_s>(this),
-		// std::make_shared<IPU_s>(this),
-		std::make_shared<VIF_s>(this, 0),
-		vu0temp,
-		std::make_shared<VIF_s>(this, 1),
-		std::make_shared<VUInterpreter_s>(this, 1),
-		std::make_shared<IOPCoreInterpreter_s>(this),
-		std::make_shared<IOPDmac_s>(this),
-		std::make_shared<IOPTimers_s>(this),
-		std::make_shared<IOPIntc_s>(this),
-		std::make_shared<CDVD_s>(this),
-		std::make_shared<SPU2_s>(this),
-		std::make_shared<GSCore_s>(this),
-		std::make_shared<CRTC_s>(this),
-	};
+	mSystemEEDmac = std::make_shared<EEDmac_s>(this);
+	mSystemEETimers = std::make_shared<EETimers_s>(this);
+	mSystemEEIntc = std::make_shared<EEIntc_s>(this);
+	// mSystemGIF = std::make_shared<GIF_s>(this);
+	// mSystemIPU = std::make_shared<IPU_s>(this);
+	mSystemVIF0 = std::make_shared<VIF_s>(this, 0);
+	mSystemVU0 = std::make_shared<VUInterpreter_s>(this, 0);
+	mSystemVIF1 = std::make_shared<VIF_s>(this, 1);
+	mSystemVU1 = std::make_shared<VUInterpreter_s>(this, 1);
+	mSystemIOPCore = std::make_shared<IOPCoreInterpreter_s>(this);
+	mSystemIOPDmac = std::make_shared<IOPDmac_s>(this);
+	mSystemIOPTimers = std::make_shared<IOPTimers_s>(this);
+	mSystemIOPIntc = std::make_shared<IOPIntc_s>(this);
+	mSystemCDVD = std::make_shared<CDVD_s>(this);
+	mSystemSPU2 = std::make_shared<SPU2_s>(this);
+	mSystemGSCore = std::make_shared<GSCore_s>(this);
+	mSystemCRTC = std::make_shared<CRTC_s>(this);
+	mSystemEECore = std::make_shared<EECoreInterpreter_s>(this, mSystemVU0);
+	mSystems = { mSystemEECore, mSystemEEDmac, mSystemEETimers, mSystemEEIntc, /* mSystemGIF,       mSystemIPU, */  mSystemVIF0, mSystemVU0,
+                 mSystemVIF1,   mSystemVU1,    mSystemIOPCore,  mSystemIOPDmac,   mSystemIOPTimers, mSystemIOPIntc, mSystemCDVD, mSystemSPU2,
+	             mSystemGSCore, mSystemCRTC };
 
 	// Initialise systems.
 	for (auto& system : mSystems)
@@ -101,14 +104,15 @@ void VM::reset()
 
 	log(Info, "VM systems initialised.");
 
+	// Create system threads.
+	for (auto& system : mSystems)
+		mSystemThreads.push_back(std::thread(&VMSystem_t::runMain, system.get()));
+
+	log(Info, "VM system threads initialised.");
+
 	// Reset done, set status to paused now (threads created will exit otherwise).
 	mStatus = Paused;
 
-	// Create system threads.
-	for (auto& system : mSystems)
-		mSystemThreads.push_back(std::thread(&VMSystem_t::run, system.get()));
-
-	log(Info, "VM system threads initialised.");
 	log(Info, "VM reset done, now paused.");
 }
 
@@ -134,14 +138,14 @@ void VM::run()
 	{
 		// Run through each of the systems simultaneously.
 		for (auto& system : mSystems)
-			system->notify();
+			system->notify(Runnable_t::Status::Run);
 
 		// Re-synchonise the threads (lock), check for any exceptions.
 		for (auto& system : mSystems)
 		{
-			system->mThreadMutex.lock();
-			if (system->mIsExcepted)
-				throw std::runtime_error(system->mExceptionMessage);
+			std::unique_lock<std::mutex> lock(system->State.mLock);
+			if (system->State.mStatus == Runnable_t::Status::Exception)
+				if (system->State.mException) std::rethrow_exception(system->State.mException);
 		}
 	}
 	else
@@ -150,12 +154,12 @@ void VM::run()
 		for (auto& system : mSystems)
 		{
 			// Notify system.
-			system->notify();
+			system->notify(Runnable_t::Status::Run);
 
 			// Re-synchonise the threads (lock), check for any exceptions.
-			system->mThreadMutex.lock();
-			if (system->mIsExcepted)
-				throw std::runtime_error(system->mExceptionMessage);
+			std::unique_lock<std::mutex> lock(system->State.mLock);
+			if (system->State.mStatus == Runnable_t::Status::Exception)
+				if (system->State.mException) std::rethrow_exception(system->State.mException);
 		}
 	}
 
@@ -165,12 +169,9 @@ void VM::run()
 
 void VM::stop()
 {
-	// Set to stopped.
-	mStatus = Stopped;
-
 	// Notify systems.
 	for (auto& system : mSystems)
-		system->notify();
+		system->notify(Runnable_t::Status::Stop);
 
 	// Join existing system threads.
 	for (auto& thread : mSystemThreads)
@@ -179,8 +180,38 @@ void VM::stop()
 	// Destroy the old threads.
 	mSystemThreads.empty();
 
+	log(Info, "VM system threads destroyed.");
+
 	// Destroy the resources.
 	mResources.reset();
+
+	log(Info, "VM resources destroyed.");
+
+	// Destroy the systems.
+	mSystemEEDmac = nullptr;
+	mSystemEETimers = nullptr;
+	mSystemEEIntc = nullptr;
+	// mSystemGIF = nullptr;
+	// mSystemIPU = nullptr;
+	mSystemVIF0 = nullptr;
+	mSystemVU0 = nullptr;
+	mSystemVIF1 = nullptr;
+	mSystemVU1 = nullptr;
+	mSystemIOPCore = nullptr;
+	mSystemIOPDmac = nullptr;
+	mSystemIOPTimers = nullptr;
+	mSystemIOPIntc = nullptr;
+	mSystemCDVD = nullptr;
+	mSystemSPU2 = nullptr;
+	mSystemGSCore = nullptr;
+	mSystemCRTC = nullptr;
+	mSystemEECore = nullptr;
+	mSystems.empty();
+
+	log(Info, "VM systems destroyed.");
+
+	// Set to stopped.
+	mStatus = Stopped;
 
 	log(Info, "VM stopped ok.");
 	LOG_CALLBACK_FUNCPTR = nullptr;

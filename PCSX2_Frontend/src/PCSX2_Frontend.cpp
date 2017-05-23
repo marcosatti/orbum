@@ -66,7 +66,7 @@ int main()
 	{
 		VM vm(vmOptions);
 
-		while (vm.getStatus() == VM::VMStatus::Running)
+		while (vm.getStatus() == VM::VMStatus::Paused)
 			vm.run();
 
 		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());

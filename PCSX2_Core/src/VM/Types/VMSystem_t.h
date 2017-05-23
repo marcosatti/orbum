@@ -2,8 +2,7 @@
 
 #include "Common/Types/System_t.h"
 #include "Common/Types/ClockSource_t.h"
-
-#include "VM/Types/ThreadableObject_t.h"
+#include "Common/Types/Runnable/Runnable_t.h"
 
 class VM;
 class Clock_t;
@@ -12,7 +11,7 @@ class Clock_t;
 Base class for a VM system component.
 Note: subclasses end with a _s suffix to signify an actual PS2 system logic component.
 */
-class VMSystem_t : public ThreadableObject_t
+class VMSystem_t : public Runnable_t
 {
 public:
 	VMSystem_t(VM * vm, const System_t system);
@@ -30,7 +29,6 @@ public:
 
 	/*
 	Runs the system logic for each clock source event by looping through the step function.
-	Used as the main thread function.
 	*/
 	void run() override;
 

@@ -33,7 +33,7 @@ public:
 		};
 
 		vm = new VM(vmOptions);
-		core = dynamic_cast<IOPCoreInterpreter_s*>(vm->mSystems[System_t::IOPCore].get());
+    core = vm->mSystemIOPCore.get();
 	}
 
 	virtual void TearDown()

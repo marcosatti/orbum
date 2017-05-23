@@ -462,6 +462,7 @@
     <ClInclude Include="src\Common\Types\Register\Register8_t.h" />
     <ClInclude Include="src\Common\Types\Register\MapperRegister16Register32_t.h" />
     <ClInclude Include="src\Common\Types\Register\ConstantRegister16_t.h" />
+    <ClInclude Include="src\Common\Types\Runnable\Runnable_t.h" />
     <ClInclude Include="src\Common\Util\FPUUtil\FPUFlags_t.h" />
     <ClInclude Include="src\Resources\CDVD\Types\CDVDFIFOQueues_t.h" />
     <ClInclude Include="src\Resources\CDVD\Types\CDVDNvrams_t.h" />
@@ -575,7 +576,6 @@
     <ClInclude Include="src\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.h" />
     <ClInclude Include="src\Common\Types\ByteMMU\ByteMMU_t.h" />
     <ClInclude Include="src\VM\Types\VMSystem_t.h" />
-    <ClInclude Include="src\VM\Types\ThreadableObject_t.h" />
     <ClInclude Include="src\VM\VM.h" />
     <ClInclude Include="src\Resources\EE\EECore\Types\EECoreException_t.h" />
     <ClInclude Include="src\Common\Types\Register\Register32_t.h" />
@@ -615,6 +615,7 @@
     <ClCompile Include="src\Common\Types\Register\Register8_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\MapperRegister16Register32_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\ConstantRegister16_t.cpp" />
+    <ClCompile Include="src\Common\Types\Runnable\Runnable_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDFIFOQueues_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDNvrams_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
@@ -740,7 +741,6 @@
     <ClCompile Include="src\Common\Types\ByteMMU\ByteMMU_t.cpp" />
     <ClCompile Include="src\VM\Systems\SPU2\SPU2_s.cpp" />
     <ClCompile Include="src\VM\Types\VMSystem_t.cpp" />
-    <ClCompile Include="src\VM\Types\ThreadableObject_t.cpp" />
     <ClCompile Include="src\VM\VM.cpp" />
     <ClCompile Include="src\Common\Types\Register\Register32_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\ConstantRegister128_t.cpp" />
