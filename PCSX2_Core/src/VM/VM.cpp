@@ -153,12 +153,12 @@ void VM::run()
 		for (auto& system : mSystems)
 		{
 			// Notify system.
-            log(Debug, "Calling notify for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
+            log(Debug, "Started notify for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
 			system->notify(Runnable_t::Status::Run);
 
 			// Re-synchronise the system (lock), check for any exceptions.
-            log(Debug, "Calling synchronise for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
             system->synchronise();
+			log(Debug, "Ended synchronise for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
 		}
 	}
 
