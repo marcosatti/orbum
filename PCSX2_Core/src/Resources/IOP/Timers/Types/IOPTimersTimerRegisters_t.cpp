@@ -21,7 +21,7 @@ void IOPTimersTimerRegister_COUNT_t::reset(const System_t context)
 	writeWord(context, 0);
 }
 
-void IOPTimersTimerRegister_COUNT_t::setPrescale(const int prescale)
+void IOPTimersTimerRegister_COUNT_t::setPrescale(const size_t prescale)
 {
 	// Prescale can only be 1 (no prescale) or above.
 	if (prescale > 0)

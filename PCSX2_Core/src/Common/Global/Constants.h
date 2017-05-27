@@ -30,7 +30,6 @@ struct Constants
 	static constexpr s64 VALUE_S64_MAX = std::numeric_limits<s64>::max();
 	static constexpr s64 VALUE_S64_MIN = std::numeric_limits<s64>::min();
 
-	static constexpr size_t SIZE_4GB = 0x100000000;
 	static constexpr size_t SIZE_512MB = 0x20000000;
 	static constexpr size_t SIZE_32MB = 0x2000000;
 	static constexpr size_t SIZE_4MB = 0x400000;

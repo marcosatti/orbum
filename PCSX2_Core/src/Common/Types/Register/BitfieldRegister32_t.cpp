@@ -110,7 +110,7 @@ void BitfieldRegister32_t::logDebugAllFields() const
 #if DEBUG_LOG_VALUE_AS_HEX
 		log(Debug, "\t%s = 0x%X.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength));
 #else
-		log(Debug, "\t%s = %d.", field.mMnemonic, MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength));
+		log(Debug, "\t%s = %d.", field.mMnemonic.c_str(), MathUtil::extractMaskedValue32(UW, field.mStartPosition, field.mLength));
 #endif
 	}
 }

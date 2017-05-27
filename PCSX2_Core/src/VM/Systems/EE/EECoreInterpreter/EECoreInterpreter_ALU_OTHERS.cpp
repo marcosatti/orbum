@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdlib>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/Register128_t.h"
