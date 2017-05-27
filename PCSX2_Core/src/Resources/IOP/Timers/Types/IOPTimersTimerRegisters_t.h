@@ -36,7 +36,7 @@ public:
 	/*
 	Sets the prescale (ie: needs x amount before 1 is added to the count).
 	*/
-	void setPrescale(const int prescale);
+	void setPrescale(const size_t prescale);
 
 protected:
 	/*
@@ -47,7 +47,7 @@ protected:
 	/*
 	Prescale functionality.
 	*/
-	int mPrescale;
+    size_t mPrescale;
 	size_t mPrescaleCount;
 };
 

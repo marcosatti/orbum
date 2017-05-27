@@ -20,7 +20,7 @@ public:
 	void increment(const System_t context, const size_t value);
 	bool isOverflowed();
 	void reset(const System_t context);
-	void setPrescale(const int prescale);
+	void setPrescale(const size_t prescale);
 
 private:
 	/*
@@ -31,7 +31,7 @@ private:
 	/*
 	Prescale functionality.
 	*/
-	int mPrescale;
+    size_t mPrescale;
 	size_t mPrescaleCount;
 };
 
