@@ -8,7 +8,7 @@ EERegister_SIO_t::EERegister_SIO_t(const char * mnemonic, const bool debugReads,
 {
 }
 
-void EERegister_SIO_t::writeByte(const System_t context, const size_t storageIndex, const u8 value)
+void EERegister_SIO_t::writeByte(const Context_t context, const size_t storageIndex, const u8 value)
 {
 	switch (storageIndex)
 	{
@@ -40,7 +40,7 @@ void EERegister_SIO_t::writeByte(const System_t context, const size_t storageInd
 	}
 }
 
-u32 EERegister_SIO_t::readWord(const System_t context, const size_t storageIndex)
+u32 EERegister_SIO_t::readWord(const Context_t context, const size_t storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -56,7 +56,7 @@ u32 EERegister_SIO_t::readWord(const System_t context, const size_t storageIndex
 	}
 }
 
-void EERegister_SIO_t::writeWord(const System_t context, const size_t storageIndex, const u32 value)
+void EERegister_SIO_t::writeWord(const Context_t context, const size_t storageIndex, const u32 value)
 {
 	switch (storageIndex)
 	{
@@ -80,7 +80,7 @@ EERegister_MCH_t::EERegister_MCH_t(const char * mnemonic, const bool debugReads,
 {
 }
 
-u32 EERegister_MCH_t::readWord(const System_t context, const size_t storageIndex)
+u32 EERegister_MCH_t::readWord(const Context_t context, const size_t storageIndex)
 {
 	switch (storageIndex)
 	{
@@ -123,7 +123,7 @@ u32 EERegister_MCH_t::readWord(const System_t context, const size_t storageIndex
 	}
 }
 
-void EERegister_MCH_t::writeWord(const System_t context, const size_t storageIndex, const u32 value)
+void EERegister_MCH_t::writeWord(const Context_t context, const size_t storageIndex, const u32 value)
 {
 	switch (storageIndex)
 	{

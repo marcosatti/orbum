@@ -18,7 +18,7 @@ public:
 	VM * vm;
 	IOPCoreInterpreter_s * core;
 
-	virtual void SetUp()
+	void SetUp() override
 	{
 		VMOptions vmOptions =
 		{
@@ -28,15 +28,15 @@ public:
 			"",
 			"",
 			0,
-			false,
+			VMOptions::ST,
 			{}
 		};
 
 		vm = new VM(vmOptions);
-    core = vm->mSystemIOPCore.get();
+        core = vm->mSystemIOPCore.get();
 	}
 
-	virtual void TearDown()
+	void TearDown() override
 	{
 		core = nullptr;
 		delete vm;

@@ -8,7 +8,7 @@
 #include "Resources/EE/VPU/VU/Types/VUCores_t.h"
 
 VUInterpreter_s::VUInterpreter_s(VM * vm, const int vuCoreIndex) :
-	VMSystem_t(vm, vuCoreIndex == 0 ? System_t::VU0 : System_t::VU1),
+	VMSystem_t(vm, vuCoreIndex == 0 ? Context_t::VU0 : Context_t::VU1),
 	mVUCoreIndex(vuCoreIndex),
 	mVUInstruction(0)
 {

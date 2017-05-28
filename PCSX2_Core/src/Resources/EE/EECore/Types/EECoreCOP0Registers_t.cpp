@@ -58,7 +58,7 @@ EECoreCOP0Register_Count_t::EECoreCOP0Register_Count_t(const char * mnemonic, co
 {
 }
 
-void EECoreCOP0Register_Count_t::increment(const System_t context, const size_t value)
+void EECoreCOP0Register_Count_t::increment(const Context_t context, const size_t value)
 {
 	writeWord(context, readWord(context) + static_cast<u32>(value));
 }
@@ -86,7 +86,7 @@ EECoreCOP0Register_Status_t::EECoreCOP0Register_Status_t(const char * mnemonic, 
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-bool EECoreCOP0Register_Status_t::isInterruptsMasked(const System_t context)
+bool EECoreCOP0Register_Status_t::isInterruptsMasked(const Context_t context)
 {
 	return !((getFieldValue(context, Fields::ERL) == 0)
 		&& (getFieldValue(context, Fields::EXL) == 0)
@@ -105,19 +105,19 @@ EECoreCOP0Register_Cause_t::EECoreCOP0Register_Cause_t(const char * mnemonic, co
 	registerField(Fields::BD, "BD", 31, 1, 0);
 }
 
-void EECoreCOP0Register_Cause_t::clearIP(const System_t context)
+void EECoreCOP0Register_Cause_t::clearIP(const Context_t context)
 {
 	u32 temp = readWord(context) & 0xFFFF00FF;
 	writeWord(context, temp);
 }
 
-void EECoreCOP0Register_Cause_t::setIRQLine(const System_t context, const int irq)
+void EECoreCOP0Register_Cause_t::setIRQLine(const Context_t context, const int irq)
 {
 	auto temp = getFieldValue(context, Fields::IP) | (1 << irq);
 	setFieldValue(context, Fields::IP, temp);
 }
 
-void EECoreCOP0Register_Cause_t::clearIRQLine(const System_t context, const int irq)
+void EECoreCOP0Register_Cause_t::clearIRQLine(const Context_t context, const int irq)
 {
 	auto temp = (getFieldValue(context, Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
 	setFieldValue(context, Fields::IP, temp);

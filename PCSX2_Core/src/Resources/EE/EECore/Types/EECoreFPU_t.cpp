@@ -21,7 +21,7 @@ EECoreFPU_t::EECoreFPU_t(const std::shared_ptr<EECoreCOP0_t>& cop0) :
 {
 }
 
-bool EECoreFPU_t::isCoprocessorUsable(const System_t context) const
+bool EECoreFPU_t::isCoprocessorUsable(const Context_t context) const
 {
 	// Check that CU[bit 1] == 1 (ie: >0) in the status register.
 	if ((COP0->Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::CU) & 0x2) > 0)

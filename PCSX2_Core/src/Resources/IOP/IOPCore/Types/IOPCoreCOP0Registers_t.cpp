@@ -30,31 +30,31 @@ IOPCoreCOP0Register_Status_t::IOPCoreCOP0Register_Status_t(const char * mnemonic
 	registerField(Fields::CU, "CU", 28, 4, 0);
 }
 
-void IOPCoreCOP0Register_Status_t::pushExceptionStack(const System_t context)
+void IOPCoreCOP0Register_Status_t::pushExceptionStack(const Context_t context)
 {
 	// New status = shift (KU|IP)(c|p) bits left by 2 then make (KU|IP)c bits = 0.
 	u32 statusValue = readWord(context);
 	writeWord(context, (statusValue & (~0x3F)) | ((statusValue & 0xF) << 2));
 }
 
-void IOPCoreCOP0Register_Status_t::popExceptionStack(const System_t context)
+void IOPCoreCOP0Register_Status_t::popExceptionStack(const Context_t context)
 {
 	// New status = shift (KU|IP)(p|o) bits right by 2. Leave old bits unchanged after.
 	u32 statusValue = readWord(context);
 	writeWord(context, (statusValue & (~0xF)) | ((statusValue & 0x3C) >> 2));
 }
 
-bool IOPCoreCOP0Register_Status_t::isExceptionsMasked(const System_t context)
+bool IOPCoreCOP0Register_Status_t::isExceptionsMasked(const Context_t context)
 {
 	return false;
 }
 
-bool IOPCoreCOP0Register_Status_t::isInterruptsMasked(const System_t context)
+bool IOPCoreCOP0Register_Status_t::isInterruptsMasked(const Context_t context)
 {
 	return !(getFieldValue(context, Fields::IEc) > 0);
 }
 
-bool IOPCoreCOP0Register_Status_t::isIRQMasked(const System_t context, const int irq)
+bool IOPCoreCOP0Register_Status_t::isIRQMasked(const Context_t context, const int irq)
 {
 	return !((getFieldValue(context, Fields::IM) & (1 << irq)) > 0);
 }
@@ -68,18 +68,18 @@ IOPCoreCOP0Register_Cause_t::IOPCoreCOP0Register_Cause_t(const char * mnemonic, 
 	registerField(Fields::BD, "BD", 31, 1, 0);
 }
 
-void IOPCoreCOP0Register_Cause_t::clearIP(const System_t context)
+void IOPCoreCOP0Register_Cause_t::clearIP(const Context_t context)
 {
 	setFieldValue(context, Fields::IP, 0);
 }
 
-void IOPCoreCOP0Register_Cause_t::setIRQLine(const System_t context, const int irq)
+void IOPCoreCOP0Register_Cause_t::setIRQLine(const Context_t context, const int irq)
 {
 	auto temp = getFieldValue(context, Fields::IP) | (1 << irq);
 	setFieldValue(context, Fields::IP, temp);
 }
 
-void IOPCoreCOP0Register_Cause_t::clearIRQLine(const System_t context, const int irq)
+void IOPCoreCOP0Register_Cause_t::clearIRQLine(const Context_t context, const int irq)
 {
 	auto temp = (getFieldValue(context, Fields::IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
 	setFieldValue(context, Fields::IP, temp);

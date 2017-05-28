@@ -23,7 +23,7 @@ EECoreFPURegister_CSR_t::EECoreFPURegister_CSR_t(const char * mnemonic, const bo
 	registerField(Fields::C, "C", 23, 1, 0);
 }
 
-void EECoreFPURegister_CSR_t::setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value)
+void EECoreFPURegister_CSR_t::setFieldValueSticky(const Context_t context, const int fieldIndex, const u32 value)
 {
 	// Check if the field index is for the non-sticky flags.
 	// TODO: relies on fact that sticky flag indexes are offset by -4.
@@ -38,13 +38,13 @@ void EECoreFPURegister_CSR_t::setFieldValueSticky(const System_t context, const 
 	}
 }
 
-void EECoreFPURegister_CSR_t::updateResultFlags(const System_t context, const FPUFlags_t & flags)
+void EECoreFPURegister_CSR_t::updateResultFlags(const Context_t context, const FPUFlags_t & flags)
 {
 	setFieldValueSticky(context, Fields::U, flags.UF ? 1 : 0);
 	setFieldValueSticky(context, Fields::O, flags.OF ? 1 : 0);
 }
 
-void EECoreFPURegister_CSR_t::clearFlags(const System_t context)
+void EECoreFPURegister_CSR_t::clearFlags(const Context_t context)
 {
 	setFieldValueSticky(context, Fields::U, 0);
 	setFieldValueSticky(context, Fields::O, 0);

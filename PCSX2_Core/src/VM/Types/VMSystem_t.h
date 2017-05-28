@@ -1,20 +1,21 @@
 #pragma once
 
-#include "Common/Types/System_t.h"
-#include "Common/Types/ClockSource_t.h"
-#include "Common/Types/Runnable/Runnable_t.h"
+#include <memory>
+
+#include "Common/Types/System/Context_t.h"
+#include "Common/Types/System/ClockSource_t.h"
+#include "Common/Types/Util/Runnable_t.h"
 
 class VM;
 class Clock_t;
 
 /*
 Base class for a VM system component.
-Note: subclasses end with a _s suffix to signify an actual PS2 system logic component.
 */
 class VMSystem_t : public Runnable_t
 {
 public:
-	VMSystem_t(VM * vm, const System_t system);
+	VMSystem_t(VM * vm, const Context_t system);
 	virtual ~VMSystem_t() = default;
 
 	/*
@@ -25,11 +26,7 @@ public:
 	/*
 	Returns the system context type.
 	*/
-#if defined(BUILD_DEBUG)
-	System_t getContext() const override;
-#else
-    System_t getContext() const;
-#endif
+    Context_t getContext() const;
 
 	/*
 	Runs the system logic for each clock source event by looping through the step function.
@@ -51,6 +48,6 @@ private:
 	System resources.
 	*/
 	VM * mVM;
-	System_t mSystemContext;
+	Context_t mContext;
 	std::shared_ptr<Clock_t> mClock;
 };

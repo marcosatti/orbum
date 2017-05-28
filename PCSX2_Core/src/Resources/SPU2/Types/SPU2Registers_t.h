@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/BitfieldRegister16_t.h"
-#include "Common/Types/System_t.h"
+#include "Common/Types/System/Context_t.h"
 
 /*
 The SPU2 SPDIF_IRQINFO register.
@@ -27,5 +27,5 @@ public:
     /*
     Returns if any of the core IRQ's are set.
     */
-    bool isInterrupted(const System_t context);
+    bool isInterrupted(const Context_t context);
 };

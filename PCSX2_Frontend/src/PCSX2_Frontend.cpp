@@ -15,16 +15,9 @@
 #include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
 std::ofstream logFile;
-bool MTmode = false;
 
 void log(const LogLevel_t level, const std::string & message)
 {
-	if (MTmode)
-	{
-		static std::mutex mtx;
-		std::lock_guard<std::mutex> lock(mtx);
-	}
-
 	std::string prefix;
 	switch (level)
 	{
@@ -58,25 +51,27 @@ int main()
 		"",
 		"",
 		10,
-		MTmode,
+		VMOptions::MT_SIM,
 		{ }
 	};
 
-	try 
 	{
-		VM vm(vmOptions);
+        VM vm(vmOptions);
 
-		while (vm.getStatus() == VM::VMStatus::Paused)
-			vm.run();
+        try
+        {
+            while (vm.getStatus() == VM::VMStatus::Paused)
+                vm.run();
+        }
+        catch (const std::exception & ex)
+        {
+            log(Fatal, ex.what());
+        }
 
-		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
-		vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
-		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
-		vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
-	}
-	catch (const std::exception & ex)
-	{
-		log(Fatal, ex.what());
+        vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
+        vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
+        vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
+        vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
 	}
 
 	logFile.close();

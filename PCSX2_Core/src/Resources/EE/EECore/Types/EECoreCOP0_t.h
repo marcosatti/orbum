@@ -51,7 +51,7 @@ public:
 	Checks if the EECore COP0 coprocessor is usable. 
 	Can be used by the component calling this to raise a EECoreException_t(coprocessor unusable) if not available.
 	*/
-	bool isCoprocessorUsable(const System_t context) const override;
+	bool isCoprocessorUsable(const Context_t context) const override;
 
 	/*
 	Initialises the COP0 registers.
@@ -61,7 +61,7 @@ public:
 	/*
 	Determine the CPU context. Uses the Status register.
 	*/
-	MIPSCPUOperatingContext_t getCPUOperatingContext(const System_t context) const override;
+	MIPSCPUOperatingContext_t getCPUOperatingContext(const Context_t context) const override;
 
 	/*
 	EECore COP0 register implementations. Follows EE Core Users Manual.

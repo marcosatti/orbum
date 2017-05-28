@@ -15,11 +15,11 @@ public:
 	/*
 	Overwritten write functions that discard any value.
 	*/
-	void writeByte(const System_t context, const size_t arrayIndex, const u8 value) override;
-	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
-	void writeWord(const System_t context, const size_t arrayIndex, const u32 value) override;
-	void writeDword(const System_t context, const size_t arrayIndex, const u64 value) override;
-	void writeQword(const System_t context, const u128 value) override;
+	void writeByte(const Context_t context, const size_t arrayIndex, const u8 value) override;
+	void writeHword(const Context_t context, const size_t arrayIndex, const u16 value) override;
+	void writeWord(const Context_t context, const size_t arrayIndex, const u32 value) override;
+	void writeDword(const Context_t context, const size_t arrayIndex, const u64 value) override;
+	void writeQword(const Context_t context, const u128 value) override;
 
 	/*
 	Initialise register (set to do nothing).

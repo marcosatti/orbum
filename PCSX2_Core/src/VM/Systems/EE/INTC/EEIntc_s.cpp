@@ -12,7 +12,7 @@
 #include "Resources/EE/EECore/Types/EECoreCOP0Registers_t.h"
 
 EEIntc_s::EEIntc_s(VM * vm) :
-	VMSystem_t(vm, System_t::EEIntc)
+	VMSystem_t(vm, Context_t::EEIntc)
 {
 	mEECOP0 = getVM()->getResources()->EE->EECore->COP0;
 	mINTC = getVM()->getResources()->EE->INTC;

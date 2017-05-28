@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Common/Types/EnumMap_t.h"
+#include "Common/Global/Globals.h"
+#include "Common/Types/Util/EnumMap_t.h"
 
 /*
 Represents a list of systems included in the PS2.
 */
-enum class System_t
+enum class Context_t
 {
 	EECore,
 	EEDmac,
@@ -33,7 +34,7 @@ enum class System_t
 /*
 Static array of names used for debug logging.
 */
-static constexpr EnumMap_t<System_t, const char *> DEBUG_SYSTEM_STRINGS = 
+static constexpr EnumMap_t<Context_t, const char *> DEBUG_CONTEXT_STRINGS = 
 { 
 	"EECore", 
 	"EEDmac", 

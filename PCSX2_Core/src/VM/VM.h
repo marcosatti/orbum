@@ -3,13 +3,12 @@
 #include <memory>
 #include <thread>
 #include <vector>
-
-#include "Common/Types/EnumMap_t.h"
+#include <utility>
 
 #include "VM/Types/VMOptions.h"
-#include "VM/Types/VMSystem_t.h"
 
-class Resources_t;
+class ThreadedRunnable_t;
+class VMSystem_t;
 class EECoreInterpreter_s;
 class EEDmac_s;
 class EETimers_s;
@@ -24,6 +23,7 @@ class CDVD_s;
 class SPU2_s;
 class GSCore_s;
 class CRTC_s;
+class Resources_t;
 
 /*
 Entry point into all PCSX2 core emulation.
@@ -89,10 +89,9 @@ private:
 	VMOptions mVMOptions;
 	VMStatus mStatus;
 	std::shared_ptr<Resources_t> mResources;
-	std::vector<std::thread> mSystemThreads;
 
 	/*
-	PS2 System logic engines.
+	PS2 system logic engines.
 	*/
 	std::shared_ptr<EECoreInterpreter_s> mSystemEECore;
 	std::shared_ptr<EEDmac_s> mSystemEEDmac;
@@ -111,5 +110,10 @@ private:
 	std::shared_ptr<GSCore_s> mSystemGSCore;
 	std::shared_ptr<CRTC_s> mSystemCRTC;
 	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
+
+    /*
+    Multi-threaded resources.
+    */
+    std::vector<std::shared_ptr<ThreadedRunnable_t>> mSystemThreads;
 };
 

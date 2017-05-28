@@ -101,7 +101,7 @@ VUCore_VU0_t::VUCore_VU0_t(const std::shared_ptr<EECoreCOP0_t> & cop0) :
 	MEMORY_Mem = std::make_shared<ByteMemory_t>("VU0 Main Mem", false, false, Constants::SIZE_4KB);
 }
 
-bool VUCore_VU0_t::isCoprocessorUsable(const System_t context) const
+bool VUCore_VU0_t::isCoprocessorUsable(const Context_t context) const
 {
 	// Check that CU[bit 2] == 1 (ie: >0) in the status register.
 	if ((COP0->Status->getFieldValue(context, EECoreCOP0Register_Status_t::Fields::CU) & 0x4) > 0)

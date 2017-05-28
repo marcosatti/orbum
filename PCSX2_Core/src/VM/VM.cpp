@@ -3,8 +3,10 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROByteMemory_t.h"
+#include "Common/Types/Util/ThreadedRunnable_t.h"
 
 #include "VM/VM.h"
+#include "VM/Types/VMSystem_t.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 #include "VM/Systems/EE/DMAC/EEDmac_s.h"
 #include "VM/Systems/EE/Timers/EETimers_s.h"
@@ -42,26 +44,11 @@ void VM::reset()
 {
 	// Initialise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
+
+    // Set status to stopped.
+    mStatus = Stopped;
+
 	log(Info, "VM reset started...");
-
-	// Set status to stopped.
-	mStatus = Stopped;
-
-	// Notify systems.
-    for (auto& system : mSystems)
-    {
-        system->notify(Runnable_t::Status::Stop);
-        system->synchronise();
-    }
-
-	// Join existing system threads.
-	for (auto& thread : mSystemThreads)
-		thread.join();
-
-	// Destroy the old threads.
-	mSystemThreads.empty();
-
-	log(Info, "VM system threads state reset.");
 
 	// Initialise resources and set system bias speeds.
 	mResources = std::make_shared<Resources_t>();
@@ -78,7 +65,7 @@ void VM::reset()
 
 	log(Info, "VM roms initialised.");
 
-	// Create components.
+	// Create systems.
 	mSystemEEDmac = std::make_shared<EEDmac_s>(this);
 	mSystemEETimers = std::make_shared<EETimers_s>(this);
 	mSystemEEIntc = std::make_shared<EEIntc_s>(this);
@@ -108,8 +95,8 @@ void VM::reset()
 	log(Info, "VM systems initialised.");
 
 	// Create system threads.
-	for (auto& system : mSystems)
-		mSystemThreads.push_back(std::thread(&VMSystem_t::threadMain, system.get()));
+    for (auto& system : mSystems)
+        mSystemThreads.push_back(std::make_shared<ThreadedRunnable_t>(system));
 
 	log(Info, "VM system threads initialised.");
 
@@ -137,30 +124,35 @@ void VM::run()
 	// Set to running.
 	mStatus = Running;
 
-	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
-	{
-		// Run through each of the systems simultaneously.
-		for (auto& system : mSystems)
-			system->notify(Runnable_t::Status::Run);
-
-		// Re-synchronise the system (lock), check for any exceptions.
+    if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::ST)
+    {
         for (auto& system : mSystems)
-            system->synchronise();
-	}
-	else
+            system->run();
+    }
+	else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SEQ)
 	{
 		// Run through each of the systems sequentially.
-		for (auto& system : mSystems)
+		for (auto& systemThread : mSystemThreads)
 		{
-			// Notify system.
-            log(Debug, "Calling notify for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
-			system->notify(Runnable_t::Status::Run);
-
-			// Re-synchronise the system (lock), check for any exceptions.
-            log(Debug, "Calling synchronise for system %s.", DEBUG_SYSTEM_STRINGS[system->getContext()]);
-            system->synchronise();
+            systemThread->notify(ThreadedRunnable_t::Command::Run);
+            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
 		}
 	}
+    else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SIM)
+    {
+        // Run through each of the systems simultaneously.
+        for (auto& systemThread : mSystemThreads)
+            systemThread->notify(ThreadedRunnable_t::Command::Run);
+
+        // Re-synchronise the system (lock), check for any exceptions.
+        for (auto& systemThread : mSystemThreads)
+            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
+    }
+    else
+    {
+        // Huh?
+        throw std::runtime_error("VM runtime mode not recognised...? How did you screw this up???");
+    }
 
 	// Set to paused.
 	mStatus = Paused;
@@ -168,28 +160,15 @@ void VM::run()
 
 void VM::stop()
 {
-	// Notify systems.
-	for (auto& system : mSystems)
-	{
-        system->notify(Runnable_t::Status::Stop);
-        system->synchronise();
-	}
-
-	// Join existing system threads.
-	for (auto& thread : mSystemThreads)
-		thread.join();
-
-	// Destroy the old threads.
-	mSystemThreads.empty();
+	// Stop system threads.
+    mSystemThreads.clear();
 
 	log(Info, "VM system threads destroyed.");
 
-	// Destroy the resources.
-	mResources.reset();
+    // Deconstruct systems.
+    mSystems.clear();
 
-	log(Info, "VM resources destroyed.");
-
-	// Destroy the systems.
+	// Deconstruct individual systems.
 	mSystemEEDmac = nullptr;
 	mSystemEETimers = nullptr;
 	mSystemEEIntc = nullptr;
@@ -211,6 +190,11 @@ void VM::stop()
 	mSystems.empty();
 
 	log(Info, "VM systems destroyed.");
+
+    // Destroy the resources.
+    mResources.reset();
+
+    log(Info, "VM resources destroyed.");
 
 	// Set to stopped.
 	mStatus = Stopped;

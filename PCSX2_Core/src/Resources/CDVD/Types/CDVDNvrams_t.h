@@ -50,62 +50,62 @@ public:
 	/*
 	Reads the next block (16 bytes / 8 hwords) to the buffer given, based upon the config access parameters set.
 	*/
-	virtual void readConfigBlock(const System_t context, u16 * buffer) = 0;
+	virtual void readConfigBlock(const Context_t context, u16 * buffer) = 0;
 
 	/*
 	Writes the next block (16 bytes / 8 hwords) from the buffer given, based upon the config access parameters set.
 	*/
-	virtual void writeConfigBlock(const System_t context, const u16 * buffer) = 0;
+	virtual void writeConfigBlock(const Context_t context, const u16 * buffer) = 0;
 
 	/*
 	Reads the console ID to the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void readConsoleID(const System_t context, u16 * buffer) const = 0;
+	virtual void readConsoleID(const Context_t context, u16 * buffer) const = 0;
 
 	/*
 	Writes the console ID from the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void writeConsoleID(const System_t context, const u16 * buffer) = 0;
+	virtual void writeConsoleID(const Context_t context, const u16 * buffer) = 0;
 	
 	/*
 	Reads the iLink ID to the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void readILinkID(const System_t context, u16 * buffer) const = 0;
+	virtual void readILinkID(const Context_t context, u16 * buffer) const = 0;
 
 	/*
 	Writes the iLink ID from the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void writeILinkID(const System_t context, const u16 * buffer) = 0;
+	virtual void writeILinkID(const Context_t context, const u16 * buffer) = 0;
 
 	/*
 	Reads the model number to the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void readModelNumber(const System_t context, u16 * buffer) const = 0;
+	virtual void readModelNumber(const Context_t context, u16 * buffer) const = 0;
 
 	/*
 	Writes the model number from of the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void writeModelNumber(const System_t context, const u16 * buffer) = 0;
+	virtual void writeModelNumber(const Context_t context, const u16 * buffer) = 0;
 
 	/*
 	Reads the region params to the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void readRegionParams(const System_t context, u16 * buffer) const = 0;
+	virtual void readRegionParams(const Context_t context, u16 * buffer) const = 0;
 
 	/*
 	Writes the region params from of the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void writeRegionParams(const System_t context, const u16 * buffer) = 0;
+	virtual void writeRegionParams(const Context_t context, const u16 * buffer) = 0;
 
 	/*
 	Reads the MAC to the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void readMAC(const System_t context, u16 * buffer) const = 0;
+	virtual void readMAC(const Context_t context, u16 * buffer) const = 0;
 
 	/*
 	Writes the MAC from of the buffer given (8 bytes / 4 hwords).
 	*/
-	virtual void writeMAC(const System_t context, const u16 * buffer) = 0;
+	virtual void writeMAC(const Context_t context, const u16 * buffer) = 0;
 
 protected:
 	/*
@@ -139,16 +139,16 @@ public:
 	Implementation of the NVRAM virtual functions.
 	Contains magic size and offset values - see within functions for the values.
 	*/
-	void readConfigBlock(const System_t context, u16 * buffer) override;
-	void writeConfigBlock(const System_t context, const u16 * buffer) override;
-	void readConsoleID(const System_t context, u16 * buffer) const override;
-	void writeConsoleID(const System_t context, const u16 * buffer) override;
-	void readILinkID(const System_t context, u16 * buffer) const override;
-	void writeILinkID(const System_t context, const u16 * buffer) override;
-	void readModelNumber(const System_t context, u16 * buffer) const override;
-	void writeModelNumber(const System_t context, const u16 * buffer) override;
-	void readRegionParams(const System_t context, u16 * buffer) const override;
-	void writeRegionParams(const System_t context, const u16 * buffer) override;
-	void readMAC(const System_t context, u16 * buffer) const override;
-	void writeMAC(const System_t context, const u16 * buffer) override;
+	void readConfigBlock(const Context_t context, u16 * buffer) override;
+	void writeConfigBlock(const Context_t context, const u16 * buffer) override;
+	void readConsoleID(const Context_t context, u16 * buffer) const override;
+	void writeConsoleID(const Context_t context, const u16 * buffer) override;
+	void readILinkID(const Context_t context, u16 * buffer) const override;
+	void writeILinkID(const Context_t context, const u16 * buffer) override;
+	void readModelNumber(const Context_t context, u16 * buffer) const override;
+	void writeModelNumber(const Context_t context, const u16 * buffer) override;
+	void readRegionParams(const Context_t context, u16 * buffer) const override;
+	void writeRegionParams(const Context_t context, const u16 * buffer) override;
+	void readMAC(const Context_t context, u16 * buffer) const override;
+	void writeMAC(const Context_t context, const u16 * buffer) override;
 };

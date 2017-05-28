@@ -28,7 +28,7 @@
 #include "Resources/EE/DMAC/Types/EEDmacRegisters_t.h"
 
 EECoreInterpreter_s::EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter) :
-	VMSystem_t(vm, System_t::EECore),
+	VMSystem_t(vm, Context_t::EECore),
 	mVU0Interpreter(vuInterpreter), 
 	mEECoreInstruction(0),
 	mException(), 

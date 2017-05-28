@@ -143,7 +143,7 @@ const SPU2CoreTable::SPU2CoreInfo_t* SPU2Core_t::getInfo() const
 	return SPU2CoreTable::getInfo(this);
 }
 
-bool SPU2Core_t::isADMAEnabled(const System_t context) const
+bool SPU2Core_t::isADMAEnabled(const Context_t context) const
 {
 	return ((getCoreID() + 1) & ADMAS->readHword(context)) > 0;
 }

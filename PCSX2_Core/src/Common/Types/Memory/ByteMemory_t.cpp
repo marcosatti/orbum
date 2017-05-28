@@ -24,7 +24,7 @@ void ByteMemory_t::initialise()
 	std::vector<u8>(mMemoryByteSize, 0).swap(mMemory);
 }
 
-u8 ByteMemory_t::readByte(const System_t context, const size_t byteOffset)
+u8 ByteMemory_t::readByte(const Context_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mMemory[byteOffset]);
@@ -34,7 +34,7 @@ u8 ByteMemory_t::readByte(const System_t context, const size_t byteOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u8 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -44,7 +44,7 @@ u8 ByteMemory_t::readByte(const System_t context, const size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeByte(const System_t context, const size_t byteOffset, const u8 value)
+void ByteMemory_t::writeByte(const Context_t context, const size_t byteOffset, const u8 value)
 {
 	// Get host storage address.
 	u8 * hostMemoryAddress = reinterpret_cast<u8*>(&mMemory[byteOffset]);
@@ -56,7 +56,7 @@ void ByteMemory_t::writeByte(const System_t context, const size_t byteOffset, co
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u8 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -64,7 +64,7 @@ void ByteMemory_t::writeByte(const System_t context, const size_t byteOffset, co
 #endif
 }
 
-u16 ByteMemory_t::readHword(const System_t context, const size_t byteOffset)
+u16 ByteMemory_t::readHword(const Context_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[byteOffset]);
@@ -74,7 +74,7 @@ u16 ByteMemory_t::readHword(const System_t context, const size_t byteOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u16 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -84,7 +84,7 @@ u16 ByteMemory_t::readHword(const System_t context, const size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeHword(const System_t context, const size_t byteOffset, const u16 value)
+void ByteMemory_t::writeHword(const Context_t context, const size_t byteOffset, const u16 value)
 {
 	// Get host storage address.
 	u16 * hostMemoryAddress = reinterpret_cast<u16*>(&mMemory[byteOffset]);
@@ -96,7 +96,7 @@ void ByteMemory_t::writeHword(const System_t context, const size_t byteOffset, c
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u16 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -104,7 +104,7 @@ void ByteMemory_t::writeHword(const System_t context, const size_t byteOffset, c
 #endif
 }
 
-u32 ByteMemory_t::readWord(const System_t context, const size_t byteOffset)
+u32 ByteMemory_t::readWord(const Context_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[byteOffset]);
@@ -114,7 +114,7 @@ u32 ByteMemory_t::readWord(const System_t context, const size_t byteOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u32 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -124,7 +124,7 @@ u32 ByteMemory_t::readWord(const System_t context, const size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeWord(const System_t context, const size_t byteOffset, const u32 value)
+void ByteMemory_t::writeWord(const Context_t context, const size_t byteOffset, const u32 value)
 {
 	// Get host storage address.
 	u32 * hostMemoryAddress = reinterpret_cast<u32*>(&mMemory[byteOffset]);
@@ -136,7 +136,7 @@ void ByteMemory_t::writeWord(const System_t context, const size_t byteOffset, co
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u32 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -144,7 +144,7 @@ void ByteMemory_t::writeWord(const System_t context, const size_t byteOffset, co
 #endif
 }
 
-u64 ByteMemory_t::readDword(const System_t context, const size_t byteOffset)
+u64 ByteMemory_t::readDword(const Context_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -154,7 +154,7 @@ u64 ByteMemory_t::readDword(const System_t context, const size_t byteOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Read u64 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -164,7 +164,7 @@ u64 ByteMemory_t::readDword(const System_t context, const size_t byteOffset)
 	return *hostMemoryAddress;
 }
 
-void ByteMemory_t::writeDword(const System_t context, const size_t byteOffset, const u64 value)
+void ByteMemory_t::writeDword(const Context_t context, const size_t byteOffset, const u64 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddress = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -176,7 +176,7 @@ void ByteMemory_t::writeDword(const System_t context, const size_t byteOffset, c
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
+		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #else
 		log(Debug, "%s: %s Write u64 @ 0x%08X, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -184,7 +184,7 @@ void ByteMemory_t::writeDword(const System_t context, const size_t byteOffset, c
 #endif
 }
 
-u128 ByteMemory_t::readQword(const System_t context, const size_t byteOffset)
+u128 ByteMemory_t::readQword(const Context_t context, const size_t byteOffset)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -195,7 +195,7 @@ u128 ByteMemory_t::readQword(const System_t context, const size_t byteOffset)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Read u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #endif
@@ -205,7 +205,7 @@ u128 ByteMemory_t::readQword(const System_t context, const size_t byteOffset)
 	return u128(*hostMemoryAddressLSB, *hostMemoryAddressMSB);
 }
 
-void ByteMemory_t::writeQword(const System_t context, const size_t byteOffset, const u128 value)
+void ByteMemory_t::writeQword(const Context_t context, const size_t byteOffset, const u128 value)
 {
 	// Get host storage address.
 	u64 * hostMemoryAddressLSB = reinterpret_cast<u64*>(&mMemory[byteOffset]);
@@ -219,7 +219,7 @@ void ByteMemory_t::writeQword(const System_t context, const size_t byteOffset, c
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_SYSTEM_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
+		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = 0x%X, ValueMSB = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddressLSB, *hostMemoryAddressMSB);
 #else
 		log(Debug, "%s: %s Write u128 @ 0x%08X, ValueLSB = %d, ValueMSB = %d.", SYSTEM_STR[context], mMnemonic.c_str(), byteOffset, *hostMemoryAddress);
 #endif
@@ -232,13 +232,13 @@ size_t ByteMemory_t::getSize()
 	return mMemoryByteSize;
 }
 
-void ByteMemory_t::read(const System_t context, const size_t byteOffset, u8 * buffer, const size_t byteLength)
+void ByteMemory_t::read(const Context_t context, const size_t byteOffset, u8 * buffer, const size_t byteLength)
 {
 	for (size_t i = 0; i < byteLength; i++)
 		buffer[i] = readByte(context, byteOffset + i);
 }
 
-void ByteMemory_t::write(const System_t context, const size_t byteOffset, const u8 * buffer, const size_t byteLength)
+void ByteMemory_t::write(const Context_t context, const size_t byteOffset, const u8 * buffer, const size_t byteLength)
 {
 	for (size_t i = 0; i < byteLength; i++)
 		writeByte(context, byteOffset + i, buffer[i]);

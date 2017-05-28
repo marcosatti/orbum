@@ -72,12 +72,12 @@ public:
 	When 1 is written to the CIS0-9, SIS, MEIS or BEIS bits, they are cleared (set to 0).
 	When 1 is written to the CIM0-9, SIM or MEIM bits, they are reversed.
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised.
 	*/
-	bool isInterruptPending(const System_t context);
+	bool isInterruptPending(const Context_t context);
 };
 
 /*

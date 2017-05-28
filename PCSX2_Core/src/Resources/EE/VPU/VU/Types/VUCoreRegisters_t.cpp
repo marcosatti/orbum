@@ -22,7 +22,7 @@ VUCoreRegister_Status_t::VUCoreRegister_Status_t(const char * mnemonic, const bo
 	registerField(Fields::DS, "DS", 11, 1, 0);
 }
 
-void VUCoreRegister_Status_t::setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value)
+void VUCoreRegister_Status_t::setFieldValueSticky(const Context_t context, const int fieldIndex, const u32 value)
 {
 	BitfieldRegister32_t::setFieldValue(context, fieldIndex, value);
 
@@ -35,7 +35,7 @@ void VUCoreRegister_Status_t::setFieldValueSticky(const System_t context, const 
 	}
 }
 
-void VUCoreRegister_Status_t::clearFlags(const System_t context)
+void VUCoreRegister_Status_t::clearFlags(const Context_t context)
 {
 	setFieldValueSticky(context, Fields::Z, 0);
 	setFieldValueSticky(context, Fields::S, 0);
@@ -67,7 +67,7 @@ VUCoreRegister_MAC_t::VUCoreRegister_MAC_t(const char * mnemonic, const bool deb
 	registerField(Fields::Ox, "Ox", 15, 1, 0);
 }
 
-void VUCoreRegister_MAC_t::setFieldValueStatus(const System_t context, const int fieldIndex, const u32 value)
+void VUCoreRegister_MAC_t::setFieldValueStatus(const Context_t context, const int fieldIndex, const u32 value)
 {
 	setFieldValue(context, fieldIndex, value);
 
@@ -80,7 +80,7 @@ void VUCoreRegister_MAC_t::setFieldValueStatus(const System_t context, const int
 		throw std::runtime_error("VU MAC register set flag stick index out of range.");
 }
 
-void VUCoreRegister_MAC_t::updateVectorField(const System_t context, const int fieldIndex, const FPUFlags_t& flags)
+void VUCoreRegister_MAC_t::updateVectorField(const Context_t context, const int fieldIndex, const FPUFlags_t& flags)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -94,7 +94,7 @@ void VUCoreRegister_MAC_t::updateVectorField(const System_t context, const int f
 	setFieldValueStatus(context, FIELD_FLAGS_SET[3], flags.OF ? 1 : 0);
 }
 
-void VUCoreRegister_MAC_t::clearVectorField(const System_t context, const int fieldIndex)
+void VUCoreRegister_MAC_t::clearVectorField(const Context_t context, const int fieldIndex)
 {
 	// Determine if its for x, y, z, w.
 	// Note: currently there is a bug in the visual c++ compiler which prevents this array being defined in the Fields struct.
@@ -135,7 +135,7 @@ VUCoreRegister_Clipping_t::VUCoreRegister_Clipping_t(const char * mnemonic, cons
 	registerField(Fields::PosZ_3, "PosZ_3", 23, 1, 0);
 }
 
-void VUCoreRegister_Clipping_t::shiftJudgement(const System_t context)
+void VUCoreRegister_Clipping_t::shiftJudgement(const Context_t context)
 {
 	writeWord(context, (readWord(context) << 6) & 0x00FFFFFF);
 }

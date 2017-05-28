@@ -20,7 +20,7 @@ public:
 	/*
 	Returns the register value, and sets it to 0 after (IOP context only).
 	*/
-	u32 readWord(const System_t context) override;
+	u32 readWord(const Context_t context) override;
 };
 
 /*
@@ -109,5 +109,5 @@ public:
 	/*
 	AND's the new value with old value (IOP context only).
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };

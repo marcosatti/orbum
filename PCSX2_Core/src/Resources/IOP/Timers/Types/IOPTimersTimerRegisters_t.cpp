@@ -16,7 +16,7 @@ bool IOPTimersTimerRegister_COUNT_t::isOverflowed()
 	return temp;
 }
 
-void IOPTimersTimerRegister_COUNT_t::reset(const System_t context)
+void IOPTimersTimerRegister_COUNT_t::reset(const Context_t context)
 {
 	writeWord(context, 0);
 }
@@ -37,7 +37,7 @@ IOPTimersTimerRegister_HWORD_COUNT_t::IOPTimersTimerRegister_HWORD_COUNT_t(const
 {
 }
 
-void IOPTimersTimerRegister_HWORD_COUNT_t::increment(const System_t context, const size_t value)
+void IOPTimersTimerRegister_HWORD_COUNT_t::increment(const Context_t context, const size_t value)
 {
 	u32 temp = readWord(context);
 
@@ -66,7 +66,7 @@ IOPTimersTimerRegister_WORD_COUNT_t::IOPTimersTimerRegister_WORD_COUNT_t(const c
 {
 }
 
-void IOPTimersTimerRegister_WORD_COUNT_t::increment(const System_t context, const size_t value)
+void IOPTimersTimerRegister_WORD_COUNT_t::increment(const Context_t context, const size_t value)
 {
 	u64 temp = static_cast<u64>(readWord(context));
 
@@ -112,11 +112,11 @@ IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemon
 	registerField(Fields::Prescale1, "Prescale1", 13, 2, 0);
 }
 
-void IOPTimersTimerRegister_MODE_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void IOPTimersTimerRegister_MODE_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		mCount->reset(context);
 
 	// Update clock source.
@@ -126,11 +126,11 @@ void IOPTimersTimerRegister_MODE_t::writeHword(const System_t context, const siz
 	mIsEnabled = (getFieldValue(context, Fields::IrqOnOF) || getFieldValue(context, Fields::IrqOnTarget));
 }
 
-void IOPTimersTimerRegister_MODE_t::writeWord(const System_t context, const u32 value)
+void IOPTimersTimerRegister_MODE_t::writeWord(const Context_t context, const u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		mCount->reset(context);
 
 	// Update clock source.
@@ -150,7 +150,7 @@ ClockSource_t IOPTimersTimerRegister_MODE_t::getClockSource() const
 	return mClockSource;
 }
 
-void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const System_t context)
+void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t context)
 {
 	if (mTimerIndex > 5)
 		throw std::runtime_error("Invalid IOP timer index to determine clock source!");

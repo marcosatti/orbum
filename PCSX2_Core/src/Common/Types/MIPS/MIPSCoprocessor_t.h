@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Types/System_t.h"
+#include "Common/Types/System/Context_t.h"
 
 /*
 Represents a MIPS co-processor base class.
@@ -14,7 +14,7 @@ public:
 	/*
 	Checks if this coprocessor is usable. As the coprocessor can be used within different CPU's, it is left as virtual.
 	*/
-	virtual bool isCoprocessorUsable(const System_t context) const = 0;
+	virtual bool isCoprocessorUsable(const Context_t context) const = 0;
 
 	/*
 	An initialisation function for the coprocessor state.

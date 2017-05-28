@@ -92,12 +92,12 @@ public:
 	/*
 	(IOP context) Reset any FL bits written to.
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised, and sets the master interrupt bit appropriately.
 	*/
-	bool isInterruptPending(const System_t context);
+	bool isInterruptPending(const Context_t context);
 };
 
 /*
@@ -187,12 +187,12 @@ public:
 	/*
 	(IOP context) Reset any FL bits written to.
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
 	Returns if there is a pending interrupt that should be raised, and sets the master interrupt bit in ICR0 appropriately.
 	*/
-	bool isInterruptPending(const System_t context);
+	bool isInterruptPending(const Context_t context);
 
 private:
 	/*

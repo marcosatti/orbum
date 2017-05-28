@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Common/Types/EnumMap_t.h"
+#include "Common/Global/Globals.h"
+#include "Common/Types/Util/EnumMap_t.h"
 
 enum class ClockSource_t
 {

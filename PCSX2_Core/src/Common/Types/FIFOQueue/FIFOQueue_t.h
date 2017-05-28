@@ -3,8 +3,8 @@
 #include <queue>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/System_t.h"
-#include "Common/Types/DebugBaseObject_t.h"
+#include "Common/Types/System/Context_t.h"
+#include "Common/Types/Util/DebugBaseObject_t.h"
 
 /*
 Represents a FIFO queue used in, for example, the DMA transfer paths and the CDVD parameter/response FIFO's.
@@ -31,28 +31,28 @@ public:
 	Upon reading or writing to the queue when there is no data left or it is full, a runtime error is thrown.
 	The provided hword/word/dword/qword functions are wrappers around the byte functions, and should not be treated as separate interfaces (not made virtual).
 	*/
-	virtual u8 readByte(const System_t context);
-	virtual void writeByte(const System_t context, const u8 data);
-	u16 readHword(const System_t context);
-	void writeHword(const System_t context, const u16 data);
-	u32 readWord(const System_t context);
-	void writeWord(const System_t context, const u32 data);
-	u64 readDword(const System_t context);
-	void writeDword(const System_t context, const u64 data);
-	u128 readQword(const System_t context);
-	void writeQword(const System_t context, const u128 data);
+	virtual u8 readByte(const Context_t context);
+	virtual void writeByte(const Context_t context, const u8 data);
+	u16 readHword(const Context_t context);
+	void writeHword(const Context_t context, const u16 data);
+	u32 readWord(const Context_t context);
+	void writeWord(const Context_t context, const u32 data);
+	u64 readDword(const Context_t context);
+	void writeDword(const Context_t context, const u64 data);
+	u128 readQword(const Context_t context);
+	void writeQword(const Context_t context, const u128 data);
 	
 	/*
 	Reads bytes to the buffer given.
 	This is a wrapper around the readByte function, and should not be treated as a separate interface (not made virtual).
 	*/
-	void read(const System_t context, u8 * buffer, const size_t length);
+	void read(const Context_t context, u8 * buffer, const size_t length);
 
 	/*
 	Writes bytes from the buffer given.
 	This is a wrapper around the writeByte function, and should not be treated as a separate interface (not made virtual).
 	*/
-	void write(const System_t context, const u8 * buffer, const size_t length);
+	void write(const Context_t context, const u8 * buffer, const size_t length);
 
 	/*
 	Gets the current number of 8-bit data elements in the queue.

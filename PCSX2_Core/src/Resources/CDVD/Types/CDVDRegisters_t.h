@@ -19,7 +19,7 @@ public:
 	Sets pending command to true.
 	Throws error when it has already been set.
 	*/
-	void writeByte(const System_t context, const u8 value) override;
+	void writeByte(const Context_t context, const u8 value) override;
 
 	/*
 	Pending command.
@@ -41,8 +41,8 @@ public:
 	/*
 	Redirect read/write calls to resources.
 	*/
-	u8 readByte(const System_t context) override;
-	void writeByte(const System_t context, const u8 value) override;
+	u8 readByte(const Context_t context) override;
+	void writeByte(const Context_t context, const u8 value) override;
 
 	/*
 	Resources.

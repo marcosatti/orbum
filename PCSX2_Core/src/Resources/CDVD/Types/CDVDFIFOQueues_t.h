@@ -18,8 +18,8 @@ public:
 	/*
 	Updates the Ready register upon reads/writes with magic values, based on if FIFO is empty.
 	*/
-	u8 readByte(const System_t context) override;
-	void writeByte(const System_t context, const u8 data) override;
+	u8 readByte(const Context_t context) override;
+	void writeByte(const Context_t context, const u8 data) override;
 	
 private:
 	/*

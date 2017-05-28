@@ -7,7 +7,7 @@ LinkRegister32_t::LinkRegister32_t(const char * mnemonic, const bool debugReads,
 {
 }
 
-void LinkRegister32_t::setLinkAddress(const System_t context)
+void LinkRegister32_t::setLinkAddress(const Context_t context)
 {
 	writeWord(context, mPCRegister->readWord(context) + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2);
 }
