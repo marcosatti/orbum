@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h"
 
@@ -12,7 +12,7 @@ The VIF is responsible for processing and transfering data to the VU units, or o
 
 For each cycle @ BUSCLK, the VIF operates on 4 x 32-bits at a time, totaling the size of 1 DMA transfer unit of 128-bits.
 */
-class VIF_s : public VMSystem_s
+class VIF_s : public VMSystem_t
 {
 public:
 	VIF_s(VM * vm, const int vifCoreIndex);

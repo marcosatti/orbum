@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/System_t.h"
-#include "Common/Types/DebugBaseObject_t.h"
+#include "Common/Types/System/Context_t.h"
+#include "Common/Types/Util/DebugBaseObject_t.h"
 
 /*
 A simple memory object which is constructed to the (byte) size specified, and optional mnemonic which is used for debugging/logging.
@@ -27,14 +27,14 @@ public:
 	/*
 	Read or write a value of a given type, to the specified hword index (hwordOffset).
 	*/
-	virtual u16 readHword(const System_t context, const size_t hwordOffset);
-	virtual void writeHword(const System_t context, const size_t hwordOffset, const u16 value);
-	virtual u32 readWord(const System_t context, const size_t hwordOffset);
-	virtual void writeWord(const System_t context, const size_t hwordOffset, const u32 value);
-	virtual u64 readDword(const System_t context, const size_t hwordOffset);
-	virtual void writeDword(const System_t context, const size_t hwordOffset, const u64 value);
-	virtual u128 readQword(const System_t context, const size_t hwordOffset);
-	virtual void writeQword(const System_t context, const size_t hwordOffset, const u128 value);
+	virtual u16 readHword(const Context_t context, const size_t hwordOffset);
+	virtual void writeHword(const Context_t context, const size_t hwordOffset, const u16 value);
+	virtual u32 readWord(const Context_t context, const size_t hwordOffset);
+	virtual void writeWord(const Context_t context, const size_t hwordOffset, const u32 value);
+	virtual u64 readDword(const Context_t context, const size_t hwordOffset);
+	virtual void writeDword(const Context_t context, const size_t hwordOffset, const u64 value);
+	virtual u128 readQword(const Context_t context, const size_t hwordOffset);
+	virtual void writeQword(const Context_t context, const size_t hwordOffset, const u128 value);
 
 	/*
 	Gets the storage length.
@@ -45,13 +45,13 @@ public:
 	Reads hwords to the buffer given.
 	This is a wrapper around the readHword function, and should not be treated as a separate interface (not made virtual).
 	*/
-	void read(const System_t context, const size_t hwordOffset, u16 * buffer, const size_t hwordLength);
+	void read(const Context_t context, const size_t hwordOffset, u16 * buffer, const size_t hwordLength);
 
 	/*
 	Writes hwords from the buffer given.
 	This is a wrapper around the writeHword function, and should not be treated as a separate interface (not made virtual).
 	*/
-	void write(const System_t context, const size_t hwordOffset, const u16 * buffer, const size_t hwordLength);
+	void write(const Context_t context, const size_t hwordOffset, const u16 * buffer, const size_t hwordLength);
 
 	/*
 	Read in a raw file to the memory (byte copy).

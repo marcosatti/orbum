@@ -14,7 +14,7 @@ public:
 	/*
 	Sets the return (link) address, which is equal to the current PC + 8.
 	*/
-	void setLinkAddress(const System_t context);
+	void setLinkAddress(const Context_t context);
 
 private:
 	/*

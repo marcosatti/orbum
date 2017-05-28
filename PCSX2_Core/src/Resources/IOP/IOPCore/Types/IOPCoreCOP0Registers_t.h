@@ -76,26 +76,26 @@ public:
 
 	When pushing, clears the expunged bits to 0 (poping contains old values).
 	*/
-	void pushExceptionStack(const System_t context);
-	void popExceptionStack(const System_t context);
+	void pushExceptionStack(const Context_t context);
+	void popExceptionStack(const Context_t context);
 
 	/*
 	Returns if all exceptions are currently masked ( = NOT ENABLED).
 	TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
 	*/
-	bool isExceptionsMasked(const System_t context);
+	bool isExceptionsMasked(const Context_t context);
 
 	/*
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master IEc bit.
 	*/
-	bool isInterruptsMasked(const System_t context);
+	bool isInterruptsMasked(const Context_t context);
 
 	/*
 	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
 	Does so by checking the IM[irq] bit.
 	*/
-	bool isIRQMasked(const System_t context, const int irq);
+	bool isIRQMasked(const Context_t context, const int irq);
 };
 
 /*
@@ -118,19 +118,19 @@ public:
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
 	*/
-	void clearIP(const System_t context);
+	void clearIP(const Context_t context);
 
 	/*
 	Sets the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQLine(const System_t context, const int irq);
+	void setIRQLine(const Context_t context, const int irq);
 
 	/*
 	Clears the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses ~AND).
 	*/
-	void clearIRQLine(const System_t context, const int irq);
+	void clearIRQLine(const Context_t context, const int irq);
 };
 
 /*

@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Tables/SPU2CoreTable.h"
-#include "Common/Types/System_t.h"
+#include "Common/Types/System/Context_t.h"
 
 class SPU2CoreVoice_t;
 class SPU2CoreRegister_CHAN0_t;
@@ -176,7 +176,7 @@ public:
 	From PCSX2's SPU2-X dma.cpp.
 	TODO: Investigate more, this does not make much sense to me. The SPU2 overview manual mentions ADMA reads and writes, but only writes are ever used it seems.
 	*/
-	bool isADMAEnabled(const System_t context) const;
+	bool isADMAEnabled(const Context_t context) const;
 
 private:
 	/*

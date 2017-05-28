@@ -9,7 +9,7 @@
 #include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
 VIF_s::VIF_s(VM * vm, const int vifCoreIndex) :
-	VMSystem_s(vm, vifCoreIndex == 0 ? System_t::VIF0 : System_t::VIF1),
+	VMSystem_t(vm, vifCoreIndex == 0 ? Context_t::VIF0 : Context_t::VIF1),
 	mVIFUnitIndex(vifCoreIndex),
 	mDMAPacket(),
 	mVIFcodeInstruction(0)

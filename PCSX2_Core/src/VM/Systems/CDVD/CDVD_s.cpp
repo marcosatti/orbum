@@ -9,7 +9,7 @@
 #include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
 CDVD_s::CDVD_s(VM * vm) :
-	VMSystem_s(vm, System_t::CDVD)
+	VMSystem_t(vm, Context_t::CDVD)
 {
 	mCDVD = getVM()->getResources()->CDVD;
 }

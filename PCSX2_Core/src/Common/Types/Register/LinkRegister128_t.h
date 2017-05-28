@@ -14,7 +14,7 @@ public:
 	/*
 	Sets the return (link) address, which is equal to the current PC + 8. Only the lower 64-bits are used, with the MSB's being 0 (ie: 32-bits effective).
 	*/
-	void setLinkAddress(const System_t context);
+	void setLinkAddress(const Context_t context);
 
 private:
 	/*

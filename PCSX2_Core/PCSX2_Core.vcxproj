@@ -443,8 +443,8 @@
     <ClInclude Include="src\Common\Tables\IOPCoreSyscallTable.h" />
     <ClInclude Include="src\Common\Tables\IOPDmacChannelTable.h" />
     <ClInclude Include="src\Common\Types\ByteMMU\MapperFIFOQueueByteMMU_t.h" />
-    <ClInclude Include="src\Common\Types\DebugBaseObject_t.h" />
-    <ClInclude Include="src\Common\Types\EnumMap_t.h" />
+    <ClInclude Include="src\Common\Types\Util\DebugBaseObject_t.h" />
+    <ClInclude Include="src\Common\Types\Util\EnumMap_t.h" />
     <ClInclude Include="src\Common\Types\FIFOQueue\FIFOQueue_t.h" />
     <ClInclude Include="src\Common\Types\Memory\HwordMemory_t.h" />
     <ClInclude Include="src\Common\Types\MIPS\MIPSOperatingContext_t.h" />
@@ -462,12 +462,14 @@
     <ClInclude Include="src\Common\Types\Register\Register8_t.h" />
     <ClInclude Include="src\Common\Types\Register\MapperRegister16Register32_t.h" />
     <ClInclude Include="src\Common\Types\Register\ConstantRegister16_t.h" />
+    <ClInclude Include="src\Common\Types\Util\Runnable_t.h" />
+    <ClInclude Include="src\Common\Types\Util\ThreadedRunnable_t.h" />
     <ClInclude Include="src\Common\Util\FPUUtil\FPUFlags_t.h" />
     <ClInclude Include="src\Resources\CDVD\Types\CDVDFIFOQueues_t.h" />
     <ClInclude Include="src\Resources\CDVD\Types\CDVDNvrams_t.h" />
     <ClInclude Include="src\Resources\CDVD\Types\CDVDRegisters_t.h" />
     <ClInclude Include="src\Resources\GS\CRTC\CRTC_t.h" />
-    <ClInclude Include="src\Common\Types\ClockSource_t.h" />
+    <ClInclude Include="src\Common\Types\System\ClockSource_t.h" />
     <ClInclude Include="src\Resources\IOP\DMAC\Types\IOPDMAtag_t.h" />
     <ClInclude Include="src\Resources\IOP\IOPCore\Types\IOPCoreInstruction_t.h" />
     <ClInclude Include="src\Resources\SIO2\SIO2_t.h" />
@@ -480,7 +482,7 @@
     <ClInclude Include="src\Resources\SPU2\Types\SPU2Registers_t.h" />
     <ClInclude Include="src\VM\Systems\CDVD\CDVD_s.h" />
     <ClInclude Include="src\VM\Systems\GS\CRTC\CRTC_s.h" />
-    <ClInclude Include="src\Common\Types\System_t.h" />
+    <ClInclude Include="src\Common\Types\System\Context_t.h" />
     <ClInclude Include="src\Resources\Common\Types\SBUSRegisters_t.h" />
     <ClInclude Include="src\Resources\Common\Types\SBUSFIFOQueues_t.h" />
     <ClInclude Include="src\Resources\IOP\DMAC\IOPDmac_t.h" />
@@ -574,7 +576,7 @@
     <ClInclude Include="src\Common\Types\MIPS\MIPSInstruction_t.h" />
     <ClInclude Include="src\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.h" />
     <ClInclude Include="src\Common\Types\ByteMMU\ByteMMU_t.h" />
-    <ClInclude Include="src\VM\Types\VMSystem_s.h" />
+    <ClInclude Include="src\VM\Types\VMSystem_t.h" />
     <ClInclude Include="src\VM\VM.h" />
     <ClInclude Include="src\Resources\EE\EECore\Types\EECoreException_t.h" />
     <ClInclude Include="src\Common\Types\Register\Register32_t.h" />
@@ -614,6 +616,7 @@
     <ClCompile Include="src\Common\Types\Register\Register8_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\MapperRegister16Register32_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\ConstantRegister16_t.cpp" />
+    <ClCompile Include="src\Common\Types\Util\ThreadedRunnable_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDFIFOQueues_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDNvrams_t.cpp" />
     <ClCompile Include="src\Resources\CDVD\Types\CDVDRegisters_t.cpp" />
@@ -738,7 +741,7 @@
     <ClCompile Include="src\VM\Systems\EE\EECoreInterpreter\EECoreInterpreter_s.cpp" />
     <ClCompile Include="src\Common\Types\ByteMMU\ByteMMU_t.cpp" />
     <ClCompile Include="src\VM\Systems\SPU2\SPU2_s.cpp" />
-    <ClCompile Include="src\VM\Types\VMSystem_s.cpp" />
+    <ClCompile Include="src\VM\Types\VMSystem_t.cpp" />
     <ClCompile Include="src\VM\VM.cpp" />
     <ClCompile Include="src\Common\Types\Register\Register32_t.cpp" />
     <ClCompile Include="src\Common\Types\Register\ConstantRegister128_t.cpp" />

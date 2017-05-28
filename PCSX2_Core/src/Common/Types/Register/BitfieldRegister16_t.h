@@ -29,10 +29,10 @@ public:
 	Override write functions to sync with the bitfield map.
 	If enabled, log all field contents on read/write.
 	*/
-	u8 readByte(const System_t context, const size_t arrayIndex) override;
-	void writeByte(const System_t context, const size_t arrayIndex, const u8 value) override;
-	u16 readHword(const System_t context) override;
-	void writeHword(const System_t context, const u16 value) override;
+	u8 readByte(const Context_t context, const size_t arrayIndex) override;
+	void writeByte(const Context_t context, const size_t arrayIndex, const u8 value) override;
+	u16 readHword(const Context_t context) override;
+	void writeHword(const Context_t context, const u16 value) override;
 
 	/*
 	Registers a field that can be used with this class. Must be done first before any other methods can be used to manipulate fields.
@@ -43,12 +43,12 @@ public:
 	/*
 	Returns the value associated with the parsed field. fieldName must reference an already registered field name otherwise the class will be left in an inconsistent state and undefined results may happen.
 	*/
-	virtual u16 getFieldValue(const System_t context, const int fieldIndex);
+	virtual u16 getFieldValue(const Context_t context, const int fieldIndex);
 
 	/*
 	Sets a field value using the parsed value. fieldName must reference an already registered field name otherwise the class will be left in an inconsitent state and undefined results may happen.
 	*/
-	virtual void setFieldValue(const System_t context, const int fieldIndex, const u16 value);
+	virtual void setFieldValue(const Context_t context, const int fieldIndex, const u16 value);
 
 	/*
 	Debug logs all bitfield mnemonics with values.

@@ -13,7 +13,7 @@
 #include "Resources/GS/GS_t.h"
 
 EETimers_s::EETimers_s(VM * vm) :
-	VMSystem_s(vm, System_t::EETimers),
+	VMSystem_t(vm, Context_t::EETimers),
 	mTimer(nullptr)
 {
 	// Set resource pointer variables.

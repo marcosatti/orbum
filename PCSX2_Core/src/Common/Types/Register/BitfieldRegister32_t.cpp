@@ -20,7 +20,7 @@ void BitfieldRegister32_t::initialiseAllFields()
 		UW = MathUtil::insertMaskedValue32(UW, field.mInitialValue, field.mStartPosition, field.mLength);
 }
 
-u8 BitfieldRegister32_t::readByte(const System_t context, const size_t arrayIndex)
+u8 BitfieldRegister32_t::readByte(const Context_t context, const size_t arrayIndex)
 {
 	auto temp = Register32_t::readByte(context, arrayIndex);
 
@@ -32,7 +32,7 @@ u8 BitfieldRegister32_t::readByte(const System_t context, const size_t arrayInde
 	return temp;
 }
 
-void BitfieldRegister32_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
+void BitfieldRegister32_t::writeByte(const Context_t context, const size_t arrayIndex, const u8 value)
 {
 	Register32_t::writeByte(context, arrayIndex, value);
 
@@ -42,7 +42,7 @@ void BitfieldRegister32_t::writeByte(const System_t context, const size_t arrayI
 #endif
 }
 
-u16 BitfieldRegister32_t::readHword(const System_t context, const size_t arrayIndex)
+u16 BitfieldRegister32_t::readHword(const Context_t context, const size_t arrayIndex)
 {
 	auto temp = Register32_t::readHword(context, arrayIndex);
 
@@ -54,7 +54,7 @@ u16 BitfieldRegister32_t::readHword(const System_t context, const size_t arrayIn
 	return temp;
 }
 
-void BitfieldRegister32_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void BitfieldRegister32_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	Register32_t::writeHword(context, arrayIndex, value);
 
@@ -64,7 +64,7 @@ void BitfieldRegister32_t::writeHword(const System_t context, const size_t array
 #endif
 }
 
-u32 BitfieldRegister32_t::readWord(const System_t context)
+u32 BitfieldRegister32_t::readWord(const Context_t context)
 {
 	auto temp = Register32_t::readWord(context);
 
@@ -76,7 +76,7 @@ u32 BitfieldRegister32_t::readWord(const System_t context)
 	return temp;
 }
 
-void BitfieldRegister32_t::writeWord(const System_t context, const u32 value)
+void BitfieldRegister32_t::writeWord(const Context_t context, const u32 value)
 {
 	Register32_t::writeWord(context, value);
 
@@ -92,12 +92,12 @@ void BitfieldRegister32_t::registerField(const int fieldIndex, const char* field
 	initialiseAllFields();
 }
 
-u32 BitfieldRegister32_t::getFieldValue(const System_t context, const int fieldIndex)
+u32 BitfieldRegister32_t::getFieldValue(const Context_t context, const int fieldIndex)
 {
 	return MathUtil::extractMaskedValue32(readWord(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
-void BitfieldRegister32_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void BitfieldRegister32_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	writeWord(context, MathUtil::insertMaskedValue32(readWord(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
 }

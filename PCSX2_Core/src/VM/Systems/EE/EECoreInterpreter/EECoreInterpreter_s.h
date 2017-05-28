@@ -5,7 +5,7 @@
 #include "Common/Global/Globals.h"
 #include "Common/Tables/EECoreExceptionsTable.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/EE/EECore/Types/EECoreInstruction_t.h"
 #include "Resources/EE/EECore/Types/EECoreException_t.h"
@@ -24,7 +24,7 @@ This is done in order to avoid reimplementing the same function twice.
 
 TODO: Finish documentation.
 */
-class EECoreInterpreter_s : public VMSystem_s
+class EECoreInterpreter_s : public VMSystem_t
 {
 public:
 	EECoreInterpreter_s(VM * vm, const std::shared_ptr<VUInterpreter_s> & vuInterpreter);

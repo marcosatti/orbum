@@ -26,7 +26,7 @@ IOPCoreCOP0_t::IOPCoreCOP0_t() :
 {
 }
 
-bool IOPCoreCOP0_t::isCoprocessorUsable(const System_t context) const
+bool IOPCoreCOP0_t::isCoprocessorUsable(const Context_t context) const
 {
 	// First check for kernel mode - the COP0 is always available in this mode. If not, then check that CU[bit 0] == 1 (ie: >0) in the status register.
 	if (getCPUOperatingContext(context) == MIPSCPUOperatingContext_t::Kernel)
@@ -43,7 +43,7 @@ void IOPCoreCOP0_t::initialise()
 		if (reg != nullptr) reg->initialise();
 }
 
-MIPSCPUOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext(const System_t context) const
+MIPSCPUOperatingContext_t IOPCoreCOP0_t::getCPUOperatingContext(const Context_t context) const
 {
 	const u32 KUc = Status->getFieldValue(context, IOPCoreCOP0Register_Status_t::Fields::KUc);
 

@@ -18,12 +18,12 @@ EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic
 	registerField(Fields::TAG, "TAG", 16, 16, 0);
 }
 
-EEDmacChannelTable::LogicalMode_t EEDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context)
+EEDmacChannelTable::LogicalMode_t EEDmacChannelRegister_CHCR_t::getLogicalMode(const Context_t context)
 {
 	return static_cast<EEDmacChannelTable::LogicalMode_t>(getFieldValue(context, Fields::MOD));
 }
 
-EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection(const System_t context)
+EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection(const Context_t context)
 {
 	return static_cast<EEDmacChannelTable::Direction_t>(getFieldValue(context, Fields::DIR));
 }
@@ -42,7 +42,7 @@ EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
-void EEDmacChannelRegister_MADR_t::increment(const System_t context)
+void EEDmacChannelRegister_MADR_t::increment(const Context_t context)
 {
 	setFieldValue(context, Fields::ADDR, getFieldValue(context, Fields::ADDR) + 0x10);
 }
@@ -52,7 +52,7 @@ EEDmacChannelRegister_QWC_t::EEDmacChannelRegister_QWC_t(const char * mnemonic, 
 {
 }
 
-void EEDmacChannelRegister_QWC_t::decrement(const System_t context)
+void EEDmacChannelRegister_QWC_t::decrement(const Context_t context)
 {
 	writeWord(context, readWord(context) - 1);
 }
@@ -64,7 +64,7 @@ EEDmacChannelRegister_TADR_t::EEDmacChannelRegister_TADR_t(const char * mnemonic
 	registerField(Fields::SPR, "SPR", 31, 1, 0);
 }
 
-void EEDmacChannelRegister_TADR_t::increment(const System_t context)
+void EEDmacChannelRegister_TADR_t::increment(const Context_t context)
 {
 	setFieldValue(context, Fields::ADDR, getFieldValue(context, Fields::ADDR) + 0x10);
 }
@@ -81,7 +81,7 @@ EEDmacChannelRegister_SADR_t::EEDmacChannelRegister_SADR_t(const char * mnemonic
 {
 }
 
-void EEDmacChannelRegister_SADR_t::increment(const System_t context)
+void EEDmacChannelRegister_SADR_t::increment(const Context_t context)
 {
 	writeWord(context, readWord(context) + 0x10);
 }
@@ -91,10 +91,10 @@ EEDmacChannelRegister_TO_CHCR_t::EEDmacChannelRegister_TO_CHCR_t(const char * mn
 {
 }
 
-void EEDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, const u32 value)
+void EEDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	u32 temp = value;
-	if (context == System_t::EECore)
+	if (context == Context_t::EECore)
 		temp |= (1 << 0);
 
 	EEDmacChannelRegister_CHCR_t::writeWord(context, temp);
@@ -105,10 +105,10 @@ EEDmacChannelRegister_FROM_CHCR_t::EEDmacChannelRegister_FROM_CHCR_t(const char 
 {
 }
 
-void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, const u32 value)
+void EEDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	u32 temp = value;
-	if (context == System_t::EECore)
+	if (context == Context_t::EECore)
 		temp &= ~(1 << 0);
 
 	EEDmacChannelRegister_CHCR_t::writeWord(context, temp);
@@ -120,7 +120,7 @@ EEDmacChannelRegister_SIF0_CHCR_t::EEDmacChannelRegister_SIF0_CHCR_t(const char 
 {
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_FROM_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -139,7 +139,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const u32 value)
+void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	EEDmacChannelRegister_FROM_CHCR_t::writeWord(context, value);
 
@@ -154,7 +154,7 @@ void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const 
 		handleSBUSUpdateFinish(context);
 }
 
-void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
+void EEDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateFinish(const Context_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x20));
@@ -167,7 +167,7 @@ EEDmacChannelRegister_SIF1_CHCR_t::EEDmacChannelRegister_SIF1_CHCR_t(const char 
 {
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_TO_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -186,7 +186,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const u32 value)
+void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	EEDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
@@ -201,7 +201,7 @@ void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const 
 		throw std::runtime_error("EE SIF1 channel tried to start in the FROM direction! Not possible.");
 }
 
-void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart(const System_t context) const
+void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x4000);
@@ -213,7 +213,7 @@ EEDmacChannelRegister_SIF2_CHCR_t::EEDmacChannelRegister_SIF2_CHCR_t(const char 
 {
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	EEDmacChannelRegister_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -232,7 +232,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, co
 	}
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const u32 value)
+void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	EEDmacChannelRegister_CHCR_t::writeWord(context, value);
 	
@@ -247,13 +247,13 @@ void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const 
 		handleSBUSUpdateFinish(context);
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart(const System_t context) const
+void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic value.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x8000);
 }
 
-void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
+void EEDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish(const Context_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x80));

@@ -19,7 +19,7 @@ public:
 	VM * vm;
 	EECoreInterpreter_s * core;
 
-	virtual void SetUp()
+	void SetUp() override
 	{
 		VMOptions vmOptions =
 		{
@@ -29,15 +29,15 @@ public:
 			"",
 			"",
 			0,
-			false,
+			VMOptions::ST,
 			{}
 		};
 		
 		vm = new VM(vmOptions);
-		core = dynamic_cast<EECoreInterpreter_s*>(vm->mSystems[System_t::EECore].get());
+        core = vm->mSystemEECore.get();
 	}
 
-	virtual void TearDown() 
+	void TearDown() override
 	{
 		core = nullptr;
 		delete vm;

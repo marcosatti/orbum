@@ -19,8 +19,8 @@ public:
 	Trigger updates to the SBUS_F300 register (magic values).
 	Based upon PCSX2's "sif2.cpp".
 	*/
-	u8 readByte(const System_t context) override;
-	void writeByte(const System_t context, const u8 data) override;
+	u8 readByte(const Context_t context) override;
+	void writeByte(const Context_t context, const u8 data) override;
 
 private:
 	/*
@@ -32,5 +32,5 @@ private:
 	Logic for updating the SBUS_F300 register.
 	Checks for a full or empty FIFO queue and sets the appropriate magic value.
 	*/
-	void handleSBUSUpdate(const System_t context) const;
+	void handleSBUSUpdate(const Context_t context) const;
 };

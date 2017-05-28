@@ -6,12 +6,12 @@ PairRegister16_t::PairRegister16_t(const char* mnemonic, bool debugReads, bool d
 {
 }
 
-u32 PairRegister16_t::readPairWord(const System_t context)
+u32 PairRegister16_t::readPairWord(const Context_t context)
 {
 	return (mHighRegister16->readHword(context) << 16) | readHword(context);
 }
 
-void PairRegister16_t::writePairWord(const System_t context, const u32 value)
+void PairRegister16_t::writePairWord(const Context_t context, const u32 value)
 {
 	mHighRegister16->writeHword(context, static_cast<u16>(value >> 16));
 	writeHword(context, static_cast<u16>(value));

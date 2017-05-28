@@ -1,11 +1,16 @@
 #include <cstdarg>
+#include <mutex>
 
 #include "Common/Global/Log.h"
 
 void (*LOG_CALLBACK_FUNCPTR)(const LogLevel_t level, const std::string & message);
 
+std::mutex logMutex;
 void log(const LogLevel_t level, const char* format, ...)
 {
+    // Lock logging to thread.
+    std::lock_guard<std::mutex> lock(logMutex);
+
 	// Construct message.
 	va_list args;
 	va_start(args, format);

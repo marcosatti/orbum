@@ -3,8 +3,8 @@
 #include <string>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/System_t.h"
-#include "Common/Types/DebugBaseObject_t.h"
+#include "Common/Types/System/Context_t.h"
+#include "Common/Types/Util/DebugBaseObject_t.h"
 
 /*
 Register type and size definitions.
@@ -33,8 +33,8 @@ public:
 	/*
 	Read/write functions to access the register, with subclassed functionality. 
 	*/
-	virtual u8 readByte(const System_t context);
-	virtual void writeByte(const System_t context, const u8 value);
+	virtual u8 readByte(const Context_t context);
+	virtual void writeByte(const Context_t context, const u8 value);
 
 	/*
 	Initialise register (set back to default value).

@@ -37,12 +37,12 @@ public:
 	Overriden write functions to trigger the update of the sticky bit flags.
 	See VU Users Manual page 40.
 	*/
-	void setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value);
+	void setFieldValueSticky(const Context_t context, const int fieldIndex, const u32 value);
 
 	/*
 	Clear the non-sticky flags, which should be done on each instruction that modifies this register.
 	*/
-	void clearFlags(const System_t context);
+	void clearFlags(const Context_t context);
 };
 
 /*
@@ -85,15 +85,15 @@ public:
 	Set bit field function to trigger changes to the associated VU status register.
 	See VU Users Manual page 39.
 	*/
-	void setFieldValueStatus(const System_t context, const int fieldIndex, const u32 value);
+	void setFieldValueStatus(const Context_t context, const int fieldIndex, const u32 value);
 
 	/*
 	Updates or clear all flags (Z, S, U, O) for the given vector field, of which at least one function should be run on each instruction that modifies this register.
 	Mapping: fieldIndex    0 -> 3
 	         vector field  x -> w
 	*/
-	void updateVectorField(const System_t context, const int fieldIndex, const FPUFlags_t & flags);
-	void clearVectorField(const System_t context, const int fieldIndex);
+	void updateVectorField(const Context_t context, const int fieldIndex, const FPUFlags_t & flags);
+	void clearVectorField(const Context_t context, const int fieldIndex);
 
 private:
 
@@ -153,7 +153,7 @@ public:
 	See VU Users Manual page 75 & 202.
 	Designed to be used in the CLIP instruction first, then set the clipping results with setFieldValue()
 	*/
-	void shiftJudgement(const System_t context);
+	void shiftJudgement(const Context_t context);
 };
 
 /*

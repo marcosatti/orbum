@@ -16,16 +16,16 @@ class ConstantByteMemory_t : public ByteMemory_t
 public:
 	ConstantByteMemory_t(const char * mnemonic, bool debugReads, bool debugWrites, const size_t byteSize, const u64 D = 0);
 
-	u8 readByte(const System_t context, const size_t byteOffset) override;
-	void writeByte(const System_t context, const size_t byteOffset, const u8 value) override;
-	u16 readHword(const System_t context, const size_t byteOffset) override;
-	void writeHword(const System_t context, const size_t byteOffset, const u16 value) override;
-	u32 readWord(const System_t context, const size_t byteOffset) override;
-	void writeWord(const System_t context, const size_t byteOffset, const u32 value) override;
-	u64 readDword(const System_t context, const size_t byteOffset) override;
-	void writeDword(const System_t context, const size_t byteOffset, const u64 value) override;
-	u128 readQword(const System_t context, const size_t byteOffset) override;
-	void writeQword(const System_t context, const size_t byteOffset, const u128 value) override;
+	u8 readByte(const Context_t context, const size_t byteOffset) override;
+	void writeByte(const Context_t context, const size_t byteOffset, const u8 value) override;
+	u16 readHword(const Context_t context, const size_t byteOffset) override;
+	void writeHword(const Context_t context, const size_t byteOffset, const u16 value) override;
+	u32 readWord(const Context_t context, const size_t byteOffset) override;
+	void writeWord(const Context_t context, const size_t byteOffset, const u32 value) override;
+	u64 readDword(const Context_t context, const size_t byteOffset) override;
+	void writeDword(const Context_t context, const size_t byteOffset, const u64 value) override;
+	u128 readQword(const Context_t context, const size_t byteOffset) override;
+	void writeQword(const Context_t context, const size_t byteOffset, const u128 value) override;
 
 	/*
 	Needed by the ByteMMU_t handler in order to map it. 

@@ -7,27 +7,27 @@ ConstantRegister128_t::ConstantRegister128_t(const char * mnemonic, const bool d
 	UQ = Q;
 }
 
-void ConstantRegister128_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
+void ConstantRegister128_t::writeByte(const Context_t context, const size_t arrayIndex, const u8 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantRegister128_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void ConstantRegister128_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantRegister128_t::writeWord(const System_t context, const size_t arrayIndex, const u32 value)
+void ConstantRegister128_t::writeWord(const Context_t context, const size_t arrayIndex, const u32 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantRegister128_t::writeDword(const System_t context, const size_t arrayIndex, const u64 value)
+void ConstantRegister128_t::writeDword(const Context_t context, const size_t arrayIndex, const u64 value)
 {
 	// Do not write value (constant register).
 }
 
-void ConstantRegister128_t::writeQword(const System_t context, const u128 value)
+void ConstantRegister128_t::writeQword(const Context_t context, const u128 value)
 {
 	// Do not write value (constant register).
 }

@@ -34,11 +34,11 @@ IOPIntcRegister_STAT_t::IOPIntcRegister_STAT_t(const char * mnemonic, const bool
 	registerField(Fields::FDMA, "FDMA", 25, 1, 0);
 }
 
-void IOPIntcRegister_STAT_t::writeWord(const System_t context, const u32 value)
+void IOPIntcRegister_STAT_t::writeWord(const Context_t context, const u32 value)
 {
 	// Preprocessing for IOP: AND with old value (acknowledge bits).
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp = readWord(context) & value;
 
 	BitfieldRegister32_t::writeWord(context, temp);
@@ -80,11 +80,11 @@ IOPIntcRegister_CTRL_t::IOPIntcRegister_CTRL_t(const char * mnemonic, const bool
 {
 }
 
-u32 IOPIntcRegister_CTRL_t::readWord(const System_t context)
+u32 IOPIntcRegister_CTRL_t::readWord(const Context_t context)
 {
 	auto temp = Register32_t::readWord(context);
 
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		writeWord(context, 0);
 
 	return temp;

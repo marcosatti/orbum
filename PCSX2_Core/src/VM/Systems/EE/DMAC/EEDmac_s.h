@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/EE/DMAC/Types/EEDMAtag_t.h"
 
@@ -28,7 +28,7 @@ TODO: Speedups can be done here:
  - Dont need to transfer 1-qword at a time.
  - Dont need to turn on cycle stealing if requested? Kind of redundant in an emulator.
 */
-class EEDmac_s : public VMSystem_s
+class EEDmac_s : public VMSystem_t
 {
 public:
 	EEDmac_s(VM * vm);

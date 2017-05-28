@@ -22,7 +22,7 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 
 IOPCoreInterpreter_s::IOPCoreInterpreter_s(VM * vm) :
-	VMSystem_s(vm, System_t::IOPCore),
+	VMSystem_t(vm, Context_t::IOPCore),
 	mIOPCoreInstruction(0)
 {
 	mIOPCore = getVM()->getResources()->IOP->IOPCore;

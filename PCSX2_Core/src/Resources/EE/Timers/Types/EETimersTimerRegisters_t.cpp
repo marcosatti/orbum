@@ -9,7 +9,7 @@ EETimersTimerRegister_COUNT_t::EETimersTimerRegister_COUNT_t(const char * mnemon
 {
 }
 
-void EETimersTimerRegister_COUNT_t::increment(const System_t context, const size_t value)
+void EETimersTimerRegister_COUNT_t::increment(const Context_t context, const size_t value)
 {
 	mPrescaleCount += value;
 	while (mPrescaleCount >= mPrescale)
@@ -35,7 +35,7 @@ bool EETimersTimerRegister_COUNT_t::isOverflowed()
 	return temp;
 }
 
-void EETimersTimerRegister_COUNT_t::reset(const System_t context)
+void EETimersTimerRegister_COUNT_t::reset(const Context_t context)
 {
 	writeWord(context, 0);
 }
@@ -68,11 +68,11 @@ EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic
 	registerField(Fields::OVFF, "OVFF", 11, 1, 0);
 }
 
-void EETimersTimerRegister_MODE_t::writeWord(const System_t context, const u32 value)
+void EETimersTimerRegister_MODE_t::writeWord(const Context_t context, const u32 value)
 {
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	u32 temp = value;
-	if (context == System_t::EECore)
+	if (context == Context_t::EECore)
 	{
 		u32 regValue = readWord(context);
 		temp = (regValue & 0xFFFFF3FF) | ((regValue & 0xC00) & (~(value & 0xC00)));
@@ -81,14 +81,14 @@ void EETimersTimerRegister_MODE_t::writeWord(const System_t context, const u32 v
 	BitfieldRegister32_t::writeWord(context, temp);
 	
 	// Test if the CUE flag is 1 - need to reset the associated Count register if set.
-	if (context == System_t::EECore)
+	if (context == Context_t::EECore)
 	{
 		if (getFieldValue(context, Fields::CUE))
 			mCount->reset(context);
 	}
 }
 
-bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const System_t context)
+bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const Context_t context)
 {
 	return ((getFieldValue(context, Fields::CLKS) == 3) && (getFieldValue(context, Fields::GATS) == 0));
 }
@@ -98,7 +98,7 @@ ClockSource_t EETimersTimerRegister_MODE_t::getClockSource() const
 	return mClockSource;
 }
 
-void EETimersTimerRegister_MODE_t::handleClockSourceUpdate(const System_t context)
+void EETimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t context)
 {
 	if (getFieldValue(context, Fields::CLKS) == 0x3)
 	{

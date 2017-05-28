@@ -131,7 +131,7 @@ public:
 	/*
 	Check if this VU unit is usable in macro mode from the EE Core by checking the EE Core's COP0.Status.CU2 bit.
 	*/
-	bool isCoprocessorUsable(const System_t context) const override;
+	bool isCoprocessorUsable(const Context_t context) const override;
 
 private:
 	/*

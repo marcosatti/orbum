@@ -3,8 +3,10 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Memory/ROByteMemory_t.h"
+#include "Common/Types/Util/ThreadedRunnable_t.h"
 
 #include "VM/VM.h"
+#include "VM/Types/VMSystem_t.h"
 #include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
 #include "VM/Systems/EE/DMAC/EEDmac_s.h"
 #include "VM/Systems/EE/Timers/EETimers_s.h"
@@ -26,20 +28,26 @@
 
 VM::VM(const VMOptions & vmOptions) : 
 	mVMOptions(vmOptions),
-	mStatus(Stopped),
-	mSystemThreadsInitialised(false)
+	mStatus(Stopped)
 {
 	// Initialise everything.
 	reset();
 }
 
+VM::~VM()
+{
+	// Call stop to handle thread cleanup.
+	stop();
+}
+
 void VM::reset()
 {
-	// Set to running.
-	mStatus = Running;
-
 	// Initialise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
+
+    // Set status to stopped.
+    mStatus = Stopped;
+
 	log(Info, "VM reset started...");
 
 	// Initialise resources and set system bias speeds.
@@ -57,61 +65,45 @@ void VM::reset()
 
 	log(Info, "VM roms initialised.");
 
-	// Create components.
-	auto vu0temp = std::make_shared<VUInterpreter_s>(this, 0);
-	mSystems =
-	{
-		std::make_shared<EECoreInterpreter_s>(this, vu0temp),
-		std::make_shared<EEDmac_s>(this),
-		std::make_shared<EETimers_s>(this),
-		std::make_shared<EEIntc_s>(this),
-		nullptr,
-		nullptr,
-		std::make_shared<VIF_s>(this, 0),
-		vu0temp,
-		std::make_shared<VIF_s>(this, 1),
-		std::make_shared<VUInterpreter_s>(this, 1),
-		std::make_shared<IOPCoreInterpreter_s>(this),
-		std::make_shared<IOPDmac_s>(this),
-		std::make_shared<IOPTimers_s>(this),
-		std::make_shared<IOPIntc_s>(this),
-		std::make_shared<CDVD_s>(this),
-		std::make_shared<SPU2_s>(this),
-		std::make_shared<GSCore_s>(this),
-		std::make_shared<CRTC_s>(this),
-	};
+	// Create systems.
+	mSystemEEDmac = std::make_shared<EEDmac_s>(this);
+	mSystemEETimers = std::make_shared<EETimers_s>(this);
+	mSystemEEIntc = std::make_shared<EEIntc_s>(this);
+	// mSystemGIF = std::make_shared<GIF_s>(this);
+	// mSystemIPU = std::make_shared<IPU_s>(this);
+	mSystemVIF0 = std::make_shared<VIF_s>(this, 0);
+	mSystemVU0 = std::make_shared<VUInterpreter_s>(this, 0);
+	mSystemVIF1 = std::make_shared<VIF_s>(this, 1);
+	mSystemVU1 = std::make_shared<VUInterpreter_s>(this, 1);
+	mSystemIOPCore = std::make_shared<IOPCoreInterpreter_s>(this);
+	mSystemIOPDmac = std::make_shared<IOPDmac_s>(this);
+	mSystemIOPTimers = std::make_shared<IOPTimers_s>(this);
+	mSystemIOPIntc = std::make_shared<IOPIntc_s>(this);
+	mSystemCDVD = std::make_shared<CDVD_s>(this);
+	mSystemSPU2 = std::make_shared<SPU2_s>(this);
+	mSystemGSCore = std::make_shared<GSCore_s>(this);
+	mSystemCRTC = std::make_shared<CRTC_s>(this);
+	mSystemEECore = std::make_shared<EECoreInterpreter_s>(this, mSystemVU0);
+	mSystems = { mSystemEECore, mSystemEEDmac, mSystemEETimers, mSystemEEIntc, /* mSystemGIF,       mSystemIPU, */  mSystemVIF0, mSystemVU0,
+                 mSystemVIF1,   mSystemVU1,    mSystemIOPCore,  mSystemIOPDmac,   mSystemIOPTimers, mSystemIOPIntc, mSystemCDVD, mSystemSPU2,
+	             mSystemGSCore, mSystemCRTC };
 
-	// Initialise components.
+	// Initialise systems.
 	for (auto& system : mSystems)
-		if (system.second != nullptr) 
-			system.second->initialise();
+		system->initialise();
 
 	log(Info, "VM systems initialised.");
 
-	// Use multithreaded systems if enabled.
-	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
-	{
-		// Clear any existing threads... could be dangerous since we have detached them... TODO: look into this.
-		mSystemThreads.empty();
+	// Create system threads.
+    for (auto& system : mSystems)
+        mSystemThreads.push_back(std::make_shared<ThreadedRunnable_t>(system));
 
-		// Initialise threads.
-		for (auto& system : mSystems)
-			if (system.second != nullptr)
-				mSystemThreads.push_back(std::thread(&VMSystem_s::threadLoop, &(*system.second)));
+	log(Info, "VM system threads initialised.");
 
-		// Detach threads.
-		for (auto& thread : mSystemThreads)
-			thread.detach();
+	// Reset done, set status to paused now (threads created will exit otherwise).
+	mStatus = Paused;
 
-		// Set threaded state to initialised.
-		mSystemThreadsInitialised = true;
-	}
-	else
-	{
-		mSystemThreadsInitialised = false;
-	}
-
-	log(Info, "VM reset done.");
+	log(Info, "VM reset done, now paused.");
 }
 
 void VM::reset(const VMOptions& options)
@@ -122,79 +114,98 @@ void VM::reset(const VMOptions& options)
 
 void VM::run()
 {
-	auto& Clock = getResources()->Clock;
+	// Reset() must have been called before attempting to run.
+	if (mStatus == Stopped)
+		throw std::runtime_error("VM needs to be reset first before running!");
 
-	if (mVMOptions.USE_MULTI_THREADED_SYSTEMS)
+	// Produce ticks (independent clock sources) for the systems to use.
+	getResources()->Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
+
+	// Set to running.
+	mStatus = Running;
+
+    if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::ST)
+    {
+        for (auto& system : mSystems)
+            system->run();
+    }
+	else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SEQ)
 	{
-		// Running in multithreaded mode.
-		if (!mSystemThreadsInitialised)
-			throw std::runtime_error("VM MT mode was not setup before running!");
-
-		// Aquire all mutex locks first (common sync point).
-		for (auto& system : mSystems)
+		// Run through each of the systems sequentially.
+		for (auto& systemThread : mSystemThreads)
 		{
-			if (system.second != nullptr) 
-				system.second->mThreadMutex.lock();
-		}
-
-		// Produce ticks (independent clock sources) for the systems to use.
-		Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
-
-		// Unlock the mutexes.
-		for (auto& system : mSystems)
-		{
-			if (system.second != nullptr)
-			{
-				system.second->mThreadRun = true;
-				system.second->mThreadMutex.unlock();
-			}
-		}
-
-		// Notify them.
-		for (auto& system : mSystems)
-		{
-			if (system.second != nullptr)
-				system.second->mThreadSync.notify_all();
+            systemThread->notify(ThreadedRunnable_t::Command::Run);
+            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
 		}
 	}
-	else
-	{
-		// Running in single threaded mode.
-		// Produce ticks (independent clock sources) for the systems to use.
-		Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
+    else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SIM)
+    {
+        // Run through each of the systems simultaneously.
+        for (auto& systemThread : mSystemThreads)
+            systemThread->notify(ThreadedRunnable_t::Command::Run);
 
-		// Run through each of the systems separately.
-		for (auto& system : mSystems)
-		{
-			if (system.second != nullptr)
-				system.second->run();
-		}
-	}
+        // Re-synchronise the system (lock), check for any exceptions.
+        for (auto& systemThread : mSystemThreads)
+            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
+    }
+    else
+    {
+        // Huh?
+        throw std::runtime_error("VM runtime mode not recognised...? How did you screw this up???");
+    }
+
+	// Set to paused.
+	mStatus = Paused;
 }
 
 void VM::stop()
 {
+	// Stop system threads.
+    mSystemThreads.clear();
+
+	log(Info, "VM system threads destroyed.");
+
+    // Deconstruct systems.
+    mSystems.clear();
+
+	// Deconstruct individual systems.
+	mSystemEEDmac = nullptr;
+	mSystemEETimers = nullptr;
+	mSystemEEIntc = nullptr;
+	// mSystemGIF = nullptr;
+	// mSystemIPU = nullptr;
+	mSystemVIF0 = nullptr;
+	mSystemVU0 = nullptr;
+	mSystemVIF1 = nullptr;
+	mSystemVU1 = nullptr;
+	mSystemIOPCore = nullptr;
+	mSystemIOPDmac = nullptr;
+	mSystemIOPTimers = nullptr;
+	mSystemIOPIntc = nullptr;
+	mSystemCDVD = nullptr;
+	mSystemSPU2 = nullptr;
+	mSystemGSCore = nullptr;
+	mSystemCRTC = nullptr;
+	mSystemEECore = nullptr;
+	mSystems.empty();
+
+	log(Info, "VM systems destroyed.");
+
+    // Destroy the resources.
+    mResources.reset();
+
+    log(Info, "VM resources destroyed.");
+
 	// Set to stopped.
 	mStatus = Stopped;
 
-	// Set system threads state to not initialised.
-	mSystemThreadsInitialised = false;
-
 	log(Info, "VM stopped ok.");
+	LOG_CALLBACK_FUNCPTR = nullptr;
 }
 
-VM::~VM()
-{
-}
-
-const VM::VMStatus& VM::getStatus() const
+VM::VMStatus VM::getStatus() const
 {
 	return mStatus;
-}
-
-void VM::setStatus(const VMStatus& status)
-{
-	mStatus = status;
 }
 
 const std::shared_ptr<Resources_t> & VM::getResources() const

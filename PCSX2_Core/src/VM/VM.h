@@ -3,12 +3,26 @@
 #include <memory>
 #include <thread>
 #include <vector>
-
-#include "Common/Types/EnumMap_t.h"
+#include <utility>
 
 #include "VM/Types/VMOptions.h"
-#include "VM/Types/VMSystem_s.h"
 
+class ThreadedRunnable_t;
+class VMSystem_t;
+class EECoreInterpreter_s;
+class EEDmac_s;
+class EETimers_s;
+class EEIntc_s;
+class VIF_s;
+class VUInterpreter_s;
+class IOPCoreInterpreter_s;
+class IOPDmac_s;
+class IOPTimers_s;
+class IOPIntc_s;
+class CDVD_s;
+class SPU2_s;
+class GSCore_s;
+class CRTC_s;
 class Resources_t;
 
 /*
@@ -21,26 +35,51 @@ public:
 	enum VMStatus
 	{
 		Running,
-		Exception,
+		Paused,
 		Stopped
 	};
 
-	VM(const VMOptions & vmOptions);
+	/*
+	Constructs the VM through a call to reset().
+	*/
+	explicit VM(const VMOptions & vmOptions);
+
+	/*
+	Deconstructs the VM through a call to stop().
+	*/
 	~VM();
 	
+	/*
+	Resets the VM by setting up logging, resources and system threads.
+	After a reset, the VM state is set to paused and is ready to run.
+	*/
 	void reset();
 	void reset(const VMOptions & options);
+
+	/*
+	Runs through one time step (set in the VM options), and then pauses the VM state.
+	If a call to run is made while the VM state is in the stopped state, a runtime_error will be thrown.
+	*/
 	void run();
+
+	/*
+	Stops the VM by deconstructing the logging, resources and system threads.
+	After calling stop, the VM state will need to be reset again before calling run.
+	*/
 	void stop();
 
 	/*
-	VM state functions.
+	Returns the VM state.
 	*/
-	const VMStatus & getStatus() const;
-	void setStatus(const VMStatus & status);
+	VMStatus getStatus() const;
+
+	/*
+	Returns a reference to the PS2 resources.
+	*/
 	const std::shared_ptr<Resources_t> & getResources() const;
 
 private:
+	// Friend classes for the unit test functions.
 	friend class TEST_EECoreInterpreter_s;
 	friend class TEST_IOPCoreInterpreter_s;
 
@@ -52,14 +91,29 @@ private:
 	std::shared_ptr<Resources_t> mResources;
 
 	/*
-	PS2 systems / components.
+	PS2 system logic engines.
 	*/
-	EnumMap_t<System_t, std::shared_ptr<VMSystem_s>> mSystems;
+	std::shared_ptr<EECoreInterpreter_s> mSystemEECore;
+	std::shared_ptr<EEDmac_s> mSystemEEDmac;
+	std::shared_ptr<EETimers_s> mSystemEETimers;
+	std::shared_ptr<EEIntc_s> mSystemEEIntc;
+	std::shared_ptr<VIF_s> mSystemVIF0;
+	std::shared_ptr<VIF_s> mSystemVIF1;
+	std::shared_ptr<VUInterpreter_s> mSystemVU0;
+	std::shared_ptr<VUInterpreter_s> mSystemVU1;
+	std::shared_ptr<IOPCoreInterpreter_s> mSystemIOPCore;
+	std::shared_ptr<IOPDmac_s> mSystemIOPDmac;
+	std::shared_ptr<IOPTimers_s> mSystemIOPTimers;
+	std::shared_ptr<IOPIntc_s> mSystemIOPIntc;
+	std::shared_ptr<CDVD_s> mSystemCDVD;
+	std::shared_ptr<SPU2_s> mSystemSPU2;
+	std::shared_ptr<GSCore_s> mSystemGSCore;
+	std::shared_ptr<CRTC_s> mSystemCRTC;
+	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
 
-	/*
-	Threading resources.
-	*/
-	std::vector<std::thread> mSystemThreads;
-	bool mSystemThreadsInitialised;
+    /*
+    Multi-threaded resources.
+    */
+    std::vector<std::shared_ptr<ThreadedRunnable_t>> mSystemThreads;
 };
 

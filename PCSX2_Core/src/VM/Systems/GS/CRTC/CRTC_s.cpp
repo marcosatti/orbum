@@ -14,7 +14,7 @@
 #include "Resources/GS/CRTC/CRTC_t.h"
 
 CRTC_s::CRTC_s(VM * vm) :
-	VMSystem_s(vm, System_t::CRTC)
+	VMSystem_t(vm, Context_t::CRTC)
 {
 	mCRTC = getVM()->getResources()->GS->CRTC;
 	mClock = getVM()->getResources()->Clock;
@@ -45,8 +45,8 @@ int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		
 		// Send HBlank start.
 		// mCRTC->mInHblank = true;
-		mClock->addSystemClockTicks(System_t::EETimers, ClockSource_t::HBlankClock, 1);
-		mClock->addSystemClockTicks(System_t::IOPTimers, ClockSource_t::HBlankClock, 1);
+		mClock->addSystemClockTicks(Context_t::EETimers, ClockSource_t::HBlankClock, 1);
+		mClock->addSystemClockTicks(Context_t::IOPTimers, ClockSource_t::HBlankClock, 1);
 
 		// Copy scanline to host render.
 		// getVM()->renderScanline(&raw_row_pixels);

@@ -50,7 +50,7 @@ public:
 	Checks if the FPU coprocessor (FPU) is usable. 
 	Can be used by the component calling this to raise a EECoreException_t(coprocessor unusable) if not available.
 	*/
-	bool isCoprocessorUsable(const System_t context) const override;
+	bool isCoprocessorUsable(const Context_t context) const override;
 
 private:
 	/*

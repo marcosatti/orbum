@@ -8,7 +8,7 @@ CDVDRegister_NS_COMMAND_t::CDVDRegister_NS_COMMAND_t(const char * mnemonic, cons
 {
 }
 
-void CDVDRegister_NS_COMMAND_t::writeByte(const System_t context, const u8 value)
+void CDVDRegister_NS_COMMAND_t::writeByte(const Context_t context, const u8 value)
 {
 	if (mPendingCommand)
 		throw std::runtime_error("CDVDRegister_NS_COMMAND_t already had pending command set... Oops!");
@@ -25,17 +25,17 @@ CDVDRegister_NS_RDY_DIN_t::CDVDRegister_NS_RDY_DIN_t(const char * mnemonic_READY
 {
 }
 
-u8 CDVDRegister_NS_RDY_DIN_t::readByte(const System_t context)
+u8 CDVDRegister_NS_RDY_DIN_t::readByte(const Context_t context)
 {
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		return READY->readByte(context);
 	else
 		throw std::runtime_error("CDVDRegister_NS_RDY_DIN readByte called but not from IOPCore - what are you trying to do??");
 }
 
-void CDVDRegister_NS_RDY_DIN_t::writeByte(const System_t context, const u8 value)
+void CDVDRegister_NS_RDY_DIN_t::writeByte(const Context_t context, const u8 value)
 {
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		DATA_IN->writeByte(context, value);
 	else
 		throw std::runtime_error("CDVDRegister_NS_RDY_DIN readByte called but not from IOPCore - what are you trying to do??");

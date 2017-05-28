@@ -28,7 +28,7 @@ CDVDNvram_000_t::CDVDNvram_000_t(const char * mnemonic, const bool debugReads, c
 	MainMemory = std::make_shared<HwordMemory_t>(mnemonic, debugReads, debugWrites, Constants::CDVD::SIZE_NVRAM);
 }
 
-void CDVDNvram_000_t::readConfigBlock(const System_t context, u16 * buffer)
+void CDVDNvram_000_t::readConfigBlock(const Context_t context, u16 * buffer)
 {
 	// Check for read mode (0), return magic values otherwise (TODO: check this, throws error for now).
 	if (mConfigReadWrite == 0)
@@ -72,7 +72,7 @@ void CDVDNvram_000_t::readConfigBlock(const System_t context, u16 * buffer)
 	}
 }
 
-void CDVDNvram_000_t::writeConfigBlock(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeConfigBlock(const Context_t context, const u16 * buffer)
 {
 	// Check for write mode (1), return magic values otherwise (TODO: check this, throws error for now).
 	if (mConfigReadWrite == 1)
@@ -116,52 +116,52 @@ void CDVDNvram_000_t::writeConfigBlock(const System_t context, const u16 * buffe
 	}
 }
 
-void CDVDNvram_000_t::readConsoleID(const System_t context, u16 * buffer) const
+void CDVDNvram_000_t::readConsoleID(const Context_t context, u16 * buffer) const
 {
 	MainMemory->read(context, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::writeConsoleID(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeConsoleID(const Context_t context, const u16 * buffer)
 {
 	MainMemory->write(context, 0x1C8 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::readILinkID(const System_t context, u16 * buffer) const
+void CDVDNvram_000_t::readILinkID(const Context_t context, u16 * buffer) const
 {
 	MainMemory->read(context, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::writeILinkID(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeILinkID(const Context_t context, const u16 * buffer)
 {
 	MainMemory->write(context, 0x1C0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::readModelNumber(const System_t context, u16 * buffer) const
+void CDVDNvram_000_t::readModelNumber(const Context_t context, u16 * buffer) const
 {
 	MainMemory->read(context, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::writeModelNumber(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeModelNumber(const Context_t context, const u16 * buffer)
 {
 	MainMemory->write(context, 0x1A0 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::readRegionParams(const System_t context, u16 * buffer) const
+void CDVDNvram_000_t::readRegionParams(const Context_t context, u16 * buffer) const
 {
 	MainMemory->read(context, 0x180 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::writeRegionParams(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeRegionParams(const Context_t context, const u16 * buffer)
 {
 	MainMemory->write(context, 0x180 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::readMAC(const System_t context, u16 * buffer) const
+void CDVDNvram_000_t::readMAC(const Context_t context, u16 * buffer) const
 {
 	MainMemory->read(context, 0x198 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
 
-void CDVDNvram_000_t::writeMAC(const System_t context, const u16 * buffer)
+void CDVDNvram_000_t::writeMAC(const Context_t context, const u16 * buffer)
 {
 	MainMemory->write(context, 0x198 / Constants::NUMBER_BYTES_IN_HWORD, buffer, 4);
 }

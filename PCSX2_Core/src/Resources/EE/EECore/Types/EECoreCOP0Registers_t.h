@@ -177,7 +177,7 @@ public:
 	EECoreCOP0Register_Count_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	// Convenience function that increments the count field value by the specified amount. 
-	void increment(const System_t context, const size_t value);
+	void increment(const Context_t context, const size_t value);
 };
 
 /*
@@ -235,19 +235,19 @@ public:
 	/*
 	Clears the Cause.IP bits (from bits 8 -> 15).
 	*/
-	void clearIP(const System_t context);
+	void clearIP(const Context_t context);
 
 	/*
 	Sets the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses OR).
 	*/
-	void setIRQLine(const System_t context, const int irq);
+	void setIRQLine(const Context_t context, const int irq);
 
 	/*
 	Clears the given IP[irq] bit given.
 	The other IP bits are left unchanged (uses ~AND).
 	*/
-	void clearIRQLine(const System_t context, const int irq);
+	void clearIRQLine(const Context_t context, const int irq);
 };
 
 /*
@@ -294,7 +294,7 @@ public:
 	Returns if all interrupts are currently masked ( = NOT ENABLED).
 	Does so by checking the master EIE and IE bit.
 	*/
-	bool isInterruptsMasked(const System_t context);
+	bool isInterruptsMasked(const Context_t context);
 };
 
 /*

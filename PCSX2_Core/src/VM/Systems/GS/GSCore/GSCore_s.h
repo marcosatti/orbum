@@ -3,14 +3,14 @@
 #include "Common/Global/Globals.h"
 
 #include "VM/VM.h"
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/GS/GS_t.h"
 
 /*
 GS system logic.
 */
-class GSCore_s : public VMSystem_s
+class GSCore_s : public VMSystem_t
 {
 public:
 	GSCore_s(VM * vm);

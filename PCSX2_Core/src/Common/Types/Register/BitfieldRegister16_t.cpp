@@ -20,7 +20,7 @@ void BitfieldRegister16_t::initialiseAllFields()
 		UH = MathUtil::insertMaskedValue16(UH, field.mInitialValue, field.mStartPosition, field.mLength);
 }
 
-u8 BitfieldRegister16_t::readByte(const System_t context, const size_t arrayIndex)
+u8 BitfieldRegister16_t::readByte(const Context_t context, const size_t arrayIndex)
 {
 	auto temp = Register16_t::readByte(context, arrayIndex);
 
@@ -32,7 +32,7 @@ u8 BitfieldRegister16_t::readByte(const System_t context, const size_t arrayInde
 	return temp;
 }
 
-void BitfieldRegister16_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
+void BitfieldRegister16_t::writeByte(const Context_t context, const size_t arrayIndex, const u8 value)
 {
 	Register16_t::writeByte(context, arrayIndex, value);
 
@@ -42,7 +42,7 @@ void BitfieldRegister16_t::writeByte(const System_t context, const size_t arrayI
 #endif
 }
 
-u16 BitfieldRegister16_t::readHword(const System_t context)
+u16 BitfieldRegister16_t::readHword(const Context_t context)
 {
 	auto temp = Register16_t::readHword(context);
 
@@ -54,7 +54,7 @@ u16 BitfieldRegister16_t::readHword(const System_t context)
 	return temp;
 }
 
-void BitfieldRegister16_t::writeHword(const System_t context, const u16 value)
+void BitfieldRegister16_t::writeHword(const Context_t context, const u16 value)
 {
 	Register16_t::writeHword(context, value);
 
@@ -70,12 +70,12 @@ void BitfieldRegister16_t::registerField(const int fieldIndex, const char* field
 	initialiseAllFields();
 }
 
-u16 BitfieldRegister16_t::getFieldValue(const System_t context, const int fieldIndex)
+u16 BitfieldRegister16_t::getFieldValue(const Context_t context, const int fieldIndex)
 {
 	return MathUtil::extractMaskedValue16(readHword(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
-void BitfieldRegister16_t::setFieldValue(const System_t context, const int fieldIndex, const u16 value)
+void BitfieldRegister16_t::setFieldValue(const Context_t context, const int fieldIndex, const u16 value)
 {
 	writeHword(context, MathUtil::insertMaskedValue16(readHword(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
 }

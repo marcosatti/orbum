@@ -19,7 +19,7 @@ using LogicalMode_t = IOPDmacChannelTable::LogicalMode_t;
 using Direction_t = IOPDmacChannelTable::Direction_t;
 
 IOPDmac_s::IOPDmac_s(VM * vm) :
-	VMSystem_s(vm, System_t::IOPDmac),
+	VMSystem_t(vm, Context_t::IOPDmac),
 	mChannel(nullptr),
 	mDMAtag(0, 0)
 {

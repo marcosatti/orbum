@@ -7,17 +7,17 @@ ConstantRegister32_t::ConstantRegister32_t(const char * mnemonic, const bool deb
 	UW = W;
 }
 
-void ConstantRegister32_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
+void ConstantRegister32_t::writeByte(const Context_t context, const size_t arrayIndex, const u8 value)
 {
 	// Do not write value (zero register).
 }
 
-void ConstantRegister32_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void ConstantRegister32_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	// Do not write value (zero register).
 }
 
-void ConstantRegister32_t::writeWord(const System_t context, const u32 value)
+void ConstantRegister32_t::writeWord(const Context_t context, const u32 value)
 {
 	// Do not write value (zero register).
 }

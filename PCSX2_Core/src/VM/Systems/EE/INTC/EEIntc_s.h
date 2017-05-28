@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class EECoreCOP0_t;
 class EEIntc_t;
@@ -10,7 +10,7 @@ Checks the I_STAT register for any pending interrupts. If there are, AND's it wi
 Note that the maximum time resolution that this can run at is limited to BUSCLK - the reason for this being that all interrupt sources runat BUSCLK or less. 
 Therefore it should be included with the BUSCLK events in the main emulation loop.
 */
-class EEIntc_s : public VMSystem_s
+class EEIntc_s : public VMSystem_t
 {
 public:
 	EEIntc_s(VM * vm);

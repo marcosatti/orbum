@@ -2,7 +2,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 class IOPIntc_t;
 class IOPTimers_t;
@@ -13,7 +13,7 @@ IOPTimers updates TIM0, TIM1, TIM2, TIM3, TIM4, TIM5.
 If interrupt conditions are met, sets the corresponding interrupt bit in the IOP INTC.
 The IOP Timers are dynamic and can be updated on the IOP system clock, pixel clock or HLINE clocks.
 */
-class IOPTimers_s : public VMSystem_s
+class IOPTimers_s : public VMSystem_t
 {
 public:
 	IOPTimers_s(VM * vm);

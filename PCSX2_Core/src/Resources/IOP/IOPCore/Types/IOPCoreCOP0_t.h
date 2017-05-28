@@ -27,7 +27,7 @@ public:
 	Checks if the IOP COP0 coprocessor is usable. 
 	Can be used by the component calling this to raise a IOPCoreException_t(coprocessor unusable) if not available.
 	*/
-	bool isCoprocessorUsable(const System_t context) const override;
+	bool isCoprocessorUsable(const Context_t context) const override;
 
 	/*
 	Initialises the IOP COP0 registers.
@@ -37,7 +37,7 @@ public:
 	/*
 	Determine the CPU context. Uses the Status register.
 	*/
-	MIPSCPUOperatingContext_t getCPUOperatingContext(const System_t context) const override;
+	MIPSCPUOperatingContext_t getCPUOperatingContext(const Context_t context) const override;
 
 	/*
 	IOP COP0 register implementations. 

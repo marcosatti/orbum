@@ -60,17 +60,17 @@ IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char * mnemonic, const bool
 	registerField(Fields::MasterInterrupt, "MasterInterrupt", 31, 1, 0);
 }
 
-void IOPDmacRegister_ICR0_t::writeWord(const System_t context, const u32 value)
+void IOPDmacRegister_ICR0_t::writeWord(const Context_t context, const u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp = ((readWord(context) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 		
 	BitfieldRegister32_t::writeWord(context, temp);
 }
 
-bool IOPDmacRegister_ICR0_t::isInterruptPending(const System_t context)
+bool IOPDmacRegister_ICR0_t::isInterruptPending(const Context_t context)
 {
 	u32 regValue = readWord(context);
 	u32 TCM = (regValue & 0x7F0000) >> 16;
@@ -139,17 +139,17 @@ IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char * mnemonic, const bool
 	registerField(Fields::TCI13, "TCI13", 30, 1, 0);
 }
 
-void IOPDmacRegister_ICR1_t::writeWord(const System_t context, const u32 value)
+void IOPDmacRegister_ICR1_t::writeWord(const Context_t context, const u32 value)
 {
 	// Preprocessing for IOP: reset (clear) the FL bits if 1 is written to them (taken from PCSX2 "IopHwWrite.cpp").
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp = ((readWord(context) & 0xFF000000) | (value & 0xFFFFFF)) & ~(value & 0x7F000000);
 
 	BitfieldRegister32_t::writeWord(context, temp);
 }
 
-bool IOPDmacRegister_ICR1_t::isInterruptPending(const System_t context)
+bool IOPDmacRegister_ICR1_t::isInterruptPending(const Context_t context)
 {
 	u32 regValue = readWord(context);
 	u32 TCM = (regValue & 0x7F0000) >> 16;

@@ -29,12 +29,12 @@ public:
 	/*
 	Returns the channel runtime logical mode its operating in.
 	*/
-	EEDmacChannelTable::LogicalMode_t getLogicalMode(const System_t context);
+	EEDmacChannelTable::LogicalMode_t getLogicalMode(const Context_t context);
 
 	/*
 	Returns the runtime direction. Useful for channels where it can be either way.
 	*/
-	EEDmacChannelTable::Direction_t getDirection(const System_t context);
+	EEDmacChannelTable::Direction_t getDirection(const Context_t context);
 
 	/*
 	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
@@ -77,7 +77,7 @@ public:
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
 	*/
-	void increment(const System_t context);
+	void increment(const Context_t context);
 };
 
 /*
@@ -91,7 +91,7 @@ public:
 	/*
 	Decrements the QWC counter by 1. Should be called when a data unit has been transferred.
 	*/
-	void decrement(const System_t context);
+	void decrement(const Context_t context);
 };
 
 /*
@@ -111,7 +111,7 @@ public:
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
 	*/
-	void increment(const System_t context);
+	void increment(const Context_t context);
 };
 
 /*
@@ -140,7 +140,7 @@ public:
 	/*
 	Increments ADDR by 0x10, which is the size of 1 DMA transfer (used when one transfer has completed).
 	*/
-	void increment(const System_t context);
+	void increment(const Context_t context);
 };
 
 /*
@@ -155,7 +155,7 @@ public:
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -170,7 +170,7 @@ public:
 	/*
 	(EE context only.) Upon writes, sets the correct direction (FROM).
 	*/
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -189,8 +189,8 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif0.cpp".
 	*/
-	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, const u32 value) override;
+	void setFieldValue(const Context_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 private:
 	/*
@@ -202,7 +202,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for ending a transfer - a starting function should never be called as this is fixed in the FROM direction.
 	*/
-	void handleSBUSUpdateFinish(const System_t context) const;
+	void handleSBUSUpdateFinish(const Context_t context) const;
 };
 
 /*
@@ -220,8 +220,8 @@ public:
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required.
 	See PCSX2's "sif1.cpp".
 	*/
-	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, const u32 value) override;
+	void setFieldValue(const Context_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 private:
 	/*
@@ -233,7 +233,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for starting a transfer - a ending function should never be called as this is fixed in the TO direction.
 	*/
-	void handleSBUSUpdateStart(const System_t context) const;
+	void handleSBUSUpdateStart(const Context_t context) const;
 };
 
 /*
@@ -250,8 +250,8 @@ public:
 	/*
 	Whenever CHCR.STR = 1 or 0, trigger an update of the SBUS registers required. See PCSX2's "sif2.cpp".
 	*/
-	void setFieldValue(const System_t context, const int fieldIndex, const u32 value) override;
-	void writeWord(const System_t context, const u32 value) override;
+	void setFieldValue(const Context_t context, const int fieldIndex, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 
 private:
 	/*
@@ -263,7 +263,7 @@ private:
 	Contains logic for updating the SBUS registers.
 	One function for starting a transfer, and ending a transfer.
 	*/
-	void handleSBUSUpdateStart(const System_t context) const;
-	void handleSBUSUpdateFinish(const System_t context) const;
+	void handleSBUSUpdateStart(const Context_t context) const;
+	void handleSBUSUpdateFinish(const Context_t context) const;
 };
 

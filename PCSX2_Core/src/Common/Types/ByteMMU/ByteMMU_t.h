@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Common/Global/Globals.h"
-#include "Common/Types/System_t.h"
+#include "Common/Types/System/Context_t.h"
 
 class MapperBaseObjectByteMMU_t;
 class ByteMemory_t;
@@ -75,16 +75,16 @@ public:
 	The address is automatically translated to the allocated memory object, which passes on the read/write call to it.
 	No error checking is done as these functions are performance critical. If you try to access an invalid mapping, it will probably crash.
 	*/
-	u8 readByte(const System_t context, const u32 physicalAddress);
-	void writeByte(const System_t context, const u32 physicalAddress, const u8 value);
-	u16 readHword(const System_t context, const u32 physicalAddress);
-	void writeHword(const System_t context, const u32 physicalAddress, const u16 value);
-	u32 readWord(const System_t context, const u32 physicalAddress);
-	void writeWord(const System_t context, const u32 physicalAddress, const u32 value);
-	u64 readDword(const System_t context, const u32 physicalAddress);
-	void writeDword(const System_t context, const u32 physicalAddress, const u64 value);
-	u128 readQword(const System_t context, const u32 physicalAddress);
-	void writeQword(const System_t context, const u32 physicalAddress, const u128 value);
+	u8 readByte(const Context_t context, const u32 physicalAddress);
+	void writeByte(const Context_t context, const u32 physicalAddress, const u8 value);
+	u16 readHword(const Context_t context, const u32 physicalAddress);
+	void writeHword(const Context_t context, const u32 physicalAddress, const u16 value);
+	u32 readWord(const Context_t context, const u32 physicalAddress);
+	void writeWord(const Context_t context, const u32 physicalAddress, const u32 value);
+	u64 readDword(const Context_t context, const u32 physicalAddress);
+	void writeDword(const Context_t context, const u32 physicalAddress, const u64 value);
+	u128 readQword(const Context_t context, const u32 physicalAddress);
+	void writeQword(const Context_t context, const u32 physicalAddress, const u128 value);
 
 private:
 	/*
@@ -127,5 +127,5 @@ private:
 	Given the address properties, performs a lookup in the page table and returns the mapped object.
 	On a nullptr object being retrieved, a runtime_error is thrown (debug builds only).
 	*/
-	const std::shared_ptr<MapperBaseObjectByteMMU_t> & getMappedObject(const System_t context, const VAddressProperties_t & properties);
+	const std::shared_ptr<MapperBaseObjectByteMMU_t> & getMappedObject(const Context_t context, const VAddressProperties_t & properties);
 };

@@ -84,12 +84,12 @@ public:
 	Set bit field function to trigger update of the sticky flags (SU, SO, SD, SI).
 	See EE Core Users Manual page 159.
 	*/
-	void setFieldValueSticky(const System_t context, const int fieldIndex, const u32 value);
+	void setFieldValueSticky(const Context_t context, const int fieldIndex, const u32 value);
 
 	/*
 	Update or clears the U, O, (D, I) flags, which both should be done on each instruction that modifies this register.
 	The C flag is not changed! Needs to be done manually.
 	*/
-	void updateResultFlags(const System_t context, const FPUFlags_t & flags);
-	void clearFlags(const System_t context); // Clears the D and I flags too.
+	void updateResultFlags(const Context_t context, const FPUFlags_t & flags);
+	void clearFlags(const Context_t context); // Clears the D and I flags too.
 };

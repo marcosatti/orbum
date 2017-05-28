@@ -26,9 +26,9 @@ public:
 	static constexpr size_t OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
 	static constexpr size_t OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
-	void writeByte(const System_t context, const size_t storageIndex, const u8 value) override;
-	u32 readWord(const System_t context, const size_t storageIndex) override;
-	void writeWord(const System_t context, const size_t storageIndex, const u32 value) override;
+	void writeByte(const Context_t context, const size_t storageIndex, const u8 value) override;
+	u32 readWord(const Context_t context, const size_t storageIndex) override;
+	void writeWord(const Context_t context, const size_t storageIndex, const u32 value) override;
 
 private:
 #if DEBUG_LOG_SIO_MESSAGES
@@ -54,8 +54,8 @@ public:
 	static constexpr size_t OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
 	static constexpr size_t OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
 
-	u32 readWord(const System_t context, const size_t storageIndex) override;
-	void writeWord(const System_t context, const size_t storageIndex, const u32 value) override;
+	u32 readWord(const Context_t context, const size_t storageIndex) override;
+	void writeWord(const Context_t context, const size_t storageIndex, const u32 value) override;
 
 private:
 	// Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).

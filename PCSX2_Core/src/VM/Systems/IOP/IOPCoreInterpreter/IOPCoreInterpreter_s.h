@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 
-#include "VM/Types/VMSystem_s.h"
+#include "VM/Types/VMSystem_t.h"
 
 #include "Resources/IOP/IOPCore/Types/IOPCoreException_t.h"
 #include "Resources/IOP/IOPCore/Types/IOPCoreInstruction_t.h"
@@ -20,7 +20,7 @@ The clock speed of the IOP is roughly 1/8th that of the EE Core (~36 MHz, increa
 
 No official documentation, but there is resources available on the internet documenting the R3000 and other parts.
 */
-class IOPCoreInterpreter_s : public VMSystem_s
+class IOPCoreInterpreter_s : public VMSystem_t
 {
 public:
 	IOPCoreInterpreter_s(VM * vm);

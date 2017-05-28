@@ -2,9 +2,9 @@
 
 #include <map>
 
-#include "Common/Types/System_t.h"
-#include "Common/Types/ClockSource_t.h"
-#include "Common/Types/EnumMap_t.h"
+#include "Common/Types/System/Context_t.h"
+#include "Common/Types/System/ClockSource_t.h"
+#include "Common/Types/Util/EnumMap_t.h"
 #include <mutex>
 
 /*
@@ -19,7 +19,7 @@ public:
 	Sets the system biases, used when adding ticks to a source.
 	When ticks are added to a system, the ticks are multiplied by the bias (regardless of which clock source it is for).
 	*/
-	void setSystemClockBiases(const std::map<System_t, double> & biases);
+	void setSystemClockBiases(const std::map<Context_t, double> & biases);
 
 	/*
 	Returns an immutable reference to the system clock state.
@@ -27,7 +27,7 @@ public:
 	It does not matter if the callee reads an older state (and then writes this), it will just have delayed execution the next time.
 	Use the add/sub tick functions to modify the state.
 	*/
-	const EnumMap_t<ClockSource_t, double> & getSystemClockTicks(const System_t system);
+	const EnumMap_t<ClockSource_t, double> & getSystemClockTicks(const Context_t system);
 
 	/*
 	Adds ticks to all of the "independent" sources in the PS2, such as the EECoreClock, EEBusClock, etc that run at a fixed rate.
@@ -41,13 +41,13 @@ public:
 	Adds ticks to the given system's clock source.
 	The system bias is applied (multiplied) when adding the ticks.
 	*/
-	void addSystemClockTicks(const System_t system, const ClockSource_t clockSource, const int ticks);
+	void addSystemClockTicks(const Context_t system, const ClockSource_t clockSource, const int ticks);
 
 	/*
 	Subtracts ticks from the given system's clock source.
 	The system bias is NOT applied to this!
 	*/
-	void subSystemClockTicks(const System_t system, const ClockSource_t clockSource, const int ticks);
+	void subSystemClockTicks(const Context_t system, const ClockSource_t clockSource, const int ticks);
 
 	/*
 	Calculates and sets the pixel clock speed used by addSystemClockTicksAll().
@@ -65,7 +65,7 @@ private:
 		double bias;
 		EnumMap_t<ClockSource_t, double> state;
 	};
-	EnumMap_t<System_t, SystemClockData_t> mSystemTickState;
+	EnumMap_t<Context_t, SystemClockData_t> mSystemTickState;
 	std::mutex mSystemTickWriteMutex;
 
 	/*

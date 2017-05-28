@@ -21,7 +21,7 @@
 #include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
 SPU2_s::SPU2_s(VM * vm) : 
-	VMSystem_s(vm, System_t::SPU2)
+	VMSystem_t(vm, Context_t::SPU2)
 {
 	mSPU2 = getVM()->getResources()->SPU2;
 	mINTC = getVM()->getResources()->IOP->INTC;

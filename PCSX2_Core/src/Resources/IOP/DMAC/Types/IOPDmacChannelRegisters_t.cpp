@@ -23,12 +23,12 @@ IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemon
 	registerField(Fields::ILinkAR, "ILinkAR", 31, 1, 0);
 }
 
-LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode(const System_t context) 
+LogicalMode_t IOPDmacChannelRegister_CHCR_t::getLogicalMode(const Context_t context) 
 {
 	return static_cast<LogicalMode_t>(getFieldValue(context, Fields::SM));
 }
 
-Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const System_t context)
+Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const Context_t context)
 {
 	return static_cast<Direction_t>(getFieldValue(context, Fields::TD));
 }
@@ -49,7 +49,7 @@ IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic
 	registerField(Fields::BA, "BA", 16, 16, 0);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
@@ -58,7 +58,7 @@ void IOPDmacChannelRegister_BCR_t::writeHword(const System_t context, const size
 	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
-void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t context, const u32 value)
 {
 	BitfieldRegister32_t::writeWord(context, value);
 
@@ -67,7 +67,7 @@ void IOPDmacChannelRegister_BCR_t::writeWord(const System_t context, const u32 v
 	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
 }
 
-void IOPDmacChannelRegister_BCR_t::decrement(const System_t context)
+void IOPDmacChannelRegister_BCR_t::decrement(const Context_t context)
 {
 	// If BS was set to 0 and we are in normal transfer mode (ie: transfer 0x10000 words), we rely on underflow to get us to the proper value (0xFFFF).
 	mBS--;
@@ -94,12 +94,12 @@ IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char * mnemon
 {
 }
 
-void IOPDmacChannelRegister_MADR_t::increment(const System_t context, const size_t amount)
+void IOPDmacChannelRegister_MADR_t::increment(const Context_t context, const size_t amount)
 {
 	writeWord(context, readWord(context) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_MADR_t::decrement(const System_t context, const size_t amount)
+void IOPDmacChannelRegister_MADR_t::decrement(const Context_t context, const size_t amount)
 {
 	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
@@ -109,12 +109,12 @@ IOPDmacChannelRegister_TADR_t::IOPDmacChannelRegister_TADR_t(const char * mnemon
 {
 }
 
-void IOPDmacChannelRegister_TADR_t::increment(const System_t context, const size_t amount)
+void IOPDmacChannelRegister_TADR_t::increment(const Context_t context, const size_t amount)
 {
 	writeWord(context, readWord(context) + static_cast<u32>(amount));
 }
 
-void IOPDmacChannelRegister_TADR_t::decrement(const System_t context, const size_t amount)
+void IOPDmacChannelRegister_TADR_t::decrement(const Context_t context, const size_t amount)
 {
 	writeWord(context, readWord(context) - static_cast<u32>(amount));
 }
@@ -124,10 +124,10 @@ IOPDmacChannelRegister_TO_CHCR_t::IOPDmacChannelRegister_TO_CHCR_t(const char * 
 {
 }
 
-void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_TO_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp |= (1 << 0);
 
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, temp);
@@ -138,10 +138,10 @@ IOPDmacChannelRegister_FROM_CHCR_t::IOPDmacChannelRegister_FROM_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_FROM_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp &= ~(1 << 0);
 
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, temp);
@@ -153,7 +153,7 @@ IOPDmacChannelRegister_SIF0_CHCR_t::IOPDmacChannelRegister_SIF0_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_TO_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -172,7 +172,7 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	IOPDmacChannelRegister_TO_CHCR_t::writeWord(context, value);
 
@@ -187,7 +187,7 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const System_t context, const
 		throw std::runtime_error("IOP SIF0 channel tried to start in the FROM direction! Not possible.");
 }
 
-void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart(const System_t context) const
+void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic value.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x2000);
@@ -199,7 +199,7 @@ IOPDmacChannelRegister_SIF1_CHCR_t::IOPDmacChannelRegister_SIF1_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_FROM_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -218,10 +218,10 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	u32 temp = value;
-	if (context == System_t::IOPCore)
+	if (context == Context_t::IOPCore)
 		temp |= (1 << 10);
 
 	IOPDmacChannelRegister_FROM_CHCR_t::writeWord(context, temp);
@@ -237,7 +237,7 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const System_t context, const
 		handleSBUSUpdateFinish(context);
 }
 
-void IOPDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
+void IOPDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateFinish(const Context_t context) const
 {
 	// Update 0x1000F240 (maps to Common->REGISTER_F240) with magic values.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x40));
@@ -250,7 +250,7 @@ IOPDmacChannelRegister_SIF2_CHCR_t::IOPDmacChannelRegister_SIF2_CHCR_t(const cha
 {
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, const int fieldIndex, const u32 value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
 	IOPDmacChannelRegister_CHCR_t::setFieldValue(context, fieldIndex, value);
 
@@ -269,7 +269,7 @@ void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const System_t context, c
 	}
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const u32 value)
+void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
 	IOPDmacChannelRegister_CHCR_t::writeWord(context, value);
 
@@ -284,13 +284,13 @@ void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const System_t context, const
 		handleSBUSUpdateFinish(context);
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart(const System_t context) const
+void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic value.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) | 0x8000);
 }
 
-void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish(const System_t context) const
+void IOPDmacChannelRegister_SIF2_CHCR_t::handleSBUSUpdateFinish(const Context_t context) const
 {
 	// Update 0x1D000040 (maps to Common->REGISTER_F240) with magic values.
 	mSbusF240->writeWord(context, mSbusF240->readWord(context) & (~0x80));

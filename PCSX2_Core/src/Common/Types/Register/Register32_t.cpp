@@ -8,13 +8,13 @@ Register32_t::Register32_t(const char* mnemonic, bool debugReads, bool debugWrit
 {
 }
 
-u8 Register32_t::readByte(const System_t context, const size_t arrayIndex)
+u8 Register32_t::readByte(const Context_t context, const size_t arrayIndex)
 {
 #if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Read u8[%d], Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #else
 		log(Debug, "%s: %s Read u8[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #endif
@@ -24,7 +24,7 @@ u8 Register32_t::readByte(const System_t context, const size_t arrayIndex)
 	return UB[arrayIndex];
 }
 
-void Register32_t::writeByte(const System_t context, const size_t arrayIndex, const u8 value)
+void Register32_t::writeByte(const Context_t context, const size_t arrayIndex, const u8 value)
 {
 	UB[arrayIndex] = value;
 
@@ -32,7 +32,7 @@ void Register32_t::writeByte(const System_t context, const size_t arrayIndex, co
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
+		log(Debug, "%s: %s Write u8[%d], Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #else
 		log(Debug, "%s: %s Write u8[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UB[arrayIndex]);
 #endif
@@ -40,13 +40,13 @@ void Register32_t::writeByte(const System_t context, const size_t arrayIndex, co
 #endif
 }
 
-u16 Register32_t::readHword(const System_t context, const size_t arrayIndex)
+u16 Register32_t::readHword(const Context_t context, const size_t arrayIndex)
 {
 #if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u16[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Read u16[%d], Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
 #else
 		log(Debug, "%s: %s Read u16[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
 #endif
@@ -56,7 +56,7 @@ u16 Register32_t::readHword(const System_t context, const size_t arrayIndex)
 	return UH[arrayIndex];
 }
 
-void Register32_t::writeHword(const System_t context, const size_t arrayIndex, const u16 value)
+void Register32_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
 {
 	UH[arrayIndex] = value;
 
@@ -64,7 +64,7 @@ void Register32_t::writeHword(const System_t context, const size_t arrayIndex, c
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u16[%d], Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
+		log(Debug, "%s: %s Write u16[%d], Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
 #else
 		log(Debug, "%s: %s Write u16[%d], Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), arrayIndex, UH[arrayIndex]);
 #endif
@@ -72,13 +72,13 @@ void Register32_t::writeHword(const System_t context, const size_t arrayIndex, c
 #endif
 }
 
-u32 Register32_t::readWord(const System_t context)
+u32 Register32_t::readWord(const Context_t context)
 {
 #if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u32, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UW);
+		log(Debug, "%s: %s Read u32, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), UW);
 #else
 		log(Debug, "%s: %s Read u32, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UW);
 #endif
@@ -88,7 +88,7 @@ u32 Register32_t::readWord(const System_t context)
 	return UW;
 }
 
-void Register32_t::writeWord(const System_t context, const u32 value)
+void Register32_t::writeWord(const Context_t context, const u32 value)
 {
 	UW = value;
 
@@ -96,7 +96,7 @@ void Register32_t::writeWord(const System_t context, const u32 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u32, Value = 0x%X.", SYSTEM_STR[context], mMnemonic.c_str(), UW);
+		log(Debug, "%s: %s Write u32, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), UW);
 #else
 		log(Debug, "%s: %s Write u32, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), UW);
 #endif
@@ -104,13 +104,13 @@ void Register32_t::writeWord(const System_t context, const u32 value)
 #endif
 }
 
-f32 Register32_t::readFloat(const System_t context)
+f32 Register32_t::readFloat(const Context_t context)
 {
 #if DEBUG_LOG_REGISTER_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read f32, Value = %A.", SYSTEM_STR[context], mMnemonic.c_str(), F);
+		log(Debug, "%s: %s Read f32, Value = %A.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), F);
 #else
 		log(Debug, "%s: %s Read f32, Value = %F.", SYSTEM_STR[context], mMnemonic.c_str(), F);
 #endif
@@ -120,7 +120,7 @@ f32 Register32_t::readFloat(const System_t context)
 	return F;
 }
 
-void Register32_t::writeFloat(const System_t context, const f32 value)
+void Register32_t::writeFloat(const Context_t context, const f32 value)
 {
 	F = value;
 
@@ -128,7 +128,7 @@ void Register32_t::writeFloat(const System_t context, const f32 value)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write f32, Value = %A.", SYSTEM_STR[context], mMnemonic.c_str(), F);
+		log(Debug, "%s: %s Write f32, Value = %A.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), F);
 #else
 		log(Debug, "%s: %s Write f32, Value = %F.", SYSTEM_STR[context], mMnemonic.c_str(), F);
 #endif

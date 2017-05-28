@@ -9,7 +9,7 @@ SPU2Register_SPDIF_IRQINFO_t::SPU2Register_SPDIF_IRQINFO_t(const char * mnemonic
     registerField(Fields::IrqCore1, "IrqCore1", 3, 1, 0);
 }
 
-bool SPU2Register_SPDIF_IRQINFO_t::isInterrupted(const System_t context)
+bool SPU2Register_SPDIF_IRQINFO_t::isInterrupted(const Context_t context)
 {
     // Core 0 and 1 IRQ bits located at bits 2 and 3 (0xC mask).
     return ((readHword(context) & 0xC) > 0);

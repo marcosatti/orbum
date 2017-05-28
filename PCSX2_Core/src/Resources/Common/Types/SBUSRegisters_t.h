@@ -11,7 +11,7 @@ class SBUSRegister_MSCOM_t : public Register32_t
 {
 public:
 	SBUSRegister_MSCOM_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -22,7 +22,7 @@ class SBUSRegister_MSFLG_t : public Register32_t
 {
 public:
 	SBUSRegister_MSFLG_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -33,7 +33,7 @@ class SBUSRegister_SMFLG_t : public Register32_t
 {
 public:
 	SBUSRegister_SMFLG_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-	void writeWord(const System_t context, const u32 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -44,10 +44,10 @@ class SBUSRegister_F240_t : public Register32_t
 {
 public:
 	SBUSRegister_F240_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-	u16 readHword(const System_t context, const size_t arrayIndex) override;
-	u32 readWord(const System_t context) override;
-	void writeHword(const System_t context, const size_t arrayIndex, const u16 value) override;
-	void writeWord(const System_t context, const u32 value) override;
+	u16 readHword(const Context_t context, const size_t arrayIndex) override;
+	u32 readWord(const Context_t context) override;
+	void writeHword(const Context_t context, const size_t arrayIndex, const u16 value) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
 
 /*
@@ -58,6 +58,6 @@ class SBUSRegister_F300_t : public Register32_t
 {
 public:
 	SBUSRegister_F300_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
-	u32 readWord(const System_t context) override;
-	void writeWord(const System_t context, const u32 value) override;
+	u32 readWord(const Context_t context) override;
+	void writeWord(const Context_t context, const u32 value) override;
 };
