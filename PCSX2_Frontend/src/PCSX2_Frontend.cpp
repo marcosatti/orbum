@@ -51,7 +51,7 @@ int main()
 		"",
 		"",
 		10,
-		VMOptions::MT_SIM,
+		VMOptions::ST,
 		{ }
 	};
 

@@ -61,19 +61,16 @@ set(COMMON_HEADER_FILES
 	src/Common/Types/ByteMMU/MapperRegister32ByteMMU_t.h
 	src/Common/Types/ByteMMU/MapperRegister64ByteMMU_t.h
 	src/Common/Types/ByteMMU/MapperRegister8ByteMMU_t.h
-	src/Common/Types/ClockSource_t.h
-	src/Common/Types/DebugBaseObject_t.h
-	src/Common/Types/EnumMap_t.h
 	src/Common/Types/FIFOQueue/FIFOQueue_t.h
+	src/Common/Types/Memory/ByteMemory_t.h
+	src/Common/Types/Memory/ConstantByteMemory_t.h
+	src/Common/Types/Memory/HwordMemory_t.h
+	src/Common/Types/Memory/ROByteMemory_t.h
 	src/Common/Types/MIPS/MIPSCoprocessor0_t.h
 	src/Common/Types/MIPS/MIPSCoprocessor_t.h
 	src/Common/Types/MIPS/MIPSInstructionInfo_t.h
 	src/Common/Types/MIPS/MIPSInstruction_t.h
 	src/Common/Types/MIPS/MIPSOperatingContext_t.h
-	src/Common/Types/Memory/ByteMemory_t.h
-	src/Common/Types/Memory/ConstantByteMemory_t.h
-	src/Common/Types/Memory/HwordMemory_t.h
-	src/Common/Types/Memory/ROByteMemory_t.h
 	src/Common/Types/Register/BitfieldRegister16_t.h
 	src/Common/Types/Register/BitfieldRegister32_t.h
 	src/Common/Types/Register/ConstantRegister128_t.h
@@ -83,15 +80,20 @@ set(COMMON_HEADER_FILES
 	src/Common/Types/Register/LinkRegister128_t.h
 	src/Common/Types/Register/LinkRegister32_t.h
 	src/Common/Types/Register/MapperRegister16Register32_t.h
+	src/Common/Types/Register/PairRegister16_t.h
 	src/Common/Types/Register/PCRegister16_t.h
 	src/Common/Types/Register/PCRegister32_t.h
-	src/Common/Types/Register/PairRegister16_t.h
 	src/Common/Types/Register/Register128_t.h
 	src/Common/Types/Register/Register16_t.h
 	src/Common/Types/Register/Register32_t.h
 	src/Common/Types/Register/Register64_t.h
 	src/Common/Types/Register/Register8_t.h
-	src/Common/Types/System_t.h
+	src/Common/Types/System/ClockSource_t.h
+	src/Common/Types/System/Context_t.h
+	src/Common/Types/Util/DebugBaseObject_t.h
+	src/Common/Types/Util/EnumMap_t.h
+	src/Common/Types/Util/Runnable_t.h
+	src/Common/Types/Util/ThreadedRunnable_t.h
 	src/Common/Util/FPUUtil/FPUFlags_t.h
 	src/Common/Util/FPUUtil/FPUUtil.h
 	src/Common/Util/MathUtil/MathUtil.h
@@ -104,10 +106,10 @@ set(COMMON_HEADER_FILES
 	src/Resources/Common/Types/SBUSFIFOQueues_t.h
 	src/Resources/Common/Types/SBUSRegisters_t.h
 	src/Resources/EE/DMAC/EEDmac_t.h
-	src/Resources/EE/DMAC/Types/EEDMAtag_t.h
 	src/Resources/EE/DMAC/Types/EEDmacChannelRegisters_t.h
 	src/Resources/EE/DMAC/Types/EEDmacChannels_t.h
 	src/Resources/EE/DMAC/Types/EEDmacRegisters_t.h
+	src/Resources/EE/DMAC/Types/EEDMAtag_t.h
 	src/Resources/EE/EECore/EECore_t.h
 	src/Resources/EE/EECore/Types/EECoreCOP0Registers_t.h
 	src/Resources/EE/EECore/Types/EECoreCOP0_t.h
@@ -128,9 +130,9 @@ set(COMMON_HEADER_FILES
 	src/Resources/EE/Timers/Types/EETimersTimers_t.h
 	src/Resources/EE/Types/EERegisters_t.h
 	src/Resources/EE/VPU/Types/VPURegisters_t.h
+	src/Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h
 	src/Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h
 	src/Resources/EE/VPU/VIF/Types/VIFCores_t.h
-	src/Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.h
 	src/Resources/EE/VPU/VIF/VIF_t.h
 	src/Resources/EE/VPU/VPU_t.h
 	src/Resources/EE/VPU/VU/Types/VUCoreRegisters_t.h
@@ -141,10 +143,10 @@ set(COMMON_HEADER_FILES
 	src/Resources/GS/CRTC/CRTC_t.h
 	src/Resources/GS/GS_t.h
 	src/Resources/IOP/DMAC/IOPDmac_t.h
-	src/Resources/IOP/DMAC/Types/IOPDMAtag_t.h
 	src/Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h
 	src/Resources/IOP/DMAC/Types/IOPDmacChannels_t.h
 	src/Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h
+	src/Resources/IOP/DMAC/Types/IOPDMAtag_t.h
 	src/Resources/IOP/INTC/IOPIntc_t.h
 	src/Resources/IOP/INTC/Types/IOPIntcRegisters_t.h
 	src/Resources/IOP/IOPCore/IOPCore_t.h
@@ -162,9 +164,9 @@ set(COMMON_HEADER_FILES
 	src/Resources/SIO2/Types/SIO2Packet_t.h
 	src/Resources/SPU2/SPU2_t.h
 	src/Resources/SPU2/Types/SPU2CoreRegisters_t.h
+	src/Resources/SPU2/Types/SPU2Cores_t.h
 	src/Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h
 	src/Resources/SPU2/Types/SPU2CoreVoices_t.h
-	src/Resources/SPU2/Types/SPU2Cores_t.h
 	src/Resources/SPU2/Types/SPU2Registers_t.h
 	src/VM/Systems/CDVD/CDVD_s.h
 	src/VM/Systems/EE/DMAC/EEDmac_s.h
@@ -181,12 +183,12 @@ set(COMMON_HEADER_FILES
 	src/VM/Systems/IOP/Timers/IOPTimers_s.h
 	src/VM/Systems/SPU2/SPU2_s.h
 	src/VM/Types/VMOptions.h
-	src/VM/Types/VMSystem_s.h
+	src/VM/Types/VMSystem_t.h
 	src/VM/VM.h
 )
 
 set(COMMON_SRC_FILES
-src/Common/Global/Log.cpp
+	src/Common/Global/Log.cpp
 	src/Common/Tables/EECoreExceptionsTable.cpp
 	src/Common/Tables/EECoreInstructionTable.cpp
 	src/Common/Tables/EECoreSyscallTable.cpp
@@ -207,11 +209,11 @@ src/Common/Global/Log.cpp
 	src/Common/Types/ByteMMU/MapperRegister64ByteMMU_t.cpp
 	src/Common/Types/ByteMMU/MapperRegister8ByteMMU_t.cpp
 	src/Common/Types/FIFOQueue/FIFOQueue_t.cpp
-	src/Common/Types/MIPS/MIPSInstruction_t.cpp
 	src/Common/Types/Memory/ByteMemory_t.cpp
 	src/Common/Types/Memory/ConstantByteMemory_t.cpp
 	src/Common/Types/Memory/HwordMemory_t.cpp
 	src/Common/Types/Memory/ROByteMemory_t.cpp
+	src/Common/Types/MIPS/MIPSInstruction_t.cpp
 	src/Common/Types/Register/BitfieldRegister16_t.cpp
 	src/Common/Types/Register/BitfieldRegister32_t.cpp
 	src/Common/Types/Register/ConstantRegister128_t.cpp
@@ -221,14 +223,15 @@ src/Common/Global/Log.cpp
 	src/Common/Types/Register/LinkRegister128_t.cpp
 	src/Common/Types/Register/LinkRegister32_t.cpp
 	src/Common/Types/Register/MapperRegister16Register32_t.cpp
+	src/Common/Types/Register/PairRegister16_t.cpp
 	src/Common/Types/Register/PCRegister16_t.cpp
 	src/Common/Types/Register/PCRegister32_t.cpp
-	src/Common/Types/Register/PairRegister16_t.cpp
 	src/Common/Types/Register/Register128_t.cpp
 	src/Common/Types/Register/Register16_t.cpp
 	src/Common/Types/Register/Register32_t.cpp
 	src/Common/Types/Register/Register64_t.cpp
 	src/Common/Types/Register/Register8_t.cpp
+	src/Common/Types/Util/ThreadedRunnable_t.cpp
 	src/Common/Util/FPUUtil/FPUUtil.cpp
 	src/Common/Util/MathUtil/MathUtil.cpp
 	src/Resources/CDVD/CDVD_t.cpp
@@ -261,9 +264,9 @@ src/Common/Global/Log.cpp
 	src/Resources/EE/Timers/Types/EETimersTimers_t.cpp
 	src/Resources/EE/Types/EERegisters_t.cpp
 	src/Resources/EE/VPU/Types/VPURegisters_t.cpp
+	src/Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.cpp
 	src/Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.cpp
 	src/Resources/EE/VPU/VIF/Types/VIFCores_t.cpp
-	src/Resources/EE/VPU/VIF/Types/VIFcodeInstruction_t.cpp
 	src/Resources/EE/VPU/VIF/VIF_t.cpp
 	src/Resources/EE/VPU/VPU_t.cpp
 	src/Resources/EE/VPU/VU/Types/VUCoreRegisters_t.cpp
@@ -292,12 +295,12 @@ src/Common/Global/Log.cpp
 	src/Resources/SIO2/SIO2_t.cpp
 	src/Resources/SPU2/SPU2_t.cpp
 	src/Resources/SPU2/Types/SPU2CoreRegisters_t.cpp
+	src/Resources/SPU2/Types/SPU2Cores_t.cpp
 	src/Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.cpp
 	src/Resources/SPU2/Types/SPU2CoreVoices_t.cpp
-	src/Resources/SPU2/Types/SPU2Cores_t.cpp
 	src/Resources/SPU2/Types/SPU2Registers_t.cpp
-	src/VM/Systems/CDVD/CDVD_SCMD.cpp
 	src/VM/Systems/CDVD/CDVD_s.cpp
+	src/VM/Systems/CDVD/CDVD_SCMD.cpp
 	src/VM/Systems/EE/DMAC/EEDmac_CHAIN.cpp
 	src/VM/Systems/EE/DMAC/EEDmac_s.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_ALU_OTHERS.cpp
@@ -317,10 +320,10 @@ src/Common/Global/Log.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_OTHERS.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_REG_TRANSFER.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_REORDERING.cpp
+	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_SHIFT.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_SPECIAL_TRANSFER.cpp
 	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_STORE_MEM.cpp
-	src/VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.cpp
 	src/VM/Systems/EE/INTC/EEIntc_s.cpp
 	src/VM/Systems/EE/Timers/EETimers_s.cpp
 	src/VM/Systems/EE/VPU/VIF/VIF_s.cpp
@@ -330,8 +333,8 @@ src/Common/Global/Log.cpp
 	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_FLOAT.cpp
 	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_INTEGER.cpp
 	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_OTHER.cpp
-	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_TRANSFER.cpp
 	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.cpp
+	src/VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_TRANSFER.cpp
 	src/VM/Systems/GS/CRTC/CRTC_s.cpp
 	src/VM/Systems/GS/GSCore/GSCore_s.cpp
 	src/VM/Systems/IOP/DMAC/IOPDmac_s.cpp
@@ -340,11 +343,11 @@ src/Common/Global/Log.cpp
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_BRANCH_JUMP.cpp
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_LOAD_STORE_MEM.cpp
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_OTHERS.cpp
-	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_SPECIAL_TRANSFER.cpp
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.cpp
+	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_SPECIAL_TRANSFER.cpp
 	src/VM/Systems/IOP/Timers/IOPTimers_s.cpp
 	src/VM/Systems/SPU2/SPU2_s.cpp
-	src/VM/Types/VMSystem_s.cpp
+	src/VM/Types/VMSystem_t.cpp
 	src/VM/VM.cpp
 )
 
