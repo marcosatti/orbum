@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.6)
 
 project(libpcsx2_core)
 
@@ -15,7 +15,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 endif()
 
 include_directories(
-	./src
+	${CMAKE_SOURCE_DIR}/libpcsx2_core/libpcsx2_core/src 
 )
 
 set(COMMON_SRC_FILES

@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.6)
 
 project(pcsx2_frontend)
 
 include_directories(
-	./src 
-	../libpcsx2_core/libpcsx2_core/src
+	${CMAKE_SOURCE_DIR}/pcsx2_frontend/src 
+	${CMAKE_SOURCE_DIR}/libpcsx2_core/libpcsx2_core/src 
 )
 
 set(PROJECT_LIBS
@@ -17,5 +17,6 @@ set(COMMON_SRC_FILES
 
 add_executable(pcsx2_frontend ${COMMON_SRC_FILES})
 target_link_libraries(pcsx2_frontend ${PROJECT_LIBS})
-set_target_properties(pcsx2_frontend PROPERTIES CXX_STANDARD 11)
+set_target_properties(pcsx2_frontend PROPERTIES CXX_STANDARD 14)
 set_target_properties(pcsx2_frontend PROPERTIES CXX_STANDARD_REQUIRED ON)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT pcsx2_frontend)
