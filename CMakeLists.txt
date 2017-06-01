@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+project(pcsx2_rewrite)
+
 # macOS deployment target needs to be set before 'project' to work.
 if(APPLE AND NOT TARGET_IOS)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version")
@@ -15,8 +17,6 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-
-project(pcsx2_rewrite)
 
 add_subdirectory(external/googletest)
 add_subdirectory(libpcsx2_core)

@@ -8,7 +8,7 @@ project(libpcsx2_core)
 # Please notify us when this is fixed!
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.0")
-		message(FATAL_ERROR "Only Clang++ 4.0+ currently works due to a compiler bug. Please see inside CMakeLists.txt for more details.")
+		message(FATAL_ERROR "Only Clang++ 4.0+ currently works due to a compiler bug. Please see inside libpcsx2_core's CMakeLists.txt for more details.")
 	else()
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 	endif()

@@ -24,5 +24,9 @@ set(COMMON_SRC_FILES
 
 add_executable(libpcsx2_core_test ${COMMON_SRC_FILES})
 target_link_libraries(libpcsx2_core_test ${PROJECT_LIBS}) 
-set_target_properties(libpcsx2_core_test PROPERTIES CXX_STANDARD 14)
+set_target_properties(libpcsx2_core_test PROPERTIES CXX_STANDARD 11)
 set_target_properties(libpcsx2_core_test PROPERTIES CXX_STANDARD_REQUIRED ON)
+
+# libpcsx2_core testing.
+enable_testing()
+add_test(libpcsx2_core_test ${EXECUTABLE_OUTPUT_PATH}/libpcsx2_core_test)
