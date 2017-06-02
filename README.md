@@ -100,7 +100,7 @@ Example usage:
 user@pc:/PCSX2_rewrite$ cd build && cmake .. && cmake --build .
 ```
 
-The CMake GUI is also supported and should probably be used in most cases.
+Use the CMake GUI to see and set the list of options available (or use the command line).
 
 By default, the install target (ie: `make install`) will copy the relevant files to PCSX2_rewrite/lib and PCSX2_rewrite/bin.
 

@@ -262,3 +262,6 @@ paket-files/
 build/
 include/
 lib/
+
+# VS Cmake integration
+CMakeSettings.json

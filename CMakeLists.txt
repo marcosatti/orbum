@@ -3,11 +3,6 @@ cmake_minimum_required(VERSION 3.1)
 # Override default configuration options. Must be before 'project' to work.
 set(CMAKE_CONFIGURATION_TYPES "Debug;Debug_Optimised;Release")
 
-# Build configuration settings. Must be before 'project' to work.
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE "Debug_Optimised" CACHE STRING "Choose the type of build, options are: Debug Debug_Optimised Release.")
-endif()
-
 # macOS deployment target. Must be before 'project' to work.
 if(APPLE AND NOT TARGET_IOS)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version.")
@@ -19,73 +14,63 @@ add_subdirectory(external)
 # Add superproject.
 project(pcsx2_rewrite CXX)
 
+# Build configuration settings.
+set(USER_BUILD_TYPE "Debug_Optimised" CACHE STRING "Choose the type of build, options are: Debug Debug_Optimised Release.")
+set_property(CACHE USER_BUILD_TYPE PROPERTY STRINGS "Debug;Debug_Optimised;Release")
+
 # Build flags for supported compilers.
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
 	# Compiler 
-	set(CMAKE_CXX_FLAGS_DEBUG           "-g    ")
-	set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3")
-	set(CMAKE_CXX_FLAGS_RELEASE         "      ")
+	set(USER_CXX_FLAGS_DEBUG           "-g"     CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "-O3"    CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${CMAKE_EXE_LINKER_FLAGS}")
+	set(USER_EXE_LINKER_FLAGS_DEBUG           "" CACHE STRING "User CXX linker flags (Debug)."            )
+	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "" CACHE STRING "User CXX linker flags (Debug_Optimised)."  )
+	set(USER_EXE_LINKER_FLAGS_RELEASE         "" CACHE STRING "User CXX linker flags (Release)."          )
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 	# Compiler 
-	set(CMAKE_CXX_FLAGS_DEBUG           "-g    ")
-	set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3")
-	set(CMAKE_CXX_FLAGS_RELEASE         "      ")
+	set(USER_CXX_FLAGS_DEBUG           "-g"     CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "-O3"    CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${CMAKE_EXE_LINKER_FLAGS}")
+	set(USER_EXE_LINKER_FLAGS_DEBUG           "" CACHE STRING "User CXX linker flags (Debug)."            )
+	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "" CACHE STRING "User CXX linker flags (Debug_Optimised)."  )
+	set(USER_EXE_LINKER_FLAGS_RELEASE         "" CACHE STRING "User CXX linker flags (Release)."          )
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Intel)
 	message(FATAL_ERROR "Implement me! (Intel)")
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	# Compiler 
-	set(CMAKE_CXX_FLAGS_DEBUG           "/MTd /Zi /Ob0 /Od /RTC1 /MP")
-	set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /Ob2 /MP")
-	set(CMAKE_CXX_FLAGS_RELEASE         "/MT /O2 /Ob2 /MP")
+	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /Ob0 /Od /RTC1 /MP" CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /Ob2 /MP"       CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /Ob2 /MP"            CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${CMAKE_EXE_LINKER_FLAGS} /DEBUG")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${CMAKE_EXE_LINKER_FLAGS}       ")
+	set(USER_EXE_LINKER_FLAGS_DEBUG           "/machine:x64 /DEBUG" CACHE STRING "User CXX linker flags (Debug)."          )
+	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "/machine:x64 /DEBUG" CACHE STRING "User CXX linker flags (Debug_Optimised).")
+	set(USER_EXE_LINKER_FLAGS_RELEASE         "/machine:x64"        CACHE STRING "User CXX linker flags (Release)."        )
 else()
-	message(WARNING "Unknown compiler (assuming GNU): ${CMAKE_CXX_COMPILER_ID}")
-	# Compiler 
-	set(CMAKE_CXX_FLAGS_DEBUG           "-g    ")
-	set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3")
-	set(CMAKE_CXX_FLAGS_RELEASE         "      ")
-	# Linker
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${CMAKE_EXE_LINKER_FLAGS}")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${CMAKE_EXE_LINKER_FLAGS}")
+	message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
-# Additional build settings (common to all compilers).
-set(CMAKE_CXX_FLAGS_DEBUG                  "${CMAKE_CXX_FLAGS_DEBUG}                  -DBUILD_DEBUG" CACHE STRING "Compiler flags for Debug build configuration."          )
-set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED        "${CMAKE_CXX_FLAGS_DEBUG_OPTIMISED}        -DBUILD_DEBUG" CACHE STRING "Compiler flags for Debug_Optimised build configuration.")
-set(CMAKE_CXX_FLAGS_RELEASE                "${CMAKE_CXX_FLAGS_RELEASE}                             " CACHE STRING "Compiler flags for Release build configuration."        )
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${CMAKE_EXE_LINKER_FLAGS_DEBUG}                        " CACHE STRING "Linker flags for Debug build configuration."            )
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED}              " CACHE STRING "Linker flags for Debug_Optimised build configuration."  )
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${CMAKE_EXE_LINKER_FLAGS_RELEASE}                      " CACHE STRING "Linker flags for Release build configuration."          )
+# Apply build settings.
+set(CMAKE_BUILD_TYPE                       "${USER_BUILD_TYPE}"                       CACHE INTERNAL "")
+set(CMAKE_CXX_FLAGS_DEBUG                  "${USER_CXX_FLAGS_DEBUG}"                  CACHE INTERNAL "")
+set(CMAKE_CXX_FLAGS_DEBUG_OPTIMISED        "${USER_CXX_FLAGS_DEBUG_OPTIMISED}"        CACHE INTERNAL "")
+set(CMAKE_CXX_FLAGS_RELEASE                "${USER_CXX_FLAGS_RELEASE}"                CACHE INTERNAL "")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG           "${USER_EXE_LINKER_FLAGS_DEBUG}"           CACHE INTERNAL "")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "${USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED}" CACHE INTERNAL "")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE         "${USER_EXE_LINKER_FLAGS_RELEASE}"         CACHE INTERNAL "")
 
-# Set install path (method used to work around gtest overriding).
-set(INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE PATH "Install path.")
-set(CMAKE_INSTALL_PREFIX ${INSTALL_PREFIX} CACHE INTERNAL "")
-
-# Log build information.
-message("Build configuration selected: ${CMAKE_BUILD_TYPE}, using compiler ${CMAKE_CXX_COMPILER_ID}.")
-message("Install path: ${CMAKE_INSTALL_PREFIX}")
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-	message("Compiler flags: ${CMAKE_CXX_FLAGS_DEBUG}")
-	message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug_Optimised")
-	message("Compiler flags: ${CMAKE_CXX_FLAGS_DEBUG_OPTIMISED}")
-	message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS_DEBUG_OPTIMISED}")
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-	message("Compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
-	message("Linker flags: ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
+# Preprocessor defines.
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	add_definitions(-DBUILD_DEBUG)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug_Optimised")
+	add_definitions(-DBUILD_DEBUG)
 endif()
+
+# Set install path.
+set(USER_INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE PATH "Install path.")
+set(CMAKE_INSTALL_PREFIX ${USER_INSTALL_PREFIX} CACHE INTERNAL "")
 
 # Add projects.
 add_subdirectory(project)
