@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(libpcsx2_core)
+project(libpcsx2_core CXX)
 
 # Clang bug: currently, as of clang++ 3.8, linking does not work due to a compiler bug.
 # Only Clang++ 4.0 and beyond works with the -std=c++1z flag.

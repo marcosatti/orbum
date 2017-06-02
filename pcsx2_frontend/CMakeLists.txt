@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(pcsx2_frontend)
+project(pcsx2_frontend CXX)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/pcsx2_frontend/src 
