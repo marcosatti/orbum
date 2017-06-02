@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.1)
 
 project(libpcsx2_core CXX)
 
@@ -14,8 +14,9 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	endif()
 endif()
 
+# Build rules.
 include_directories(
-	${CMAKE_SOURCE_DIR}/libpcsx2_core/libpcsx2_core/src 
+	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )
 
 set(COMMON_SRC_FILES
@@ -185,3 +186,6 @@ set(COMMON_SRC_FILES
 add_library(pcsx2_core STATIC ${COMMON_SRC_FILES})
 set_target_properties(pcsx2_core PROPERTIES CXX_STANDARD 14)
 set_target_properties(pcsx2_core PROPERTIES CXX_STANDARD_REQUIRED ON)
+
+# Install rules.
+install(TARGETS pcsx2_core ARCHIVE DESTINATION lib)

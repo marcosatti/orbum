@@ -40,7 +40,7 @@ void log(const LogLevel_t level, const std::string & message)
 
 int main()
 {
-	std::string workspace("../Workspace/");
+	std::string workspace("./workspace/");
 	logFile.open(workspace + "PCSX2_Rewrite_Log.txt");
 	
 	VMOptions vmOptions = 

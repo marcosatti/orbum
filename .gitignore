@@ -258,5 +258,7 @@ paket-files/
 # Workspace
 [Ww]orkspace/
 
-# CMake build dir
+# Build/install dirs
 build/
+include/
+lib/
