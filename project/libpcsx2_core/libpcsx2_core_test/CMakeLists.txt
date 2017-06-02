@@ -25,8 +25,6 @@ set(COMMON_SRC_FILES
 find_package(Threads)
 add_executable(libpcsx2_core_test ${COMMON_SRC_FILES})
 target_link_libraries(libpcsx2_core_test ${PROJECT_LIBS} ${CMAKE_THREAD_LIBS_INIT}) 
-set_target_properties(libpcsx2_core_test PROPERTIES CXX_STANDARD 14)
-set_target_properties(libpcsx2_core_test PROPERTIES CXX_STANDARD_REQUIRED ON)
 
 # Visual studio startup project
 if (NOT (${CMAKE_VERSION} VERSION_LESS 3.6))

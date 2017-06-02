@@ -20,19 +20,28 @@ set_property(CACHE USER_BUILD_TYPE PROPERTY STRINGS "Debug;Debug_Optimised;Relea
 
 # Build flags for supported compilers.
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
+	# Clang bug: currently, as of clang++ 3.8, linking does not work due to a compiler bug.
+	# Only Clang++ 4.0 and beyond works with the -std=c++1z flag.
+	# See this bug report for details: https://bugs.llvm.org/show_bug.cgi?id=33098
+	# Please notify us when this is fixed! 
+	# Until this happens, the easist way to support different '-std' options in CMake is through here.
+	# After this is fixed, look into going to set_target_properties(... CXX_STANDARD 14) or something.
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.0")
+		message(FATAL_ERROR "Currently only Clang++ 4.0+ works due to a compiler bug. Please see inside the root CMakeLists.txt file for more details.")
+	endif()
 	# Compiler 
-	set(USER_CXX_FLAGS_DEBUG           "-g"     CACHE STRING "User CXX compiler flags (Debug)."          )
-	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
-	set(USER_CXX_FLAGS_RELEASE         "-O3"    CACHE STRING "User CXX compiler flags (Release)."        )
+	set(USER_CXX_FLAGS_DEBUG           "-g -std=c++1z"     CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3 -std=c++1z" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "-O3 -std=c++1z"    CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
 	set(USER_EXE_LINKER_FLAGS_DEBUG           "" CACHE STRING "User CXX linker flags (Debug)."            )
 	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "" CACHE STRING "User CXX linker flags (Debug_Optimised)."  )
 	set(USER_EXE_LINKER_FLAGS_RELEASE         "" CACHE STRING "User CXX linker flags (Release)."          )
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 	# Compiler 
-	set(USER_CXX_FLAGS_DEBUG           "-g"     CACHE STRING "User CXX compiler flags (Debug)."          )
-	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
-	set(USER_CXX_FLAGS_RELEASE         "-O3"    CACHE STRING "User CXX compiler flags (Release)."        )
+	set(USER_CXX_FLAGS_DEBUG           "-g -std=c++14"     CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "-g -O3 -std=c++14" CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "-O3 -std=c++14"    CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
 	set(USER_EXE_LINKER_FLAGS_DEBUG           "" CACHE STRING "User CXX linker flags (Debug)."            )
 	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "" CACHE STRING "User CXX linker flags (Debug_Optimised)."  )
@@ -41,15 +50,15 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL Intel)
 	message(FATAL_ERROR "Implement me! (Intel)")
 elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 	# Compiler 
-	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /Ob0 /Od /RTC1 /MP" CACHE STRING "User CXX compiler flags (Debug)."          )
-	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /Ob2 /MP"       CACHE STRING "User CXX compiler flags (Debug_Optimised).")
-	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /Ob2 /MP"            CACHE STRING "User CXX compiler flags (Release)."        )
+	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /Ob0 /Od /RTC1 /MP /std=c++14" CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /Ob2 /MP /std=c++14"       CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /Ob2 /MP /std=c++14"            CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
 	set(USER_EXE_LINKER_FLAGS_DEBUG           "/machine:x64 /DEBUG" CACHE STRING "User CXX linker flags (Debug)."          )
 	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "/machine:x64 /DEBUG" CACHE STRING "User CXX linker flags (Debug_Optimised).")
 	set(USER_EXE_LINKER_FLAGS_RELEASE         "/machine:x64"        CACHE STRING "User CXX linker flags (Release)."        )
 else()
-	message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
+	message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}, stopping.")
 endif()
 
 # Apply build settings.

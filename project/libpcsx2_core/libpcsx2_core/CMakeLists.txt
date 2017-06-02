@@ -2,18 +2,6 @@ cmake_minimum_required(VERSION 3.1)
 
 project(libpcsx2_core CXX)
 
-# Clang bug: currently, as of clang++ 3.8, linking does not work due to a compiler bug.
-# Only Clang++ 4.0 and beyond works with the -std=c++1z flag.
-# See this bug report for details: https://bugs.llvm.org/show_bug.cgi?id=33098
-# Please notify us when this is fixed!
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.0")
-		message(FATAL_ERROR "Only Clang++ 4.0+ currently works due to a compiler bug. Please see inside libpcsx2_core's CMakeLists.txt for more details.")
-	else()
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
-	endif()
-endif()
-
 # Build rules.
 include_directories(
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
@@ -184,8 +172,6 @@ set(COMMON_SRC_FILES
 )
 
 add_library(pcsx2_core STATIC ${COMMON_SRC_FILES})
-set_target_properties(pcsx2_core PROPERTIES CXX_STANDARD 14)
-set_target_properties(pcsx2_core PROPERTIES CXX_STANDARD_REQUIRED ON)
 
 # Install rules.
 install(TARGETS pcsx2_core ARCHIVE DESTINATION lib)

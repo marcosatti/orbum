@@ -18,8 +18,6 @@ set(COMMON_SRC_FILES
 find_package(Threads)
 add_executable(pcsx2_frontend ${COMMON_SRC_FILES})
 target_link_libraries(pcsx2_frontend ${PROJECT_LIBS} ${CMAKE_THREAD_LIBS_INIT})
-set_target_properties(pcsx2_frontend PROPERTIES CXX_STANDARD 14)
-set_target_properties(pcsx2_frontend PROPERTIES CXX_STANDARD_REQUIRED ON)
 
 # Visual studio startup project
 if (NOT (${CMAKE_VERSION} VERSION_LESS 3.6))
