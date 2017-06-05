@@ -38,11 +38,20 @@ void log(const LogLevel_t level, const std::string & message)
 	std::cout.flush();
 }
 
-int main()
+int main(int argc, char * argv[])
 {
 	std::string workspace("./workspace/");
+
+	if (argc > 1)
+		workspace = argv[1];
+
+    std::cout << "PCSX2_Frontend starting, called with arguments:" << std::endl;
+    for (int i = 0; i < argc; i++)
+        std::cout << i << ": " << argv[i] << std::endl;
+    std::cout << "Using workspace directory: " << workspace << std::endl;
+
 	logFile.open(workspace + "PCSX2_Rewrite_Log.txt");
-	
+
 	VMOptions vmOptions = 
 	{
 		log,
@@ -51,28 +60,35 @@ int main()
 		"",
 		"",
 		10,
-		VMOptions::MT_SIM,
+		VMOptions::ST,
 		{ }
 	};
 
+	try
 	{
-        VM vm(vmOptions);
+		VM vm(vmOptions);
 
-        try
-        {
-            while (vm.getStatus() == VM::VMStatus::Paused)
-                vm.run();
-        }
-        catch (const std::exception & ex)
-        {
-            log(Fatal, ex.what());
-        }
+		try 
+		{
+			vm.reset(true);
+			
+			while (vm.getStatus() == VM::VMStatus::Paused)
+				vm.run();
+		}
+		catch (const std::runtime_error & ex)
+		{
+			log(Fatal, ex.what());
+		}
 
-        vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
-        vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
-        vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
-        vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
+		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
+		vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
+		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
+		vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
 	}
+	catch (const std::exception & ex)
+	{
+		log(Fatal, ex.what());
+	}       
 
 	logFile.close();
 	

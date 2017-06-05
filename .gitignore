@@ -263,5 +263,5 @@ build/
 include/
 lib/
 
-# VS Cmake integration
-CMakeSettings.json
+# VSCode CMake Tools stuff (locally cached)
+.vscode/.cmaketools.json

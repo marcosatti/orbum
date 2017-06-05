@@ -63,7 +63,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 	message(FATAL_ERROR "Implement me! (Intel)")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	# Compiler 
-	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /RTC1 /MP /std=c++14" CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /RTC1 /MP /std=c++14"     CACHE STRING "User CXX compiler flags (Debug)."          )
 	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /MP /std=c++14"       CACHE STRING "User CXX compiler flags (Debug_Optimised).")
 	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /MP /std=c++14"            CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker

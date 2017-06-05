@@ -1,0 +1,37 @@
+// Place your settings in this file to overwrite the default and user settings
+{
+    "cmake.installPrefix": "${workspaceRoot}",
+
+    "cmake.preferredGenerators": [
+        "Unix Makefiles",
+        "Visual Studio 15 2017 Win64",
+        "Visual Studio 15 2017",
+        "Ninja",
+        "MinGW Makefiles",
+        "NMake Makefiles"
+    ],
+
+    "cmake.experimental.useCMakeServer": true,
+
+    "cmake.defaultVariants": {
+        "buildType": {
+            "default$": "debug_optimised",
+            "description$": "The build type to use",
+            "debug": {
+                "oneWordSummary$": "Debug",
+                "description$": "Emit debug information without performing optimizations",
+                "buildType": "Debug"
+            },
+            "debug_optimised": {
+                "oneWordSummary$": "Debug_Optimised",
+                "description$": "Emit debug information with optimizations",
+                "buildType": "Debug_Optimised"
+            },
+            "release": {
+                "oneWordSummary$": "Release",
+                "description$": "Enable optimizations, omit debug info",
+                "buildType": "Release"
+            }
+        }
+    }
+}

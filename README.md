@@ -90,7 +90,7 @@ user@pc:/PCSX2_rewrite$ git submodule init && git submodule update
 ```
 No support for big-endian architectures (yet), or when a float is not 32-bits wide (see the f32 typedef).
 Both 32-bit and 64-bit architectures are supported, however only 64-bit is used by me.
-See `PCSX2_Core/src/Common/Global/CompileOptions.h` for a list of debug options you can use.
+See `libpcsx2_core/src/Common/Global/CompileOptions.h` for a list of debug options you can use.
 
 ### CMake Support
 PCSX2_Rewrite includes CMake support for building under Linux, macOS and Windows.
@@ -101,9 +101,30 @@ user@pc:/PCSX2_rewrite$ cd build && cmake .. && cmake --build .
 ```
 
 Use the CMake GUI to see and set the list of options available (or use the command line).
+In order to support every platform/config, please do not use the CMAKE_* variables to change options.
+Instead, use the USER_* cache variables are available to the user.
+Any modifications done to the CMAKE_* versions will be overridden when CMake is configuring by the USER_* ones.
 
-By default, the install target (ie: `make install`) will copy the relevant files to PCSX2_rewrite/lib and PCSX2_rewrite/bin.
+By default, the install target (ie: `make install`) will copy the relevant files to PCSX2_rewrite/lib and PCSX2_rewrite/bin, etc.
+Although, there is probably no reason to use it right now.
+
+## Suggested Workflow (Visual Studio Code)
+I am using Visual Studio Code (cross-platform) with the following settings:
+- Preconfigured workspace .vscode config files, for launching/debugging/CMake Tools, which is included in the repo.
+- The "C/C++" (ms-vscode.cpptools), "CMake" (twxs.cmake) and "CMake Tools" (vector-of-bool.cmake-tools) extensions.
+- CMake binary installed (at least version 3.7 for the server backend which is turned on by default).
+
+You are able to build and debug the project directly through VS Code (using the CMake support).
+Again, if you need to change any of the compiler/linker flags, you can do so through the USER_* CMake cache variables.
+
+## Other IDE's
+Unfortunately (for Windows users), the full Visual Studio does not work currently, even with the inbuilt CMake open folder support.
+It currently does not support custom build configurations, and is a real PITA when it comes to setting your own CXX flags etc, so mostly just doesn't work at all.
+I might try again in the future, of course if someone else gets it working perfectly with the current CMakeLists.txt let me know.
+
+Qt Creater might work, I haven't tried it though. It does have inbuild CMake support, so the framework is there.
 
 ## Running
 You will require the scph10000.bin bios. Other bios' have not been tested but may work.
-Running the emulator will search for the bios in "./workspace".
+The first argument parsed to pcsx2_frontend determines the workspace path (eg: "./workspace/", you need the trailing slash).
+Running the emulator will search for the bios (exact name!) in this workspace path.

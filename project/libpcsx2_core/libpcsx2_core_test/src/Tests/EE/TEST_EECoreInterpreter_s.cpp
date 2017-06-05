@@ -34,6 +34,7 @@ public:
 		};
 		
 		vm = new VM(vmOptions);
+		vm->reset(false);
         core = vm->mSystemEECore.get();
 	}
 
