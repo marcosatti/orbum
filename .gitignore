@@ -257,3 +257,11 @@ paket-files/
 
 # Workspace
 [Ww]orkspace/
+
+# Build/install dirs
+build/
+include/
+lib/
+
+# VSCode CMake Tools stuff (locally cached)
+.vscode/.cmaketools.json

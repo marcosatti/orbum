@@ -1,0 +1,21 @@
+{
+    "buildType": {
+        "default$": "debug_optimised",
+        "description$": "The build type to use",
+        "debug": {
+            "oneWordSummary$": "Debug",
+            "description$": "Emit debug information without performing optimisations.",
+            "buildType": "Debug"
+        },
+        "debug_optimised": {
+            "oneWordSummary$": "Debug_Optimised",
+            "description$": "Emit debug information with most optimisations.",
+            "buildType": "Debug_Optimised"
+        },
+        "release": {
+            "oneWordSummary$": "Release",
+            "description$": "Enable optimisations, omit debug info.",
+            "buildType": "Release"
+        }
+    }
+}

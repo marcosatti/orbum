@@ -1,0 +1,56 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(Debug) pcsx2_frontend",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/pcsx2_frontend/Debug/pcsx2_frontend.exe",
+            "cwd": "${workspaceRoot}",
+            "args": [ "${workspaceRoot}/bin/workspace/" ],
+            "externalConsole": true
+        },
+        {
+            "name": "(Debug) libpcsx2_core_test",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Debug/libpcsx2_core_test.exe",
+            "cwd": "${workspaceRoot}",
+            "externalConsole": true
+        },
+        {
+            "name": "(Debug_Optimised) pcsx2_frontend",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/pcsx2_frontend/Debug_Optimised/pcsx2_frontend.exe",
+            "cwd": "${workspaceRoot}",
+            "args": [ "${workspaceRoot}/bin/workspace/" ],
+            "externalConsole": true
+        },
+        {
+            "name": "(Debug_Optimised) libpcsx2_core_test",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Debug_Optimised/libpcsx2_core_test.exe",
+            "cwd": "${workspaceRoot}",
+            "externalConsole": true
+        },
+        {
+            "name": "(Release) pcsx2_frontend",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/pcsx2_frontend/Release/pcsx2_frontend.exe",
+            "cwd": "${workspaceRoot}",
+            "args": [ "${workspaceRoot}/bin/workspace/" ],
+            "externalConsole": true
+        },
+        {
+            "name": "(Release) libpcsx2_core_test",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Release/libpcsx2_core_test.exe",
+            "cwd": "${workspaceRoot}",
+            "externalConsole": true
+        }
+    ]
+}

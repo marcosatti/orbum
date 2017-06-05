@@ -1,68 +1,37 @@
+// Place your settings in this file to overwrite the default and user settings
 {
-    "files.associations": {
-        "exception": "cpp",
-        "condition_variable": "cpp",
-        "stdexcept": "cpp",
-        "algorithm": "cpp",
-        "bitset": "cpp",
-        "chrono": "cpp",
-        "cmath": "cpp",
-        "cstdarg": "cpp",
-        "cstddef": "cpp",
-        "cstdint": "cpp",
-        "cstdio": "cpp",
-        "cstdlib": "cpp",
-        "cstring": "cpp",
-        "ctime": "cpp",
-        "cwchar": "cpp",
-        "deque": "cpp",
-        "forward_list": "cpp",
-        "fstream": "cpp",
-        "functional": "cpp",
-        "hash_map": "cpp",
-        "hash_set": "cpp",
-        "initializer_list": "cpp",
-        "iomanip": "cpp",
-        "ios": "cpp",
-        "iosfwd": "cpp",
-        "iostream": "cpp",
-        "istream": "cpp",
-        "iterator": "cpp",
-        "limits": "cpp",
-        "list": "cpp",
-        "map": "cpp",
-        "memory": "cpp",
-        "mutex": "cpp",
-        "new": "cpp",
-        "ostream": "cpp",
-        "queue": "cpp",
-        "ratio": "cpp",
-        "set": "cpp",
-        "sstream": "cpp",
-        "streambuf": "cpp",
-        "string": "cpp",
-        "system_error": "cpp",
-        "thread": "cpp",
-        "tuple": "cpp",
-        "type_traits": "cpp",
-        "typeinfo": "cpp",
-        "utility": "cpp",
-        "vector": "cpp",
-        "xfacet": "cpp",
-        "xfunctional": "cpp",
-        "xhash": "cpp",
-        "xiosbase": "cpp",
-        "xlocale": "cpp",
-        "xlocinfo": "cpp",
-        "xlocmon": "cpp",
-        "xlocnum": "cpp",
-        "xloctime": "cpp",
-        "xmemory": "cpp",
-        "xmemory0": "cpp",
-        "xstddef": "cpp",
-        "xstring": "cpp",
-        "xtr1common": "cpp",
-        "xtree": "cpp",
-        "xutility": "cpp"
+    "cmake.installPrefix": "${workspaceRoot}",
+
+    "cmake.preferredGenerators": [
+        "Unix Makefiles",
+        "Visual Studio 15 2017 Win64",
+        "Visual Studio 15 2017",
+        "Ninja",
+        "MinGW Makefiles",
+        "NMake Makefiles"
+    ],
+
+    "cmake.experimental.useCMakeServer": true,
+
+    "cmake.defaultVariants": {
+        "buildType": {
+            "default$": "debug_optimised",
+            "description$": "The build type to use",
+            "debug": {
+                "oneWordSummary$": "Debug",
+                "description$": "Emit debug information without performing optimizations",
+                "buildType": "Debug"
+            },
+            "debug_optimised": {
+                "oneWordSummary$": "Debug_Optimised",
+                "description$": "Emit debug information with optimizations",
+                "buildType": "Debug_Optimised"
+            },
+            "release": {
+                "oneWordSummary$": "Release",
+                "description$": "Enable optimizations, omit debug info",
+                "buildType": "Release"
+            }
+        }
     }
 }

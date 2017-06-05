@@ -30,8 +30,6 @@ VM::VM(const VMOptions & vmOptions) :
 	mVMOptions(vmOptions),
 	mStatus(Stopped)
 {
-	// Initialise everything.
-	reset();
 }
 
 VM::~VM()
@@ -40,7 +38,7 @@ VM::~VM()
 	stop();
 }
 
-void VM::reset()
+void VM::reset(const bool loadBIOS)
 {
 	// Initialise logging.
 	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
@@ -56,14 +54,11 @@ void VM::reset()
 
 	log(Info, "VM resources initialised.");
 
-	// Initialise Roms.
-	if (!mVMOptions.BOOT_ROM_PATH.empty())
-		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH.c_str(), 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
-	// ROM1.
-	// ROM2.
-	// EROM.
-
-	log(Info, "VM roms initialised.");
+	if (loadBIOS)
+	{
+		resetBIOS();
+		log(Info, "VM roms initialised.");
+	}
 
 	// Create systems.
 	mSystemEEDmac = std::make_shared<EEDmac_s>(this);
@@ -106,10 +101,20 @@ void VM::reset()
 	log(Info, "VM reset done, now paused.");
 }
 
-void VM::reset(const VMOptions& options)
+void VM::reset(const bool loadBIOS, const VMOptions& options)
 {
 	mVMOptions = options;
-	reset();
+	reset(loadBIOS);
+}
+
+void VM::resetBIOS()
+{
+	// Initialise Roms.
+	if (!mVMOptions.BOOT_ROM_PATH.empty())
+		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH.c_str(), 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
+	// ROM1.
+	// ROM2.
+	// EROM.
 }
 
 void VM::run()

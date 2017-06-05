@@ -40,7 +40,7 @@ public:
 	};
 
 	/*
-	Constructs the VM through a call to reset().
+	Constructs the VM. A reset is not performed; it must be called explicitly to run.
 	*/
 	explicit VM(const VMOptions & vmOptions);
 
@@ -52,9 +52,15 @@ public:
 	/*
 	Resets the VM by setting up logging, resources and system threads.
 	After a reset, the VM state is set to paused and is ready to run.
+	The parameter loadBIOS controls automatically loading the BIOS into memory; call loadBIOS() explicitly otherwise;
 	*/
-	void reset();
-	void reset(const VMOptions & options);
+	void reset(const bool loadBIOS);
+	void reset(const bool loadBIOS, const VMOptions & options);
+
+	/*
+	Loads the various bios' into memory, from the VM option given in reset().
+	*/
+	void resetBIOS();
 
 	/*
 	Runs through one time step (set in the VM options), and then pauses the VM state.
