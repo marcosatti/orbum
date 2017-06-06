@@ -12,9 +12,13 @@
 void CDVD_s::SCMD_INSTRUCTION_40()
 {
 	// Read config parameters.
-	u8 readWrite = mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext());
-	u8 area = mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext());
-	u8 maxBlocks = mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext());
+	u8 readWrite, area, maxBlocks;
+	if (!mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext(), readWrite)
+		|| !mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext(), area)
+		|| !mCDVD->S_RDY_DIN->DATA_IN->readByte(getContext(), maxBlocks))
+		{
+			throw std::runtime_error("CDVD_s: Instruction 0x40 failed, one of the paramters did not read ok. Please debug.");
+		}
 
 	// Set NVRAM config parameters.
 	mCDVD->NVRAM->setConfigAccessParams(readWrite, area, maxBlocks, 0);
@@ -30,7 +34,8 @@ void CDVD_s::SCMD_INSTRUCTION_41()
 	// TODO: check for endianess problems.
 	u16 buffer[8];
 	mCDVD->NVRAM->readConfigBlock(getContext(), buffer);
-	mCDVD->S_DATA_OUT->write(getContext(), reinterpret_cast<u8*>(buffer), 16);
+	if (!mCDVD->S_DATA_OUT->write(getContext(), reinterpret_cast<u8*>(buffer), 16))
+		throw std::runtime_error("CDVD_s: Instruction 0x41 failed, not enough space in the FIFO queue to write. Please debug");
 }
 
 void CDVD_s::SCMD_INSTRUCTION_42()
@@ -39,7 +44,8 @@ void CDVD_s::SCMD_INSTRUCTION_42()
 	// A block is 16 bytes / 8 hwords long.
 	// TODO: check for endianess problems.
 	u16 buffer[8];
-	mCDVD->S_RDY_DIN->DATA_IN->read(getContext(), reinterpret_cast<u8*>(buffer), 16);
+	if (!mCDVD->S_RDY_DIN->DATA_IN->read(getContext(), reinterpret_cast<u8*>(buffer), 16))
+		throw std::runtime_error("CDVD_s: Instruction 0x42 failed, not enough data in the FIFO queue to read. Please debug.");
 	mCDVD->NVRAM->writeConfigBlock(getContext(), buffer);
 	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
 }

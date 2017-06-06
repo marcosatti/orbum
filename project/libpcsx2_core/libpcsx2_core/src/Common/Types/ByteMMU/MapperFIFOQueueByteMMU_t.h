@@ -9,6 +9,8 @@
 /*
 A transition layer, allowing a FIFO queue to be mapped into the PS2 physical memory space.
 This wrapper maps the FIFO queue to a single byte of the address space and acts like a port.
+TODO: getSize() needs to be looked at - although it works, its not technically correct to only occupy 1 byte for (example) the qword functions.
+      Probably needs to be split up into different mappers - for 8/16/32/64/128.
 */
 class MapperFIFOQueueByteMMU_t : public MapperBaseObjectByteMMU_t
 {

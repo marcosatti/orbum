@@ -1,6 +1,6 @@
 #pragma once
 
-#include <queue>
+#include <boost/lockfree/spsc_queue.hpp>
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/System/Context_t.h"
@@ -8,10 +8,9 @@
 
 /*
 Represents a FIFO queue used in, for example, the DMA transfer paths and the CDVD parameter/response FIFO's.
-The minimum sized data unit that can be read/written to the queue is 8-bits.
+The minimum sized data unit that can be read/written to the queue is a byte.
 Other sizes can be read/write, with an optional buffer to perform operations directly on.
-TODO: Test performance... probably migrate to using a ring buffer.
-TODO: Add in thread safety - trivial task, just put in locks on every read/write function.
+Uses a thread-safe ring buffer (boost::lock_free::spsc_queue) as the backend, which allows only one producer & one consumer at any one time.
 */
 class FIFOQueue_t : public DebugBaseObject_t
 {
@@ -25,54 +24,61 @@ public:
 	virtual void initialise();
 
 	/*
-	Read/write functions to access the FIFO queue, with subclassed functionality.
-	Reads pop byte(s) from the FIFO queue, and cannot be accessed again.
-	Writes push bytes(s) to the end of the FIFO queue.
-	Upon reading or writing to the queue when there is no data left or it is full, a runtime error is thrown.
-	The provided hword/word/dword/qword functions are wrappers around the byte functions, and should not be treated as separate interfaces (not made virtual).
+	Reads byte(s) from the FIFO queue (pop).
+	Returns true on a successful read.
 	*/
-	virtual u8 readByte(const Context_t context);
-	virtual void writeByte(const Context_t context, const u8 data);
-	u16 readHword(const Context_t context);
-	void writeHword(const Context_t context, const u16 data);
-	u32 readWord(const Context_t context);
-	void writeWord(const Context_t context, const u32 data);
-	u64 readDword(const Context_t context);
-	void writeDword(const Context_t context, const u64 data);
-	u128 readQword(const Context_t context);
-	void writeQword(const Context_t context, const u128 data);
+	virtual bool readByte(const Context_t context, u8 & data);
+
+	/*
+	Writes push bytes(s) to the end of the FIFO queue.
+	Returns true on a successful writes.
+	*/
+	virtual bool writeByte(const Context_t context, const u8 data);
 	
 	/*
 	Reads bytes to the buffer given.
 	This is a wrapper around the readByte function, and should not be treated as a separate interface (not made virtual).
+	Before reading from the queue, first checks that there are 'length' elements available. 
+	Returns true if this check passed and bytes were read into 'buffer', false otherwise.
 	*/
-	void read(const Context_t context, u8 * buffer, const size_t length);
+	bool read(const Context_t context, u8 * buffer, const size_t length);
 
 	/*
 	Writes bytes from the buffer given.
 	This is a wrapper around the writeByte function, and should not be treated as a separate interface (not made virtual).
+	Before writing to the queue, first checks that there are 'length' spaces available. 
+	Returns true if this check passed and bytes were written from 'buffer', false otherwise.
 	*/
-	void write(const Context_t context, const u8 * buffer, const size_t length);
+	bool write(const Context_t context, const u8 * buffer, const size_t length);
 
 	/*
-	Gets the current number of 8-bit data elements in the queue.
+	Returns the number of bytes remaining in the queue available for reading.
+	Use only from a consumer thread (Boost requirement).
 	*/
-	size_t getCurrentSize() const;
+	size_t getReadAvailable() const;
 
 	/*
-	Gets the max allowable number of 8-bit data elements this FIFO queue can hold.
+	Returns the number of bytes free in the queue available for writing.
+	Use only from a producer thread (Boost requirement).
 	*/
-	size_t getMaxSize() const;
+	size_t getWriteAvailable() const;
+
+	/*
+	Returns the maximum amount of data this queue can hold, set at construction.
+	*/
+	size_t getSize() const;
 
 private:
 	/*
-	The max number of 8-bit data elements allowed in the queue, set to the constructor parameter.
+	Maximum size of the FIFO queue.
 	*/
-	size_t mMaxByteSize;
+	size_t mSize;
 
 	/*
 	The backend for the FIFO queue.
+	Note: The docs might be a little confusing, in that while it says only one producer and one consumer, that is only when it is simultaneously accessed.
+	      This means multiple threads can produce & consume, but there can only be one producer & consumer of those threads active at a time.
 	*/
-	std::queue<u8> mFIFOQueue;
+	boost::lockfree::spsc_queue<u8> mFIFOQueue;
 };
 

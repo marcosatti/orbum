@@ -6,18 +6,22 @@ CDVDFIFOQueue_NS_DATA_OUT_t::CDVDFIFOQueue_NS_DATA_OUT_t(const char* mnemonic, c
 {
 }
 
-u8 CDVDFIFOQueue_NS_DATA_OUT_t::readByte(const Context_t context)
+bool CDVDFIFOQueue_NS_DATA_OUT_t::readByte(const Context_t context, u8 & data)
 {
-	auto temp = FIFOQueue_t::readByte(context);
+	auto success = FIFOQueue_t::readByte(context, data);
 
-	if (getCurrentSize() == 0)
+	if (getReadAvailable() == 0)
 		mNS_RDY_DIN->READY->writeByte(context, mNS_RDY_DIN->READY->readByte(context) | 0x40);
 
-	return temp;
+	return success;
 }
 
-void CDVDFIFOQueue_NS_DATA_OUT_t::writeByte(const Context_t context, const u8 data)
+bool CDVDFIFOQueue_NS_DATA_OUT_t::writeByte(const Context_t context, const u8 data)
 {
-	FIFOQueue_t::writeByte(context, data);
-	mNS_RDY_DIN->READY->writeByte(context, mNS_RDY_DIN->READY->readByte(context) & (~0x40));
+	bool success = FIFOQueue_t::writeByte(context, data);
+
+	if (getWriteAvailable() != getSize())
+		mNS_RDY_DIN->READY->writeByte(context, mNS_RDY_DIN->READY->readByte(context) & (~0x40));
+
+	return success;
 }

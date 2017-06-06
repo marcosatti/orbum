@@ -8,11 +8,11 @@ if(APPLE AND NOT TARGET_IOS)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version.")
 endif()
 
-# Add externals first to override any settings they change.
-add_subdirectory(external)
-
 # Declare superproject.
 project(pcsx2_rewrite CXX)
+
+# Add externals first to override any settings they change.
+add_subdirectory(external)
 
 # Build configuration settings.
 set(USER_BUILD_TYPE "Debug_Optimised" CACHE STRING "Choose the type of build, options are: Debug Debug_Optimised Release.")
@@ -63,9 +63,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 	message(FATAL_ERROR "Implement me! (Intel)")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	# Compiler 
-	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /RTC1 /MP /std=c++14"     CACHE STRING "User CXX compiler flags (Debug)."          )
-	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /MP /std=c++14"       CACHE STRING "User CXX compiler flags (Debug_Optimised).")
-	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /MP /std=c++14"            CACHE STRING "User CXX compiler flags (Release)."        )
+	set(USER_CXX_FLAGS_DEBUG           "/MTd /Zi /RTC1 /MP /std=c++14 /D_SCL_SECURE_NO_WARNINGS" CACHE STRING "User CXX compiler flags (Debug)."          )
+	set(USER_CXX_FLAGS_DEBUG_OPTIMISED "/MTd /Zi /O2 /MP /std=c++14 /D_SCL_SECURE_NO_WARNINGS"   CACHE STRING "User CXX compiler flags (Debug_Optimised).")
+	set(USER_CXX_FLAGS_RELEASE         "/MT /O2 /MP /std=c++14 /D_SCL_SECURE_NO_WARNINGS"        CACHE STRING "User CXX compiler flags (Release)."        )
 	# Linker
 	set(USER_EXE_LINKER_FLAGS_DEBUG           "/DEBUG" CACHE STRING "User CXX linker flags (Debug)."          )
 	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "/DEBUG" CACHE STRING "User CXX linker flags (Debug_Optimised).")

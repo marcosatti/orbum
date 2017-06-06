@@ -2,123 +2,94 @@
 
 FIFOQueue_t::FIFOQueue_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const size_t maxByteSize) :
 	DebugBaseObject_t(mnemonic, debugReads, debugWrites),
-	mMaxByteSize(maxByteSize)
+	mSize(maxByteSize),
+	mFIFOQueue(maxByteSize)
 {
 }
 
 void FIFOQueue_t::initialise()
 {
-	// Reset (clear) FIFO queue.
-	std::queue<u8>().swap(mFIFOQueue);
+	// Clear the FIFO queue.
+	mFIFOQueue.reset();
 }
 
-u8 FIFOQueue_t::readByte(const Context_t context)
+bool FIFOQueue_t::readByte(const Context_t context, u8 & data)
 {
-	if (getCurrentSize() == 0)
-		throw std::runtime_error("FIFO Queue empty, but tried to read. Please fix.");
-
-	auto temp = mFIFOQueue.front();
-	mFIFOQueue.pop();
+	bool success = mFIFOQueue.pop(data);
 
 #if DEBUG_LOG_FIFOQUEUE_READ_WRITE
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8, Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), mFIFOQueue.size(), temp);
+		log(Debug, "%s: %s Read u8 (S = %d), Used Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, mFIFOQueue.read_available(), data);
 #else
-		log(Debug, "%s: %s Read u8, Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), temp);
+		log(Debug, "%s: %s Read u8 (S = %d), Used Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, mFIFOQueue.read_available(), data);
 #endif
 	}
 #endif
 
-	return temp;
+	if (!success)
+		log(Debug, "FIFOQueue_t: Failed to push a byte to the FIFO queue. This **might** be ok, but you have been warned...");
+
+	return success;
 }
 
-void FIFOQueue_t::writeByte(const Context_t context, const u8 data)
+bool FIFOQueue_t::writeByte(const Context_t context, const u8 data)
 {
-	if (getCurrentSize() == mMaxByteSize)
-		throw std::runtime_error("FIFO Queue full, but tried to write. Please fix.");
-
-	mFIFOQueue.push(data);
+	bool success = mFIFOQueue.push(data);
 
 #if DEBUG_LOG_FIFOQUEUE_READ_WRITE
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8, Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u8 (S = %d), Free Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, mFIFOQueue.write_available(), data);
 #else
-		log(Debug, "%s: %s Write u8, Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), mFIFOQueue.size(), data);
+		log(Debug, "%s: %s Write u8 (S = %d), Free Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, mFIFOQueue.write_available(), data);
 #endif
 	}
 #endif
+
+	if (!success)
+		log(Debug, "FIFOQueue_t: Failed to push a byte to the FIFO queue. This **might** be ok, but you have been warned...");
+
+	return success;
 }
 
-u16 FIFOQueue_t::readHword(const Context_t context)
+bool FIFOQueue_t::read(const Context_t context, u8* buffer, const size_t length)
 {
-	u16 buffer;
-	read(context, reinterpret_cast<u8*>(&buffer), Constants::NUMBER_BYTES_IN_HWORD);
-	return buffer;
-}
+	if (mFIFOQueue.read_available() < length)
+		return false;
 
-void FIFOQueue_t::writeHword(const Context_t context, const u16 data)
-{
-	write(context, reinterpret_cast<const u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD);
-}
-
-u32 FIFOQueue_t::readWord(const Context_t context)
-{
-	u32 buffer;
-	read(context, reinterpret_cast<u8*>(&buffer), Constants::NUMBER_BYTES_IN_WORD);
-	return buffer;
-}
-
-void FIFOQueue_t::writeWord(const Context_t context, const u32 data)
-{
-	write(context, reinterpret_cast<const u8*>(&data), Constants::NUMBER_BYTES_IN_WORD);
-}
-
-u64 FIFOQueue_t::readDword(const Context_t context)
-{
-	u64 buffer;
-	read(context, reinterpret_cast<u8*>(&buffer), Constants::NUMBER_BYTES_IN_DWORD);
-	return buffer;
-}
-
-void FIFOQueue_t::writeDword(const Context_t context, const u64 data)
-{
-	write(context, reinterpret_cast<const u8*>(&data), Constants::NUMBER_BYTES_IN_DWORD);
-}
-
-u128 FIFOQueue_t::readQword(const Context_t context)
-{
-	u128 buffer;
-	read(context, reinterpret_cast<u8*>(&buffer), Constants::NUMBER_BYTES_IN_QWORD);
-	return buffer;
-}
-
-void FIFOQueue_t::writeQword(const Context_t context, const u128 data)
-{
-	write(context, reinterpret_cast<const u8*>(&data), Constants::NUMBER_BYTES_IN_QWORD);
-}
-
-void FIFOQueue_t::read(const Context_t context, u8* buffer, const size_t length)
-{
 	for (size_t i = 0; i < length; i++)
-		buffer[i] = readByte(context);
+	{
+		if (!readByte(context, buffer[i]))
+			throw std::runtime_error("FIFOQueue_t::read() failed while in loop. Please debug.");
+	}
 }
 
-void FIFOQueue_t::write(const Context_t context, const u8* buffer, const size_t length)
+bool FIFOQueue_t::write(const Context_t context, const u8* buffer, const size_t length)
 {
+	if (mFIFOQueue.write_available() < length)
+		return false;
+
 	for (size_t i = 0; i < length; i++)
-		writeByte(context, buffer[i]);
+	{
+		if (!writeByte(context, buffer[i]))
+			throw std::runtime_error("FIFOQueue_t::read() failed while in loop. Please debug.");
+	}
 }
 
-size_t FIFOQueue_t::getCurrentSize() const
+size_t FIFOQueue_t::getReadAvailable() const
 {
-	return mFIFOQueue.size();
+	return mFIFOQueue.read_available();
 }
 
-size_t FIFOQueue_t::getMaxSize() const
+size_t FIFOQueue_t::getWriteAvailable() const
 {
-	return mMaxByteSize;
+	return mFIFOQueue.write_available();
+}
+
+size_t FIFOQueue_t::getSize() const
+{
+	return mSize;
 }

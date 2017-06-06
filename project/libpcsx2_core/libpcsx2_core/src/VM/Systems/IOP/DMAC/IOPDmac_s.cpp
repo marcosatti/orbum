@@ -254,11 +254,10 @@ int IOPDmac_s::transferData() const
 	// Transfer data to or from the FIFO queue.
 	if (direction == Direction_t::FROM)
 	{
-		// Check if channel does not have data ready (need at least a single u32) - need to try again next cycle.
-		if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_WORD)
+		// Transfer data, return early if we could not read from the FIFO queue.
+		u32 packet;
+		if (!mChannel->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&packet), Constants::NUMBER_BYTES_IN_WORD))
 			return 0;
-
-		u32 packet = mChannel->FIFOQueue->readWord(getContext());
 		writeWordMemory(physicalAddress, packet);
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
@@ -267,12 +266,10 @@ int IOPDmac_s::transferData() const
 	}
 	else if (direction == Direction_t::TO)
 	{
-		// Check if channel is full (we need at least a single u32 space) - need to try again next cycle.
-		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_WORD))
-			return 0;
-
+		// Transfer data, return early if we could not write to the FIFO queue.
 		u32 packet = readWordMemory(physicalAddress);
-		mChannel->FIFOQueue->writeWord(getContext(), packet);
+		if (!mChannel->FIFOQueue->write(getContext(), reinterpret_cast<const u8*>(&packet), Constants::NUMBER_BYTES_IN_WORD))
+			return 0;
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
 		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
@@ -345,25 +342,15 @@ u128 IOPDmac_s::readQwordMemory(const u32 bytePhysicalAddress) const
 
 bool IOPDmac_s::readChainSourceTag()
 {
-	// Check for space (u128) in the FIFO queue, which depends on if the tag transfer (TTE) option is on (CHCR bit 8 aka "chopping enable" set). See below.
-	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
-	{
-		if (mChannel->FIFOQueue->getCurrentSize() > (mChannel->FIFOQueue->getMaxSize() - Constants::NUMBER_BYTES_IN_QWORD))
-			return false;
-	}
-
 	// Get tag memory address (TADR).
 	const u32 TADR = mChannel->TADR->readWord(getContext());
 
 	// Read EE tag (128-bits) from TADR.
 	const u128 tag = readQwordMemory(TADR);
 
-	// Set mDMAtag based upon the LSB 64-bits of tag.
-	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
-
 #if DEBUG_LOG_IOP_DMAC_TAGS
 	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
+		mChannel->getInfo()->mMnemonic, TADR, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
 	mDMAtag.logDebugAllFields();
 #endif
 
@@ -371,14 +358,19 @@ bool IOPDmac_s::readChainSourceTag()
 	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
 		// Setup new tag with LSB 64-bits filled with data from MSB 64-bits of tag read from before, then send.
+		// If there is no space in the FIFO queue, try again next cycle.
 		u128 sendTag = u128(tag.UW[2], tag.UW[3], 0, 0);
-		mChannel->FIFOQueue->writeQword(getContext(), sendTag);
+		if (!mChannel->FIFOQueue->write(getContext(), reinterpret_cast<const u8*>(&sendTag), Constants::NUMBER_BYTES_IN_QWORD))
+			return false;
 	}
+
+	// Set mDMAtag based upon the LSB 64-bits of tag.
+	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 
 	// Set tag transfer length.
 	// The maximum supported length is 1MB - 16 bytes, rounded up to the nearest qword alignment (from PCSX2).
 	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter? Probably doesn't need it, when source chain is enforced anyway (ie: will never receive data that isn't qword aligned).
-	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
+	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway (explains the 0xFFFFC mask).
 	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
 
 	// Increment TADR.
@@ -394,12 +386,10 @@ bool IOPDmac_s::readChainSourceTag()
 
 bool IOPDmac_s::readChainDestTag()
 {
-	// Check first if there is tag data available.
-	if (mChannel->FIFOQueue->getCurrentSize() < Constants::NUMBER_BYTES_IN_QWORD)
+	// Read tag from channel FIFO. If no data is available, try again next cycle.
+	u128 tag;
+	if (!mChannel->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&tag), Constants::NUMBER_BYTES_IN_QWORD))
 		return false;
-
-	// Read tag (u128) from channel FIFO. Only first 2 u32's are used for the IOP.
-	const u128 tag = mChannel->FIFOQueue->readQword(getContext());
 
 	// Set mDMAtag based upon the first 2 words read from the channel.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);

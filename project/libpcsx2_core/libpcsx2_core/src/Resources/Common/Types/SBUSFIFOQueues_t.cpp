@@ -9,24 +9,30 @@ SBUSFIFOQueue_SIF2_t::SBUSFIFOQueue_SIF2_t(const char * mnemonic, const bool deb
 {
 }
 
-u8 SBUSFIFOQueue_SIF2_t::readByte(const Context_t context)
+bool SBUSFIFOQueue_SIF2_t::readByte(const Context_t context, u8 & data)
 {
-	// Must read from the FIFO first - SBUS update calls FIFOQueue::getCurrentSize().
-	u32 temp = FIFOQueue_t::readByte(context);
-	handleSBUSUpdate(context);
-	return temp;
+	if (FIFOQueue_t::readByte(context, data))
+	{
+		// Check if the FIFO queue is empty.
+		if (getReadAvailable() == 0)
+			mSBUSF300->writeWord(context, mSBUSF300->readWord(context) | 0x04000000);
+		else
+			mSBUSF300->writeWord(context, mSBUSF300->readWord(context) & (~0x04000000));
+		
+		return true;
+	}
+
+	return false;
 }
 
-void SBUSFIFOQueue_SIF2_t::writeByte(const Context_t context, const u8 data)
+bool SBUSFIFOQueue_SIF2_t::writeByte(const Context_t context, const u8 data)
 {
-	FIFOQueue_t::writeByte(context, data);
-	handleSBUSUpdate(context);
-}
-
-void SBUSFIFOQueue_SIF2_t::handleSBUSUpdate(const Context_t context) const
-{
-	if (getCurrentSize() == 0)
-		mSBUSF300->writeWord(context, mSBUSF300->readWord(context) | 0x04000000);
-	else
+	if (FIFOQueue_t::writeByte(context, data))
+	{
+		// We are writing data - there is no need to check for data available == 0.
 		mSBUSF300->writeWord(context, mSBUSF300->readWord(context) & (~0x04000000));
+		return true;
+	}
+
+	return false;
 }

@@ -137,51 +137,46 @@ bool SPU2_s::handleSoundGeneration()
 
 int SPU2_s::transferData_ADMA_Write() const
 {
-	// Only transfer if data is available.
-	if (mCore->FIFOQueue->getCurrentSize() > 0)
+	// Get the source or destination transfer start address (TSAL/H). The address is always relative to the defined base addresses in the SPU2 memory.
+	// See page 28 of the SPU2 Overview manual for these base addresses.
+	u32 TSA = mCore->TSAL->readPairWord(getContext());
+
+	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
+	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
+	if (((mCore->ATTR->mDMACount / 0x100) % 2) == 0)
 	{
-		// Get the source or destination transfer start address (TSAL/H). The address is always relative to the defined base addresses in the SPU2 memory.
-		// See page 28 of the SPU2 Overview manual for these base addresses.
-		u32 TSA = mCore->TSAL->readPairWord(getContext());
+		// Left sound block.
+		// Get left channel address.
+		u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA + mCore->ATTR->mDMATransferAddressLeft;
 
-		// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
-		// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
-		if (((mCore->ATTR->mDMACount / 0x100) % 2) == 0)
-		{
-			// Left sound block.
-			// Get left channel address.
-			u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA + mCore->ATTR->mDMATransferAddressLeft;
+		// Perform word write from FIFO to left channel memory (2 hwords).
+		u32 data;
+		mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_WORD);
+		mSPU2->MainMemory->write(getContext(), leftAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
 
-			// Perform word write from FIFO to left channel memory (2 hwords).
-			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->write(getContext(), leftAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
+		// Update the DMA transfer address (move forward 2 hwords).
+		mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
+	}
+	else
+	{
+		// Right sound block.
+		// Get right channel address.
+		u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA + mCore->ATTR->mDMATransferAddressRight;
 
-			// Update the DMA transfer address (move forward 2 hwords).
-			mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
-		}
-		else
-		{
-			// Right sound block.
-			// Get right channel address.
-			u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA + mCore->ATTR->mDMATransferAddressRight;
+		// Perform word write from FIFO to right channel memory (2 hwords).
+		u32 data;
+		mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_WORD);
+		mSPU2->MainMemory->write(getContext(), rightAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
 
-			// Perform word write from FIFO to right channel memory (2 hwords).
-			u32 data = mCore->FIFOQueue->readWord(getContext());
-			mSPU2->MainMemory->write(getContext(), rightAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
-
-			// Update the DMA transfer address (move forward 2 hwords).
-			mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
-		}
-
-		// Increment the transfer count (2 hwords).
-		mCore->ATTR->mDMACount += Constants::NUMBER_HWORDS_IN_WORD;
-		
-		// ADMA has completed one transfer.
-		return 1;
+		// Update the DMA transfer address (move forward 2 hwords).
+		mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
 	}
 
-	// ADMA did not transfer anything.
-	return 0;
+	// Increment the transfer count (2 hwords).
+	mCore->ATTR->mDMACount += Constants::NUMBER_HWORDS_IN_WORD;
+	
+	// ADMA has completed one transfer.
+	return 1;
 }
 
 int SPU2_s::transferData_ADMA_Read() const
