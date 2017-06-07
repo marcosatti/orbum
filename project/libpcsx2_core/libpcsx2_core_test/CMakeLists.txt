@@ -3,23 +3,26 @@ cmake_minimum_required(VERSION 3.1)
 project(libpcsx2_core_test CXX)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/external/googletest/googletest/include
+	${CMAKE_SOURCE_DIR}/external/boost
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core_test/src 
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )
 
+link_directories(
+	${CMAKE_SOURCE_DIR}/external/boost/stage/lib
+)
+
 set(PROJECT_LIBS
-	gtest
 	pcsx2_core
 )
 
 set(COMMON_SRC_FILES
-	src/Main.cpp
-	src/Tests/Common/TEST_ByteMMU_t.cpp
+#	src/Main.cpp
+#	src/Tests/Common/TEST_ByteMMU_t.cpp
 	src/Tests/Common/TEST_MIPSInstruction_t.cpp
 	src/Tests/Common/TEST_PrimativeTypes.cpp
-	src/Tests/EE/TEST_EECoreInterpreter_s.cpp
-	src/Tests/IOP/TEST_IOPCoreInterpreter_s.cpp
+#	src/Tests/EE/TEST_EECoreInterpreter_s.cpp
+#	src/Tests/IOP/TEST_IOPCoreInterpreter_s.cpp
 )
 
 find_package(Threads)

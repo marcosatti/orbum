@@ -82,12 +82,15 @@ Some debug output:
 ## Build Instructions
 ### General Information
 The project uses the following libraries as git submodules:
-- Google test library (only for PCSX2_Core_UnitTest, you can build the Core and Frontend projects without).
+- Boost library.
 
-The following command should be enough to get going:
+The following commands should be enough to get going:
 ```
-user@pc:/PCSX2_rewrite$ git submodule init && git submodule update
+user@pc:/PCSX2_rewrite$ git submodule update --init --recursive
+user@pc:/PCSX2_rewrite$ cd external/boost && ./b2 headers && ./b2 address-model=[32 or 64] link=static runtime-link=static
 ```
+Or, if you know what you're doing, create symlink(s) to already existing directories.
+
 No support for big-endian architectures (yet), or when a float is not 32-bits wide (see the f32 typedef).
 Both 32-bit and 64-bit architectures are supported, however only 64-bit is used by me.
 See `libpcsx2_core/src/Common/Global/CompileOptions.h` for a list of debug options you can use.

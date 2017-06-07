@@ -17,7 +17,7 @@ REFRESH_RATE = Speed in Hz.
 */
 struct Constants
 {
-  static constexpr u8  VALUE_U8_MAX = std::numeric_limits<u8>::max();
+	static constexpr u8  VALUE_U8_MAX = std::numeric_limits<u8>::max();
 	static constexpr s8  VALUE_S8_MAX = std::numeric_limits<s8>::max();
 	static constexpr s8  VALUE_S8_MIN = std::numeric_limits<s8>::min();
 	static constexpr u16 VALUE_U16_MAX = std::numeric_limits<u16>::max();
