@@ -65,6 +65,8 @@ bool FIFOQueue_t::read(const Context_t context, u8* buffer, const size_t length)
 		if (!readByte(context, buffer[i]))
 			throw std::runtime_error("FIFOQueue_t::read() failed while in loop. Please debug.");
 	}
+
+	return true;
 }
 
 bool FIFOQueue_t::write(const Context_t context, const u8* buffer, const size_t length)
@@ -77,6 +79,8 @@ bool FIFOQueue_t::write(const Context_t context, const u8* buffer, const size_t 
 		if (!writeByte(context, buffer[i]))
 			throw std::runtime_error("FIFOQueue_t::read() failed while in loop. Please debug.");
 	}
+
+	return true;
 }
 
 size_t FIFOQueue_t::getReadAvailable() const
