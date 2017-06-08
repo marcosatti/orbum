@@ -86,8 +86,8 @@ public:
 
 private:
 	// Friend classes for the unit test functions.
-	friend class TEST_EECoreInterpreter_s;
-	friend class TEST_IOPCoreInterpreter_s;
+	friend struct R_TEST_EECoreInterpreter_s;
+	friend struct R_TEST_IOPCoreInterpreter_s;
 
 	/*
 	VM state resources.

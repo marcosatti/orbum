@@ -86,8 +86,11 @@ The project uses the following libraries as git submodules:
 
 The following commands should be enough to get going:
 ```
-user@pc:/PCSX2_rewrite$ git submodule update --init --recursive
-user@pc:/PCSX2_rewrite$ cd external/boost && ./b2 headers && ./b2 address-model=[32 or 64] link=static runtime-link=static
+user@pc:/PCSX2_rewrite$ git submodule update --init
+user@pc:/PCSX2_rewrite$ cd external/boost 
+user@pc:/PCSX2_rewrite/external/boost$ git checkout boost-1.64.0 (do not use the master branch - it will most likely fail to build, use `git clean -d -x -ff` if you have already)
+user@pc:/PCSX2_rewrite/external/boost$ git submodule update --init (clone the boost submodules)
+user@pc:/PCSX2_rewrite/external/boost$ ./bootstrap.[bat|sh] && ./b2 headers && ./b2 address-model=[32|64 (used normally)] link=[shared|static (used normally)] runtime-link=[shared|static (used normally)]
 ```
 Or, if you know what you're doing, create symlink(s) to already existing directories.
 
@@ -106,7 +109,8 @@ user@pc:/PCSX2_rewrite$ cd build && cmake .. && cmake --build .
 Use the CMake GUI to see and set the list of options available (or use the command line).
 In order to support every platform/config, please do not use the CMAKE_* variables to change options.
 Instead, use the USER_* cache variables are available to the user.
-Any modifications done to the CMAKE_* versions will be overridden when CMake is configuring by the USER_* ones.
+Any modifications done to the CMAKE_* versions will be overridden by the USER_* ones.
+Sane defaults have been provided for most compilers, so you probably don't need to change this.
 
 By default, the install target (ie: `make install`) will copy the relevant files to PCSX2_rewrite/lib and PCSX2_rewrite/bin, etc.
 Although, there is probably no reason to use it right now.
@@ -128,6 +132,7 @@ I might try again in the future, of course if someone else gets it working perfe
 Qt Creater might work, I haven't tried it though. It does have inbuild CMake support, so the framework is there.
 
 ## Running
+Running the emulator is done so through the pcsx2_frontend project: `./pcsx2_frontend`.
+By default, it uses `./workspace` in the current directory as the working area, in which it will search for the bios, store log files and dump raw memory contents.
+The first argument to pcsx2_frontend will change this path (eg: `./pcsx2_frontend ./workspace/`, you need the trailing slash).
 You will require the scph10000.bin bios. Other bios' have not been tested but may work.
-The first argument parsed to pcsx2_frontend determines the workspace path (eg: "./workspace/", you need the trailing slash).
-Running the emulator will search for the bios (exact name!) in this workspace path.

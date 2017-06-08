@@ -41,9 +41,8 @@ public:
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
 private:
-	// UnitTest friend classes (use non-macro defined friend statements to remove the dependency on the GoogleTestLibrary). 
-	// "FRIEND_TEST(Foo, Bar)" equivilant to "friend class Foo_Bar_Test".
-	friend class TEST_EECoreInterpreter_s_MIPS_INSTRUCTION_IMPLEMENTATIONS_Test;
+	// Friend classes for the unit test functions.
+	friend struct R_TEST_EECoreInterpreter_s;
 
 	//////////////////////////
 	// Common Functionality //

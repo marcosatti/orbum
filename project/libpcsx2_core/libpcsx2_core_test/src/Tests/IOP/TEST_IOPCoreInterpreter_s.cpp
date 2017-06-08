@@ -1,5 +1,3 @@
-#include <gtest/gtest.h>
-
 #include <VM/VM.h>
 #include <VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h>
 #include <Resources/Resources_t.h>
