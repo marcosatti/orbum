@@ -15,7 +15,8 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Debug/libpcsx2_core_test.exe",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/bin/workspace",
+            "args": [ "--logger=HRF,all,libpcsx2_core_test_log.txt" ],
             "externalConsole": true
         },
         {
@@ -32,7 +33,8 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Debug_Optimised/libpcsx2_core_test.exe",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/bin/workspace",
+            "args": [ "--logger=HRF,all,libpcsx2_core_test_log.txt" ],
             "externalConsole": true
         },
         {
@@ -49,7 +51,8 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/project/libpcsx2_core/libpcsx2_core_test/Release/libpcsx2_core_test.exe",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/bin/workspace",
+            "args": [ "--logger=HRF,all,libpcsx2_core_test_log.txt" ],
             "externalConsole": true
         }
     ]

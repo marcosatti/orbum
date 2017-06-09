@@ -31,9 +31,9 @@ BOOST_AUTO_TEST_CASE(READ_WRITE_8BIT)
 	u8 valueU8 = 123;
 	s8 valueS8 = -51;
 	mmu.writeByte(Context_t::EECore, address, valueU8);
-	BOOST_TEST(valueU8, mmu.readByte(Context_t::EECore, address));
+	BOOST_TEST(valueU8 == mmu.readByte(Context_t::EECore, address));
 	mmu.writeByte(Context_t::EECore, address, valueS8);
-	BOOST_TEST(valueS8, static_cast<s8>(mmu.readByte(Context_t::EECore, address)));
+	BOOST_TEST(valueS8 == static_cast<s8>(mmu.readByte(Context_t::EECore, address)));
 }
 
 BOOST_AUTO_TEST_CASE(READ_WRITE_16BIT)
@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE(READ_WRITE_16BIT)
 	u16 valueU16 = 12345;
 	s16 valueS16 = -23232;
 	mmu.writeHword(Context_t::EECore, address, valueU16);
-	BOOST_TEST(valueU16, mmu.readHword(Context_t::EECore, address));
+	BOOST_TEST(valueU16 == mmu.readHword(Context_t::EECore, address));
 	mmu.writeHword(Context_t::EECore, address, valueS16);
-	BOOST_TEST(valueS16, static_cast<s16>(mmu.readHword(Context_t::EECore, address)));
+	BOOST_TEST(valueS16 == static_cast<s16>(mmu.readHword(Context_t::EECore, address)));
 }
 
 BOOST_AUTO_TEST_CASE(READ_WRITE_32BIT)
@@ -53,9 +53,9 @@ BOOST_AUTO_TEST_CASE(READ_WRITE_32BIT)
 	u32 valueU32 = 2012345610;
 	s32 valueS32 = -1549267813;
 	mmu.writeWord(Context_t::EECore, address, valueU32);
-	BOOST_TEST(valueU32, mmu.readWord(Context_t::EECore, address));
+	BOOST_TEST(valueU32 == mmu.readWord(Context_t::EECore, address));
 	mmu.writeWord(Context_t::EECore, address, valueS32);
-	BOOST_TEST(valueS32, static_cast<s32>(mmu.readWord(Context_t::EECore, address)));
+	BOOST_TEST(valueS32 == static_cast<s32>(mmu.readWord(Context_t::EECore, address)));
 }
 
 BOOST_AUTO_TEST_CASE(READ_WRITE_64BIT)
@@ -64,9 +64,9 @@ BOOST_AUTO_TEST_CASE(READ_WRITE_64BIT)
 	u64 valueU64 = 8424978132468451571;
 	s64 valueS64 = -2312456987458799565;
 	mmu.writeDword(Context_t::EECore, address, valueU64);
-	BOOST_TEST(valueU64, mmu.readDword(Context_t::EECore, address));
+	BOOST_TEST(valueU64 == mmu.readDword(Context_t::EECore, address));
 	mmu.writeDword(Context_t::EECore, address, valueS64);
-	BOOST_TEST(valueS64, static_cast<s64>(mmu.readDword(Context_t::EECore, address)));
+	BOOST_TEST(valueS64 == static_cast<s64>(mmu.readDword(Context_t::EECore, address)));
 }
 
 BOOST_AUTO_TEST_CASE(READ_WRITE_128BIT)
@@ -77,8 +77,8 @@ BOOST_AUTO_TEST_CASE(READ_WRITE_128BIT)
 	u128 valueU128 = u128(val0, val1);
 	mmu.writeQword(Context_t::EECore, address, valueU128);
 	u128 val2 = mmu.readQword(Context_t::EECore, address);
-	BOOST_TEST(val0, val2.lo);
-	BOOST_TEST(val1, val2.hi);
+	BOOST_TEST(val0 == val2.lo);
+	BOOST_TEST(val1 == val2.hi);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -4,14 +4,12 @@
 
     "cmake.preferredGenerators": [
         "Unix Makefiles",
-        "Visual Studio 15 2017 Win64",
-        "Visual Studio 15 2017",
         "Ninja",
         "MinGW Makefiles",
-        "NMake Makefiles"
+        "NMake Makefiles",
+        "Visual Studio 15 2017 Win64",
+        "Visual Studio 15 2017"
     ],
-
-    "cmake.experimental.useCMakeServer": true,
 
     "cmake.defaultVariants": {
         "buildType": {
