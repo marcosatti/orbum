@@ -25,7 +25,7 @@ struct R_TEST_ByteMMU_t
 
 BOOST_FIXTURE_TEST_SUITE(TEST_ByteMMU_t, R_TEST_ByteMMU_t)
 
-BOOST_FIXTURE_TEST_CASE(READ_WRITE_8BIT, R_TEST_ByteMMU_t) 
+BOOST_AUTO_TEST_CASE(READ_WRITE_8BIT)
 {
 	// 8-bit test.
 	u8 valueU8 = 123;
@@ -36,7 +36,7 @@ BOOST_FIXTURE_TEST_CASE(READ_WRITE_8BIT, R_TEST_ByteMMU_t)
 	BOOST_TEST(valueS8, static_cast<s8>(mmu.readByte(Context_t::EECore, address)));
 }
 
-BOOST_FIXTURE_TEST_CASE(READ_WRITE_16BIT, R_TEST_ByteMMU_t) 
+BOOST_AUTO_TEST_CASE(READ_WRITE_16BIT)
 {
 	// 16-bit test.
 	u16 valueU16 = 12345;
@@ -47,7 +47,7 @@ BOOST_FIXTURE_TEST_CASE(READ_WRITE_16BIT, R_TEST_ByteMMU_t)
 	BOOST_TEST(valueS16, static_cast<s16>(mmu.readHword(Context_t::EECore, address)));
 }
 
-BOOST_FIXTURE_TEST_CASE(READ_WRITE_32BIT, R_TEST_ByteMMU_t) 
+BOOST_AUTO_TEST_CASE(READ_WRITE_32BIT)
 {
 	// 32-bit test.
 	u32 valueU32 = 2012345610;
@@ -58,7 +58,7 @@ BOOST_FIXTURE_TEST_CASE(READ_WRITE_32BIT, R_TEST_ByteMMU_t)
 	BOOST_TEST(valueS32, static_cast<s32>(mmu.readWord(Context_t::EECore, address)));
 }
 
-BOOST_FIXTURE_TEST_CASE(READ_WRITE_64BIT, R_TEST_ByteMMU_t) 
+BOOST_AUTO_TEST_CASE(READ_WRITE_64BIT)
 {
 	// 64-bit test.
 	u64 valueU64 = 8424978132468451571;
@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_CASE(READ_WRITE_64BIT, R_TEST_ByteMMU_t)
 	BOOST_TEST(valueS64, static_cast<s64>(mmu.readDword(Context_t::EECore, address)));
 }
 
-BOOST_FIXTURE_TEST_CASE(READ_WRITE_128BIT, R_TEST_ByteMMU_t) 
+BOOST_AUTO_TEST_CASE(READ_WRITE_128BIT)
 {
 	// 128-bit test. There is no signed test, only unsigned.
 	u64 val0 = 9384;

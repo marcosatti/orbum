@@ -22,9 +22,11 @@ public:
 	*/
 	void initialise() override;
 
+	/*
+	Checks through the INTC STAT and MASK bits and sends an interrupt to the IOP Core on the INT2 line.
+	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
-private:
 	/*
 	Context resources needed.
 	*/

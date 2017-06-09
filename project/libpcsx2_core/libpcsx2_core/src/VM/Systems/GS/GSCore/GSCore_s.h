@@ -22,10 +22,10 @@ public:
 	void initialise() override;
 
 	/*
+	Steps through the GSCore state, and renders graphics.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
-private:
 	/*
 	Resources.
 	*/

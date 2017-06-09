@@ -32,14 +32,9 @@ public:
 	void initialise() override;
 
 	/*
-	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
+	Steps through the IOP Core state, executing one instruction.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
-
-private:
-	// UnitTest friend classes (use non-macro defined friend statements to remove the dependency on the GoogleTestLibrary). 
-	// "FRIEND_TEST(Foo, Bar)" equivilant to "friend class Foo_Bar_Test".
-	friend class TEST_IOPCoreInterpreter_s_MIPS_INSTRUCTION_IMPLEMENTATIONS_Test;
 
 	//////////////////////////
 	// Common Functionality //

@@ -22,7 +22,7 @@ set(COMMON_SRC_FILES
 	src/Tests/Common/TEST_MIPSInstruction_t.cpp
 	src/Tests/Common/TEST_PrimativeTypes.cpp
 	src/Tests/EE/TEST_EECoreInterpreter_s.cpp
-#	src/Tests/IOP/TEST_IOPCoreInterpreter_s.cpp
+	src/Tests/IOP/TEST_IOPCoreInterpreter_s.cpp
 )
 
 find_package(Threads)

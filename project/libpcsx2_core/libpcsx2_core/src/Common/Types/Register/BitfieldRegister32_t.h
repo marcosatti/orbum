@@ -58,9 +58,11 @@ public:
 	void logDebugAllFields() const;
 
 private:
-	// For debug purposes.
+#if defined(BUILD_DEBUG)
+	// Used to print more verbose debug information.
 	friend class EECoreInterpreter_s;
 	friend class IOPCoreInterpreter_s;
+#endif
 
 	/*
 	Container which stores all of the registered fields, along with their associated properties.

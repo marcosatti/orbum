@@ -41,10 +41,10 @@ public:
 
 	/*
 	Check through the channels and initate data transfers.
+	If a channel is enabled for transfer, data units (128-bit) are sent.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
-private:
 	/*
 	Resources.
 	*/

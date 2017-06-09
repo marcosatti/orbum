@@ -27,7 +27,6 @@ public:
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
 
-private:
 	/*
 	Context resources needed.
 	*/

@@ -84,18 +84,6 @@ public:
 	*/
 	const std::shared_ptr<Resources_t> & getResources() const;
 
-private:
-	// Friend classes for the unit test functions.
-	friend struct R_TEST_EECoreInterpreter_s;
-	friend struct R_TEST_IOPCoreInterpreter_s;
-
-	/*
-	VM state resources.
-	*/
-	VMOptions mVMOptions;
-	VMStatus mStatus;
-	std::shared_ptr<Resources_t> mResources;
-
 	/*
 	PS2 system logic engines.
 	*/
@@ -121,5 +109,13 @@ private:
     Multi-threaded resources.
     */
     std::vector<std::shared_ptr<ThreadedRunnable_t>> mSystemThreads;
+
+private:
+	/*
+	VM state resources.
+	*/
+	VMOptions mVMOptions;
+	VMStatus mStatus;
+	std::shared_ptr<Resources_t> mResources;
 };
 

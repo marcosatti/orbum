@@ -36,13 +36,9 @@ public:
 	void initialise() override;
 
 	/*
-	This is the "main loop" function called by the base interpreter component, and sub-functions it calls.
+	Steps through the EE Core state, executing one instruction.
 	*/
 	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
-
-private:
-	// Friend classes for the unit test functions.
-	friend struct R_TEST_EECoreInterpreter_s;
 
 	//////////////////////////
 	// Common Functionality //
