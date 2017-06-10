@@ -4,7 +4,7 @@ project(libpcsx2_core CXX)
 
 # Build rules.
 include_directories(
-	${CMAKE_SOURCE_DIR}/external/boost
+	${Boost_INCLUDE_DIR}
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )
 

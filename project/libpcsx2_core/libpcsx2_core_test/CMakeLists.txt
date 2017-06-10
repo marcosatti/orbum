@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.1)
 
 project(libpcsx2_core_test CXX)
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/external/boost
-	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core_test/src 
-	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
-)
-
-link_directories(
-	${CMAKE_SOURCE_DIR}/external/boost/stage/lib
-)
+find_package(Threads)
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 set(PROJECT_LIBS
+	${Boost_LIBRARIES}
 	pcsx2_core
+)
+
+include_directories(
+	${Boost_INCLUDE_DIR}
+	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core_test/src 
+	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )
 
 set(COMMON_SRC_FILES
@@ -25,9 +25,8 @@ set(COMMON_SRC_FILES
 	src/Tests/IOP/TEST_IOPCoreInterpreter_s.cpp
 )
 
-find_package(Threads)
 add_executable(libpcsx2_core_test ${COMMON_SRC_FILES})
-target_link_libraries(libpcsx2_core_test ${PROJECT_LIBS} ${CMAKE_THREAD_LIBS_INIT}) 
+target_link_libraries(libpcsx2_core_test PRIVATE ${PROJECT_LIBS} ${CMAKE_THREAD_LIBS_INIT}) 
 
 # Visual studio startup project
 if (NOT (${CMAKE_VERSION} VERSION_LESS 3.6))
