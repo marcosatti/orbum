@@ -11,7 +11,7 @@ set(PROJECT_LIBS
 )
 
 include_directories(
-	${Boost_INCLUDE_DIR}
+	${Boost_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core_test/src 
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )

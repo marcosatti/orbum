@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(libpcsx2_core CXX)
+find_package(Boost REQUIRED)
 
 # Build rules.
 include_directories(
-	${Boost_INCLUDE_DIR}
+	${Boost_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/project/libpcsx2_core/libpcsx2_core/src 
 )
 

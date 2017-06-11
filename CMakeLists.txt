@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Override default configuration options. Must be before 'project' to work.
-set(CMAKE_CONFIGURATION_TYPES "Debug;Debug_Optimised;Release")
+set(CMAKE_CONFIGURATION_TYPES "Debug;Debug_Optimised;Release" CACHE INTERNAL "pcsx2_rewrite build configurations.")
+set_property(GLOBAL PROPERTY DEBUG_CONFIGURATIONS "Debug;Debug_Optimised")
 
 # macOS deployment target. Must be before 'project' to work.
 if(APPLE AND NOT TARGET_IOS)
@@ -10,9 +11,6 @@ endif()
 
 # Declare superproject.
 project(pcsx2_rewrite CXX)
-
-# Add externals first to override any settings they change.
-add_subdirectory(external)
 
 # Build configuration settings.
 set(USER_BUILD_TYPE "Debug_Optimised" CACHE STRING "Choose the type of build, options are: Debug Debug_Optimised Release.")
@@ -70,6 +68,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	set(USER_EXE_LINKER_FLAGS_DEBUG           "/DEBUG" CACHE STRING "User CXX linker flags (Debug)."          )
 	set(USER_EXE_LINKER_FLAGS_DEBUG_OPTIMISED "/DEBUG" CACHE STRING "User CXX linker flags (Debug_Optimised).")
 	set(USER_EXE_LINKER_FLAGS_RELEASE         ""       CACHE STRING "User CXX linker flags (Release)."        )
+	set(MSVC ON CACHE INTERNAL "")
+	set(WIN32 ON CACHE INTERNAL "")
 else()
 	message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}, stopping.")
 endif()
@@ -95,6 +95,7 @@ set(USER_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" CACHE PATH "Install path.")
 set(CMAKE_INSTALL_PREFIX "${USER_INSTALL_PREFIX}" CACHE INTERNAL "")
 
 # Add projects.
+add_subdirectory(external)
 add_subdirectory(project)
 
 # Visual studio startup project.
