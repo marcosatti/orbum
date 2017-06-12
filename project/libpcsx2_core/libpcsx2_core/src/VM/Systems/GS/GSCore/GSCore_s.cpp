@@ -11,7 +11,7 @@ void GSCore_s::initialise()
 {
 }
 
-int GSCore_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int GSCore_s::step(const Event_t & event)
 {
-	return ticksAvailable;
+	return event.mQuantity;
 }

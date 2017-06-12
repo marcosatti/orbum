@@ -3,11 +3,11 @@
 #include <memory>
 
 #include "Common/Types/System/Context_t.h"
-#include "Common/Types/System/ClockSource_t.h"
+#include "Common/Types/System/Event_t.h"
 #include "Common/Types/Util/Runnable_t.h"
 
 class VM;
-class Clock_t;
+class Events_t;
 
 /*
 Base class for a VM system component.
@@ -41,7 +41,7 @@ public:
 	/*
 	Steps the system logic for the given clock source.
 	*/
-	virtual int step(const ClockSource_t clockSource, const int ticksAvailable) = 0;
+	virtual int step(const Event_t & event) = 0;
 
 private:
 	/*
@@ -49,5 +49,5 @@ private:
 	*/
 	VM * mVM;
 	Context_t mContext;
-	std::shared_ptr<Clock_t> mClock;
+	std::shared_ptr<Events_t> mEvents;
 };

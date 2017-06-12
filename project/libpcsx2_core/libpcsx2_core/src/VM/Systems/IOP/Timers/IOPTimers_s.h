@@ -27,7 +27,7 @@ public:
 	/*
 	Updates the timers with the specified clock source type.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Context resources needed.

@@ -45,7 +45,7 @@ void EECoreInterpreter_s::initialise()
 	handleException(EECoreException_t::EX_RESET);
 }
 
-int EECoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int EECoreInterpreter_s::step(const Event_t & event)
 {
 	// Check if any external interrupts are pending and immediately handle exception if there is one.
 	handleInterruptCheck();

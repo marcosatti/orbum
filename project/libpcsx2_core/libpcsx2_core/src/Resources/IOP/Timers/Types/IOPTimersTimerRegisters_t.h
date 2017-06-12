@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/BitfieldRegister32_t.h"
-#include "Common/Types/System/ClockSource_t.h"
+#include "Common/Types/System/Event_t.h"
 
 /*
 The base Timer Count register type.
@@ -122,7 +122,7 @@ public:
 	/*
 	Returns the cached emulator clock source.
 	*/
-	ClockSource_t getClockSource() const;
+	Event_t::Source getEventSource() const;
 
 private:
 	/*
@@ -133,7 +133,7 @@ private:
 	/*
 	Sets the internal clock source based on the register state.
 	*/
-	void handleClockSourceUpdate(const Context_t context);
+	void handleEventSourceUpdate(const Context_t context);
 
 	/*
 	Holds the result of if the timer is enabled, based on the interrupt bits set.
@@ -141,10 +141,10 @@ private:
 	bool mIsEnabled;
 
 	/*
-	Contains the emulation clock source updated through handleClockSourceUpdate().
-	Retrieve through getClockSource().
+	Contains the emulation clock source updated through handleEventSourceUpdate().
+	Retrieve through getEventSource().
 	*/
-	ClockSource_t mClockSource;
+	Event_t::Source mEventSource;
 
 	/*
 	A reference to the associated Count register, which is reset on certain conditions.

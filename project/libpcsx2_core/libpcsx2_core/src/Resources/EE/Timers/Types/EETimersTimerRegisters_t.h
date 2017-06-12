@@ -4,7 +4,7 @@
 
 #include "Common/Global/Globals.h"
 #include "Common/Types/Register/BitfieldRegister32_t.h"
-#include "Common/Types/System/ClockSource_t.h"
+#include "Common/Types/System/Event_t.h"
 
 /*
 The Timer Count register type. See EE Users Manual page 37.
@@ -75,7 +75,7 @@ public:
 	/*
 	Returns the cached emulator clock source.
 	*/
-	ClockSource_t getClockSource() const;
+	Event_t::Source getEventSource() const;
 
 private:
 	/*
@@ -86,12 +86,12 @@ private:
 	/*
 	Sets the internal clock source based on the register state.
 	*/
-	void handleClockSourceUpdate(const Context_t context);
+	void handleEventSourceUpdate(const Context_t context);
 
 	/*
-	Contains the emulation clock source updated through handleClockSourceUpdate().
-	Retrieve through getClockSource().
+	Contains the emulation clock source updated through handleEventSourceUpdate().
+	Retrieve through getEventSource().
 	*/
-	ClockSource_t mClockSource;
+	Event_t::Source mEventSource;
 };
 

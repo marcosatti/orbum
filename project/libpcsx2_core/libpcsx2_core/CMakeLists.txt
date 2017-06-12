@@ -60,7 +60,7 @@ set(COMMON_SRC_FILES
 	src/Resources/CDVD/Types/CDVDFIFOQueues_t.cpp
 	src/Resources/CDVD/Types/CDVDNvrams_t.cpp
 	src/Resources/CDVD/Types/CDVDRegisters_t.cpp
-	src/Resources/Clock/Clock_t.cpp
+	src/Resources/Events/Events_t.cpp
 	src/Resources/Common/Common_t.cpp
 	src/Resources/Common/Types/SBUSFIFOQueues_t.cpp
 	src/Resources/Common/Types/SBUSRegisters_t.cpp

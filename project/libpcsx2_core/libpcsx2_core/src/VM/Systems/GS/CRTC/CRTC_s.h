@@ -6,7 +6,7 @@
 #include "VM/Types/VMSystem_t.h"
 
 class CRTC_t;
-class Clock_t;
+class Events_t;
 class EEIntc_t;
 class IOPIntc_t;
 
@@ -34,13 +34,13 @@ public:
 	When a row of pixels has been completed (scanline), copy's the row to the VM buffer and sends a HBlank clock event to EE/IOP Timers.
 	When a whole frame/field has been completed, calls the VM render function and sends a VBlank start/end interrupt to the EE/IOP Intc.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Resources.
 	*/
 	std::shared_ptr<CRTC_t> mCRTC;
-	std::shared_ptr<Clock_t> mClock;
+	std::shared_ptr<Events_t> mEvents;
 	std::shared_ptr<EEIntc_t> mEEINTC;
 	std::shared_ptr<IOPIntc_t> mIOPINTC;
 };

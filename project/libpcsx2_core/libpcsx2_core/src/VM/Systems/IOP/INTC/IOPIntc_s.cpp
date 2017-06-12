@@ -25,7 +25,7 @@ void IOPIntc_s::initialise()
 	mINTC->MASK->initialise();
 }
 
-int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int IOPIntc_s::step(const Event_t & event)
 {
 	// Check the master CTRL register and STAT register.
 	bool interrupt = false;
@@ -43,7 +43,7 @@ int IOPIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 
 	// INTC has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	return ticksAvailable;
+	return event.mQuantity;
 #else
 	return 1;
 #endif

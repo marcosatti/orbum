@@ -23,7 +23,7 @@ public:
 	/*
 	Checks the CDVD state for any actions to be performed, and steps through if needed.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Resources.

@@ -24,7 +24,7 @@ void EEIntc_s::initialise()
 	mINTC->MASK->initialise();
 }
 
-int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int EEIntc_s::step(const Event_t & event)
 {
 	// Check the interrupt status on the stat register.
 	if (mINTC->STAT->readWord(getContext()) & mINTC->MASK->readWord(getContext()))
@@ -34,7 +34,7 @@ int EEIntc_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	
 	// INTC has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	return ticksAvailable;
+	return event.mQuantity;
 #else
 	return 1;
 #endif

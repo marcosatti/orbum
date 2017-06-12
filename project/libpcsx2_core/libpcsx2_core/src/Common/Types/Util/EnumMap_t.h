@@ -28,7 +28,10 @@ public:
 	};
 
 	/*
-	Construct the map using default initialised values or with a initialiser list.
+	Construct the map using:
+	 - Default initialised types,
+	 - Value initalised types,
+	 - or with a initialiser list.
 	*/
 	constexpr EnumMap_t() : mMap{}
 	{

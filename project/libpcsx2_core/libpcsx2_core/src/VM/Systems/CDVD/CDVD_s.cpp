@@ -26,7 +26,7 @@ void CDVD_s::initialise()
 	mCDVD->NVRAM->writeILinkID(getContext(), reinterpret_cast<const u16*>(CDVDNvram_t::ILINK_DATA_MAGIC));
 }
 
-int CDVD_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int CDVD_s::step(const Event_t & event)
 {
 	// 2 types of commands to process: N-type, and S-type.
 	// Process N-type.
@@ -42,7 +42,7 @@ int CDVD_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		mCDVD->S_COMMAND->mPendingCommand = false;
 	}
 
-	return ticksAvailable;
+	return event.mQuantity;
 }
 
 void CDVD_s::NCMD_INSTRUCTION_UNKNOWN()

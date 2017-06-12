@@ -29,7 +29,7 @@ public:
 	 - Do sound generation and interfacing with the VM / user.
 	 - Check for any IRQ's pending and notify the IOP INTC.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Context resources needed.

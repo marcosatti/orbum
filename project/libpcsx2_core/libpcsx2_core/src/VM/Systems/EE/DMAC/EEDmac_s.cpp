@@ -58,7 +58,7 @@ void EEDmac_s::initialise()
 	mDMAC->ENABLEW->initialise();
 }
 
-int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int EEDmac_s::step(const Event_t & event)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
@@ -121,7 +121,7 @@ int EEDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	// DMAC has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
-		return ticksAvailable;
+		return event.mQuantity;
 	else
 		return 1;
 #else

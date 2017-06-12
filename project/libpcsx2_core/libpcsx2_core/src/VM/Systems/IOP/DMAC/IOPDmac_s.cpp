@@ -49,7 +49,7 @@ void IOPDmac_s::initialise()
 	mDMAC->GCTRL->initialise();
 }
 
-int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int IOPDmac_s::step(const Event_t & event)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
@@ -120,7 +120,7 @@ int IOPDmac_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	// DMAC has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
-		return ticksAvailable;
+		return event.mQuantity;
 	else
 		return 1;
 #else

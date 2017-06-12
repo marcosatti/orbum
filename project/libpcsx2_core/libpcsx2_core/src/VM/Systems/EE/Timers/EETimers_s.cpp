@@ -33,7 +33,7 @@ void EETimers_s::initialise()
 	}
 }
 
-int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int EETimers_s::step(const Event_t & event)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed.
@@ -50,7 +50,7 @@ int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::CUE) > 0)
 		{
 			// Check if the timer mode is equal to the clock source.
-			if (clockSource == mTimer->MODE->getClockSource())
+			if (event.mSource == mTimer->MODE->getEventSource())
 			{
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 				// A timer consumed a tick for this clock source - do not skip any ticks.
@@ -97,7 +97,7 @@ int EETimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	// Timers has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
-		return ticksAvailable;
+		return event.mQuantity;
 	else
 		return 1;
 #else
@@ -168,14 +168,14 @@ void EETimers_s::handleTimerGateReset() const
 	}
 	case 1:
 	{
-		// Resets and starts counting at the gate signal’s rising edge.
+		// Resets and starts counting at the gate signalï¿½s rising edge.
 		if (gateSource && !gateSourceLast)
 			mTimer->COUNT->reset(getContext());
 		break;
 	}
 	case 2:
 	{
-		// Resets and starts counting at the gate signal’s falling edge.
+		// Resets and starts counting at the gate signalï¿½s falling edge.
 		if (!gateSource && gateSourceLast)
 			mTimer->COUNT->reset(getContext());
 		break;

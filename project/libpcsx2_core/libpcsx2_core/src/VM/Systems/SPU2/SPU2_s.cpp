@@ -32,7 +32,7 @@ void SPU2_s::initialise()
 
 }
 
-int SPU2_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int SPU2_s::step(const Event_t & event)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no DMA transfer happened, or sound generation was not performed
@@ -61,7 +61,7 @@ int SPU2_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	// SPU2 has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
-		return ticksAvailable;
+		return event.mQuantity;
 	else
 		return 1;
 #else

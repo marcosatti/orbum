@@ -25,7 +25,7 @@ public:
 	/*
 	Steps through the VU core state, executing one macro and one micro instruction.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	//////////////////////////
 	// Common Functionality //

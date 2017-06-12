@@ -3,7 +3,7 @@
 #include "VM/Systems/GS/CRTC/CRTC_s.h"
 
 #include "Resources/Resources_t.h"
-#include "Resources/Clock/Clock_t.h"
+#include "Resources/Events/Events_t.h"
 #include "Resources/EE/EE_t.h"
 #include "Resources/EE/INTC/EEIntc_t.h"
 #include "Resources/EE/INTC/Types/EEIntcRegisters_t.h"
@@ -17,7 +17,7 @@ CRTC_s::CRTC_s(VM * vm) :
 	VMSystem_t(vm, Context_t::CRTC)
 {
 	mCRTC = getVM()->getResources()->GS->CRTC;
-	mClock = getVM()->getResources()->Clock;
+	mEvents = getVM()->getResources()->Events;
 	mEEINTC = getVM()->getResources()->EE->INTC;
 	mIOPINTC = getVM()->getResources()->IOP->INTC;
 }
@@ -26,7 +26,7 @@ void CRTC_s::initialise()
 {
 }
 
-int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int CRTC_s::step(const Event_t & event)
 {
 	static int col = 0;
 	static int row = 0;
@@ -45,8 +45,8 @@ int CRTC_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		
 		// Send HBlank start.
 		// mCRTC->mInHblank = true;
-		mClock->addSystemClockTicks(Context_t::EETimers, ClockSource_t::HBlankClock, 1);
-		mClock->addSystemClockTicks(Context_t::IOPTimers, ClockSource_t::HBlankClock, 1);
+		mEvents->addEvent(Context_t::EETimers, Event_t(Event_t::Source::HBlank, 1));
+		mEvents->addEvent(Context_t::IOPTimers, Event_t(Event_t::Source::HBlank, 1));
 
 		// Copy scanline to host render.
 		// getVM()->renderScanline(&raw_row_pixels);

@@ -31,7 +31,7 @@ public:
 	Check through the channels and initate data transfers.
 	If a channel is enabled for transfer, data units (32-bit) are sent.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Resources.

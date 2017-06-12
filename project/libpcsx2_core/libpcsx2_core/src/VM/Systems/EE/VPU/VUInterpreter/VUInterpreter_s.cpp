@@ -19,8 +19,8 @@ void VUInterpreter_s::initialise()
 {
 }
 
-int VUInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int VUInterpreter_s::step(const Event_t & event)
 {
 	// TODO: Implement.
-	return ticksAvailable;
+	return event.mQuantity;
 }

@@ -27,7 +27,7 @@ public:
 	Steps through the VIF core state:
 	- Check the FIFO queue and process data if available.
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Context of which VIF this system is processing.

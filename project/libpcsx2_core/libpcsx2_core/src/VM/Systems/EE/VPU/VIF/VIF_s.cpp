@@ -20,9 +20,9 @@ void VIF_s::initialise()
 {
 }
 
-int VIF_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int VIF_s::step(const Event_t & event)
 {
-	return ticksAvailable; // not yet completed.
+	return event.mQuantity; // not yet completed.
 
 	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_CORES[mVIFUnitIndex];
 

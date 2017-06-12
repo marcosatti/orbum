@@ -30,7 +30,7 @@ void IOPTimers_s::initialise()
 	}
 }
 
-int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int IOPTimers_s::step(const Event_t & event)
 {
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed.
@@ -49,7 +49,7 @@ int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 		if (mTimer->MODE->isEnabled())
 		{
 			// Check if the timer mode is equal to the clock source.
-			if (clockSource == mTimer->MODE->getClockSource())
+			if (event.mSource == mTimer->MODE->getEventSource())
 			{
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 				// A timer consumed a tick for this clock source - do not skip any ticks.
@@ -81,7 +81,7 @@ int IOPTimers_s::step(const ClockSource_t clockSource, const int ticksAvailable)
 	// Timers has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	if (!workDone)
-		return ticksAvailable;
+		return event.mQuantity;
 	else
 		return 1;
 #else

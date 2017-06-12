@@ -23,7 +23,7 @@
 #include "VM/Systems/GS/CRTC/CRTC_s.h"
 
 #include "Resources/Resources_t.h"
-#include "Resources/Clock/Clock_t.h"
+#include "Resources/Events/Events_t.h"
 #include "Resources/EE/EE_t.h"
 
 VM::VM(const VMOptions & vmOptions) : 
@@ -50,7 +50,7 @@ void VM::reset(const bool loadBIOS)
 
 	// Initialise resources and set system bias speeds.
 	mResources = std::make_shared<Resources_t>();
-	mResources->Clock->setSystemClockBiases(mVMOptions.SYSTEM_BIASES);
+	mResources->Events->setClockBias(mVMOptions.SYSTEM_BIASES);
 
 	log(Info, "VM resources initialised.");
 
@@ -124,7 +124,7 @@ void VM::run()
 		throw std::runtime_error("VM needs to be reset first before running!");
 
 	// Produce ticks (independent clock sources) for the systems to use.
-	getResources()->Clock->addSystemClockTicksAll(mVMOptions.TIME_SLICE_PER_RUN);
+	getResources()->Events->addClockTime(mVMOptions.TIME_SLICE_PER_RUN);
 
 	// Set to running.
 	mStatus = Running;
@@ -174,6 +174,7 @@ void VM::stop()
     mSystems.clear();
 
 	// Deconstruct individual systems.
+	mSystemEECore = nullptr;
 	mSystemEEDmac = nullptr;
 	mSystemEETimers = nullptr;
 	mSystemEEIntc = nullptr;
@@ -191,8 +192,6 @@ void VM::stop()
 	mSystemSPU2 = nullptr;
 	mSystemGSCore = nullptr;
 	mSystemCRTC = nullptr;
-	mSystemEECore = nullptr;
-	mSystems.empty();
 
 	log(Info, "VM systems destroyed.");
 

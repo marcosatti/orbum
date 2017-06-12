@@ -11,7 +11,7 @@
 #include "Common/Types/Memory/ConstantByteMemory_t.h"
 
 #include "Resources/Resources_t.h"
-#include "Resources/Clock/Clock_t.h"
+#include "Resources/Events/Events_t.h"
 #include "Resources/EE/EE_t.h"
 #include "Resources/GS/GS_t.h"
 #include "Resources/IOP/IOP_t.h"
@@ -69,7 +69,7 @@
 #include "Resources/SIO2/SIO2_t.h"
 
 Resources_t::Resources_t() :
-	Clock(std::make_shared<Clock_t>()),
+	Events(std::make_shared<Events_t>()),
 	Common(std::make_shared<Common_t>()),
 	GS(std::make_shared<GS_t>()),
 	EE(std::make_shared<EE_t>()),

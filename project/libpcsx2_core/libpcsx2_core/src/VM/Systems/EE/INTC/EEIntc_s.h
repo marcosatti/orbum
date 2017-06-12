@@ -25,7 +25,7 @@ public:
 	Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.
 	See EE Core Users Manual page 73-75 for the EE Core details. Note that on page 75, there is a typo, where the INTx lines are mixed up on bits 10 and 11 (verified through running through bios code).
 	*/
-	int step(const ClockSource_t clockSource, const int ticksAvailable) override;
+	int step(const Event_t & event) override;
 
 	/*
 	Context resources needed.

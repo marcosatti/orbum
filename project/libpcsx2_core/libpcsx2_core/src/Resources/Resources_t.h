@@ -2,7 +2,7 @@
 
 #include <memory>
 
-class Clock_t;
+class Events_t;
 class EE_t;
 class GS_t;
 class IOP_t;
@@ -38,9 +38,9 @@ public:
 	Resources_t();
 
 	/*
-	The Clock class, used to control timing accross components.
+	The Events class, used to control timing accross components.
 	*/
-	std::shared_ptr<Clock_t> Clock;
+	std::shared_ptr<Events_t> Events;
 
 	/*
 	Common resources structure (shared between EE, GS and/or IOP).

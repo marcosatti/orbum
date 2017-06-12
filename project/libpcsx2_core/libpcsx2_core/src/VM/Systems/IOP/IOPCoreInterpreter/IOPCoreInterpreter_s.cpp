@@ -35,7 +35,7 @@ void IOPCoreInterpreter_s::initialise()
 	handleException(IOPCoreException_t::EX_RESET);
 }
 
-int IOPCoreInterpreter_s::step(const ClockSource_t clockSource, const int ticksAvailable)
+int IOPCoreInterpreter_s::step(const Event_t & event)
 {
 	// Check if any external interrupts are pending and immediately handle exception if there is one.
 	handleInterruptCheck();

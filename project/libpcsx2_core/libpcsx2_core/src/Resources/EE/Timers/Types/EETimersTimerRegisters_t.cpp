@@ -54,7 +54,7 @@ void EETimersTimerRegister_COUNT_t::setPrescale(const size_t prescale)
 EETimersTimerRegister_MODE_t::EETimersTimerRegister_MODE_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const std::shared_ptr<EETimersTimerRegister_COUNT_t> & count) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mCount(count),
-	mClockSource(ClockSource_t::EEBusClock)
+	mEventSource(Event_t::Source::ClockTick)
 {
 	registerField(Fields::CLKS, "CLKS", 0, 2, 0);
 	registerField(Fields::GATE, "GATE", 2, 1, 0);
@@ -93,20 +93,20 @@ bool EETimersTimerRegister_MODE_t::isGateHBLNKSpecial(const Context_t context)
 	return ((getFieldValue(context, Fields::CLKS) == 3) && (getFieldValue(context, Fields::GATS) == 0));
 }
 
-ClockSource_t EETimersTimerRegister_MODE_t::getClockSource() const
+Event_t::Source EETimersTimerRegister_MODE_t::getEventSource() const
 {
-	return mClockSource;
+	return mEventSource;
 }
 
-void EETimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t context)
+void EETimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t context)
 {
 	if (getFieldValue(context, Fields::CLKS) == 0x3)
 	{
-		mClockSource = ClockSource_t::HBlankClock;
+		mEventSource = Event_t::Source::HBlank;
 	}
 	else
 	{
-		mClockSource = ClockSource_t::EEBusClock;
+		mEventSource = Event_t::Source::ClockTick;
 
 		// Set prescale.
 		if (getFieldValue(context, Fields::CLKS) == 0x1)

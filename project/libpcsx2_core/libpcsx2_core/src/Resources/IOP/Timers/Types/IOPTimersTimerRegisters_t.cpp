@@ -94,7 +94,7 @@ IOPTimersTimerRegister_MODE_t::IOPTimersTimerRegister_MODE_t(const char * mnemon
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mTimerIndex(timerIndex),
 	mIsEnabled(false),
-	mClockSource(ClockSource_t::IOPBusClock),
+	mEventSource(Event_t::Source::ClockTick),
 	mCount(count)
 {
 	registerField(Fields::SyncEnable, "SyncEnable", 0, 1, 0);
@@ -120,7 +120,7 @@ void IOPTimersTimerRegister_MODE_t::writeHword(const Context_t context, const si
 		mCount->reset(context);
 
 	// Update clock source.
-	handleClockSourceUpdate(context);
+	handleEventSourceUpdate(context);
 
 	// Check through either of the interrupt bits for "enabled".
 	mIsEnabled = (getFieldValue(context, Fields::IrqOnOF) || getFieldValue(context, Fields::IrqOnTarget));
@@ -134,7 +134,7 @@ void IOPTimersTimerRegister_MODE_t::writeWord(const Context_t context, const u32
 		mCount->reset(context);
 
 	// Update clock source.
-	handleClockSourceUpdate(context);
+	handleEventSourceUpdate(context);
 
 	// Check through either of the interrupt bits for "enabled".
 	mIsEnabled = (getFieldValue(context, Fields::IrqOnOF) || getFieldValue(context, Fields::IrqOnTarget));
@@ -145,12 +145,12 @@ bool IOPTimersTimerRegister_MODE_t::isEnabled() const
 	return mIsEnabled;
 }
 
-ClockSource_t IOPTimersTimerRegister_MODE_t::getClockSource() const
+Event_t::Source IOPTimersTimerRegister_MODE_t::getEventSource() const
 {
-	return mClockSource;
+	return mEventSource;
 }
 
-void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t context)
+void IOPTimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t context)
 {
 	if (mTimerIndex > 5)
 		throw std::runtime_error("Invalid IOP timer index to determine clock source!");
@@ -162,18 +162,18 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t cont
 		// Check for Prescale8 (bit 9).
 		if (getFieldValue(context, Fields::Prescale0) > 0)
 		{
-			throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
+			throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
 		}
 		else
 		{
 			if (getFieldValue(context, Fields::ClockSrc) == 0)
 			{
 				mCount->setPrescale(1);
-				mClockSource = ClockSource_t::IOPBusClock;
+				mEventSource = Event_t::Source::ClockTick;
 			}
 			else
 			{
-				throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
+				throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
 			}
 		}
 	}
@@ -182,18 +182,18 @@ void IOPTimersTimerRegister_MODE_t::handleClockSourceUpdate(const Context_t cont
 		// Check for Prescale8/16/256 (bits 13 and 14).
 		if (getFieldValue(context, Fields::Prescale1) > 0)
 		{
-			throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
+			throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
 		}
 		else
 		{
 			if (getFieldValue(context, Fields::ClockSrc) == 0)
 			{
 				mCount->setPrescale(1);
-				mClockSource = ClockSource_t::IOPBusClock;
+				mEventSource = Event_t::Source::ClockTick;
 			}
 			else
 			{
-				throw std::runtime_error("handleClockSourceUpdate() not fully implemented.");
+				throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
 			}
 		}
 	}
