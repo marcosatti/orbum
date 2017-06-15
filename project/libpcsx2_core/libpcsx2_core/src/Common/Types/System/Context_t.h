@@ -26,6 +26,7 @@ enum class Context_t
 	SPU2,
 	GSCore,
 	CRTC,
+	SIO2,
 
 	COUNT
 };
@@ -53,6 +54,7 @@ static constexpr EnumMap_t<Context_t, const char *> DEBUG_CONTEXT_STRINGS =
 	"CDVD",
 	"SPU2",
 	"GSCore",
-	"PCRTC"
+	"PCRTC",
+	"SIO2"
 };
 #endif

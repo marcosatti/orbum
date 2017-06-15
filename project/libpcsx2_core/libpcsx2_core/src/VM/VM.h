@@ -23,6 +23,7 @@ class CDVD_s;
 class SPU2_s;
 class GSCore_s;
 class CRTC_s;
+class SIO2_s;
 class Resources_t;
 
 /*
@@ -103,6 +104,7 @@ public:
 	std::shared_ptr<SPU2_s> mSystemSPU2;
 	std::shared_ptr<GSCore_s> mSystemGSCore;
 	std::shared_ptr<CRTC_s> mSystemCRTC;
+	std::shared_ptr<SIO2_s> mSystemSIO2;
 	std::vector<std::shared_ptr<VMSystem_t>> mSystems;
 
     /*

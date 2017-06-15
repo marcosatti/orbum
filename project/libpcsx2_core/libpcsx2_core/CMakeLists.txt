@@ -169,6 +169,7 @@ set(COMMON_SRC_FILES
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_SPECIAL_TRANSFER.cpp
 	src/VM/Systems/IOP/Timers/IOPTimers_s.cpp
 	src/VM/Systems/SPU2/SPU2_s.cpp
+	src/VM/Systems/SIO2/SIO2_s.cpp
 	src/VM/Types/VMSystem_t.cpp
 	src/VM/VM.cpp
 )

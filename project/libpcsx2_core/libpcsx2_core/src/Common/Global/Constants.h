@@ -345,6 +345,10 @@ struct Constants
 
 			static constexpr double PCRTC_CLK_SPEED_DEFAULT = 1 / ((1 / 15734.0) / 2 / 640); // ~20 MHz, guess based on NTSC defaults of resX = 640 @ 15.734 kHz. Working: period of 1 cycle, divided by half (actual render vs. hblank), divided by number of resX pixels, all inversed for Hz.
 		};
+	};
 
+	struct SIO2
+	{
+		static constexpr double SIO2_CLK_SPEED = 2000000.0; // 2 MHz. From here: https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
 	};
 };

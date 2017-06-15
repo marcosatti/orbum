@@ -21,6 +21,7 @@
 #include "VM/Systems/SPU2/SPU2_s.h"
 #include "VM/Systems/GS/GSCore/GSCore_s.h"
 #include "VM/Systems/GS/CRTC/CRTC_s.h"
+#include "VM/Systems/SIO2/SIO2_s.h"
 
 #include "Resources/Resources_t.h"
 #include "Resources/Events/Events_t.h"
@@ -79,9 +80,10 @@ void VM::reset(const bool loadBIOS)
 	mSystemGSCore = std::make_shared<GSCore_s>(this);
 	mSystemCRTC = std::make_shared<CRTC_s>(this);
 	mSystemEECore = std::make_shared<EECoreInterpreter_s>(this, mSystemVU0);
+	mSystemSIO2 = std::make_shared<SIO2_s>(this);
 	mSystems = { mSystemEECore, mSystemEEDmac, mSystemEETimers, mSystemEEIntc, /* mSystemGIF,       mSystemIPU, */  mSystemVIF0, mSystemVU0,
                  mSystemVIF1,   mSystemVU1,    mSystemIOPCore,  mSystemIOPDmac,   mSystemIOPTimers, mSystemIOPIntc, mSystemCDVD, mSystemSPU2,
-	             mSystemGSCore, mSystemCRTC };
+	             mSystemGSCore, mSystemCRTC,   mSystemSIO2 };
 
 	// Initialise systems.
 	for (auto& system : mSystems)
@@ -191,7 +193,8 @@ void VM::stop()
 	mSystemCDVD = nullptr;
 	mSystemSPU2 = nullptr;
 	mSystemGSCore = nullptr;
-	mSystemCRTC = nullptr;
+	mSystemCRTC = nullptr;	
+	mSystemSIO2 = nullptr;
 
 	log(Info, "VM systems destroyed.");
 
