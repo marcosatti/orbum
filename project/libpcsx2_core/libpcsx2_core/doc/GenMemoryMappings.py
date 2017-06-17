@@ -11,7 +11,7 @@ Output Format:
 import re
 import csv
 
-resourcesFile = "../Source/Resources/Resources_t.cpp"
+resourcesFile = "../src/Resources/Resources_t.cpp"
 csvFile = "MemoryMappings.csv"
 regexString = r"(?:.*->)?(.*)->MMU->mapObject\((0x[a-fA-F0-9]{1,8}).*,\s+([^\)]*)\)+;"
 mapStrings = []

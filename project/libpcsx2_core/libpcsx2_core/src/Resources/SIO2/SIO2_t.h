@@ -18,8 +18,38 @@ public:
 	/*
 	SIO2 Registers.
 	*/
+	std::shared_ptr<Register32_t> PORT0_CTRL3; // TODO: figure out these names properly.
+	std::shared_ptr<Register32_t> PORT1_CTRL3;
+	std::shared_ptr<Register32_t> PORT2_CTRL3;
+	std::shared_ptr<Register32_t> PORT3_CTRL3;
+	std::shared_ptr<Register32_t> PORT4_CTRL3;
+	std::shared_ptr<Register32_t> PORT5_CTRL3;
+	std::shared_ptr<Register32_t> PORT6_CTRL3;
+	std::shared_ptr<Register32_t> PORT7_CTRL3;
+	std::shared_ptr<Register32_t> PORT8_CTRL3;
+	std::shared_ptr<Register32_t> PORT9_CTRL3;
+	std::shared_ptr<Register32_t> PORTA_CTRL3;
+	std::shared_ptr<Register32_t> PORTB_CTRL3;
+	std::shared_ptr<Register32_t> PORTC_CTRL3;
+	std::shared_ptr<Register32_t> PORTD_CTRL3;
+	std::shared_ptr<Register32_t> PORTE_CTRL3;
+	std::shared_ptr<Register32_t> PORTF_CTRL3;
+
+	std::shared_ptr<Register32_t> PORT0_CTRL1;
+	std::shared_ptr<Register32_t> PORT0_CTRL2;
+	std::shared_ptr<Register32_t> PORT1_CTRL1;
+	std::shared_ptr<Register32_t> PORT1_CTRL2;
+	std::shared_ptr<Register32_t> PORT2_CTRL1;
+	std::shared_ptr<Register32_t> PORT2_CTRL2;
+	std::shared_ptr<Register32_t> PORT3_CTRL1;
+	std::shared_ptr<Register32_t> PORT3_CTRL2;
+	std::shared_ptr<Register32_t> DATA_OUT;
+	std::shared_ptr<Register32_t> DATA_IN;
 	std::shared_ptr<Register32_t> CTRL;
+	std::shared_ptr<Register32_t> STAT_826C;
+	std::shared_ptr<Register32_t> STAT_8270;
+	std::shared_ptr<Register32_t> STAT_8274;
 	std::shared_ptr<Register32_t> REGISTER_8278;
 	std::shared_ptr<Register32_t> REGISTER_827C;
-	std::shared_ptr<Register32_t> INTR;
+	std::shared_ptr<Register32_t> INTR;          // Also known as the STAT register.
 };
