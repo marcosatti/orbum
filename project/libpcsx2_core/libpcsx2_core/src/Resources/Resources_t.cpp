@@ -1030,7 +1030,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F900340, SPU2->CORE_0->ENDX0);
 			IOP->MMU->mapObject(0x1F900342, SPU2->CORE_0->ENDX1);
 			IOP->MMU->mapObject(0x1F900344, SPU2->CORE_0->STATX);
-			IOP->MMU->mapObject(0x1F900346, SPU2->CORE_0->MEMORY_0346);
+			IOP->MMU->mapObject(0x1F900346, SPU2->MEMORY_0346);
 			IOP->MMU->mapObject(0x1F900400, SPU2->CORE_1->VOICE_0->VOLL);
 			IOP->MMU->mapObject(0x1F900402, SPU2->CORE_1->VOICE_0->VOLR);
 			IOP->MMU->mapObject(0x1F900404, SPU2->CORE_1->VOICE_0->PITCH);
@@ -1443,6 +1443,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F900740, SPU2->CORE_1->ENDX0);
 			IOP->MMU->mapObject(0x1F900742, SPU2->CORE_1->ENDX1);
 			IOP->MMU->mapObject(0x1F900744, SPU2->CORE_1->STATX);
+			IOP->MMU->mapObject(0x1F900746, SPU2->MEMORY_0746);
 			IOP->MMU->mapObject(0x1F900760, SPU2->CORE_0->MVOLL);
 			IOP->MMU->mapObject(0x1F900762, SPU2->CORE_0->MVOLR);
 			IOP->MMU->mapObject(0x1F900764, SPU2->CORE_0->EVOLL);
@@ -1483,6 +1484,7 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F9007AA, SPU2->CORE_1->APF2_VOL);
 			IOP->MMU->mapObject(0x1F9007AC, SPU2->CORE_1->IN_COEF_L);
 			IOP->MMU->mapObject(0x1F9007AE, SPU2->CORE_1->IN_COEF_R);
+			IOP->MMU->mapObject(0x1F9007B0, SPU2->MEMORY_07B0);
 			IOP->MMU->mapObject(0x1F9007C0, SPU2->SPDIF_OUT);
 			IOP->MMU->mapObject(0x1F9007C2, SPU2->SPDIF_IRQINFO);
 			IOP->MMU->mapObject(0x1F9007C4, SPU2->SPDIF_07C4);
@@ -1490,7 +1492,8 @@ void Resources_t::postInit_IOP() const
 			IOP->MMU->mapObject(0x1F9007C8, SPU2->SPDIF_MEDIA);
 			IOP->MMU->mapObject(0x1F9007CA, SPU2->SPDIF_07CA);
 			IOP->MMU->mapObject(0x1F9007CC, SPU2->SPDIF_PROTECT);
-			IOP->MMU->mapObject(0x1F900B46, SPU2->CORE_0->MEMORY_0346);
+			IOP->MMU->mapObject(0x1F9007CE, SPU2->MEMORY_07CE);
+			IOP->MMU->mapObject(0x1F900B46, SPU2->MEMORY_0346); // 0x346 mirrored at 0xB46.
 
 			// Timers Registers.
 			IOP->MMU->mapObject(0x1F801100, IOP->Timers->TIMER_0->COUNT);

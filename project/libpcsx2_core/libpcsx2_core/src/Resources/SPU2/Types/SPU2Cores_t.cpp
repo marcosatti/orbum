@@ -149,8 +149,7 @@ bool SPU2Core_t::isADMAEnabled(const Context_t context) const
 }
 
 SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
-	SPU2Core_t(CORE_ID, fifoQueue),
-	MEMORY_0346(std::make_shared<ByteMemory_t>("SPU2 C0 MEMORY_0346", false, false, 0xBA))
+	SPU2Core_t(CORE_ID, fifoQueue)
 {
 	PMON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 PMON0", false, false);
 	PMON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 PMON1", false, false);

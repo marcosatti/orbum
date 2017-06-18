@@ -137,6 +137,9 @@ bool SPU2_s::handleSoundGeneration()
 
 int SPU2_s::transferData_ADMA_Write() const
 {
+	// TODO: Check this, its probably wrong.
+	//       Also, a DMA transfer is assumed to be a word in size because of the IOP side, but is it actually only a hword?
+	
 	// Get the source or destination transfer start address (TSAL/H). The address is always relative to the defined base addresses in the SPU2 memory.
 	// See page 28 of the SPU2 Overview manual for these base addresses.
 	u32 TSA = mCore->TSAL->readPairWord(getContext());

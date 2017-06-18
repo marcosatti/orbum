@@ -3,6 +3,7 @@
 #include <memory>
 
 class HwordMemory_t;
+class ByteMemory_t;
 class SPU2Core_C0_t;
 class SPU2Core_C1_t;
 class SPU2Core_t;
@@ -45,4 +46,15 @@ public:
 	The raw byte-addressed memory is still provided, with a wrapper applied for the half-word verison.
 	*/
 	std::shared_ptr<HwordMemory_t> MainMemory;
+
+	/*
+	Unknown memory / registers.
+	There is a block of registers (with IOP MMU prefix address 0x1F900xxx) after both the core 0 and 1 known registers that are accessed.
+	For core 0 this is in the range [0x346, 0x400).
+	For core 1 this is in the range [0x746, 0x760), [0x7B0, 0x7C0) and [0x7CE, 0x800).
+	*/
+	std::shared_ptr<ByteMemory_t> MEMORY_0346;
+	std::shared_ptr<ByteMemory_t> MEMORY_0746;
+	std::shared_ptr<ByteMemory_t> MEMORY_07B0;
+	std::shared_ptr<ByteMemory_t> MEMORY_07CE;
 };

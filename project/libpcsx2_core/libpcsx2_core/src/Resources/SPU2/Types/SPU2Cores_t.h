@@ -190,11 +190,6 @@ class SPU2Core_C0_t : public SPU2Core_t
 public:
 	SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
 
-	/*
-	Unknown memory/registers.
-	*/
-	std::shared_ptr<ByteMemory_t> MEMORY_0346;
-
 	static constexpr int CORE_ID = 0;
 };
 
