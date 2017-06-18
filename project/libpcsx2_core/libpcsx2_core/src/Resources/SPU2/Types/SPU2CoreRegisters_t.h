@@ -129,15 +129,7 @@ public:
 	Current auto/manual DMA transfer count state, in terms of hwords.
 	Reset upon the register being written to.
 	*/
-	size_t mDMACount;
-
-	/*
-	Current auto/manual DMA transfer addresses for the left and right channels.
-	Each time a DMA data unit is transferred, one of these addresses will be incremented to point to the next available space in memory. 
-	Reset upon the register being written to.
-	*/
-	u32 mDMATransferAddressLeft;
-	u32 mDMATransferAddressRight;
+	u32 mDMAOffset;
 };
 
 /*

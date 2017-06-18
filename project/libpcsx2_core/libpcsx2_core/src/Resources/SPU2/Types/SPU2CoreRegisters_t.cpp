@@ -63,9 +63,7 @@ SPU2CoreRegister_MMIX_t::SPU2CoreRegister_MMIX_t(const char * mnemonic, const bo
 
 SPU2CoreRegister_ATTR_t::SPU2CoreRegister_ATTR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites),
-	mDMACount(0),
-	mDMATransferAddressLeft(0),
-	mDMATransferAddressRight(0)
+	mDMAOffset(0)
 {
 	registerField(Fields::DMABits, "DMABits", 1, 3, 0);
 	registerField(Fields::DMAMode, "DMAMode", 4, 2, 0);
@@ -81,9 +79,7 @@ void SPU2CoreRegister_ATTR_t::writeHword(const Context_t context, const u16 valu
 	if (context == Context_t::IOPCore)
 	{
 		// Reset DMA context parameters.
-		mDMACount = 0;
-		mDMATransferAddressLeft = 0;
-		mDMATransferAddressRight = 0;
+		mDMAOffset = 0;
 	}
 
 	BitfieldRegister16_t::writeHword(context, value);

@@ -137,46 +137,40 @@ bool SPU2_s::handleSoundGeneration()
 
 int SPU2_s::transferData_ADMA_Write() const
 {
-	// TODO: Check this, its probably wrong.
-	//       Also, a DMA transfer is assumed to be a word in size because of the IOP side, but is it actually only a hword?
-	
-	// Get the source or destination transfer start address (TSAL/H). The address is always relative to the defined base addresses in the SPU2 memory.
-	// See page 28 of the SPU2 Overview manual for these base addresses.
-	u32 TSA = mCore->TSAL->readPairWord(getContext());
+	// TODO: Check this, its probably wrong. The write addresses are also meant to be used in conjunction with the current read address (double buffer).
+	// TSA is not used here! The write addresses are fixed. See pages 13, 28 and 55 of the SPU2 Overview manual.
+
+	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
+	u16 data;
+	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+		return 0;
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
 	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
-	if (((mCore->ATTR->mDMACount / 0x100) % 2) == 0)
-	{
-		// Left sound block.
-		// Get left channel address.
-		u32 leftAddr = mCore->getInfo()->mBaseTSALeft + TSA + mCore->ATTR->mDMATransferAddressLeft;
-
-		// Perform word write from FIFO to left channel memory (2 hwords).
-		u32 data;
-		mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_WORD);
-		mSPU2->MainMemory->write(getContext(), leftAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
-
-		// Update the DMA transfer address (move forward 2 hwords).
-		mCore->ATTR->mDMATransferAddressLeft += Constants::NUMBER_HWORDS_IN_WORD;
-	}
+	int block = mCore->ATTR->mDMAOffset / 0x100;
+	bool inLeftBlock = ((block % 2) == 0);
+	u32 channelOffset;
+	if (inLeftBlock)
+		channelOffset = mCore->ATTR->mDMAOffset - (block / 2) * 0x100;
 	else
-	{
-		// Right sound block.
-		// Get right channel address.
-		u32 rightAddr = mCore->getInfo()->mBaseTSARight + TSA + mCore->ATTR->mDMATransferAddressRight;
+		channelOffset = mCore->ATTR->mDMAOffset - (block / 2 + 1) * 0x100;
 
-		// Perform word write from FIFO to right channel memory (2 hwords).
-		u32 data;
-		mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_WORD);
-		mSPU2->MainMemory->write(getContext(), rightAddr, reinterpret_cast<const u16*>(&data), Constants::NUMBER_HWORDS_IN_WORD);
+	// ADMA is limited to a hword space of 0x200 for each sound channel (left and right).
+	channelOffset %= 0x200;
 
-		// Update the DMA transfer address (move forward 2 hwords).
-		mCore->ATTR->mDMATransferAddressRight += Constants::NUMBER_HWORDS_IN_WORD;
-	}
+	// Calculate final address.
+	u32 address;
+	if (inLeftBlock)
+		address = mCore->getInfo()->mBaseTSALeft + channelOffset;
+	else
+		address = mCore->getInfo()->mBaseTSARight + channelOffset;
 
-	// Increment the transfer count (2 hwords).
-	mCore->ATTR->mDMACount += Constants::NUMBER_HWORDS_IN_WORD;
+
+	// Write to SPU2 memory.
+	writeHwordMemory(address, data);
+
+	// Increment the transfer count.
+	mCore->ATTR->mDMAOffset += 1;
 	
 	// ADMA has completed one transfer.
 	return 1;
@@ -189,7 +183,24 @@ int SPU2_s::transferData_ADMA_Read() const
 
 int SPU2_s::transferData_MDMA_Write() const
 {
-	throw std::runtime_error("SPU2 MDMA write not yet implemented. Look into the ATTR.DMAMode bits, as this might be incorrectly called.");
+	// TODO: Check this!
+
+	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
+	u16 data;
+	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+		return 0;
+
+	// Calculate write address.
+	u32 address = mCore->TSAL->readPairWord(getContext()) + mCore->ATTR->mDMAOffset;
+
+	// Write to SPU2 memory.
+	writeHwordMemory(address, data);
+
+	// Increment the transfer count.
+	mCore->ATTR->mDMAOffset += 1;
+	
+	// ADMA has completed one transfer.
+	return 1;
 }
 
 int SPU2_s::transferData_MDMA_Read() const
@@ -199,22 +210,28 @@ int SPU2_s::transferData_MDMA_Read() const
 
 u16 SPU2_s::readHwordMemory(const u32 hwordPhysicalAddress) const
 {
+	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
+	u32 address = hwordPhysicalAddress % 0x100000;
+
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
 	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
-	if (irqAddr == hwordPhysicalAddress)
+	if (irqAddr == address)
 		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
 
-	return mSPU2->MainMemory->readHword(getContext(), hwordPhysicalAddress);
+	return mSPU2->MainMemory->readHword(getContext(), address);
 }
 
 void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) const
 {
+	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
+	u32 address = hwordPhysicalAddress % 0x100000;
+
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
 	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
-	if (irqAddr == hwordPhysicalAddress)
+	if (irqAddr == address)
 		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
 
-	mSPU2->MainMemory->writeHword(getContext(), hwordPhysicalAddress, value);
+	mSPU2->MainMemory->writeHword(getContext(), address, value);
 }
 
 void SPU2_s::handleInterruptCheck() const
