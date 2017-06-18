@@ -116,7 +116,8 @@ bool SPU2_s::handleSoundGeneration()
 	{
 		// Check if we are running out of data - that the end of data is less than 0x200 hwords away. Set STATX on this condition and send an interrupt (or clear it otherwise).
 		// TODO: Check the logic and implement. Might need to set the IOP DMAC interrupt bit for the current core (a bit weird)? See SPU2-X/ReadInput.cpp (V_Core::ReadInput()).
-		if (false) 
+		static int hackCount = 0;
+		if ((++hackCount) % 2000 < 1000) 
 		{
 			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 			// mDMAC->ICR{0,1}->setFieldValue(getContext(), IOPDmacRegister_ICR{0,1}_t::Fields::TCI{...}, 1);
@@ -143,7 +144,12 @@ int SPU2_s::transferData_ADMA_Write() const
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+	{
+		// TODO: check this especially!!!
+		// Need to also clear the STATX.NeedData bit when out of data.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
 		return 0;
+	}
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
 	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
@@ -165,6 +171,8 @@ int SPU2_s::transferData_ADMA_Write() const
 	else
 		address = mCore->getInfo()->mBaseTSARight + channelOffset;
 
+	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
+	address %= 0x100000;
 
 	// Write to SPU2 memory.
 	writeHwordMemory(address, data);
@@ -188,10 +196,15 @@ int SPU2_s::transferData_MDMA_Write() const
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+	{
+		// TODO: check this especially!!!
+		// Need to also clear the STATX.NeedData bit when out of data.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
 		return 0;
+	}
 
-	// Calculate write address.
-	u32 address = mCore->TSAL->readPairWord(getContext()) + mCore->ATTR->mDMAOffset;
+	// Calculate write address. Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
+	u32 address = (mCore->TSAL->readPairWord(getContext()) + mCore->ATTR->mDMAOffset) % 0x100000;
 
 	// Write to SPU2 memory.
 	writeHwordMemory(address, data);
@@ -210,28 +223,22 @@ int SPU2_s::transferData_MDMA_Read() const
 
 u16 SPU2_s::readHwordMemory(const u32 hwordPhysicalAddress) const
 {
-	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
-	u32 address = hwordPhysicalAddress % 0x100000;
-
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
 	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
-	if (irqAddr == address)
+	if (irqAddr == hwordPhysicalAddress)
 		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
 
-	return mSPU2->MainMemory->readHword(getContext(), address);
+	return mSPU2->MainMemory->readHword(getContext(), hwordPhysicalAddress);
 }
 
 void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) const
 {
-	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
-	u32 address = hwordPhysicalAddress % 0x100000;
-
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
 	u32 irqAddr = mCore->IRQAL->readPairWord(getContext());
-	if (irqAddr == address)
+	if (irqAddr == hwordPhysicalAddress)
 		mSPU2->SPDIF_IRQINFO->setFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()], 1);
 
-	mSPU2->MainMemory->writeHword(getContext(), address, value);
+	mSPU2->MainMemory->writeHword(getContext(), hwordPhysicalAddress, value);
 }
 
 void SPU2_s::handleInterruptCheck() const

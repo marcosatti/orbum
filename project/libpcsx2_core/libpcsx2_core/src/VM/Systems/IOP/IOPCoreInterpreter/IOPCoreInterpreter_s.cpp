@@ -47,7 +47,7 @@ int IOPCoreInterpreter_s::step(const Event_t & event)
 	mIOPCoreInstruction = IOPCoreInstruction_t(mByteMMU->readWord(getContext(), physicalAddress));
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000439A41;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000998269;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	static u32 DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 

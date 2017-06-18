@@ -15,6 +15,7 @@
 #include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
 std::ofstream logFile;
+volatile bool DEBUG_RUN = true;
 
 void log(const LogLevel_t level, const std::string & message)
 {
@@ -72,7 +73,7 @@ int main(int argc, char * argv[])
 		{
 			vm.reset(true);
 			
-			while (vm.getStatus() == VM::VMStatus::Paused)
+			while (vm.getStatus() == VM::VMStatus::Paused && DEBUG_RUN)
 				vm.run();
 		}
 		catch (const std::runtime_error & ex)
