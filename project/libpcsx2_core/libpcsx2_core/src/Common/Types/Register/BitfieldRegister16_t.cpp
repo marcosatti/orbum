@@ -72,12 +72,12 @@ void BitfieldRegister16_t::registerField(const int fieldIndex, const char* field
 
 u16 BitfieldRegister16_t::getFieldValue(const Context_t context, const int fieldIndex)
 {
-	return MathUtil::extractMaskedValue16(readHword(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
+	return MathUtil::extractMaskedValue16(UH, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
 void BitfieldRegister16_t::setFieldValue(const Context_t context, const int fieldIndex, const u16 value)
 {
-	writeHword(context, MathUtil::insertMaskedValue16(readHword(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
+	writeHword(context, MathUtil::insertMaskedValue16(UH, value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
 }
 
 void BitfieldRegister16_t::logDebugAllFields() const

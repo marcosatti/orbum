@@ -88,5 +88,5 @@ void SPU2CoreRegister_ATTR_t::writeHword(const Context_t context, const u16 valu
 SPU2CoreRegister_STATX_t::SPU2CoreRegister_STATX_t(const char* mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister16_t(mnemonic, debugReads, debugWrites)
 {
-	registerField(Fields::NeedData, "NeedData", 7, 1, 1);
+	registerField(Fields::NeedData, "NeedData", 7, 1, 0);
 }

@@ -29,7 +29,6 @@ SPU2_s::SPU2_s(VM * vm) :
 
 void SPU2_s::initialise()
 {
-
 }
 
 int SPU2_s::step(const Event_t & event)
@@ -82,28 +81,56 @@ bool SPU2_s::handleDMATransfer()
 		throw std::runtime_error("SPU2 ATTR DMABits field set to non-zero. What is this for?");
 
 	int dmaCount = 0;
+	bool updateSTATX = false;
 	switch (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMAMode))
 	{
 	case 0:
+	{
 		// Auto DMA write mode.
 		if (mCore->isADMAEnabled(getContext())) 
+		{
 			dmaCount = transferData_ADMA_Write(); 
+			updateSTATX = true;
+		}
 		break;
+	}
 	case 1:
+	{
 		// Auto DMA read mode. 
 		if (mCore->isADMAEnabled(getContext()))
+		{
 			dmaCount = transferData_ADMA_Read();
+			updateSTATX = true;
+		}
 		break;
+	}		
 	case 2:
+	{
 		// Manual DMA write mode.
 		dmaCount = transferData_MDMA_Write();
+		updateSTATX = true;
 		break;
+	}
 	case 3:
+	{
 		// Manual DMA read mode.
 		dmaCount = transferData_MDMA_Read();
+		updateSTATX = true;
 		break;
+	}
 	default:
+	{
 		throw std::runtime_error("SPU2 could not determine DMA mode. Please fix.");
+	}
+	}
+
+	// Update STATX only if DMA attemped to run, and if there was FIFO data available.
+	if (updateSTATX)
+	{
+		if (mCore->FIFOQueue->getReadAvailable() > 0)
+			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
+		else
+			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 	}
 
 	return (dmaCount > 0);
@@ -114,19 +141,6 @@ bool SPU2_s::handleSoundGeneration()
 	// Check if core is enabled and do sound generation.
 	if (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::CoreEnable))
 	{
-		// Check if we are running out of data - that the end of data is less than 0x200 hwords away. Set STATX on this condition and send an interrupt (or clear it otherwise).
-		// TODO: Check the logic and implement. Might need to set the IOP DMAC interrupt bit for the current core (a bit weird)? See SPU2-X/ReadInput.cpp (V_Core::ReadInput()).
-		static int hackCount = 0;
-		if ((++hackCount) % 2000 < 1000) 
-		{
-			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
-			// mDMAC->ICR{0,1}->setFieldValue(getContext(), IOPDmacRegister_ICR{0,1}_t::Fields::TCI{...}, 1);
-		}
-		else
-		{
-			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
-		}
-
 		return false; 
 	}
 	else
@@ -196,12 +210,7 @@ int SPU2_s::transferData_MDMA_Write() const
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
-	{
-		// TODO: check this especially!!!
-		// Need to also clear the STATX.NeedData bit when out of data.
-		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
 		return 0;
-	}
 
 	// Calculate write address. Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
 	u32 address = (mCore->TSAL->readPairWord(getContext()) + mCore->ATTR->mDMAOffset) % 0x100000;
