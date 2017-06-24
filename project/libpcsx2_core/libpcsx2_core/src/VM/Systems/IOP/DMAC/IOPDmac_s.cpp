@@ -66,7 +66,8 @@ int IOPDmac_s::step(const Event_t & event)
 			mChannel = channel.get();
 
 			// Check if channel is enabled for transfer (both from PCR and the CHCR).
-			if (isChannelEnabled())
+			if ((mDMAC->PCRW->isChannelEnabled(getContext(), mChannel)) 
+				&& (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start) > 0))
 			{
 				switch (mChannel->CHCR->getLogicalMode(getContext()))
 				{
@@ -234,8 +235,10 @@ bool IOPDmac_s::transferChain()
 void IOPDmac_s::handleInterruptCheck() const
 {
 	// Check ICR0 and ICR1 for interrupt status, else clear the master interrupt and INTC bits.
-	if (mDMAC->ICR0->isInterruptPending(getContext()) || mDMAC->ICR1->isInterruptPending(getContext()))
+	if (mDMAC->ICRW->isInterruptPending(getContext()))
+	{
 		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::DMAC, 1);
+	}
 	else
 	{
 		mDMAC->ICR0->setFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::MasterInterrupt, 0);
@@ -297,32 +300,13 @@ void IOPDmac_s::setStateSuspended() const
 	// Stop channel.
 	mChannel->CHCR->setFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
 
-	// Emit interrupt stat bit (use ICR0 or ICR1 based on channel index).
-	if (mChannel->getChannelID() < 7)
-		mDMAC->ICR0->setFieldValue(getContext(), IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID()], 1);
-	else
-		mDMAC->ICR1->setFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[mChannel->getChannelID() % 7], 1);
-}
-
-bool IOPDmac_s::isChannelEnabled() const
-{
-	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start) > 0)
-	{
-		// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
-		if (mChannel->getChannelID() < 7)
-			return (mDMAC->PCR0->getFieldValue(getContext(), IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID()]) > 0);
-		else
-			return (mDMAC->PCR1->getFieldValue(getContext(), IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[mChannel->getChannelID() % 7]) > 0);
-	}
-	else
-	{
-		return false;
-	}
+	// Set channel transfer complete interrupt bit.
+	mDMAC->ICRW->setChannelTCI(getContext(), mChannel, 1);
 }
 
 bool IOPDmac_s::isChannelIRQEnabled() const
 {
-	return (mDMAC->ICR1->getFieldValue(getContext(), IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[mChannel->getChannelID()]) > 0);
+	return (mDMAC->ICRW->getChannelIQE(getContext(), mChannel) > 0);
 }
 
 u32 IOPDmac_s::readWordMemory(const u32 bytePhysicalAddress) const

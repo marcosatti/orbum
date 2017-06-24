@@ -25,6 +25,8 @@ IOPDmac_t::IOPDmac_t() :
 	ICR0(std::make_shared<IOPDmacRegister_ICR0_t>("IOP DMAC ICR0", false, false)),
 	PCR1(std::make_shared<IOPDmacRegister_PCR1_t>("IOP DMAC PCR1", false, false)),
 	ICR1(std::make_shared<IOPDmacRegister_ICR1_t>("IOP DMAC ICR1", false, false, ICR0)),
+	PCRW(std::make_shared<IOPDmacRegister_PCRW_t>(PCR0, PCR1)),
+	ICRW(std::make_shared<IOPDmacRegister_ICRW_t>(ICR0, ICR1)),
 	GCTRL(std::make_shared<Register32_t>("IOP DMAC GCTRL", false, false))
 {
 }

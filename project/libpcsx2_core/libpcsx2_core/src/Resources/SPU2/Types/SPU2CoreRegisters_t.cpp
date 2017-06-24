@@ -90,3 +90,20 @@ SPU2CoreRegister_STATX_t::SPU2CoreRegister_STATX_t(const char* mnemonic, const b
 {
 	registerField(Fields::NeedData, "NeedData", 7, 1, 0);
 }
+
+
+SPU2CoreRegister_ADMAS_t::SPU2CoreRegister_ADMAS_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const int coreID) :
+	Register16_t(mnemonic, debugReads, debugWrites),
+	mCoreID(coreID)
+{
+}
+
+bool SPU2CoreRegister_ADMAS_t::isADMAEnabled(const Context_t context)
+{
+	return ((mCoreID + 1) & readHword(context)) > 0;
+}
+
+void SPU2CoreRegister_ADMAS_t::setADMAOff(const Context_t context)
+{
+	writeHword(context, readHword(context) | (~0x3));
+}

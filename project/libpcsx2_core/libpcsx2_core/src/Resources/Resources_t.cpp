@@ -80,8 +80,10 @@ Resources_t::Resources_t() :
 {
 	postInit_EE_DMAC();
 	postInit_EE_VPU_VU();
-	postInit_SPU2();
 	postInit_IOP_DMAC();
+
+	// SPU2 dependant on IOP DMAC resources initialisation.
+	postInit_SPU2();
 
 	// Put these last - they are dependant on the resources initialised from the other init functions (due to memory mappings).
 	postInit_EE();
@@ -1568,8 +1570,8 @@ void Resources_t::postInit_IOP() const
 
 void Resources_t::postInit_SPU2() const
 {
-	SPU2->CORE_0 = std::make_shared<SPU2Core_C0_t>(Common->FIFO_SPU2C0);
-	SPU2->CORE_1 = std::make_shared<SPU2Core_C1_t>(Common->FIFO_SPU2C1);
+	SPU2->CORE_0 = std::make_shared<SPU2Core_C0_t>(IOP->DMAC->CHANNEL_SPU2C0);
+	SPU2->CORE_1 = std::make_shared<SPU2Core_C1_t>(IOP->DMAC->CHANNEL_SPU2C1);
 	SPU2->CORES[0] = SPU2->CORE_0;
 	SPU2->CORES[1] = SPU2->CORE_1;
 }

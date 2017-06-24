@@ -4,6 +4,7 @@
 
 class SPU2_t;
 class IOPIntc_t;
+class IOPDmac_t;
 class SPU2Core_t;
 
 /*
@@ -36,6 +37,7 @@ public:
 	*/
 	std::shared_ptr<SPU2_t> mSPU2;
 	std::shared_ptr<IOPIntc_t> mINTC;
+	std::shared_ptr<IOPDmac_t> mDMAC;
 	SPU2Core_t * mCore;
 
 	///////////////////////////

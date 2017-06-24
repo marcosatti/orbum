@@ -1,9 +1,12 @@
 #include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 
+constexpr int IOPDmacRegister_PCR0_t::Fields::CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
+constexpr int IOPDmacRegister_PCR1_t::Fields::CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
 constexpr int IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
 constexpr int IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
@@ -163,4 +166,145 @@ bool IOPDmacRegister_ICR1_t::isInterruptPending(const Context_t context)
 	}
 
 	return false;
+}
+
+IOPDmacRegister_PCRW_t::IOPDmacRegister_PCRW_t(const std::shared_ptr<IOPDmacRegister_PCR0_t> & pcr0, const std::shared_ptr<IOPDmacRegister_PCR1_t> & pcr1) :
+	mPCR0(pcr0),
+	mPCR1(pcr1)
+{
+}
+
+u32 IOPDmacRegister_PCRW_t::getChannelPriority(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		return mPCR0->getFieldValue(context, IOPDmacRegister_PCR0_t::Fields::CHANNEL_PRIORITY_KEYS[channel->getChannelID()]);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		return mPCR1->getFieldValue(context, IOPDmacRegister_PCR1_t::Fields::CHANNEL_PRIORITY_KEYS[channel->getChannelID() % 7]);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get priority index.");
+}
+
+void IOPDmacRegister_PCRW_t::setChannelPriority(const Context_t context, const IOPDmacChannel_t * channel, const u32 value)
+{
+	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		mPCR0->setFieldValue(context, IOPDmacRegister_PCR0_t::Fields::CHANNEL_PRIORITY_KEYS[channel->getChannelID()], value);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		mPCR1->setFieldValue(context, IOPDmacRegister_PCR1_t::Fields::CHANNEL_PRIORITY_KEYS[channel->getChannelID() % 7], value);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set priority index.");
+}
+
+bool IOPDmacRegister_PCRW_t::isChannelEnabled(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		return (mPCR0->getFieldValue(context, IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[channel->getChannelID()]) > 0);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		return (mPCR1->getFieldValue(context, IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[channel->getChannelID() % 7]) > 0);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get enabled index.");
+}
+
+void IOPDmacRegister_PCRW_t::setChannelEnabled(const Context_t context, const IOPDmacChannel_t * channel, const bool value)
+{
+	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		mPCR0->setFieldValue(context, IOPDmacRegister_PCR0_t::Fields::CHANNEL_ENABLE_KEYS[channel->getChannelID()], (value ? 1 : 0));
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		mPCR1->setFieldValue(context, IOPDmacRegister_PCR1_t::Fields::CHANNEL_ENABLE_KEYS[channel->getChannelID() % 7], (value ? 1: 0));
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set enabled index.");
+}
+
+IOPDmacRegister_ICRW_t::IOPDmacRegister_ICRW_t(const std::shared_ptr<IOPDmacRegister_ICR0_t> & icr0, const std::shared_ptr<IOPDmacRegister_ICR1_t> & icr1) :
+	mICR0(icr0),
+	mICR1(icr1)
+{
+}
+
+u32 IOPDmacRegister_ICRW_t::getChannelIRM(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-6 belong to ICR0.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		return mICR0->getFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_IRM_KEYS[channel->getChannelID()]);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get IRM index.");
+}
+
+void IOPDmacRegister_ICRW_t::setChannelIRM(const Context_t context, const IOPDmacChannel_t * channel, const u32 value)
+{
+	// Channels 0-6 belong to ICR0.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		mICR0->setFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_IRM_KEYS[channel->getChannelID()], value);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set IRM index.");
+}
+
+u32 IOPDmacRegister_ICRW_t::getChannelIQE(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 14)
+		return mICR1->getFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[channel->getChannelID()]);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get IQE index.");
+}
+
+void IOPDmacRegister_ICRW_t::setChannelIQE(const Context_t context, const IOPDmacChannel_t * channel, const u32 value)
+{
+	// Channels 0-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 14)
+		mICR1->setFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_IQE_KEYS[channel->getChannelID()], value);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set IQE index.");
+}
+
+u32 IOPDmacRegister_ICRW_t::getChannelTCM(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		return mICR0->getFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCM_KEYS[channel->getChannelID()]);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		return mICR1->getFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCM_KEYS[channel->getChannelID() % 7]);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get TCM index.");
+}
+
+void IOPDmacRegister_ICRW_t::setChannelTCM(const Context_t context, const IOPDmacChannel_t * channel, const u32 value)
+{
+	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		mICR0->setFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCM_KEYS[channel->getChannelID()], value);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		mICR1->setFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCM_KEYS[channel->getChannelID() % 7], value);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set TCM index.");
+}
+
+u32 IOPDmacRegister_ICRW_t::getChannelTCI(const Context_t context, const IOPDmacChannel_t * channel)
+{
+	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		return mICR0->getFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[channel->getChannelID()]);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		return mICR1->getFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[channel->getChannelID() % 7]);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel get TCI index.");
+}
+
+void IOPDmacRegister_ICRW_t::setChannelTCI(const Context_t context, const IOPDmacChannel_t * channel, const u32 value)
+{
+	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
+	if (channel->getChannelID() >= 0 && channel->getChannelID() < 7)
+		mICR0->setFieldValue(context, IOPDmacRegister_ICR0_t::Fields::CHANNEL_TCI_KEYS[channel->getChannelID()], value);
+	else if (channel->getChannelID() >= 7 && channel->getChannelID() < 14)
+		mICR1->setFieldValue(context, IOPDmacRegister_ICR1_t::Fields::CHANNEL_TCI_KEYS[channel->getChannelID() % 7], value);
+	else
+		throw std::runtime_error("IOP DMAC PCRW could not determine channel set TCI index.");
+}
+
+bool IOPDmacRegister_ICRW_t::isInterruptPending(const Context_t context) const
+{
+	return (mICR0->isInterruptPending(context) || mICR1->isInterruptPending(context));
 }

@@ -13,10 +13,12 @@ class SPU2CoreRegister_MMIX_t;
 class SPU2CoreRegister_ATTR_t;
 class SPU2CoreRegister_VOL_t;
 class SPU2CoreRegister_STATX_t;
+class SPU2CoreRegister_ADMAS_t;
 class ByteMemory_t;
 class Register16_t;
 class PairRegister16_t;
 class FIFOQueue_t;
+class IOPDmacChannel_t;
 
 /*
 Base class representing a SPU2 core.
@@ -25,7 +27,7 @@ There are 2 individual cores in the SPU2, each with 24 voice channels.
 class SPU2Core_t
 {
 public:
-	SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	SPU2Core_t(const int coreID, const std::shared_ptr<IOPDmacChannel_t> & dmaChannel);
 
 	/*
 	SPU2 Core registers.
@@ -54,7 +56,7 @@ public:
 	std::shared_ptr<PairRegister16_t>         TSAL;
 	std::shared_ptr<Register16_t>             DATA0;
 	std::shared_ptr<Register16_t>             DATA1;
-	std::shared_ptr<Register16_t>             ADMAS; // "AutoDMA Status".
+	std::shared_ptr<SPU2CoreRegister_ADMAS_t> ADMAS; // "AutoDMA Status".
 	std::shared_ptr<Register16_t>             ESAH;
 	std::shared_ptr<Register16_t>             ESAL;
 	std::shared_ptr<Register16_t>             APF1_SIZEH;
@@ -157,10 +159,20 @@ public:
 	std::shared_ptr<SPU2CoreVoice_t> VOICES[Constants::SPU2::NUMBER_CORE_VOICES];
 
 	/*
+	Associated IOP DMA channel attached to this core.
+	When ADMA modes are used, this is used to stop trasnfers from the IOP side and trigger an IOP DMAC interrupt.
+	TODO: Confirm this is how it works. From PCSX2, the spu2-x plugin also controls the IOP SPU2CX DMAC bits.
+	      However, it does this for ADMA and MDMA - I think this was only meant for ADMA, since it processes data in 0x200 hword blocks only.
+		  The way the SPU2 overview manual reads, it often implies that the SPU2 can change the IOP DMA status bits - which means hardware wiring... Maybe check schematics for clues?
+	*/
+	std::shared_ptr<IOPDmacChannel_t> DMAChannel;
+
+	/*
 	Associated DMA FIFO queue attached to this core.
+	This is the same as DMAChannel->FIFOQueue
 	*/
 	std::shared_ptr<FIFOQueue_t> FIFOQueue;
-	
+
 	/*
 	Returns the core ID.	
 	*/
@@ -170,13 +182,6 @@ public:
 	Returns the constant properties for this core.
 	*/
 	const SPU2CoreTable::SPU2CoreInfo_t * getInfo() const;
-
-	/*
-	Returns if the core is enabled for auto DMA transfers, by checking that ((coreIdx + 1) & ADMAS) > 0.
-	From PCSX2's SPU2-X dma.cpp.
-	TODO: Investigate more, this does not make much sense to me. The SPU2 overview manual mentions ADMA reads and writes, but only writes are ever used it seems.
-	*/
-	bool isADMAEnabled(const Context_t context) const;
 
 private:
 	/*
@@ -188,7 +193,7 @@ private:
 class SPU2Core_C0_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	SPU2Core_C0_t(const std::shared_ptr<IOPDmacChannel_t> & dmaChannel);
 
 	static constexpr int CORE_ID = 0;
 };
@@ -196,7 +201,7 @@ public:
 class SPU2Core_C1_t : public SPU2Core_t
 {
 public:
-	SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue);
+	SPU2Core_C1_t(const std::shared_ptr<IOPDmacChannel_t> & dmaChannel);
 
 	static constexpr int CORE_ID = 1;
 };

@@ -147,3 +147,32 @@ public:
 
 	SPU2CoreRegister_STATX_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 };
+
+/*
+The SPU2 Core ADMAS register.
+Controls the Auto DMA function.
+When turning ADMA off, it requires a special value to be set.
+*/
+class SPU2CoreRegister_ADMAS_t : public Register16_t
+{
+public:
+	SPU2CoreRegister_ADMAS_t(const char * mnemonic, const bool debugReads, const bool debugWrites, const int coreID);
+
+	/*
+	Returns if ADMA is enabled for this SPU2 core.
+	Requires the core ID to perform this check.
+	*/
+	bool isADMAEnabled(const Context_t context);
+
+	/*
+	Turns off ADMA by setting a magic value.
+	TODO: Confirm special value is actually needed, it is in SPU2-X, but not checked against BIOS code.
+	*/
+	void setADMAOff(const Context_t context);
+
+private:
+	/*
+	The associated core ID.
+	*/
+	int mCoreID;
+};

@@ -9,10 +9,13 @@
 #include "VM/Systems/SPU2/SPU2_s.h"
 
 #include "Resources/Resources_t.h"
-#include "Resources/Common/Common_t.h"
+#include "Resources/IOP/IOP_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "Resources/IOP/IOP_t.h"
+#include "Resources/IOP/DMAC/IOPDmac_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacChannelRegisters_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacRegisters_t.h"
 #include "Resources/SPU2/SPU2_t.h"
 #include "Resources/SPU2/Types/SPU2Registers_t.h"
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
@@ -25,6 +28,7 @@ SPU2_s::SPU2_s(VM * vm) :
 {
 	mSPU2 = getVM()->getResources()->SPU2;
 	mINTC = getVM()->getResources()->IOP->INTC;
+	mDMAC = getVM()->getResources()->IOP->DMAC;
 }
 
 void SPU2_s::initialise()
@@ -81,56 +85,38 @@ bool SPU2_s::handleDMATransfer()
 		throw std::runtime_error("SPU2 ATTR DMABits field set to non-zero. What is this for?");
 
 	int dmaCount = 0;
-	bool updateSTATX = false;
 	switch (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::DMAMode))
 	{
 	case 0:
 	{
 		// Auto DMA write mode.
-		if (mCore->isADMAEnabled(getContext())) 
-		{
+		if (mCore->ADMAS->isADMAEnabled(getContext())) 
 			dmaCount = transferData_ADMA_Write(); 
-			updateSTATX = true;
-		}
 		break;
 	}
 	case 1:
 	{
 		// Auto DMA read mode. 
-		if (mCore->isADMAEnabled(getContext()))
-		{
+		if (mCore->ADMAS->isADMAEnabled(getContext()))
 			dmaCount = transferData_ADMA_Read();
-			updateSTATX = true;
-		}
 		break;
 	}		
 	case 2:
 	{
 		// Manual DMA write mode.
 		dmaCount = transferData_MDMA_Write();
-		updateSTATX = true;
 		break;
 	}
 	case 3:
 	{
 		// Manual DMA read mode.
 		dmaCount = transferData_MDMA_Read();
-		updateSTATX = true;
 		break;
 	}
 	default:
 	{
 		throw std::runtime_error("SPU2 could not determine DMA mode. Please fix.");
 	}
-	}
-
-	// Update STATX only if DMA attemped to run, and if there was FIFO data available.
-	if (updateSTATX)
-	{
-		if (mCore->FIFOQueue->getReadAvailable() > 0)
-			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
-		else
-			mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 	}
 
 	return (dmaCount > 0);
@@ -153,16 +139,21 @@ bool SPU2_s::handleSoundGeneration()
 int SPU2_s::transferData_ADMA_Write() const
 {
 	// TODO: Check this, its probably wrong. The write addresses are also meant to be used in conjunction with the current read address (double buffer).
-	// TSA is not used here! The write addresses are fixed. See pages 13, 28 and 55 of the SPU2 Overview manual.
+	// Note: TSA is not used here! The write addresses are fixed. See pages 13, 28 and 55 of the SPU2 Overview manual.
 
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
 	{
-		// TODO: check this especially!!!
-		// Need to also clear the STATX.NeedData bit when out of data.
-		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
+		// TODO: check this especially!!! Are we meant to stop the IOP DMA as well?
+		// Need to also set the STATX.NeedData bit when out of data.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 		return 0;
+	}
+	else
+	{
+		// Clear STATX, we still have data to process.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);	
 	}
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
@@ -185,15 +176,30 @@ int SPU2_s::transferData_ADMA_Write() const
 	else
 		address = mCore->getInfo()->mBaseTSARight + channelOffset;
 
-	// Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
-	address %= 0x100000;
-
 	// Write to SPU2 memory.
 	writeHwordMemory(address, data);
 
 	// Increment the transfer count.
 	mCore->ATTR->mDMAOffset += 1;
-	
+
+	// Stop ADMA if 0x100 hwords have been received, and also stop the IOP DMAC channel.
+	if ((mCore->ATTR->mDMAOffset % 0x100) == 0)
+	{
+		// Set STATX to signal we need data.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
+
+		// Set IOP DMA channel status to stopped.
+		mCore->DMAChannel->CHCR->setFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
+
+		// Emit interrupt stat bit (IOP DMAC will handle notifying the IOP).
+		mDMAC->ICRW->setChannelTCI(getContext(), mCore->DMAChannel.get(), 1);
+
+		// Set ADMA register to special value.
+		mCore->ADMAS->setADMAOff(getContext());		
+
+		log(Debug, "SPU2 core %d reached end of ADMA block (0x100 hwords). Remaining data in FIFO queue = 0x%X.", mCore->getCoreID(), mCore->FIFOQueue->getReadAvailable());
+	}
+
 	// ADMA has completed one transfer.
 	return 1;
 }

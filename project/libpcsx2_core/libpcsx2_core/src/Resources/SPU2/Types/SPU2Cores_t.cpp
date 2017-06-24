@@ -5,8 +5,9 @@
 #include "Resources/SPU2/Types/SPU2Cores_t.h"
 #include "Resources/SPU2/Types/SPU2CoreRegisters_t.h"
 #include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
+#include "Resources/IOP/DMAC/Types/IOPDmacChannels_t.h"
 
-SPU2Core_t::SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
+SPU2Core_t::SPU2Core_t(const int coreID, const std::shared_ptr<IOPDmacChannel_t> & dmaChannel) :
 	PMON0(nullptr),
 	PMON1(nullptr),
 	NON0(nullptr),
@@ -128,7 +129,8 @@ SPU2Core_t::SPU2Core_t(const int coreID, const std::shared_ptr<FIFOQueue_t> & fi
 	VOICE_22(nullptr),
 	VOICE_23(nullptr),
 	VOICES{ nullptr },
-	FIFOQueue(fifoQueue),
+	DMAChannel(dmaChannel),
+	FIFOQueue(dmaChannel->FIFOQueue),
 	mCoreID(coreID)
 {
 }
@@ -143,13 +145,8 @@ const SPU2CoreTable::SPU2CoreInfo_t* SPU2Core_t::getInfo() const
 	return SPU2CoreTable::getInfo(this);
 }
 
-bool SPU2Core_t::isADMAEnabled(const Context_t context) const
-{
-	return ((getCoreID() + 1) & ADMAS->readHword(context)) > 0;
-}
-
-SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
-	SPU2Core_t(CORE_ID, fifoQueue)
+SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<IOPDmacChannel_t> & dmaChannel) :
+	SPU2Core_t(CORE_ID, dmaChannel)
 {
 	PMON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C0 PMON0", false, false);
 	PMON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C0 PMON1", false, false);
@@ -175,7 +172,7 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	TSAL = std::make_shared<PairRegister16_t>("SPU2 C0 TSAL", false, true, TSAH);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C0 DATA0", false, false);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C0 DATA1", false, false);
-	ADMAS = std::make_shared<Register16_t>("SPU2 C0 ADMAS", false, true);
+	ADMAS = std::make_shared<SPU2CoreRegister_ADMAS_t>("SPU2 C0 ADMAS", false, true, CORE_ID);
 	ESAH = std::make_shared<Register16_t>("SPU2 C0 ESAH", false, false);
 	ESAL = std::make_shared<Register16_t>("SPU2 C0 ESAL", false, false);
 	APF1_SIZEH = std::make_shared<Register16_t>("SPU2 C0 APF1_SIZEH", false, false);
@@ -297,8 +294,8 @@ SPU2Core_C0_t::SPU2Core_C0_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
 	VOICES[23] = VOICE_23;
 }
 
-SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue):
-	SPU2Core_t(CORE_ID, fifoQueue)
+SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<IOPDmacChannel_t> & dmaChannel):
+	SPU2Core_t(CORE_ID, dmaChannel)
 {
 	PMON0 = std::make_shared<SPU2CoreRegister_CHAN0_t>("SPU2 C1 PMON0", false, false);
 	PMON1 = std::make_shared<SPU2CoreRegister_CHAN1_t>("SPU2 C1 PMON1", false, false);
@@ -324,7 +321,7 @@ SPU2Core_C1_t::SPU2Core_C1_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue):
 	TSAL = std::make_shared<PairRegister16_t>("SPU2 C1 TSAL", false, true, TSAH);
 	DATA0 = std::make_shared<Register16_t>("SPU2 C1 DATA0", false, false);
 	DATA1 = std::make_shared<Register16_t>("SPU2 C1 DATA1", false, false);
-	ADMAS = std::make_shared<Register16_t>("SPU2 C1 ADMAS", false, true);
+	ADMAS = std::make_shared<SPU2CoreRegister_ADMAS_t>("SPU2 C1 ADMAS", false, true, CORE_ID);
 	ESAH = std::make_shared<Register16_t>("SPU2 C1 ESAH", false, false);
 	ESAL = std::make_shared<Register16_t>("SPU2 C1 ESAL", false, false);
 	APF1_SIZEH = std::make_shared<Register16_t>("SPU2 C1 APF1_SIZEH", false, false);

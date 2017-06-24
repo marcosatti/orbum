@@ -1,9 +1,12 @@
 #pragma once
 
+#include <memory>
+
 #include "Common/Global/Globals.h"
 
 #include "Common/Types/Register/BitfieldRegister32_t.h"
-#include <memory>
+
+class IOPDmacChannel_t;
 
 /*
 The IOP DMAC PCR0 register.
@@ -35,6 +38,7 @@ public:
 		static constexpr int PriorityCPU = 14;
 		static constexpr int EnableCPU = 15;
 
+		static constexpr int CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Priority0, Priority1, Priority2, Priority3, Priority4, Priority5, Priority6 };
 		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable0, Enable1, Enable2, Enable3, Enable4, Enable5, Enable6 };
 	};
 
@@ -126,8 +130,8 @@ public:
 		static constexpr int Enable12 = 11;
 		static constexpr int Priority13 = 12;
 		static constexpr int Enable13 = 13;
-
-
+		
+		static constexpr int CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Priority7, Priority8, Priority9, Priority10, Priority11, Priority12, Priority13 };
 		static constexpr int CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2] = { Enable7, Enable8, Enable9, Enable10, Enable11, Enable12, Enable13 };
 	};
 
@@ -199,4 +203,103 @@ private:
 	Reference to the ICR0 register, see handleInterruptCheck() above.
 	*/
 	std::shared_ptr<IOPDmacRegister_ICR0_t> mICR0;
+};
+
+/*
+Wrapper class around the PCR 0 and 1 registers to provide one interface for all channels.
+This uses the register functionality, and uses values internally in terms of u32's.
+Provides:
+ - Get/set for priorities.
+ - Get/set for enabling.
+TODO: CPU priority and enabling not implemented, just use PCR0 directly.
+
+For more information, see the PCR0 and PCR1 registers above.
+*/
+class IOPDmacRegister_PCRW_t
+{
+public:
+	IOPDmacRegister_PCRW_t(const std::shared_ptr<IOPDmacRegister_PCR0_t> & pcr0, const std::shared_ptr<IOPDmacRegister_PCR1_t> & pcr1);
+
+	/*
+	Gets or sets the priority status for a channel.
+	*/
+	u32 getChannelPriority(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelPriority(const Context_t context, const IOPDmacChannel_t * channel, const u32 value);
+
+	/*
+	Gets or sets the enabled status for a channel.
+	*/
+	bool isChannelEnabled(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelEnabled(const Context_t context, const IOPDmacChannel_t * channel, const bool value);
+
+private:
+	/*
+	Reference to the PCR0 register.
+	*/
+	std::shared_ptr<IOPDmacRegister_PCR0_t> mPCR0;
+
+	/*
+	Reference to the PCR1 register.
+	*/
+	std::shared_ptr<IOPDmacRegister_PCR1_t> mPCR1;
+};
+
+/*
+Wrapper class around the ICR 0 and 1 registers to provide one interface for all channels.
+This uses the register functionality, and uses values internally in terms of u32's.
+Provides:
+ - Get/set for IRM (individual request mask).
+ - Get/set for IQE (interrupt on tag event queue).
+ - Get/set for TCM (transfer complete mask).
+ - Get/set for TCI (transfer complete interrupt).
+ - Getting the interrupted status (checks for any channels that have interrupted).
+
+For more information, see the ICR0 and ICR1 registers above.
+*/
+class IOPDmacRegister_ICRW_t
+{
+public:
+	IOPDmacRegister_ICRW_t(const std::shared_ptr<IOPDmacRegister_ICR0_t> & icr0, const std::shared_ptr<IOPDmacRegister_ICR1_t> & icr1);
+
+	/*
+	Gets or sets the IRM for a channel.
+	Only channels 0 to 6 are valid for IRM.
+	TODO: Not sure where the others are for 7 to 13...
+	*/
+	u32 getChannelIRM(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelIRM(const Context_t context, const IOPDmacChannel_t * channel, const u32 value);
+
+	/*
+	Gets or sets the IQE for a channel.
+	*/
+	u32 getChannelIQE(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelIQE(const Context_t context, const IOPDmacChannel_t * channel, const u32 value);
+
+	/*
+	Gets or sets the TCM for a channel.
+	*/
+	u32 getChannelTCM(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelTCM(const Context_t context, const IOPDmacChannel_t * channel, const u32 value);
+
+	/*
+	Gets or sets the TCI for a channel.
+	*/
+	u32 getChannelTCI(const Context_t context, const IOPDmacChannel_t * channel);
+	void setChannelTCI(const Context_t context, const IOPDmacChannel_t * channel, const u32 value);
+
+	/*
+	Returns if any of the channels are in an interrupt pending state.
+	*/
+	bool isInterruptPending(const Context_t context) const;
+
+private:
+	/*
+	Reference to the PCR0 register.
+	*/
+	std::shared_ptr<IOPDmacRegister_ICR0_t> mICR0;
+
+	/*
+	Reference to the PCR1 register.
+	*/
+	std::shared_ptr<IOPDmacRegister_ICR1_t> mICR1;
 };

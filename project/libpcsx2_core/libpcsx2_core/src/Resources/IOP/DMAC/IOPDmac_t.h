@@ -25,6 +25,8 @@ class IOPDmacRegister_ICR0_t;
 class IOPDmacRegister_PCR1_t; 
 class IOPDmacRegister_ICR1_t;
 class Register32_t;
+class IOPDmacRegister_PCRW_t;
+class IOPDmacRegister_ICRW_t;
 
 /*
 IOP DMAC resources.
@@ -57,11 +59,14 @@ public:
 
 	/*
 	DMAC Common Registers.
+	Wrappers are provided for the PCR and ICR registers, to appear as one.
 	*/
 	std::shared_ptr<IOPDmacRegister_PCR0_t> PCR0;  
 	std::shared_ptr<IOPDmacRegister_ICR0_t> ICR0;  
 	std::shared_ptr<IOPDmacRegister_PCR1_t> PCR1;  
 	std::shared_ptr<IOPDmacRegister_ICR1_t> ICR1;  
+	std::shared_ptr<IOPDmacRegister_PCRW_t> PCRW;
+	std::shared_ptr<IOPDmacRegister_ICRW_t> ICRW;
 	std::shared_ptr<Register32_t>           GCTRL; 
 };
 
