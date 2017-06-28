@@ -188,7 +188,7 @@ int SPU2_s::transferData_ADMA_Write() const
 		// Only need to control ADMA if channel has been stopped from the IOP side - ie: it will not be sending any more data.
 		if (mCore->DMAChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start) == 0)
 		{
-			// If there is no more data in the FIFO queue, and the IOP channel is not on, then send a DMA interrupt.
+			// If there is no more data in the FIFO queue, then stop.
 			if (mCore->FIFOQueue->getReadAvailable() == 0)
 			{
 				// Set STATX to signal we need data.

@@ -209,8 +209,6 @@ int EEDmac_s::transferData() const
 
 void EEDmac_s::setStateSuspended() const
 {
-	log(Debug, "EE DMAC channel %s (direction = %s) interrupt.", mChannel->getInfo()->mMnemonic, mChannel->CHCR->getDirection(getContext()) == Direction_t::TO ? "To" : "From");
-
 	// Emit the interrupt status bit.
 	mDMAC->STAT->setFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_CIS_KEYS[mChannel->getChannelID()], 1);
 

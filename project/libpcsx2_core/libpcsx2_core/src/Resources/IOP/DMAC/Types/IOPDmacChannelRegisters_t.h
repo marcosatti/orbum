@@ -82,15 +82,16 @@ public:
 	IOPDmacChannelRegister_BCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites);
 
 	/*
-	Upon writing, stores the transfer size to be used by the DMAC.
+	Calculates the transfer size, based on the BCR register value.
+	Call this before starting a DMA transfer, and then use the transfer length member directly.
+	Parsing useBA = true means a block mode transfer size is calculated, otherwise, slice mode is calculated.
 	*/
-	void writeHword(const Context_t context, const size_t arrayIndex, const u16 value) override;
-	void writeWord(const Context_t context, const u32 value) override;
+	void calculate(const Context_t context, const bool useBA);
 
 	/*
 	Transfer size.
 	The register value is not meant to change during the transfer.
-	Instead, we calculate the total length and use result here.
+	Instead, the total length after calling calculate() is stored here.
 	This is directly accessible to the IOP DMAC which manipulates this value.
 	*/
 	size_t mTransferLength;

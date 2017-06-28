@@ -58,42 +58,25 @@ IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic
 	registerField(Fields::BA, "BA", 16, 16, 0);
 }
 
-void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t context, const size_t arrayIndex, const u16 value)
+void IOPDmacChannelRegister_BCR_t::calculate(const Context_t context, const bool useBA)
 {
-	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
-
 	// Update the transfer size.
 	// When BS = 0, it is interpreted as 0x10000 (see wisi and sp193's IOP DMAC docs).
-	// Wben BA = 0, just use 1 in its place (0 implies it is being used in a burst context).
-	// TODO: I'm actually not sure if when BA = 0, does it mean 0x10000 (same as BS). Wouldn't think so...
-	u16 BS = static_cast<u16>(getFieldValue(context, Fields::BS));
-	u16 BA = static_cast<u16>(getFieldValue(context, Fields::BA));
-	BA = (BA > 0) ? BA : 1;
-
-	if (BS == 0)
-		mTransferLength = BA * 0x10000;
-	else
+	// Wben BA = 0, it is also interpreted as 0x10000 (see wisi and sp193's IOP DMAC docs).
+	if (useBA)
+	{
+		u32 BS = getFieldValue(context, Fields::BS);
+		u32 BA = getFieldValue(context, Fields::BA);
+		BS = (BS > 0) ? BS : 0x10000;
+		BA = (BA > 0) ? BA : 0x10000;
 		mTransferLength = BA * BS;
-
-	if (mTransferLength == 0)
-		log(Debug, "IOP DMA BCR register's transfer size set is 0 - please check!");
-}
-
-void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t context, const u32 value)
-{
-	BitfieldRegister32_t::writeWord(context, value);
-
-	// Update the transfer size.
-	// When BS = 0, it is interpreted as 0x10000 (see wisi and sp193's IOP DMAC docs).
-	u16 BS = static_cast<u16>(getFieldValue(context, Fields::BS));
-	u16 BA = static_cast<u16>(getFieldValue(context, Fields::BA));
-	if (BS == 0)
-		mTransferLength = BA * 0x10000;
+	}
 	else
-		mTransferLength = BA * BS;
-		
-	if (mTransferLength == 0)
-		log(Debug, "IOP DMA BCR register's transfer size set is 0 - please check!");
+	{
+		u32 BS = getFieldValue(context, Fields::BS);
+		BS = (BS > 0) ? BS : 0x10000;
+		mTransferLength = BS;
+	}
 }
 
 IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :

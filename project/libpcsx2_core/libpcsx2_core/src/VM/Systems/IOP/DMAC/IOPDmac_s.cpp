@@ -120,11 +120,8 @@ bool IOPDmac_s::transferNormalBurst()
 	// Perform pre-start checks.
 	if (!mChannel->CHCR->mDMAStarted)
 	{
-		// Check the BCR register, make sure that size > 0 in order to start transfer.
-		if (mChannel->BCR->mTransferLength == 0)
-		{
-			throw std::runtime_error("IOP DMAC tried to start transfer without any length - panic!");
-		}
+		// Calculate transfer size.
+		mChannel->BCR->calculate(getContext(), false);
 
 		// Pre checks ok - start the DMA transfer.
 		mChannel->CHCR->mDMAStarted = true;
@@ -163,11 +160,8 @@ bool IOPDmac_s::transferNormalSlice()
 	// Perform pre-start checks.
 	if (!mChannel->CHCR->mDMAStarted)
 	{
-		// Check the BCR register, make sure that size > 0 in order to start transfer.
-		if (mChannel->BCR->mTransferLength == 0)
-		{
-			throw std::runtime_error("IOP DMAC tried to start transfer without any length - panic!");
-		}
+		// Calculate transfer size.
+		mChannel->BCR->calculate(getContext(), true);
 
 		// Pre checks ok - start the DMA transfer.
 		mChannel->CHCR->mDMAStarted = true;
@@ -206,8 +200,12 @@ bool IOPDmac_s::transferChain()
 	// Perform pre-start checks.
 	if (!mChannel->CHCR->mDMAStarted)
 	{
-		// No prechecks needed - start DMA transfer.
-		// If BCR transfer size is 0 initially, then it just means that we read a tag straight away.
+		// Tag length is always 0 to begin with.
+		// TODO: wisi's DMA docs mention the TBCR register, which is not implemented, but used instead over BCR for chain modes (tag transfer length).
+		//       But for the IOP, TBCR is always 0 so far. If emulator crashes with MMU error, this will probably need to be put in.
+		mChannel->BCR->mTransferLength = 0;
+
+		// Pre checks ok - start the DMA transfer.
 		mChannel->CHCR->mDMAStarted = true;
 		return true;
 	}
@@ -347,8 +345,6 @@ int IOPDmac_s::transferData() const
 
 void IOPDmac_s::setStateSuspended() const
 {
-	log(Debug, "IOP DMAC channel %s (direction = %s) interrupt.", mChannel->getInfo()->mMnemonic, mChannel->CHCR->getDirection(getContext()) == Direction_t::TO ? "To" : "From");
-
 	// Stop channel.
 	mChannel->CHCR->setFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
 

@@ -101,8 +101,8 @@ IOPDmacChannel_SIF0_t::IOPDmacChannel_SIF0_t(const std::shared_ptr<FIFOQueue_t> 
 	IOPDmacChannel_t(CHANNEL_ID, fifoQueue)
 {
 	MADR = std::make_shared<IOPDmacChannelRegister_MADR_t>("IOP DMAC CH_SIF0 MADR", false, false);
-	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_SIF0 BCR", false, true);
-	CHCR = std::make_shared<IOPDmacChannelRegister_SIF0_CHCR_t>("IOP DMAC CH_SIF0 CHCR", false, true, sbusF240);
+	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_SIF0 BCR", false, false);
+	CHCR = std::make_shared<IOPDmacChannelRegister_SIF0_CHCR_t>("IOP DMAC CH_SIF0 CHCR", false, false, sbusF240);
 	TADR = std::make_shared<IOPDmacChannelRegister_TADR_t>("IOP DMAC CH_SIF0 TADR", false, false);
 }
 
@@ -110,8 +110,8 @@ IOPDmacChannel_SIF1_t::IOPDmacChannel_SIF1_t(const std::shared_ptr<FIFOQueue_t> 
 	IOPDmacChannel_t(CHANNEL_ID, fifoQueue)
 {
 	MADR = std::make_shared<IOPDmacChannelRegister_MADR_t>("IOP DMAC CH_SIF1 MADR", false, false);
-	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_SIF1 BCR", false, true);
-	CHCR = std::make_shared<IOPDmacChannelRegister_SIF1_CHCR_t>("IOP DMAC CH_SIF1 CHCR", false, true, sbusF240);
+	BCR = std::make_shared<IOPDmacChannelRegister_BCR_t>("IOP DMAC CH_SIF1 BCR", false, false);
+	CHCR = std::make_shared<IOPDmacChannelRegister_SIF1_CHCR_t>("IOP DMAC CH_SIF1 CHCR", false, false, sbusF240);
 }
 
 IOPDmacChannel_fromSIO2_t::IOPDmacChannel_fromSIO2_t(const std::shared_ptr<FIFOQueue_t> & fifoQueue) :
