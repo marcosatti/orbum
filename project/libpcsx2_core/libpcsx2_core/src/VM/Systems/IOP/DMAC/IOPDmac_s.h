@@ -15,6 +15,9 @@ class IOPDmacChannel_t;
 The IOP DMAC system logic.
 It operates using 32-bit data units and can operate in burst, slice, linked-list or chain modes.
 Logic adapted from PCSX2, nocash PSX docs (http://problemkaputt.de/psx-spx.htm), and wisi and SP193's docs (http://psx-scene.com/forums/f167/speed-iop-dma-relaying-156928/).
+Pretty similar to the EE DMAC, and a lot of code has been adopted to suit.
+
+If transfering data from memory to a peripheral, it will wait until the data has been received (FIFO size is 0) before interrupting the IOP INTC.
 */
 class IOPDmac_s : public VMSystem_t
 {

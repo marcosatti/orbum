@@ -5,6 +5,7 @@ using Direction_t = EEDmacChannelTable::Direction_t;
 
 EEDmacChannelRegister_CHCR_t::EEDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
+	mDMAStarted(false),
 	mTagExit(false),
 	mTagStallControl(false),
 	mTagIRQ(false)
@@ -28,11 +29,22 @@ EEDmacChannelTable::Direction_t EEDmacChannelRegister_CHCR_t::getDirection(const
 	return static_cast<EEDmacChannelTable::Direction_t>(getFieldValue(context, Fields::DIR));
 }
 
-void EEDmacChannelRegister_CHCR_t::resetChainState()
+void EEDmacChannelRegister_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
-	mTagExit = false;
-	mTagStallControl = false;
-	mTagIRQ = false;
+	auto strOld = BitfieldRegister32_t::getFieldValue(context, Fields::STR);
+
+	BitfieldRegister32_t::writeWord(context, value);
+
+	auto strNew = BitfieldRegister32_t::getFieldValue(context, Fields::STR);
+
+	// Reset DMA flags on suspended -> start.
+	if ((strOld == 0) && (strNew != 0))
+	{
+		mDMAStarted = false;
+		mTagExit = false;
+		mTagStallControl = false;
+		mTagIRQ = false;
+	}
 }
 
 EEDmacChannelRegister_MADR_t::EEDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -130,11 +142,8 @@ void EEDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const Context_t context, c
 		auto start = getFieldValue(context, Fields::STR);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
-		if (start > 0 && direction == Direction_t::TO)
-			throw std::runtime_error("EE SIF0 channel tried to start in the TO direction! Not possible.");
-		else if (start == 0 && direction == Direction_t::FROM)
+		// Trigger SBUS update.
+		if (start == 0 && direction == Direction_t::FROM)
 			handleSBUSUpdateFinish(context);
 	}
 }
@@ -146,11 +155,8 @@ void EEDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, const
 	auto start = getFieldValue(context, Fields::STR);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
-	if (start > 0 && direction == Direction_t::TO)
-		throw std::runtime_error("EE SIF0 channel tried to start in the TO direction! Not possible.");
-	else if (start == 0 && direction == Direction_t::FROM)
+	// Trigger SBUS update.
+	if (start == 0 && direction == Direction_t::FROM)
 		handleSBUSUpdateFinish(context);
 }
 
@@ -177,12 +183,9 @@ void EEDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const Context_t context, c
 		auto start = getFieldValue(context, Fields::STR);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		// Trigger SBUS update.
 		if (start > 0 && direction == Direction_t::TO)
 			handleSBUSUpdateStart(context);
-		else if (start == 0 && direction == Direction_t::FROM)
-			throw std::runtime_error("EE SIF1 channel tried to start in the FROM direction! Not possible.");
 	}
 }
 
@@ -193,12 +196,9 @@ void EEDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, const
 	auto start = getFieldValue(context, Fields::STR);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	// Trigger SBUS update.
 	if (start > 0 && direction == Direction_t::TO)
 		handleSBUSUpdateStart(context);
-	else if (start == 0 && direction == Direction_t::FROM)
-		throw std::runtime_error("EE SIF1 channel tried to start in the FROM direction! Not possible.");
 }
 
 void EEDmacChannelRegister_SIF1_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
@@ -223,8 +223,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const Context_t context, c
 		auto str = getFieldValue(context, Fields::STR);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		// Trigger SBUS update.
 		if (str > 0 && direction == Direction_t::TO)
 			handleSBUSUpdateStart(context);
 		else if (str == 0 && direction == Direction_t::FROM)
@@ -239,8 +238,7 @@ void EEDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, const
 	auto str = getFieldValue(context, Fields::STR);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	// Trigger SBUS update.
 	if (str > 0 && direction == Direction_t::TO)
 		handleSBUSUpdateStart(context);
 	else if (str == 0 && direction == Direction_t::FROM)

@@ -94,12 +94,12 @@ void BitfieldRegister32_t::registerField(const int fieldIndex, const char* field
 
 u32 BitfieldRegister32_t::getFieldValue(const Context_t context, const int fieldIndex)
 {
-	return MathUtil::extractMaskedValue32(UW, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
+	return MathUtil::extractMaskedValue32(BitfieldRegister32_t::readWord(context), mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength);
 }
 
 void BitfieldRegister32_t::setFieldValue(const Context_t context, const int fieldIndex, const u32 value)
 {
-	writeWord(context, MathUtil::insertMaskedValue32(UW, value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
+	BitfieldRegister32_t::writeWord(context, MathUtil::insertMaskedValue32(BitfieldRegister32_t::readWord(context), value, mFields[fieldIndex].mStartPosition, mFields[fieldIndex].mLength));
 }
 
 void BitfieldRegister32_t::logDebugAllFields() const

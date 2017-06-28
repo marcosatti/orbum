@@ -10,6 +10,7 @@ bool CDVDFIFOQueue_NS_DATA_OUT_t::readByte(const Context_t context, u8 & data)
 {
 	auto success = FIFOQueue_t::readByte(context, data);
 
+	// Check if FIFO is empty.
 	if (getReadAvailable() == 0)
 		mNS_RDY_DIN->READY->writeByte(context, mNS_RDY_DIN->READY->readByte(context) | 0x40);
 
@@ -20,7 +21,8 @@ bool CDVDFIFOQueue_NS_DATA_OUT_t::writeByte(const Context_t context, const u8 da
 {
 	bool success = FIFOQueue_t::writeByte(context, data);
 
-	if (getWriteAvailable() != getSize())
+	// Check if FIFO is empty (write could fail).
+	if (getReadAvailable() > 0)
 		mNS_RDY_DIN->READY->writeByte(context, mNS_RDY_DIN->READY->readByte(context) & (~0x40));
 
 	return success;

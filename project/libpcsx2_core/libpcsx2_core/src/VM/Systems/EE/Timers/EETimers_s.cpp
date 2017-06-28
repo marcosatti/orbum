@@ -35,10 +35,8 @@ void EETimers_s::initialise()
 
 int EETimers_s::step(const Event_t & event)
 {
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed.
+	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed at the end.
 	bool workDone = false;
-#endif
 
 	// Update the timers which are set to count based on the type of event recieved.
 	for (auto& timer : mTimers->TIMERS)
@@ -52,10 +50,9 @@ int EETimers_s::step(const Event_t & event)
 			// Check if the timer mode is equal to the clock source.
 			if (event.mSource == mTimer->MODE->getEventSource())
 			{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 				// A timer consumed a tick for this clock source - do not skip any ticks.
 				workDone = true;
-#endif
+
 				// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
 				//  in which case count normally.
 				if (mTimer->MODE->getFieldValue(getContext(), EETimersTimerRegister_MODE_t::Fields::GATE)

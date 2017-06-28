@@ -60,10 +60,8 @@ void EEDmac_s::initialise()
 
 int EEDmac_s::step(const Event_t & event)
 {
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
+	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed at the end.
 	bool workDone = false;
-#endif
 
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->CTRL->getFieldValue(getContext(), EEDmacRegister_CTRL_t::Fields::DMAE) > 0)
@@ -81,29 +79,17 @@ int EEDmac_s::step(const Event_t & event)
 				{
 				case LogicalMode_t::NORMAL:
 				{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 					workDone |= transferNormal();
-#else
-					transferNormal();
-#endif
 					break;
 				}
 				case LogicalMode_t::CHAIN:
 				{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-					workDone |= transferChain();
-#else
-					transferChain();
-#endif   
+					workDone |= transferChain();  
 					break;
 				}
 				case LogicalMode_t::INTERLEAVED:
 				{
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 					workDone |= transferInterleaved();
-#else
-					transferInterleaved();
-#endif
 					break;
 				}
 				default:
@@ -223,6 +209,8 @@ int EEDmac_s::transferData() const
 
 void EEDmac_s::setStateSuspended() const
 {
+	log(Debug, "EE DMAC channel %s (direction = %s) interrupt.", mChannel->getInfo()->mMnemonic, mChannel->CHCR->getDirection(getContext()) == Direction_t::TO ? "To" : "From");
+
 	// Emit the interrupt status bit.
 	mDMAC->STAT->setFieldValue(getContext(), EEDmacRegister_STAT_t::Fields::CHANNEL_CIS_KEYS[mChannel->getChannelID()], 1);
 
@@ -232,49 +220,45 @@ void EEDmac_s::setStateSuspended() const
 
 void EEDmac_s::setStateFailedTransfer() const
 {
-	throw std::runtime_error("failed transfer not implemented.");
+	throw std::runtime_error("EE DMAC failed transfer not implemented.");
 }
 
 bool EEDmac_s::transferNormal()
 {
-	// Check the QWC register, make sure that size > 0 in order to start transfer.
-	if (mChannel->QWC->readWord(getContext()) == 0)
+	// Perform pre-start checks.
+	if (!mChannel->CHCR->mDMAStarted)
 	{
-		setStateFailedTransfer();
-		return false;
+		// Check the QWC register, make sure that size > 0 in order to start transfer.
+		if (mChannel->QWC->readWord(getContext()) == 0)
+		{
+			setStateFailedTransfer();
+			return false;
+		}
+
+		// Pre checks ok - start the DMA transfer.
+		mChannel->CHCR->mDMAStarted = true;
+		return true;
 	}
-
-	// Check for drain stall control conditions, and skip cycle if the data is not ready (when the next slice is not ready).
-	if (isDrainStallControlOn() && isDrainStallControlWaiting())
+	else
 	{
-		setDMACStallControlSIS();
-		return false;
-	}
+		// Check if QWC == 0 (transfer completed).
+		if (mChannel->QWC->readWord(getContext()) == 0)
+		{
+			// If we are writing to a FIFO, check that the peripheral received the data before interrupting EE Core (except for toSPR).
+			// Try again until condition is met.
+			if ((mChannel->CHCR->getDirection(getContext()) == Direction_t::TO) && (mChannel->getChannelID() != 9))
+			{
+				if (mChannel->FIFOQueue->getReadAvailable() > 0)
+					return false;
+			}
 
-	// Transfer a data unit (128-bits). If no data was transfered, try again next cycle.
-	int count = transferData();
-	if (count == 0)
-		return false;
+			// Send interrupt to EE Core.
+			setStateSuspended();
+			return true;
+		}
 
-	// Check for source stall control conditions, and update D_STADR if required.
-	if (isSourceStallControlOn())
-		setDMACStallControlSTADR();
-
-	// Check if QWC == 0 (transfer completed), in which case stop transferring and update status.
-	if (mChannel->QWC->readWord(getContext()) == 0)
-		setStateSuspended();
-
-	// Transfer successful, done for this cycle.
-	return true;
-}
-
-bool EEDmac_s::transferChain()
-{
-	// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
-	if (mChannel->QWC->readWord(getContext()) > 0)
-	{
-		// Check for drain stall control conditions (including if we are in "refs" tag), and skip cycle if the data is not ready.
-		if (isDrainStallControlOn() && isDrainStallControlWaiting() && mChannel->CHCR->mTagStallControl)
+		// Check for drain stall control conditions, and skip cycle if the data is not ready (when the next slice is not ready).
+		if (isDrainStallControlOn() && isDrainStallControlWaiting())
 		{
 			setDMACStallControlSIS();
 			return false;
@@ -285,68 +269,108 @@ bool EEDmac_s::transferChain()
 		if (count == 0)
 			return false;
 
-		// Check for source stall control conditions (including if we are in "cnts" tag id), and update D_STADR if required.
-		if (isSourceStallControlOn() && mChannel->CHCR->mTagStallControl)
+		// Check for source stall control conditions, and update D_STADR if required.
+		if (isSourceStallControlOn())
 			setDMACStallControlSTADR();
 
-		// If QWC is now 0, update the tag flags state, and check for suspend conditions.
-		if (mChannel->QWC->readWord(getContext()) == 0)
-		{
-			// Check if we need to emit an interrupt due to tag (done after chain transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
-			if (mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TIE) > 0 && mChannel->CHCR->mTagIRQ)
-				setStateSuspended();
-
-			// Check if we need to exit based on tag flag (set by "end", "ret", etc).
-			if (mChannel->CHCR->mTagExit)
-				setStateSuspended();
-
-			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
-			mChannel->CHCR->resetChainState();
-		}
-		
 		// Transfer successful, done for this cycle.
+		return true;
+	}
+}
+
+bool EEDmac_s::transferChain()
+{
+	// Perform pre-start checks.
+	if (!mChannel->CHCR->mDMAStarted)
+	{
+		// No prechecks needed - start DMA transfer.
+		// If QWC transfer size is 0 initially, then it just means that we read a tag straight away.
+		mChannel->CHCR->mDMAStarted = true;
 		return true;
 	}
 	else
 	{
-		// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, QWC, etc).
-		// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties listed on pg 42 of EE Users Manual? Works both ways, but direction is less code.
-		switch (mChannel->CHCR->getDirection(getContext())) 
+		// Check the QWC register, make sure that size > 0 for a transfer to occur (otherwise read a tag).
+		if (mChannel->QWC->readWord(getContext()) > 0)
 		{
-		case Direction_t::TO:
-		{
-			// Read in a tag, exit early if we need to wait for data.
-			if (!readChainSourceTag())
+			// Check for drain stall control conditions (including if we are in "refs" tag), and skip cycle if the data is not ready.
+			if (isDrainStallControlOn() && isDrainStallControlWaiting() && mChannel->CHCR->mTagStallControl)
+			{
+				setDMACStallControlSIS();
+				return false;
+			}
+
+			// Transfer a data unit (128-bits). If no data was transfered, try again next cycle.
+			int count = transferData();
+			if (count == 0)
 				return false;
 
-			// Execute the tag handler
-			(this->*SRC_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
-			break;
+			// Check for source stall control conditions (including if we are in "cnts" tag id), and update D_STADR if required.
+			if (isSourceStallControlOn() && mChannel->CHCR->mTagStallControl)
+				setDMACStallControlSTADR();
+			
+			// Transfer successful, done for this cycle.
+			return true;
 		}
-		case Direction_t::FROM:
+		else
 		{
-			// Read in a tag, exit early if we need to wait for data.
-			if (!readChainDestTag())
-				return false;
+			// Check first if we need to exit the transfer (by tag instruction or IRQ).
+			bool tagIRQ = (mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TIE) > 0) && mChannel->CHCR->mTagIRQ;
+			if (tagIRQ || mChannel->CHCR->mTagExit)
+			{
+				// If we are writing to a FIFO, check that the peripheral received the data before interrupting EE Core (except for toSPR).
+				// Try again until condition is met.
+				if ((mChannel->CHCR->getDirection(getContext()) == Direction_t::TO) && (mChannel->getChannelID() != 9))
+				{
+					if (mChannel->FIFOQueue->getReadAvailable() > 0)
+						return false;
+				}
 
-			// Execute the tag handler
-			(this->*DST_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
-			break;
+				// Send interrupt to EE Core.
+				setStateSuspended();
+				return true;
+			}
+
+			// We are instead reading in the next tag.
+			// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, QWC, etc).
+			// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties listed on pg 42 of EE Users Manual? Works both ways, but direction is less code.
+			switch (mChannel->CHCR->getDirection(getContext())) 
+			{
+			case Direction_t::TO:
+			{
+				// Read in a tag, exit early if we need to wait for data.
+				if (!readChainSourceTag())
+					return false;
+
+				// Execute the tag handler
+				(this->*SRC_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
+				break;
+			}
+			case Direction_t::FROM:
+			{
+				// Read in a tag, exit early if we need to wait for data.
+				if (!readChainDestTag())
+					return false;
+
+				// Execute the tag handler
+				(this->*DST_CHAIN_INSTRUCTION_TABLE[mDMAtag.getID()])();
+				break;
+			}
+			default:
+			{
+				throw std::runtime_error("EE DMAC could not determine chain mode context.");
+			}
+			}
+
+			// Set the IRQ flag if the DMAtag.IRQ bit is set.
+			mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
+
+			// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
+			mChannel->CHCR->setFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TAG, mDMAtag.getTAG());
+
+			// Transfer successful, done for this cycle.
+			return true;
 		}
-		default:
-		{
-			throw std::runtime_error("EE DMAC could not determine chain mode context.");
-		}
-		}
-
-		// Set the IRQ flag if the DMAtag.IRQ bit is set.
-		mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
-
-		// Set CHCR.TAG based upon the DMA tag read (bits 16-31).
-		mChannel->CHCR->setFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TAG, mDMAtag.getTAG());
-
-		// Transfer successful, done for this cycle.
-		return true;
 	}
 }
 
@@ -490,12 +514,6 @@ bool EEDmac_s::readChainSourceTag()
 	// Read EE tag (128-bits) from TADR.
 	const u128 tag = readQwordMemory(TADR, SPRFlag);
 	
-#if DEBUG_LOG_EE_DMAC_TAGS
-	log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
-		mChannel->getInfo()->mMnemonic, mChannel->TADR->readWord(getContext()), tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TTE));
-	mDMAtag.logDebugAllFields();
-#endif
-	
 	// Check if we need to transfer the tag.
 	if (mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TTE) > 0)
 	{
@@ -508,6 +526,12 @@ bool EEDmac_s::readChainSourceTag()
 	
 	// Set mDMAtag based upon the LSB 64-bits of tag.
 	mDMAtag = EEDMAtag_t(tag.UW[0], tag.UW[1]);
+
+#if DEBUG_LOG_EE_DMAC_TAGS
+    log(Debug, "EE tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
+        mChannel->getInfo()->mMnemonic, mChannel->TADR->readWord(getContext()), mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), EEDmacChannelRegister_CHCR_t::Fields::TTE));
+    mDMAtag.logDebugAllFields();
+#endif
 
 	return true;
 }

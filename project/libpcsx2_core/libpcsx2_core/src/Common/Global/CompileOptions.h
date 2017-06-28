@@ -43,10 +43,10 @@ Parameters still need to be set upon constructing the object.
 Define if the emulator should log EE and IOP DMAC transfer and/or tag activity (source/chain/list modes).
 */
 #if defined(BUILD_DEBUG)
-#define DEBUG_LOG_EE_DMAC_XFERS 0
-#define DEBUG_LOG_IOP_DMAC_XFERS 0
- #define DEBUG_LOG_EE_DMAC_TAGS 0
- #define DEBUG_LOG_IOP_DMAC_TAGS 0
+ #define DEBUG_LOG_EE_DMAC_XFERS 1
+ #define DEBUG_LOG_IOP_DMAC_XFERS 1
+ #define DEBUG_LOG_EE_DMAC_TAGS 1
+ #define DEBUG_LOG_IOP_DMAC_TAGS 1
 #else
  #define DEBUG_LOG_EE_DMA_TAGS 0
  #define DEBUG_LOG_IOP_DMA_TAGS 0

@@ -9,6 +9,7 @@
 
 /*
 The DMAC D_CHCR register, aka channel control register.
+TODO: some of the tag variables might be redundant when also considering the TAG bits - look into.
 */
 class EEDmacChannelRegister_CHCR_t : public BitfieldRegister32_t
 {
@@ -37,25 +38,32 @@ public:
 	EEDmacChannelTable::Direction_t getDirection(const Context_t context);
 
 	/*
-	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
+	Resets the flags below when STR = 1 is written.
 	*/
-	void resetChainState();
+	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
-	Tag exit flag. Within DMAC logic, set this to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer. Reset this on a finished transfer.
-	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	DMA started flag. Used to indicate if a DMA transfer is in progress, in order for the DMAC to perform some initial and final checks.
+	An example of the DMAC using this is to check for an initial invalid transfer length.
+	Reset to false upon writing to this register.
+	*/
+	bool mDMAStarted;
+
+	/*
+	Tag exit flag. Within DMAC logic, set to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer.
+	Reset to false upon writing to this register.
 	*/
 	bool mTagExit;
 
 	/*
-	Tag stall control flag. Within DMAC logic, set this to true when an stall control tag is encountered, and use to check whether to update STADR or skip a cycle. Reset this on a finished transfer.
-	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	Tag stall control flag. Within DMAC logic, set to true when an stall control tag is encountered, and use to check whether to update STADR or skip a cycle.
+	Reset to false upon writing to this register.
 	*/
 	bool mTagStallControl;
 
 	/*
-	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. Reset this on a finished transfer.
-	TODO: I feel like this should be done from within the TAG field... but I can't see a way when considering both the source and dest tag id's.
+	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. 
+	Reset to false upon writing to this register.
 	*/
 	bool mTagIRQ;
 };

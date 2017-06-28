@@ -5,9 +5,9 @@ using Direction_t = IOPDmacChannelTable::Direction_t;
 
 IOPDmacChannelRegister_CHCR_t::IOPDmacChannelRegister_CHCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
+	mDMAStarted(false),
 	mTagExit(false),
-	mTagIRQ(false),
-	mTagTransferLength(0)
+	mTagIRQ(false)
 {
 	registerField(Fields::TD, "TD", 0, 1, 0);
 	registerField(Fields::MAS, "MAS", 1, 1, 0);
@@ -33,17 +33,26 @@ Direction_t IOPDmacChannelRegister_CHCR_t::getDirection(const Context_t context)
 	return static_cast<Direction_t>(getFieldValue(context, Fields::TD));
 }
 
-void IOPDmacChannelRegister_CHCR_t::resetChainState()
+void IOPDmacChannelRegister_CHCR_t::writeWord(const Context_t context, const u32 value)
 {
-	mTagExit = false;
-	mTagIRQ = false;
-	mTagTransferLength = 0;
+	auto startOld = getFieldValue(context, Fields::Start);
+
+	BitfieldRegister32_t::writeWord(context, value);
+
+	auto startNew = getFieldValue(context, Fields::Start);
+
+	// Reset DMA flags on suspended -> start.
+	if ((startOld == 0) && (startNew != 0))
+	{
+		mDMAStarted = false;
+		mTagExit = false;
+		mTagIRQ = false;
+	}
 }
 
 IOPDmacChannelRegister_BCR_t::IOPDmacChannelRegister_BCR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
-	mBS(0),
-	mBA(0)
+	mTransferLength(0)
 {
 	registerField(Fields::BS, "BS", 0, 16, 0);
 	registerField(Fields::BA, "BA", 16, 16, 0);
@@ -54,8 +63,20 @@ void IOPDmacChannelRegister_BCR_t::writeHword(const Context_t context, const siz
 	BitfieldRegister32_t::writeHword(context, arrayIndex, value);
 
 	// Update the transfer size.
-	mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
-	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
+	// When BS = 0, it is interpreted as 0x10000 (see wisi and sp193's IOP DMAC docs).
+	// Wben BA = 0, just use 1 in its place (0 implies it is being used in a burst context).
+	// TODO: I'm actually not sure if when BA = 0, does it mean 0x10000 (same as BS). Wouldn't think so...
+	u16 BS = static_cast<u16>(getFieldValue(context, Fields::BS));
+	u16 BA = static_cast<u16>(getFieldValue(context, Fields::BA));
+	BA = (BA > 0) ? BA : 1;
+
+	if (BS == 0)
+		mTransferLength = BA * 0x10000;
+	else
+		mTransferLength = BA * BS;
+
+	if (mTransferLength == 0)
+		log(Debug, "IOP DMA BCR register's transfer size set is 0 - please check!");
 }
 
 void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t context, const u32 value)
@@ -63,30 +84,16 @@ void IOPDmacChannelRegister_BCR_t::writeWord(const Context_t context, const u32 
 	BitfieldRegister32_t::writeWord(context, value);
 
 	// Update the transfer size.
-	mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
-	mBA = static_cast<u16>(getFieldValue(context, Fields::BA));
-}
-
-void IOPDmacChannelRegister_BCR_t::decrement(const Context_t context)
-{
-	// If BS was set to 0 and we are in normal transfer mode (ie: transfer 0x10000 words), we rely on underflow to get us to the proper value (0xFFFF).
-	mBS--;
-
-	// Only decrement BA if there is blocks remaining, otherwise we are at the end of a transfer for chain/linked-list mode (there is no 0xFFFF thing like BS).
-	// BS is set back to the original value when a new block is being transferred.
-	if (mBS == 0 && mBA > 0)
-	{
-		mBS = static_cast<u16>(getFieldValue(context, Fields::BS));
-		mBA--;
-	}
-}
-
-bool IOPDmacChannelRegister_BCR_t::isFinished(bool checkBS) const
-{
-	if (checkBS)
-		return (mBS == 0 && mBA == 0);
+	// When BS = 0, it is interpreted as 0x10000 (see wisi and sp193's IOP DMAC docs).
+	u16 BS = static_cast<u16>(getFieldValue(context, Fields::BS));
+	u16 BA = static_cast<u16>(getFieldValue(context, Fields::BA));
+	if (BS == 0)
+		mTransferLength = BA * 0x10000;
 	else
-		return (mBS == 0);
+		mTransferLength = BA * BS;
+		
+	if (mTransferLength == 0)
+		log(Debug, "IOP DMA BCR register's transfer size set is 0 - please check!");
 }
 
 IOPDmacChannelRegister_MADR_t::IOPDmacChannelRegister_MADR_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
@@ -163,12 +170,9 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::setFieldValue(const Context_t context, 
 		auto start = getFieldValue(context, Fields::Start);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		// Trigger SBUS update.
 		if (start > 0 && direction == Direction_t::TO)
 			handleSBUSUpdateStart(context);
-		else if (start == 0 && direction == Direction_t::FROM)
-			throw std::runtime_error("IOP SIF0 channel tried to start in the FROM direction! Not possible.");
 	}
 }
 
@@ -179,12 +183,9 @@ void IOPDmacChannelRegister_SIF0_CHCR_t::writeWord(const Context_t context, cons
 	auto start = getFieldValue(context, Fields::Start);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	// Trigger SBUS update.
 	if (start > 0 && direction == Direction_t::TO)
 		handleSBUSUpdateStart(context);
-	else if (start == 0 && direction == Direction_t::FROM)
-		throw std::runtime_error("IOP SIF0 channel tried to start in the FROM direction! Not possible.");
 }
 
 void IOPDmacChannelRegister_SIF0_CHCR_t::handleSBUSUpdateStart(const Context_t context) const
@@ -209,11 +210,8 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::setFieldValue(const Context_t context, 
 		auto start = getFieldValue(context, Fields::Start);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
-		if (start > 0 && direction == Direction_t::TO)
-			throw std::runtime_error("IOP SIF1 channel tried to start in the TO direction! Not possible.");
-		else if (start == 0 && direction == Direction_t::FROM)
+		// Trigger SBUS update.
+		if (start == 0 && direction == Direction_t::FROM)
 			handleSBUSUpdateFinish(context);
 	}
 }
@@ -229,11 +227,8 @@ void IOPDmacChannelRegister_SIF1_CHCR_t::writeWord(const Context_t context, cons
 	auto start = getFieldValue(context, Fields::Start);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
-	if (start > 0 && direction == Direction_t::TO)
-		throw std::runtime_error("IOP SIF1 channel tried to start in the TO direction! Not possible.");
-	else if (start == 0 && direction == Direction_t::FROM)
+	// Trigger SBUS update.
+	if (start == 0 && direction == Direction_t::FROM)
 		handleSBUSUpdateFinish(context);
 }
 
@@ -260,8 +255,7 @@ void IOPDmacChannelRegister_SIF2_CHCR_t::setFieldValue(const Context_t context, 
 		auto start = getFieldValue(context, Fields::Start);
 		auto direction = getDirection(context);
 
-		// Trigger update based on direction and if we are starting or stopping.
-		// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+		// Trigger SBUS update.
 		if (start > 0 && direction == Direction_t::TO)
 			handleSBUSUpdateStart(context);
 		else if (start == 0 && direction == Direction_t::FROM)
@@ -276,8 +270,7 @@ void IOPDmacChannelRegister_SIF2_CHCR_t::writeWord(const Context_t context, cons
 	auto start = getFieldValue(context, Fields::Start);
 	auto direction = getDirection(context);
 
-	// Trigger update based on direction and if we are starting or stopping.
-	// 2 triggers to consider: starting and direction = TO, stopping and direction = FROM.
+	// Trigger SBUS update.
 	if (start > 0 && direction == Direction_t::TO)
 		handleSBUSUpdateStart(context);
 	else if (start == 0 && direction == Direction_t::FROM)

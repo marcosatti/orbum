@@ -17,6 +17,8 @@ The EE DMAC is synced to the BUSCLK clock source, and at most transfers a qword 
 In a slice physical transfer mode, 8 qwords are transfered before the DMAC releases the bus to the CPU - it waits for a 'DMA request' command before continuing.
 In a burst physical transfer mode, n qwords are transfered all at once - the CPU must wait for the DMAC to release the bus.
 
+If transfering data from memory to a peripheral, it will wait until the data has been received (FIFO size is 0) before interrupting the EE Core.
+
 See EE Users Manual page 41 onwards.
 
 TODO: Not implemented:

@@ -40,26 +40,30 @@ public:
 	Gets the runtime direction. Useful for channels where it can be either way.
 	*/
 	IOPDmacChannelTable::Direction_t getDirection(const Context_t context);
-
+	
 	/*
-	Resets the chain mode state (variables below). Meant to be called on every finished tag transfer.
+	Resets the flags below when START = 1 is written.
 	*/
-	void resetChainState();
+	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
-	Tag exit flag. Within DMAC logic, set this to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer. Reset this on a finished transfer.
+	DMA started flag. Used to indicate if a DMA transfer is in progress, in order for the DMAC to perform some initial and final checks.
+	An example of the DMAC using this is to check for an initial invalid transfer length.
+	Reset to false upon writing to this register.
+	*/
+	bool mDMAStarted;
+
+	/*
+	Tag exit flag. Within DMAC logic, set to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer.
+	Reset to false upon writing to this register.
 	*/
 	bool mTagExit;
 
 	/*
-	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. Reset this on a finished transfer.
+	Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. 
+	Reset to false upon writing to this register.
 	*/
 	bool mTagIRQ;
-
-	/*
-	Chain mode transfer length. Set upon reading a tag and decremented on every unit transfered.
-	*/
-	size_t mTagTransferLength;
 };
 
 /*
@@ -84,24 +88,12 @@ public:
 	void writeWord(const Context_t context, const u32 value) override;
 
 	/*
-	Decrements the tag transfer size by 1.
-	If we are in slice mode (using both BS and BA), it will decrement automatically BA and set BS back to the original value.
-	*/
-	void decrement(const Context_t context);
-
-	/*
-	Returns if the tag transfer size is finished.
-	checkBS controls whether to check if both BS and BA are equal to 0 or just check if BS is equal to 0 (use in slice or burst mode respectively).
-	*/
-	bool isFinished(bool checkBS) const;
-
-private:
-	/*
-	Internal transfer size parameters.
+	Transfer size.
 	The register value is not meant to change during the transfer.
+	Instead, we calculate the total length and use result here.
+	This is directly accessible to the IOP DMAC which manipulates this value.
 	*/
-	u16 mBS;
-	u16 mBA;
+	size_t mTransferLength;
 };
 
 /*

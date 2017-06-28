@@ -51,10 +51,8 @@ void IOPDmac_s::initialise()
 
 int IOPDmac_s::step(const Event_t & event)
 {
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed.
+	// Used to skip ticks. If no channel is enabled for transfers, then all of the ticks will be consumed at the end.
 	bool workDone = false;
-#endif
 
 	// Check if DMA transfers are enabled. If not, DMAC has nothing to do.
 	if (mDMAC->GCTRL->readWord(getContext()) > 0)
@@ -74,21 +72,13 @@ int IOPDmac_s::step(const Event_t & event)
 				case LogicalMode_t::NORMAL_BURST:
 				{
 					// Normal/burst mode.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 					workDone |= transferNormalBurst();
-#else
-					transferNormalBurst();
-#endif
 					break;
 				}
 				case LogicalMode_t::NORMAL_SLICE:
 				{
 					// Normal/slice mode.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 					workDone |= transferNormalSlice();
-#else
-					transferNormalSlice();
-#endif
 					break;
 				}
 				case LogicalMode_t::LINKEDLIST:
@@ -99,11 +89,7 @@ int IOPDmac_s::step(const Event_t & event)
 				case LogicalMode_t::CHAIN:
 				{
 					// Chain mode (listed as undefined in nocash PSX docs), based of wisi's docs.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 					workDone |= transferChain();
-#else
-					transferChain();
-#endif
 					break;
 				}
 				default:
@@ -131,104 +117,168 @@ int IOPDmac_s::step(const Event_t & event)
 
 bool IOPDmac_s::transferNormalBurst()
 {
-	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
-	int count = transferData();
-	if (count == 0)
-		return false;
-
-	// Check if there is no more data to process (check BS), in which case stop transferring and update status.
-	if (mChannel->BCR->isFinished(false))
-		setStateSuspended();
-
-	// Transfer successful, done for this cycle.
-	return true;
-}
-
-bool IOPDmac_s::transferNormalSlice()
-{
-	// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
-	int count = transferData();
-	if (count == 0)
-		return false;
-
-	// Check if there is no more data to process (check BS and BA), in which case stop transferring and update status.
-	if (mChannel->BCR->isFinished(true))
-		setStateSuspended();
-	
-	// Transfer successful, done for this cycle.
-	return true;
-}
-
-bool IOPDmac_s::transferChain()
-{
-	// Check the transfer size, make sure that size > 0 for a transfer to occur (otherwise read a tag). 
-	// TODO: Chain mode has its own transfer length counter? Not sure how this is meant to be counted through BCR register. See wisi's docs later..
-	if (mChannel->CHCR->mTagTransferLength > 0)
+	// Perform pre-start checks.
+	if (!mChannel->CHCR->mDMAStarted)
 	{
-		// Transfer a data unit (32-bits). If no data was transfered, try again next cycle. 
-		int count = transferData();
-		if (count == 0)
-			return false;
-
-		// Decrement the chain mode transfer length (as we are not using BCR).
-		mChannel->CHCR->mTagTransferLength -= count;
-		
-		// If transfer length is now 0, update the tag flags state, and check for suspend conditions.
-		if (mChannel->CHCR->mTagTransferLength == 0)
+		// Check the BCR register, make sure that size > 0 in order to start transfer.
+		if (mChannel->BCR->mTransferLength == 0)
 		{
-			// Check if we need to emit an interrupt due to tag (done after packet transfer has completed). Dependent on the tag IRQ flag set and the CHCR.TIE bit set.
-			// TODO: verify whats meant to happen... suspend or just emit interrupt?
-			if (isChannelIRQEnabled() && mChannel->CHCR->mTagIRQ)
-				setStateSuspended();
-
-			// Check if we need to exit based on tag flag (set by ERT flag within DMA tag).
-			if (mChannel->CHCR->mTagExit)
-				setStateSuspended();
-
-			// Reset the tag flag state (done regardless of the above on every finished tag transfer).
-			mChannel->CHCR->resetChainState();
+			throw std::runtime_error("IOP DMAC tried to start transfer without any length - panic!");
 		}
 
-		// Transfer successful, done for this cycle.
+		// Pre checks ok - start the DMA transfer.
+		mChannel->CHCR->mDMAStarted = true;
 		return true;
 	}
 	else
 	{
-		// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, BCR, etc).
-		// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties? Works both ways, but direction is less code.
-		switch (mChannel->CHCR->getDirection(getContext()))
+		// Check if BCR == 0 (transfer completed).
+		if (mChannel->BCR->mTransferLength == 0)
 		{
-		case Direction_t::TO:
-		{
-			// Read in a tag, exit early if we need to wait for data.
-			if (!readChainSourceTag())
-				return false;
-			
-			break;
-		}
-		case Direction_t::FROM:
-		{
-			// Read in a tag, exit early if we need to wait for data.
-			if (!readChainDestTag())
-				return false;
-			
-			break;
-		}
-		default:
-		{
-			throw std::runtime_error("IOP DMAC could not determine chain mode context.");
-		}
+			// If we are writing to a FIFO, check that the peripheral received the data before interrupting IOP INTC.
+			// Try again until condition is met.
+			if (mChannel->CHCR->getDirection(getContext()) == Direction_t::TO)
+			{
+				if (mChannel->FIFOQueue->getReadAvailable() > 0)
+					return false;
+			}
+
+			// Send interrupt to IOP INTC.
+			setStateSuspended();
+			return true;
 		}
 
-		// Set the tag flag properties.
-		mChannel->CHCR->mTagExit = mDMAtag.getERT() > 0;
-		mChannel->CHCR->mTagIRQ = mDMAtag.getIRQ() > 0;
+		// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
+		int count = transferData();
+		if (count == 0)
+			return false;
 
-		// Set the tag data transfer address.
-		mChannel->MADR->writeWord(getContext(), mDMAtag.getADDR());
-
-		// Chain mode setup was successful, done for this cycle.
+		// Transfer successful, done for this cycle.
 		return true;
+	}
+}
+
+bool IOPDmac_s::transferNormalSlice()
+{
+	// Perform pre-start checks.
+	if (!mChannel->CHCR->mDMAStarted)
+	{
+		// Check the BCR register, make sure that size > 0 in order to start transfer.
+		if (mChannel->BCR->mTransferLength == 0)
+		{
+			throw std::runtime_error("IOP DMAC tried to start transfer without any length - panic!");
+		}
+
+		// Pre checks ok - start the DMA transfer.
+		mChannel->CHCR->mDMAStarted = true;
+		return true;
+	}
+	else
+	{
+		// Check if BCR == 0 (transfer completed).
+		if (mChannel->BCR->mTransferLength == 0)
+		{
+			// If we are writing to a FIFO, check that the peripheral received the data before interrupting IOP INTC.
+			// Try again until condition is met.
+			if (mChannel->CHCR->getDirection(getContext()) == Direction_t::TO)
+			{
+				if (mChannel->FIFOQueue->getReadAvailable() > 0)
+					return false;
+			}
+
+			// Send interrupt to IOP INTC.
+			setStateSuspended();
+			return true;
+		}
+
+		// Transfer a data unit (32-bits). If no data was transfered, try again next cycle.
+		int count = transferData();
+		if (count == 0)
+			return false;
+
+		// Transfer successful, done for this cycle.
+		return true;
+	}
+}
+
+bool IOPDmac_s::transferChain()
+{
+	// Perform pre-start checks.
+	if (!mChannel->CHCR->mDMAStarted)
+	{
+		// No prechecks needed - start DMA transfer.
+		// If BCR transfer size is 0 initially, then it just means that we read a tag straight away.
+		mChannel->CHCR->mDMAStarted = true;
+		return true;
+	}
+	else
+	{
+		// Check the transfer size, make sure that size > 0 for a transfer to occur (otherwise read a tag). 
+		if (mChannel->BCR->mTransferLength > 0)
+		{
+			// Transfer a data unit (32-bits). If no data was transfered, try again next cycle. 
+			int count = transferData();
+			if (count == 0)
+				return false;
+
+			// Transfer successful, done for this cycle.
+			return true;
+		}
+		else
+		{
+			// Check first if we need to exit the transfer (by tag instruction or IRQ).
+			bool tagIRQ = isChannelIRQEnabled() && mChannel->CHCR->mTagIRQ;
+			if (tagIRQ || mChannel->CHCR->mTagExit)
+			{
+				// If we are writing to a FIFO, check that the peripheral received the data before interrupting IOP INTC.
+				// Try again until condition is met.
+				if (mChannel->CHCR->getDirection(getContext()) == Direction_t::TO)
+				{
+					if (mChannel->FIFOQueue->getReadAvailable() > 0)
+						return false;
+				}
+
+				// Send interrupt to IOP INTC.
+				setStateSuspended();
+				return true;
+			}
+
+			// Check if we are in source or dest chain mode, read in a tag (to mDMAtag), and perform action based on tag id (which will set MADR, BCR, etc).
+			// TODO: Do check based off the CHCR.DIR (direction) set or based on constant properties? Works both ways, but direction is less code.
+			switch (mChannel->CHCR->getDirection(getContext()))
+			{
+			case Direction_t::TO:
+			{
+				// Read in a tag, exit early if we need to wait for data.
+				if (!readChainSourceTag())
+					return false;
+				
+				break;
+			}
+			case Direction_t::FROM:
+			{
+				// Read in a tag, exit early if we need to wait for data.
+				if (!readChainDestTag())
+					return false;
+				
+				break;
+			}
+			default:
+			{
+				throw std::runtime_error("IOP DMAC could not determine chain mode context.");
+			}
+			}
+
+			// Set the tag flag properties.
+			mChannel->CHCR->mTagExit = (mDMAtag.getERT() > 0);
+			mChannel->CHCR->mTagIRQ = (mDMAtag.getIRQ() > 0);
+
+			// Set the tag data transfer address.
+			mChannel->MADR->writeWord(getContext(), mDMAtag.getADDR());
+
+			// Chain mode setup was successful, done for this cycle.
+			return true;
+		}
 	}
 }
 
@@ -264,7 +314,7 @@ int IOPDmac_s::transferData() const
 		writeWordMemory(physicalAddress, packet);
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
-		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+		log(Debug, "IOP DMAC Read u32 channel %s, value = 0x%08X -> MemAddr = 0x%08X", mChannel->getInfo()->mMnemonic, packet, physicalAddress);
 #endif
 	}
 	else if (direction == Direction_t::TO)
@@ -275,7 +325,7 @@ int IOPDmac_s::transferData() const
 			return 0;
 
 #if DEBUG_LOG_IOP_DMAC_XFERS
-		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getChannelInfo()->mMnemonic, packet, physicalAddress);
+		log(Debug, "IOP DMAC Write u32 channel %s, value = 0x%08X <- MemAddr = 0x%08X", mChannel->getInfo()->mMnemonic, packet, physicalAddress);
 #endif
 	}
 	else
@@ -290,13 +340,15 @@ int IOPDmac_s::transferData() const
 		mChannel->MADR->decrement(getContext());
 
 	// Update number of word units left (BCR).
-	mChannel->BCR->decrement(getContext());
+	mChannel->BCR->mTransferLength -= 1;
 
 	return 1;
 }
 
 void IOPDmac_s::setStateSuspended() const
 {
+	log(Debug, "IOP DMAC channel %s (direction = %s) interrupt.", mChannel->getInfo()->mMnemonic, mChannel->CHCR->getDirection(getContext()) == Direction_t::TO ? "To" : "From");
+
 	// Stop channel.
 	mChannel->CHCR->setFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start, 0);
 
@@ -332,12 +384,6 @@ bool IOPDmac_s::readChainSourceTag()
 	// Read EE tag (128-bits) from TADR.
 	const u128 tag = readQwordMemory(TADR);
 
-#if DEBUG_LOG_IOP_DMAC_TAGS
-	log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.", 
-		mChannel->getInfo()->mMnemonic, TADR, tag.UW[0], tag.UW[1], mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
-	mDMAtag.logDebugAllFields();
-#endif
-
 	// Check if we need to transfer the tag (CHCR bit 8 aka "chopping enable" set).
 	if (mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE) > 0)
 	{
@@ -351,11 +397,17 @@ bool IOPDmac_s::readChainSourceTag()
 	// Set mDMAtag based upon the LSB 64-bits of tag.
 	mDMAtag = IOPDMAtag_t(tag.UW[0], tag.UW[1]);
 
+#if DEBUG_LOG_IOP_DMAC_TAGS
+    log(Debug, "IOP tag (source chain mode) read on channel %s, TADR = 0x%08X. Tag0 = 0x%08X, Tag1 = 0x%08X, TTE = %d.",
+        mChannel->getInfo()->mMnemonic, TADR, mDMAtag.getTag0(), mDMAtag.getTag1(), mChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::CE));
+    mDMAtag.logDebugAllFields();
+#endif
+
 	// Set tag transfer length.
 	// The maximum supported length is 1MB - 16 bytes, rounded up to the nearest qword alignment (from PCSX2).
 	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter? Probably doesn't need it, when source chain is enforced anyway (ie: will never receive data that isn't qword aligned).
 	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway (explains the 0xFFFFC mask).
-	mChannel->CHCR->mTagTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
+	mChannel->BCR->mTransferLength = (mDMAtag.getLength() + 3) & 0xFFFFC;
 
 	// Increment TADR.
 	mChannel->TADR->increment(getContext(), 0x10);
@@ -389,7 +441,7 @@ bool IOPDmac_s::readChainDestTag()
 	// TODO: qword alignment is forced for source chain mode, but not dest - does it matter? Probably doesn't need it, when source chain is enforced anyway (ie: will never receive data that isn't qword aligned).
 	// TODO: there is also a 'cache mode' part, but not sure where (also from PCSX2). It shouldn't need to be implemented anyway.
 	// TODO: check if "& 0xFFFFC" is needed, or if its just PCSX2 specific.
-	mChannel->CHCR->mTagTransferLength = mDMAtag.getLength();
+	mChannel->BCR->mTransferLength = mDMAtag.getLength();
 
 	// TODO: look into the tag transfer enable (TTE) option not set (CHCR bit 8 aka "chopping enable").
 	//       PCSX2 does not implement anything at all, but wisi might know something. SIF1 has this bit set always. For now, left unimplemented.
