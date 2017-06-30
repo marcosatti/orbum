@@ -37,11 +37,9 @@ void SPU2_s::initialise()
 
 int SPU2_s::step(const Event_t & event)
 {
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 	// Used to skip ticks. If no DMA transfer happened, or sound generation was not performed
 	//  then all of the ticks will be consumed.
 	bool workDone = false;
-#endif
 
 	// For each core (core 0 and core 1), run through DMA transfers and sound generation.
 	for (auto& core : mSPU2->CORES)
@@ -49,13 +47,8 @@ int SPU2_s::step(const Event_t & event)
 		// Set context.
 		mCore = core.get();
 
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
 		workDone |= handleDMATransfer();
 		workDone |= handleSoundGeneration();
-#else
-		handleDMATransfer();
-		handleSoundGeneration();
-#endif
 	}
 
 	// Do an interrupt check, and send signal to the IOP INTC if needed.
@@ -144,13 +137,16 @@ int SPU2_s::transferData_ADMA_Write() const
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+	{
+		// Set 'no data available' magic values for SPU2 registers.
+		mCore->ADMAS->setADMAEnd(getContext(), true);	
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 		return 0;
-	
-	if (mCore->STATX->getFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData) > 0)
-		throw std::runtime_error("STATX was not 0 at beginning of ADMA write cycle.");
+	}
 
-	if (mCore->ADMAS->readHword(getContext()) & 0xFF00)
-		throw std::runtime_error("ADMAS had high byte set - might want to check this."); 
+	// Set 'data available' magic values for SPU2 registers.
+	mCore->ADMAS->setADMAEnd(getContext(), false);	
+	mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
 	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
@@ -174,40 +170,13 @@ int SPU2_s::transferData_ADMA_Write() const
 		address = mCore->getInfo()->mBaseTSARight + channelOffset;
 
 		
-	log(Debug, "SPU2 core %d ADMA write ATTR.mDMAOffset = 0x%08X, channelOffset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", mCore->getCoreID(), mCore->ATTR->mDMAOffset, channelOffset, address, mCore->FIFOQueue->getReadAvailable());
+	//log(Debug, "SPU2 core %d ADMA write ATTR.mDMAOffset = 0x%08X, channelOffset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", mCore->getCoreID(), mCore->ATTR->mDMAOffset, channelOffset, address, mCore->FIFOQueue->getReadAvailable());
 
 	// Write to SPU2 memory.
 	writeHwordMemory(address, data);
 
 	// Increment the transfer count.
 	mCore->ATTR->mDMAOffset += 1;
-
-	// Control ADMA status if entering a new block of data - 0x200 hwords have been received (0x100 hwords for both left and right)
-	if ((mCore->ATTR->mDMAOffset % 0x200) == 0)
-	{
-		// Only need to control ADMA if channel has been stopped from the IOP side - ie: it will not be sending any more data.
-		if (mCore->DMAChannel->CHCR->getFieldValue(getContext(), IOPDmacChannelRegister_CHCR_t::Fields::Start) == 0)
-		{
-			// If there is no more data in the FIFO queue, then stop.
-			if (mCore->FIFOQueue->getReadAvailable() == 0)
-			{
-				// Set STATX to signal we need data.
-				mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
-
-				// Set ADMA register to special value.
-				mCore->ADMAS->setADMAOff(getContext());		
-
-				log(Debug, "SPU2 core %d finished ADMA ok.", mCore->getCoreID());					
-			}
-			else if (mCore->FIFOQueue->getReadAvailable() < 0x400)
-			{
-				// If the IOP DMA has stopped, and there is less than 0x200 hwords in the FIFO queue, then...? 
-				// PCSX2 just clears the remaining data without using it.
-				log(Debug, "SPU2 core %d had 0x%X bytes remaining in FIFO queue, but ADMA block and IOP DMA ended!", mCore->getCoreID(), mCore->FIFOQueue->getReadAvailable());
-			}
-		}
-		log(Debug, "SPU2 core %d reached end of ADMA block (0x200 hwords [L & R]). Remaining data in FIFO queue = 0x%X bytes.", mCore->getCoreID(), mCore->FIFOQueue->getReadAvailable());	
-	}
 
 	// ADMA has completed one transfer.
 	return 1;
@@ -225,13 +194,22 @@ int SPU2_s::transferData_MDMA_Write() const
 	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
 	u16 data;
 	if (!mCore->FIFOQueue->read(getContext(), reinterpret_cast<u8*>(&data), Constants::NUMBER_BYTES_IN_HWORD))
+	{
+		// Set 'no data available' magic values for SPU2 registers.
+		mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 1);
 		return 0;
+	}
+
+	// Set 'data available' magic values for SPU2 registers.
+	mCore->STATX->setFieldValue(getContext(), SPU2CoreRegister_STATX_t::Fields::NeedData, 0);
 
 	// Calculate write address. Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
 	u32 address = (mCore->TSAL->readPairWord(getContext()) + mCore->ATTR->mDMAOffset) % 0x100000;
 
 	// Write to SPU2 memory.
 	writeHwordMemory(address, data);
+
+	//log(Debug, "SPU2 core %d ADMA write ATTR.mDMAOffset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", mCore->getCoreID(), mCore->ATTR->mDMAOffset, address, mCore->FIFOQueue->getReadAvailable());
 
 	// Increment the transfer count.
 	mCore->ATTR->mDMAOffset += 1;
@@ -267,7 +245,8 @@ void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) c
 
 void SPU2_s::handleInterruptCheck() const
 {
-	if (mSPU2->SPDIF_IRQINFO->isInterrupted(getContext()))
+	if (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::IRQEnable) 
+		&& mSPU2->SPDIF_IRQINFO->isInterrupted(getContext()))
 	{
 		// IRQ was set, notify the IOP INTC.
 		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::SPU, 1);

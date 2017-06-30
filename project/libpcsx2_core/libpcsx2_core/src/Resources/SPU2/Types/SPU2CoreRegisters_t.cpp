@@ -103,7 +103,10 @@ bool SPU2CoreRegister_ADMAS_t::isADMAEnabled(const Context_t context)
 	return ((mCoreID + 1) & readHword(context)) > 0;
 }
 
-void SPU2CoreRegister_ADMAS_t::setADMAOff(const Context_t context)
+void SPU2CoreRegister_ADMAS_t::setADMAEnd(const Context_t context, const bool isEnded)
 {
-	writeHword(context, readHword(context) | (~0x3));
+	if (isEnded)
+		writeHword(context, readHword(context) | (~0x3));
+	else 
+		writeHword(context, readHword(context) & 0x3);
 }

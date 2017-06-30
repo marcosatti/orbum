@@ -43,7 +43,9 @@ public:
 	*/
 	virtual void initialise();
 
+#if !defined(BUILD_DEBUG)
 protected:
+#endif
 	/*
 	Underlying storage for register.
 	*/

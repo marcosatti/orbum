@@ -165,10 +165,12 @@ public:
 	bool isADMAEnabled(const Context_t context);
 
 	/*
-	Turns off ADMA by setting a magic value.
-	TODO: Confirm special value is actually needed, it is in SPU2-X, but not checked against BIOS code.
+	Sets the ADMAS register to a magic value when isEnded is true.
+	isEnded represents if the FIFO queue is out of data, and ADMA cannot continue.
+	Reverses the magic value when isEnded is false.
+	TODO: Confirm special values are actually needed, it is in SPU2-X, but not checked against BIOS code.
 	*/
-	void setADMAOff(const Context_t context);
+	void setADMAEnd(const Context_t context, const bool isEnded);
 
 private:
 	/*
