@@ -162,7 +162,7 @@ void IOPTimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t cont
 		// Check for Prescale8 (bit 9).
 		if (getFieldValue(context, Fields::Prescale0) > 0)
 		{
-			throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
+			throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [0].");
 		}
 		else
 		{
@@ -173,7 +173,8 @@ void IOPTimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t cont
 			}
 			else
 			{
-				throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
+				mCount->setPrescale(1);
+				mEventSource = Event_t::Source::HBlank;
 			}
 		}
 	}
@@ -182,7 +183,7 @@ void IOPTimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t cont
 		// Check for Prescale8/16/256 (bits 13 and 14).
 		if (getFieldValue(context, Fields::Prescale1) > 0)
 		{
-			throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
+			throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [2].");
 		}
 		else
 		{
@@ -193,7 +194,7 @@ void IOPTimersTimerRegister_MODE_t::handleEventSourceUpdate(const Context_t cont
 			}
 			else
 			{
-				throw std::runtime_error("handleEventSourceUpdate() not fully implemented.");
+				throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [3].");
 			}
 		}
 	}

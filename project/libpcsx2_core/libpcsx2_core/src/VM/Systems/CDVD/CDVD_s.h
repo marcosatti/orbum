@@ -301,6 +301,7 @@ public:
 	Notation: "Mnemonic" (3:1) means 3 parameter bytes in (S_DATA_IN FIFO), 1 result byte out (S_DATA_OUT).
 	*/
 	void SCMD_INSTRUCTION_UNKNOWN();
+	void SCMD_INSTRUCTION_15();      // "sceCdForbidDVDP" (0:1).
 	void SCMD_INSTRUCTION_40();      // "sceCdOpenConfig" (3:1).
 	void SCMD_INSTRUCTION_41();      // "sceCdReadConfig" (0:16).
 	void SCMD_INSTRUCTION_42();      // "sceCdWriteConfig" (16:1).
@@ -328,7 +329,7 @@ public:
 		/* 0x12 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x13 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x14 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
-		/* 0x15 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
+		/* 0x15 */ &CDVD_s::SCMD_INSTRUCTION_15,
 		/* 0x16 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x17 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x18 */ &CDVD_s::SCMD_INSTRUCTION_UNKNOWN,

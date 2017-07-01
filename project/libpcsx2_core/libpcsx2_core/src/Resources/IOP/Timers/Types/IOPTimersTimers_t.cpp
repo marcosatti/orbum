@@ -27,7 +27,7 @@ IOPTimersTimer_TIM1_t::IOPTimersTimer_TIM1_t() :
 {
 	COUNT = std::make_shared<IOPTimersTimerRegister_HWORD_COUNT_t>("IOP Timer1 Count", false, false);
 	MODE = std::make_shared<IOPTimersTimerRegister_MODE_t>("IOP Timer1 Mode", false, false, TIMER_ID, COUNT);
-	COMP = std::make_shared<Register32_t>("IOP Timer1 Compare", false, false);
+	COMP = std::make_shared<Register32_t>("IOP Timer1 Compare", false, true);
 }
 
 IOPTimersTimer_TIM2_t::IOPTimersTimer_TIM2_t() :

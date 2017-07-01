@@ -47,10 +47,10 @@ int CDVD_s::step(const Event_t & event)
 
 void CDVD_s::NCMD_INSTRUCTION_UNKNOWN()
 {
-	log(Debug, "CDVD N_CMD Unknown Instruction called (%d).", mCDVD->N_COMMAND->readByte(getContext()));
+	log(Debug, "CDVD N_CMD Unknown Instruction called (0x%02X).", mCDVD->N_COMMAND->readByte(getContext()));
 }
 
 void CDVD_s::SCMD_INSTRUCTION_UNKNOWN()
 {
-	log(Debug, "CDVD S_CMD Unknown Instruction called (%d).", mCDVD->S_COMMAND->readByte(getContext()));
+	log(Debug, "CDVD S_CMD Unknown Instruction called (0x%02X).", mCDVD->S_COMMAND->readByte(getContext()));
 }

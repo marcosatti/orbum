@@ -9,6 +9,13 @@
 #include "Resources/CDVD/Types/CDVDNvrams_t.h"
 #include "Resources/CDVD/Types/CDVDFIFOQueues_t.h"
 
+void CDVD_s::SCMD_INSTRUCTION_15()
+{
+	// Return magic value.
+	if (!mCDVD->S_DATA_OUT->writeByte(getContext(), 0x5))
+		throw std::runtime_error("CDVD_s: Instruction 0x15 failed, not enough space in the FIFO queue to write. Please debug");
+}
+
 void CDVD_s::SCMD_INSTRUCTION_40()
 {
 	// Read config parameters.
@@ -24,7 +31,8 @@ void CDVD_s::SCMD_INSTRUCTION_40()
 	mCDVD->NVRAM->setConfigAccessParams(readWrite, area, maxBlocks, 0);
 
 	// Return success.
-	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
+	if (!mCDVD->S_DATA_OUT->writeByte(getContext(), 0))
+		throw std::runtime_error("CDVD_s: Instruction 0x40 failed, not enough space in the FIFO queue to write. Please debug");
 }
 
 void CDVD_s::SCMD_INSTRUCTION_41()
@@ -47,12 +55,14 @@ void CDVD_s::SCMD_INSTRUCTION_42()
 	if (!mCDVD->S_RDY_DIN->DATA_IN->read(getContext(), reinterpret_cast<u8*>(buffer), 16))
 		throw std::runtime_error("CDVD_s: Instruction 0x42 failed, not enough data in the FIFO queue to read. Please debug.");
 	mCDVD->NVRAM->writeConfigBlock(getContext(), buffer);
-	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
+	if (!mCDVD->S_DATA_OUT->writeByte(getContext(), 0))
+		throw std::runtime_error("CDVD_s: Instruction 0x42 failed, not enough space in the FIFO queue to write. Please debug");
 }
 
 void CDVD_s::SCMD_INSTRUCTION_43()
 {
 	// Reset config parameters and return success.
 	mCDVD->NVRAM->setConfigAccessParams(0, 0, 0, 0);
-	mCDVD->S_DATA_OUT->writeByte(getContext(), 0);
+	if (!mCDVD->S_DATA_OUT->writeByte(getContext(), 0))
+		throw std::runtime_error("CDVD_s: Instruction 0x43 failed, not enough space in the FIFO queue to write. Please debug");
 }
