@@ -57,7 +57,7 @@ int EECoreInterpreter_s::step(const Event_t & event)
 	mEECoreInstruction = EECoreInstruction_t(mByteMMU->readWord(getContext(), physicalAddress));
 
 #if defined(BUILD_DEBUG)
-	static u64 DEBUG_LOOP_BREAKPOINT = 0x10000000143138b;
+	static u64 DEBUG_LOOP_BREAKPOINT = 0x100000004F94E00;
 	static u32 DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
 	{

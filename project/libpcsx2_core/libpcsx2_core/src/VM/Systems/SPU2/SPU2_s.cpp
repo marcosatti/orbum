@@ -49,10 +49,10 @@ int SPU2_s::step(const Event_t & event)
 
 		workDone |= handleDMATransfer();
 		workDone |= handleSoundGeneration();
-	}
 
-	// Do an interrupt check, and send signal to the IOP INTC if needed.
-	handleInterruptCheck();
+		// Do an interrupt check, and send signal to the IOP INTC if needed.
+		handleInterruptCheck();
+	}
 
 	// SPU2 has completed 1 cycle.
 #if ACCURACY_SKIP_TICKS_ON_NO_WORK
@@ -246,7 +246,7 @@ void SPU2_s::writeHwordMemory(const u32 hwordPhysicalAddress, const u16 value) c
 void SPU2_s::handleInterruptCheck() const
 {
 	if (mCore->ATTR->getFieldValue(getContext(), SPU2CoreRegister_ATTR_t::Fields::IRQEnable) 
-		&& mSPU2->SPDIF_IRQINFO->isInterrupted(getContext()))
+		&& mSPU2->SPDIF_IRQINFO->getFieldValue(getContext(), SPU2Register_SPDIF_IRQINFO_t::Fields::IRQ_KEYS[mCore->getCoreID()]))
 	{
 		// IRQ was set, notify the IOP INTC.
 		mINTC->STAT->setFieldValue(getContext(), IOPIntcRegister_STAT_t::Fields::SPU, 1);

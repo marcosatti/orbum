@@ -21,15 +21,15 @@ bool FIFOQueue_t::readByte(const Context_t context, u8 & data)
 	if (mDebugReads)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Read u8 (S = %d), Used Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, mFIFOQueue.read_available(), data);
+		log(Debug, "%s: %s Read u8 (Ok = %d), Used Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, getReadAvailable(), data);
 #else
-		log(Debug, "%s: %s Read u8 (S = %d), Used Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, mFIFOQueue.read_available(), data);
+		log(Debug, "%s: %s Read u8 (Ok = %d), Used Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, getReadAvailable(), data);
 #endif
 	}
 #endif
 
 	if (!success)
-		log(Debug, "FIFOQueue_t: Failed to push a byte to the FIFO queue. This **might** be ok, but you have been warned...");
+		log(Debug, "FIFOQueue_t: Failed to read a byte to the FIFO queue. This **might** be ok, but you have been warned...");
 
 	return success;
 }
@@ -42,9 +42,9 @@ bool FIFOQueue_t::writeByte(const Context_t context, const u8 data)
 	if (mDebugWrites)
 	{
 #if DEBUG_LOG_VALUE_AS_HEX
-		log(Debug, "%s: %s Write u8 (S = %d), Free Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, mFIFOQueue.write_available(), data);
+		log(Debug, "%s: %s Write u8 (Ok = %d), Used Size = %d, Value = 0x%X.", DEBUG_CONTEXT_STRINGS[context], mMnemonic.c_str(), success, getReadAvailable(), data);
 #else
-		log(Debug, "%s: %s Write u8 (S = %d), Free Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, mFIFOQueue.write_available(), data);
+		log(Debug, "%s: %s Write u8 (Ok = %d), Used Size = %d, Value = %d.", SYSTEM_STR[context], mMnemonic.c_str(), success, getReadAvailable(), data);
 #endif
 	}
 #endif

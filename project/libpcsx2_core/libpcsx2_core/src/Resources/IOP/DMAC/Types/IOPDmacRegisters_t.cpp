@@ -37,29 +37,29 @@ IOPDmacRegister_PCR0_t::IOPDmacRegister_PCR0_t(const char * mnemonic, const bool
 IOPDmacRegister_ICR0_t::IOPDmacRegister_ICR0_t(const char * mnemonic, const bool debugReads, const bool debugWrites) :
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites)
 {
-	registerField(Fields::IRM0, "IRM0", 0, 1, 0);
-	registerField(Fields::IRM1, "IRM1", 1, 1, 0);
-	registerField(Fields::IRM2, "IRM2", 2, 1, 0);
-	registerField(Fields::IRM3, "IRM3", 3, 1, 0);
-	registerField(Fields::IRM4, "IRM4", 4, 1, 0);
-	registerField(Fields::IRM5, "IRM5", 5, 1, 0);
-	registerField(Fields::IRM6, "IRM6", 6, 1, 0);
+	registerField(Fields::IRM0, "IRM0 (fromMDEC)", 0, 1, 0);
+	registerField(Fields::IRM1, "IRM1 (toMDEC)", 1, 1, 0);
+	registerField(Fields::IRM2, "IRM2 (SIF2/GPU)", 2, 1, 0);
+	registerField(Fields::IRM3, "IRM3 (CDROM)", 3, 1, 0);
+	registerField(Fields::IRM4, "IRM4 (SPU2c0)", 4, 1, 0);
+	registerField(Fields::IRM5, "IRM5 (PIO)", 5, 1, 0);
+	registerField(Fields::IRM6, "IRM6 (OTClear)", 6, 1, 0);
 	registerField(Fields::Error, "Error", 15, 1, 0);
-	registerField(Fields::TCM0, "TCM0", 16, 1, 0);
-	registerField(Fields::TCM1, "TCM1", 17, 1, 0);
-	registerField(Fields::TCM2, "TCM2", 18, 1, 0);
-	registerField(Fields::TCM3, "TCM3", 19, 1, 0);
-	registerField(Fields::TCM4, "TCM4", 20, 1, 0);
-	registerField(Fields::TCM5, "TCM5", 21, 1, 0);
-	registerField(Fields::TCM6, "TCM6", 22, 1, 0);
+	registerField(Fields::TCM0, "TCM0 (fromMDEC)", 16, 1, 0);
+	registerField(Fields::TCM1, "TCM1 (toMDEC)", 17, 1, 0);
+	registerField(Fields::TCM2, "TCM2 (SIF2/GPU)", 18, 1, 0);
+	registerField(Fields::TCM3, "TCM3 (CDROM)", 19, 1, 0);
+	registerField(Fields::TCM4, "TCM4 (SPU2c0)", 20, 1, 0);
+	registerField(Fields::TCM5, "TCM5 (PIO)", 21, 1, 0);
+	registerField(Fields::TCM6, "TCM6 (OTClear)", 22, 1, 0);
 	registerField(Fields::MasterEnable, "MasterEnable", 23, 1, 0);
-	registerField(Fields::TCI0, "TCI0", 24, 1, 0);
-	registerField(Fields::TCI1, "TCI1", 25, 1, 0);
-	registerField(Fields::TCI2, "TCI2", 26, 1, 0);
-	registerField(Fields::TCI3, "TCI3", 27, 1, 0);
-	registerField(Fields::TCI4, "TCI4", 28, 1, 0);
-	registerField(Fields::TCI5, "TCI5", 29, 1, 0);
-	registerField(Fields::TCI6, "TCI6", 30, 1, 0);
+	registerField(Fields::TCI0, "TCI0 (fromMDEC)", 24, 1, 0);
+	registerField(Fields::TCI1, "TCI1 (toMDEC)", 25, 1, 0);
+	registerField(Fields::TCI2, "TCI2 (SIF2/GPU)", 26, 1, 0);
+	registerField(Fields::TCI3, "TCI3 (CDROM)", 27, 1, 0);
+	registerField(Fields::TCI4, "TCI4 (SPU2c0)", 28, 1, 0);
+	registerField(Fields::TCI5, "TCI5 (PIO)", 29, 1, 0);
+	registerField(Fields::TCI6, "TCI6 (OTClear)", 30, 1, 0);
 	registerField(Fields::MasterInterrupt, "MasterInterrupt", 31, 1, 0);
 }
 
@@ -112,34 +112,34 @@ IOPDmacRegister_ICR1_t::IOPDmacRegister_ICR1_t(const char * mnemonic, const bool
 	BitfieldRegister32_t(mnemonic, debugReads, debugWrites),
 	mICR0(ICR0)
 {
-	registerField(Fields::IQE0, "IQE0", 0, 1, 0);
-	registerField(Fields::IQE1, "IQE1", 1, 1, 0);
-	registerField(Fields::IQE2, "IQE2", 2, 1, 0);
-	registerField(Fields::IQE3, "IQE3", 3, 1, 0);
-	registerField(Fields::IQE4, "IQE4", 4, 1, 0);
-	registerField(Fields::IQE5, "IQE5", 5, 1, 0);
-	registerField(Fields::IQE6, "IQE6", 6, 1, 0);
-	registerField(Fields::IQE7, "IQE7", 7, 1, 0);
-	registerField(Fields::IQE8, "IQE8", 8, 1, 0);
-	registerField(Fields::IQE9, "IQE9", 9, 1, 0);
-	registerField(Fields::IQE10, "IQE10", 10, 1, 0);
-	registerField(Fields::IQE11, "IQE11", 11, 1, 0);
-	registerField(Fields::IQE12, "IQE12", 12, 1, 0);
-	registerField(Fields::IQE13, "IQE13", 13, 1, 0);
-	registerField(Fields::TCM7, "TCM7", 16, 1, 0);
-	registerField(Fields::TCM8, "TCM8", 17, 1, 0);
-	registerField(Fields::TCM9, "TCM9", 18, 1, 0);
-	registerField(Fields::TCM10, "TCM10", 19, 1, 0);
-	registerField(Fields::TCM11, "TCM11", 20, 1, 0);
-	registerField(Fields::TCM12, "TCM12", 21, 1, 0);
-	registerField(Fields::TCM13, "TCM13", 22, 1, 0);
-	registerField(Fields::TCI7, "TCI7", 24, 1, 0);
-	registerField(Fields::TCI8, "TCI8", 25, 1, 0);
-	registerField(Fields::TCI9, "TCI9", 26, 1, 0);
-	registerField(Fields::TCI10, "TCI10", 27, 1, 0);
-	registerField(Fields::TCI11, "TCI11", 28, 1, 0);
-	registerField(Fields::TCI12, "TCI12", 29, 1, 0);
-	registerField(Fields::TCI13, "TCI13", 30, 1, 0);
+	registerField(Fields::IQE0, "IQE0 (fromMDEC)", 0, 1, 0);
+	registerField(Fields::IQE1, "IQE1 (toMDEC)", 1, 1, 0);
+	registerField(Fields::IQE2, "IQE2 (SIF2/GPU)", 2, 1, 0);
+	registerField(Fields::IQE3, "IQE3 (CDROM)", 3, 1, 0);
+	registerField(Fields::IQE4, "IQE4 (SPU2c0)", 4, 1, 0);
+	registerField(Fields::IQE5, "IQE5 (PIO)", 5, 1, 0);
+	registerField(Fields::IQE6, "IQE6 (OTClear)", 6, 1, 0);
+	registerField(Fields::IQE7, "IQE7 (SPU2c1)", 7, 1, 0);
+	registerField(Fields::IQE8, "IQE8 (DEV9)", 8, 1, 0);
+	registerField(Fields::IQE9, "IQE9 (SIF0)", 9, 1, 0);
+	registerField(Fields::IQE10, "IQE10 (SIF1)", 10, 1, 0);
+	registerField(Fields::IQE11, "IQE11 (fromSIO2)", 11, 1, 0);
+	registerField(Fields::IQE12, "IQE12 (toSIO2)", 12, 1, 0);
+	registerField(Fields::IQE13, "IQE13 (dummy)", 13, 1, 0);
+	registerField(Fields::TCM7, "TCM7 (SPU2c1)", 16, 1, 0);
+	registerField(Fields::TCM8, "TCM8 (DEV9)", 17, 1, 0);
+	registerField(Fields::TCM9, "TCM9 (SIF0)", 18, 1, 0);
+	registerField(Fields::TCM10, "TCM10 (SIF1)", 19, 1, 0);
+	registerField(Fields::TCM11, "TCM11 (fromSIO2)", 20, 1, 0);
+	registerField(Fields::TCM12, "TCM12 (toSIO2)", 21, 1, 0);
+	registerField(Fields::TCM13, "TCM13 (dummy)", 22, 1, 0);
+	registerField(Fields::TCI7, "TCI7 (SPU2c1)", 24, 1, 0);
+	registerField(Fields::TCI8, "TCI8 (DEV9)", 25, 1, 0);
+	registerField(Fields::TCI9, "TCI9 (SIF0)", 26, 1, 0);
+	registerField(Fields::TCI10, "TCI10 (SIF1)", 27, 1, 0);
+	registerField(Fields::TCI11, "TCI11 (fromSIO2)", 28, 1, 0);
+	registerField(Fields::TCI12, "TCI12 (toSIO2)", 29, 1, 0);
+	registerField(Fields::TCI13, "TCI13 (dummy)", 30, 1, 0);
 }
 
 void IOPDmacRegister_ICR1_t::writeWord(const Context_t context, const u32 value)

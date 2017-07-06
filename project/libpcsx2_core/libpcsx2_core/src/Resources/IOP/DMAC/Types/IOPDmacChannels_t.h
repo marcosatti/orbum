@@ -124,7 +124,7 @@ public:
 };
 
 /*
-Represents IOP DMAC channel 5 - PIO (parallel I/O?) channel.
+Represents IOP DMAC channel 5 - PIO (parallel I/O) channel.
 This channel inherits a base IOP DMAC channel.
 */
 class IOPDmacChannel_PIO_t : public IOPDmacChannel_t
@@ -138,7 +138,7 @@ public:
 /*
 Represents IOP DMAC channel 6 - the OTClear channel.
 The OTClear channel inherits a base IOP DMAC channel.
-TODO: what is this???
+TODO: Ordering table clear - related to PSX GPU. Probably don't have to worry about for now.
 */
 class IOPDmacChannel_OTClear_t : public IOPDmacChannel_t
 {

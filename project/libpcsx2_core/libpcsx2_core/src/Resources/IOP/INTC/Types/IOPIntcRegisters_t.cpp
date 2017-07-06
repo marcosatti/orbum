@@ -58,7 +58,7 @@ IOPIntcRegister_MASK_t::IOPIntcRegister_MASK_t(const char * mnemonic, const bool
 	registerField(Fields::SIO1, "SIO1", 8, 1, 0);
 	registerField(Fields::SPU, "SPU", 9, 1, 0);
 	registerField(Fields::PIO, "PIO", 10, 1, 0);
-	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0); // End of VBLANK?
+	registerField(Fields::EVBLANK, "EVBLANK", 11, 1, 0); // End of VBLANK.
 	registerField(Fields::DVD, "DVD", 12, 1, 0);
 	registerField(Fields::PCMCIA, "PCMCIA", 13, 1, 0);
 	registerField(Fields::TMR3, "TMR3", 14, 1, 0);
