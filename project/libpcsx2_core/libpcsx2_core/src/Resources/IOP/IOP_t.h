@@ -6,6 +6,8 @@ class IOPCore_t;
 class IOPDmac_t;
 class IOPIntc_t;
 class IOPTimers_t;
+class SIO0_t;
+class SIO2_t;
 class ByteMemory_t;
 class DebugMemory_t;
 class ByteMMU_t;
@@ -41,6 +43,16 @@ public:
 	Timers resources.
 	*/
 	std::shared_ptr<IOPTimers_t> Timers;
+
+	/*
+	SIO2 Resources.
+	*/
+	std::shared_ptr<SIO0_t> SIO0;
+
+	/*
+	SIO2 Resources.
+	*/
+	std::shared_ptr<SIO2_t> SIO2;
 
 	/*
 	The IOP physical memory space.

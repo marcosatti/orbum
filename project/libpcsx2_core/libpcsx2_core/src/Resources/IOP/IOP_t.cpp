@@ -10,12 +10,16 @@
 #include "Resources/IOP/DMAC/IOPDmac_t.h"
 #include "Resources/IOP/INTC/IOPIntc_t.h"
 #include "Resources/IOP/Timers/IOPTimers_t.h"
+#include "Resources/IOP/SIO0/SIO0_t.h"
+#include "Resources/IOP/SIO2/SIO2_t.h"
 
 IOP_t::IOP_t() :
 	IOPCore(std::make_shared<IOPCore_t>()),
 	DMAC(std::make_shared<IOPDmac_t>()),
 	INTC(std::make_shared<IOPIntc_t>()),
 	Timers(std::make_shared<IOPTimers_t>()),
+	SIO0(std::make_shared<SIO0_t>()),
+	SIO2(std::make_shared<SIO2_t>()),
 	MMU(std::make_shared<ByteMMU_t>(32, 16, 0)), // Number of page index bits optimised for minimum memory usage (Marco Satti).
 	MainMemory(std::make_shared<ByteMemory_t>("IOP MainMem", false, false, Constants::IOP::IOPMemory::SIZE_IOP_MEMORY)),
 	ParallelPort(std::make_shared<ByteMemory_t>("IOP ParallelPort IO Mem", false, false, Constants::IOP::ParallelPort::SIZE_PARALLEL_PORT)),

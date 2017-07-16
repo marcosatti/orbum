@@ -65,7 +65,8 @@ void Events_t::addClockTime(const double timeDelta)
 	mSystemClockTicks[Context_t::SPU2].second += timeDelta / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * mSystemClockTicks[Context_t::SPU2].first;
 	mSystemClockTicks[Context_t::GSCore].second += timeDelta / 1.0e6 * Constants::GS::GSCore::GSCORE_CLK_SPEED * mSystemClockTicks[Context_t::GSCore].first;
 	mSystemClockTicks[Context_t::CRTC].second += timeDelta / 1.0e6 * Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT * mSystemClockTicks[Context_t::CRTC].first;
-	mSystemClockTicks[Context_t::SIO2].second += timeDelta / 1.0e6 * Constants::SIO2::SIO2_CLK_SPEED * mSystemClockTicks[Context_t::SIO2].first;
+	mSystemClockTicks[Context_t::SIO0].second += timeDelta / 1.0e6 * Constants::IOP::SIO0::SIO0_CLK_SPEED * mSystemClockTicks[Context_t::SIO0].first;
+	mSystemClockTicks[Context_t::SIO2].second += timeDelta / 1.0e6 * Constants::IOP::SIO2::SIO2_CLK_SPEED * mSystemClockTicks[Context_t::SIO2].first;
 
 	// Iterate through each of the systems; if the tick state is above 1.0, generate an event and add it to the system queue (use only whole ticks).
 	for (auto& state : mSystemClockTicks)

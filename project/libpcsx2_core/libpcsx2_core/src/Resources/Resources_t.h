@@ -72,11 +72,6 @@ public:
 	*/
 	std::shared_ptr<SPU2_t> SPU2;
 
-	/*
-	SIO2 Resources.
-	*/
-	std::shared_ptr<SIO2_t> SIO2;
-
 private:
 	/*
 	Post initialisation functions.

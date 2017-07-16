@@ -3,6 +3,7 @@
 #include "VM/Types/VMSystem_t.h"
 
 class SIO2_t;
+class IOPIntc_t;
 
 /*
 SIO2 system logic.
@@ -28,6 +29,7 @@ public:
 	Context resources needed.
 	*/
 	std::shared_ptr<SIO2_t> mSIO2;
+	std::shared_ptr<IOPIntc_t> mINTC;
 
 };
 

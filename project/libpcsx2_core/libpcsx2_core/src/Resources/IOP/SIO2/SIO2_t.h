@@ -3,6 +3,7 @@
 #include <memory>
 
 class Register32_t;
+class SIO2Register_CTRL_t;
 
 /*
 SIO2 resources.
@@ -45,10 +46,10 @@ public:
 	std::shared_ptr<Register32_t> PORT3_CTRL2;
 	std::shared_ptr<Register32_t> DATA_OUT;
 	std::shared_ptr<Register32_t> DATA_IN;
-	std::shared_ptr<Register32_t> CTRL;
-	std::shared_ptr<Register32_t> STAT_826C;
-	std::shared_ptr<Register32_t> STAT_8270;
-	std::shared_ptr<Register32_t> STAT_8274;
+	std::shared_ptr<SIO2Register_CTRL_t> CTRL;
+	std::shared_ptr<Register32_t> RECV1;
+	std::shared_ptr<Register32_t> RECV2;
+	std::shared_ptr<Register32_t> RECV3;
 	std::shared_ptr<Register32_t> REGISTER_8278;
 	std::shared_ptr<Register32_t> REGISTER_827C;
 	std::shared_ptr<Register32_t> INTR;          // Also known as the STAT register.

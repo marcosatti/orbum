@@ -26,6 +26,7 @@ enum class Context_t
 	SPU2,
 	GSCore,
 	CRTC,
+	SIO0,
 	SIO2,
 
 	COUNT
@@ -55,6 +56,7 @@ static constexpr EnumMap_t<Context_t, const char *> DEBUG_CONTEXT_STRINGS =
 	"SPU2",
 	"GSCore",
 	"PCRTC",
+	"SIO0",
 	"SIO2"
 };
 #endif

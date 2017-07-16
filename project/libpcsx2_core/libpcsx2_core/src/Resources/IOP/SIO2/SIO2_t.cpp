@@ -1,6 +1,7 @@
 #include "Common/Types/Register/Register32_t.h"
 
-#include "Resources/SIO2/SIO2_t.h"
+#include "Resources/IOP/SIO2/SIO2_t.h"
+#include "Resources/IOP/SIO2/Types/SIO2Registers_t.h"
 
 SIO2_t::SIO2_t() :
 	PORT0_CTRL3(std::make_shared<Register32_t>("SIO2 PORT0_CTRL3", true, true)),
@@ -29,10 +30,10 @@ SIO2_t::SIO2_t() :
 	PORT3_CTRL2(std::make_shared<Register32_t>("SIO2 PORT3_CTRL2", true, true)),
 	DATA_OUT(std::make_shared<Register32_t>("SIO2 DATA_OUT", true, true)),
 	DATA_IN(std::make_shared<Register32_t>("SIO2 DATA_IN", true, true)),
-	CTRL(std::make_shared<Register32_t>("SIO2 CTRL", true, true)),
-	STAT_826C(std::make_shared<Register32_t>("SIO2 STAT_826C", true, true)),
-	STAT_8270(std::make_shared<Register32_t>("SIO2 STAT_8270", true, true)),
-	STAT_8274(std::make_shared<Register32_t>("SIO2 STAT_8274", true, true)),
+	CTRL(std::make_shared<SIO2Register_CTRL_t>("SIO2 CTRL", true, true)),
+	RECV1(std::make_shared<Register32_t>("SIO2 RECV1", true, true)),
+	RECV2(std::make_shared<Register32_t>("SIO2 RECV2", true, true)),
+	RECV3(std::make_shared<Register32_t>("SIO2 RECV3", true, true)),
 	REGISTER_8278(std::make_shared<Register32_t>("SIO2 REGISTER_8278", true, true)),
 	REGISTER_827C(std::make_shared<Register32_t>("SIO2 REGISTER_827C", true, true)),
 	INTR(std::make_shared<Register32_t>("SIO2 REGISTER_INTR", true, true))

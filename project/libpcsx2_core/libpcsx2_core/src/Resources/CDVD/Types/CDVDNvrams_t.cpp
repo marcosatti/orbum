@@ -38,31 +38,35 @@ void CDVDNvram_000_t::readConfigBlock(const Context_t context, u16 * buffer)
 			|| ((mConfigAreaIndex == 1) && (mConfigBlockIndex >= 2))
 			|| ((mConfigAreaIndex == 2) && (mConfigBlockIndex >= 7)) )
 		{
-			throw std::runtime_error("CDVD read config block was outside of bounds... What is meant to happen?");
+			// Return empty data immediately.
+			for (int i = 0; i < 8; i++)
+				buffer[i] = 0x0;
 		}
-
 		// Check if block is within the max allowed parameter set.
-		if (mConfigBlockIndex >= mConfigMaxBlockIndex)
+		else if (mConfigBlockIndex >= mConfigMaxBlockIndex)
 		{
 			throw std::runtime_error("CDVD read config block was outside of max block parameter set... What is meant to happen?");
 		}
-
-		// Ok to read a block. Remember, there are 8 hwords to a block (which is 16 bytes).
-		// The addresses come from PCSX2/CDVD.cpp (transformed from a byte address to a hword address).
-		switch (mConfigAreaIndex)
+		// Ok to read a block. 
+		else
 		{
-		case 0:
-			MainMemory->read(context, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
-		case 1:
-			MainMemory->read(context, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
-		case 2:
-			MainMemory->read(context, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
-		default:
-			throw std::runtime_error("CDVD read config block tried to read from invalid config area. Please fix.");
+			// Remember, there are 8 hwords to a block (which is 16 bytes).
+			// The addresses come from PCSX2/CDVD.cpp (transformed from a byte address to a hword address).
+			switch (mConfigAreaIndex)
+			{
+			case 0:
+				MainMemory->read(context, 0x280 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
+			case 1:
+				MainMemory->read(context, 0x300 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
+			case 2:
+				MainMemory->read(context, 0x200 / Constants::NUMBER_BYTES_IN_HWORD + mConfigBlockIndex * 8, buffer, 8); break;
+			default:
+				throw std::runtime_error("CDVD read config block tried to read from invalid config area. Please fix.");
+			}
+			
+			// Increment block index.
+			mConfigBlockIndex += 1;
 		}
-
-		// Increment block index.
-		mConfigBlockIndex += 1;
 	}
 	else
 	{

@@ -114,7 +114,9 @@ set(COMMON_SRC_FILES
 	src/Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.cpp
 	src/Resources/IOP/Timers/Types/IOPTimersTimers_t.cpp
 	src/Resources/Resources_t.cpp
-	src/Resources/SIO2/SIO2_t.cpp
+	src/Resources/IOP/SIO0/SIO0_t.cpp
+	src/Resources/IOP/SIO2/SIO2_t.cpp
+	src/Resources/IOP/SIO2/Types/SIO2Registers_t.cpp
 	src/Resources/SPU2/SPU2_t.cpp
 	src/Resources/SPU2/Types/SPU2CoreRegisters_t.cpp
 	src/Resources/SPU2/Types/SPU2Cores_t.cpp
@@ -169,7 +171,8 @@ set(COMMON_SRC_FILES
 	src/VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_SPECIAL_TRANSFER.cpp
 	src/VM/Systems/IOP/Timers/IOPTimers_s.cpp
 	src/VM/Systems/SPU2/SPU2_s.cpp
-	src/VM/Systems/SIO2/SIO2_s.cpp
+	src/VM/Systems/IOP/SIO0/SIO0_s.cpp
+	src/VM/Systems/IOP/SIO2/SIO2_s.cpp
 	src/VM/Types/VMSystem_t.cpp
 	src/VM/VM.cpp
 )

@@ -35,11 +35,11 @@ int CDVD_s::step(const Event_t & event)
 	// Check for a pending command, only process if set.
 	if (mCDVD->S_COMMAND->mPendingCommand)
 	{
+		// Command has been acknowledged, reset the variable.
+		mCDVD->S_COMMAND->mPendingCommand = false;
+
 		// Run the S function based upon the S_COMMAND index.
 		(this->*SCMD_INSTRUCTION_TABLE[mCDVD->S_COMMAND->readByte(getContext())])();
-
-		// Command has been processed, reset the variable.
-		mCDVD->S_COMMAND->mPendingCommand = false;
 	}
 
 	return event.mQuantity;

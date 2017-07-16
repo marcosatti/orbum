@@ -54,6 +54,9 @@
 #include "Resources/IOP/Timers/IOPTimers_t.h"
 #include "Resources/IOP/Timers/Types/IOPTimersTimers_t.h"
 #include "Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
+#include "Resources/IOP/SIO0/SIO0_t.h"
+#include "Resources/IOP/SIO2/SIO2_t.h"
+#include "Resources/IOP/SIO2/Types/SIO2Registers_t.h"
 
 #include "Resources/CDVD/CDVD_t.h"
 #include "Resources/CDVD/Types/CDVDRegisters_t.h"
@@ -66,8 +69,6 @@
 #include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
 #include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
 
-#include "Resources/SIO2/SIO2_t.h"
-
 Resources_t::Resources_t() :
 	Events(std::make_shared<Events_t>()),
 	Common(std::make_shared<Common_t>()),
@@ -75,8 +76,7 @@ Resources_t::Resources_t() :
 	EE(std::make_shared<EE_t>()),
 	IOP(std::make_shared<IOP_t>()),
 	CDVD(std::make_shared<CDVD_t>()),
-	SPU2(std::make_shared<SPU2_t>()),
-	SIO2(std::make_shared<SIO2_t>())
+	SPU2(std::make_shared<SPU2_t>())
 {
 	postInit_EE_DMAC();
 	postInit_EE_VPU_VU();
@@ -1520,40 +1520,46 @@ void Resources_t::postInit_IOP() const
 			// Parallel Port.
 			IOP->MMU->mapObject(0x1F000000, IOP->ParallelPort);
 
+			// SIO Registers.
+			IOP->MMU->mapObject(0x1F801040, IOP->SIO0->DATA);
+			IOP->MMU->mapObject(0x1F801044, IOP->SIO0->STAT);
+			IOP->MMU->mapObject(0x1F801048, IOP->SIO0->MODE);
+			IOP->MMU->mapObject(0x1F80104C, IOP->SIO0->CTRL);
+
 			// SIO2 Registers.
-			IOP->MMU->mapObject(0x1F808200, SIO2->PORT0_CTRL3);
-			IOP->MMU->mapObject(0x1F808204, SIO2->PORT1_CTRL3);
-			IOP->MMU->mapObject(0x1F808208, SIO2->PORT2_CTRL3);
-			IOP->MMU->mapObject(0x1F80820C, SIO2->PORT3_CTRL3);
-			IOP->MMU->mapObject(0x1F808210, SIO2->PORT4_CTRL3);
-			IOP->MMU->mapObject(0x1F808214, SIO2->PORT5_CTRL3);
-			IOP->MMU->mapObject(0x1F808218, SIO2->PORT6_CTRL3);
-			IOP->MMU->mapObject(0x1F80821C, SIO2->PORT7_CTRL3);
-			IOP->MMU->mapObject(0x1F808220, SIO2->PORT8_CTRL3);
-			IOP->MMU->mapObject(0x1F808224, SIO2->PORT9_CTRL3);
-			IOP->MMU->mapObject(0x1F808228, SIO2->PORTA_CTRL3);
-			IOP->MMU->mapObject(0x1F80822C, SIO2->PORTB_CTRL3);
-			IOP->MMU->mapObject(0x1F808230, SIO2->PORTC_CTRL3);
-			IOP->MMU->mapObject(0x1F808234, SIO2->PORTD_CTRL3);
-			IOP->MMU->mapObject(0x1F808238, SIO2->PORTE_CTRL3);
-			IOP->MMU->mapObject(0x1F80823C, SIO2->PORTF_CTRL3);
-			IOP->MMU->mapObject(0x1F808240, SIO2->PORT0_CTRL1);
-			IOP->MMU->mapObject(0x1F808244, SIO2->PORT0_CTRL2);
-			IOP->MMU->mapObject(0x1F808248, SIO2->PORT1_CTRL1);
-			IOP->MMU->mapObject(0x1F80824C, SIO2->PORT1_CTRL2);
-			IOP->MMU->mapObject(0x1F808250, SIO2->PORT2_CTRL1);
-			IOP->MMU->mapObject(0x1F808254, SIO2->PORT2_CTRL2);
-			IOP->MMU->mapObject(0x1F808258, SIO2->PORT3_CTRL1);
-			IOP->MMU->mapObject(0x1F80825C, SIO2->PORT3_CTRL2);
-			IOP->MMU->mapObject(0x1F808260, SIO2->DATA_OUT);
-			IOP->MMU->mapObject(0x1F808264, SIO2->DATA_IN);
-			IOP->MMU->mapObject(0x1F808268, SIO2->CTRL);
-			IOP->MMU->mapObject(0x1F80826C, SIO2->STAT_826C);
-			IOP->MMU->mapObject(0x1F808270, SIO2->STAT_8270);
-			IOP->MMU->mapObject(0x1F808274, SIO2->STAT_8274);
-			IOP->MMU->mapObject(0x1F808278, SIO2->REGISTER_8278);
-			IOP->MMU->mapObject(0x1F80827C, SIO2->REGISTER_827C);
-			IOP->MMU->mapObject(0x1F808280, SIO2->INTR);
+			IOP->MMU->mapObject(0x1F808200, IOP->SIO2->PORT0_CTRL3);
+			IOP->MMU->mapObject(0x1F808204, IOP->SIO2->PORT1_CTRL3);
+			IOP->MMU->mapObject(0x1F808208, IOP->SIO2->PORT2_CTRL3);
+			IOP->MMU->mapObject(0x1F80820C, IOP->SIO2->PORT3_CTRL3);
+			IOP->MMU->mapObject(0x1F808210, IOP->SIO2->PORT4_CTRL3);
+			IOP->MMU->mapObject(0x1F808214, IOP->SIO2->PORT5_CTRL3);
+			IOP->MMU->mapObject(0x1F808218, IOP->SIO2->PORT6_CTRL3);
+			IOP->MMU->mapObject(0x1F80821C, IOP->SIO2->PORT7_CTRL3);
+			IOP->MMU->mapObject(0x1F808220, IOP->SIO2->PORT8_CTRL3);
+			IOP->MMU->mapObject(0x1F808224, IOP->SIO2->PORT9_CTRL3);
+			IOP->MMU->mapObject(0x1F808228, IOP->SIO2->PORTA_CTRL3);
+			IOP->MMU->mapObject(0x1F80822C, IOP->SIO2->PORTB_CTRL3);
+			IOP->MMU->mapObject(0x1F808230, IOP->SIO2->PORTC_CTRL3);
+			IOP->MMU->mapObject(0x1F808234, IOP->SIO2->PORTD_CTRL3);
+			IOP->MMU->mapObject(0x1F808238, IOP->SIO2->PORTE_CTRL3);
+			IOP->MMU->mapObject(0x1F80823C, IOP->SIO2->PORTF_CTRL3);
+			IOP->MMU->mapObject(0x1F808240, IOP->SIO2->PORT0_CTRL1);
+			IOP->MMU->mapObject(0x1F808244, IOP->SIO2->PORT0_CTRL2);
+			IOP->MMU->mapObject(0x1F808248, IOP->SIO2->PORT1_CTRL1);
+			IOP->MMU->mapObject(0x1F80824C, IOP->SIO2->PORT1_CTRL2);
+			IOP->MMU->mapObject(0x1F808250, IOP->SIO2->PORT2_CTRL1);
+			IOP->MMU->mapObject(0x1F808254, IOP->SIO2->PORT2_CTRL2);
+			IOP->MMU->mapObject(0x1F808258, IOP->SIO2->PORT3_CTRL1);
+			IOP->MMU->mapObject(0x1F80825C, IOP->SIO2->PORT3_CTRL2);
+			IOP->MMU->mapObject(0x1F808260, IOP->SIO2->DATA_OUT);
+			IOP->MMU->mapObject(0x1F808264, IOP->SIO2->DATA_IN);
+			IOP->MMU->mapObject(0x1F808268, IOP->SIO2->CTRL);
+			IOP->MMU->mapObject(0x1F80826C, IOP->SIO2->RECV1);
+			IOP->MMU->mapObject(0x1F808270, IOP->SIO2->RECV2);
+			IOP->MMU->mapObject(0x1F808274, IOP->SIO2->RECV3);
+			IOP->MMU->mapObject(0x1F808278, IOP->SIO2->REGISTER_8278);
+			IOP->MMU->mapObject(0x1F80827C, IOP->SIO2->REGISTER_827C);
+			IOP->MMU->mapObject(0x1F808280, IOP->SIO2->INTR);
 		}
 
 		// SIF Registers

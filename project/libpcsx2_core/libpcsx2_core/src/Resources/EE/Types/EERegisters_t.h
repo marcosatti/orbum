@@ -15,6 +15,7 @@ The SIO (serial I/O), which is somewhat undocumented. Some information can be fo
 Some useful information can be found in the old PCSX2 under Hw.h (register names). It requires some special functionality (see below).
 In a real PS2, you can communicate with the EE over this serial port.
 Allocated at base PS2 physical memory address 0x1000F100.
+This is different from the PSX / IOP SIO.
 */
 class EERegister_SIO_t : public ByteMemory_t
 {

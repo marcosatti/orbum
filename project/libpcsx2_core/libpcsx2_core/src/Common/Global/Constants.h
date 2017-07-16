@@ -290,6 +290,16 @@ struct Constants
 			static constexpr size_t SIZE_PARALLEL_PORT = SIZE_64KB;
 		};
 
+		struct SIO0
+		{
+			static constexpr double SIO0_CLK_SPEED = 2000000.0; // 2 MHz. From here: https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
+		};
+
+		struct SIO2
+		{
+			static constexpr double SIO2_CLK_SPEED = 2000000.0; // 2 MHz. From here: https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
+		};
+
 		static constexpr double IOPBUS_CLK_SPEED = 37500000.0; // 37.5 MHz (same as IOPCore speed).
 	};
 
@@ -345,10 +355,5 @@ struct Constants
 
 			static constexpr double PCRTC_CLK_SPEED_DEFAULT = 1 / ((1 / 15734.0) / 2 / 640); // ~20 MHz, guess based on NTSC defaults of resX = 640 @ 15.734 kHz. Working: period of 1 cycle, divided by half (actual render vs. hblank), divided by number of resX pixels, all inversed for Hz.
 		};
-	};
-
-	struct SIO2
-	{
-		static constexpr double SIO2_CLK_SPEED = 2000000.0; // 2 MHz. From here: https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
 	};
 };
