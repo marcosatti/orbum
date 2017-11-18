@@ -1,0 +1,176 @@
+#pragma once
+
+#include "Common/Types/Primitive.hpp"
+
+struct VifcodeInstruction;
+
+/*
+Static class used as the VIFcode instruction information lookup.
+See EE Users Manual page 87.
+It does not have an associated spreadsheet table as there is only a small number of instructions.
+*/
+struct VIFcodeTable
+{
+	struct VIFcodeInstructionInfo_t
+	{
+		const char * mMnemonic;
+		const uword  mImplementationIndex;
+	};
+
+	static constexpr VIFcodeInstructionInfo_t VIFCODE_BASE_TABLE[128] =
+	{
+		{ "NOP", 1 },
+		{ "STCYCL", 2 },
+		{ "OFFSET", 3 },
+		{ "BASE", 4 },
+		{ "ITOP", 5 },
+		{ "STMOD", 6 },
+		{ "MSKPATH3", 7 },
+		{ "MARK", 8 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "FLUSHE", 9 },
+		{ "FLUSH", 10 },
+		{ "undefined", 0 },
+		{ "FLUSHA", 11 },
+		{ "MSCAL", 12 },
+		{ "MSCALF", 13 },
+		{ "undefined", 0 },
+		{ "MSCNT", 14 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "STMASK", 15 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "STROW", 16 },
+		{ "STCOL", 17 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "MPG", 18 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "DIRECT", 19 },
+		{ "DIRECTHL", 20 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "undefined", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 },
+		{ "INVALID/UNPACK (FIX ME!)", 0 }
+	};
+
+	static constexpr VIFcodeInstructionInfo_t VIFCODE_UNPACK_TABLE[16] =
+	{
+		{ "UNPACK_S_32", 21 },
+		{ "UNPACK_S_16", 22 },
+		{ "UNPACK_S_8", 23 },
+		{ "undefined", 0 },
+		{ "UNPACK_V2_32", 24 },
+		{ "UNPACK_V2_16", 25 },
+		{ "UNPACK_V2_8", 26 },
+		{ "undefined", 0 },
+		{ "UNPACK_V3_32", 27 },
+		{ "UNPACK_V3_16", 28 },
+		{ "UNPACK_V3_8", 29 },
+		{ "undefined", 0 },
+		{ "UNPACK_V4_32", 30 },
+		{ "UNPACK_V4_16", 31 },
+		{ "UNPACK_V4_8", 32 },
+		{ "UNPACK_V4_5", 33 }
+	};
+
+	/*
+	Returns info for the given VIFcode.
+	*/
+	static const VIFcodeInstructionInfo_t * getInfo(const VifcodeInstruction * vifCode);
+};
