@@ -5,19 +5,16 @@ using LogicalMode = IopDmacChannelRegister_Chcr::LogicalMode;
 using Direction = IopDmacChannelRegister_Chcr::Direction;
 
 IopDmacChannelRegister_Chcr::IopDmacChannelRegister_Chcr() :
-	SizedWordRegister(),
-	dma_started(false),
-	tag_exit(false),
-	tag_irq(false)
+	dma_started(false)
 {
 }
 
-LogicalMode IopDmacChannelRegister_Chcr::logical_mode() 
+LogicalMode IopDmacChannelRegister_Chcr::get_logical_mode() 
 {
 	return static_cast<LogicalMode>(extract_field(SM));
 }
 
-Direction IopDmacChannelRegister_Chcr::direction()
+Direction IopDmacChannelRegister_Chcr::get_direction()
 {
 	return static_cast<Direction>(extract_field(TD));
 }
@@ -34,8 +31,7 @@ void IopDmacChannelRegister_Chcr::write_uword(const uword value)
 	if ((start_old == 0) && (start_new != 0))
 	{
 		dma_started = false;
-		tag_exit = false;
-		tag_irq = false;
+		dma_tag = IopDmatag();
 	}
 }
 
@@ -92,7 +88,7 @@ void IopDmacChannelRegister_Chcr_Sif0::write_uword(const uword value)
 	IopDmacChannelRegister_Chcr_To::write_uword(value);
 
 	auto start = extract_field(START);
-	auto dir = direction();
+	auto dir = get_direction();
 
 	// Trigger SBUS update.
 	if (start > 0 && dir == Direction::TO)
@@ -115,7 +111,7 @@ void IopDmacChannelRegister_Chcr_Sif1::write_uword(const uword value)
 	IopDmacChannelRegister_Chcr_From::write_uword(value);
 
 	auto start = extract_field(START);
-	auto dir = direction();
+	auto dir = get_direction();
 
 	// Trigger SBUS update.
 	if (start == 0 && dir == Direction::FROM)
@@ -150,7 +146,7 @@ void IopDmacChannelRegister_Chcr_Sif2::write_uword(const uword value)
 	IopDmacChannelRegister_Chcr::write_uword(value);
 
 	auto start = extract_field(START);
-	auto dir = direction();
+	auto dir = get_direction();
 
 	// Trigger SBUS update.
 	if (start > 0 && dir == Direction::TO)

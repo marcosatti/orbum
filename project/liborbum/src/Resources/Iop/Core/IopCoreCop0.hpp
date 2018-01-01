@@ -14,20 +14,14 @@ class IopCoreCop0 : public MipsCoprocessor0
 public:
 	IopCoreCop0();
 
-	/*
-	Checks if the IOP COP0 coprocessor is usable. 
-	Can be used by the component calling this to raise a IOPCoreException_t(coprocessor unusable) if not available.
-	*/
+	/// Checks if the IOP COP0 coprocessor is usable. 
+	/// Can be used by the component calling this to raise a IopCoreException(coprocessor unusable) if not available.
 	bool is_usable() override;
 
-	/*
-	Determine the CPU context. Uses the Status register.
-	*/
+	/// Determine the CPU context. Uses the Status register.
 	OperatingContext operating_context() override;
 
-	/*
-	IOP COP0 register implementations. 
-	*/
+	/// IOP COP0 register implementations. 
 	SizedWordRegister           indx;    // r0: INDX.
 	SizedWordRegister           rand;    // r1: RAND.
 	SizedWordRegister           tlbl;    // r2: TLBL.

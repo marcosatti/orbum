@@ -1,0 +1,665 @@
+{
+    "name": "OPCODE",
+    "type": "class",
+    "lookup_field": "opcode",
+    "SPECIAL": {
+        "type": "class",
+        "name": "SPECIAL",
+        "value": 0,
+        "lookup_field": "funct",
+        "SLL": {
+            "type": "instruction",
+            "name": "SLL",
+            "class_index": 0,
+            "impl_index": 29,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SRL": {
+            "type": "instruction",
+            "name": "SRL",
+            "class_index": 2,
+            "impl_index": 30,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SRA": {
+            "type": "instruction",
+            "name": "SRA",
+            "class_index": 3,
+            "impl_index": 31,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SLLV": {
+            "type": "instruction",
+            "name": "SLLV",
+            "class_index": 4,
+            "impl_index": 32,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SRLV": {
+            "type": "instruction",
+            "name": "SRLV",
+            "class_index": 6,
+            "impl_index": 33,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SRAV": {
+            "type": "instruction",
+            "name": "SRAV",
+            "class_index": 7,
+            "impl_index": 34,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "JR": {
+            "type": "instruction",
+            "name": "JR",
+            "class_index": 8,
+            "impl_index": 35,
+            "cpi": "CPI_R3000_BRANCH"
+        },
+        "JALR": {
+            "type": "instruction",
+            "name": "JALR",
+            "class_index": 9,
+            "impl_index": 36,
+            "cpi": "CPI_R3000_BRANCH"
+        },
+        "SYSCALL": {
+            "type": "instruction",
+            "name": "SYSCALL",
+            "class_index": 12,
+            "impl_index": 37,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "BREAK": {
+            "type": "instruction",
+            "name": "BREAK",
+            "class_index": 13,
+            "impl_index": 38,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "MFHI": {
+            "type": "instruction",
+            "name": "MFHI",
+            "class_index": 16,
+            "impl_index": 39,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "MTHI": {
+            "type": "instruction",
+            "name": "MTHI",
+            "class_index": 17,
+            "impl_index": 40,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "MFLO": {
+            "type": "instruction",
+            "name": "MFLO",
+            "class_index": 18,
+            "impl_index": 41,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "MTLO": {
+            "type": "instruction",
+            "name": "MTLO",
+            "class_index": 19,
+            "impl_index": 42,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "MULT": {
+            "type": "instruction",
+            "name": "MULT",
+            "class_index": 24,
+            "impl_index": 43,
+            "cpi": "CPI_R3000_MULTIPLY"
+        },
+        "MULTU": {
+            "type": "instruction",
+            "name": "MULTU",
+            "class_index": 25,
+            "impl_index": 44,
+            "cpi": "CPI_R3000_MULTIPLY"
+        },
+        "DIV": {
+            "type": "instruction",
+            "name": "DIV",
+            "class_index": 26,
+            "impl_index": 45,
+            "cpi": "CPI_R3000_DIVIDE"
+        },
+        "DIVU": {
+            "type": "instruction",
+            "name": "DIVU",
+            "class_index": 27,
+            "impl_index": 46,
+            "cpi": "CPI_R3000_DIVIDE"
+        },
+        "ADD": {
+            "type": "instruction",
+            "name": "ADD",
+            "class_index": 32,
+            "impl_index": 47,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "ADDU": {
+            "type": "instruction",
+            "name": "ADDU",
+            "class_index": 33,
+            "impl_index": 48,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SUB": {
+            "type": "instruction",
+            "name": "SUB",
+            "class_index": 34,
+            "impl_index": 49,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SUBU": {
+            "type": "instruction",
+            "name": "SUBU",
+            "class_index": 35,
+            "impl_index": 50,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "AND": {
+            "type": "instruction",
+            "name": "AND",
+            "class_index": 36,
+            "impl_index": 51,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "OR": {
+            "type": "instruction",
+            "name": "OR",
+            "class_index": 37,
+            "impl_index": 52,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "XOR": {
+            "type": "instruction",
+            "name": "XOR",
+            "class_index": 38,
+            "impl_index": 53,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "NOR": {
+            "type": "instruction",
+            "name": "NOR",
+            "class_index": 39,
+            "impl_index": 54,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SLT": {
+            "type": "instruction",
+            "name": "SLT",
+            "class_index": 42,
+            "impl_index": 55,
+            "cpi": "CPI_R3000_DEFAULT"
+        },
+        "SLTU": {
+            "type": "instruction",
+            "name": "SLTU",
+            "class_index": 43,
+            "impl_index": 56,
+            "cpi": "CPI_R3000_DEFAULT"
+        }
+    },
+    "REGIMM": {
+        "type": "class",
+        "name": "REGIMM",
+        "value": 1,
+        "lookup_field": "rt",
+        "BLTZ": {
+            "type": "instruction",
+            "name": "BLTZ",
+            "class_index": 0,
+            "impl_index": 57,
+            "cpi": "CPI_R3000_BRANCH"
+        },
+        "BGEZ": {
+            "type": "instruction",
+            "name": "BGEZ",
+            "class_index": 1,
+            "impl_index": 58,
+            "cpi": "CPI_R3000_BRANCH"
+        },
+        "BLTZAL": {
+            "type": "instruction",
+            "name": "BLTZAL",
+            "class_index": 15,
+            "impl_index": 59,
+            "cpi": "CPI_R3000_BRANCH"
+        },
+        "BGEZAL": {
+            "type": "instruction",
+            "name": "BGEZAL",
+            "class_index": 16,
+            "impl_index": 60,
+            "cpi": "CPI_R3000_BRANCH"
+        }
+    },
+    "COP0": {
+        "type": "class",
+        "name": "COP0",
+        "value": 16,
+        "lookup_field": "rs",
+        "MFC0": {
+            "type": "instruction",
+            "name": "MFC0",
+            "class_index": 0,
+            "impl_index": 61,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "CFC0": {
+            "type": "instruction",
+            "name": "CFC0",
+            "class_index": 2,
+            "impl_index": 62,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "MTC0": {
+            "type": "instruction",
+            "name": "MTC0",
+            "class_index": 4,
+            "impl_index": 63,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "CTC0": {
+            "type": "instruction",
+            "name": "CTC0",
+            "class_index": 6,
+            "impl_index": 64,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "RFE": {
+            "type": "instruction",
+            "name": "RFE",
+            "class_index": 16,
+            "impl_index": 65,
+            "cpi": "CPI_COP_DEFAULT"
+        }
+    },
+    "COP2": {
+        "type": "class",
+        "name": "COP2",
+        "value": 18,
+        "lookup_field": "funct",
+        "CP2BSC": {
+            "type": "class",
+            "name": "CP2BSC",
+            "value": 0,
+            "lookup_field": "rs",
+            "MFC2": {
+                "type": "instruction",
+                "name": "MFC2",
+                "class_index": 0,
+                "impl_index": 87,
+                "cpi": "CPI_COP_DEFAULT"
+            },
+            "CFC2": {
+                "type": "instruction",
+                "name": "CFC2",
+                "class_index": 2,
+                "impl_index": 88,
+                "cpi": "CPI_COP_DEFAULT"
+            },
+            "MTC2": {
+                "type": "instruction",
+                "name": "MTC2",
+                "class_index": 4,
+                "impl_index": 89,
+                "cpi": "CPI_COP_DEFAULT"
+            },
+            "CTC2": {
+                "type": "instruction",
+                "name": "CTC2",
+                "class_index": 6,
+                "impl_index": 90,
+                "cpi": "CPI_COP_DEFAULT"
+            }
+        },
+        "RTPS": {
+            "type": "instruction",
+            "name": "RTPS",
+            "class_index": 1,
+            "impl_index": 66,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCLIP": {
+            "type": "instruction",
+            "name": "NCLIP",
+            "class_index": 6,
+            "impl_index": 67,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "OP": {
+            "type": "instruction",
+            "name": "OP",
+            "class_index": 12,
+            "impl_index": 68,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "DPCS": {
+            "type": "instruction",
+            "name": "DPCS",
+            "class_index": 16,
+            "impl_index": 69,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "INTPL": {
+            "type": "instruction",
+            "name": "INTPL",
+            "class_index": 17,
+            "impl_index": 70,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "MVMVA": {
+            "type": "instruction",
+            "name": "MVMVA",
+            "class_index": 18,
+            "impl_index": 71,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCDS": {
+            "type": "instruction",
+            "name": "NCDS",
+            "class_index": 19,
+            "impl_index": 72,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "CDP": {
+            "type": "instruction",
+            "name": "CDP",
+            "class_index": 20,
+            "impl_index": 73,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCDT": {
+            "type": "instruction",
+            "name": "NCDT",
+            "class_index": 21,
+            "impl_index": 74,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCCS": {
+            "type": "instruction",
+            "name": "NCCS",
+            "class_index": 27,
+            "impl_index": 75,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "CC": {
+            "type": "instruction",
+            "name": "CC",
+            "class_index": 28,
+            "impl_index": 76,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCS": {
+            "type": "instruction",
+            "name": "NCS",
+            "class_index": 30,
+            "impl_index": 77,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "NCT": {
+            "type": "instruction",
+            "name": "NCT",
+            "class_index": 32,
+            "impl_index": 78,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "SQR": {
+            "type": "instruction",
+            "name": "SQR",
+            "class_index": 40,
+            "impl_index": 79,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "DCPL": {
+            "type": "instruction",
+            "name": "DCPL",
+            "class_index": 41,
+            "impl_index": 80,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "DPCT": {
+            "type": "instruction",
+            "name": "DPCT",
+            "class_index": 42,
+            "impl_index": 81,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "AVSZ3": {
+            "type": "instruction",
+            "name": "AVSZ3",
+            "class_index": 45,
+            "impl_index": 82,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "AVSZ4": {
+            "type": "instruction",
+            "name": "AVSZ4",
+            "class_index": 46,
+            "impl_index": 83,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "RTPT": {
+            "type": "instruction",
+            "name": "RTPT",
+            "class_index": 48,
+            "impl_index": 84,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "GPF": {
+            "type": "instruction",
+            "name": "GPF",
+            "class_index": 61,
+            "impl_index": 85,
+            "cpi": "CPI_COP_DEFAULT"
+        },
+        "GPL": {
+            "type": "instruction",
+            "name": "GPL",
+            "class_index": 62,
+            "impl_index": 86,
+            "cpi": "CPI_COP_DEFAULT"
+        }
+    },
+    "J": {
+        "type": "instruction",
+        "name": "J",
+        "class_index": 2,
+        "impl_index": 1,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "JAL": {
+        "type": "instruction",
+        "name": "JAL",
+        "class_index": 3,
+        "impl_index": 2,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "BEQ": {
+        "type": "instruction",
+        "name": "BEQ",
+        "class_index": 4,
+        "impl_index": 3,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "BNE": {
+        "type": "instruction",
+        "name": "BNE",
+        "class_index": 5,
+        "impl_index": 4,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "BLEZ": {
+        "type": "instruction",
+        "name": "BLEZ",
+        "class_index": 6,
+        "impl_index": 5,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "BGTZ": {
+        "type": "instruction",
+        "name": "BGTZ",
+        "class_index": 7,
+        "impl_index": 6,
+        "cpi": "CPI_R3000_BRANCH"
+    },
+    "ADDI": {
+        "type": "instruction",
+        "name": "ADDI",
+        "class_index": 8,
+        "impl_index": 7,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "ADDIU": {
+        "type": "instruction",
+        "name": "ADDIU",
+        "class_index": 9,
+        "impl_index": 8,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "SLTI": {
+        "type": "instruction",
+        "name": "SLTI",
+        "class_index": 10,
+        "impl_index": 9,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "SLTIU": {
+        "type": "instruction",
+        "name": "SLTIU",
+        "class_index": 11,
+        "impl_index": 10,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "ANDI": {
+        "type": "instruction",
+        "name": "ANDI",
+        "class_index": 12,
+        "impl_index": 11,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "ORI": {
+        "type": "instruction",
+        "name": "ORI",
+        "class_index": 13,
+        "impl_index": 12,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "XORI": {
+        "type": "instruction",
+        "name": "XORI",
+        "class_index": 14,
+        "impl_index": 13,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "LUI": {
+        "type": "instruction",
+        "name": "LUI",
+        "class_index": 15,
+        "impl_index": 14,
+        "cpi": "CPI_R3000_DEFAULT"
+    },
+    "LB": {
+        "type": "instruction",
+        "name": "LB",
+        "class_index": 32,
+        "impl_index": 15,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LH": {
+        "type": "instruction",
+        "name": "LH",
+        "class_index": 33,
+        "impl_index": 16,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LWL": {
+        "type": "instruction",
+        "name": "LWL",
+        "class_index": 34,
+        "impl_index": 17,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LW": {
+        "type": "instruction",
+        "name": "LW",
+        "class_index": 35,
+        "impl_index": 18,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LBU": {
+        "type": "instruction",
+        "name": "LBU",
+        "class_index": 36,
+        "impl_index": 19,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LHU": {
+        "type": "instruction",
+        "name": "LHU",
+        "class_index": 37,
+        "impl_index": 20,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "LWR": {
+        "type": "instruction",
+        "name": "LWR",
+        "class_index": 38,
+        "impl_index": 21,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "SB": {
+        "type": "instruction",
+        "name": "SB",
+        "class_index": 40,
+        "impl_index": 22,
+        "cpi": "CPI_R3000_STORE"
+    },
+    "SH": {
+        "type": "instruction",
+        "name": "SH",
+        "class_index": 41,
+        "impl_index": 23,
+        "cpi": "CPI_R3000_STORE"
+    },
+    "SWL": {
+        "type": "instruction",
+        "name": "SWL",
+        "class_index": 42,
+        "impl_index": 24,
+        "cpi": "CPI_R3000_STORE"
+    },
+    "SW": {
+        "type": "instruction",
+        "name": "SW",
+        "class_index": 43,
+        "impl_index": 25,
+        "cpi": "CPI_R3000_STORE"
+    },
+    "SWR": {
+        "type": "instruction",
+        "name": "SWR",
+        "class_index": 46,
+        "impl_index": 26,
+        "cpi": "CPI_R3000_STORE"
+    },
+    "LWC2": {
+        "type": "instruction",
+        "name": "LWC2",
+        "class_index": 50,
+        "impl_index": 27,
+        "cpi": "CPI_R3000_LOAD"
+    },
+    "SWC2": {
+        "type": "instruction",
+        "name": "SWC2",
+        "class_index": 58,
+        "impl_index": 28,
+        "cpi": "CPI_R3000_STORE"
+    }
+}

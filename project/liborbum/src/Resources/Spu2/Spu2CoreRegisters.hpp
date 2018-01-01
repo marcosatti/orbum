@@ -86,20 +86,35 @@ public:
 
 	Spu2CoreRegister_Attr();
 
-	/*
-	When this register is written to, resets the DMA transfer state.
-	Scope locked for the entire duration.
-	*/
+	/// When this register is written to, resets the DMA transfer state.
+	/// Scope locked for the entire duration.
 	void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
 
-	/*
-	Current auto/manual DMA transfer count state, in terms of hwords.
-	Reset upon the register being written to.
-	*/
+	/// Current auto/manual DMA transfer count state, in terms of hwords.
+	/// Reset upon the register being written to.
 	size_t dma_offset;
 };
 
-class Spu2CoreRegister_StatX : public SizedHwordRegister
+/// SPU2 Core STATX register.
+/// TODO: find out more, not much to go on.
+class Spu2CoreRegister_Statx : public SizedHwordRegister
 {
+public:
 	static constexpr Bitfield NEEDDATA = Bitfield(7, 1);
+};
+
+/// SPU2 Core ADMAS register.
+/// Some vague references in the SPU2 overview manual, not much info overall.
+class Spu2CoreRegister_Admas : public SizedHwordRegister
+{
+public:
+	Spu2CoreRegister_Admas();
+
+	/// Sets the ADMA running status (magic values).
+	void set_adma_running(const bool running);
+
+	/// Returns if ADMA is enabled for the core_id set.
+	bool is_adma_enabled();
+	
+	const int * core_id;
 };

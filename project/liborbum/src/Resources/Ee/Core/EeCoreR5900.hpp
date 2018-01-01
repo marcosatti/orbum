@@ -3,6 +3,7 @@
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/Register/SizedQwordRegister.hpp"
+#include "Common/Types/MIPS/BranchDelaySlot.hpp"
 
 /// The R5900 is the EE Core's CPU. 
 /// It has been modified from a stock R5900 to include Sony specific instructions
@@ -16,6 +17,9 @@ public:
 	/// The 32-bit Program Counter (PC) register. See EE Core Users manual, pg 61.
 	/// Points to the current instruction virtual address.
 	SizedWordRegister pc;
+	
+	/// Branch delay slot holding area.
+	BranchDelaySlot<> bdelay;
 
 	/// The R5900 general purpose registers (GPR's) are 128-bit long.
 	/// The upper 64-bits are only used when specific instructions are run, such as 

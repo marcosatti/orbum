@@ -33,35 +33,30 @@ public:
 	static constexpr Bitfield BEV = Bitfield(22, 1);
 	static constexpr Bitfield RE = Bitfield(25, 1);
 	static constexpr Bitfield CU = Bitfield(28, 4);
+	
+	static constexpr uword INITIAL_VALUE = 0x00400000;
+	
+	IopCoreCop0Register_Status();
 
-	/*
-	Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level (similar to a stack).
-	In the bitfield names for those bits,
-	"c" refers to the current status.
-	"p" refers to the previous status.
-	"o" refers to the oldest status.
-
-	When pushing, clears the expunged bits to 0 (poping contains old values).
-	*/
+	/// Pushes/Pops the IE & KU bits (used in exception handling) to an older or earlier level (similar to a stack).
+	/// In the bitfield names for those bits,
+	/// "c" refers to the current status.
+	/// "p" refers to the previous status.
+	/// "o" refers to the oldest status.
+	/// When pushing, clears the expunged bits to 0 (poping contains old values).
 	void push_exception_stack();
 	void pop_exception_stack();
 
-	/*
-	Returns if all exceptions are currently masked ( = NOT ENABLED).
-	TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
-	*/
+	/// Returns if all exceptions are currently masked ( = NOT ENABLED).
+	/// TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
 	bool is_exceptions_masked();
 
-	/*
-	Returns if all interrupts are currently masked ( = NOT ENABLED).
-	Does so by checking the master IEc bit.
-	*/
+	/// Returns if all interrupts are currently masked ( = NOT ENABLED).
+	/// Does so by checking the master IEc bit.
 	bool is_interrupts_masked();
 
-	/*
-	Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
-	Does so by checking the IM[irq] bit.
-	*/
+	/// Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
+	/// Does so by checking the IM[irq] bit.
 	bool is_irq_masked(const int irq);
 };
 
@@ -74,22 +69,23 @@ public:
 	static constexpr Bitfield CE = Bitfield(28, 2);
 	static constexpr Bitfield BD = Bitfield(31, 1);
 
-	/*
-	Clears the Cause.IP bits (from bits 8 -> 15).
-	*/
-	void clear_ip();
+	IopCoreCop0Register_Cause();
 
-	/*
-	Sets the given IP[irq] bit given.
-	The other IP bits are left unchanged (uses OR).
-	*/
+	/// Clears all of the IRQ lines.
+	void clear_all_irq();
+
+	/// Sets the given IRQ line.
 	void set_irq_line(const int irq);
 
-	/*
-	Clears the given IP[irq] bit given.
-	The other IP bits are left unchanged (uses ~AND).
-	*/
+	/// Clears the given IRQ line.
 	void clear_irq_line(const int irq);
+
+	/// Syncs the register state with the IRQ flags and returns the register value.
+	uword read_uword() override;
+
+private:
+	/// IRQ line flags.
+	bool irq_lines[8];
 };
 
 /// The PRId register of the IOP COP0.

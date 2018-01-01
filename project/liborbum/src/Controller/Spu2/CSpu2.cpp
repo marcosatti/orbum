@@ -1,109 +1,107 @@
+#include "Core.hpp"
 
-#include "Common/Types/FifoQueue/SpscFifoQueue.h"
-#include "Common/Types/Memory/HwordMemory_t.h"
-#include "Common/Tables/SPU2CoreTable.h"
-#include "Common/Types/Register/SizedHwordRegister.hpp"
-#include "Common/Types/Register/SizedHwordRegister.hpp"
-
-#include "VM/VM.h"
-#include "VM/Systems/SPU2/SPU2_s.h"
+#include "Controller/Spu2/CSpu2.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/IOP/IOP_t.h"
-#include "Resources/Iop/Intc/RIopIntc.hpp"
-#include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "Resources/IOP/DMAC/IOPDmac_t.h"
-#include "Resources/Iop/Dmac/IopDmacChannelRegisters.hpp"
-#include "Resources/Iop/Dmac/IopDmacChannels.hpp"
-#include "Resources/Iop/Dmac/IopDmacRegisters.hpp"
-#include "Resources/SPU2/SPU2_t.h"
-#include "Resources/SPU2/Types/Spu2Registers.h"
-#include "Resources/SPU2/Types/SPU2Cores_t.h"
-#include "Resources/SPU2/Types/Spu2CoreRegisters_t.h"
-#include "Resources/SPU2/Types/SPU2CoreVoices_t.h"
-#include "Resources/SPU2/Types/SPU2CoreVoiceRegisters_t.h"
+#include "Resources/Spu2/Spu2CoreTable.hpp"
 
-SPU2_s::SPU2_s(VM * vm) : 
-	VMSystem_t(vm, Context_t::SPU2)
-{
-	mSPU2 = getVM()->getResources()->SPU2;
-	mINTC = getVM()->getResources()->IOP->INTC;
-	mDMAC = getVM()->getResources()->IOP->DMAC;
-}
-
-void SPU2_s::initialise()
+CSpu2::CSpu2(Core * core) : 
+	CController(core)
 {
 }
 
-int SPU2_s::step(const Event_t & event)
+void CSpu2::handle_event(const ControllerEvent & event) const
 {
-	// Used to skip ticks. If no DMA transfer happened, or sound generation was not performed
-	//  then all of the ticks will be consumed.
-	bool workDone = false;
-
-	// For each core (core 0 and core 1), run through DMA transfers and sound generation.
-	for (auto& core : mSPU2->CORES)
+	switch (event.type)
 	{
-		// Set context.
-		mCore = core.get();
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CSpu2 event handler not implemented - please fix!");
+	}
+	}
+}
 
-		workDone |= handleDMATransfer();
-		workDone |= handleSoundGeneration();
-
-		// Do an interrupt check, and send signal to the IOP INTC if needed.
-		handleInterruptCheck();
+int CSpu2::time_to_ticks(const double time_us) const
+{
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Spu2]);
+	
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "SPU2 ticks too low - increase time delta";
+			warned = true;
+		}
 	}
 
-	// SPU2 has completed 1 cycle.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	if (!workDone)
-		return event.mQuantity;
-	else
-		return 1;
-#else
-	return 1;
-#endif
+	return ticks;
 }
 
-bool SPU2_s::handleDMATransfer()
+
+int CSpu2::time_step(const int ticks_available) const
 {
-	// Check which DMA mode we are in, based on the ATTR.DMAMode bits. Either manual DMA read/writes or auto DMA read/writes are possible.
+	auto& r = core->get_resources();
+
+	for (auto& spu2_core : r.spu2.cores)
+	{
+		// For each core, run through DMA transfers and sound generation.
+		handle_dma_transfer(*spu2_core);
+		handle_sound_generation(*spu2_core);
+
+		// Finally do an interrupt check, and send signal to the IOP INTC if needed.
+		handle_interrupt_check(*spu2_core);
+	}
+
+	return 1;
+}
+
+bool CSpu2::handle_dma_transfer(Spu2Core_Base & spu2_core) const
+{
+	// Check which DMA mode we are in, based on the ATTR.DMAMODE bits. Either manual DMA read/writes or auto DMA read/writes are possible.
 	// If we are using auto DMA, the ADMAS register still needs to be set properly.
 	// TODO: Not sure this is actually correct - I am lead to believe it is like this because of Nocash's psx docs (SPUCNT.SoundTxferMode), and it works.
 	// TODO: Currently, reading from the SPU2 memory is unsupported. Although it is implemented in PCSX2/SPU2-X, I haven't been able to trigger it.
 	//       In terms of the ATTR register, manual/auto DMA read mode probably sets it to 0b01xxxx or 0b11xxxx respectively, so these are set to throw an error for now.
-	// TODO: I do not know what the "DMABits" field is for, but probably doesn't matter after looking at SPU2-X code (not needed?). Probably not even related to DMA...
+	// TODO: I do not know what the "DMABITS" field is for, but probably doesn't matter after looking at SPU2-X code (not needed?). Probably not even related to DMA...
 	//       Nocash PSX docs says related to other things, such as CD audio (SPUCNT)... 
-	if (mCore->ATTR->getFieldValue(, Spu2CoreRegister_Attr::DMABits > 0))
-		throw std::runtime_error("SPU2 ATTR DMABits field set to non-zero. What is this for?");
+	if (spu2_core.attr.extract_field(Spu2CoreRegister_Attr::DMABITS) > 0)
+		throw std::runtime_error("SPU2 ATTR DMABITS field set to non-zero. What is this for?");
 
-	int dmaCount = 0;
-	switch (mCore->ATTR->getFieldValue(, Spu2CoreRegister_Attr::DMAMode))
+	int dma_count = 0;
+	switch (spu2_core.attr.extract_field(Spu2CoreRegister_Attr::DMAMODE))
 	{
 	case 0:
 	{
 		// Auto DMA write mode.
-		if (mCore->ADMAS->isADMAEnabled()) 
-			dmaCount = transferData_ADMA_Write(); 
+		if (spu2_core.admas.is_adma_enabled()) 
+			dma_count = transfer_data_adma_write(spu2_core); 
 		break;
 	}
 	case 1:
 	{
 		// Auto DMA read mode. 
-		if (mCore->ADMAS->isADMAEnabled())
-			dmaCount = transferData_ADMA_Read();
+		if (spu2_core.admas.is_adma_enabled())
+			dma_count = transfer_data_adma_read(spu2_core);
 		break;
 	}		
 	case 2:
 	{
 		// Manual DMA write mode.
-		dmaCount = transferData_MDMA_Write();
+		dma_count = transfer_data_mdma_write(spu2_core);
 		break;
 	}
 	case 3:
 	{
 		// Manual DMA read mode.
-		dmaCount = transferData_MDMA_Read();
+		dma_count = transfer_data_mdma_read(spu2_core);
 		break;
 	}
 	default:
@@ -112,143 +110,153 @@ bool SPU2_s::handleDMATransfer()
 	}
 	}
 
-	return (dmaCount > 0);
+	return (dma_count > 0);
 }
 
-bool SPU2_s::handleSoundGeneration()
+bool CSpu2::handle_sound_generation(Spu2Core_Base & spu2_core) const
 {
-	// Check if core is enabled and do sound generation.
-	if (mCore->ATTR->getFieldValue(, Spu2CoreRegister_Attr::CoreEnable))
-	{
+	// Check if core is enabled.
+	if (!spu2_core.attr.extract_field(Spu2CoreRegister_Attr::COREENABLE))
 		return false; 
-	}
-	else
-	{
-		// No sound generation was performed.
-		return false;
-	}
+
+	return true;
 }
 
-int SPU2_s::transferData_ADMA_Write() const
+int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core) const
 {
 	// TODO: Check this, its probably wrong. The write addresses are also meant to be used in conjunction with the current read address (double buffer).
 	// Note: TSA is not used here! The write addresses are fixed. See pages 13, 28 and 55 of the SPU2 Overview manual.
 
-	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
-	uhword data;
-	if (!mCore->FifoQueue->read(, reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD))
+	// Exit early if theres no data to process.
+	if (!spu2_core.dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_HWORD))
 	{
-		// Set 'no data available' magic values for SPU2 registers.
-		mCore->ADMAS->setADMAEnd(, true);	
-		mCore->STATX->setFieldValue(, SizedHwordRegister::NeedData, 1);
+		// Set 'no data available' magic values for SPU2 registers (done on each try).
+		spu2_core.admas.set_adma_running(false);	
+		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 1);
 		return 0;
 	}
 
-	// Set 'data available' magic values for SPU2 registers.
-	mCore->ADMAS->setADMAEnd(, false);	
-	mCore->STATX->setFieldValue(, SizedHwordRegister::NeedData, 0);
+	// Read in data and set 'data available' magic values for SPU2 registers.
+	uhword data;
+	spu2_core.dma_fifo_queue->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD);
+	spu2_core.admas.set_adma_running(true);	
+	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 0);
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
 	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
-	int block = mCore->ATTR->mDMAOffset / 0x100;
-	bool inLeftBlock = ((block % 2) == 0);
-	uword channelOffset;
-	if (inLeftBlock)
-		channelOffset = mCore->ATTR->mDMAOffset - (block / 2) * 0x100;
+	int block = static_cast<int>(spu2_core.attr.dma_offset / 0x100);
+	bool in_left_block = ((block % 2) == 0);
+	size_t channel_offset;
+	if (in_left_block)
+		channel_offset = spu2_core.attr.dma_offset - (block / 2) * 0x100;
 	else
-		channelOffset = mCore->ATTR->mDMAOffset - (block / 2 + 1) * 0x100;
+		channel_offset = spu2_core.attr.dma_offset - (block / 2 + 1) * 0x100;
 
 	// ADMA is limited to a hword space of 0x100 for each sound channel (left and right), for each buffer (2 total), for a total of 0x100 * 4 address space.
 	// See SPU2 Overview manual page 28.
-	channelOffset %= 0x400;
+	channel_offset %= 0x400;
 
 	// Calculate final address.
-	uword address;
-	if (inLeftBlock)
-		address = mCore->getInfo()->mBaseTSALeft + channelOffset;
+	uptr address;
+	if (in_left_block)
+		address = Spu2CoreTable::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_left + static_cast<uptr>(channel_offset);
 	else
-		address = mCore->getInfo()->mBaseTSARight + channelOffset;
+		address = Spu2CoreTable::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_right + static_cast<uptr>(channel_offset);
 
 		
-	//log(Debug, "SPU2 core %d ADMA write ATTR.mDMAOffset = 0x%08X, channelOffset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", mCore->getCoreID(), mCore->ATTR->mDMAOffset, channelOffset, address, mCore->FifoQueue->read_available());
+	//log(Debug, "SPU2 core %d ADMA write ATTR.dma_offset = 0x%08X, channel_offset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", spu2_core.core_id, spu2_core.attr.dma_offset, channel_offset, address, spu2_core.FifoQueue->read_available());
 
 	// Write to SPU2 memory.
-	writeHwordMemory(address, data);
+	write_hword_memory(spu2_core, address, data);
 
 	// Increment the transfer count.
-	mCore->ATTR->mDMAOffset += 1;
+	spu2_core.attr.dma_offset += 1;
 
 	// ADMA has completed one transfer.
 	return 1;
 }
 
-int SPU2_s::transferData_ADMA_Read() const
+int CSpu2::transfer_data_adma_read(Spu2Core_Base & spu2_core) const
 {
-	throw std::runtime_error("SPU2 ADMA read not yet implemented. Look into the ATTR.DMAMode bits, as this might be incorrectly called.");
+	throw std::runtime_error("SPU2 ADMA read not yet implemented. Look into the ATTR.DMAMODE bits, as this might be incorrectly called.");
 }
 
-int SPU2_s::transferData_MDMA_Write() const
+int CSpu2::transfer_data_mdma_write(Spu2Core_Base & spu2_core) const
 {
 	// TODO: Check this!
 
-	// Check for incoming data and read it in, otherwise exit early as theres nothing to do.
-	uhword data;
-	if (!mCore->FifoQueue->read(, reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD))
+	// Exit early if theres no data to process.
+	if (!spu2_core.dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_HWORD))
 	{
 		// Set 'no data available' magic values for SPU2 registers.
-		mCore->STATX->setFieldValue(, SizedHwordRegister::NeedData, 1);
+		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 1);
 		return 0;
 	}
 
-	// Set 'data available' magic values for SPU2 registers.
-	mCore->STATX->setFieldValue(, SizedHwordRegister::NeedData, 0);
+	// Read in data and set 'data available' magic values for SPU2 registers.
+	uhword data;
+	spu2_core.dma_fifo_queue->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD);
+	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 0);
 
 	// Calculate write address. Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
-	uword address = (mCore->TSAL->readPairWord() + mCore->ATTR->mDMAOffset) % 0x100000;
+	uhword tsal_addr_lo = spu2_core.tsal.read_uhword();
+	uhword tsal_addr_hi = spu2_core.tsah.read_uhword();
+	uptr tsal_addr = (static_cast<uptr>(tsal_addr_hi) << 16) | tsal_addr_lo;
+	uptr address = static_cast<uptr>((tsal_addr + spu2_core.attr.dma_offset) % 0x100000);
 
 	// Write to SPU2 memory.
-	writeHwordMemory(address, data);
+	write_hword_memory(spu2_core, address, data);
 
-	//log(Debug, "SPU2 core %d ADMA write ATTR.mDMAOffset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", mCore->getCoreID(), mCore->ATTR->mDMAOffset, address, mCore->FifoQueue->read_available());
+	//log(Debug, "SPU2 core %d ADMA write ATTR.dma_offset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", spu2_core.core_id, spu2_core.attr.dma_offset, address, spu2_core.FifoQueue->read_available());
 
 	// Increment the transfer count.
-	mCore->ATTR->mDMAOffset += 1;
+	spu2_core.attr.dma_offset += 1;
 	
 	// ADMA has completed one transfer.
 	return 1;
 }
 
-int SPU2_s::transferData_MDMA_Read() const
+int CSpu2::transfer_data_mdma_read(Spu2Core_Base & spu2_core) const
 {
-	throw std::runtime_error("SPU2 MDMA read not yet implemented. Look into the ATTR.DMAMode bits, as this might be incorrectly called.");
+	throw std::runtime_error("SPU2 MDMA read not yet implemented. Look into the ATTR.DMAMODE bits, as this might be incorrectly called.");
 }
 
-uhword SPU2_s::readHwordMemory(const uptr address) const
+uhword CSpu2::read_hword_memory(Spu2Core_Base & spu2_core, const uptr address) const
 {
+	auto& r = core->get_resources();
+
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
-	uword irqAddr = mCore->IRQAL->readPairWord();
-	if (irqAddr == hwordPhysicalAddress)
-		mSPU2->SPDIF_IRQINFO->setFieldValue(, SPU2Register_SPDIF_IRQINFO_t::IRQ_KEYS[mCore->getCoreID()], 1);
+	uhword irq_addr_lo = spu2_core.irqal.read_uhword();
+	uhword irq_addr_hi = spu2_core.irqah.read_uhword();
+	uptr irq_addr = (static_cast<uptr>(irq_addr_hi) << 16) | irq_addr_lo;
+	if (irq_addr == address)
+		r.spu2.spdif_irqinfo.insert_field(Spu2Register_Spdif_Irqinfo::IRQ_KEYS[spu2_core.core_id], 1);
 
-	return mSPU2->MainMemory->read_uhword(hwordPhysicalAddress);
+	return r.spu2.main_memory.read_uhword(address);
 }
 
-void SPU2_s::writeHwordMemory(const uptr address, const uhword value) const
+void CSpu2::write_hword_memory(Spu2Core_Base & spu2_core, const uptr address, const uhword value) const
 {
+	auto& r = core->get_resources();
+
 	// Check for IRQ conditions by comparing the address given with the IRQA register pair. Set IRQ if they match.
-	uword irqAddr = mCore->IRQAL->readPairWord();
-	if (irqAddr == hwordPhysicalAddress)
-		mSPU2->SPDIF_IRQINFO->setFieldValue(, SPU2Register_SPDIF_IRQINFO_t::IRQ_KEYS[mCore->getCoreID()], 1);
+	uhword irq_addr_lo = spu2_core.irqal.read_uhword();
+	uhword irq_addr_hi = spu2_core.irqah.read_uhword();
+	uptr irq_addr = (static_cast<uptr>(irq_addr_hi) << 16) | irq_addr_lo;
+	if (irq_addr == address)
+		r.spu2.spdif_irqinfo.insert_field(Spu2Register_Spdif_Irqinfo::IRQ_KEYS[spu2_core.core_id], 1);
 
-	mSPU2->MainMemory->write_uhword(hwordPhysicalAddress, value);
+	r.spu2.main_memory.write_uhword(address, value);
 }
 
-void SPU2_s::handleInterruptCheck() const
+void CSpu2::handle_interrupt_check(Spu2Core_Base & spu2_core) const
 {
-	if (mCore->ATTR->getFieldValue(, Spu2CoreRegister_Attr::IRQEnable) 
-		&& mSPU2->SPDIF_IRQINFO->getFieldValue(, SPU2Register_SPDIF_IRQINFO_t::IRQ_KEYS[mCore->getCoreID()]))
+	auto& r = core->get_resources();
+
+	if (spu2_core.attr.extract_field(Spu2CoreRegister_Attr::IRQENABLE) 
+		&& r.spu2.spdif_irqinfo.extract_field(Spu2Register_Spdif_Irqinfo::IRQ_KEYS[spu2_core.core_id]))
 	{
 		// IRQ was set, notify the IOP INTC.
-		mINTC->STAT->setFieldValue(, IOPIntcRegister_STAT_t::SPU, 1);
+		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SPU, 1);
 	}
 }

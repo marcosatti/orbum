@@ -27,8 +27,8 @@ TODO: document properly after I have figured it out.
 // 	uword mRecieveValue2;
 // 	size_t mSendSize;
 // 	size_t mRecieveSize;
-// 	uword mSendAddress;
-// 	uword mRecieveAddress;
+// 	uptr mSendAddress;
+// 	uptr mRecieveAddress;
 
 // 	SIO2DmaArgument_t mInDmaArgument;
 // 	SIO2DmaArgument_t mOutDmaArgument;

@@ -2,6 +2,11 @@
 
 #include "Resources/Iop/Core/IopCoreCop0Registers.hpp"
 
+IopCoreCop0Register_Status::IopCoreCop0Register_Status() :
+	SizedWordRegister(INITIAL_VALUE)
+{
+}
+
 
 void IopCoreCop0Register_Status::push_exception_stack()
 {
@@ -32,21 +37,41 @@ bool IopCoreCop0Register_Status::is_irq_masked(const int irq)
 	return !((extract_field(IM) & (1 << irq)) > 0);
 }
 
-void IopCoreCop0Register_Cause::clear_ip()
+IopCoreCop0Register_Cause::IopCoreCop0Register_Cause() :
+	irq_lines{ false }
 {
-	insert_field(IP, 0);
+}
+
+void IopCoreCop0Register_Cause::clear_all_irq()
+{
+	for (auto& line : irq_lines)
+		line = false;
 }
 
 void IopCoreCop0Register_Cause::set_irq_line(const int irq)
 {
-	auto temp = extract_field(IP) | (1 << irq);
-	insert_field(IP, temp);
+	irq_lines[irq] = true;
 }
 
 void IopCoreCop0Register_Cause::clear_irq_line(const int irq)
 {
-	auto temp = (extract_field(IP) & (~(1 << irq))) & 0xFF; // 0xFF mask to strip off any other bits as a safety precaution.
-	insert_field(IP, temp);
+	irq_lines[irq] = false;
+}
+
+uword IopCoreCop0Register_Cause::read_uword()
+{
+	uword value = SizedWordRegister::read_uword();
+
+	uword ip = 0;
+	for (int i = 0; i < 8; i++)
+		if (irq_lines[i])
+			ip |= (1 << i);
+
+	value = IP.insert_into(value, ip);
+
+	// Maybe no point in writing it back...
+	SizedWordRegister::write_uword(value);
+	return value;
 }
 
 IopCoreCop0Register_Prid::IopCoreCop0Register_Prid() :

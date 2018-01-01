@@ -1,224 +1,180 @@
-#include <memory>
-#include <cmath>
+#include <stdexcept>
+#include <thread>
+#include <boost/log/core.hpp>
+#include <boost/log/attributes.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
+#include <chrono>
 
+#include "Core.hpp"
 
-#include "Common/Types/Memory/ROArrayByteMemory.h"
-#include "Common/Types/Util/ThreadedRunnable_t.h"
-
-#include "VM/VM.h"
-#include "VM/Types/VMSystem_t.h"
-#include "VM/Systems/EE/EECoreInterpreter/EECoreInterpreter_s.h"
-#include "VM/Systems/EE/DMAC/EEDmac_s.h"
-#include "VM/Systems/EE/Timers/EETimers_s.h"
-#include "VM/Systems/EE/INTC/EEIntc_s.h"
-#include "VM/Systems/EE/VPU/VIF/VIF_s.h"
-#include "VM/Systems/EE/VPU/VUInterpreter/VUInterpreter_s.h"
-#include "VM/Systems/IOP/IOPCoreInterpreter/IOPCoreInterpreter_s.h"
-#include "VM/Systems/IOP/DMAC/IOPDmac_s.h"
-#include "VM/Systems/IOP/Timers/IOPTimers_s.h"
-#include "VM/Systems/IOP/INTC/IOPIntc_s.h"
-#include "VM/Systems/CDVD/CDVD_s.h"
-#include "VM/Systems/SPU2/SPU2_s.h"
-#include "VM/Systems/GS/GSCore/GSCore_s.h"
-#include "VM/Systems/GS/CRTC/CRTC_s.h"
-#include "VM/Systems/IOP/SIO0/SIO0_s.h"
-#include "VM/Systems/IOP/SIO2/SIO2_s.h"
+#include "Controller/Gs/Crtc/CCrtc.hpp"
+#include "Controller/Gs/Core/CGsCore.hpp"
+#include "Controller/Cdvd/CCdvd.hpp"
+#include "Controller/Spu2/CSpu2.hpp"
+#include "Controller/Iop/Dmac/CIopDmac.hpp"
+#include "Controller/Iop/Intc/CIopIntc.hpp"
+#include "Controller/Iop/Timers/CIopTimers.hpp"
+#include "Controller/Iop/Sio0/CSio0.hpp"
+#include "Controller/Iop/Sio2/CSio2.hpp"
+#include "Controller/Ee/Vpu/Vif/CVif.hpp"
+#include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
+#include "Controller/Ee/Ipu/CIpu.hpp"
+#include "Controller/Ee/Gif/CGif.hpp"
+#include "Controller/Ee/Intc/CEeIntc.hpp"
+#include "Controller/Ee/Timers/CEeTimers.hpp"
+#include "Controller/Ee/Dmac/CEeDmac.hpp"
+#include "Controller/Iop/Core/Interpreter/CIopCoreInterpreter.hpp"
+#include "Controller/Ee/Core/Interpreter/CEeCoreInterpreter.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Events/Events_t.h"
-#include "Resources/Ee/REe.hpp"
 
-VM::VM(const VMOptions & vmOptions) : 
-	mVMOptions(vmOptions),
-	mStatus(Stopped)
+boost::log::sources::logger_mt Core::logger;
+
+CoreOptions CoreOptions::make_default()
 {
+    return CoreOptions 
+    {
+		"logs/",
+		"bios/",
+        "scph10000.bin",
+        "",
+        "",
+        "",
+        50,
+        std::thread::hardware_concurrency() - 1,
+        EnumMap<ControllerType::Type, double>(1.0)
+    };
 }
 
-VM::~VM()
-{
-	// Call stop to handle thread cleanup.
-	stop();
-}
-
-void VM::reset(const bool loadBIOS)
+Core::Core(const CoreOptions & options) :
+    options(options)
 {
 	// Initialise logging.
-	LOG_CALLBACK_FUNCPTR = mVMOptions.LOG_CALLBACK_FUNCPTR;
+	init_logging();
 
-    // Set status to stopped.
-    mStatus = Stopped;
+	BOOST_LOG(get_logger()) << "Core initialising... please wait";
 
-	log(Info, "VM reset started...");
+	// Initialise resources.
+	resources = std::make_unique<RResources>();
+	initialise_resources(resources);
 
-	// Initialise resources and set system bias speeds.
-	mResources = std::make_shared<RResources>();
-	mResources->Events->setClockBias(mVMOptions.SYSTEM_BIASES);
+	// Initialise roms (boot_rom (required), rom1, rom2, erom).
+	get_resources().boot_rom.read_from_file(options.roms_dir_path + options.boot_rom_file_name, Constants::EE::ROM::SIZE_BOOT_ROM);
+	if (!options.rom1_file_name.empty())
+		get_resources().rom1.read_from_file(options.roms_dir_path + options.rom1_file_name, Constants::EE::ROM::SIZE_ROM1);
+	if (!options.rom2_file_name.empty())
+		get_resources().rom2.read_from_file(options.roms_dir_path + options.rom2_file_name, Constants::EE::ROM::SIZE_ROM2);
+	if (!options.erom_file_name.empty())
+		get_resources().erom.read_from_file(options.roms_dir_path + options.erom_file_name, Constants::EE::ROM::SIZE_EROM);
 
-	log(Info, "VM resources initialised.");
+    // Initialise controllers.
+    controllers[ControllerType::Type::EeCore] = std::make_unique<CEeCoreInterpreter>(this);
+    controllers[ControllerType::Type::EeDmac] = std::make_unique<CEeDmac>(this);
+    controllers[ControllerType::Type::EeTimers] = std::make_unique<CEeTimers>(this);
+    controllers[ControllerType::Type::EeIntc] = std::make_unique<CEeIntc>(this);
+    controllers[ControllerType::Type::Gif] = std::make_unique<CGif>(this);
+    controllers[ControllerType::Type::Ipu] = std::make_unique<CIpu>(this);
+    controllers[ControllerType::Type::Vif] = std::make_unique<CVif>(this);
+    controllers[ControllerType::Type::Vu] = std::make_unique<CVuInterpreter>(this);
+    controllers[ControllerType::Type::IopCore] = std::make_unique<CIopCoreInterpreter>(this);
+    controllers[ControllerType::Type::IopDmac] = std::make_unique<CIopDmac>(this);
+    controllers[ControllerType::Type::IopTimers] = std::make_unique<CIopTimers>(this);
+    controllers[ControllerType::Type::IopIntc] = std::make_unique<CIopIntc>(this);
+    controllers[ControllerType::Type::Cdvd] = std::make_unique<CCdvd>(this);
+    controllers[ControllerType::Type::Spu2] = std::make_unique<CSpu2>(this);
+    controllers[ControllerType::Type::GsCore] = std::make_unique<CGsCore>(this);
+    controllers[ControllerType::Type::Crtc] = std::make_unique<CCrtc>(this);
+    controllers[ControllerType::Type::Sio0] = std::make_unique<CSio0>(this);
+    controllers[ControllerType::Type::Sio2] = std::make_unique<CSio2>(this);
 
-	if (loadBIOS)
-	{
-		resetBIOS();
-		log(Info, "VM roms initialised.");
-	}
+    // Task executor.
+    task_executor = std::make_unique<TaskExecutor>(options.number_workers);
 
-	// Create systems.
-	mSystemEEDmac = std::make_shared<EEDmac_s>(this);
-	mSystemEETimers = std::make_shared<EETimers_s>(this);
-	mSystemEEIntc = std::make_shared<EEIntc_s>(this);
-	// mSystemGIF = std::make_shared<GIF_s>(this);
-	// mSystemIPU = std::make_shared<IPU_s>(this);
-	mSystemVIF0 = std::make_shared<VIF_s>(this, 0);
-	mSystemVU0 = std::make_shared<VUInterpreter_s>(this, 0);
-	mSystemVIF1 = std::make_shared<VIF_s>(this, 1);
-	mSystemVU1 = std::make_shared<VUInterpreter_s>(this, 1);
-	mSystemIOPCore = std::make_shared<IOPCoreInterpreter_s>(this);
-	mSystemIOPDmac = std::make_shared<IOPDmac_s>(this);
-	mSystemIOPTimers = std::make_shared<IOPTimers_s>(this);
-	mSystemIOPIntc = std::make_shared<IOPIntc_s>(this);
-	mSystemCDVD = std::make_shared<CDVD_s>(this);
-	mSystemSPU2 = std::make_shared<SPU2_s>(this);
-	mSystemGSCore = std::make_shared<GSCore_s>(this);
-	mSystemCRTC = std::make_shared<CRTC_s>(this);
-	mSystemEECore = std::make_shared<EECoreInterpreter_s>(this, mSystemVU0);
-	mSystemSIO0 = std::make_shared<SIO0_s>(this);
-	mSystemSIO2 = std::make_shared<SIO2_s>(this);
-	mSystems = { mSystemEECore, mSystemEEDmac, mSystemEETimers, mSystemEEIntc, /* mSystemGIF,       mSystemIPU, */  mSystemVIF0, mSystemVU0,
-                 mSystemVIF1,   mSystemVU1,    mSystemIOPCore,  mSystemIOPDmac,   mSystemIOPTimers, mSystemIOPIntc, mSystemCDVD, mSystemSPU2,
-	             mSystemGSCore, mSystemCRTC,   mSystemSIO0,     mSystemSIO2 };
-
-	// Initialise systems.
-	for (auto& system : mSystems)
-		system->initialise();
-
-	log(Info, "VM systems initialised.");
-
-	// Create system threads.
-    for (auto& system : mSystems)
-        mSystemThreads.push_back(std::make_shared<ThreadedRunnable_t>(system));
-
-	log(Info, "VM system threads initialised.");
-
-	// Reset done, set status to paused now (threads created will exit otherwise).
-	mStatus = Paused;
-
-	log(Info, "VM reset done, now paused.");
+	BOOST_LOG(get_logger()) << "Core initialised";
 }
 
-void VM::reset(const bool loadBIOS, const VMOptions& options)
+Core::~Core()
 {
-	mVMOptions = options;
-	reset(loadBIOS);
+	BOOST_LOG(get_logger()) << "Core shutting down";
 }
 
-void VM::resetBIOS()
+const CoreOptions & Core::get_options() const
 {
-	// Initialise Roms.
-	if (!mVMOptions.BOOT_ROM_PATH.empty())
-		mResources->EE->BootROM->readFile(mVMOptions.BOOT_ROM_PATH.c_str(), 0, Constants::EE::ROM::SIZE_BOOT_ROM, 0); // BootROM.
-	// ROM1.
-	// ROM2.
-	// EROM.
+    return options;
 }
 
-void VM::run()
+RResources & Core::get_resources() const
 {
-	// Reset() must have been called before attempting to run.
-	if (mStatus == Stopped)
-		throw std::runtime_error("VM needs to be reset first before running!");
+    return *resources;
+}
 
-	// Produce ticks (independent clock sources) for the systems to use.
-	getResources()->Events->addClockTime(mVMOptions.TIME_SLICE_PER_RUN);
-
-	// Set to running.
-	mStatus = Running;
-
-    if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::ST)
+void Core::run()
+{
+    // Enqueue time events (always done on each run).
+    auto event = ControllerEvent{ ControllerEvent::Type::Time, options.time_slice_per_run_us };
+    for (int i = 0; i < static_cast<int>(ControllerType::Type::COUNT); i++) // TODO: find better syntax..
     {
-        for (auto& system : mSystems)
-            system->run();
-    }
-	else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SEQ)
-	{
-		// Run through each of the systems sequentially.
-		for (auto& systemThread : mSystemThreads)
-		{
-            systemThread->notify(ThreadedRunnable_t::Command::Run);
-            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
-		}
-	}
-    else if (mVMOptions.VM_RUNTIME_EXEC_MODE == VMOptions::MT_SIM)
-    {
-        // Run through each of the systems simultaneously.
-        for (auto& systemThread : mSystemThreads)
-            systemThread->notify(ThreadedRunnable_t::Command::Run);
-
-        // Re-synchronise the system (lock), check for any exceptions.
-        for (auto& systemThread : mSystemThreads)
-            systemThread->synchronise(ThreadedRunnable_t::Status::Paused);
-    }
-    else
-    {
-        // Huh?
-        throw std::runtime_error("VM runtime mode not recognised...? How did you screw this up???");
+        auto controller = static_cast<ControllerType::Type>(i);
+		enqueue_controller_event(controller, event);
     }
 
-	// Set to paused.
-	mStatus = Paused;
+    // Package events into tasks and send to workers.
+	EventEntry entry;
+    while (controller_event_queue.try_pop(entry))
+    {
+        auto task = [this, entry] ()
+        {
+			if (controllers[entry.t])
+				controllers[entry.t]->handle_event(entry.e);
+        };
+
+        task_executor->enqueue_task(task);
+    }
+
+    // Wait for sync (task executor has no more tasks).
+	task_executor->wait_for_idle();
 }
 
-void VM::stop()
+void Core::enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event)
 {
-	// Stop system threads.
-    mSystemThreads.clear();
-
-	log(Info, "VM system threads destroyed.");
-
-    // Deconstruct systems.
-    mSystems.clear();
-
-	// Deconstruct individual systems.
-	mSystemEECore = nullptr;
-	mSystemEEDmac = nullptr;
-	mSystemEETimers = nullptr;
-	mSystemEEIntc = nullptr;
-	// mSystemGIF = nullptr;
-	// mSystemIPU = nullptr;
-	mSystemVIF0 = nullptr;
-	mSystemVU0 = nullptr;
-	mSystemVIF1 = nullptr;
-	mSystemVU1 = nullptr;
-	mSystemIOPCore = nullptr;
-	mSystemIOPDmac = nullptr;
-	mSystemIOPTimers = nullptr;
-	mSystemIOPIntc = nullptr;
-	mSystemCDVD = nullptr;
-	mSystemSPU2 = nullptr;
-	mSystemGSCore = nullptr;
-	mSystemCRTC = nullptr;	
-	mSystemSIO0 = nullptr;
-	mSystemSIO2 = nullptr;
-
-	log(Info, "VM systems destroyed.");
-
-    // Destroy the resources.
-    mResources.reset();
-
-    log(Info, "VM resources destroyed.");
-
-	// Set to stopped.
-	mStatus = Stopped;
-
-	log(Info, "VM stopped ok.");
-	LOG_CALLBACK_FUNCPTR = nullptr;
+	EventEntry qe{ c_type, event };
+	controller_event_queue.push(qe);
 }
 
-VM::VMStatus VM::getStatus() const
+TaskExecutor & Core::get_task_executor() const
 {
-	return mStatus;
+	return *task_executor;
 }
 
-const RResources & VM::getResources() const
+boost::log::sources::logger_mt & Core::get_logger()
 {
-	return mResources;
+	return logger;
+}
+
+void Core::dump_all_memory() const
+{
+	std::string base = "./dumps/";
+	get_resources().ee.main_memory.write_to_file(base + "End_Dump_EE.bin");
+	get_resources().iop.main_memory.write_to_file(base + "End_Dump_IOP.bin");
+	get_resources().spu2.main_memory.write_to_file(base + "End_Dump_SPU2.bin");
+	get_resources().cdvd.nvram.memory.write_to_file(base + "End_Dump_CDVD_NVRAM.bin");
+	BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
+}
+
+void Core::init_logging()
+{
+	boost::log::add_common_attributes();
+	boost::log::add_file_log
+	(
+		boost::log::keywords::file_name = options.log_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
+		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
+	);
+	boost::log::add_console_log
+	(
+		std::cout,
+		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
+	);
 }

@@ -1,6 +1,7 @@
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 
 SizedHwordRegister::SizedHwordRegister(const uhword initial_value, const bool read_only) :
+	h(initial_value),
 	initial_value(initial_value),
 	read_only(read_only)
 {
@@ -41,9 +42,4 @@ void SizedHwordRegister::write_uhword(const uhword value)
 {
 	if (!read_only)
 		h = value;
-}
-
-usize SizedHwordRegister::byte_bus_map_size() const
-{
-	return static_cast<usize>(NUMBER_BYTES_IN_HWORD);
 }

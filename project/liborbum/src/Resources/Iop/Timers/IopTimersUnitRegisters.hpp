@@ -13,7 +13,7 @@ using ControllerEventType = ControllerEvent::Type;
 class IopTimersUnitRegister_Count : public SizedWordRegister
 {
 public:
-	IopTimersUnitRegister_Count(const int timer_id);
+	IopTimersUnitRegister_Count(const bool b32_mode);
 
 	/// Increments the timer by the amount specified (controlling prescalling when required).
 	/// Updates the overflow status. If it overflows, the flag is set.
@@ -26,14 +26,14 @@ public:
 	void reset_prescale(const int prescale_target);
 
 private:
+	/// 32 or 16-bit increment mode selector.
+	bool is_using_32b_mode;
+
 	/// 16-bit increment.
 	void increment_16(const uhword value);
 	
 	/// 32-bit increment.
 	void increment_32(const uword value);
-
-	/// Timer ID.
-	int timer_id;
 
 	/// Internal overflow flag. Use/see is_overflowed_and_reset().
 	bool is_overflowed;
@@ -68,32 +68,25 @@ public:
 	static constexpr Bitfield REACH_OF      = Bitfield(12, 1);
 	static constexpr Bitfield PRESCALE1     = Bitfield(13, 2);
 
-	IopTimersUnitRegister_Mode(const int timer_id);
+	IopTimersUnitRegister_Mode();
 
 	/// When written to, caches timer event source and enabled status (looks at IRQ conditions).
 	/// Also resets the count register on write. Scope locked for the entire duration.
 	void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
 	void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
 
+	/// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
+	bool write_latch;
+	
 	/// Holds the cached result of if the timer is enabled, based on the interrupt bits set.
 	/// Used as a way to increase performance by skipping over useless timers.
 	bool is_enabled;
 
+	/// Calculates unit parameters including:
+	/// - Internally sets the event source this timer follows.
+	/// - Returns the prescale that should be set on the count register.
+	uword calculate_prescale_and_set_event(const int unit_id);
+	
 	/// Holds the cached result of which event type this timer is following.
 	ControllerEventType event_type;
-
-	/// Bus write latch. Signifies that the timer unit should be reset (ie: count).
-	bool write_latch;
-
-	/// Contains the calculated prescale to apply to the count register upon resetting (through bus write).
-	/// The prescale should be applied to the count register by the controller.
-	uword count_reset_prescale_target;
-
-private:
-	/// Updates which event type this timer follows, triggered on a bus write.
-	/// Also calculates the prescale the count register should use.
-	void handle_event_type_update();
-
-	/// Timer ID.
-	int timer_id;
 };

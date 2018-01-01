@@ -49,3 +49,18 @@ void QwordRegister::byte_bus_write_uqword(const BusContext context, const usize 
 {
 	write_uqword(value);
 }
+
+f32 QwordRegister::read_float(const size_t offset)
+{
+	return static_cast<f32>(read_uword(offset));
+}
+
+void QwordRegister::write_float(const size_t offset, const f32 value)
+{
+	write_uword(offset, static_cast<uword>(value));
+}
+
+usize QwordRegister::byte_bus_map_size() const
+{
+	return static_cast<usize>(NUMBER_BYTES_IN_QWORD);
+}

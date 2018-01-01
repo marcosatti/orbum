@@ -1,10 +1,9 @@
 #pragma once
 
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 #include "Resources/Iop/Dmac/IopDmacChannelRegisters.hpp"
-
-class SpscFifoQueue;
 
 /// DMAC channel abstraction type.
 class IopDmacChannel
@@ -21,7 +20,7 @@ public:
 	}
 
 	int * channel_id;
-	SpscFifoQueue * dma_fifo_queue;
+	DmaFifoQueue<> * dma_fifo_queue;
 	SizedWordRegister * madr;
 	IopDmacChannelRegister_Bcr * bcr;
 	IopDmacChannelRegister_Chcr * chcr;

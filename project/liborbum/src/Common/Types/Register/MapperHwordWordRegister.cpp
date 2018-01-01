@@ -35,8 +35,3 @@ void MapperHwordWordRegister::write_uword(const uword value)
 {
 	hword_register->write_uhword(static_cast<uhword>(value));
 }
-
-usize MapperHwordWordRegister::byte_bus_map_size() const
-{
-	return static_cast<usize>(NUMBER_BYTES_IN_WORD);
-}

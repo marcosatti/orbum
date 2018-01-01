@@ -1,38 +1,20 @@
 #include "Common/Types/FifoQueue/FifoQueue.hpp"
 
-bool FifoQueue::read(ubyte* buffer, const size_t length)
+void FifoQueue::read(ubyte* buffer, const size_t length)
 {
-	if (read_available() < length)
-		return false;
-
 	for (size_t i = 0; i < length; i++)
-	{
-		if (!read_ubyte(buffer[i]))
-			throw std::runtime_error("FifoQueue::read() failed while in loop. Please debug.");
-	}
-
-	return true;
+		buffer[i] = read_ubyte();
 }
 
-bool FifoQueue::write(const ubyte* buffer, const size_t length)
+void FifoQueue::write(const ubyte* buffer, const size_t length)
 {
-	if (write_available() < length)
-		return false;
-
 	for (size_t i = 0; i < length; i++)
-	{
-		if (!write_ubyte(buffer[i]))
-			throw std::runtime_error("FifoQueue::read() failed while in loop. Please debug.");
-	}
-
-	return true;
+		write_ubyte(buffer[i]);
 }
 
 ubyte FifoQueue::byte_bus_read_ubyte(const BusContext context, const usize offset)
 {
-	ubyte value;
-	read_ubyte(value);
-	return value;
+	return read_ubyte();
 }
 
 void FifoQueue::byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value)
@@ -86,4 +68,19 @@ uqword FifoQueue::byte_bus_read_uqword(const BusContext context, const usize off
 void FifoQueue::byte_bus_write_uqword(const BusContext context, const usize offset, const uqword value)
 {
 	write(reinterpret_cast<const ubyte*>(&value), NUMBER_BYTES_IN_QWORD);
+}
+
+bool FifoQueue::is_empty() const
+{
+	return !has_read_available(1);
+}
+
+bool FifoQueue::is_full() const
+{
+	return !has_write_available(1);
+}
+
+usize FifoQueue::byte_bus_map_size() const
+{
+	return static_cast<usize>(1);
 }

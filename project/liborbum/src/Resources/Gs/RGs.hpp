@@ -14,9 +14,7 @@ public:
 	/// (P)CRTC resources.
 	RCrtc crtc;
 
-	/*
-	GS privileged registers, defined on page 26 onwards of the EE Users Manual. All start from PS2 physical address 0x12000000 to 0x14000000.
-	*/
+	/// GS privileged registers, defined on page 26 onwards of the EE Users Manual. All start from PS2 physical address 0x12000000 to 0x14000000.
 	// 0x12000000.
 	SizedDwordRegister pmode;
 	SizedDwordRegister smode1;

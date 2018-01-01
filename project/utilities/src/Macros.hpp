@@ -16,3 +16,12 @@
 #else
  #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 #endif
+
+/// Export/import macros.
+#if defined(ENV_WINDOWS)
+#define SHARED_EXPORT __declspec(dllexport)
+#define SHARED_IMPORT __declspec(dllimport)
+#else
+#define SHARED_EXPORT 
+#define SHARED_IMPORT
+#endif

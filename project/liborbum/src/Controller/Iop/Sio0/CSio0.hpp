@@ -1,35 +1,17 @@
 #pragma once
 
-#include "VM/Types/VMSystem_t.h"
+#include "Controller/CController.hpp"
 
-class SIO0_t;
-class RIopIntc;
-
-/*
-SIO0 system logic.
-TODO: Fill in.
-*/
-class SIO0_s : public VMSystem_t
+class CSio0 : public CController
 {
 public:
-	SIO0_s(VM * vm);
-	virtual ~SIO0_s() = default;
+	CSio0(Core * core);
 
-	/*
-	Initialisation.
-	*/
-	void initialise() override;
-
-	/*
-	Steps through the SIO0 state, performing the following tasks:
-	*/
-	int step(const Event_t & event) override;
-
-	/*
-	Context resources needed.
-	*/
-	SIO0_t mSIO0;
-	RIopIntc mINTC;
-
+	void handle_event(const ControllerEvent & event) const override;
+	
+	/// Converts a time duration into the number of ticks that would have occurred.
+	int time_to_ticks(const double time_us) const;
+	
+	int time_step(const int ticks_available) const;
 };
 

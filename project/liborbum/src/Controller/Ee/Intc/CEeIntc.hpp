@@ -1,36 +1,24 @@
 #pragma once
 
-#include "VM/Types/VMSystem_t.h"
+#include "Controller/CController.hpp"
 
-class EeCoreCop0;
-class REeIntc;
+class Core;
 
-/*
-Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any interrupts to send to the EE Core to process.
-Note that the maximum time resolution that this can run at is limited to BUSCLK - the reason for this being that all interrupt sources runat BUSCLK or less. 
-Therefore it should be included with the BUSCLK events in the main emulation loop.
-*/
-class EEIntc_s : public VMSystem_t
+/// Checks the I_STAT register for any pending interrupts. If there are, AND's it with the I_MASK register and checks for any interrupts to send to the EE Core to process.
+/// Note that the maximum time resolution that this can run at is limited to BUSCLK - the reason for this being that all interrupt sources runat BUSCLK or less. 
+/// Therefore it should be included with the BUSCLK events in the main emulation loop.
+class CEeIntc : public CController
 {
 public:
-	EEIntc_s(VM * vm);
-	virtual ~EEIntc_s() = default;
+	CEeIntc(Core * core);
 
-	/*
-	Initialisation.
-	*/
-	void initialise() override;
+	void handle_event(const ControllerEvent & event) const override;
 
-	/*
-	Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.
-	See EE Core Users Manual page 73-75 for the EE Core details. Note that on page 75, there is a typo, where the INTx lines are mixed up on bits 10 and 11 (verified through running through bios code).
-	*/
-	int step(const Event_t & event) override;
-
-	/*
-	Context resources needed.
-	*/
-	EeCoreCop0 mEECOP0;
-	REeIntc mINTC;
+	/// Converts a time duration into the number of ticks that would have occurred.
+	int time_to_ticks(const double time_us) const;
+	
+	/// Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.
+	/// See EE Core Users Manual page 73-75 for the EE Core details. Note that on page 75, there is a typo, where the INTx lines are mixed up on bits 10 and 11 (verified through running through bios code).
+	int time_step(const int ticks_available) const;	
 };
 

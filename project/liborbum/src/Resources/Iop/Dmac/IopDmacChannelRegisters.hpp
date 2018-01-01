@@ -3,6 +3,8 @@
 #include "Common/Types/ScopeLock.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
+#include "Resources/Iop/Dmac/IopDmatag.hpp"
+
 class SbusRegister_F240;
 
 /// The IOP DMAC D_CHCR register.
@@ -43,10 +45,10 @@ public:
 	IopDmacChannelRegister_Chcr();
 
 	/// Returns the channel runtime logical mode its operating in.
-	LogicalMode logical_mode();
+	LogicalMode get_logical_mode();
 
 	/// Gets the runtime direction. Useful for channels where it can be either way.
-	Direction direction();
+	Direction get_direction();
 	
 	/// Resets the flags below when START = 1 is written.
 	void write_uword(const uword value) override;
@@ -59,13 +61,8 @@ public:
 	/// Reset to false upon writing to this register.
 	bool dma_started;
 
-	// Tag exit flag. Within DMAC logic, set to true when an exit tag is encountered, and use to check whether to exit from a DMA transfer.
-	// Reset to false upon writing to this register.
-	bool tag_exit;
-
-	// Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. 
-	// Reset to false upon writing to this register.
-	bool tag_irq;
+	// DMA tag holding area, set by the DMAC when a tag is read.
+	IopDmatag dma_tag;
 };
 
 /// The IOP DMAC D_BCR register.
@@ -86,8 +83,8 @@ public:
 	void calculate(const bool use_blocks);
 
 	// Transfer size.
+	// The total length after calling calculate() is stored here.
 	// The register value is not meant to change during the transfer.
-	// Instead, the total length after calling calculate() is stored here.
 	// This is directly accessible to the IOP DMAC which manipulates this value.
 	size_t transfer_length;
 };

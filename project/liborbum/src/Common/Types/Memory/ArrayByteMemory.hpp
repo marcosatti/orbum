@@ -4,35 +4,25 @@
 
 #include "Common/Types/Memory/ByteMemory.hpp"
 
-/*
-Array backed byte-addressed memory.
-Can be optionally initialised with a byte value, copied across the whole array.
-*/
+/// Array backed byte-addressed memory.
+/// Can be optionally initialised with a byte value, copied across the whole array.
 class ArrayByteMemory : public ByteMemory
 {
 public:
 	ArrayByteMemory(const size_t size, const ubyte initial_value = 0, const bool read_only = false);
 
-	/*
-	Initialise memory.
-	*/
+	/// Initialise memory.
 	void initialise() override;
 
-	/*
-	Read in a raw file to the memory (byte copy).
-	For VM use only! Do not use within the system logic.
-	*/
-	void read_from_file(const char * file_path, const size_t file_length);
+	/// Read in a raw file to the memory (byte copy).
+	/// For Core use only! Do not use within the controller logic.
+	void read_from_file(const std::string & path, const size_t file_length);
 
-	/*
-	Dumps the memory contents to a file.
-	For VM use only! Do not use within the system logic.
-	*/
-	void write_to_file(const char * file_path);
+	/// Dumps the memory contents to a file.
+	/// For Core use only! Do not use within the controller logic.
+	void write_to_file(const std::string & path);
 
-	/*
-	Read or write a value of a given type, to the specified byte index (offset).
-	*/
+	/// Read or write a value of a given type, to the specified byte index (offset).
 	ubyte read_ubyte(const size_t offset) override;
 	void write_ubyte(const size_t offset, const ubyte value) override;
 	uhword read_uhword(const size_t offset) override;
@@ -44,31 +34,21 @@ public:
 	uqword read_uqword(const size_t offset) override;
 	void write_uqword(const size_t offset, const uqword value) override;
 
-	/*
-	ByteBusMappable overrides.
-	*/
+	/// ByteBusMappable overrides.
 	usize byte_bus_map_size() const override;
 
 private:
-	/*
-	Total size of the byte memory.
-	*/
+	/// Total size of the byte memory.
 	size_t size;
 
-	/*
-	Array backend for the byte memory.
-	*/
+	/// Array backend for the byte memory.
 	std::vector<ubyte> memory;
 
-	/*
-	Initial value.
-	*/
+	/// Initial value.
 	ubyte initial_value;
 
-	/*
-	Read-only flag.
-	Writes are silently discarded if turned on.
-	*/
+	/// Read-only flag.
+	/// Writes are silently discarded if turned on.
 	bool read_only;
 };
 

@@ -1,125 +1,106 @@
 #pragma once
 
-#include <memory>
-#include <thread>
-#include <vector>
 #include <utility>
+#include <memory>
+#include <functional>
+#include <vector>
+#include <boost/log/sources/logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/lockfree/queue.hpp>
+#include <Macros.hpp>
+#include <EnumMap.hpp>
+#include <Queues.hpp>
+#include <TaskExecutor.hpp>
 
-#include "VM/Types/VMOptions.h"
+#include "Controller/ControllerEvent.hpp"
+#include "Controller/ControllerType.hpp"
 
-class ThreadedRunnable_t;
-class VMSystem_t;
-class EECoreInterpreter_s;
-class EEDmac_s;
-class EETimers_s;
-class EEIntc_s;
-class VIF_s;
-class VUInterpreter_s;
-class IOPCoreInterpreter_s;
-class IOPDmac_s;
-class IOPTimers_s;
-class IOPIntc_s;
-class CDVD_s;
-class SPU2_s;
-class GSCore_s;
-class CRTC_s;
-class SIO0_s;
-class SIO2_s;
-class RResources;
+struct RResources;
+class CController;
 
-/*
-Entry point into all PCSX2 core emulation.
-This is the VM manager for the PS2's execution. All user interface & host OS functionality will eventually come through here.
-*/
-class VM
+/// Core runtime options.
+struct SHARED_EXPORT CoreOptions
+{
+	/// Contstructs default core options.
+	/// See inside for details.
+	static CoreOptions make_default();
+
+	// Notes: 
+    // For single-threaded operation, set number_workers to 1.
+    // us = microseconds.
+	// Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
+
+	/* Log dir path.             */ std::string log_dir_path;
+	/* Roms dir path.            */ std::string roms_dir_path;
+	/* Boot ROM file name.       */ std::string boot_rom_file_name;
+	/* ROM1 file name.           */ std::string rom1_file_name;
+	/* ROM2 file name.           */ std::string rom2_file_name;
+	/* EROM file name.           */ std::string erom_file_name;
+
+	/* Time slice per run in us. */ double time_slice_per_run_us;
+
+    /* Number of worker threads .*/ size_t number_workers;
+
+	/* System speed biases.      */ EnumMap<ControllerType::Type, double> system_biases;
+};
+
+/// Entry point into all Orbum core emulation.
+/// This is the manager for the PS2's execution. 
+/// Execution occurs in synchronised blocks - the core waits until all events
+/// are processed by the controllers before dispatching any new ones.
+class SHARED_EXPORT Core
 {
 public:
-	enum VMStatus
-	{
-		Running,
-		Paused,
-		Stopped
-	};
+	Core(const CoreOptions & options);
+	~Core();
 
-	/*
-	Constructs the VM. A reset is not performed; it must be called explicitly to run.
-	*/
-	explicit VM(const VMOptions & vmOptions);
+	/// Returns a reference to the logging functionality.
+	static boost::log::sources::logger_mt & get_logger();
 
-	/*
-	Deconstructs the VM through a call to stop().
-	*/
-	~VM();
-	
-	/*
-	Resets the VM by setting up logging, resources and system threads.
-	After a reset, the VM state is set to paused and is ready to run.
-	The parameter loadBIOS controls automatically loading the BIOS into memory; call loadBIOS() explicitly otherwise;
-	*/
-	void reset(const bool loadBIOS);
-	void reset(const bool loadBIOS, const VMOptions & options);
+	/// Returns the runtime core options.
+	const CoreOptions & get_options() const;
 
-	/*
-	Loads the various bios' into memory, from the VM option given in reset().
-	*/
-	void resetBIOS();
-
-	/*
-	Runs through one time step (set in the VM options), and then pauses the VM state.
-	If a call to run is made while the VM state is in the stopped state, a runtime_error will be thrown.
-	*/
+	/// Runs the core and updates the state.
+	/// This is the main loop function.
 	void run();
 
-	/*
-	Stops the VM by deconstructing the logging, resources and system threads.
-	After calling stop, the VM state will need to be reset again before calling run.
-	*/
-	void stop();
+	/// Returns the task executor.
+	TaskExecutor & get_task_executor() const;
 
-	/*
-	Returns the VM state.
-	*/
-	VMStatus getStatus() const;
+	/// Returns a reference to the PS2 resources.
+	RResources & get_resources() const;
 
-	/*
-	Returns a reference to the PS2 resources.
-	*/
-	const RResources & getResources() const;
+	/// Enqueues a controller event that is dispatched on the next synchronised run.
+	void enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event);
 
-	/*
-	PS2 system logic engines.
-	*/
-	EECoreInterpreter_s mSystemEECore;
-	EEDmac_s mSystemEEDmac;
-	EETimers_s mSystemEETimers;
-	EEIntc_s mSystemEEIntc;
-	VIF_s mSystemVIF0;
-	VIF_s mSystemVIF1;
-	VUInterpreter_s mSystemVU0;
-	VUInterpreter_s mSystemVU1;
-	IOPCoreInterpreter_s mSystemIOPCore;
-	IOPDmac_s mSystemIOPDmac;
-	IOPTimers_s mSystemIOPTimers;
-	IOPIntc_s mSystemIOPIntc;
-	CDVD_s mSystemCDVD;
-	SPU2_s mSystemSPU2;
-	GSCore_s mSystemGSCore;
-	CRTC_s mSystemCRTC;
-	SIO0_s mSystemSIO0;
-	SIO2_s mSystemSIO2;
-	std::vector<VMSystem_t> mSystems;
+	/// Dumps all memory objects to the ./dumps folder.
+	void dump_all_memory() const;
 
-    /*
-    Multi-threaded resources.
-    */
-    std::vector<ThreadedRunnable_t> mSystemThreads;
+private:	
+	/// Initialises logging using options.
+	void init_logging();
 
-private:
-	/*
-	VM state resources.
-	*/
-	VMOptions mVMOptions;
-	VMStatus mStatus;
-	RResources mResources;
+	/// Logging source.
+	static boost::log::sources::logger_mt logger;
+
+	/// Core options.
+	CoreOptions options;
+
+	/// PS2 Resources.
+	std::unique_ptr<RResources> resources;
+
+	/// Controller Event handling queues.
+	struct EventEntry
+	{ 
+		ControllerType::Type t; 
+		ControllerEvent e;
+	};
+	MpmcQueue<EventEntry, 128> controller_event_queue;
+
+	/// Controllers.
+	EnumMap<ControllerType::Type, std::unique_ptr<CController>> controllers;
+	
+	/// Task executor.
+	std::unique_ptr<TaskExecutor> task_executor;
 };
 

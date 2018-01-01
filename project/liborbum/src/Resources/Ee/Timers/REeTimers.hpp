@@ -10,12 +10,12 @@ struct REeTimers
 {
 	REeTimers();
 	
-	EeTimersUnit_Hold timer_0;
-	EeTimersUnit_Hold timer_1;
-	EeTimersUnit_Base timer_2;
-	EeTimersUnit_Base timer_3;
+	EeTimersUnit_Hold unit_0;
+	EeTimersUnit_Hold unit_1;
+	EeTimersUnit_Base unit_2;
+	EeTimersUnit_Base unit_3;
 
 	/// Timer abstractions.
-	// EeTimersUnit * timers[Constants::EE::Timers::NUMBER_TIMERS];
+	EeTimersUnit units[Constants::EE::Timers::NUMBER_TIMERS];
 };
 

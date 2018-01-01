@@ -15,7 +15,6 @@ REeDmac::REeDmac() :
 	channel_sif2(7),
 	channel_fromspr(8),
 	channel_tospr(9),
-	channels{nullptr},
 	memory_8060(0xFA0, 0, true),
 	memory_9060(0xFA0, 0, true),
 	memory_a060(0xFA0, 0, true),

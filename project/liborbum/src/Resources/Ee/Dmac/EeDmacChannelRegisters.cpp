@@ -8,12 +8,12 @@ EeDmacChannelRegister_Chcr::EeDmacChannelRegister_Chcr() :
 {
 }
 
-EeDmacChannelRegister_Chcr::LogicalMode EeDmacChannelRegister_Chcr::logical_mode()
+EeDmacChannelRegister_Chcr::LogicalMode EeDmacChannelRegister_Chcr::get_logical_mode()
 {
 	return static_cast<LogicalMode>(extract_field(MOD));
 }
 
-EeDmacChannelRegister_Chcr::Direction EeDmacChannelRegister_Chcr::direction()
+EeDmacChannelRegister_Chcr::Direction EeDmacChannelRegister_Chcr::get_direction()
 {
 	return static_cast<Direction>(extract_field(DIR));
 }
@@ -33,6 +33,7 @@ void EeDmacChannelRegister_Chcr::write_uword(const uword value)
 		tag_exit = false;
 		tag_stall = false;
 		tag_irq = false;
+		dma_tag = EeDmatag();
 	}
 }
 
@@ -53,7 +54,6 @@ void EeDmacChannelRegister_Chcr_From::write_uword(const uword value)
 }
 
 EeDmacChannelRegister_Chcr_Sif0::EeDmacChannelRegister_Chcr_Sif0() :
-	EeDmacChannelRegister_Chcr_From(),
 	sbus_f240(nullptr)
 {
 }
@@ -63,7 +63,7 @@ void EeDmacChannelRegister_Chcr_Sif0::write_uword(const uword value)
 	EeDmacChannelRegister_Chcr_From::write_uword(value);
 
 	auto start = extract_field(STR);
-	auto direction = this->direction();
+	auto direction = get_direction();
 
 	// Trigger SBUS update.
 	if (start == 0 && direction == Direction::FROM)
@@ -78,7 +78,6 @@ void EeDmacChannelRegister_Chcr_Sif0::handle_sbus_update_finish() const
 }
 
 EeDmacChannelRegister_Chcr_Sif1::EeDmacChannelRegister_Chcr_Sif1() :
-	EeDmacChannelRegister_Chcr_To(),
 	sbus_f240(nullptr)
 {
 }
@@ -88,7 +87,7 @@ void EeDmacChannelRegister_Chcr_Sif1::write_uword(const uword value)
 	EeDmacChannelRegister_Chcr_To::write_uword(value);
 
 	auto start = extract_field(STR);
-	auto direction = this->direction();
+	auto direction = get_direction();
 
 	// Trigger SBUS update.
 	if (start > 0 && direction == Direction::TO)
@@ -102,7 +101,6 @@ void EeDmacChannelRegister_Chcr_Sif1::handle_sbus_update_start() const
 }
 
 EeDmacChannelRegister_Chcr_Sif2::EeDmacChannelRegister_Chcr_Sif2() :
-	EeDmacChannelRegister_Chcr(),
 	sbus_f240(nullptr)
 {
 }
@@ -112,7 +110,7 @@ void EeDmacChannelRegister_Chcr_Sif2::write_uword(const uword value)
 	EeDmacChannelRegister_Chcr::write_uword(value);
 	
 	auto str = extract_field(STR);
-	auto direction = this->direction();
+	auto direction = get_direction();
 
 	// Trigger SBUS update.
 	if (str > 0 && direction == Direction::TO)

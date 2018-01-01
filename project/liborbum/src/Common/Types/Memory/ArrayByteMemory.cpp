@@ -15,15 +15,19 @@ void ArrayByteMemory::initialise()
 	std::vector<ubyte>(size, initial_value).swap(memory);
 }
 
-void ArrayByteMemory::read_from_file(const char * file_path, const size_t file_length)
+void ArrayByteMemory::read_from_file(const std::string & path, const size_t file_length)
 {
-	std::ifstream file(file_path, std::ios_base::binary);
+	std::ifstream file(path, std::ios_base::binary);
+	if (!file)
+		throw std::runtime_error("Unable to read file");
 	file.read(reinterpret_cast<char*>(&memory[0]), file_length);
 }
 
-void ArrayByteMemory::write_to_file(const char * file_path)
+void ArrayByteMemory::write_to_file(const std::string & path)
 {
-	std::ofstream file(file_path, std::ios_base::binary);
+	std::ofstream file(path, std::ios_base::binary);
+	if (!file)
+		throw std::runtime_error("Unable to write file");
 	file.write(reinterpret_cast<char*>(&memory[0]), size);
 }
 

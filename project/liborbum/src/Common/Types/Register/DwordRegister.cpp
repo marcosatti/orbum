@@ -54,3 +54,8 @@ void DwordRegister::offset(const sdword value)
 {
 	write_udword(read_udword() + value);
 }
+
+usize DwordRegister::byte_bus_map_size() const
+{
+	return static_cast<usize>(NUMBER_BYTES_IN_DWORD);
+}

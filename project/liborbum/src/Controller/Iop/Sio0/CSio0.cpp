@@ -1,26 +1,51 @@
+#include "Core.hpp"
 
-
-#include "VM/VM.h"
-#include "VM/Systems/IOP/SIO0/SIO0_s.h"
+#include "Controller/Iop/Sio0/CSio0.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/IOP/IOP_t.h"
-#include "Resources/Iop/Intc/RIopIntc.hpp"
-#include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "Resources/IOP/SIO0/SIO0_t.h"
 
-SIO0_s::SIO0_s(VM * vm) : 
-	VMSystem_t(vm, Context_t::SIO0)
-{
-	mSIO0 = getVM()->getResources()->IOP->SIO0;
-	mINTC = getVM()->getResources()->IOP->INTC;
-}
-
-void SIO0_s::initialise()
+CSio0::CSio0(Core * core) : 
+	CController(core)
 {
 }
 
-int SIO0_s::step(const Event_t & event)
+void CSio0::handle_event(const ControllerEvent & event) const
 {
-	return event.mQuantity;
+	switch (event.type)
+	{
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CSio0 event handler not implemented - please fix!");
+	}
+	}
+}
+
+int CSio0::time_to_ticks(const double time_us) const
+{
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::SIO0::SIO0_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Sio0]);
+	
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "Sio0 ticks too low - increase time delta";
+			warned = true;
+		}
+	}
+
+	return ticks;
+}
+
+int CSio0::time_step(const int ticks_available) const
+{
+	// Not yet implemented.
+	return ticks_available;
 }

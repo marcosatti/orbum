@@ -2,39 +2,33 @@
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Common/Types/MIPS/BranchDelaySlot.hpp"
 
-/*
-The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
-It uses a little-endian configuration (bit 0 is always the LSB).
-
-There is no official documentation from Sony on any of the IOP - implementation is based off PCSX2's code, and other documents available online.
-There are many user-submitted documents about the PSX architecture, which has been used to aid implementation.
-*/
+/// The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
+/// It uses a little-endian configuration.
+/// There is no official documentation from Sony on any of the IOP - implementation is based off PCSX2's code, and other documents available online.
+/// There are many user-submitted documents about the PSX architecture, which has been used to aid implementation.
 class IopCoreR3000
 {
 public:
 	IopCoreR3000();
 
-	/*
-	The 32-bit Program Counter (PC) register.
-	Points to the current instruction virtual address.
-	Must be initialised before LinkRegister and BD below due to dependency.
-	*/
+	/// The 32-bit Program Counter (PC) register.
+	/// Points to the current instruction virtual address.
 	SizedWordRegister pc;
 
-	/*
-	The 32 general purpose registers. They are each 32-bits long.
-	GPR[0] is hardwired to 0.
-	*/
+	/// Branch delay slot holding area.
+	BranchDelaySlot<> bdelay;
+
+	/// The 32 general purpose registers. They are each 32-bits long.
+	/// GPR[0] is hardwired to 0.
 	SizedWordRegister zero_register;
 	SizedWordRegister gpr_base[Constants::IOP::IOPCore::R3000::NUMBER_GP_REGISTERS - 1];
 	SizedWordRegister * gpr[Constants::IOP::IOPCore::R3000::NUMBER_GP_REGISTERS];
 
-	/*
-	The HI and LO registers.
-	These registers are used to hold the results of integer multiply and divide operations.
-	They are 32-bit long.
-	*/
+	/// The HI and LO registers.
+	/// These registers are used to hold the results of integer multiply and divide operations.
+	/// They are 32-bit long.
 	SizedWordRegister hi;
 	SizedWordRegister lo;
 };

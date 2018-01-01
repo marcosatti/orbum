@@ -1,16 +1,22 @@
 cmake_minimum_required(VERSION 3.1)
 
 #if(APPLE and not TARGET_IOS)
-#	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" cache string "Minimum OS X deployment version.")
+#	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" cache string "Minimum OS X deployment version")
 #endif()
 
 project(orbum CXX)
 
+find_package(Threads)
+
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/bin" CACHE PATH "Default install path" FORCE )
+endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 set(BUILD_SHARED_LIBS on)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
 add_subdirectory(external)
 add_subdirectory(project)
-
-if(MSVC)
-    add_compile_options("/MP")
-endif()

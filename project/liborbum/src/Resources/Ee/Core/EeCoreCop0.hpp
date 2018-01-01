@@ -6,33 +6,21 @@
 
 #include "Resources/Ee/Core/EeCoreCop0Registers.hpp"
 
-/*
-COP0 refers to the system control coprocessor (used for manipulating the memory management and exception handling facilities of the processor, etc).
-See EE Core Users Manual page 62 onwards.
-*/
+/// COP0 refers to the system control coprocessor (used for manipulating the memory management and exception handling facilities of the processor, etc).
+/// See EE Core Users Manual page 62 onwards.
 class EeCoreCop0 : public MipsCoprocessor0
 {
 public:
 	EeCoreCop0();
 
-	/*
-	Checks if the EECore COP0 coprocessor is usable. 
-	Can be used by the component calling this to raise a EECoreException_t(coprocessor unusable) if not available.
-	*/
+	/// Checks if the EECore COP0 coprocessor is usable. 
+	/// Can be used by the component calling this to raise a EeCoreException(coprocessor unusable) if not available.
 	bool is_usable() override;
 
-	/*
-	Determine the CPU context. Uses the Status register.
-	*/
+	/// Determine the CPU context. Uses the Status register.
 	MipsCoprocessor0::OperatingContext operating_context() override;
 
-	/*
-	EECore COP0 register implementations. Follows EE Core Users Manual.
-	Note: Registers r24 and r25 have been split up into 7 and 3 registers respectively as per the docs, 
-	       as it is not feasible to implement them as sub-registers.
-	The new registers have been assigned register numbers from 32 -> 39 (for PCSX2 reference).
-	*/
-	// General registers.
+	/// COP0 General registers.
 	EeCoreCop0Register_Index    index;	    // r0:  Index that specifies TLB entry for reading for writing.
 	EeCoreCop0Register_Random	random;	    // r1:  Pseudo-random index for TLB replacement.
 	EeCoreCop0Register_EntryLo0 entrylo0;   // r2:  Low half of TLB entry (for even PFN).
@@ -66,7 +54,7 @@ public:
 	SizedWordRegister           errorepc;   // r30: Error Exception Program Counter.
 	SizedWordRegister			reserved31; // r31: Reserved.
 
-	// Debug registers.
+	/// Debug registers.
 	EeCoreCop0Register_Bpc bpc;  // r24: Registers related to debug function.
 	SizedWordRegister      iab;  // r32: Instruction address breakpoint settings.
 	SizedWordRegister      iabm; // r33: Instruction address breakpoint settings.
@@ -75,15 +63,15 @@ public:
 	SizedWordRegister      dvb;	 // r36: Data value breakpoint settings.
 	SizedWordRegister      dvbm; // r37: Data value breakpoint settings.
 
-	// Performance registers.
+	/// Performance registers.
 	EeCoreCop0Register_Pccr pccr; // r25: Performance counter and control register.
 	EeCoreCop0Register_Pcr0	pcr0; // r38: Performance counter.
 	EeCoreCop0Register_Pcr1	pcr1; // r39: Performance counter.
 
-	// Array of above registers (needed by some EECore instructions to access by index). 
-	// Generally you will never access registers directly through this, only the PS2 OS will.
+	/// Array of above registers (needed by some EECore instructions to access by index). 
+	/// Generally you will never access registers directly through this, only the PS2 OS will.
 	SizedWordRegister * registers[Constants::EE::EECore::COP0::NUMBER_REGISTERS];
 
-	// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
+	/// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
 	SizedWordRegister * pcr_registers[Constants::EE::EECore::COP0::NUMBER_PCR_REGISTERS];
 };

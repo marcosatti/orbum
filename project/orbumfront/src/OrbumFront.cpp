@@ -1,103 +1,47 @@
-//#include <iostream>
-//#include <fstream>
-//#include <mutex>
-//
-//#include "Common/Global/Log.h"
-//#include "VM/VM.h"
-//#include "VM/Types/VMOptions.h"
-//#include "Common/Types/Memory/ArrayByteMemory.hpp"
-//#include "Common/Types/Memory/HwordMemory_t.h"
-//#include "Resources/RResources.hpp"
-//#include "Resources/Ee/REe.hpp"
-//#include "Resources/IOP/IOP_t.h"
-//#include "Resources/SPU2/SPU2_t.h"
-//#include "Resources/CDVD/CDVD_t.h"
-//#include "Resources/CDVD/Types/CDVDNvrams_t.h"
-//
-//std::ofstream logFile;
-//volatile bool DEBUG_RUN = true;
-//
-//void log(const LogLevel_t level, const std::string & message)
-//{
-//	std::string prefix;
-//	switch (level)
-//	{
-//	case Debug:
-//		prefix = "[Debug] "; break;
-//	case Info:
-//		prefix = "[Info] "; break;
-//	case Warning:
-//		prefix = "[Warning] "; break;
-//	case Fatal:
-//		prefix = "[Fatal] "; break;
-//	}
-//
-//	logFile << prefix << message << std::endl;
-//	std::cout << prefix << message << std::endl;
-//
-//	logFile.flush();
-//	std::cout.flush();
-//}
-//
-//int main(int argc, char * argv[])
-//{
-//	std::string workspace("./workspace/");
-//
-//	if (argc > 1)
-//		workspace = argv[1];
-//
-//    std::cout << "OrbumFront starting, called with arguments:" << std::endl;
-//    for (int i = 0; i < argc; i++)
-//        std::cout << i << ": " << argv[i] << std::endl;
-//    std::cout << "Using workspace directory: " << workspace << std::endl;
-//
-//	logFile.open(workspace + "OrbumFront_Log.txt");
-//
-//	VMOptions vmOptions = 
-//	{
-//		log,
-//		workspace + "scph10000.bin",
-//		"",
-//		"",
-//		"",
-//		10,
-//		VMOptions::ST,
-//		{ }
-//	};
-//
-//	try
-//	{
-//		VM vm(vmOptions);
-//
-//		try 
-//		{
-//			vm.reset(true);
-//			
-//			while (vm.getStatus() == VM::VMStatus::Paused && DEBUG_RUN)
-//				vm.run();
-//		}
-//		catch (const std::runtime_error & ex)
-//		{
-//			log(Fatal, ex.what());
-//		}
-//
-//		vm.getResources()->EE->MainMemory->dump(std::string(workspace + "End_Dump_EE.bin").c_str());
-//		vm.getResources()->IOP->MainMemory->dump(std::string(workspace + "End_Dump_IOP.bin").c_str());
-//		vm.getResources()->SPU2->MainMemory->dump(std::string(workspace + "End_Dump_SPU2.bin").c_str());
-//		vm.getResources()->CDVD->NVRAM->MainMemory->dump(std::string(workspace + "End_Dump_CDVD_NVRAM.bin").c_str());
-//	}
-//	catch (const std::exception & ex)
-//	{
-//		log(Fatal, ex.what());
-//	}       
-//
-//	logFile.close();
-//	
-//    return 0;
-//}
-//
+#include <iostream>
+#include <csignal>
+#include <boost/filesystem.hpp>
+#include <Macros.hpp>
 
-int main()
+#include <Core.hpp>
+
+volatile bool DEBUG_RUN = true;
+
+void signal_handler(int signal)
 {
+	DEBUG_RUN = false;
+}
+
+int main(int argc, char * argv[])
+{
+	std::cout << "Command line: ";
+	for (int i = 0; i < argc; i++)
+		std::cout << argv[i] << ", ";
+	std::cout << std::endl << "Working directory: " << boost::filesystem::initial_path() << std::endl;
+	std::signal(SIGINT, signal_handler);
+	std::signal(SIGBREAK, signal_handler);
+
+	try 
+	{
+		Core core(CoreOptions::make_default());
+
+		try
+		{
+			while (DEBUG_RUN)
+				core.run();
+		}
+		catch (std::runtime_error & e)
+		{
+			std::cout << "Core running fatal error: " << e.what() << std::endl;
+		}
+
+		core.dump_all_memory();
+	}
+	catch (...)
+	{
+		std::cout << "Core init/exit/internal fatal error" << std::endl;
+	}
+
+	std::cout << "Exiting" << std::endl;
 	return 0;
 }

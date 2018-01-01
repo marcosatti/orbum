@@ -6,20 +6,14 @@
 #include "Common/Types/Bus/BusContext.hpp"
 #include "Common/Types/Bus/ByteBusMappable.hpp"
 
-/*
-Byte-addressed memory interface.
-*/
+/// Byte-addressed memory interface.
 class ByteMemory : public ByteBusMappable
 {
 public:
-	/*
-	Initialise memory.
-	*/
+	/// Initialise memory.
 	virtual void initialise() = 0;
 
-	/*
-	Read or write a value of a given type, to the specified byte index (offset).
-	*/
+	/// Read or write a value of a given type, to the specified byte index (offset).
 	virtual ubyte read_ubyte(const size_t offset) = 0;
 	virtual void write_ubyte(const size_t offset, const ubyte value) = 0;
 	virtual uhword read_uhword(const size_t offset) = 0;
@@ -31,21 +25,15 @@ public:
 	virtual uqword read_uqword(const size_t offset) = 0;
 	virtual void write_uqword(const size_t offset, const uqword value) = 0;
 
-	/*
-	Reads bytes to the buffer given.
-	This is a wrapper around the read_ubyte function, and should not be treated as a separate interface (not made virtual).
-	*/
+	/// Reads bytes to the buffer given.
+	/// This is a wrapper around the read_ubyte function, and should not be treated as a separate interface (not made virtual).
 	void read(const size_t offset, ubyte * buffer, const size_t length);
 
-	/*
-	Writes bytes from the buffer given.
-	This is a wrapper around the write_ubyte function, and should not be treated as a separate interface (not made virtual).
-	*/
+	/// Writes bytes from the buffer given.
+	/// This is a wrapper around the write_ubyte function, and should not be treated as a separate interface (not made virtual).
 	void write(const size_t offset, const ubyte * buffer, const size_t length);
 
-	/*
-	ByteBusMappable overrides.
-	*/
+	/// ByteBusMappable overrides.
 	ubyte byte_bus_read_ubyte(const BusContext context, const usize offset) override;
 	void byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value) override;
 	uhword byte_bus_read_uhword(const BusContext context, const usize offset) override;

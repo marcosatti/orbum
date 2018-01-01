@@ -2,22 +2,16 @@
 
 #include "Common/Types/Register/DwordRegister.hpp"
 
-/*
-Dword register.
-*/
+/// Sized Dword register.
 class SizedDwordRegister : public DwordRegister
 {
 public:
 	SizedDwordRegister(const udword initial_value = 0, const bool read_only = false);
 
-	/*
-	Initialise register.
-	*/
+	/// Initialise register.
 	void initialise() override;
 
-	/*
-	Read/write functions to access the register.
-    */
+	/// Read/write functions to access the register.
     ubyte read_ubyte(const size_t offset) override;
 	void write_ubyte(const size_t offset, const ubyte value) override;
 	uhword read_uhword(const size_t offset) override;
@@ -27,15 +21,8 @@ public:
 	udword read_udword() override;
 	void write_udword(const udword value) override;
 
-	/*
-	ByteBusMappable overrides.
-	*/
-	usize byte_bus_map_size() const override;
-
 private:
-	/*
-	Primitive (sized) storage for register.
-	*/
+	/// Primitive (sized) storage for register.
 	union
 	{
         ubyte  b[NUMBER_BYTES_IN_DWORD];
@@ -44,14 +31,10 @@ private:
 		udword d;
 	};
 
-	/*
-	Initial value.
-	*/
+	/// Initial value.
 	udword initial_value;
 	
-	/*
-	Read-only flag.
-	Writes are silently discarded if turned on.
-	*/
+	/// Read-only flag.
+	/// Writes are silently discarded if turned on.
 	bool read_only;
 };

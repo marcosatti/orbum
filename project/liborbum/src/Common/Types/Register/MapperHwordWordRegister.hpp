@@ -17,9 +17,6 @@ public:
 	void write_uhword(const size_t offset, const uhword value) override;
 	uword read_uword() override;
 	void write_uword(const uword value) override;
-	
-	/// ByteBusMappable overrides.
-	usize byte_bus_map_size() const override;
 
 	/// Reference to mapped hword register.
 	HwordRegister * hword_register;

@@ -9,10 +9,9 @@ struct Bitfield
 		start(start),
 		length(length)
 	{
-		// Do compile time checks.
+		// Perform checks.
 		// Note: a zero-length bitfield is ok - in this case all operations
-		// (ie: extraction) will result in a value of 0. This is used within
-		// the Iop ByteBus constructor.
+		// (ie: extract) will result in a value of 0 or (ie: insert) no change.
 		if (start < 0)
 			throw std::logic_error("Start must be >= 0");
 		if (length < 0)

@@ -1,6 +1,7 @@
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 SizedWordRegister::SizedWordRegister(const uword initial_value, const bool read_only) :
+	w(initial_value),
 	initial_value(initial_value),
 	read_only(read_only)
 {
@@ -62,9 +63,4 @@ void SizedWordRegister::write_uword(const uword value)
 {
 	if (!read_only)
 		w = value;
-}
-
-usize SizedWordRegister::byte_bus_map_size() const
-{
-	return static_cast<usize>(NUMBER_BYTES_IN_WORD);
 }

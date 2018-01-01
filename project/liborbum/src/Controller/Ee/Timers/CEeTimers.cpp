@@ -1,192 +1,138 @@
+#include "Core.hpp"
 
-
-#include "VM/VM.h"
-#include "VM/Systems/EE/Timers/EETimers_s.h"
+#include "Controller/EE/Timers/CEeTimers.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Ee/REe.hpp"
-#include "Resources/Ee/Timers/REeTimers.hpp"
-#include "Resources/Ee/Timers/EeTimersUnitRegisters.hpp"
-#include "Resources/EE/Timers/Types/EETimersTimers_t.h"
-#include "Resources/Ee/Intc/REeIntc.hpp"
-#include "Resources/Ee/Intc/EeIntcRegisters.hpp"
-#include "Resources/GS/RGs.h"
 
-EETimers_s::EETimers_s(VM * vm) :
-	VMSystem_t(vm, Context_t::EETimers),
-	mTimer(nullptr)
+CEeTimers::CEeTimers(Core * core) :
+	CController(core)
 {
-	// Set resource pointer variables.
-	mTimers = getVM()->getResources()->EE->Timers;
-	mINTC = getVM()->getResources()->EE->INTC;
-	mGS = getVM()->getResources()->GS;
 }
 
-void EETimers_s::initialise()
+void CEeTimers::handle_event(const ControllerEvent & event) const
 {
-	for (auto& timer : mTimers->TIMERS)
+	switch (event.type)
 	{
-		if (timer->COUNT != nullptr) timer->COUNT->initialise();
-		if (timer->MODE != nullptr) timer->MODE->initialise();
-		if (timer->COMP != nullptr) timer->COMP->initialise();
-		if (timer->HOLD != nullptr) timer->HOLD->initialise();
+	case ControllerEvent::Type::Time:
+	{
+		int ticks = time_to_ticks(event.data.time_us);
+		for (int i = 0; i < ticks; i++)
+			tick_timer(ControllerEvent::Type::Time);
+		break;
+	}
+	case ControllerEvent::Type::HBlank:
+	{
+		for (int i = 0; i < event.data.amount; i++)
+			tick_timer(ControllerEvent::Type::HBlank);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CEeTimers event handler not implemented - please fix!");
+	}
 	}
 }
 
-int EETimers_s::step(const Event_t & event)
+int CEeTimers::time_to_ticks(const double time_us) const
 {
-	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed at the end.
-	bool workDone = false;
-
-	// Update the timers which are set to count based on the type of event recieved.
-	for (auto& timer : mTimers->TIMERS)
+	// TODO: find out for sure.
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeTimers]);
+	
+	if (ticks < 10)
 	{
-		// Set timer resource context.
-		mTimer = timer.get();
-
-		// Count only if enabled.
-		if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::CUE) > 0)
+		static bool warned = false;
+		if (!warned)
 		{
-			// Check if the timer mode is equal to the clock source.
-			if (event.mSource == mTimer->MODE->getEventSource())
-			{
-				// A timer consumed a tick for this clock source - do not skip any ticks.
-				workDone = true;
-
-				// Next check for the gate function. Also check for a special gate condition, for when CLKS == H_BLNK and GATS == HBLNK, 
-				//  in which case count normally.
-				if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::GATE)
-					&& !mTimer->MODE->isGateHBLNKSpecial())
-				{
-					// Check if the timer needs to be reset.
-					handleTimerGateReset();
-
-					// If the timer is using GATM = 0, need to check if the signal is low first.
-					if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::GATM) == 0)
-					{
-						throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
-
-						const ubyte * gateSources[] = { nullptr, nullptr };
-						uword index = mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::GATS);
-						if (!(*gateSources[index]))
-							mTimer->COUNT->increment(, 1);
-					}
-					else
-					{
-						mTimer->COUNT->increment(, 1);
-					}
-				}
-				else
-				{
-					// Count normally without gate.
-					mTimer->COUNT->increment(, 1);
-				}
-
-				// Check for interrupt conditions on the timer.
-				handleTimerInterrupt();
-
-				// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise this may cause interrupt to be missed).
-				handleTimerZRET();
-			}
+			BOOST_LOG(Core::get_logger()) << "EeTimers ticks too low - increase time delta";
+			warned = true;
 		}
 	}
 
-	// Timers has completed 1 cycle.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	if (!workDone)
-		return event.mQuantity;
-	else
-		return 1;
-#else
-	return 1;
-#endif
+	return ticks;
 }
 
-void EETimers_s::handleTimerInterrupt() const
+void CEeTimers::tick_timer(const ControllerEvent::Type ce_type) const
 {
+	auto& r = core->get_resources();
+
+	// Update the timers which are set to count based on the type of event recieved.
+	for (auto& unit : r.ee.timers.units)
+	{
+		auto _lock = unit.mode->scope_lock();
+
+		// Check if we need to perform reset proceedures.
+		if (unit.mode->write_latch)
+		{
+			// Reset the count register.
+			uword prescale = unit.mode->calculate_prescale_and_set_event();
+			unit.count->reset_prescale(prescale);
+
+			unit.mode->write_latch = false;
+		}
+
+		// Count only if enabled.
+		bool unit_enabled = unit.mode->extract_field(EeTimersUnitRegister_Mode::CUE);
+		bool is_same_clk_source = ce_type == unit.mode->event_type;
+		if (!unit_enabled || !is_same_clk_source)
+			continue;
+
+		// Next check for the gate function. Also check for a special gate condition, 
+		// for when CLKS == H_BLNK and GATS == HBLNK, in which case count normally.
+		bool gated_mode = unit.mode->extract_field(EeTimersUnitRegister_Mode::GATE) > 0;
+		if (gated_mode && !unit.mode->is_gate_hblnk_special())
+		{
+			throw std::runtime_error("EE Timers gated mode not fully implemented.");
+		}
+		else
+		{
+			// Count normally without gate.
+			unit.count->increment(1);
+		}
+
+		// Check for interrupt conditions on the timer.
+		handle_timer_interrupt(unit);
+
+		// Check for zero return (ZRET) conditions (perform after interrupt check, otherwise this may cause interrupt to be missed).
+		handle_timer_zret(unit);
+	}
+}
+
+void CEeTimers::handle_timer_interrupt(EeTimersUnit & unit) const
+{
+	auto& r = core->get_resources();
+
 	bool interrupt = false;
 
 	// Check for Compare-Interrupt.
-	if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::CMPE))
+	if (unit.mode->extract_field(EeTimersUnitRegister_Mode::CMPE))
 	{
-		if (mTimer->COUNT->read_uword() == mTimer->COMP->read_uword())
-		{
+		if (unit.count->read_uword() == unit.compare->read_uword())
 			interrupt = true;
-		}
 	}
 
 	// Check for Overflow-Interrupt.
-	if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::OVFE))
+	if (unit.mode->extract_field(EeTimersUnitRegister_Mode::OVFE))
 	{
-		if (mTimer->COUNT->isOverflowed())
-		{
+		if (unit.count->is_overflowed_and_reset())
 			interrupt = true;
-		}
 	}
 
 	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
 	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
-		mINTC->STAT->setFieldValue(, EeIntcRegister_Stat::TIM_KEYS[mTimer->getTimerID()], 1);
+		r.ee.intc.stat.insert_field(EeIntcRegister_Stat::TIM_KEYS[*unit.unit_id], 1);
 }
 
-void EETimers_s::handleTimerZRET() const
+void CEeTimers::handle_timer_zret(EeTimersUnit & unit) const
 {
 	// Check for ZRET condition.
-	if (mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::ZRET))
+	if (unit.mode->extract_field(EeTimersUnitRegister_Mode::ZRET))
 	{
 		// Check for Count >= Compare.
-		if (mTimer->COUNT->read_uword() == mTimer->COMP->read_uword())
+		if (unit.count->read_uword() == unit.compare->read_uword())
 		{
 			// Set Count to 0.
-			mTimer->COUNT->reset();
+			unit.count->write_uword(0);
 		}
-	}
-}
-
-void EETimers_s::handleTimerGateReset() const
-{
-	throw std::runtime_error("EE Timer gate function not fully implemented (dependant on GS). Fix this up when completed.");
-
-	auto GATM = mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::GATM);
-	auto GATS = mTimer->MODE->getFieldValue(, EeTimersUnitRegister_Mode::GATS);
-
-	const ubyte * gateSources[] = { nullptr, nullptr };
-	const ubyte * gateSourcesLast[] = {nullptr, nullptr };
-	auto& gateSource = gateSources[GATS];
-	auto& gateSourceLast = gateSourcesLast[GATS];
-
-	switch (GATM)
-	{
-	case 0:
-	{
-		// Do not need to reset for GATM = 0 according to the docs.
-		break;
-	}
-	case 1:
-	{
-		// Resets and starts counting at the gate signal�s rising edge.
-		if (gateSource && !gateSourceLast)
-			mTimer->COUNT->reset();
-		break;
-	}
-	case 2:
-	{
-		// Resets and starts counting at the gate signal�s falling edge.
-		if (!gateSource && gateSourceLast)
-			mTimer->COUNT->reset();
-		break;
-	}
-	case 3:
-	{
-		// Resets and starts counting at both edges of the gate signal.
-		if ((gateSource && !gateSourceLast) || (!gateSource && gateSourceLast))
-			mTimer->COUNT->reset();
-		break;
-	}
-	default:
-	{
-		throw std::runtime_error("Could not determine timer gate context (GATM). Please fix!");
-	}
 	}
 }

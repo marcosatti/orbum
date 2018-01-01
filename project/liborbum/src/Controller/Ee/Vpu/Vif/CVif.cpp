@@ -1,222 +1,228 @@
-#include "VM/VM.h"
-#include "VM/Systems/EE/VPU/VIF/VIF_s.h"
+#include "Core.hpp"
+#include "Controller/Ee/Vpu/Vif/CVif.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Ee/REe.hpp"
-#include "Resources/EE/VPU/RVpu.h"
-#include "Resources/EE/VPU/VIF/VIF_t.h"
-#include "Resources/Ee/Vpu/VifCores.hpp"
-#include "Resources/EE/VPU/VIF/Types/VIFCoreRegisters_t.h"
 
-VIF_s::VIF_s(VM * vm, const int vifCoreIndex) :
-	VMSystem_t(vm, vifCoreIndex == 0 ? Context_t::VIF0 : Context_t::VIF1),
-	mVIFUnitIndex(vifCoreIndex),
-	mDMAPacket(),
-	mVIFcodeInstruction(0)
+CVif::CVif(Core * core) :
+	CController(core)
 {
 }
 
-void VIF_s::initialise()
+void CVif::handle_event(const ControllerEvent & event) const
 {
-}
-
-int VIF_s::step(const Event_t & event)
-{
-	return event.mQuantity; // not yet completed.
-
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_CORES[mVIFUnitIndex];
-
-	// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
-	if (isVIFStalled())
-		return 1;
-
-	// Check the FIFO queue for incoming DMA packet. Return if there is nothing to process.
-	if (!checkIncomingDMAPacket())
-		return 1;
-
-	// We have an incoming DMA unit of data, now we must split it into 4 x 32-bit and process each one. // TODO: check wih pcsx2's code.
-	for (auto& data : mDMAPacket.UW)
+	switch (event.type)
 	{
-		// Check the NUM register, to determine if we are continuing a VIFcode instruction instead of reading a VIFcode.
-		if (VIF->NUM->getFieldValue(, VifCoreRegister_Num::NUM))
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CVif event handler not implemented - please fix!");
+	}
+	}
+}
+
+int CVif::time_to_ticks(const double time_us) const
+{
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Vif]);
+	
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
 		{
-		
-		}
-		else
-		{
-			// Set the current data as the VIFcode.
-			mVIFcodeInstruction = VifcodeInstruction(data);
-
-			// Process the VIFcode by calling the instruction handler.
-			(this->*INSTRUCTION_TABLE[mVIFcodeInstruction.get_instruction_info()->mImplementationIndex])();
-
-			// If the I bit is set, we need to raise an interrupt after the whole VIF packet has been processed - set a context variable.
-
+			BOOST_LOG(Core::get_logger()) << "Vif ticks too low - increase time delta";
+			warned = true;
 		}
 	}
 
-	// VIF has completed 1 cycle.
+	return ticks;
+}
+
+int CVif::time_step(const int ticks_available) const
+{
+	auto& r = core->get_resources();
+
+	for (auto& unit : r.ee.vpu.vif.units)
+	{
+		// Check if VIF is stalled, do not do anything (FBRST.STC needs to be written to before we continue).
+		if (unit->stat.is_stalled())
+			continue;
+
+		// Check the FIFO queue for incoming DMA packet. Exit early if there is nothing to process.
+		if (!unit->dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_QWORD))
+			continue;
+		uqword packet;
+		unit->dma_fifo_queue->read(reinterpret_cast<ubyte*>(&packet), NUMBER_BYTES_IN_QWORD);
+
+		// We have an incoming DMA unit of data, now we must split it into 4 x 32-bit and process each one. // TODO: check wih pcsx2's code.
+		for (auto& data : packet.uw)
+		{
+			// Check the NUM register, to determine if we are continuing a VIFcode instruction instead of reading a VIFcode.
+			if (unit->num.extract_field(VifUnitRegister_Num::NUM))
+			{
+				
+			}
+			else
+			{
+				// Set the current data as the VIFcode.
+				VifcodeInstruction inst = VifcodeInstruction(data);
+
+				// Process the VIFcode by calling the instruction handler.
+				(this->*INSTRUCTION_TABLE[inst.get_info()->impl_index])(unit, inst);
+
+				// If the I bit is set, we need to raise an interrupt after the whole VIF packet has been processed - set a context variable.
+				// if (instruction.i())
+				//     r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VIF, 1);
+			}
+		}
+	}
+
+	// TODO: different for each unit...
 	return 1;
 }
 
-bool VIF_s::isVIFStalled() const
-{
-	auto& VIF = getVM()->getResources()->EE->VPU->VIF->VIF_CORES[mVIFUnitIndex];
-	auto& STAT = VIF->STAT;
-
-	// If any of the STAT.VSS, VFS, VIS, INT, ER0 or ER1 fields are set to 1, 
-	//  then the VIF has stalled and needs to be reset by writing to FBRST.STC.
-	if (STAT->getFieldValue(, VifCoreRegister_Stat::VSS)
-		|| STAT->getFieldValue(, VifCoreRegister_Stat::VFS)
-		|| STAT->getFieldValue(, VifCoreRegister_Stat::VIS)
-		|| STAT->getFieldValue(, VifCoreRegister_Stat::INT)
-		|| STAT->getFieldValue(, VifCoreRegister_Stat::ER0)
-		|| STAT->getFieldValue(, VifCoreRegister_Stat::ER1))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool VIF_s::checkIncomingDMAPacket()
-{
-	throw std::runtime_error("Not implemented.");
-}
-
-void VIF_s::INSTRUCTION_UNSUPPORTED()
+void CVif::INSTRUCTION_UNSUPPORTED(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 	throw std::runtime_error("VIFcode CMD field was invalid! Please fix.");
 }
 
-void VIF_s::NOP()
+void CVif::NOP(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::STCYCL()
+void CVif::STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::OFFSET()
+void CVif::OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::BASE()
+void CVif::BASE(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::ITOP()
+void CVif::ITOP(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::STMOD()
+void CVif::STMOD(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MSKPATH3()
+void CVif::MSKPATH3(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MARK()
+void CVif::MARK(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::FLUSHE()
+void CVif::FLUSHE(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::FLUSH()
+void CVif::FLUSH(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::FLUSHA()
+void CVif::FLUSHA(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MSCAL()
+void CVif::MSCAL(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MSCNT()
+void CVif::MSCNT(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MSCALF()
+void CVif::MSCALF(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::STMASK()
+void CVif::STMASK(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::STROW()
+void CVif::STROW(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::STCOL()
+void CVif::STCOL(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::MPG()
+void CVif::MPG(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::DIRECT()
+void CVif::DIRECT(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::DIRECTHL()
+void CVif::DIRECTHL(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_S_32()
+void CVif::UNPACK(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_S_16()
+void CVif::UNPACK_S_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_S_8()
+void CVif::UNPACK_S_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V2_32()
+void CVif::UNPACK_S_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V2_16()
+void CVif::UNPACK_V2_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V2_8()
+void CVif::UNPACK_V2_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V3_32()
+void CVif::UNPACK_V2_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V3_16()
+void CVif::UNPACK_V3_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V3_8()
+void CVif::UNPACK_V3_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V4_32()
+void CVif::UNPACK_V3_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V4_16()
+void CVif::UNPACK_V4_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V4_8()
+void CVif::UNPACK_V4_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }
 
-void VIF_s::UNPACK_V4_5()
+void CVif::UNPACK_V4_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
+{
+}
+
+void CVif::UNPACK_V4_5(VifUnit_Base * unit, const VifcodeInstruction inst) const
 {
 }

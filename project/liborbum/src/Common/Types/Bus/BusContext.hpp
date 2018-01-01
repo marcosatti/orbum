@@ -4,5 +4,6 @@
 enum class BusContext
 {
 	Ee,
-	Iop
+	Iop,
+	Vu
 };

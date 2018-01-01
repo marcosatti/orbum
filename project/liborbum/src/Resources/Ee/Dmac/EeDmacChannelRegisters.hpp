@@ -3,6 +3,8 @@
 #include "Common/Types/ScopeLock.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
+#include "Resources/Ee/Dmac/EeDmatag.hpp"
+
 /// The DMAC D_CHCR register, aka channel control register.
 /// Register should be scope locked by the DMAC controller.
 /// TODO: some of the tag variables might be redundant when also considering the TAG bits - look into,
@@ -14,7 +16,7 @@ public:
 	{
 		// Ordered according to CHCR.DIR. Relative to FIFO's perspective.
 		FROM = 0,
-		TO = 1,
+		TO = 1
 	};
 	
 	enum class LogicalMode
@@ -36,10 +38,10 @@ public:
 	EeDmacChannelRegister_Chcr();
 
 	/// Returns the channel runtime logical mode its operating in.
-	LogicalMode logical_mode();
+	LogicalMode get_logical_mode();
 
 	/// Returns the runtime direction. Useful for channels where it can be either way.
-	Direction direction();
+	Direction get_direction();
 
 	/// Resets the flags below when STR = 1 is written.
 	void write_uword(const uword value) override;
@@ -63,6 +65,10 @@ public:
 	/// Tag IRQ flag. Within DMAC logic, set this to true when the IRQ flag is set, and use to check whether to interrupt on finishing the tag transfer. 
 	/// Reset to false upon writing to this register.
 	bool tag_irq;
+
+	/// DMAtag holder, contains the current dma tag read, set by the DMAC.
+	/// TODO: might be a way to omit this and just use the upper 16-bits, but for now extra information is required.
+	EeDmatag dma_tag;
 };
 
 /// DMAC ADDR (made up) register, used by the MADR, TADR and ASR registers.

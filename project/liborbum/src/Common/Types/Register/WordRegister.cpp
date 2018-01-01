@@ -44,3 +44,18 @@ void WordRegister::offset(const sword value)
 {
 	write_uword(read_uword() + value);
 }
+
+f32 WordRegister::read_float()
+{
+	return static_cast<f32>(read_uword());
+}
+
+void WordRegister::write_float(const f32 value)
+{
+	write_uword(static_cast<uword>(value));
+}
+
+usize WordRegister::byte_bus_map_size() const
+{
+	return static_cast<usize>(NUMBER_BYTES_IN_WORD);
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Types/FifoQueue/SpscFifoQueue.hpp"
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Resources/Ee/Dmac/EeDmacChannelRegisters.hpp"
 
 /// DMAC channel abstraction type.
@@ -20,7 +20,7 @@ public:
 	}
 
 	int * channel_id;
-	SpscFifoQueue * dma_fifo_queue;
+	DmaFifoQueue<> * dma_fifo_queue;
 	EeDmacChannelRegister_Addr * madr;
 	SizedWordRegister * qwc;
 	EeDmacChannelRegister_Chcr * chcr;

@@ -1,111 +1,119 @@
+#include "Core.hpp"
 
-
-#include "VM/VM.h"
-#include "VM/Systems/IOP/Timers/IOPTimers_s.h"
+#include "Controller/Iop/Timers/CIopTimers.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/IOP/IOP_t.h"
-#include "Resources/IOP/Timers/IOPTimers_t.h"
-#include "Resources/IOP/Timers/Types/IOPTimersTimerRegisters_t.h"
-#include "Resources/IOP/Timers/Types/IOPTimersTimers_t.h"
-#include "Resources/Iop/Intc/RIopIntc.hpp"
-#include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
 
-IOPTimers_s::IOPTimers_s(VM * vm) :
-	VMSystem_t(vm, Context_t::IOPTimers),
-	mTimer(nullptr)
+CIopTimers::CIopTimers(Core * core) :
+	CController(core)
 {
-	// Set resource pointer variables.
-	mTimers = getVM()->getResources()->IOP->Timers;
-	mINTC = getVM()->getResources()->IOP->INTC;
 }
 
-void IOPTimers_s::initialise()
+void CIopTimers::handle_event(const ControllerEvent & event) const
 {
-	for (auto& timer : mTimers->TIMERS)
+	switch (event.type)
 	{
-		if (timer->COUNT != nullptr) timer->COUNT->initialise();
-		if (timer->MODE != nullptr) timer->MODE->initialise();
-		if (timer->COMP != nullptr) timer->COMP->initialise();
+	case ControllerEvent::Type::Time:
+	{
+		int ticks = time_to_ticks(event.data.time_us);
+		for (int i = 0; i < ticks; i++)
+			tick_timer(ControllerEvent::Type::Time);
+		break;
+	}
+	case ControllerEvent::Type::HBlank:
+	{
+		for (int i = 0; i < event.data.amount; i++)
+			tick_timer(ControllerEvent::Type::HBlank);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CIopTimers event handler not implemented - please fix!");
+	}
 	}
 }
 
-int IOPTimers_s::step(const Event_t & event)
+int CIopTimers::time_to_ticks(const double time_us) const
 {
-	// Used to skip ticks. If no timer is enabled for counting, then all of the ticks will be consumed at the end.
-	bool workDone = false;
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::IopTimers]);
 
-	// Update the timers which are set to count based on the type of event recieved.
-	for (auto& timer : mTimers->TIMERS)
+	if (ticks < 10)
 	{
-		// Set timer resource context.
-		mTimer = timer.get();
-		
-		// Count only if "enabled". There is no explicit "enable bit" in the IOP timers, however a timer is only useful to us if it can cause an interrupt, so we use this to check.
-		// If a timer is written to (such that interrupt conditions are now enabled), the count register is cleared upon write anyway.
-		// This means we do not have to consider the case where the timer suddenly comes alive, with a populated count register, therefore missing the interrupt condition.
-		if (mTimer->MODE->isEnabled())
+		static bool warned = false;
+		if (!warned)
 		{
-			// Check if the timer mode is equal to the clock source.
-			if (event.mSource == mTimer->MODE->getEventSource())
-			{
-				// A timer consumed a tick for this clock source - do not skip any ticks.
-				workDone = true;
-
-				// Next check for the gate function.
-				if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::SyncEnable) > 0)
-				{
-					throw std::runtime_error("IOP Timers sync mode (gate) = 1, but not implemented.");
-				}
-				else
-				{
-					// Count normally without gate.
-					mTimer->COUNT->increment(, 1);
-				}
-
-				// Check for interrupt conditions on the timer. Needs to be done before handling the overflow or target conditions.
-				handleTimerInterrupt();
-
-				// Check for overflow conditions on the timer.
-				handleTimerOverflow();
-
-				// Check for target conditions on the timer.
-				handleTimerTarget();
-			}
+			BOOST_LOG(Core::get_logger()) << "IopTimers ticks too low - increase time delta";
+			warned = true;
 		}
 	}
 
-	// Timers has completed 1 cycle.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	if (!workDone)
-		return event.mQuantity;
-	else
-		return 1;
-#else
-	return 1;
-#endif
+	return ticks;
 }
 
-void IOPTimers_s::handleTimerInterrupt() const
+void CIopTimers::tick_timer(const ControllerEvent::Type ce_type) const
 {
+	auto& r = core->get_resources();
+
+	// Update the timers which are set to count based on the type of event recieved.
+	for (auto& unit : r.iop.timers.units)
+	{
+		auto _lock = unit->mode.scope_lock();
+
+		// Check if we need to perform reset proceedures.
+		if (unit->mode.write_latch)
+		{
+			// Work out if the timer is used meaningfully (enabled).
+			bool irq_on_of = unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_OF) > 0;
+			bool irq_on_target = unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_TARGET) > 0;
+			unit->mode.is_enabled = irq_on_of || irq_on_target;
+
+			// Reset the count register.
+			uword prescale = unit->mode.calculate_prescale_and_set_event(unit->unit_id);
+			unit->count.reset_prescale(prescale);
+
+			unit->mode.write_latch = false;
+		}
+
+		// Count only if the timer is "enabled", and mode is equal to the event source.
+		if (!unit->mode.is_enabled || ce_type != unit->mode.event_type)
+			continue;
+			
+		// Perform a gated tick if on, else increment normally.
+		bool gated_tick = unit->mode.extract_field(IopTimersUnitRegister_Mode::SYNC_ENABLE) > 0;
+		if (gated_tick)
+		{
+			throw std::runtime_error("IOP Timers sync mode (gate) = 1, but not implemented.");
+		}
+		else
+		{
+			unit->count.increment(1);
+		}
+
+		// Check for interrupt conditions on the timer.
+		bool has_overflowed = handle_timer_overflow(unit);
+		bool has_reached_target = handle_timer_target(unit);
+		handle_timer_interrupt(unit, has_overflowed, has_reached_target);
+	}
+}
+
+void CIopTimers::handle_timer_interrupt(IopTimersUnit_Base * unit, const bool has_overflowed, const bool has_reached_target) const
+{
+	auto& r = core->get_resources();
+
 	bool interrupt = false;
 
 	// Check for Compare-Interrupt.
-	if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqOnTarget))
+	if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_TARGET))
 	{
-		if (mTimer->COUNT->read_uword() == mTimer->COMP->read_uword())
-		{
+		if (has_reached_target)
 			interrupt = true;
-		}
 	}
 
 	// Check for Overflow-Interrupt.
-	if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqOnOF))
+	if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_OF))
 	{
-		if (mTimer->COUNT->isOverflowed())
-		{
+		if (has_overflowed)
 			interrupt = true;
-		}
 	}
 
 	// Handle internal interrupt bit if interrupt flag set. 
@@ -114,20 +122,20 @@ void IOPTimers_s::handleTimerInterrupt() const
 	{
 		// If after this code block has run, and the internal IrqRequest bit is low (0), then an external interrupt should be generated (ie: to INTC).
 		// Check if we are using one-shot or repeat.
-		if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqRepeat))
+		if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_REPEAT))
 		{
 			// Check for IRQ toggle mode.
-			if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqToggle))
+			if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_TOGGLE))
 			{
 				// Toggle bit.
 				throw std::runtime_error("IOP Timers int toggle mode not implemented.");
-				// uword value = mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqRequest);
-				// mTimer->MODE->setFieldValue(, IOPTimersTimerRegister_MODE_t::IrqRequest, value ^ 1);
+				// uword value = unit->mode.extract_field(IopTimersUnitRegister_Mode::IrqRequest);
+				// unit->mode.insert_field(IopTimersUnitRegister_Mode::IrqRequest, value ^ 1);
 			}
 			else
 			{
 				// Set bit low (0).
-				mTimer->MODE->setFieldValue(, IOPTimersTimerRegister_MODE_t::IrqRequest, 0);
+				unit->mode.insert_field(IopTimersUnitRegister_Mode::IRQ_REQUEST, 0);
 			}
 		}
 		else
@@ -136,44 +144,40 @@ void IOPTimers_s::handleTimerInterrupt() const
 		}
 
 		// Check for internal interrupt bit is low, and send INTC interrupt.
-		if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::IrqRequest) == 0)
+		if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_REQUEST) == 0)
 		{
 			// Raise IRQ.
-			mINTC->STAT->setFieldValue(, IOPIntcRegister_STAT_t::TMR_KEYS[mTimer->getTimerID()], 1);
+			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::TMR_KEYS[unit->unit_id], 1);
 		}
 	}
 }
 
-void IOPTimers_s::handleTimerOverflow() const
+bool CIopTimers::handle_timer_overflow(IopTimersUnit_Base * unit) const
 {
-	// Check for overflow conditions.
-	if (mTimer->COUNT->isOverflowed())
+	if (unit->count.is_overflowed_and_reset())
 	{
-		// Check for target reset condition.
-		if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::ResetMode) == 0)
-		{
-			// Set Count to 0.
-			mTimer->COUNT->reset();
-		}
+		// Reset the count register if that mode is selected.
+		if (unit->mode.extract_field(IopTimersUnitRegister_Mode::RESET_MODE) == 0)
+			unit->count.write_uword(0);
 
-		// Set reach overflow bit.
-		mTimer->MODE->setFieldValue(, IOPTimersTimerRegister_MODE_t::ReachOF, 1);
+		unit->mode.insert_field(IopTimersUnitRegister_Mode::REACH_OF, 1);
+		return true;
 	}
+
+	return false;
 }
 
-void IOPTimers_s::handleTimerTarget() const
+bool CIopTimers::handle_timer_target(IopTimersUnit_Base * unit) const
 {
-	// Check for Count >= Compare.
-	if (mTimer->COUNT->read_uword() == mTimer->COMP->read_uword())
+	if (unit->count.read_uword() == unit->compare.read_uword())
 	{
-		// Check for target reset condition.
-		if (mTimer->MODE->getFieldValue(, IOPTimersTimerRegister_MODE_t::ResetMode) > 0)
-		{
-			// Set Count to 0.
-			mTimer->COUNT->reset();
-		}
+		// Reset the count register if that mode is selected.
+		if (unit->mode.extract_field(IopTimersUnitRegister_Mode::RESET_MODE) > 0)
+			unit->count.write_uword(0);
 
-		// Set reach target bit.
-		mTimer->MODE->setFieldValue(, IOPTimersTimerRegister_MODE_t::ReachTarget, 1);
+		unit->mode.insert_field(IopTimersUnitRegister_Mode::REACH_TARGET, 1);
+		return true;
 	}
+
+	return false;
 }

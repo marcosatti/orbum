@@ -2,17 +2,14 @@
 
 #include "Common/Types/Primitive.hpp"
 
-/*
-Constants used throughout the PS2 core.
-
-Some prefix definitions (others are self-explanatory):
-PADDRESS = Physical base address.
-VADDRESS = Virtual base address.
-OADDRESS = Offset from physical/virtual address.
-SIZE = Size in bytes.
-CLK_SPEED = Speed in Hz.
-REFRESH_RATE = Speed in Hz.
-*/
+/// Constants used throughout the PS2 core.
+/// Some prefix definitions (others are self-explanatory):
+/// PADDRESS = Physical base address.
+/// VADDRESS = Virtual base address.
+/// OADDRESS = Offset from physical/virtual address.
+/// SIZE = Size in bytes.
+/// CLK_SPEED = Speed in Hz.
+/// REFRESH_RATE = Speed in Hz.
 struct Constants
 {
 	static constexpr size_t SIZE_512MB = 0x20000000;
@@ -38,24 +35,24 @@ struct Constants
 
 		struct MMU
 		{
-			static constexpr uword VADDRESS_USER_UPPER_BOUND = 0x7FFFFFFF; // Memory segment 'useg'.
-			static constexpr uword VADDRESS_USER_LOWER_BOUND = 0x00000000;
+			static constexpr uptr VADDRESS_USER_UPPER_BOUND = 0x7FFFFFFF; // Memory segment 'useg'.
+			static constexpr uptr VADDRESS_USER_LOWER_BOUND = 0x00000000;
 
-			static constexpr uword VADDRESS_SUPERVISOR_UPPER_BOUND_1 = 0x7FFFFFFF; // Memory segment 'suseg'.
-			static constexpr uword VADDRESS_SUPERVISOR_LOWER_BOUND_1 = 0x00000000;
-			static constexpr uword VADDRESS_SUPERVISOR_UPPER_BOUND_2 = 0xDFFFFFFF; // Memory segment 'sseg'.
-			static constexpr uword VADDRESS_SUPERVISOR_LOWER_BOUND_2 = 0xC0000000;
+			static constexpr uptr VADDRESS_SUPERVISOR_UPPER_BOUND_1 = 0x7FFFFFFF; // Memory segment 'suseg'.
+			static constexpr uptr VADDRESS_SUPERVISOR_LOWER_BOUND_1 = 0x00000000;
+			static constexpr uptr VADDRESS_SUPERVISOR_UPPER_BOUND_2 = 0xDFFFFFFF; // Memory segment 'sseg'.
+			static constexpr uptr VADDRESS_SUPERVISOR_LOWER_BOUND_2 = 0xC0000000;
 
-			static constexpr uword VADDRESS_KERNEL_UPPER_BOUND_1 = 0x7FFFFFFF; // Memory segment 'kuseg'.
-			static constexpr uword VADDRESS_KERNEL_LOWER_BOUND_1 = 0x00000000;
-			static constexpr uword VADDRESS_KERNEL_UPPER_BOUND_2 = 0x9FFFFFFF; // Memory segment 'kseg0'.
-			static constexpr uword VADDRESS_KERNEL_LOWER_BOUND_2 = 0x80000000;
-			static constexpr uword VADDRESS_KERNEL_UPPER_BOUND_3 = 0xBFFFFFFF; // Memory segment 'kseg1'.
-			static constexpr uword VADDRESS_KERNEL_LOWER_BOUND_3 = 0xA0000000;
-			static constexpr uword VADDRESS_KERNEL_UPPER_BOUND_4 = 0xDFFFFFFF; // Memory segment 'ksseg'.
-			static constexpr uword VADDRESS_KERNEL_LOWER_BOUND_4 = 0xC0000000;
-			static constexpr uword VADDRESS_KERNEL_UPPER_BOUND_5 = 0xFFFFFFFF; // Memory segment 'kseg3'.
-			static constexpr uword VADDRESS_KERNEL_LOWER_BOUND_5 = 0xE0000000;
+			static constexpr uptr VADDRESS_KERNEL_UPPER_BOUND_1 = 0x7FFFFFFF; // Memory segment 'kuseg'.
+			static constexpr uptr VADDRESS_KERNEL_LOWER_BOUND_1 = 0x00000000;
+			static constexpr uptr VADDRESS_KERNEL_UPPER_BOUND_2 = 0x9FFFFFFF; // Memory segment 'kseg0'.
+			static constexpr uptr VADDRESS_KERNEL_LOWER_BOUND_2 = 0x80000000;
+			static constexpr uptr VADDRESS_KERNEL_UPPER_BOUND_3 = 0xBFFFFFFF; // Memory segment 'kseg1'.
+			static constexpr uptr VADDRESS_KERNEL_LOWER_BOUND_3 = 0xA0000000;
+			static constexpr uptr VADDRESS_KERNEL_UPPER_BOUND_4 = 0xDFFFFFFF; // Memory segment 'ksseg'.
+			static constexpr uptr VADDRESS_KERNEL_LOWER_BOUND_4 = 0xC0000000;
+			static constexpr uptr VADDRESS_KERNEL_UPPER_BOUND_5 = 0xFFFFFFFF; // Memory segment 'kseg3'.
+			static constexpr uptr VADDRESS_KERNEL_LOWER_BOUND_5 = 0xE0000000;
 		};
 
 		struct Exceptions
@@ -65,25 +62,25 @@ struct Constants
 			{
 				// Used by the IOP (R3000).
 				// Taken from PSX docs, plus PCSX2 source code (R3000A.cpp).
-				static constexpr uword VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
-				static constexpr uword VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00100;
-				static constexpr uword VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000080;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00100;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000080;
 			};
 
 			struct Imp46
 			{
 				// Used by the EE Core (R5900).
 				// See EE Core Users Manual page 90. A0 = Address 0, A1 = Address 1.
-				static constexpr uword VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
-				static constexpr uword VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00200;
-				static constexpr uword VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_COUNTER = 0x00000080;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_DEBUG = 0x00000100;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
-				static constexpr uword OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_A0 = 0x80000000;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_A1 = 0xBFC00200;
+				static constexpr uptr VADDRESS_EXCEPTION_BASE_V_RESET_NMI = 0xBFC00000;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_TLB_REFILL = 0x00000000;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_COUNTER = 0x00000080;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_DEBUG = 0x00000100;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_COMMON = 0x00000180;
+				static constexpr uptr OADDRESS_EXCEPTION_VECTOR_V_INTERRUPT = 0x00000200;
 			};
 		};
 	};
@@ -223,11 +220,11 @@ struct Constants
 
 			struct MMU
 			{
-				static constexpr uword VADDRESS_SPECIAL_1_LOWER_BOUND = 0x00000000;
-				static constexpr uword VADDRESS_SPECIAL_1_UPPER_BOUND = 0x001FFFFF;
+				static constexpr uptr VADDRESS_SPECIAL_1_LOWER_BOUND = 0x00000000;
+				static constexpr uptr VADDRESS_SPECIAL_1_UPPER_BOUND = 0x001FFFFF;
 
-				static constexpr uword VADDRESS_SPECIAL_2_LOWER_BOUND = 0xFFC00000;
-				static constexpr uword VADDRESS_SPECIAL_2_UPPER_BOUND = 0xFFFFFFFF;
+				static constexpr uptr VADDRESS_SPECIAL_2_LOWER_BOUND = 0xFFC00000;
+				static constexpr uptr VADDRESS_SPECIAL_2_UPPER_BOUND = 0xFFFFFFFF;
 			};
 
 			static constexpr int NUMBER_IOP_INSTRUCTIONS = 91;

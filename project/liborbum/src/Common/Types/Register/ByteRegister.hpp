@@ -24,6 +24,7 @@ public:
 	void offset(const sbyte value);
 	
 	/// ByteBusMappable overrides.
+	usize byte_bus_map_size() const override;
 	ubyte byte_bus_read_ubyte(const BusContext context, const usize offset) override;
 	void byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value) override;
 };

@@ -48,9 +48,8 @@ void EeTimersUnitRegister_Count::reset_prescale(const int prescale_target)
 }
 
 EeTimersUnitRegister_Mode::EeTimersUnitRegister_Mode() :
-	event_type(ControllerEventType::Time),
 	write_latch(false),
-	count_reset_prescale_target(1)
+	event_type(ControllerEventType::Time)
 {
 }
 
@@ -62,9 +61,6 @@ void EeTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, c
 	if (write_latch)
 		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
 	write_latch = true;
-
-	// Update event type source.
-	handle_event_type_update();
 
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	uword temp = value;
@@ -82,28 +78,28 @@ bool EeTimersUnitRegister_Mode::is_gate_hblnk_special()
 	return ((extract_field(CLKS) == 3) && (extract_field(GATS) == 0));
 }
 
-void EeTimersUnitRegister_Mode::handle_event_type_update()
+uword EeTimersUnitRegister_Mode::calculate_prescale_and_set_event()
 {
 	uword source = extract_field(CLKS);
 	if (source == 0x0)
 	{
 		event_type = ControllerEventType::Time;
-		count_reset_prescale_target = 1;
+		return 1;
 	}
 	else if (source == 0x1)
 	{
 		event_type = ControllerEventType::Time;
-		count_reset_prescale_target = 16;
+		return 16;
 	}
 	else if (source == 0x2)
 	{
 		event_type = ControllerEventType::Time;
-		count_reset_prescale_target = 256;
+		return 256;
 	}
 	else if (source == 0x3)
 	{
 		event_type = ControllerEventType::HBlank;
-		count_reset_prescale_target = 1;
+		return 1;
 	}
 	else
 	{

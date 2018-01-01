@@ -1,9 +1,9 @@
 #include "Resources/Ee/Timers/REeTimers.hpp"
 
 REeTimers::REeTimers() :
-    timer_0(0),
-    timer_1(1),
-    timer_2(2),
-    timer_3(3)
+    unit_0(0),
+    unit_1(1),
+    unit_2(2),
+    unit_3(3)
 {
 }

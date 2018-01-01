@@ -164,3 +164,8 @@ void CdvdNvram_000::write_mac(const uhword * buffer)
 {
 	memory.write(0x198 / NUMBER_BYTES_IN_HWORD, buffer, 4);
 }
+
+CdvdNvram_000::CdvdNvram_000()
+{
+	write_ilink_id(reinterpret_cast<const uhword*>(ILINK_DATA_MAGIC));
+}

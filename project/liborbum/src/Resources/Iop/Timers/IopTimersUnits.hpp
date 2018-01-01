@@ -6,10 +6,12 @@
 
 /// Represents IOP Timer unit.
 /// Documentation taken from PCSX2 and No$PSX docs.
-class IopTimersUnit
+class IopTimersUnit_Base
 {
 public:
-	IopTimersUnit(const int timer_id);
+	IopTimersUnit_Base(const int unit_id);
+
+	int unit_id;
 
 	IopTimersUnitRegister_Count count;
 	IopTimersUnitRegister_Mode  mode;

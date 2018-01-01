@@ -16,6 +16,10 @@ class EeCoreCop0Register_Random : public SizedWordRegister
 {
 public:
 	static constexpr Bitfield RANDOM = Bitfield(0, 6);
+	
+	static constexpr uword INITIAL_VALUE = 47;
+
+	EeCoreCop0Register_Random();
 };
 
 class EeCoreCop0Register_EntryLo0 : public SizedWordRegister
@@ -79,12 +83,21 @@ public:
 	static constexpr Bitfield BEV = Bitfield(22, 1);
 	static constexpr Bitfield DEV = Bitfield(23, 1);
 	static constexpr Bitfield CU  = Bitfield(28, 4);
+	
+	static constexpr uword INITIAL_VALUE = 0x00400004; // BEV = 1, ERL = 1.
+
+	EeCoreCop0Register_Status();
 
 	/// Returns if all interrupts are currently masked ( = NOT ENABLED).
 	/// Does so by checking the master EIE and IE bit.
 	bool is_interrupts_masked();
 };
 
+/// Cause register.
+/// As this is accessed by other peripherals, the IP bits should only be changed
+/// (externally) using set/clear_irq_line(), which uses separate flags. When the
+/// EE Core reads from the register, the flags will be substituted into the read.
+/// The reason for this is to prevent missed register updates.
 class EeCoreCop0Register_Cause : public SizedWordRegister
 {
 public:
@@ -95,16 +108,23 @@ public:
 	static constexpr Bitfield BD2     = Bitfield(30, 1);
 	static constexpr Bitfield BD      = Bitfield(31, 1);
 
-	/// Clears the Cause.IP bits (from bits 8 -> 15).
-	void clear_ip();
+	EeCoreCop0Register_Cause();
 
-	/// Sets the given IP[irq] bit given.
-	/// The other IP bits are left unchanged (uses OR).
+	/// Clears all of the IRQ lines.
+	void clear_all_irq();
+
+	/// Sets the given IRQ line.
 	void set_irq_line(const int irq);
 
-	/// Clears the given IP[irq] bit given.
-	/// The other IP bits are left unchanged (uses ~AND).
+	/// Clears the given IRQ line.
 	void clear_irq_line(const int irq);
+
+	/// Syncs the register state with the IRQ flags and returns the register value.
+	uword read_uword() override;
+
+private:
+	/// IRQ line flags.
+	bool irq_lines[8];
 };
 
 class EeCoreCop0Register_Prid : public SizedWordRegister
@@ -130,6 +150,10 @@ public:
 	static constexpr Bitfield ICE = Bitfield(17, 1);
 	static constexpr Bitfield DIE = Bitfield(18, 1);
 	static constexpr Bitfield EC  = Bitfield(28, 3);
+	
+	static constexpr uword INITIAL_VALUE = 0x00000440;
+	
+	EeCoreCop0Register_Config();
 };
 
 class EeCoreCop0Register_BadPAddr : public SizedWordRegister

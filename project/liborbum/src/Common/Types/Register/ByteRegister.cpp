@@ -24,3 +24,8 @@ void ByteRegister::offset(const sbyte value)
 {
 	write_ubyte(read_ubyte() + value);
 }
+
+usize ByteRegister::byte_bus_map_size() const
+{
+	return static_cast<usize>(1);
+}

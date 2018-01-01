@@ -99,14 +99,18 @@ void ArrayHwordMemory::write_uqword(const size_t offset, const uqword value)
 		*reinterpret_cast<uqword*>(&memory[offset]) = value;
 }
 
-void ArrayHwordMemory::read_from_file(const char * file_path, const size_t file_length)
+void ArrayHwordMemory::read_from_file(const std::string & path, const size_t file_length)
 {
-	std::ifstream file(file_path, std::ios_base::binary);
+	std::ifstream file(path, std::ios_base::binary);
+	if (!file)
+		throw std::runtime_error("Unable to read file");
 	file.read(reinterpret_cast<char*>(&memory[0]), file_length * NUMBER_BYTES_IN_HWORD);
 }
 
-void ArrayHwordMemory::write_to_file(const char * file_path)
+void ArrayHwordMemory::write_to_file(const std::string & path)
 {
-	std::ofstream file(file_path, std::ios_base::binary);
+	std::ofstream file(path, std::ios_base::binary);
+	if (!file)
+		throw std::runtime_error("Unable to write file");
 	file.write(reinterpret_cast<char*>(&memory[0]), size * NUMBER_BYTES_IN_HWORD);
 }

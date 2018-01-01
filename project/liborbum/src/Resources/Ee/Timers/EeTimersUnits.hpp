@@ -4,18 +4,29 @@
 
 #include "Resources/Ee/Timers/EeTimersUnitRegisters.hpp"
 
+/// EE Timer unit abstraction type.
+class EeTimersUnit
+{
+public:
+	EeTimersUnit();
+
+	int * unit_id;
+
+	EeTimersUnitRegister_Count * count;
+	EeTimersUnitRegister_Mode *  mode;
+	SizedWordRegister *          compare;
+	SizedWordRegister *          hold;
+};
+
 /// A base type representing an EE Timers Timer.
 /// See EE Users Manual page 35.	
 /// The MODE, COUNT and COMP registers are always defined for each timer.
 class EeTimersUnit_Base
 {
 public:
-	EeTimersUnit_Base(const int timer_id) :
-		timer_id(timer_id)
-	{
-	}
+	EeTimersUnit_Base(const int unit_id);
 
-	int timer_id;
+	int unit_id;
 
 	EeTimersUnitRegister_Count count;
 	EeTimersUnitRegister_Mode  mode;
@@ -26,10 +37,7 @@ public:
 class EeTimersUnit_Hold : public EeTimersUnit_Base
 {
 public:
-	EeTimersUnit_Hold(const int timer_id) :
-		EeTimersUnit_Base(timer_id)
-	{
-	}
+	EeTimersUnit_Hold(const int unit_id);
 
 	SizedWordRegister hold;
 };

@@ -1,77 +1,100 @@
+#include <stdexcept>
+#include <iostream>
 
-
-#include "VM/Systems/GS/CRTC/CRTC_s.h"
+#include "Core.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Events/Events_t.h"
-#include "Resources/Ee/REe.hpp"
-#include "Resources/Ee/Intc/REeIntc.hpp"
-#include "Resources/Ee/Intc/EeIntcRegisters.hpp"
-#include "Resources/IOP/IOP_t.h"
-#include "Resources/Iop/Intc/RIopIntc.hpp"
-#include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "Resources/GS/GS_t.h"
-#include "Resources/GS/CRTC/CRTC_t.h"
 
-CRTC_s::CRTC_s(VM * vm) :
-	VMSystem_t(vm, Context_t::CRTC)
-{
-	mCRTC = getVM()->getResources()->GS->CRTC;
-	mEvents = getVM()->getResources()->Events;
-	mEEINTC = getVM()->getResources()->EE->INTC;
-	mIOPINTC = getVM()->getResources()->IOP->INTC;
-}
+#include "Controller/Gs/Crtc/CCrtc.hpp"
 
-void CRTC_s::initialise()
+CCrtc::CCrtc(Core * core) :
+	CController(core)
 {
 }
 
-int CRTC_s::step(const Event_t & event)
+void CCrtc::handle_event(const ControllerEvent & event) const
 {
+	switch (event.type)
+	{
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CRTC event handler not implemented - please fix!");
+	}
+	}
+}
+
+int CCrtc::time_to_ticks(const double time_us) const
+{
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT * core->get_options().system_biases[ControllerType::Type::Crtc]);
+	
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "CRTC ticks too low - increase time delta";
+			warned = true;
+		}
+	}
+
+	return ticks;
+}
+
+int CCrtc::time_step(const int ticks_available) const
+{
+	auto& r = core->get_resources();
+
+	// TODO: quick hack to get started...
 	static int col = 0;
 	static int row = 0;
-
+	
 	if (col == -1)
 	{
 		// Send HBlank end.
-		// mCRTC->mInHBlank = false;
 	}
-
+	
 	col++;
-
+	
 	if (col > 639)
 	{
 		col = -640;
-		
+			
 		// Send HBlank start.
-		// mCRTC->mInHblank = true;
-		mEvents->addEvent(Context_t::EETimers, Event_t(Event_t::Source::HBlank, 1));
-		mEvents->addEvent(Context_t::IOPTimers, Event_t(Event_t::Source::HBlank, 1));
-
+		auto hblank_event = ControllerEvent{ ControllerEvent::Type::HBlank, 1 };
+		core->enqueue_controller_event(ControllerType::Type::EeTimers, hblank_event);
+		core->enqueue_controller_event(ControllerType::Type::IopTimers, hblank_event);
+	
 		// Copy scanline to host render.
-		// getVM()->renderScanline(&raw_row_pixels);
-
+		// core->render_scan_line(&raw_row_pixels);
+	
 		if (row == -1)
 		{
 			// Send VBlank end.
-			mEEINTC->STAT->setFieldValue(, EeIntcRegister_Stat::VBOF, 1);
-			mIOPINTC->STAT->setFieldValue(, IOPIntcRegister_STAT_t::EVBLANK, 1);
-			// mCRTC->mInVBlank = false;
+			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBOF, 1);
+			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::EVBLANK, 1);
+			BOOST_LOG(Core::get_logger()) << "EVBLANK fired!";
 		}
-
+	
 		row++;
-
+	
 		if (row > 223)
 		{
 			row = -224;
-
+	
 			// Send VBlank start.
-			mEEINTC->STAT->setFieldValue(, EeIntcRegister_Stat::VBON, 1);
-			mIOPINTC->STAT->setFieldValue(, IOPIntcRegister_STAT_t::VBLANK, 1);
-			// mCRTC->mInVBlank = true;
-
-			// Tell VM to render frame.
-			// getVM()->renderFrame();
+			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBON, 1);
+			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::VBLANK, 1);
+			BOOST_LOG(Core::get_logger()) << "VBLANK fired!";
+	
+			// Tell core to render frame.
+			// core->render_frame();
 		}
 	}
 

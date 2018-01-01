@@ -29,10 +29,8 @@ public:
 	int generate_new_tlb_index();
 
 private:
-	/*
-	TLB entries. See EE Core Users Manual page 120.
-	In total there are 48 entries.
-	*/
+	/// TLB entries. See EE Core Users Manual page 120.
+	/// In total there are 48 entries.
 	EeCoreTlbEntry tlb_entries[Constants::EE::EECore::MMU::NUMBER_TLB_ENTRIES];
 };
 

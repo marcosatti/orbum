@@ -1,6 +1,7 @@
 #include "Common/Types/Register/SizedDwordRegister.hpp"
 
 SizedDwordRegister::SizedDwordRegister(const udword initial_value, const bool read_only) :
+	d(initial_value),
 	initial_value(initial_value),
 	read_only(read_only)
 {
@@ -83,9 +84,4 @@ void SizedDwordRegister::write_udword(const udword value)
 {
 	if (!read_only)
 		d = value;
-}
-
-usize SizedDwordRegister::byte_bus_map_size() const
-{
-	return static_cast<usize>(NUMBER_BYTES_IN_DWORD);
 }

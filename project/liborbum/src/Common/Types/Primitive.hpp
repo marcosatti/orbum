@@ -4,18 +4,15 @@
 #include <cstdint>
 #include <limits>
 
-/*
-PS2 Primative Data Types.
-These types should be used throughout the emulator when operating on the PS2 system state.
-
-The PS2 and SCE manuals use this size terminology:
-Byte               size is 8-bit.
-Halfword (hword)   size is 16-bit.
-Word               size is 32-bit.
-Doubleword (dword) size is 64-bit.
-Quadword (qword)   size is 128-bit.
-Float (single)     size is 32-bit.
-*/
+/// PS2 Primative Data Types.
+/// These types should be used throughout the emulator when operating on the PS2 system state.
+/// The PS2 and SCE manuals use this size terminology:
+/// Byte               size is 8-bit.
+/// Halfword (hword)   size is 16-bit.
+/// Word               size is 32-bit.
+/// Doubleword (dword) size is 64-bit.
+/// Quadword (qword)   size is 128-bit.
+/// Float (single)     size is 32-bit.
 typedef int8_t sbyte;
 typedef int16_t shword;
 typedef int32_t sword;
@@ -30,13 +27,17 @@ typedef uword uptr;
 typedef uword usize;
 typedef sword ssize;
 
-/*
-Qword (128-bit) type. 
-The PS2 never operates on pure 128-bit values - rather it operates on sub
-sections of this value, such as 4 words or 2 dwords. It does not make sense for
-a signed 128-bit value to exist (or performing arithmetic operations).
-TODO: Look into boost/multiprecision (uint128_t) for endianess and compiler ordering.
-*/
+/// Floating point types.
+/// Warning! Assumes sizeof(float) * CHAR_BIT == 32 ! 
+/// A compile time error will be given to make sure.
+typedef float f32;
+static_assert(sizeof(f32) * CHAR_BIT == 32, "f32 is not 32-bits long!");
+
+//// Qword (128-bit) type. 
+/// The PS2 never operates on pure 128-bit values - rather it operates on sub
+/// sections of this value, such as 4 words or 2 dwords. It does not make sense for
+/// a signed 128-bit value to exist (or performing arithmetic operations).
+/// TODO: Look into boost/multiprecision (uint128_t) for endianess and compiler ordering?
 struct uqword
 {
 	union
@@ -77,9 +78,7 @@ struct uqword
 	}
 };
 
-/*
-Primitive type min/max values.
-*/
+/// Primitive type min/max values.
 static constexpr ubyte  VALUE_UBYTE_MAX  = std::numeric_limits<ubyte>::max();
 static constexpr sbyte  VALUE_SBYTE_MAX  = std::numeric_limits<sbyte>::max();
 static constexpr sbyte  VALUE_SBYTE_MIN  = std::numeric_limits<sbyte>::min();
@@ -93,9 +92,7 @@ static constexpr udword VALUE_UDWORD_MAX = std::numeric_limits<udword>::max();
 static constexpr sdword VALUE_SDWORD_MAX = std::numeric_limits<sdword>::max();
 static constexpr sdword VALUE_SDWORD_MIN = std::numeric_limits<sdword>::min();
 
-/*
-Primitive ratios.
-*/
+/// Primitive ratios.
 static constexpr int NUMBER_BYTES_IN_QWORD = 16;
 static constexpr int NUMBER_HWORDS_IN_QWORD = 8;
 static constexpr int NUMBER_WORDS_IN_QWORD = 4;

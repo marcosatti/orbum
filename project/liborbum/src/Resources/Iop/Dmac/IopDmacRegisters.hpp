@@ -181,11 +181,11 @@ class IopDmacRegister_Pcrw
 {
 public:
 	/// Returns the priority status for a channel.
-	uword channel_priority(const IopDmacChannel * channel);
+	uword get_channel_priority(const IopDmacChannel * channel) const;
 	// void set_channel_priority(const IopDmacChannel * channel, const uword value)
 
 	/// Returns the enabled status for a channel.
-	bool is_channel_enabled(const IopDmacChannel * channel);
+	bool is_channel_enabled(const IopDmacChannel * channel) const;
 	// void set_channel_enabled(const IopDmacChannel * channel, const bool value)
 
 	/// PCR0 register.
@@ -211,20 +211,20 @@ public:
 	/// Gets or sets the IRM for a channel.
 	/// Only channels 0 to 6 are valid for IRM.
 	/// TODO: Not sure where the others are for 7 to 13...
-	uword channel_irm(const IopDmacChannel * channel);
-	void set_channel_irm(const IopDmacChannel * channel, const uword value);
+	uword get_channel_irm(const IopDmacChannel * channel) const;
+	void set_channel_irm(const IopDmacChannel * channel, const uword value) const;
 
 	/// Gets or sets the IQE for a channel.
-	uword channel_iqe(const IopDmacChannel * channel);
-	void set_channel_iqe(const IopDmacChannel * channel, const uword value);
+	uword get_channel_iqe(const IopDmacChannel * channel) const;
+	void set_channel_iqe(const IopDmacChannel * channel, const uword value) const;
 
 	/// Gets or sets the TCM for a channel.
-	uword channel_tcm(const IopDmacChannel * channel);
-	void set_channel_tcm(const IopDmacChannel * channel, const uword value);
+	uword get_channel_tcm(const IopDmacChannel * channel) const;
+	void set_channel_tcm(const IopDmacChannel * channel, const uword value) const;
 
 	/// Gets or sets the TCI for a channel.
-	uword channel_tci(const IopDmacChannel * channel);
-	void set_channel_tci(const IopDmacChannel * channel, const uword value);
+	uword get_channel_tci(const IopDmacChannel * channel) const;
+	void set_channel_tci(const IopDmacChannel * channel, const uword value) const;
 
 	/// Returns if any of the channels are in an interrupt pending state.
 	/// Sets the master interrupt if either ICR register has an interrupt pending.

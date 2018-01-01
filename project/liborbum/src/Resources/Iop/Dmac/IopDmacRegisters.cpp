@@ -70,7 +70,7 @@ bool IopDmacRegister_Icr1::is_interrupt_pending_and_set_master()
 	return false;
 }
 
-uword IopDmacRegister_Pcrw::channel_priority(const IopDmacChannel * channel)
+uword IopDmacRegister_Pcrw::get_channel_priority(const IopDmacChannel * channel) const
 {
 	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -92,7 +92,7 @@ uword IopDmacRegister_Pcrw::channel_priority(const IopDmacChannel * channel)
 // 		throw std::runtime_error("IOP DMAC PCRW could not determine channel set priority index.");
 // }
 
-bool IopDmacRegister_Pcrw::is_channel_enabled(const IopDmacChannel * channel)
+bool IopDmacRegister_Pcrw::is_channel_enabled(const IopDmacChannel * channel) const
 {
 	// Channels 0-6 belong to PCR0, channels 7-13 belong to PCR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -114,7 +114,7 @@ bool IopDmacRegister_Pcrw::is_channel_enabled(const IopDmacChannel * channel)
 // 		throw std::runtime_error("IOP DMAC PCRW could not determine channel set enabled index.");
 // }
 
-uword IopDmacRegister_Icrw::channel_irm(const IopDmacChannel * channel)
+uword IopDmacRegister_Icrw::get_channel_irm(const IopDmacChannel * channel) const
 {
 	// Channels 0-6 belong to icr0.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -123,7 +123,7 @@ uword IopDmacRegister_Icrw::channel_irm(const IopDmacChannel * channel)
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel get IRM index.");
 }
 
-void IopDmacRegister_Icrw::set_channel_irm(const IopDmacChannel * channel, const uword value)
+void IopDmacRegister_Icrw::set_channel_irm(const IopDmacChannel * channel, const uword value) const
 {
 	// Channels 0-6 belong to icr0.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -132,7 +132,7 @@ void IopDmacRegister_Icrw::set_channel_irm(const IopDmacChannel * channel, const
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel set IRM index.");
 }
 
-uword IopDmacRegister_Icrw::channel_iqe(const IopDmacChannel * channel)
+uword IopDmacRegister_Icrw::get_channel_iqe(const IopDmacChannel * channel) const
 {
 	// Channels 0-13 belong to icr1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 14)
@@ -141,7 +141,7 @@ uword IopDmacRegister_Icrw::channel_iqe(const IopDmacChannel * channel)
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel get IQE index.");
 }
 
-void IopDmacRegister_Icrw::set_channel_iqe(const IopDmacChannel * channel, const uword value)
+void IopDmacRegister_Icrw::set_channel_iqe(const IopDmacChannel * channel, const uword value) const
 {
 	// Channels 0-13 belong to icr1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 14)
@@ -150,7 +150,7 @@ void IopDmacRegister_Icrw::set_channel_iqe(const IopDmacChannel * channel, const
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel set IQE index.");
 }
 
-uword IopDmacRegister_Icrw::channel_tcm(const IopDmacChannel * channel)
+uword IopDmacRegister_Icrw::get_channel_tcm(const IopDmacChannel * channel) const
 {
 	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -161,7 +161,7 @@ uword IopDmacRegister_Icrw::channel_tcm(const IopDmacChannel * channel)
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel get TCM index.");
 }
 
-void IopDmacRegister_Icrw::set_channel_tcm(const IopDmacChannel * channel, const uword value)
+void IopDmacRegister_Icrw::set_channel_tcm(const IopDmacChannel * channel, const uword value) const
 {
 	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -172,7 +172,7 @@ void IopDmacRegister_Icrw::set_channel_tcm(const IopDmacChannel * channel, const
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel set TCM index.");
 }
 
-uword IopDmacRegister_Icrw::channel_tci(const IopDmacChannel * channel)
+uword IopDmacRegister_Icrw::get_channel_tci(const IopDmacChannel * channel) const
 {
 	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)
@@ -183,7 +183,7 @@ uword IopDmacRegister_Icrw::channel_tci(const IopDmacChannel * channel)
 		throw std::runtime_error("IOP DMAC PCRW could not determine channel get TCI index.");
 }
 
-void IopDmacRegister_Icrw::set_channel_tci(const IopDmacChannel * channel, const uword value)
+void IopDmacRegister_Icrw::set_channel_tci(const IopDmacChannel * channel, const uword value) const
 {
 	// Channels 0-6 belong to ICR0, channels 7-13 belong to ICR1.
 	if (*channel->channel_id >= 0 && *channel->channel_id < 7)

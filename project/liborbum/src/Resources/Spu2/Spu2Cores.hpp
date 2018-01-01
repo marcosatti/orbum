@@ -1,34 +1,26 @@
 #pragma once
 
 #include "Common/Constants.hpp"
-#include "Common/Types/FifoQueue/SpscFifoQueue.hpp"
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 
 #include "Resources/Spu2/Spu2CoreRegisters.hpp"
 #include "Resources/Spu2/Spu2CoreVoice.hpp"
 #include "Resources/Spu2/Spu2CoreTable.hpp"
 
-/*
-Base class representing a SPU2 core.
-There are 2 individual cores in the SPU2, each with 24 voice channels.
-*/
+/// Base class representing a SPU2 core.
+/// There are 2 individual cores in the SPU2, each with 24 voice channels.
 class Spu2Core_Base 
 {
 public:
 	Spu2Core_Base(const int core_id);
 
-	/*
-	Associated DMA FIFO queue attached to this core.
-	*/
-	SpscFifoQueue * dma_fifo_queue;
+	/// Associated DMA FIFO queue attached to this core.
+	DmaFifoQueue<> * dma_fifo_queue;
 	
-	/*
-	SPU2 Core ID.
-	*/
+	/// SPU2 Core ID.
 	const int core_id;
 
-	/*
-	SPU2 Core registers.
-	*/
+	/// SPU2 Core registers.
 	Spu2CoreRegister_Chan0 pmon0;
 	Spu2CoreRegister_Chan1 pmon1;
 	Spu2CoreRegister_Chan0 non0;
@@ -53,7 +45,7 @@ public:
 	SizedHwordRegister     tsal;
 	SizedHwordRegister     data0;
 	SizedHwordRegister     data1;
-	SizedHwordRegister     admas; // "AutoDMA Status".
+	Spu2CoreRegister_Admas admas; // "AutoDMA Status".
 	SizedHwordRegister     esah;
 	SizedHwordRegister     esal;
 	SizedHwordRegister     apf1_sizeh;
@@ -104,7 +96,7 @@ public:
 	SizedHwordRegister     eeal;
 	SizedHwordRegister     endx0;
 	SizedHwordRegister     endx1;
-	Spu2CoreRegister_StatX statx;
+	Spu2CoreRegister_Statx statx;
 	Spu2CoreRegister_Vol   mvoll;
 	Spu2CoreRegister_Vol   mvolr;
 	SizedHwordRegister     evoll;
@@ -126,10 +118,8 @@ public:
 	SizedHwordRegister     in_coef_l;
 	SizedHwordRegister     in_coef_r;
 
-	/*
-	SPU2 Core voice channels.
-	There are 24 voices in total.
-	*/
+	/// SPU2 Core voice channels.
+	/// There are 24 voices in total.
 	Spu2CoreVoice voice_0;
 	Spu2CoreVoice voice_1;
 	Spu2CoreVoice voice_2;
@@ -155,9 +145,4 @@ public:
 	Spu2CoreVoice voice_22;
 	Spu2CoreVoice voice_23;
 	Spu2CoreVoice * voices[Constants::SPU2::NUMBER_CORE_VOICES];
-
-	/*
-	Returns the constant properties for this core.
-	*/
-	const Spu2CoreTable::Spu2CoreInfo * get_static_info() const;
 };

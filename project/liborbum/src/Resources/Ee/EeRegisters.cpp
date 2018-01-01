@@ -1,3 +1,7 @@
+#include <boost/format.hpp>
+
+#include "Core.hpp"
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Primitive.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
@@ -23,13 +27,13 @@ void EeRegister_Sio::write_ubyte(const size_t offset, const ubyte value)
 			// Do not bother outputting the '\r' or '\n' characters, as this is done by the logging functions of the emulator.
 
 			// Output the message.
-			log(Debug, "%s: %s", SIO_BUFFER_PREFIX, sioBuffer.c_str());
+			BOOST_LOG(Core::get_logger()) << boost::format("%s: %s") % SIO_BUFFER_PREFIX % sio_buffer.c_str();
 
 			// Reset the buffer.
-			sioBuffer.clear();
+			sio_buffer.clear();
 		}
 		else if (value != '\n') // See above for why '\n' is not written to the buffer.
-			sioBuffer.push_back(value);
+			sio_buffer.push_back(value);
 #endif
 		break;
 	}

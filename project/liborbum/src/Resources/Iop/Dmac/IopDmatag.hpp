@@ -4,17 +4,25 @@
 
 /// An IOP DMAtag type, as explained by wisi and SP193's IOP DMA docs.
 /// Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred to as 64-bits in the map data below).
-struct IopDmaTag
+/// The other 64-bits are discarded upon reading the tag.
+struct IopDmatag
 {
 	static constexpr Bitfield ADDR   = Bitfield(0, 24); // For tag0.
 	static constexpr Bitfield IRQ    = Bitfield(30, 1); // For tag0.
 	static constexpr Bitfield ERT    = Bitfield(31, 1); // For tag0.
 	static constexpr Bitfield LENGTH = Bitfield(0, 24); // For tag1.
 
+	/// Construct a blank tag.
+	IopDmatag() : 
+		tag0(0),
+		tag1(0)
+	{
+	}
+
 	/// Construct the tag with the raw values.
 	/// - tag0 is for bits 0-31.
 	/// - tag1 is for bits 32-63.
-	IopDmaTag(const uword tag0, const uword tag1) :
+	IopDmatag(const uword tag0, const uword tag1) :
 		tag0(tag0),
 		tag1(tag1)
 	{

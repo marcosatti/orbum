@@ -1,6 +1,7 @@
 #include "Common/Types/Register/SizedQwordRegister.hpp"
 
 SizedQwordRegister::SizedQwordRegister(const uqword initial_value, const bool read_only) :
+	q(initial_value),
 	initial_value(initial_value),
 	read_only(read_only)
 {
@@ -104,9 +105,4 @@ void SizedQwordRegister::write_uqword(const uqword value)
 {
 	if (!read_only)
 		q = value;
-}
-
-usize SizedQwordRegister::byte_bus_map_size() const
-{
-	return static_cast<usize>(NUMBER_BYTES_IN_QWORD);
 }

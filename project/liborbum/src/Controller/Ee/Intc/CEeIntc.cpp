@@ -1,41 +1,62 @@
+#include "Core.hpp"
 
-
-#include "VM/VM.h"
-#include "VM/Systems/EE/INTC/EEIntc_s.h"
+#include "Controller/Ee/Intc/CEeIntc.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Ee/REe.hpp"
-#include "Resources/Ee/Intc/REeIntc.hpp"
-#include "Resources/Ee/Intc/EeIntcRegisters.hpp"
-#include "Resources/Ee/Core/REeCore.hpp"
-#include "Resources/Ee/Core/EeCoreCop0.hpp"
-#include "Resources/Ee/Core/EeCoreCop0Registers.hpp"
 
-EEIntc_s::EEIntc_s(VM * vm) :
-	VMSystem_t(vm, Context_t::EEIntc)
+CEeIntc::CEeIntc(Core * core) :
+	CController(core)
 {
-	mEECOP0 = getVM()->getResources()->EE->EECore->COP0;
-	mINTC = getVM()->getResources()->EE->INTC;
 }
 
-void EEIntc_s::initialise()
+void CEeIntc::handle_event(const ControllerEvent & event) const
 {
-	mINTC->STAT->initialise();
-	mINTC->MASK->initialise();
+	switch (event.type)
+	{
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CEeIntc event handler not implemented - please fix!");
+	}
+	}
 }
 
-int EEIntc_s::step(const Event_t & event)
+int CEeIntc::time_to_ticks(const double time_us) const
 {
-	// Check the interrupt status on the stat register.
-	if (mINTC->STAT->read_uword() & mINTC->MASK->read_uword())
-		mEECOP0->Cause->set_irq_line(, 2);
-	else
-		mEECOP0->Cause->clear_irq_line(, 2);
+	// TODO: find out for sure.
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeIntc]);
 	
-	// INTC has completed 1 cycle.
-#if ACCURACY_SKIP_TICKS_ON_NO_WORK
-	return event.mQuantity;
-#else
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "EeIntc ticks too low - increase time delta";
+			warned = true;
+		}
+	}
+
+	return ticks;
+}
+
+int CEeIntc::time_step(const int ticks_available) const
+{
+	auto& r = core->get_resources();
+	auto& cause = r.ee.core.cop0.cause;
+	auto& stat = r.ee.intc.stat;
+	auto& mask = r.ee.intc.mask;
+
+	// Check the interrupt status on the stat register.
+	if (stat.read_uword() & mask.read_uword())
+		cause.set_irq_line(2);
+	else
+		cause.clear_irq_line(2);
+
 	return 1;
-#endif
 }

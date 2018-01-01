@@ -4,7 +4,7 @@
 
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
-#include "Common/Types/FifoQueue/SpscFifoQueue.hpp"
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 
 #include "Resources/Gs/RGs.hpp"
 #include "Resources/Ee/REe.hpp"
@@ -53,27 +53,27 @@ struct RResources
 	SizedWordRegister  sbus_f380;  
 
 	/// FIFO Queue registers, attached to both the EE and IOP DMAC channels.
-	static constexpr size_t DEBUG_FIFO_SIZE = 4 * 128 * 16;
-	SpscFifoQueue      fifo_vif0;
-	SpscFifoQueue      fifo_vif1;
-	SpscFifoQueue      fifo_gif;
-	SpscFifoQueue      fifo_fromipu;
-	SpscFifoQueue      fifo_toipu;
-	SpscFifoQueue      fifo_sif0;
-	SpscFifoQueue      fifo_sif1;
-	SbusFifoQueue_Sif2 fifo_sif2;
-	SpscFifoQueue      fifo_frommdec;
-	SpscFifoQueue      fifo_tomdec;
-	SpscFifoQueue      fifo_cdvd;
-	SpscFifoQueue      fifo_spu2c0;
-	SpscFifoQueue      fifo_pio;
-	SpscFifoQueue      fifo_otclear;
-	SpscFifoQueue      fifo_spu2c1;
-	SpscFifoQueue      fifo_dev9;
-	SpscFifoQueue      fifo_fromsio2;
-	SpscFifoQueue      fifo_tosio2;
+	DmaFifoQueue<>       fifo_vif0;
+	DmaFifoQueue<>       fifo_vif1;
+	DmaFifoQueue<>       fifo_gif;
+	DmaFifoQueue<>       fifo_fromipu;
+	DmaFifoQueue<>       fifo_toipu;
+	DmaFifoQueue<>       fifo_sif0;
+	DmaFifoQueue<>       fifo_sif1;
+	SbusFifoQueue_Sif2   fifo_sif2;
+	DmaFifoQueue<>       fifo_frommdec;
+	DmaFifoQueue<>       fifo_tomdec;
+	DmaFifoQueue<>       fifo_cdvd;
+	DmaFifoQueue<>       fifo_spu2c0;
+	DmaFifoQueue<>       fifo_pio;
+	DmaFifoQueue<>       fifo_otclear;
+	DmaFifoQueue<>       fifo_spu2c1;
+	DmaFifoQueue<>       fifo_dev9;
+	DmaFifoQueue<>       fifo_fromsio2;
+	DmaFifoQueue<>       fifo_tosio2;
 };
 
 /// Initialises the resources by filling in references, performing bus mappings, etc.
 /// Only perform after RResources struct has been allocated!
+/// Done by the core after a reset.
 void initialise_resources(const std::unique_ptr<RResources> & r);

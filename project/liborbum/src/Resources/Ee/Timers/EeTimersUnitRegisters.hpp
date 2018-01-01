@@ -35,10 +35,8 @@ private:
 	int prescale_count;
 };
 
-/*
-The Timer Mode register type. See EE Users Manual page 36.
-Writing 1 to the Equal flag or Overflow flag (bits 10 and 11) will trigger a timer unit reset.
-*/
+/// The Timer Mode register type. See EE Users Manual page 36.
+/// Writing 1 to the Equal flag or Overflow flag (bits 10 and 11) will trigger a timer unit reset.
 class EeTimersUnitRegister_Mode : public SizedWordRegister, public ScopeLock
 {
 public:
@@ -63,20 +61,15 @@ public:
 	/// Returns if CLKS and GATS are both set to H-BLNK, which is used as a special condition.
 	bool is_gate_hblnk_special();
 
+	/// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
+	bool write_latch;
+
+	/// Calculates unit parameters including:
+	/// - Internally sets the event source this timer follows.
+	/// - Returns the prescale that should be set on the count register.
+	uword calculate_prescale_and_set_event();
+	
 	/// Holds the cached result of which event type this timer is following.
 	ControllerEventType event_type;
-
-	/// Bus write latch. Signifies that the timer unit might need to be reset (ie: count).
-	/// Controller will need to check if the CUE bit is 1 for a reset.
-	bool write_latch;
-	
-	/// Contains the calculated prescale to apply to the count register upon resetting (through bus write).
-	/// The prescale should be applied to the count register by the controller.
-	uword count_reset_prescale_target;
-
-private:
-	/// Updates which event type this timer follows, triggered on a bus write.
-	/// Also calculates the prescale the count register should use.
-	void handle_event_type_update();
 };
 

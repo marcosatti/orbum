@@ -34,3 +34,8 @@ void HwordRegister::offset(const shword value)
 {
 	write_uhword(read_uhword() + value);
 }
+
+usize HwordRegister::byte_bus_map_size() const
+{
+	return static_cast<usize>(NUMBER_BYTES_IN_HWORD);
+}

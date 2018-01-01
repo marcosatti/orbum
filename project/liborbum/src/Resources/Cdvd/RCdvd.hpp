@@ -59,6 +59,4 @@ struct RCdvd
 	/// CDVD NVRAM state.
 	/// TODO: Assumes the correct bios for now, change to be dynamic later.
 	CdvdNvram_000 nvram;
-
-	static constexpr int DEBUG_FIFO_SIZE = 128;
 };

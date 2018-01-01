@@ -1,44 +1,70 @@
+#include "Core.hpp"
 
-
-#include "VM/VM.h"
-#include "VM/Systems/IOP/SIO2/SIO2_s.h"
+#include "Controller/Iop/Sio2/CSio2.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/IOP/IOP_t.h"
-#include "Resources/Iop/Intc/RIopIntc.hpp"
-#include "Resources/IOP/INTC/Types/IOPIntcRegisters_t.h"
-#include "Resources/IOP/SIO2/SIO2_t.h"
-#include "Resources/IOP/SIO2/Types/SIO2Registers_t.h"
 
-SIO2_s::SIO2_s(VM * vm) : 
-	VMSystem_t(vm, Context_t::SIO2)
-{
-	mSIO2 = getVM()->getResources()->IOP->SIO2;
-	mINTC = getVM()->getResources()->IOP->INTC;
-}
-
-void SIO2_s::initialise()
+CSio2::CSio2(Core * core) : 
+	CController(core)
 {
 }
 
-int SIO2_s::step(const Event_t & event)
+void CSio2::handle_event(const ControllerEvent & event) const
 {
-	if (mSIO2->CTRL->mPendingCommand)
+	switch (event.type)
 	{
-		mSIO2->CTRL->mPendingCommand = false; 
-		
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CSio2 event handler not implemented - please fix!");
+	}
+	}
+}
+
+int CSio2::time_to_ticks(const double time_us) const
+{
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::SIO2::SIO2_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Sio2]);
+	
+	if (ticks < 10)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "Sio0 ticks too low - increase time delta";
+			warned = true;
+		}
+	}
+
+	return ticks;
+}
+
+int CSio2::time_step(const int ticks_available) const
+{
+	auto& r = core->get_resources();
+	
+	if (r.iop.sio2.ctrl.write_latch)
+	{
 		/*
-		if (mSIO2->CTRL->getFieldValue(, SIO2Register_CTRL_t::Reset) > 0)
+		if (r.iop.sio2.ctrl.extract_field(SIO2Register_CTRL_t::Reset) > 0)
 		{
 		}
 		else
 		{
-
+	
 		}
 		*/
-
+	
 		// Raise IOP IRQ always.
-		mINTC->STAT->setFieldValue(, IOPIntcRegister_STAT_t::SIO2, 1);
+		//r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
+
+		r.iop.sio2.ctrl.write_latch = false; 
 	}
-	return event.mQuantity;
+
+	return 1;
 }

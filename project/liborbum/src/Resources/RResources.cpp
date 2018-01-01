@@ -5,33 +5,52 @@ RResources::RResources() :
 	rom1(Constants::EE::ROM::SIZE_ROM1, 0, true),
 	erom(Constants::EE::ROM::SIZE_EROM, 0, true),
 	rom2(Constants::EE::ROM::SIZE_ROM2, 0, true),
-	fifo_vif0(DEBUG_FIFO_SIZE),
-	fifo_vif1(DEBUG_FIFO_SIZE),
-	fifo_gif(DEBUG_FIFO_SIZE),
-	fifo_fromipu(DEBUG_FIFO_SIZE),
-	fifo_toipu(DEBUG_FIFO_SIZE),
-	fifo_sif0(DEBUG_FIFO_SIZE),
-	fifo_sif1(DEBUG_FIFO_SIZE),
-	fifo_sif2(DEBUG_FIFO_SIZE),
-	fifo_frommdec(DEBUG_FIFO_SIZE),
-	fifo_tomdec(DEBUG_FIFO_SIZE),
-	fifo_cdvd(DEBUG_FIFO_SIZE),
-	fifo_spu2c0(DEBUG_FIFO_SIZE),
-	fifo_pio(DEBUG_FIFO_SIZE),
-	fifo_otclear(DEBUG_FIFO_SIZE),
-	fifo_spu2c1(DEBUG_FIFO_SIZE),
-	fifo_dev9(DEBUG_FIFO_SIZE),
-	fifo_fromsio2(DEBUG_FIFO_SIZE),
-	fifo_tosio2(DEBUG_FIFO_SIZE)
+	sbus_f260(0, true)
 {
+}
+
+void initialise_cdvd(RResources * r)
+{
+	r->cdvd.n_data_out.ns_rdy_din = &r->cdvd.n_rdy_din;
+	r->cdvd.s_data_out.ns_rdy_din = &r->cdvd.s_rdy_din;
+	r->cdvd.n_command.ns_rdy_din = &r->cdvd.n_rdy_din;
+	r->cdvd.s_command.ns_rdy_din = &r->cdvd.s_rdy_din;
 }
 
 void initialise_spu2(RResources * r)
 {
 	r->spu2.core_0.dma_fifo_queue = &r->fifo_spu2c0;
-	r->spu2.core_0.dma_fifo_queue = &r->fifo_spu2c1;
+	r->spu2.core_1.dma_fifo_queue = &r->fifo_spu2c1;
 	r->spu2.cores[0] = &r->spu2.core_0;
 	r->spu2.cores[1] = &r->spu2.core_1;
+	r->spu2.core_0.admas.core_id = &r->spu2.core_0.core_id;
+	r->spu2.core_1.admas.core_id = &r->spu2.core_1.core_id;
+}
+
+void initialise_ee_timers(RResources * r)
+{
+	r->ee.timers.units[0].unit_id = &r->ee.timers.unit_0.unit_id;
+	r->ee.timers.units[1].unit_id = &r->ee.timers.unit_1.unit_id;
+	r->ee.timers.units[2].unit_id = &r->ee.timers.unit_2.unit_id;
+	r->ee.timers.units[3].unit_id = &r->ee.timers.unit_3.unit_id;
+
+	r->ee.timers.units[0].count = &r->ee.timers.unit_0.count;
+	r->ee.timers.units[1].count = &r->ee.timers.unit_1.count;
+	r->ee.timers.units[2].count = &r->ee.timers.unit_2.count;
+	r->ee.timers.units[3].count = &r->ee.timers.unit_3.count;
+
+	r->ee.timers.units[0].mode = &r->ee.timers.unit_0.mode;
+	r->ee.timers.units[1].mode = &r->ee.timers.unit_1.mode;
+	r->ee.timers.units[2].mode = &r->ee.timers.unit_2.mode;
+	r->ee.timers.units[3].mode = &r->ee.timers.unit_3.mode;
+	
+	r->ee.timers.units[0].compare = &r->ee.timers.unit_0.compare;
+	r->ee.timers.units[1].compare = &r->ee.timers.unit_1.compare;
+	r->ee.timers.units[2].compare = &r->ee.timers.unit_2.compare;
+	r->ee.timers.units[3].compare = &r->ee.timers.unit_3.compare;
+
+	r->ee.timers.units[0].hold = &r->ee.timers.unit_0.hold;
+	r->ee.timers.units[1].hold = &r->ee.timers.unit_1.hold;
 }
 
 void initialise_ee_dmac(RResources * r)
@@ -42,147 +61,167 @@ void initialise_ee_dmac(RResources * r)
 	r->ee.dmac.channel_sif2.chcr.sbus_f240 = &r->sbus_f240;
 
 	// Init channel abstrations.
-	r->ee.dmac.channels[0]->channel_id = &r->ee.dmac.channel_vif0.channel_id;
-	r->ee.dmac.channels[0]->madr = &r->ee.dmac.channel_vif0.madr;
-	r->ee.dmac.channels[0]->qwc = &r->ee.dmac.channel_vif0.qwc;
-	r->ee.dmac.channels[0]->chcr = &r->ee.dmac.channel_vif0.chcr;
-	r->ee.dmac.channels[0]->tadr = &r->ee.dmac.channel_vif0.tadr;
-	r->ee.dmac.channels[0]->asr[0] = &r->ee.dmac.channel_vif0.asr[0];
-	r->ee.dmac.channels[0]->asr[1] = &r->ee.dmac.channel_vif0.asr[1];
-	r->ee.dmac.channels[1]->channel_id = &r->ee.dmac.channel_vif1.channel_id;
-	r->ee.dmac.channels[1]->madr = &r->ee.dmac.channel_vif1.madr;
-	r->ee.dmac.channels[1]->qwc = &r->ee.dmac.channel_vif1.qwc;
-	r->ee.dmac.channels[1]->chcr = &r->ee.dmac.channel_vif1.chcr;
-	r->ee.dmac.channels[1]->tadr = &r->ee.dmac.channel_vif1.tadr;
-	r->ee.dmac.channels[1]->asr[0] = &r->ee.dmac.channel_vif1.asr[0];
-	r->ee.dmac.channels[1]->asr[1] = &r->ee.dmac.channel_vif1.asr[1];
-	r->ee.dmac.channels[2]->channel_id = &r->ee.dmac.channel_gif.channel_id;
-	r->ee.dmac.channels[2]->madr = &r->ee.dmac.channel_gif.madr;
-	r->ee.dmac.channels[2]->qwc = &r->ee.dmac.channel_gif.qwc;
-	r->ee.dmac.channels[2]->chcr = &r->ee.dmac.channel_gif.chcr;
-	r->ee.dmac.channels[2]->tadr = &r->ee.dmac.channel_gif.tadr;
-	r->ee.dmac.channels[2]->asr[0] = &r->ee.dmac.channel_gif.asr[0];
-	r->ee.dmac.channels[2]->asr[1] = &r->ee.dmac.channel_gif.asr[1];
-	r->ee.dmac.channels[3]->channel_id = &r->ee.dmac.channel_fromipu.channel_id;
-	r->ee.dmac.channels[3]->madr = &r->ee.dmac.channel_fromipu.madr;
-	r->ee.dmac.channels[3]->qwc = &r->ee.dmac.channel_fromipu.qwc;
-	r->ee.dmac.channels[3]->chcr = &r->ee.dmac.channel_fromipu.chcr;
-	r->ee.dmac.channels[4]->channel_id = &r->ee.dmac.channel_toipu.channel_id;
-	r->ee.dmac.channels[4]->madr = &r->ee.dmac.channel_toipu.madr;
-	r->ee.dmac.channels[4]->qwc = &r->ee.dmac.channel_toipu.qwc;
-	r->ee.dmac.channels[4]->chcr = &r->ee.dmac.channel_toipu.chcr;
-	r->ee.dmac.channels[4]->tadr = &r->ee.dmac.channel_toipu.tadr;
-	r->ee.dmac.channels[5]->channel_id = &r->ee.dmac.channel_sif0.channel_id;
-	r->ee.dmac.channels[5]->madr = &r->ee.dmac.channel_sif0.madr;
-	r->ee.dmac.channels[5]->qwc = &r->ee.dmac.channel_sif0.qwc;
-	r->ee.dmac.channels[5]->chcr = &r->ee.dmac.channel_sif0.chcr;
-	r->ee.dmac.channels[6]->channel_id = &r->ee.dmac.channel_sif1.channel_id;
-	r->ee.dmac.channels[6]->madr = &r->ee.dmac.channel_sif1.madr;
-	r->ee.dmac.channels[6]->qwc = &r->ee.dmac.channel_sif1.qwc;
-	r->ee.dmac.channels[6]->chcr = &r->ee.dmac.channel_sif1.chcr;
-	r->ee.dmac.channels[6]->tadr = &r->ee.dmac.channel_sif1.tadr;
-	r->ee.dmac.channels[7]->channel_id = &r->ee.dmac.channel_sif2.channel_id;
-	r->ee.dmac.channels[7]->madr = &r->ee.dmac.channel_sif2.madr;
-	r->ee.dmac.channels[7]->qwc = &r->ee.dmac.channel_sif2.qwc;
-	r->ee.dmac.channels[7]->chcr = &r->ee.dmac.channel_sif2.chcr;
-	r->ee.dmac.channels[8]->channel_id = &r->ee.dmac.channel_fromspr.channel_id;
-	r->ee.dmac.channels[8]->madr = &r->ee.dmac.channel_fromspr.madr;
-	r->ee.dmac.channels[8]->qwc = &r->ee.dmac.channel_fromspr.qwc;
-	r->ee.dmac.channels[8]->chcr = &r->ee.dmac.channel_fromspr.chcr;
-	r->ee.dmac.channels[8]->sadr = &r->ee.dmac.channel_fromspr.sadr;
-	r->ee.dmac.channels[9]->channel_id = &r->ee.dmac.channel_tospr.channel_id;
-	r->ee.dmac.channels[9]->madr = &r->ee.dmac.channel_tospr.madr;
-	r->ee.dmac.channels[9]->qwc = &r->ee.dmac.channel_tospr.qwc;
-	r->ee.dmac.channels[9]->chcr = &r->ee.dmac.channel_tospr.chcr;
-	r->ee.dmac.channels[9]->tadr = &r->ee.dmac.channel_tospr.tadr;
-	r->ee.dmac.channels[9]->sadr = &r->ee.dmac.channel_tospr.sadr;
+	r->ee.dmac.channels[0].channel_id = &r->ee.dmac.channel_vif0.channel_id;
+	r->ee.dmac.channels[0].madr = &r->ee.dmac.channel_vif0.madr;
+	r->ee.dmac.channels[0].qwc = &r->ee.dmac.channel_vif0.qwc;
+	r->ee.dmac.channels[0].chcr = &r->ee.dmac.channel_vif0.chcr;
+	r->ee.dmac.channels[0].tadr = &r->ee.dmac.channel_vif0.tadr;
+	r->ee.dmac.channels[0].asr[0] = &r->ee.dmac.channel_vif0.asr[0];
+	r->ee.dmac.channels[0].asr[1] = &r->ee.dmac.channel_vif0.asr[1];
+	r->ee.dmac.channels[1].channel_id = &r->ee.dmac.channel_vif1.channel_id;
+	r->ee.dmac.channels[1].madr = &r->ee.dmac.channel_vif1.madr;
+	r->ee.dmac.channels[1].qwc = &r->ee.dmac.channel_vif1.qwc;
+	r->ee.dmac.channels[1].chcr = &r->ee.dmac.channel_vif1.chcr;
+	r->ee.dmac.channels[1].tadr = &r->ee.dmac.channel_vif1.tadr;
+	r->ee.dmac.channels[1].asr[0] = &r->ee.dmac.channel_vif1.asr[0];
+	r->ee.dmac.channels[1].asr[1] = &r->ee.dmac.channel_vif1.asr[1];
+	r->ee.dmac.channels[2].channel_id = &r->ee.dmac.channel_gif.channel_id;
+	r->ee.dmac.channels[2].madr = &r->ee.dmac.channel_gif.madr;
+	r->ee.dmac.channels[2].qwc = &r->ee.dmac.channel_gif.qwc;
+	r->ee.dmac.channels[2].chcr = &r->ee.dmac.channel_gif.chcr;
+	r->ee.dmac.channels[2].tadr = &r->ee.dmac.channel_gif.tadr;
+	r->ee.dmac.channels[2].asr[0] = &r->ee.dmac.channel_gif.asr[0];
+	r->ee.dmac.channels[2].asr[1] = &r->ee.dmac.channel_gif.asr[1];
+	r->ee.dmac.channels[3].channel_id = &r->ee.dmac.channel_fromipu.channel_id;
+	r->ee.dmac.channels[3].madr = &r->ee.dmac.channel_fromipu.madr;
+	r->ee.dmac.channels[3].qwc = &r->ee.dmac.channel_fromipu.qwc;
+	r->ee.dmac.channels[3].chcr = &r->ee.dmac.channel_fromipu.chcr;
+	r->ee.dmac.channels[4].channel_id = &r->ee.dmac.channel_toipu.channel_id;
+	r->ee.dmac.channels[4].madr = &r->ee.dmac.channel_toipu.madr;
+	r->ee.dmac.channels[4].qwc = &r->ee.dmac.channel_toipu.qwc;
+	r->ee.dmac.channels[4].chcr = &r->ee.dmac.channel_toipu.chcr;
+	r->ee.dmac.channels[4].tadr = &r->ee.dmac.channel_toipu.tadr;
+	r->ee.dmac.channels[5].channel_id = &r->ee.dmac.channel_sif0.channel_id;
+	r->ee.dmac.channels[5].madr = &r->ee.dmac.channel_sif0.madr;
+	r->ee.dmac.channels[5].qwc = &r->ee.dmac.channel_sif0.qwc;
+	r->ee.dmac.channels[5].chcr = &r->ee.dmac.channel_sif0.chcr;
+	r->ee.dmac.channels[6].channel_id = &r->ee.dmac.channel_sif1.channel_id;
+	r->ee.dmac.channels[6].madr = &r->ee.dmac.channel_sif1.madr;
+	r->ee.dmac.channels[6].qwc = &r->ee.dmac.channel_sif1.qwc;
+	r->ee.dmac.channels[6].chcr = &r->ee.dmac.channel_sif1.chcr;
+	r->ee.dmac.channels[6].tadr = &r->ee.dmac.channel_sif1.tadr;
+	r->ee.dmac.channels[7].channel_id = &r->ee.dmac.channel_sif2.channel_id;
+	r->ee.dmac.channels[7].madr = &r->ee.dmac.channel_sif2.madr;
+	r->ee.dmac.channels[7].qwc = &r->ee.dmac.channel_sif2.qwc;
+	r->ee.dmac.channels[7].chcr = &r->ee.dmac.channel_sif2.chcr;
+	r->ee.dmac.channels[8].channel_id = &r->ee.dmac.channel_fromspr.channel_id;
+	r->ee.dmac.channels[8].madr = &r->ee.dmac.channel_fromspr.madr;
+	r->ee.dmac.channels[8].qwc = &r->ee.dmac.channel_fromspr.qwc;
+	r->ee.dmac.channels[8].chcr = &r->ee.dmac.channel_fromspr.chcr;
+	r->ee.dmac.channels[8].sadr = &r->ee.dmac.channel_fromspr.sadr;
+	r->ee.dmac.channels[9].channel_id = &r->ee.dmac.channel_tospr.channel_id;
+	r->ee.dmac.channels[9].madr = &r->ee.dmac.channel_tospr.madr;
+	r->ee.dmac.channels[9].qwc = &r->ee.dmac.channel_tospr.qwc;
+	r->ee.dmac.channels[9].chcr = &r->ee.dmac.channel_tospr.chcr;
+	r->ee.dmac.channels[9].tadr = &r->ee.dmac.channel_tospr.tadr;
+	r->ee.dmac.channels[9].sadr = &r->ee.dmac.channel_tospr.sadr;
 
 	// Init DMA FIFO queues.
-	r->ee.dmac.channels[0]->dma_fifo_queue = &r->fifo_vif0;
-	r->ee.dmac.channels[1]->dma_fifo_queue = &r->fifo_vif1;
-	r->ee.dmac.channels[2]->dma_fifo_queue = &r->fifo_gif;
-	r->ee.dmac.channels[3]->dma_fifo_queue = &r->fifo_fromipu;
-	r->ee.dmac.channels[4]->dma_fifo_queue = &r->fifo_toipu;
-	r->ee.dmac.channels[5]->dma_fifo_queue = &r->fifo_sif0;
-	r->ee.dmac.channels[6]->dma_fifo_queue = &r->fifo_sif1;
-	r->ee.dmac.channels[7]->dma_fifo_queue = &r->fifo_sif2;
+	r->ee.dmac.channels[0].dma_fifo_queue = &r->fifo_vif0;
+	r->ee.dmac.channels[1].dma_fifo_queue = &r->fifo_vif1;
+	r->ee.dmac.channels[2].dma_fifo_queue = &r->fifo_gif;
+	r->ee.dmac.channels[3].dma_fifo_queue = &r->fifo_fromipu;
+	r->ee.dmac.channels[4].dma_fifo_queue = &r->fifo_toipu;
+	r->ee.dmac.channels[5].dma_fifo_queue = &r->fifo_sif0;
+	r->ee.dmac.channels[6].dma_fifo_queue = &r->fifo_sif1;
+	r->ee.dmac.channels[7].dma_fifo_queue = &r->fifo_sif2;
 }
 
 void initialise_ee_vpu(RResources * r)
 {
+	// Init VIF resources.
+	r->ee.vpu.vif.unit_0.dma_fifo_queue = &r->fifo_vif0;
+	r->ee.vpu.vif.unit_1.dma_fifo_queue = &r->fifo_vif1;
+
+	r->ee.vpu.vif.units[0] = &r->ee.vpu.vif.unit_0;
+	r->ee.vpu.vif.units[1] = &r->ee.vpu.vif.unit_1;
+
+	// Init vi registers.
+	r->ee.vpu.vu.unit_0.vi[0] = &r->ee.vpu.vu.unit_0.vi_zero_register;
+	r->ee.vpu.vu.unit_1.vi[0] = &r->ee.vpu.vu.unit_1.vi_zero_register;
+	for (int i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS - 1; i++)
+	{
+		r->ee.vpu.vu.unit_0.vi[i + 1] = &r->ee.vpu.vu.unit_0.vi_base[i];
+		r->ee.vpu.vu.unit_1.vi[i + 1] = &r->ee.vpu.vu.unit_1.vi_base[i];
+	}	
+
 	// Init vi_32 wrappers.
 	for (int i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
 	{
-		r->ee.vpu.vu0.vi_32[i].hword_register = &r->ee.vpu.vu0.vi[i];
-		r->ee.vpu.vu1.vi_32[i].hword_register = &r->ee.vpu.vu1.vi[i];
+		r->ee.vpu.vu.unit_0.vi_32[i].hword_register = r->ee.vpu.vu.unit_0.vi[i];
+		r->ee.vpu.vu.unit_1.vi_32[i].hword_register = r->ee.vpu.vu.unit_1.vi[i];
 	}
 
-	// Init vu0.ccr registers.
-	r->ee.vpu.vu0.ccr[0] = &r->ee.vpu.vu0.vi_32[0];
-	r->ee.vpu.vu0.ccr[1] = &r->ee.vpu.vu0.vi_32[1];
-	r->ee.vpu.vu0.ccr[2] = &r->ee.vpu.vu0.vi_32[2];
-	r->ee.vpu.vu0.ccr[3] = &r->ee.vpu.vu0.vi_32[3];
-	r->ee.vpu.vu0.ccr[4] = &r->ee.vpu.vu0.vi_32[4];
-	r->ee.vpu.vu0.ccr[5] = &r->ee.vpu.vu0.vi_32[5];
-	r->ee.vpu.vu0.ccr[6] = &r->ee.vpu.vu0.vi_32[6];
-	r->ee.vpu.vu0.ccr[7] = &r->ee.vpu.vu0.vi_32[7];
-	r->ee.vpu.vu0.ccr[8] = &r->ee.vpu.vu0.vi_32[8];
-	r->ee.vpu.vu0.ccr[9] = &r->ee.vpu.vu0.vi_32[9];
-	r->ee.vpu.vu0.ccr[10] = &r->ee.vpu.vu0.vi_32[10];
-	r->ee.vpu.vu0.ccr[11] = &r->ee.vpu.vu0.vi_32[11];
-	r->ee.vpu.vu0.ccr[12] = &r->ee.vpu.vu0.vi_32[12];
-	r->ee.vpu.vu0.ccr[13] = &r->ee.vpu.vu0.vi_32[13];
-	r->ee.vpu.vu0.ccr[14] = &r->ee.vpu.vu0.vi_32[14];
-	r->ee.vpu.vu0.ccr[15] = &r->ee.vpu.vu0.vi_32[15];
-	r->ee.vpu.vu0.ccr[16] = &r->ee.vpu.vu0.status;
-	r->ee.vpu.vu0.ccr[17] = &r->ee.vpu.vu0.mac;
-	r->ee.vpu.vu0.ccr[18] = &r->ee.vpu.vu0.clipping;
-	r->ee.vpu.vu0.ccr[20] = &r->ee.vpu.vu0.r;
-	r->ee.vpu.vu0.ccr[21] = &r->ee.vpu.vu0.i;
-	r->ee.vpu.vu0.ccr[22] = &r->ee.vpu.vu0.q;
-	r->ee.vpu.vu0.ccr[26] = &r->ee.vpu.vu0.pc; // TPC.
-	r->ee.vpu.vu0.ccr[27] = &r->ee.vpu.vu0.cmsar;
-	r->ee.vpu.vu0.ccr[28] = &r->ee.vpu.fbrst;
-	r->ee.vpu.vu0.ccr[29] = &r->ee.vpu.stat;
-	r->ee.vpu.vu0.ccr[31] = &r->ee.vpu.vu1.cmsar;
+	// Init unit_0.ccr registers.
+	r->ee.vpu.vu.unit_0.ccr[0] = &r->ee.vpu.vu.unit_0.vi_32[0];
+	r->ee.vpu.vu.unit_0.ccr[1] = &r->ee.vpu.vu.unit_0.vi_32[1];
+	r->ee.vpu.vu.unit_0.ccr[2] = &r->ee.vpu.vu.unit_0.vi_32[2];
+	r->ee.vpu.vu.unit_0.ccr[3] = &r->ee.vpu.vu.unit_0.vi_32[3];
+	r->ee.vpu.vu.unit_0.ccr[4] = &r->ee.vpu.vu.unit_0.vi_32[4];
+	r->ee.vpu.vu.unit_0.ccr[5] = &r->ee.vpu.vu.unit_0.vi_32[5];
+	r->ee.vpu.vu.unit_0.ccr[6] = &r->ee.vpu.vu.unit_0.vi_32[6];
+	r->ee.vpu.vu.unit_0.ccr[7] = &r->ee.vpu.vu.unit_0.vi_32[7];
+	r->ee.vpu.vu.unit_0.ccr[8] = &r->ee.vpu.vu.unit_0.vi_32[8];
+	r->ee.vpu.vu.unit_0.ccr[9] = &r->ee.vpu.vu.unit_0.vi_32[9];
+	r->ee.vpu.vu.unit_0.ccr[10] = &r->ee.vpu.vu.unit_0.vi_32[10];
+	r->ee.vpu.vu.unit_0.ccr[11] = &r->ee.vpu.vu.unit_0.vi_32[11];
+	r->ee.vpu.vu.unit_0.ccr[12] = &r->ee.vpu.vu.unit_0.vi_32[12];
+	r->ee.vpu.vu.unit_0.ccr[13] = &r->ee.vpu.vu.unit_0.vi_32[13];
+	r->ee.vpu.vu.unit_0.ccr[14] = &r->ee.vpu.vu.unit_0.vi_32[14];
+	r->ee.vpu.vu.unit_0.ccr[15] = &r->ee.vpu.vu.unit_0.vi_32[15];
+	r->ee.vpu.vu.unit_0.ccr[16] = &r->ee.vpu.vu.unit_0.status;
+	r->ee.vpu.vu.unit_0.ccr[17] = &r->ee.vpu.vu.unit_0.mac;
+	r->ee.vpu.vu.unit_0.ccr[18] = &r->ee.vpu.vu.unit_0.clipping;
+	r->ee.vpu.vu.unit_0.ccr[20] = &r->ee.vpu.vu.unit_0.r;
+	r->ee.vpu.vu.unit_0.ccr[21] = &r->ee.vpu.vu.unit_0.i;
+	r->ee.vpu.vu.unit_0.ccr[22] = &r->ee.vpu.vu.unit_0.q;
+	r->ee.vpu.vu.unit_0.ccr[26] = &r->ee.vpu.vu.unit_0.pc; // TPC.
+	r->ee.vpu.vu.unit_0.ccr[27] = &r->ee.vpu.vu.unit_0.cmsar;
+	r->ee.vpu.vu.unit_0.ccr[28] = &r->ee.vpu.vu.fbrst;
+	r->ee.vpu.vu.unit_0.ccr[29] = &r->ee.vpu.stat;
+	r->ee.vpu.vu.unit_0.ccr[31] = &r->ee.vpu.vu.unit_1.cmsar;
 
 	// Init VU units array.
-	r->ee.vpu.vu_cores[0] = &r->ee.vpu.vu0;
-	r->ee.vpu.vu_cores[1] = &r->ee.vpu.vu1;
+	r->ee.vpu.vu.units[0] = &r->ee.vpu.vu.unit_0;
+	r->ee.vpu.vu.units[1] = &r->ee.vpu.vu.unit_1;
 
 	// Init VU0 memory.
 	{
 		// Memory + mirrors.
-		r->ee.vpu.vu0.bus.map(0x0000, &r->ee.vpu.vu0.memory_mem);
-		r->ee.vpu.vu0.bus.map(0x1000, &r->ee.vpu.vu0.memory_mem);
-		r->ee.vpu.vu0.bus.map(0x2000, &r->ee.vpu.vu0.memory_mem);
-		r->ee.vpu.vu0.bus.map(0x3000, &r->ee.vpu.vu0.memory_mem);
+		r->ee.vpu.vu.unit_0.bus.map(0x0000, &r->ee.vpu.vu.unit_0.memory_mem);
+		r->ee.vpu.vu.unit_0.bus.map(0x1000, &r->ee.vpu.vu.unit_0.memory_mem);
+		r->ee.vpu.vu.unit_0.bus.map(0x2000, &r->ee.vpu.vu.unit_0.memory_mem);
+		r->ee.vpu.vu.unit_0.bus.map(0x3000, &r->ee.vpu.vu.unit_0.memory_mem);
 	
 		// VU1.vf Registers, see VU Users Manual page 222. 
 		for (auto i = 0; i < Constants::EE::VPU::VU::NUMBER_VF_REGISTERS; i++)
-			r->ee.vpu.vu0.bus.map(0x4000 + i * NUMBER_BYTES_IN_QWORD, &r->ee.vpu.vu1.vf[i]);
+			r->ee.vpu.vu.unit_0.bus.map(0x4000 + i * NUMBER_BYTES_IN_QWORD, &r->ee.vpu.vu.unit_1.vf[i]);
 	
 		// VU1.vi Registers. Aligned on 128-bit boundaries, accessed by 32-bit r/w, but upper 16-bits discarded! 
 		// NOT mapped as the true register size of 16-bit. See EE Users Manual page 84.
 		for (auto i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
-			r->ee.vpu.vu0.bus.map(0x4200 + i * NUMBER_BYTES_IN_QWORD, &r->ee.vpu.vu1.vi_32[i]);
+			r->ee.vpu.vu.unit_0.bus.map(0x4200 + i * NUMBER_BYTES_IN_QWORD, &r->ee.vpu.vu.unit_1.vi_32[i]);
 	
 		// Misc Registers.
-		r->ee.vpu.vu0.bus.map(0x4300, &r->ee.vpu.vu1.status);
-		r->ee.vpu.vu0.bus.map(0x4310, &r->ee.vpu.vu1.mac);
-		r->ee.vpu.vu0.bus.map(0x4320, &r->ee.vpu.vu1.clipping);
-		r->ee.vpu.vu0.bus.map(0x4340, &r->ee.vpu.vu1.r);
-		r->ee.vpu.vu0.bus.map(0x4350, &r->ee.vpu.vu1.i);
-		r->ee.vpu.vu0.bus.map(0x4360, &r->ee.vpu.vu1.q);
-		r->ee.vpu.vu0.bus.map(0x4370, &r->ee.vpu.vu1.p);
-		r->ee.vpu.vu0.bus.map(0x43A0, &r->ee.vpu.vu1.pc); // TPC.
+		r->ee.vpu.vu.unit_0.bus.map(0x4300, &r->ee.vpu.vu.unit_1.status);
+		r->ee.vpu.vu.unit_0.bus.map(0x4310, &r->ee.vpu.vu.unit_1.mac);
+		r->ee.vpu.vu.unit_0.bus.map(0x4320, &r->ee.vpu.vu.unit_1.clipping);
+		r->ee.vpu.vu.unit_0.bus.map(0x4340, &r->ee.vpu.vu.unit_1.r);
+		r->ee.vpu.vu.unit_0.bus.map(0x4350, &r->ee.vpu.vu.unit_1.i);
+		r->ee.vpu.vu.unit_0.bus.map(0x4360, &r->ee.vpu.vu.unit_1.q);
+		r->ee.vpu.vu.unit_0.bus.map(0x4370, &r->ee.vpu.vu.unit_1.p);
+		r->ee.vpu.vu.unit_0.bus.map(0x43A0, &r->ee.vpu.vu.unit_1.pc); // TPC.
 	}
 	
 	// Init VU1 memory.
-	r->ee.vpu.vu1.bus.map(0x0000, &r->ee.vpu.vu1.memory_mem);
+	r->ee.vpu.vu.unit_1.bus.map(0x0000, &r->ee.vpu.vu.unit_1.memory_mem);
 
 	// Init VU0 COP0.
-	r->ee.vpu.vu0.cop0 = &r->ee.core.cop0;
+	r->ee.vpu.vu.unit_0.cop0 = &r->ee.core.cop0;
+
+	// Init MAC registers.
+	r->ee.vpu.vu.unit_0.mac.status = &r->ee.vpu.vu.unit_0.status;
+	r->ee.vpu.vu.unit_1.mac.status = &r->ee.vpu.vu.unit_1.status;
 }
 
 void initialise_iop_dmac(RResources * r)
@@ -193,75 +232,82 @@ void initialise_iop_dmac(RResources * r)
 	r->iop.dmac.channel_sif2.chcr.sbus_f240 = &r->sbus_f240;
 
 	// Init channel abstrations.
-	r->iop.dmac.channels[0]->channel_id = &r->iop.dmac.channel_frommdec.channel_id;
-	r->iop.dmac.channels[0]->madr = &r->iop.dmac.channel_frommdec.madr;
-	r->iop.dmac.channels[0]->bcr = &r->iop.dmac.channel_frommdec.bcr;
-	r->iop.dmac.channels[0]->chcr = &r->iop.dmac.channel_frommdec.chcr;
-	r->iop.dmac.channels[1]->channel_id = &r->iop.dmac.channel_tomdec.channel_id;
-	r->iop.dmac.channels[1]->madr = &r->iop.dmac.channel_tomdec.madr;
-	r->iop.dmac.channels[1]->bcr = &r->iop.dmac.channel_tomdec.bcr;
-	r->iop.dmac.channels[1]->chcr = &r->iop.dmac.channel_tomdec.chcr;
-	r->iop.dmac.channels[2]->channel_id = &r->iop.dmac.channel_sif2.channel_id;
-	r->iop.dmac.channels[2]->madr = &r->iop.dmac.channel_sif2.madr;
-	r->iop.dmac.channels[2]->bcr = &r->iop.dmac.channel_sif2.bcr;
-	r->iop.dmac.channels[2]->chcr = &r->iop.dmac.channel_sif2.chcr;
-	r->iop.dmac.channels[3]->channel_id = &r->iop.dmac.channel_cdvd.channel_id;
-	r->iop.dmac.channels[3]->madr = &r->iop.dmac.channel_cdvd.madr;
-	r->iop.dmac.channels[3]->bcr = &r->iop.dmac.channel_cdvd.bcr;
-	r->iop.dmac.channels[3]->chcr = &r->iop.dmac.channel_cdvd.chcr;
-	r->iop.dmac.channels[4]->channel_id = &r->iop.dmac.channel_spu2c0.channel_id;
-	r->iop.dmac.channels[4]->madr = &r->iop.dmac.channel_spu2c0.madr;
-	r->iop.dmac.channels[4]->bcr = &r->iop.dmac.channel_spu2c0.bcr;
-	r->iop.dmac.channels[4]->chcr = &r->iop.dmac.channel_spu2c0.chcr;
-	r->iop.dmac.channels[4]->tadr = &r->iop.dmac.channel_spu2c0.tadr;
-	r->iop.dmac.channels[5]->channel_id = &r->iop.dmac.channel_pio.channel_id;
-	r->iop.dmac.channels[5]->madr = &r->iop.dmac.channel_pio.madr;
-	r->iop.dmac.channels[5]->bcr = &r->iop.dmac.channel_pio.bcr;
-	r->iop.dmac.channels[5]->chcr = &r->iop.dmac.channel_pio.chcr;
-	r->iop.dmac.channels[6]->channel_id = &r->iop.dmac.channel_otclear.channel_id;
-	r->iop.dmac.channels[6]->madr = &r->iop.dmac.channel_otclear.madr;
-	r->iop.dmac.channels[6]->bcr = &r->iop.dmac.channel_otclear.bcr;
-	r->iop.dmac.channels[6]->chcr = &r->iop.dmac.channel_otclear.chcr;
-	r->iop.dmac.channels[7]->channel_id = &r->iop.dmac.channel_spu2c1.channel_id;
-	r->iop.dmac.channels[7]->madr = &r->iop.dmac.channel_spu2c1.madr;
-	r->iop.dmac.channels[7]->bcr = &r->iop.dmac.channel_spu2c1.bcr;
-	r->iop.dmac.channels[7]->chcr = &r->iop.dmac.channel_spu2c1.chcr;
-	r->iop.dmac.channels[8]->channel_id = &r->iop.dmac.channel_dev9.channel_id;
-	r->iop.dmac.channels[8]->madr = &r->iop.dmac.channel_dev9.madr;
-	r->iop.dmac.channels[8]->bcr = &r->iop.dmac.channel_dev9.bcr;
-	r->iop.dmac.channels[8]->chcr = &r->iop.dmac.channel_dev9.chcr;
-	r->iop.dmac.channels[9]->channel_id = &r->iop.dmac.channel_sif0.channel_id;
-	r->iop.dmac.channels[9]->madr = &r->iop.dmac.channel_sif0.madr;
-	r->iop.dmac.channels[9]->bcr = &r->iop.dmac.channel_sif0.bcr;
-	r->iop.dmac.channels[9]->chcr = &r->iop.dmac.channel_sif0.chcr;
-	r->iop.dmac.channels[9]->tadr = &r->iop.dmac.channel_sif0.tadr;
-	r->iop.dmac.channels[10]->channel_id = &r->iop.dmac.channel_sif1.channel_id;
-	r->iop.dmac.channels[10]->madr = &r->iop.dmac.channel_sif1.madr;
-	r->iop.dmac.channels[10]->bcr = &r->iop.dmac.channel_sif1.bcr;
-	r->iop.dmac.channels[10]->chcr = &r->iop.dmac.channel_sif1.chcr;
-	r->iop.dmac.channels[11]->channel_id = &r->iop.dmac.channel_fromsio2.channel_id;
-	r->iop.dmac.channels[11]->madr = &r->iop.dmac.channel_fromsio2.madr;
-	r->iop.dmac.channels[11]->bcr = &r->iop.dmac.channel_fromsio2.bcr;
-	r->iop.dmac.channels[11]->chcr = &r->iop.dmac.channel_fromsio2.chcr;
-	r->iop.dmac.channels[12]->channel_id = &r->iop.dmac.channel_tosio2.channel_id;
-	r->iop.dmac.channels[12]->madr = &r->iop.dmac.channel_tosio2.madr;
-	r->iop.dmac.channels[12]->bcr = &r->iop.dmac.channel_tosio2.bcr;
-	r->iop.dmac.channels[12]->chcr = &r->iop.dmac.channel_tosio2.chcr;
+	r->iop.dmac.channels[0].channel_id = &r->iop.dmac.channel_frommdec.channel_id;
+	r->iop.dmac.channels[0].madr = &r->iop.dmac.channel_frommdec.madr;
+	r->iop.dmac.channels[0].bcr = &r->iop.dmac.channel_frommdec.bcr;
+	r->iop.dmac.channels[0].chcr = &r->iop.dmac.channel_frommdec.chcr;
+	r->iop.dmac.channels[1].channel_id = &r->iop.dmac.channel_tomdec.channel_id;
+	r->iop.dmac.channels[1].madr = &r->iop.dmac.channel_tomdec.madr;
+	r->iop.dmac.channels[1].bcr = &r->iop.dmac.channel_tomdec.bcr;
+	r->iop.dmac.channels[1].chcr = &r->iop.dmac.channel_tomdec.chcr;
+	r->iop.dmac.channels[2].channel_id = &r->iop.dmac.channel_sif2.channel_id;
+	r->iop.dmac.channels[2].madr = &r->iop.dmac.channel_sif2.madr;
+	r->iop.dmac.channels[2].bcr = &r->iop.dmac.channel_sif2.bcr;
+	r->iop.dmac.channels[2].chcr = &r->iop.dmac.channel_sif2.chcr;
+	r->iop.dmac.channels[3].channel_id = &r->iop.dmac.channel_cdvd.channel_id;
+	r->iop.dmac.channels[3].madr = &r->iop.dmac.channel_cdvd.madr;
+	r->iop.dmac.channels[3].bcr = &r->iop.dmac.channel_cdvd.bcr;
+	r->iop.dmac.channels[3].chcr = &r->iop.dmac.channel_cdvd.chcr;
+	r->iop.dmac.channels[4].channel_id = &r->iop.dmac.channel_spu2c0.channel_id;
+	r->iop.dmac.channels[4].madr = &r->iop.dmac.channel_spu2c0.madr;
+	r->iop.dmac.channels[4].bcr = &r->iop.dmac.channel_spu2c0.bcr;
+	r->iop.dmac.channels[4].chcr = &r->iop.dmac.channel_spu2c0.chcr;
+	r->iop.dmac.channels[4].tadr = &r->iop.dmac.channel_spu2c0.tadr;
+	r->iop.dmac.channels[5].channel_id = &r->iop.dmac.channel_pio.channel_id;
+	r->iop.dmac.channels[5].madr = &r->iop.dmac.channel_pio.madr;
+	r->iop.dmac.channels[5].bcr = &r->iop.dmac.channel_pio.bcr;
+	r->iop.dmac.channels[5].chcr = &r->iop.dmac.channel_pio.chcr;
+	r->iop.dmac.channels[6].channel_id = &r->iop.dmac.channel_otclear.channel_id;
+	r->iop.dmac.channels[6].madr = &r->iop.dmac.channel_otclear.madr;
+	r->iop.dmac.channels[6].bcr = &r->iop.dmac.channel_otclear.bcr;
+	r->iop.dmac.channels[6].chcr = &r->iop.dmac.channel_otclear.chcr;
+	r->iop.dmac.channels[7].channel_id = &r->iop.dmac.channel_spu2c1.channel_id;
+	r->iop.dmac.channels[7].madr = &r->iop.dmac.channel_spu2c1.madr;
+	r->iop.dmac.channels[7].bcr = &r->iop.dmac.channel_spu2c1.bcr;
+	r->iop.dmac.channels[7].chcr = &r->iop.dmac.channel_spu2c1.chcr;
+	r->iop.dmac.channels[8].channel_id = &r->iop.dmac.channel_dev9.channel_id;
+	r->iop.dmac.channels[8].madr = &r->iop.dmac.channel_dev9.madr;
+	r->iop.dmac.channels[8].bcr = &r->iop.dmac.channel_dev9.bcr;
+	r->iop.dmac.channels[8].chcr = &r->iop.dmac.channel_dev9.chcr;
+	r->iop.dmac.channels[9].channel_id = &r->iop.dmac.channel_sif0.channel_id;
+	r->iop.dmac.channels[9].madr = &r->iop.dmac.channel_sif0.madr;
+	r->iop.dmac.channels[9].bcr = &r->iop.dmac.channel_sif0.bcr;
+	r->iop.dmac.channels[9].chcr = &r->iop.dmac.channel_sif0.chcr;
+	r->iop.dmac.channels[9].tadr = &r->iop.dmac.channel_sif0.tadr;
+	r->iop.dmac.channels[10].channel_id = &r->iop.dmac.channel_sif1.channel_id;
+	r->iop.dmac.channels[10].madr = &r->iop.dmac.channel_sif1.madr;
+	r->iop.dmac.channels[10].bcr = &r->iop.dmac.channel_sif1.bcr;
+	r->iop.dmac.channels[10].chcr = &r->iop.dmac.channel_sif1.chcr;
+	r->iop.dmac.channels[11].channel_id = &r->iop.dmac.channel_fromsio2.channel_id;
+	r->iop.dmac.channels[11].madr = &r->iop.dmac.channel_fromsio2.madr;
+	r->iop.dmac.channels[11].bcr = &r->iop.dmac.channel_fromsio2.bcr;
+	r->iop.dmac.channels[11].chcr = &r->iop.dmac.channel_fromsio2.chcr;
+	r->iop.dmac.channels[12].channel_id = &r->iop.dmac.channel_tosio2.channel_id;
+	r->iop.dmac.channels[12].madr = &r->iop.dmac.channel_tosio2.madr;
+	r->iop.dmac.channels[12].bcr = &r->iop.dmac.channel_tosio2.bcr;
+	r->iop.dmac.channels[12].chcr = &r->iop.dmac.channel_tosio2.chcr;
 
 	// Init DMA FIFO queues.
-	r->iop.dmac.channels[0]->dma_fifo_queue = &r->fifo_frommdec;
-	r->iop.dmac.channels[1]->dma_fifo_queue = &r->fifo_tomdec;
-	r->iop.dmac.channels[2]->dma_fifo_queue = &r->fifo_sif2;
-	r->iop.dmac.channels[3]->dma_fifo_queue = &r->fifo_cdvd;
-	r->iop.dmac.channels[4]->dma_fifo_queue = &r->fifo_spu2c0;
-	r->iop.dmac.channels[5]->dma_fifo_queue = &r->fifo_pio;
-	r->iop.dmac.channels[6]->dma_fifo_queue = &r->fifo_otclear;
-	r->iop.dmac.channels[7]->dma_fifo_queue = &r->fifo_spu2c1;
-	r->iop.dmac.channels[8]->dma_fifo_queue = &r->fifo_dev9;
-	r->iop.dmac.channels[9]->dma_fifo_queue = &r->fifo_sif0;
-	r->iop.dmac.channels[10]->dma_fifo_queue = &r->fifo_sif1;
-	r->iop.dmac.channels[11]->dma_fifo_queue = &r->fifo_fromsio2;
-	r->iop.dmac.channels[12]->dma_fifo_queue = &r->fifo_tosio2;
+	r->iop.dmac.channels[0].dma_fifo_queue = &r->fifo_frommdec;
+	r->iop.dmac.channels[1].dma_fifo_queue = &r->fifo_tomdec;
+	r->iop.dmac.channels[2].dma_fifo_queue = &r->fifo_sif2;
+	r->iop.dmac.channels[3].dma_fifo_queue = &r->fifo_cdvd;
+	r->iop.dmac.channels[4].dma_fifo_queue = &r->fifo_spu2c0;
+	r->iop.dmac.channels[5].dma_fifo_queue = &r->fifo_pio;
+	r->iop.dmac.channels[6].dma_fifo_queue = &r->fifo_otclear;
+	r->iop.dmac.channels[7].dma_fifo_queue = &r->fifo_spu2c1;
+	r->iop.dmac.channels[8].dma_fifo_queue = &r->fifo_dev9;
+	r->iop.dmac.channels[9].dma_fifo_queue = &r->fifo_sif0;
+	r->iop.dmac.channels[10].dma_fifo_queue = &r->fifo_sif1;
+	r->iop.dmac.channels[11].dma_fifo_queue = &r->fifo_fromsio2;
+	r->iop.dmac.channels[12].dma_fifo_queue = &r->fifo_tosio2;
+
+	// Init PCR / ICR.
+	r->iop.dmac.icr1.icr0 = &r->iop.dmac.icr0;
+	r->iop.dmac.pcrw.pcr0 = &r->iop.dmac.pcr0;
+	r->iop.dmac.pcrw.pcr1 = &r->iop.dmac.pcr1;
+	r->iop.dmac.icrw.icr0 = &r->iop.dmac.icr0;
+	r->iop.dmac.icrw.icr1 = &r->iop.dmac.icr1;
 }
 
 void initialise_ee(RResources * r)
@@ -297,20 +343,20 @@ void initialise_ee(RResources * r)
 			r->ee.bus.map(0x1000f450, &r->ee.memory_f450);
 
 			// Timers Registers.
-			r->ee.bus.map(0x10000000, &r->ee.timers.timer_0.count);
-			r->ee.bus.map(0x10000010, &r->ee.timers.timer_0.mode);
-			r->ee.bus.map(0x10000020, &r->ee.timers.timer_0.compare);
-			r->ee.bus.map(0x10000030, &r->ee.timers.timer_0.hold);
-			r->ee.bus.map(0x10000800, &r->ee.timers.timer_1.count);
-			r->ee.bus.map(0x10000810, &r->ee.timers.timer_1.mode);
-			r->ee.bus.map(0x10000820, &r->ee.timers.timer_1.compare);
-			r->ee.bus.map(0x10000830, &r->ee.timers.timer_1.hold);
-			r->ee.bus.map(0x10001000, &r->ee.timers.timer_2.count);
-			r->ee.bus.map(0x10001010, &r->ee.timers.timer_2.mode);
-			r->ee.bus.map(0x10001020, &r->ee.timers.timer_2.compare);
-			r->ee.bus.map(0x10001800, &r->ee.timers.timer_3.count);
-			r->ee.bus.map(0x10001810, &r->ee.timers.timer_3.mode);
-			r->ee.bus.map(0x10001820, &r->ee.timers.timer_3.compare);
+			r->ee.bus.map(0x10000000, &r->ee.timers.unit_0.count);
+			r->ee.bus.map(0x10000010, &r->ee.timers.unit_0.mode);
+			r->ee.bus.map(0x10000020, &r->ee.timers.unit_0.compare);
+			r->ee.bus.map(0x10000030, &r->ee.timers.unit_0.hold);
+			r->ee.bus.map(0x10000800, &r->ee.timers.unit_1.count);
+			r->ee.bus.map(0x10000810, &r->ee.timers.unit_1.mode);
+			r->ee.bus.map(0x10000820, &r->ee.timers.unit_1.compare);
+			r->ee.bus.map(0x10000830, &r->ee.timers.unit_1.hold);
+			r->ee.bus.map(0x10001000, &r->ee.timers.unit_2.count);
+			r->ee.bus.map(0x10001010, &r->ee.timers.unit_2.mode);
+			r->ee.bus.map(0x10001020, &r->ee.timers.unit_2.compare);
+			r->ee.bus.map(0x10001800, &r->ee.timers.unit_3.count);
+			r->ee.bus.map(0x10001810, &r->ee.timers.unit_3.mode);
+			r->ee.bus.map(0x10001820, &r->ee.timers.unit_3.compare);
 
 			// IPU Registers.
 			r->ee.bus.map(0x10002000, &r->ee.ipu.cmd);
@@ -331,50 +377,50 @@ void initialise_ee(RResources * r)
 			r->ee.bus.map(0x100030a0, &r->ee.gif.p3tag);
 
 			// VIF0 Registers.
-			r->ee.bus.map(0x10003800, &r->ee.vpu.vif0.stat);
-			r->ee.bus.map(0x10003810, &r->ee.vpu.vif0.fbrst);
-			r->ee.bus.map(0x10003820, &r->ee.vpu.vif0.err);
-			r->ee.bus.map(0x10003830, &r->ee.vpu.vif0.mark);
-			r->ee.bus.map(0x10003840, &r->ee.vpu.vif0.cycle);
-			r->ee.bus.map(0x10003850, &r->ee.vpu.vif0.mode);
-			r->ee.bus.map(0x10003860, &r->ee.vpu.vif0.num);
-			r->ee.bus.map(0x10003870, &r->ee.vpu.vif0.mask);
-			r->ee.bus.map(0x10003880, &r->ee.vpu.vif0.code);
-			r->ee.bus.map(0x10003890, &r->ee.vpu.vif0.itops);
-			r->ee.bus.map(0x100038d0, &r->ee.vpu.vif0.itop);
-			r->ee.bus.map(0x10003900, &r->ee.vpu.vif0.r0);
-			r->ee.bus.map(0x10003910, &r->ee.vpu.vif0.r1);
-			r->ee.bus.map(0x10003920, &r->ee.vpu.vif0.r2);
-			r->ee.bus.map(0x10003930, &r->ee.vpu.vif0.r3);
-			r->ee.bus.map(0x10003940, &r->ee.vpu.vif0.c0);
-			r->ee.bus.map(0x10003950, &r->ee.vpu.vif0.c1);
-			r->ee.bus.map(0x10003960, &r->ee.vpu.vif0.c2);
-			r->ee.bus.map(0x10003970, &r->ee.vpu.vif0.c3);
+			r->ee.bus.map(0x10003800, &r->ee.vpu.vif.unit_0.stat);
+			r->ee.bus.map(0x10003810, &r->ee.vpu.vif.unit_0.fbrst);
+			r->ee.bus.map(0x10003820, &r->ee.vpu.vif.unit_0.err);
+			r->ee.bus.map(0x10003830, &r->ee.vpu.vif.unit_0.mark);
+			r->ee.bus.map(0x10003840, &r->ee.vpu.vif.unit_0.cycle);
+			r->ee.bus.map(0x10003850, &r->ee.vpu.vif.unit_0.mode);
+			r->ee.bus.map(0x10003860, &r->ee.vpu.vif.unit_0.num);
+			r->ee.bus.map(0x10003870, &r->ee.vpu.vif.unit_0.mask);
+			r->ee.bus.map(0x10003880, &r->ee.vpu.vif.unit_0.code);
+			r->ee.bus.map(0x10003890, &r->ee.vpu.vif.unit_0.itops);
+			r->ee.bus.map(0x100038d0, &r->ee.vpu.vif.unit_0.itop);
+			r->ee.bus.map(0x10003900, &r->ee.vpu.vif.unit_0.r0);
+			r->ee.bus.map(0x10003910, &r->ee.vpu.vif.unit_0.r1);
+			r->ee.bus.map(0x10003920, &r->ee.vpu.vif.unit_0.r2);
+			r->ee.bus.map(0x10003930, &r->ee.vpu.vif.unit_0.r3);
+			r->ee.bus.map(0x10003940, &r->ee.vpu.vif.unit_0.c0);
+			r->ee.bus.map(0x10003950, &r->ee.vpu.vif.unit_0.c1);
+			r->ee.bus.map(0x10003960, &r->ee.vpu.vif.unit_0.c2);
+			r->ee.bus.map(0x10003970, &r->ee.vpu.vif.unit_0.c3);
 
 			// VIF1 Registers.
-			r->ee.bus.map(0x10003c00, &r->ee.vpu.vif1.stat);
-			r->ee.bus.map(0x10003c10, &r->ee.vpu.vif1.fbrst);
-			r->ee.bus.map(0x10003c20, &r->ee.vpu.vif1.err);
-			r->ee.bus.map(0x10003c30, &r->ee.vpu.vif1.mark);
-			r->ee.bus.map(0x10003c40, &r->ee.vpu.vif1.cycle);
-			r->ee.bus.map(0x10003c50, &r->ee.vpu.vif1.mode);
-			r->ee.bus.map(0x10003c60, &r->ee.vpu.vif1.num);
-			r->ee.bus.map(0x10003c70, &r->ee.vpu.vif1.mask);
-			r->ee.bus.map(0x10003c80, &r->ee.vpu.vif1.code);
-			r->ee.bus.map(0x10003c90, &r->ee.vpu.vif1.itops);
-			r->ee.bus.map(0x10003ca0, &r->ee.vpu.vif1.base);
-			r->ee.bus.map(0x10003cb0, &r->ee.vpu.vif1.ofst);
-			r->ee.bus.map(0x10003cc0, &r->ee.vpu.vif1.tops);
-			r->ee.bus.map(0x10003cd0, &r->ee.vpu.vif1.itop);
-			r->ee.bus.map(0x10003ce0, &r->ee.vpu.vif1.top);
-			r->ee.bus.map(0x10003d00, &r->ee.vpu.vif1.r0);
-			r->ee.bus.map(0x10003d10, &r->ee.vpu.vif1.r1);
-			r->ee.bus.map(0x10003d20, &r->ee.vpu.vif1.r2);
-			r->ee.bus.map(0x10003d30, &r->ee.vpu.vif1.r3);
-			r->ee.bus.map(0x10003d40, &r->ee.vpu.vif1.c0);
-			r->ee.bus.map(0x10003d50, &r->ee.vpu.vif1.c1);
-			r->ee.bus.map(0x10003d60, &r->ee.vpu.vif1.c2);
-			r->ee.bus.map(0x10003d70, &r->ee.vpu.vif1.c3);
+			r->ee.bus.map(0x10003c00, &r->ee.vpu.vif.unit_1.stat);
+			r->ee.bus.map(0x10003c10, &r->ee.vpu.vif.unit_1.fbrst);
+			r->ee.bus.map(0x10003c20, &r->ee.vpu.vif.unit_1.err);
+			r->ee.bus.map(0x10003c30, &r->ee.vpu.vif.unit_1.mark);
+			r->ee.bus.map(0x10003c40, &r->ee.vpu.vif.unit_1.cycle);
+			r->ee.bus.map(0x10003c50, &r->ee.vpu.vif.unit_1.mode);
+			r->ee.bus.map(0x10003c60, &r->ee.vpu.vif.unit_1.num);
+			r->ee.bus.map(0x10003c70, &r->ee.vpu.vif.unit_1.mask);
+			r->ee.bus.map(0x10003c80, &r->ee.vpu.vif.unit_1.code);
+			r->ee.bus.map(0x10003c90, &r->ee.vpu.vif.unit_1.itops);
+			r->ee.bus.map(0x10003ca0, &r->ee.vpu.vif.unit_1.base);
+			r->ee.bus.map(0x10003cb0, &r->ee.vpu.vif.unit_1.ofst);
+			r->ee.bus.map(0x10003cc0, &r->ee.vpu.vif.unit_1.tops);
+			r->ee.bus.map(0x10003cd0, &r->ee.vpu.vif.unit_1.itop);
+			r->ee.bus.map(0x10003ce0, &r->ee.vpu.vif.unit_1.top);
+			r->ee.bus.map(0x10003d00, &r->ee.vpu.vif.unit_1.r0);
+			r->ee.bus.map(0x10003d10, &r->ee.vpu.vif.unit_1.r1);
+			r->ee.bus.map(0x10003d20, &r->ee.vpu.vif.unit_1.r2);
+			r->ee.bus.map(0x10003d30, &r->ee.vpu.vif.unit_1.r3);
+			r->ee.bus.map(0x10003d40, &r->ee.vpu.vif.unit_1.c0);
+			r->ee.bus.map(0x10003d50, &r->ee.vpu.vif.unit_1.c1);
+			r->ee.bus.map(0x10003d60, &r->ee.vpu.vif.unit_1.c2);
+			r->ee.bus.map(0x10003d70, &r->ee.vpu.vif.unit_1.c3);
 
 			// FIFO Registers.
 			r->ee.bus.map(0x10004000, &r->fifo_vif0);
@@ -460,10 +506,10 @@ void initialise_ee(RResources * r)
 
 		// VU0/1 Memory.
 		{
-			r->ee.bus.map(0x11000000, &r->ee.vpu.vu0.memory_micro);
-			r->ee.bus.map(0x11004000, &r->ee.vpu.vu0.memory_mem);
-			r->ee.bus.map(0x11008000, &r->ee.vpu.vu1.memory_micro);
-			r->ee.bus.map(0x1100c000, &r->ee.vpu.vu1.memory_mem);
+			r->ee.bus.map(0x11000000, &r->ee.vpu.vu.unit_0.memory_micro);
+			r->ee.bus.map(0x11004000, &r->ee.vpu.vu.unit_0.memory_mem);
+			r->ee.bus.map(0x11008000, &r->ee.vpu.vu.unit_1.memory_micro);
+			r->ee.bus.map(0x1100c000, &r->ee.vpu.vu.unit_1.memory_mem);
 		}
 
 		// GS Privileged Registers.
@@ -1533,24 +1579,24 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F900B46, &r->spu2.memory_0346); // 0x346 mirrored at 0xB46.
 
 			// Timers Registers.
-			r->iop.bus.map(0x1F801100, &r->iop.timers.timer_0.count);
-			r->iop.bus.map(0x1F801104, &r->iop.timers.timer_0.mode);
-			r->iop.bus.map(0x1F801108, &r->iop.timers.timer_0.compare);
-			r->iop.bus.map(0x1F801110, &r->iop.timers.timer_1.count);
-			r->iop.bus.map(0x1F801114, &r->iop.timers.timer_1.mode);
-			r->iop.bus.map(0x1F801118, &r->iop.timers.timer_1.compare);
-			r->iop.bus.map(0x1F801120, &r->iop.timers.timer_2.count);
-			r->iop.bus.map(0x1F801124, &r->iop.timers.timer_2.mode);
-			r->iop.bus.map(0x1F801128, &r->iop.timers.timer_2.compare);
-			r->iop.bus.map(0x1F801480, &r->iop.timers.timer_3.count);
-			r->iop.bus.map(0x1F801484, &r->iop.timers.timer_3.mode);
-			r->iop.bus.map(0x1F801488, &r->iop.timers.timer_3.compare);
-			r->iop.bus.map(0x1F801490, &r->iop.timers.timer_4.count);
-			r->iop.bus.map(0x1F801494, &r->iop.timers.timer_4.mode);
-			r->iop.bus.map(0x1F801498, &r->iop.timers.timer_4.compare);
-			r->iop.bus.map(0x1F8014A0, &r->iop.timers.timer_5.count);
-			r->iop.bus.map(0x1F8014A4, &r->iop.timers.timer_5.mode);
-			r->iop.bus.map(0x1F8014A8, &r->iop.timers.timer_5.compare);
+			r->iop.bus.map(0x1F801100, &r->iop.timers.unit_0.count);
+			r->iop.bus.map(0x1F801104, &r->iop.timers.unit_0.mode);
+			r->iop.bus.map(0x1F801108, &r->iop.timers.unit_0.compare);
+			r->iop.bus.map(0x1F801110, &r->iop.timers.unit_1.count);
+			r->iop.bus.map(0x1F801114, &r->iop.timers.unit_1.mode);
+			r->iop.bus.map(0x1F801118, &r->iop.timers.unit_1.compare);
+			r->iop.bus.map(0x1F801120, &r->iop.timers.unit_2.count);
+			r->iop.bus.map(0x1F801124, &r->iop.timers.unit_2.mode);
+			r->iop.bus.map(0x1F801128, &r->iop.timers.unit_2.compare);
+			r->iop.bus.map(0x1F801480, &r->iop.timers.unit_3.count);
+			r->iop.bus.map(0x1F801484, &r->iop.timers.unit_3.mode);
+			r->iop.bus.map(0x1F801488, &r->iop.timers.unit_3.compare);
+			r->iop.bus.map(0x1F801490, &r->iop.timers.unit_4.count);
+			r->iop.bus.map(0x1F801494, &r->iop.timers.unit_4.mode);
+			r->iop.bus.map(0x1F801498, &r->iop.timers.unit_4.compare);
+			r->iop.bus.map(0x1F8014A0, &r->iop.timers.unit_5.count);
+			r->iop.bus.map(0x1F8014A4, &r->iop.timers.unit_5.mode);
+			r->iop.bus.map(0x1F8014A8, &r->iop.timers.unit_5.compare);
 
 			// Parallel Port.
 			r->iop.bus.map(0x1F000000, &r->iop.parallel_port);
@@ -1609,16 +1655,120 @@ void initialise_iop(RResources * r)
 	}
 }
 
+void initialise_iop_core(RResources * r)
+{
+	// R3000.
+	r->iop.core.r3000.gpr[0] = &r->iop.core.r3000.zero_register;
+	for (int i = 0; i < 31; i++)
+		r->iop.core.r3000.gpr[i + 1] = &r->iop.core.r3000.gpr_base[i];
+
+	// COP0.
+	r->iop.core.cop0.registers[0] = &r->iop.core.cop0.indx;
+	r->iop.core.cop0.registers[1] = &r->iop.core.cop0.rand;
+	r->iop.core.cop0.registers[2] = &r->iop.core.cop0.tlbl;
+	r->iop.core.cop0.registers[3] = &r->iop.core.cop0.bpc;
+	r->iop.core.cop0.registers[4] = &r->iop.core.cop0.context;
+	r->iop.core.cop0.registers[5] = &r->iop.core.cop0.bda;
+	r->iop.core.cop0.registers[6] = &r->iop.core.cop0.pidmask;
+	r->iop.core.cop0.registers[7] = &r->iop.core.cop0.dcic;
+	r->iop.core.cop0.registers[8] = &r->iop.core.cop0.badv;
+	r->iop.core.cop0.registers[9] = &r->iop.core.cop0.bdam;
+	r->iop.core.cop0.registers[10] = &r->iop.core.cop0.tlbh;
+	r->iop.core.cop0.registers[11] = &r->iop.core.cop0.bpcm;
+	r->iop.core.cop0.registers[12] = &r->iop.core.cop0.status;
+	r->iop.core.cop0.registers[13] = &r->iop.core.cop0.cause;
+	r->iop.core.cop0.registers[14] = &r->iop.core.cop0.epc;
+	r->iop.core.cop0.registers[15] = &r->iop.core.cop0.prid;
+	r->iop.core.cop0.registers[16] = &r->iop.core.cop0.erreg;
+}
+
+void initialise_iop_timers(RResources * r)
+{
+	r->iop.timers.units[0] = &r->iop.timers.unit_0;
+	r->iop.timers.units[1] = &r->iop.timers.unit_1;
+	r->iop.timers.units[2] = &r->iop.timers.unit_2;
+	r->iop.timers.units[3] = &r->iop.timers.unit_3;
+	r->iop.timers.units[4] = &r->iop.timers.unit_4;
+	r->iop.timers.units[5] = &r->iop.timers.unit_5;
+}
+
+void initialise_ee_core(RResources * r)
+{
+	// R5900.
+	r->ee.core.r5900.gpr[0] = &r->ee.core.r5900.zero_register;
+	for (int i = 0; i < 31; i++)
+		r->ee.core.r5900.gpr[i + 1] = &r->ee.core.r5900.gpr_base[i];
+
+	// COP0.
+	r->ee.core.cop0.registers[0] = &r->ee.core.cop0.index;
+	r->ee.core.cop0.registers[1] = &r->ee.core.cop0.random;
+	r->ee.core.cop0.registers[2] = &r->ee.core.cop0.entrylo0;
+	r->ee.core.cop0.registers[3] = &r->ee.core.cop0.entrylo1;
+	r->ee.core.cop0.registers[4] = &r->ee.core.cop0.context;
+	r->ee.core.cop0.registers[5] = &r->ee.core.cop0.pagemask;
+	r->ee.core.cop0.registers[6] = &r->ee.core.cop0.wired;
+	r->ee.core.cop0.registers[7] = &r->ee.core.cop0.reserved7;
+	r->ee.core.cop0.registers[8] = &r->ee.core.cop0.badvaddr;
+	r->ee.core.cop0.registers[9] = &r->ee.core.cop0.count;
+	r->ee.core.cop0.registers[10] = &r->ee.core.cop0.entryhi;
+	r->ee.core.cop0.registers[11] = &r->ee.core.cop0.compare;
+	r->ee.core.cop0.registers[12] = &r->ee.core.cop0.status;
+	r->ee.core.cop0.registers[13] = &r->ee.core.cop0.cause;
+	r->ee.core.cop0.registers[14] = &r->ee.core.cop0.epc;
+	r->ee.core.cop0.registers[15] = &r->ee.core.cop0.prid;
+	r->ee.core.cop0.registers[16] = &r->ee.core.cop0.config;
+	r->ee.core.cop0.registers[17] = &r->ee.core.cop0.reserved17;
+	r->ee.core.cop0.registers[18] = &r->ee.core.cop0.reserved18;
+	r->ee.core.cop0.registers[19] = &r->ee.core.cop0.reserved19;
+	r->ee.core.cop0.registers[20] = &r->ee.core.cop0.reserved20;
+	r->ee.core.cop0.registers[21] = &r->ee.core.cop0.reserved21;
+	r->ee.core.cop0.registers[22] = &r->ee.core.cop0.reserved22;
+	r->ee.core.cop0.registers[23] = &r->ee.core.cop0.badpaddr;
+	r->ee.core.cop0.registers[24] = &r->ee.core.cop0.bpc;
+	r->ee.core.cop0.registers[25] = &r->ee.core.cop0.pccr;
+	r->ee.core.cop0.registers[26] = &r->ee.core.cop0.reserved26;
+	r->ee.core.cop0.registers[27] = &r->ee.core.cop0.reserved27;
+	r->ee.core.cop0.registers[28] = &r->ee.core.cop0.taglo;
+	r->ee.core.cop0.registers[29] = &r->ee.core.cop0.taghi;
+	r->ee.core.cop0.registers[30] = &r->ee.core.cop0.errorepc;
+	r->ee.core.cop0.registers[31] = &r->ee.core.cop0.reserved31;
+	r->ee.core.cop0.pcr_registers[0] = &r->ee.core.cop0.pcr0;
+	r->ee.core.cop0.pcr_registers[1] = &r->ee.core.cop0.pcr1;
+
+	// FPU.
+	r->ee.core.fpu.cop0 = &r->ee.core.cop0;
+	r->ee.core.fpu.fcr[0] = &r->ee.core.fpu.irr;
+	r->ee.core.fpu.fcr[31] = &r->ee.core.fpu.csr;
+}
+
+void cull_bus_size(RResources * r)
+{
+	// Cull every bus used to reduce memory footprint.
+	// TODO: make it so that it's done after each bus is created...
+	r->ee.vpu.vu.unit_0.bus.cull_memory();
+	r->ee.vpu.vu.unit_1.bus.cull_memory();
+	r->ee.bus.cull_memory();
+	r->iop.bus.cull_memory();
+}
+
 void initialise_resources(const std::unique_ptr<RResources> & r)
 {
+	initialise_ee_core(r.get());
+	initialise_ee_timers(r.get());
 	initialise_ee_dmac(r.get());
 	initialise_ee_vpu(r.get());
 
+	initialise_iop_core(r.get());
 	initialise_iop_dmac(r.get());
+	initialise_iop_timers(r.get());
+
+	initialise_cdvd(r.get());
 
 	initialise_spu2(r.get());
 
 	initialise_ee(r.get());
 	initialise_iop(r.get());
+
+	cull_bus_size(r.get());
 }
 

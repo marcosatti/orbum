@@ -2,8 +2,8 @@
 
 #include "Resources/Iop/Timers/IopTimersUnitRegisters.hpp"
 
-IopTimersUnitRegister_Count::IopTimersUnitRegister_Count(const int timer_id) :
-	timer_id(timer_id),
+IopTimersUnitRegister_Count::IopTimersUnitRegister_Count(const bool b32_mode) :
+	is_using_32b_mode(b32_mode),
 	is_overflowed(false),
 	prescale_target(1),
 	prescale_count(0)
@@ -12,12 +12,10 @@ IopTimersUnitRegister_Count::IopTimersUnitRegister_Count(const int timer_id) :
 
 void IopTimersUnitRegister_Count::increment(const uword value)
 {
-	if (timer_id >= 0 && timer_id < 3)
+	if (!is_using_32b_mode)
 		increment_16(value);
-	else if (timer_id >= 3 && timer_id < 6)
+	else 
 		increment_32(value);
-	else
-		throw std::runtime_error("Invalid IOP timer id specified.");
 }
 
 bool IopTimersUnitRegister_Count::is_overflowed_and_reset()
@@ -83,12 +81,10 @@ void IopTimersUnitRegister_Count::increment_32(const uword value)
 	}
 }
 
-IopTimersUnitRegister_Mode::IopTimersUnitRegister_Mode(const int timer_id) :
-	is_enabled(false),
-	event_type(ControllerEventType::Time),
+IopTimersUnitRegister_Mode::IopTimersUnitRegister_Mode() :
 	write_latch(false),
-	count_reset_prescale_target(1),
-	timer_id(timer_id)
+	is_enabled(false),
+	event_type(ControllerEventType::Time)
 {
 }
 
@@ -104,12 +100,6 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uhword(const BusContext context,
 		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
 	write_latch = true;
 
-	// Update event type source.
-	handle_event_type_update();
-
-	// Check through either of the interrupt bits for "enabled".
-	is_enabled = (IRQ_ON_OF.extract_from(value) || IRQ_ON_TARGET.extract_from(value));
-
 	write_uhword(offset, value);
 }
 
@@ -122,22 +112,16 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, 
 		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
 	write_latch = true;
 
-	// Update event type source.
-	handle_event_type_update();
-		
-	// Check through either of the interrupt bits for "enabled".
-	is_enabled = (IRQ_ON_OF.extract_from(value) || IRQ_ON_TARGET.extract_from(value));
-
 	write_uword(value);
 }
 
-void IopTimersUnitRegister_Mode::handle_event_type_update()
+uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int unit_id)
 {
-	if (timer_id < 0 || timer_id > 5)
+	if (unit_id < 0 || unit_id > 5)
 		throw std::runtime_error("Invalid IOP timer index to determine clock source!");
 
 	// Sources are majorly different for each type of timer... no easy way of doing this... :( .
-	if (timer_id < 3)
+	if (unit_id < 3)
 	{
 		// Check for Prescale8 (bit 9).
 		if (extract_field(PRESCALE0) > 0)
@@ -149,12 +133,12 @@ void IopTimersUnitRegister_Mode::handle_event_type_update()
 			if (extract_field(EVENT_SRC) == 0)
 			{
 				event_type = ControllerEventType::Time;
-				count_reset_prescale_target = 1;
+				return 1;
 			}
 			else
 			{
 				event_type = ControllerEventType::HBlank;
-				count_reset_prescale_target = 1;
+				return 1;
 			}
 		}
 	}
@@ -170,7 +154,7 @@ void IopTimersUnitRegister_Mode::handle_event_type_update()
 			if (extract_field(EVENT_SRC) == 0)
 			{
 				event_type = ControllerEventType::Time;
-				count_reset_prescale_target = 1;
+				return 1;
 			}
 			else
 			{

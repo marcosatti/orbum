@@ -1,11 +1,8 @@
 #pragma once
 
-/*
-CRTC resources.
-*/
+/// CRTC resources.
 class RCrtc
 {
-public:
-	
+public:	
 };
 

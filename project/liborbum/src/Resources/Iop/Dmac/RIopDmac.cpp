@@ -13,7 +13,6 @@ RIopDmac::RIopDmac() :
 	channel_sif0(9),
 	channel_sif1(10),
 	channel_fromsio2(11),
-	channel_tosio2(12),
-	channels{nullptr}
+	channel_tosio2(12)
 {
 }

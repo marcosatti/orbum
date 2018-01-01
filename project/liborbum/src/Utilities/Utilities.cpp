@@ -4,7 +4,7 @@
 
 #include "Utilities/Utilities.hpp"
 
-uword countLeadingBits(s32 value)
+uword count_leading_bits(sword value)
 {
 	// If the value is 0, return 32 automatically.
 	if (value == 0)
@@ -27,104 +27,30 @@ uword countLeadingBits(s32 value)
 	return num_leading_bits;
 }
 
-uword constructMask32(int startPos, int length)
+shword saturating_word_to_hword(sword value)
 {
-	// Due to how x86 (and possibly other arch's) shift, we need a solution for the case when length == 32, as it generates a bad mask.
-	// Old method: mask = (1 << param) - 1;
-	// Algorithm from here (thanks to Siu Ching Pong): http://stackoverflow.com/questions/1392059/algorithm-to-generate-bit-mask
-	return (static_cast<uword>(-(length != 0)) & (static_cast<uword>(-1) >> (32 - length))) << startPos;
-}
-
-uword extractMaskedValue32(uword value, int maskStartPos, int maskLength)
-{
-	const uword mask = constructMask32(maskStartPos, maskLength);
-	return ((value & mask) >> maskStartPos);
-}
-
-uword insertMaskedValue32(uword value, uword insertValue, int maskStartPos, int maskLength)
-{
-	const uword mask = constructMask32(maskStartPos, maskLength);
-	const uword insertValueShifted = (insertValue << maskStartPos) & mask;
-	return ((value & ~mask) | insertValueShifted);
-}
-
-uhword constructMask16(int startPos, int length)
-{
-	// Due to how x86 (and possibly other arch's) shift, we need a solution for the case when length == 16, as it generates a bad mask.
-	// Old method: mask = (1 << param) - 1;
-	// Algorithm from here (thanks to Siu Ching Pong): http://stackoverflow.com/questions/1392059/algorithm-to-generate-bit-mask
-	return (static_cast<uhword>(-(length != 0)) & (static_cast<uhword>(-1) >> (16 - length))) << startPos;
-}
-
-uhword extractMaskedValue16(uhword value, int maskStartPos, int maskLength)
-{
-	const uhword mask = constructMask16(maskStartPos, maskLength);
-	return ((value & mask) >> maskStartPos);
-}
-
-uhword insertMaskedValue16(uhword value, uhword insertValue, int maskStartPos, int maskLength)
-{
-	const uhword mask = constructMask16(maskStartPos, maskLength);
-	const uhword insertValueShifted = (insertValue << maskStartPos) & mask;
-	return ((value & ~mask) | insertValueShifted);
-}
-
-s16 saturateWordToHword(s32 value)
-{
-	if (value > Constants::VALUE_S16_MAX)
-		return Constants::VALUE_S16_MAX;
-	else if (value < Constants::VALUE_S16_MIN)
-		return Constants::VALUE_S16_MIN;
+	if (value > VALUE_SHWORD_MAX)
+		return VALUE_SHWORD_MAX;
+	else if (value < VALUE_SHWORD_MIN)
+		return VALUE_SHWORD_MIN;
 	else 
-		return static_cast<s16>(value);
+		return static_cast<shword>(value);
 }
 
-s32 saturateDwordToWord(s64 value)
+sword saturating_dword_to_word(sdword value)
 {
-	if (value > Constants::VALUE_S32_MAX)
-		return Constants::VALUE_S32_MAX;
-	else if (value < Constants::VALUE_S32_MIN)
-		return Constants::VALUE_S32_MIN;
+	if (value > VALUE_SWORD_MAX)
+		return VALUE_SWORD_MAX;
+	else if (value < VALUE_SWORD_MIN)
+		return VALUE_SWORD_MIN;
 	else
-		return static_cast<s32>(value);
+		return static_cast<sword>(value);
 }
 
-uword log2N(uword value)
+bool test_over_or_underflow_32(sword x, sword y)
 {
-	static const uword b[] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
-
-	uword r = (value & b[0]) != 0;
-
-	for (uword i = 4; i > 0; i--) // unroll for speed...
-		r |= ((value & b[i]) != 0) << i;
-
-	return r;
-}
-
-bool testOverflow32(s32 x, s32 y)
-{
-	if (((x > 0) && (y > Constants::VALUE_S32_MAX - x)))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool testUnderflow32(s32 x, s32 y)
-{
-	if (((x < 0) && (y < Constants::VALUE_S32_MIN - x)))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool testOverOrUnderflow32(s32 x, s32 y)
-{
-	if (((x > 0) && (y > Constants::VALUE_S32_MAX - x))
-		|| ((x < 0) && (y < Constants::VALUE_S32_MIN - x)))
+	if (((x > 0) && (y > VALUE_SWORD_MAX - x))
+		|| ((x < 0) && (y < VALUE_SWORD_MIN - x)))
 	{
 		return true;
 	}
@@ -132,9 +58,10 @@ bool testOverOrUnderflow32(s32 x, s32 y)
 	return false;
 }
 
-bool testOverflow64(s64 x, s64 y)
+bool test_over_or_underflow_64(sdword x, sdword y)
 {
-	if (((x > 0) && (y > Constants::VALUE_S64_MAX - x)))
+	if (((x > 0) && (y > VALUE_SDWORD_MAX - x))
+		|| ((x < 0) && (y < VALUE_SDWORD_MIN - x)))
 	{
 		return true;
 	}
@@ -142,33 +69,7 @@ bool testOverflow64(s64 x, s64 y)
 	return false;
 }
 
-bool testUnderflow64(s64 x, s64 y)
-{
-	if (((x < 0) && (y < Constants::VALUE_S64_MIN - x)))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool testOverOrUnderflow64(s64 x, s64 y)
-{
-	if (((x > 0) && (y > Constants::VALUE_S64_MAX - x))
-		|| ((x < 0) && (y < Constants::VALUE_S64_MIN - x)))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-uword getHI19(uword value)
-{
-	return (value & 0xFFFFE000) >> 19;
-}
-
-f32 formatIEEEToPS2Float(const f32 value, FpuFlags & flags)
+f32 to_ps2_float(const f32 value, FpuFlags & flags)
 {
 	// Intended to format incoming IEEE754 spec values into PS2 spec values.
 	// In the PS2 there is no support for NaN's, +/- Inf, or denormalised (subnormal) values.
@@ -180,7 +81,8 @@ f32 formatIEEEToPS2Float(const f32 value, FpuFlags & flags)
 	flags.OF = false;
 
 	// Set the sign flag (always checked no matter the float type).
-	flags.SF = isNegative(value);
+	// A negative value means true.
+	flags.SF = value < 0.0f;
 
 	switch (std::fpclassify(value))
 	{
@@ -216,22 +118,9 @@ f32 formatIEEEToPS2Float(const f32 value, FpuFlags & flags)
 	}
 }
 
-uword getXORSign(const f32 value1, const f32 value2)
+ubyte get_float_exponent(const f32 value)
 {
-	uword value1_uword = static_cast<uword>(value1);
-	uword value2_uword = static_cast<uword>(value2);
-	return (value1_uword ^ value2_uword) & 0x80000000;
-}
-
-bool isNegative(const f32 value)
-{
-	return std::signbit(value);
-}
-
-ubyte getExponent(const f32 value)
-{
-	s32 exp;
+	sword exp;
 	std::frexp(value, &exp);
 	return static_cast<ubyte>(exp);
 }
-

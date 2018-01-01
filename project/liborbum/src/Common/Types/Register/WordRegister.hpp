@@ -19,6 +19,10 @@ public:
 	virtual void write_uhword(const size_t offset, const uhword value) = 0;
 	virtual uword read_uword() = 0;
 	virtual void write_uword(const uword value) = 0;
+	
+	/// Read/write floats - wrappers around read/write uword.
+	f32 read_float();
+	void write_float(const f32 value);
 
 	/// Bitfield extraction/insertion.
 	uword extract_field(const Bitfield field);
@@ -28,6 +32,7 @@ public:
 	void offset(const sword value);
 	
 	/// ByteBusMappable overrides.
+	usize byte_bus_map_size() const override;
 	ubyte byte_bus_read_ubyte(const BusContext context, const usize offset) override;
 	void byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value) override;
 	uhword byte_bus_read_uhword(const BusContext context, const usize offset) override;

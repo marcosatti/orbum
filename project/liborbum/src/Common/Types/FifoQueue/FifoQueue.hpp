@@ -6,61 +6,43 @@
 #include "Common/Types/Bus/BusContext.hpp"
 #include "Common/Types/Bus/ByteBusMappable.hpp"
 
-/*
-FIFO queue.
-Minimum sized type that can be transfered is a byte.
-*/
+/// FIFO queue.
+/// Minimum sized type that can be transfered is a byte.
 class FifoQueue : public ByteBusMappable
 {
 public:
-	/*
-	Initialise FIFO queue (set to empty).
-	*/
+	/// Initialise FIFO queue.
 	virtual void initialise() = 0;
 
-	/*
-	Reads byte(s) from the FIFO queue (pop).
-	Returns true on a successful read.
-	*/
-	virtual bool read_ubyte(ubyte & data) = 0;
+	/// Reads byte(s) from the FIFO queue (pop).
+	virtual ubyte read_ubyte() = 0;
 
-	/*
-	Writes push bytes(s) to the end of the FIFO queue.
-	Returns true on a successful writes.
-	*/
-	virtual bool write_ubyte(const ubyte data) = 0;
+	/// Writes push bytes(s) to the end of the FIFO queue.
+	virtual void write_ubyte(const ubyte data) = 0;
 	
-	/*
-	Reads bytes to the buffer given.
-	This is a wrapper around the read_ubyte function, and should not be treated as a separate interface (not made virtual).
-	Before reading from the queue, first checks that there are 'length' elements available. 
-	Returns true if this check passed and bytes were read into 'buffer', false otherwise.
-	*/
-	bool read(ubyte * buffer, const size_t length);
+	/// Reads bytes to the buffer given.
+	/// This is a wrapper around the read_ubyte function, and should not be treated as a separate interface (not made virtual).
+	void read(ubyte * buffer, const size_t length);
 
-	/*
-	Writes bytes from the buffer given.
-	This is a wrapper around the write_ubyte function, and should not be treated as a separate interface (not made virtual).
-	Before writing to the queue, first checks that there are 'length' spaces available. 
-	Returns true if this check passed and bytes were written from 'buffer', false otherwise.
-	*/
-	bool write(const ubyte * buffer, const size_t length);
+	/// Writes bytes from the buffer given.
+	/// This is a wrapper around the write_ubyte function, and should not be treated as a separate interface (not made virtual).
+	void write(const ubyte * buffer, const size_t length);
 
-	/*
-	Returns the number of bytes remaining in the queue available for reading.
-	Use only from a consumer thread.
-	*/
-	virtual size_t read_available() const = 0;
+	/// Checks if the queue has at least n_bytes available for reading.
+	virtual bool has_read_available(const size_t n_bytes) const = 0;
 
-	/*
-	Returns the number of bytes free in the queue available for writing.
-	Use only from a producer thread.
-	*/
-	virtual size_t write_available() const = 0;
+	/// Checks if the queue has at least n_bytes available for writing.
+	virtual bool has_write_available(const size_t n_bytes) const = 0;
 
-	/*
-	ByteBusMappable overrides.
-	*/
+	/// Check if queue is full/empty (wrappers around above functions).
+	bool is_empty() const;
+	bool is_full() const;
+
+	/// ByteBusMappable overrides.
+	/// For the FifoQueue object, the map size is always one byte.
+	/// The offset is not used in reading or writing to the queue.
+	/// For a larger mapping, map the queue multiple times.
+	usize byte_bus_map_size() const override;
 	ubyte byte_bus_read_ubyte(const BusContext context, const usize offset) override;
 	void byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value) override;
 	uhword byte_bus_read_uhword(const BusContext context, const usize offset) override;

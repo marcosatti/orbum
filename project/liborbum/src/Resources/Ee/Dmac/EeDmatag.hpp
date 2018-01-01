@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Common/Types/Primitive.hpp"
+#include "Common/Types/Bitfield.hpp"
+
 /// An EE DMAtag type, as explained on page 58 of the EE Users Manual.
 /// Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred to as 64-bits in the map data below).
-struct EeDmaTag
+struct EeDmatag
 {
 	static constexpr Bitfield QWC  = Bitfield(0, 16); // For tag0.
 	static constexpr Bitfield TAG  = Bitfield(16, 16); // For tag0. Needed by CHCR register (all upper 16 bits).
@@ -12,11 +15,17 @@ struct EeDmaTag
 	static constexpr Bitfield ADDR = Bitfield(0, 31); // For tag1.
 	static constexpr Bitfield SPR  = Bitfield(31, 1); // For tag1.
 	
+	/// Construct a blank DMAtag.
+	EeDmatag() :
+		tag0(0),
+		tag1(0)
+	{
+	}
 
 	/// Construct the tag with the raw values.
 	/// - tag0 is for bits 0-31.
 	/// - tag1 is for bits 32-63.
-	EeDmaTag(const uword tag0, const uword tag1) :
+	EeDmatag(const uword tag0, const uword tag1) :
 		tag0(tag0),
 		tag1(tag1)
 	{

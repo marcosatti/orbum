@@ -1,56 +1,85 @@
+#include <stdexcept>
 
-
-#include "VM/VM.h"
-#include "VM/Systems/CDVD/CDVD_s.h"
+#include "Core.hpp"
+#include "Controller/Cdvd/CCdvd.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/CDVD/CDVD_t.h"
-#include "Resources/CDVD/Types/CDVDRegisters_t.h"
-#include "Resources/CDVD/Types/CDVDNvrams_t.h"
 
-CDVD_s::CDVD_s(VM * vm) :
-	VMSystem_t(vm, Context_t::CDVD)
+CCdvd::CCdvd(Core * core) :
+	CController(core)
 {
-	mCDVD = getVM()->getResources()->CDVD;
 }
 
-void CDVD_s::initialise()
+void CCdvd::handle_event(const ControllerEvent & event) const
 {
-	// Reset CDVD registers.
-	
-	// Set N_READY / S_READY.
-	mCDVD->N_RDY_DIN->READY->write_ubyte(0x4E);
-	mCDVD->S_RDY_DIN->READY->write_ubyte(0x40);
+	auto& r = core->get_resources();
 
-	// Set iLink Data magic values.
-	mCDVD->NVRAM->writeILinkID(, reinterpret_cast<const uhword*>(CDVDNvram_t::ILINK_DATA_MAGIC));
+	switch (event.type)
+	{
+	case ControllerEvent::Type::Time:
+	{
+		int ticks_remaining = time_to_ticks(event.data.time_us);
+		while (ticks_remaining > 0)
+			ticks_remaining -= time_step(ticks_remaining);
+		break;
+	}
+	default:
+	{
+		throw std::runtime_error("CDVD event handler not implemented - please fix!");
+	}
+	}
 }
 
-int CDVD_s::step(const Event_t & event)
+int CCdvd::time_to_ticks(const double time_us) const
 {
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::CDVD::CDVD_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Cdvd]);
+
+	if (ticks < 5)
+	{
+		static bool warned = false;
+		if (!warned)
+		{
+			BOOST_LOG(Core::get_logger()) << "CDVD ticks too low - increase time delta";
+			warned = true;
+		}
+	}
+
+	return ticks;
+}
+
+int CCdvd::time_step(const int ticks_available) const
+{
+	auto& r = core->get_resources();
+
 	// 2 types of commands to process: N-type, and S-type.
 	// Process N-type.
+	if (r.cdvd.n_command.write_latch)
+	{
+		// Run the N function based upon the N_COMMAND index.
+		(this->*NCMD_INSTRUCTION_TABLE[r.cdvd.n_command.read_ubyte()])();
+		r.cdvd.n_rdy_din.ready.insert_field(CdvdRegister_Ns_Rdy_Din::READY_BUSY, 0);
+		r.cdvd.n_command.write_latch = false;
+	}
 
 	// Process S-type.
 	// Check for a pending command, only process if set.
-	if (mCDVD->S_COMMAND->mPendingCommand)
+	if (r.cdvd.s_command.write_latch)
 	{
-		// Command has been acknowledged, reset the variable.
-		mCDVD->S_COMMAND->mPendingCommand = false;
-
 		// Run the S function based upon the S_COMMAND index.
-		(this->*SCMD_INSTRUCTION_TABLE[mCDVD->S_COMMAND->read_ubyte()])();
+		(this->*SCMD_INSTRUCTION_TABLE[r.cdvd.s_command.read_ubyte()])();
+		r.cdvd.s_rdy_din.ready.insert_field(CdvdRegister_Ns_Rdy_Din::READY_BUSY, 0);
+		r.cdvd.s_command.write_latch = false;
 	}
 
-	return event.mQuantity;
+	return 1;
 }
 
-void CDVD_s::NCMD_INSTRUCTION_UNKNOWN()
+void CCdvd::NCMD_INSTRUCTION_UNKNOWN() const
 {
-	log(Debug, "CDVD N_CMD Unknown Instruction called (0x%02X).", mCDVD->N_COMMAND->read_ubyte());
+	throw std::runtime_error("CDVD N_CMD unknown instruction called");
 }
 
-void CDVD_s::SCMD_INSTRUCTION_UNKNOWN()
+void CCdvd::SCMD_INSTRUCTION_UNKNOWN() const
 {
-	log(Debug, "CDVD S_CMD Unknown Instruction called (0x%02X).", mCDVD->S_COMMAND->read_ubyte());
+	throw std::runtime_error("CDVD S_CMD unknown instruction called");
 }
