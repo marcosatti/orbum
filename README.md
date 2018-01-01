@@ -10,7 +10,7 @@ I can only work on this in my spare time, so I am thankful for any help!
 
 ## Current status
 
-Status as of 2017/12/16:
+Status as of 2018/1/1:
 - Primary focus for now is on the IOP, will continue on the EE side after.
 - Work started on the SIO/SIO2 (controllers and MC's).
 - Work started on the VIFs and VUs, mostly just implementing instructions left.
@@ -33,6 +33,10 @@ Note: as soon as Boost-Cmake is ready for VS2017, it will be used instead.
 
 The bios file scph10000.bin should be placed in `bios/`.
 Other bios' are not currently supported or tested with.
+
+Upon Ctrl-C, memory dumps will be placed in the `dumps/` folder.
+Logging will save files to `logs/` (uses boost logging).
+Please create these folders, they are not done automatically.
 
 ## Licence
 
