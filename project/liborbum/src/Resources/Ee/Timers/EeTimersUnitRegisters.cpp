@@ -1,3 +1,5 @@
+#include "Core.hpp"
+
 #include "Resources/Ee/Timers/EeTimersUnitRegisters.hpp"
 #include "Resources/Ee/Timers/REeTimers.hpp"
 
@@ -57,10 +59,8 @@ void EeTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, c
 {
 	auto _lock = scope_lock();
 	
-	// Signal a timer unit reset is required.
 	if (write_latch)
-		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
-	write_latch = true;
+		BOOST_LOG(Core::get_logger()) << "EE Timer unit write latch was already set - please check (might be ok)!";
 
 	// Clear bits 10 and 11 (0xC00) when a 1 is written to them.
 	uword temp = value;
@@ -71,6 +71,9 @@ void EeTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, c
 	}
 	
 	write_uword(temp);
+
+    // Signal a timer unit reset is required.
+    write_latch = true;
 }
 
 bool EeTimersUnitRegister_Mode::is_gate_hblnk_special()

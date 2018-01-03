@@ -1,4 +1,4 @@
-#include <stdexcept>
+#include "Core.hpp"
 
 #include "Resources/Iop/Sio2/Sio2Registers.hpp"
 
@@ -11,10 +11,10 @@ void Sio2Register_Ctrl::byte_bus_write_uword(const BusContext context, const usi
 {
 	auto _lock = scope_lock();
 	
-	if (write_latch)
-		throw std::runtime_error("Sio2 write latch already set!");
+    if (write_latch)
+        BOOST_LOG(Core::get_logger()) << "SIO2 write latch was already set - please check (might be ok)!";
 
-	write_latch = true;
-	
 	write_uword(value);
+
+    write_latch = true;
 }

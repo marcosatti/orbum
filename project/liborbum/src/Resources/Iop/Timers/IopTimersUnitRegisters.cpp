@@ -1,5 +1,7 @@
 #include <stdexcept>
 
+#include "Core.hpp"
+
 #include "Resources/Iop/Timers/IopTimersUnitRegisters.hpp"
 
 IopTimersUnitRegister_Count::IopTimersUnitRegister_Count(const bool b32_mode) :
@@ -94,13 +96,14 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uhword(const BusContext context,
 		throw std::runtime_error("Iop timers write hword offset not 0.");
 
 	auto _lock = scope_lock();
-	
-	// Signal a timer unit reset is required.
-	if (write_latch)
-		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
-	write_latch = true;
 
+    if (write_latch)
+        BOOST_LOG(Core::get_logger()) << "IOP Timer unit write latch was already set - please check (might be ok)!";
+	
 	write_uhword(offset, value);
+
+    // Signal a timer unit reset is required.
+    write_latch = true;
 }
 
 void IopTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
@@ -108,11 +111,12 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, 
 	auto _lock = scope_lock();
 	
 	// Signal a timer unit reset is required.
-	if (write_latch)
-		throw std::runtime_error("IOP Timer unit write latch was already set - please debug!");
-	write_latch = true;
+    if (write_latch)
+        BOOST_LOG(Core::get_logger()) << "IOP Timer unit write latch was already set - please check (might be ok)!";
 
 	write_uword(value);
+
+    write_latch = true;
 }
 
 uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int unit_id)
@@ -126,7 +130,7 @@ uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int uni
 		// Check for Prescale8 (bit 9).
 		if (extract_field(PRESCALE0) > 0)
 		{
-			throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [0].");
+			throw std::runtime_error("IOP Timers calculate_prescale_and_set_event() not fully implemented [0].");
 		}
 		else
 		{
@@ -147,7 +151,7 @@ uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int uni
 		// Check for Prescale8/16/256 (bits 13 and 14).
 		if (extract_field(PRESCALE1) > 0)
 		{
-			throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [1].");
+			throw std::runtime_error("IOP Timers calculate_prescale_and_set_event() not fully implemented [1].");
 		}
 		else
 		{
@@ -158,7 +162,7 @@ uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int uni
 			}
 			else
 			{
-				throw std::runtime_error("IOP Timers handleEventSourceUpdate() not fully implemented [2].");
+				throw std::runtime_error("IOP Timers calculate_prescale_and_set_event() not fully implemented [2].");
 			}
 		}
 	}

@@ -1,3 +1,5 @@
+#include "Core.hpp"
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 
 #include "Resources/Cdvd/CdvdRegisters.hpp"
@@ -25,8 +27,10 @@ CdvdRegister_Ns_Command::CdvdRegister_Ns_Command() :
 
 void CdvdRegister_Ns_Command::byte_bus_write_ubyte(const BusContext context, const usize offset, const ubyte value)
 {
-	if (write_latch)
-		throw std::runtime_error("Cdvd N/S Command write latch already set");
+    auto _lock = scope_lock();
+
+    if (write_latch)
+        BOOST_LOG(Core::get_logger()) << "CDVD NS_COMMAND write latch was already set - please check (might be ok)!";
 
 	write_ubyte(value);
 	ns_rdy_din->ready.insert_field(CdvdRegister_Ns_Rdy_Din::READY_BUSY, 1);

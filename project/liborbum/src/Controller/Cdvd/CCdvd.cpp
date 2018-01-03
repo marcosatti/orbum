@@ -55,6 +55,8 @@ int CCdvd::time_step(const int ticks_available) const
 	// Process N-type.
 	if (r.cdvd.n_command.write_latch)
 	{
+        auto _lock = r.cdvd.n_command.scope_lock();
+
 		// Run the N function based upon the N_COMMAND index.
 		(this->*NCMD_INSTRUCTION_TABLE[r.cdvd.n_command.read_ubyte()])();
 		r.cdvd.n_rdy_din.ready.insert_field(CdvdRegister_Ns_Rdy_Din::READY_BUSY, 0);
@@ -65,6 +67,8 @@ int CCdvd::time_step(const int ticks_available) const
 	// Check for a pending command, only process if set.
 	if (r.cdvd.s_command.write_latch)
 	{
+        auto _lock = r.cdvd.s_command.scope_lock();
+
 		// Run the S function based upon the S_COMMAND index.
 		(this->*SCMD_INSTRUCTION_TABLE[r.cdvd.s_command.read_ubyte()])();
 		r.cdvd.s_rdy_din.ready.insert_field(CdvdRegister_Ns_Rdy_Din::READY_BUSY, 0);

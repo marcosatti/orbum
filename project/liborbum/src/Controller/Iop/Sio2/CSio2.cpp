@@ -47,22 +47,25 @@ int CSio2::time_to_ticks(const double time_us) const
 int CSio2::time_step(const int ticks_available) const
 {
 	auto& r = core->get_resources();
+
+    auto _ctrl_lock = r.iop.sio2.ctrl.scope_lock();
 	
 	if (r.iop.sio2.ctrl.write_latch)
 	{
 		/*
 		if (r.iop.sio2.ctrl.extract_field(SIO2Register_CTRL_t::Reset) > 0)
 		{
+            // Receive packet (?).
+
+		    // Raise IOP IRQ.
+		    //r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
 		}
 		else
 		{
-	
+            // Send packet (?).
 		}
 		*/
 	
-		// Raise IOP IRQ always.
-		//r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
-
 		r.iop.sio2.ctrl.write_latch = false; 
 	}
 
