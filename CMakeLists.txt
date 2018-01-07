@@ -6,17 +6,16 @@ cmake_minimum_required(VERSION 3.1)
 
 project(orbum CXX)
 
-find_package(Threads)
+set(CMAKE_CXX_STANDARD 14)
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/bin" CACHE PATH "Default install path" FORCE )
-endif()
+find_package(Threads)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+
 set(BUILD_SHARED_LIBS on)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
 add_subdirectory(external)
 add_subdirectory(project)

@@ -135,18 +135,28 @@ set(COMMON_SRC_FILES
 
 add_library(liborbum ${COMMON_SRC_FILES})
 
-# Disable MSVC non-safe copy warnings.
-target_compile_definitions(liborbum PUBLIC "_SCL_SECURE_NO_WARNINGS")
+# TODO: Sort out later into proper build configurations.
+# Also disable MSVC non-safe copy warnings.
+target_compile_definitions(
+	liborbum PUBLIC 
+	 "_SCL_SECURE_NO_WARNINGS"
+	"BUILD_DEBUG"
+)
 
-# Sort out later into proper build configurations.
-target_compile_definitions(liborbum PUBLIC "BUILD_DEBUG")
+target_include_directories(
+	liborbum PUBLIC
+	"${Boost_INCLUDE_DIR}"
+	"${CMAKE_SOURCE_DIR}/project/liborbum/src"
+	"${CMAKE_SOURCE_DIR}/project/utilities/src"
+)
 
-message("Boost headers found: ${Boost_INCLUDE_DIR}")
-target_include_directories(liborbum PUBLIC "${Boost_INCLUDE_DIR}")
-target_include_directories(liborbum PUBLIC "${CMAKE_SOURCE_DIR}/project/liborbum/src")
-target_include_directories(liborbum PUBLIC "${CMAKE_SOURCE_DIR}/project/utilities/src")
+target_link_libraries(
+	liborbum 
+	${Boost_LIBRARIES}
+)
 
-message("Boost libs found: ${Boost_LIBRARIES}")
-target_link_libraries(liborbum ${Boost_LIBRARIES})
-
-install(TARGETS liborbum RUNTIME DESTINATION ".")
+install(
+	TARGETS liborbum 
+	ARCHIVE DESTINATION "lib/static"
+	LIBRARY DESTINATION "lib"
+)

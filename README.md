@@ -1,4 +1,5 @@
-# orbum
+# orbum [![Build Status](https://travis-ci.org/marco9999/orbum.svg?branch=master)](https://travis-ci.org/marco9999/orbum)
+
 #### PS2 Emulator
 An attempt at updating the PCSX2 codebase:
 
