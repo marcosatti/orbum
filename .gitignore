@@ -262,6 +262,7 @@ paket-files/
 build/
 include/
 lib/
+[Tt]emp/
 
 # VSCode
 .vscode/
