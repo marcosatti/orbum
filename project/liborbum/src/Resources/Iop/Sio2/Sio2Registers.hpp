@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Common/Types/ScopeLock.hpp"
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Common/Types/Register/ByteRegister.hpp"
 
 /// SIO2 CTRL Register.
-///
-/// TODO: notes so far:
-/// Bit 0 is a reset SIO2 or SIO flag in TX/RX direction (?). Cleared once reset complete???
-/// PCSX2 probably not proper - doesn't seem right that things like this exist: "sio2.ctrl &= ~1;"
-/// Fuck it, its magic.
+/// RESET_DIR is a reset SIO2 or SIO flag in TX/RX direction (?). 
+/// This seems like a bit of magic to me, no documentation really.
+/// Looking into the bios, it changes between OR'ing 0xC or 0x1 with 0x3BC, which works with what PCSX2 says.
+/// (ie: 0xC OR'd has no effect, 0x1 OR'd makes it 0x3BD.)
 class Sio2Register_Ctrl : public SizedWordRegister, public ScopeLock
 {
 public:
@@ -23,4 +24,21 @@ public:
 	/// Write latch.
 	/// Set to true on write, cleared by the system logic when the command has been processed.
 	bool write_latch;
+};
+
+/// Data fifo port register.
+/// Used as an interface by the SIO2 to transmit data.
+class Sio2Register_Data : public ByteRegister
+{
+public:
+	Sio2Register_Data();
+
+	void initialise() override;
+
+	/// Reads and writes to the data fifo queue.
+	ubyte read_ubyte() override;
+	void write_ubyte(const ubyte value) override;
+
+	/// Reference to the data fifo queue.
+	DmaFifoQueue<> * data_fifo;
 };

@@ -1,3 +1,5 @@
+#include <utility>
+#include <algorithm>
 #include <boost/format.hpp>
 
 #include "Core.hpp"
@@ -154,8 +156,18 @@ void CIopCoreInterpreter::debug_print_interrupt_info() const
 	// Check the INTC.
 	for (auto& irq_field : IopIntcRegister_Stat::IRQ_KEYS)
 	{
+		const Bitfield DEBUG_LOG_INTC_FILTER[] = 
+		{ 
+			IopIntcRegister_Stat::VBLANK, 
+			IopIntcRegister_Stat::EVBLANK 
+		};
+		if (std::end(DEBUG_LOG_INTC_FILTER) != std::find(std::begin(DEBUG_LOG_INTC_FILTER), std::end(DEBUG_LOG_INTC_FILTER), irq_field))
+			continue;
+
 		if (stat.extract_field(irq_field) & mask.extract_field(irq_field))
+		{
 			BOOST_LOG(Core::get_logger()) << boost::format("INTC source %d") % irq_field.start;
+		}
 	}
 
 	// Print DMAC sources if it was a source.
@@ -317,16 +329,23 @@ bool CIopCoreInterpreter::translate_vaddress(const uptr virtual_address, const M
 	auto& cop0 = r.iop.core.cop0;
 
 #if defined(BUILD_DEBUG)
-	static uword DEBUG_VA_BREAKPOINT_LO = 0xFFFFFFFF;
-	static uword DEBUG_VA_BREAKPOINT_HI = 0xFFFFFFFF;
-	if (virtual_address >= DEBUG_VA_BREAKPOINT_LO && virtual_address <= DEBUG_VA_BREAKPOINT_HI)
+	static const std::pair<uword, uword> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
-		BOOST_LOG(Core::get_logger()) << 
-			boost::format("IOP MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
-			% DEBUG_LOOP_COUNTER 
-			% r.iop.core.r3000.pc.read_uword() 
-			% virtual_address
-			% ((access == READ) ? "READ" : "WRITE");
+		std::make_pair(0xBF801040, 0xBF801050),
+		std::make_pair(0xBF808200, 0xBF808300)
+	};
+
+	for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)
+	{
+		if (virtual_address >= range.first && virtual_address <= range.second)
+		{
+			BOOST_LOG(Core::get_logger()) << 
+				boost::format("IOP MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
+				% DEBUG_LOOP_COUNTER 
+				% r.iop.core.r3000.pc.read_uword() 
+				% virtual_address
+				% ((access == READ) ? "READ" : "WRITE");
+		}
 	}
 #endif
 

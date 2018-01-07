@@ -18,3 +18,23 @@ void Sio2Register_Ctrl::byte_bus_write_uword(const BusContext context, const usi
 
     write_latch = true;
 }
+
+Sio2Register_Data::Sio2Register_Data() :
+	data_fifo(nullptr)
+{
+}
+
+void Sio2Register_Data::initialise()
+{
+    data_fifo->initialise();
+}
+
+ubyte Sio2Register_Data::read_ubyte()
+{
+    return data_fifo->read_ubyte();
+}
+
+void Sio2Register_Data::write_ubyte(const ubyte value)
+{
+    data_fifo->write_ubyte(value);
+}

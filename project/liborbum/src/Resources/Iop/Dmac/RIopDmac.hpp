@@ -23,8 +23,8 @@ struct RIopDmac
 	SizedWordRegister    gctrl; 
 
 	/// DMAC Channels.
-	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_frommdec; // CH 0
-	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_tomdec;   // CH 1
+	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_tomdec;   // CH 0
+	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_frommdec; // CH 1
 	IopDmacChannel_Base<IopDmacChannelRegister_Chcr_Sif2> channel_sif2;     // CH 2 bidirectional w/ EE
 	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_cdvd;     // CH 3
 	IopDmacChannel_Tadr<IopDmacChannelRegister_Chcr>      channel_spu2c0;   // CH 4
@@ -34,8 +34,8 @@ struct RIopDmac
 	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_dev9;     // CH 8
 	IopDmacChannel_Tadr<IopDmacChannelRegister_Chcr_Sif0> channel_sif0;     // CH 9 to EE
 	IopDmacChannel_Base<IopDmacChannelRegister_Chcr_Sif1> channel_sif1;     // CH 10 from EE
-	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_fromsio2; // CH 11
-	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_tosio2;   // CH 12
+	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_tosio2;   // CH 11
+	IopDmacChannel_Base<IopDmacChannelRegister_Chcr>      channel_fromsio2; // CH 12
 
 	/// IOP DMA channel abstrations. 
 	/// There are 14 channels in total (to make it even), with the last one being undefined.

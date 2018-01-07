@@ -1,3 +1,4 @@
+#include <boost/format.hpp>
 #include "Core.hpp"
 
 #include "Controller/Iop/Sio2/CSio2.hpp"
@@ -47,26 +48,37 @@ int CSio2::time_to_ticks(const double time_us) const
 int CSio2::time_step(const int ticks_available) const
 {
 	auto& r = core->get_resources();
+	auto& ctrl = r.iop.sio2.ctrl;
+	auto& intc_stat = r.iop.intc.stat;
 
-    auto _ctrl_lock = r.iop.sio2.ctrl.scope_lock();
+    auto _ctrl_lock = ctrl.scope_lock();
 	
-	if (r.iop.sio2.ctrl.write_latch)
+	if (ctrl.write_latch)
 	{
-		/*
-		if (r.iop.sio2.ctrl.extract_field(SIO2Register_CTRL_t::Reset) > 0)
+		if (ctrl.extract_field(Sio2Register_Ctrl::RESET_DIR) > 0)
 		{
-            // Receive packet (?).
+            // Receive packet. Value should be 0x3BD.
+			if (ctrl.read_uword() != 0x3BD)
+				BOOST_LOG(Core::get_logger()) << 
+					boost::format("Careful, SIO2 ctrl recv value not normal: 0x%08X") 
+					% ctrl.read_uword();
 
 		    // Raise IOP IRQ.
-		    //r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
+		    intc_stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
+
+			// Clear the direction bit (no idea why... seems to be required).
+			ctrl.insert_field(Sio2Register_Ctrl::RESET_DIR, 0);
 		}
 		else
 		{
-            // Send packet (?).
+            // Send packet. Value should be 0x3BC.
+			if (ctrl.read_uword() != 0x3BC)
+				BOOST_LOG(Core::get_logger()) << 
+					boost::format("Careful, SIO2 ctrl send value not normal: 0x%08X") 
+					% ctrl.read_uword();
 		}
-		*/
 	
-		r.iop.sio2.ctrl.write_latch = false; 
+		ctrl.write_latch = false; 
 	}
 
 	return 1;

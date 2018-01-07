@@ -44,6 +44,16 @@ struct Bitfield
 		return cleaned_value | cleaned_field_value;
 	}
 
+	constexpr bool operator==(const Bitfield & rhs) const
+	{
+		return (start == rhs.start) && (length == rhs.length);
+	}
+
+	constexpr bool operator!=(const Bitfield & rhs) const
+	{
+		return !operator==(rhs);
+	}
+
 	const int start;
 	const int length;
 };

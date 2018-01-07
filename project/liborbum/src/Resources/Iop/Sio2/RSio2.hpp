@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 #include "Resources/Iop/Sio2/Sio2Registers.hpp"
@@ -10,6 +11,10 @@
 /// A lot of information can be found through the PS2SDK too: https://github.com/ps2dev/ps2sdk/tree/master/iop/system/sio2log/src.
 struct RSio2
 {
+	RSio2();
+
+	DmaFifoQueue<> data_fifo; // Fifo queue used for sending and receiving data (can change direction).
+
 	SizedWordRegister port0_ctrl3; // TODO: figure out these names properly.
 	SizedWordRegister port1_ctrl3;
 	SizedWordRegister port2_ctrl3;
@@ -35,11 +40,11 @@ struct RSio2
 	SizedWordRegister port2_ctrl2;
 	SizedWordRegister port3_ctrl1;
 	SizedWordRegister port3_ctrl2;
-	SizedWordRegister data_out;
-	SizedWordRegister data_in;
+	Sio2Register_Data data_in;
+	Sio2Register_Data data_out;
 	Sio2Register_Ctrl ctrl;
 	SizedWordRegister recv1;
-	SizedWordRegister recv2;
+	SizedWordRegister recv2;         // Constant 0xF value.
 	SizedWordRegister recv3;
 	SizedWordRegister register_8278;
 	SizedWordRegister register_827c;

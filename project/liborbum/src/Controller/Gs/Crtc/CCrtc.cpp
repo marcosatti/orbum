@@ -79,7 +79,7 @@ int CCrtc::time_step(const int ticks_available) const
 			// Send VBlank end.
 			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBOF, 1);
 			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::EVBLANK, 1);
-			BOOST_LOG(Core::get_logger()) << "EVBLANK fired!";
+			//BOOST_LOG(Core::get_logger()) << "EVBLANK fired!";
 		}
 	
 		row++;
@@ -91,7 +91,7 @@ int CCrtc::time_step(const int ticks_available) const
 			// Send VBlank start.
 			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBON, 1);
 			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::VBLANK, 1);
-			BOOST_LOG(Core::get_logger()) << "VBLANK fired!";
+			//BOOST_LOG(Core::get_logger()) << "VBLANK fired!";
 	
 			// Tell core to render frame.
 			// core->render_frame();

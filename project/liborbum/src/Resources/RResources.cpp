@@ -232,14 +232,14 @@ void initialise_iop_dmac(RResources * r)
 	r->iop.dmac.channel_sif2.chcr.sbus_f240 = &r->sbus_f240;
 
 	// Init channel abstrations.
-	r->iop.dmac.channels[0].channel_id = &r->iop.dmac.channel_frommdec.channel_id;
-	r->iop.dmac.channels[0].madr = &r->iop.dmac.channel_frommdec.madr;
-	r->iop.dmac.channels[0].bcr = &r->iop.dmac.channel_frommdec.bcr;
-	r->iop.dmac.channels[0].chcr = &r->iop.dmac.channel_frommdec.chcr;
-	r->iop.dmac.channels[1].channel_id = &r->iop.dmac.channel_tomdec.channel_id;
-	r->iop.dmac.channels[1].madr = &r->iop.dmac.channel_tomdec.madr;
-	r->iop.dmac.channels[1].bcr = &r->iop.dmac.channel_tomdec.bcr;
-	r->iop.dmac.channels[1].chcr = &r->iop.dmac.channel_tomdec.chcr;
+	r->iop.dmac.channels[0].channel_id = &r->iop.dmac.channel_tomdec.channel_id;
+	r->iop.dmac.channels[0].madr = &r->iop.dmac.channel_tomdec.madr;
+	r->iop.dmac.channels[0].bcr = &r->iop.dmac.channel_tomdec.bcr;
+	r->iop.dmac.channels[0].chcr = &r->iop.dmac.channel_tomdec.chcr;
+	r->iop.dmac.channels[1].channel_id = &r->iop.dmac.channel_frommdec.channel_id;
+	r->iop.dmac.channels[1].madr = &r->iop.dmac.channel_frommdec.madr;
+	r->iop.dmac.channels[1].bcr = &r->iop.dmac.channel_frommdec.bcr;
+	r->iop.dmac.channels[1].chcr = &r->iop.dmac.channel_frommdec.chcr;
 	r->iop.dmac.channels[2].channel_id = &r->iop.dmac.channel_sif2.channel_id;
 	r->iop.dmac.channels[2].madr = &r->iop.dmac.channel_sif2.madr;
 	r->iop.dmac.channels[2].bcr = &r->iop.dmac.channel_sif2.bcr;
@@ -278,14 +278,14 @@ void initialise_iop_dmac(RResources * r)
 	r->iop.dmac.channels[10].madr = &r->iop.dmac.channel_sif1.madr;
 	r->iop.dmac.channels[10].bcr = &r->iop.dmac.channel_sif1.bcr;
 	r->iop.dmac.channels[10].chcr = &r->iop.dmac.channel_sif1.chcr;
-	r->iop.dmac.channels[11].channel_id = &r->iop.dmac.channel_fromsio2.channel_id;
-	r->iop.dmac.channels[11].madr = &r->iop.dmac.channel_fromsio2.madr;
-	r->iop.dmac.channels[11].bcr = &r->iop.dmac.channel_fromsio2.bcr;
-	r->iop.dmac.channels[11].chcr = &r->iop.dmac.channel_fromsio2.chcr;
-	r->iop.dmac.channels[12].channel_id = &r->iop.dmac.channel_tosio2.channel_id;
-	r->iop.dmac.channels[12].madr = &r->iop.dmac.channel_tosio2.madr;
-	r->iop.dmac.channels[12].bcr = &r->iop.dmac.channel_tosio2.bcr;
-	r->iop.dmac.channels[12].chcr = &r->iop.dmac.channel_tosio2.chcr;
+	r->iop.dmac.channels[11].channel_id = &r->iop.dmac.channel_tosio2.channel_id;
+	r->iop.dmac.channels[11].madr = &r->iop.dmac.channel_tosio2.madr;
+	r->iop.dmac.channels[11].bcr = &r->iop.dmac.channel_tosio2.bcr;
+	r->iop.dmac.channels[11].chcr = &r->iop.dmac.channel_tosio2.chcr;
+	r->iop.dmac.channels[12].channel_id = &r->iop.dmac.channel_fromsio2.channel_id;
+	r->iop.dmac.channels[12].madr = &r->iop.dmac.channel_fromsio2.madr;
+	r->iop.dmac.channels[12].bcr = &r->iop.dmac.channel_fromsio2.bcr;
+	r->iop.dmac.channels[12].chcr = &r->iop.dmac.channel_fromsio2.chcr;
 
 	// Init DMA FIFO queues.
 	r->iop.dmac.channels[0].dma_fifo_queue = &r->fifo_frommdec;
@@ -612,12 +612,12 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F802070, &r->iop.register_2070);
 
 			// DMAC Registers.
-			r->iop.bus.map(0x1F801080, &r->iop.dmac.channel_frommdec.madr);
-			r->iop.bus.map(0x1F801084, &r->iop.dmac.channel_frommdec.bcr);
-			r->iop.bus.map(0x1F801088, &r->iop.dmac.channel_frommdec.chcr);
-			r->iop.bus.map(0x1F801090, &r->iop.dmac.channel_tomdec.madr);
-			r->iop.bus.map(0x1F801094, &r->iop.dmac.channel_tomdec.bcr);
-			r->iop.bus.map(0x1F801098, &r->iop.dmac.channel_tomdec.chcr);
+			r->iop.bus.map(0x1F801080, &r->iop.dmac.channel_tomdec.madr);
+			r->iop.bus.map(0x1F801084, &r->iop.dmac.channel_tomdec.bcr);
+			r->iop.bus.map(0x1F801088, &r->iop.dmac.channel_tomdec.chcr);
+			r->iop.bus.map(0x1F801090, &r->iop.dmac.channel_frommdec.madr);
+			r->iop.bus.map(0x1F801094, &r->iop.dmac.channel_frommdec.bcr);
+			r->iop.bus.map(0x1F801098, &r->iop.dmac.channel_frommdec.chcr);
 			r->iop.bus.map(0x1F8010A0, &r->iop.dmac.channel_sif2.madr);
 			r->iop.bus.map(0x1F8010A4, &r->iop.dmac.channel_sif2.bcr);
 			r->iop.bus.map(0x1F8010A8, &r->iop.dmac.channel_sif2.chcr);
@@ -647,12 +647,12 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F801530, &r->iop.dmac.channel_sif1.madr);
 			r->iop.bus.map(0x1F801534, &r->iop.dmac.channel_sif1.bcr);
 			r->iop.bus.map(0x1F801538, &r->iop.dmac.channel_sif1.chcr);
-			r->iop.bus.map(0x1F801540, &r->iop.dmac.channel_fromsio2.madr);
-			r->iop.bus.map(0x1F801544, &r->iop.dmac.channel_fromsio2.bcr);
-			r->iop.bus.map(0x1F801548, &r->iop.dmac.channel_fromsio2.chcr);
-			r->iop.bus.map(0x1F801550, &r->iop.dmac.channel_tosio2.madr);
-			r->iop.bus.map(0x1F801554, &r->iop.dmac.channel_tosio2.bcr);
-			r->iop.bus.map(0x1F801558, &r->iop.dmac.channel_tosio2.chcr);
+			r->iop.bus.map(0x1F801540, &r->iop.dmac.channel_tosio2.madr);
+			r->iop.bus.map(0x1F801544, &r->iop.dmac.channel_tosio2.bcr);
+			r->iop.bus.map(0x1F801548, &r->iop.dmac.channel_tosio2.chcr);
+			r->iop.bus.map(0x1F801550, &r->iop.dmac.channel_fromsio2.madr);
+			r->iop.bus.map(0x1F801554, &r->iop.dmac.channel_fromsio2.bcr);
+			r->iop.bus.map(0x1F801558, &r->iop.dmac.channel_fromsio2.chcr);
 			r->iop.bus.map(0x1F8010F0, &r->iop.dmac.pcr0);
 			r->iop.bus.map(0x1F8010F4, &r->iop.dmac.icr0);
 			r->iop.bus.map(0x1F801570, &r->iop.dmac.pcr1);
@@ -1632,8 +1632,8 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F808254, &r->iop.sio2.port2_ctrl2);
 			r->iop.bus.map(0x1F808258, &r->iop.sio2.port3_ctrl1);
 			r->iop.bus.map(0x1F80825C, &r->iop.sio2.port3_ctrl2);
-			r->iop.bus.map(0x1F808260, &r->iop.sio2.data_out);
-			r->iop.bus.map(0x1F808264, &r->iop.sio2.data_in);
+			r->iop.bus.map(0x1F808260, &r->iop.sio2.data_in);
+			r->iop.bus.map(0x1F808264, &r->iop.sio2.data_out);
 			r->iop.bus.map(0x1F808268, &r->iop.sio2.ctrl);
 			r->iop.bus.map(0x1F80826C, &r->iop.sio2.recv1);
 			r->iop.bus.map(0x1F808270, &r->iop.sio2.recv2);
@@ -1690,6 +1690,12 @@ void initialise_iop_timers(RResources * r)
 	r->iop.timers.units[3] = &r->iop.timers.unit_3;
 	r->iop.timers.units[4] = &r->iop.timers.unit_4;
 	r->iop.timers.units[5] = &r->iop.timers.unit_5;
+}
+
+void initialise_iop_sio2(RResources * r)
+{
+	r->iop.sio2.data_in.data_fifo = &r->iop.sio2.data_fifo;
+	r->iop.sio2.data_out.data_fifo = &r->iop.sio2.data_fifo;
 }
 
 void initialise_ee_core(RResources * r)
@@ -1761,6 +1767,7 @@ void initialise_resources(const std::unique_ptr<RResources> & r)
 	initialise_iop_core(r.get());
 	initialise_iop_dmac(r.get());
 	initialise_iop_timers(r.get());
+	initialise_iop_sio2(r.get());
 
 	initialise_cdvd(r.get());
 
