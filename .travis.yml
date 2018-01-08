@@ -1,15 +1,28 @@
 language: cpp
-compiler:
-  - clang
-  - gcc
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y cmake
-  - sudo apt-get install -y libboost-all-dev
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - cmake
+            - libboost-all-dev
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
 install: true
+
 before_script:
+  - eval "${MATRIX_EVAL}"
+  - echo "CC test... `${CC} --verison`"
+  - echo "CXX test... `${CXX} --verison`"
   - mkdir -p build
   - cd build
+
 script:
   - cmake ..
   - cmake --build .

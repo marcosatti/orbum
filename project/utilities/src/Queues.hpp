@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <stdexcept>
 #include <mutex>
 #include <condition_variable>
@@ -133,7 +134,7 @@ public:
 	/// Not thread safe.
 	void reset()
 	{
-		queue.reset()
+		queue.reset();
 	}
 
 private:

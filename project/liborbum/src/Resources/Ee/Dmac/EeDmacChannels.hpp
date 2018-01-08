@@ -54,7 +54,7 @@ class EeDmacChannel_Tadr : public EeDmacChannel_Base<EeDmacChannelRegister_Chcr_
 {
 public:
 	EeDmacChannel_Tadr(const int channel_id) :
-		EeDmacChannel_Base(channel_id)
+		EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>(channel_id)
 	{
 	}
 
@@ -67,7 +67,7 @@ class EeDmacChannel_Asr : public EeDmacChannel_Tadr<EeDmacChannelRegister_Chcr_T
 {
 public:
 	EeDmacChannel_Asr(const int channel_id) :
-		EeDmacChannel_Tadr(channel_id)
+		EeDmacChannel_Tadr<EeDmacChannelRegister_Chcr_Ty>(channel_id)
 	{
 	}
 
@@ -80,7 +80,7 @@ class EeDmacChannel_Sadr : public EeDmacChannel_Base<EeDmacChannelRegister_Chcr_
 {
 public:
 	EeDmacChannel_Sadr(const int channel_id) :
-		EeDmacChannel_Base(channel_id)
+		EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>(channel_id)
 	{
 	}
 
@@ -93,7 +93,7 @@ class EeDmacChannel_Tadr_Sadr : public EeDmacChannel_Base<EeDmacChannelRegister_
 {
 public:
 	EeDmacChannel_Tadr_Sadr(const int channel_id) :
-		EeDmacChannel_Base(channel_id)
+		EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>(channel_id)
 	{
 	}
 

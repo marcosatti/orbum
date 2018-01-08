@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <climits>
 
 /// PS2 Primative Data Types.
 /// These types should be used throughout the emulator when operating on the PS2 system state.
