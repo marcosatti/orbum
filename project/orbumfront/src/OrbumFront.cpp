@@ -19,7 +19,6 @@ int main(int argc, char * argv[])
 		std::cout << argv[i] << ", ";
 	std::cout << std::endl << "Working directory: " << boost::filesystem::initial_path() << std::endl;
 	std::signal(SIGINT, signal_handler);
-	std::signal(SIGBREAK, signal_handler);
 
 	try 
 	{

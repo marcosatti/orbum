@@ -3,7 +3,7 @@
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/Register/SizedQwordRegister.hpp"
-#include "Common/Types/MIPS/BranchDelaySlot.hpp"
+#include "Common/Types/Mips/BranchDelaySlot.hpp"
 
 /// The R5900 is the EE Core's CPU. 
 /// It has been modified from a stock R5900 to include Sony specific instructions

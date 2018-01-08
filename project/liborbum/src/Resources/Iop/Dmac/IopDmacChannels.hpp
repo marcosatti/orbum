@@ -51,7 +51,7 @@ class IopDmacChannel_Tadr : public IopDmacChannel_Base<IopDmacChannelRegister_Ch
 {
 public:
 	IopDmacChannel_Tadr(const int channel_id) :
-		IopDmacChannel_Base(channel_id)
+		IopDmacChannel_Base<IopDmacChannelRegister_Chcr_Ty>(channel_id)
 	{
 	}
 

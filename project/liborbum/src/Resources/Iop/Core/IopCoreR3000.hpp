@@ -2,7 +2,7 @@
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
-#include "Common/Types/MIPS/BranchDelaySlot.hpp"
+#include "Common/Types/Mips/BranchDelaySlot.hpp"
 
 /// The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
 /// It uses a little-endian configuration.

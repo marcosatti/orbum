@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(external CXX)
 
-set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 

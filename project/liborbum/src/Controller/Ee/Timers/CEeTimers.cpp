@@ -1,6 +1,6 @@
 #include "Core.hpp"
 
-#include "Controller/EE/Timers/CEeTimers.hpp"
+#include "Controller/Ee/Timers/CEeTimers.hpp"
 
 #include "Resources/RResources.hpp"
 
