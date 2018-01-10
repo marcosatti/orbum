@@ -133,7 +133,7 @@ set(COMMON_SRC_FILES
 	src/Controller/Ee/Core/Interpreter/CEeCoreInterpreter_STORE_MEM.cpp
 )
 
-add_library(liborbum ${COMMON_SRC_FILES})
+add_library(liborbum STATIC ${COMMON_SRC_FILES})
 
 # TODO: Sort out later into proper build configurations.
 # Also disable MSVC non-safe copy warnings.
@@ -145,14 +145,16 @@ target_compile_definitions(
 
 target_include_directories(
 	liborbum PUBLIC
-	"${Boost_INCLUDE_DIR}"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src"
 	"${CMAKE_SOURCE_DIR}/project/utilities/src"
 )
 
 target_link_libraries(
 	liborbum 
-	${Boost_LIBRARIES}
+	PUBLIC
+		Boost::boost
+		Boost::filesystem
+		Boost::log_setup
 )
 
 install(
