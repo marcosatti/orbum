@@ -1,10 +1,5 @@
 #include "Resources/Ee/Vpu/Vu/VuUnitRegisters.hpp"
 
-constexpr Bitfield VuUnitRegister_Mac::X_FLAGS[4];
-constexpr Bitfield VuUnitRegister_Mac::Y_FLAGS[4];
-constexpr Bitfield VuUnitRegister_Mac::Z_FLAGS[4];
-constexpr Bitfield VuUnitRegister_Mac::W_FLAGS[4];
-
 void VuUnitRegister_Status::set_z_flag_sticky(const uword value)
 {
 	uword zs = extract_field(ZS);

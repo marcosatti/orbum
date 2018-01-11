@@ -1,8 +1,5 @@
 #include "Resources/Iop/Intc/IopIntcRegisters.hpp"
 
-constexpr Bitfield IopIntcRegister_Stat::IRQ_KEYS[Constants::IOP::INTC::NUMBER_IRQ_LINES];
-constexpr Bitfield IopIntcRegister_Stat::TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS];
-
 uword IopIntcRegister_Ctrl::byte_bus_read_uword(const BusContext context, const usize offset)
 {
 	auto temp = SizedWordRegister::read_uword();

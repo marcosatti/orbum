@@ -1,8 +1,5 @@
 #include "Resources/Ee/Dmac/EeDmacRegisters.hpp"
 
-constexpr Bitfield EeDmacRegister_Stat::CHANNEL_CIS_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS];
-constexpr Bitfield EeDmacRegister_Stat::CHANNEL_CIM_KEYS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS];
-
 void EeDmacRegister_Stat::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
 {
 	auto _lock = scope_lock();

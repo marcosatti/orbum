@@ -3,17 +3,6 @@
 #include "Resources/Iop/Dmac/IopDmacRegisters.hpp"
 #include "Resources/Iop/Dmac/IopDmacChannels.hpp"
 
-constexpr Bitfield IopDmacRegister_Pcr0::CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Pcr0::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Icr0::CHANNEL_IRM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Icr0::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Icr0::CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Pcr1::CHANNEL_PRIORITY_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Pcr1::CHANNEL_ENABLE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Icr1::CHANNEL_IQE_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS];
-constexpr Bitfield IopDmacRegister_Icr1::CHANNEL_TCM_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-constexpr Bitfield IopDmacRegister_Icr1::CHANNEL_TCI_KEYS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2];
-
 void IopDmacRegister_Icr0::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
 {
 	auto _lock = scope_lock();

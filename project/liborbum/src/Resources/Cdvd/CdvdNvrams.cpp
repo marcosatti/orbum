@@ -4,8 +4,6 @@
 #include "Common/Types/Memory/HwordMemory.hpp"
 #include "Resources/Cdvd/CdvdNvrams.hpp"
 
-constexpr ubyte CdvdNvram::ILINK_DATA_MAGIC[8];
-
 CdvdNvram::CdvdNvram() :
 	memory(Constants::CDVD::SIZE_NVRAM),
 	access_read_write(0),
