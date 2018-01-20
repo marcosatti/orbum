@@ -283,13 +283,16 @@ void CIopDmac::handle_interrupt_check() const
 	// Check ICR0 and ICR1 for interrupt status, else clear the master interrupt and INTC bits.
 	if (r.iop.dmac.icrw.is_interrupt_pending_and_set_master())
 	{
+		auto _lock = r.iop.intc.stat.scope_lock();
 		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::DMAC, 1);
 	}
+	/*
 	else
 	{
 		r.iop.dmac.icr0.insert_field(IopDmacRegister_Icr0::MASTER_INTERRUPT, 0);
 		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::DMAC, 0);
 	}
+	*/
 }
 
 int CIopDmac::transfer_data(IopDmacChannel & channel) const

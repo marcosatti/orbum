@@ -46,6 +46,51 @@ int CSio0::time_to_ticks(const double time_us) const
 
 int CSio0::time_step(const int ticks_available) const
 {
-	// Not yet implemented.
+	handle_reset_check();
+	handle_irq_check();
+
 	return ticks_available;
+}
+
+void CSio0::handle_reset_check() const
+{
+	auto& r = core->get_resources();
+	auto& ctrl = r.iop.sio0.ctrl;
+	auto& stat = r.iop.sio0.stat;
+	
+	// Perform SIO0 reset (all relevant bits).
+	if (ctrl.extract_field(Sio0Register_Ctrl::SIO_RESET))
+	{
+		auto _ctrl_lock = ctrl.scope_lock();
+		auto _stat_lock = stat.scope_lock();
+
+		ctrl.insert_field(Sio0Register_Ctrl::RESET_IRQ, 0);
+		stat.insert_field(Sio0Register_Stat::TX_RDY, 1);
+		stat.insert_field(Sio0Register_Stat::TX_EMPTY, 1);
+		stat.insert_field(Sio0Register_Stat::IRQ, 0);
+	}
+}
+
+void CSio0::handle_irq_check() const 
+{
+	auto& r = core->get_resources();
+	auto& ctrl = r.iop.sio0.ctrl;
+	auto& stat = r.iop.sio0.stat;
+	
+	// Reset IRQ bit if it has been acknowledged by IOP.
+	if (ctrl.extract_field(Sio0Register_Ctrl::RESET_IRQ))
+	{
+		auto _ctrl_lock = ctrl.scope_lock();
+		auto _stat_lock = stat.scope_lock();
+
+		stat.insert_field(Sio0Register_Stat::IRQ, 0);
+		ctrl.insert_field(Sio0Register_Ctrl::RESET_IRQ, 0);
+	}
+
+	// Raise IOP INTC IRQ if requested.
+	if (stat.extract_field(Sio0Register_Stat::IRQ)) 
+	{
+		auto& _lock = r.iop.intc.stat.scope_lock();
+		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO0, 1);
+	}
 }

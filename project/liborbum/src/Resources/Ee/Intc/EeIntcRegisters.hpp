@@ -2,6 +2,7 @@
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Bitfield.hpp"
+#include "Common/Types/ScopeLock.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 /// The EE INTC I_MASK register, which holds a set of flags determining if the interrupt source is masked.
@@ -31,7 +32,9 @@ public:
 
 /// The EE INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 /// Bits are cleared by writing 1 (through EE context).
-class EeIntcRegister_Stat : public SizedWordRegister
+/// The INTC is edge triggered (ie: only need to pulse line). See EE Users Manual page 28.
+/// STAT writes needs to be scope locked by the peripherals.
+class EeIntcRegister_Stat : public SizedWordRegister, public ScopeLock
 {
 public:
 	static constexpr Bitfield GS = Bitfield(0, 1);
@@ -56,5 +59,6 @@ public:
 	static constexpr Bitfield TIM_KEYS[Constants::EE::Timers::NUMBER_TIMERS] = { TIM0, TIM1, TIM2, TIM3 };
 
 	/// (EE context) Clears any bits written to.
+	/// Scope locked.
 	void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
 };

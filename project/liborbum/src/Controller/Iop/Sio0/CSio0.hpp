@@ -13,5 +13,11 @@ public:
 	int time_to_ticks(const double time_us) const;
 	
 	int time_step(const int ticks_available) const;
+
+	/// Performs a reset if needed.
+    void handle_reset_check() const;
+
+    /// Handles raising IRQ's with the IOP and resetting the state.
+    void handle_irq_check() const;
 };
 

@@ -118,9 +118,11 @@ void CEeTimers::handle_timer_interrupt(EeTimersUnit & unit) const
 	}
 
 	// Assert interrupt bit if flag set. IRQ line for timers is 9 -> 12.
-	// TODO: not sure if we need to deassert... the INTC is edge triggered. "...At the edge of an interrupt request signal..." see EE Users Manual page 28.
 	if (interrupt)
+	{
+		auto _lock = r.ee.intc.stat.scope_lock();
 		r.ee.intc.stat.insert_field(EeIntcRegister_Stat::TIM_KEYS[*unit.unit_id], 1);
+	}
 }
 
 void CEeTimers::handle_timer_zret(EeTimersUnit & unit) const

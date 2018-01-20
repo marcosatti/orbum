@@ -76,8 +76,13 @@ int CVif::time_step(const int ticks_available) const
 				(this->*INSTRUCTION_TABLE[inst.get_info()->impl_index])(unit, inst);
 
 				// If the I bit is set, we need to raise an interrupt after the whole VIF packet has been processed - set a context variable.
-				// if (instruction.i())
-				//     r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VIF, 1);
+				/*
+				if (instruction.i())
+				{
+					auto _lock = r.ee.intc.stat.scope_lock();
+					r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VIF, 1);
+				}
+				*/
 			}
 		}
 	}

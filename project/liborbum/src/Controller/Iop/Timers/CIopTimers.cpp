@@ -147,6 +147,7 @@ void CIopTimers::handle_timer_interrupt(IopTimersUnit_Base * unit, const bool ha
 		if (unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_REQUEST) == 0)
 		{
 			// Raise IRQ.
+			auto _lock = r.iop.intc.stat.scope_lock();
 			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::TMR_KEYS[unit->unit_id], 1);
 		}
 	}

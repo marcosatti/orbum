@@ -1,12 +1,8 @@
 #pragma once
 
 #include "Common/Constants.hpp"
+#include "Common/Types/ScopeLock.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
-
-/// Scope lock note:
-/// No scope lock is needed for these registers - the INTC controller only ever
-/// reads from these registers, only writing to the IOP Core interrupt line when
-/// needed.
 
 /// IOP INTC I_CTRL register.
 /// Functionality is largely unknown, however upon reading (through IOP), the register value is set to 0.
@@ -55,7 +51,9 @@ public:
 /// The IOP INTC I_STAT register, which holds a set of flags determining if a component caused an interrupt.
 /// When written to, AND's the previous value with the new value (see IopHwWrite.cpp in PCSX2).
 /// Names from here, not sure if accurate: https://github.com/kode54/Highly_Experimental/blob/master/Core/iop.c.
-class IopIntcRegister_Stat : public SizedWordRegister
+/// (Assumed) The INTC is edge triggered (ie: only need to pulse line), see the EE INTC equivilant.
+/// STAT writes needs to be scope locked by the peripherals.
+class IopIntcRegister_Stat : public SizedWordRegister, public ScopeLock
 {
 public:
 	static constexpr Bitfield VBLANK = Bitfield(0, 1);
@@ -89,5 +87,6 @@ public:
 	static constexpr Bitfield TMR_KEYS[Constants::IOP::Timers::NUMBER_TIMERS] = { TMR0, TMR1, TMR2, TMR3, TMR4, TMR5 };
 
 	/// AND's the new value with old value (IOP context only).
+	/// Scope locked.
 	void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
 };

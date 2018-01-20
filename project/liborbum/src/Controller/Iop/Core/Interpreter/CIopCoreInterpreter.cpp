@@ -329,7 +329,7 @@ bool CIopCoreInterpreter::translate_vaddress(const uptr virtual_address, const M
 	auto& cop0 = r.iop.core.cop0;
 
 #if defined(BUILD_DEBUG)
-	static const std::pair<uword, uword> DEBUG_VA_BREAKPOINT_RANGES[] = 
+	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
 		std::make_pair(0xBF801040, 0xBF801050),
 		std::make_pair(0xBF808200, 0xBF808300)

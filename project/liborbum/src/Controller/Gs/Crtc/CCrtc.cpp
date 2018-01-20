@@ -76,6 +76,9 @@ int CCrtc::time_step(const int ticks_available) const
 	
 		if (row == -1)
 		{
+			auto _ee_lock = r.ee.intc.stat.scope_lock();
+			auto _iop_lock = r.iop.intc.stat.scope_lock();
+
 			// Send VBlank end.
 			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBOF, 1);
 			r.iop.intc.stat.insert_field(IopIntcRegister_Stat::EVBLANK, 1);
@@ -87,6 +90,9 @@ int CCrtc::time_step(const int ticks_available) const
 		if (row > 223)
 		{
 			row = -224;
+
+			auto _ee_lock = r.ee.intc.stat.scope_lock();
+			auto _iop_lock = r.iop.intc.stat.scope_lock();
 	
 			// Send VBlank start.
 			r.ee.intc.stat.insert_field(EeIntcRegister_Stat::VBON, 1);

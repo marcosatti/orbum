@@ -66,6 +66,7 @@ set(COMMON_SRC_FILES
 	src/Resources/Iop/Dmac/RIopDmac.cpp
 	src/Resources/Iop/Intc/IopIntcRegisters.cpp
 	src/Resources/Iop/RIop.cpp
+	src/Resources/Iop/Sio0/Sio0Registers.cpp
 	src/Resources/Iop/Sio2/RSio2.cpp
 	src/Resources/Iop/Sio2/Sio2Registers.cpp
 	src/Resources/Iop/Timers/IopTimersUnitRegisters.cpp

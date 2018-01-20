@@ -91,10 +91,10 @@ void CIopCoreInterpreter::RFE(const IopCoreInstruction inst) const
 	r.iop.core.cop0.status.pop_exception_stack();
 
 	// Force a flush of all irq lines - we could be in the state
-	// where the EE core is the only component left running, and
+	// where the IOP core is the only component left running, and
 	// the next loop could cause an errornous interrupt to occur.
 	// Since all components are constantly updating their interrupt
-	// status, we don't really loose out on anything. ERET should 
+	// status, we don't really loose out on anything. RFE should 
 	// be the last instruction executed before interrupts can occur 
 	// again.
 	r.iop.core.cop0.cause.clear_all_irq();

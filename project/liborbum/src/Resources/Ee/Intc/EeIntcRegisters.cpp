@@ -2,6 +2,8 @@
 
 void EeIntcRegister_Stat::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
 {
+	auto _lock = scope_lock();
+	
 	uword temp = value;
 	if (context == BusContext::Ee)
 		temp = read_uword() & (~value);

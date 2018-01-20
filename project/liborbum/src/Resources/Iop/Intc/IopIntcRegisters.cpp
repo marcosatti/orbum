@@ -12,6 +12,8 @@ uword IopIntcRegister_Ctrl::byte_bus_read_uword(const BusContext context, const 
 
 void IopIntcRegister_Stat::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
 {
+	auto _lock = scope_lock();
+	
 	uword temp = value;
 
 	// Preprocessing for IOP: AND with old value (acknowledge bits).

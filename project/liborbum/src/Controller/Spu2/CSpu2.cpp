@@ -257,6 +257,7 @@ void CSpu2::handle_interrupt_check(Spu2Core_Base & spu2_core) const
 		&& r.spu2.spdif_irqinfo.extract_field(Spu2Register_Spdif_Irqinfo::IRQ_KEYS[spu2_core.core_id]))
 	{
 		// IRQ was set, notify the IOP INTC.
+		auto _lock = r.iop.intc.stat.scope_lock();
 		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SPU, 1);
 	}
 }

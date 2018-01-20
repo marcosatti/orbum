@@ -13,5 +13,8 @@ public:
 	int time_to_ticks(const double time_us) const;
 	
 	int time_step(const int ticks_available) const;
+
+	/// Sets the SIO0 up for a reset.
+	void handle_sio0_reset() const;
 };
 
