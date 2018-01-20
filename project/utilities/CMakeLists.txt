@@ -21,11 +21,6 @@ target_sources(
 target_include_directories(
 	utilities 
 	INTERFACE
+		"${Boost_INCLUDE_DIR}"
 		"${CMAKE_SOURCE_DIR}/project/utilities/src"
-)
-
-target_link_libraries(
-	utilities 
-	INTERFACE
-		Boost::boost
 )

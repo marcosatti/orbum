@@ -270,6 +270,7 @@ add_library(liborbum "${COMMON_SRC_FILES}")
 target_include_directories(
 	liborbum 
 	PUBLIC
+		"${Boost_INCLUDE_DIR}"
 		"${CMAKE_SOURCE_DIR}/project/liborbum/src"
 )
 
@@ -286,9 +287,7 @@ target_link_libraries(
 	liborbum 
 	PUBLIC
 		utilities
-		Boost::boost
-		Boost::filesystem
-		Boost::log
+		${Boost_LIBRARIES}
 )
 
 install(
