@@ -34,7 +34,6 @@ set(COMMON_SRC_FILES
 	src/Resources/Ee/Core/EeCoreR5900.cpp
 	src/Resources/Ee/Core/EeCoreTlb.cpp
 	src/Resources/Ee/Core/REeCore.cpp
-	src/Resources/Ee/Dmac/EeDmacChannelTable.cpp
 	src/Resources/Ee/Dmac/EeDmacChannelRegisters.cpp
 	src/Resources/Ee/Dmac/EeDmacRegisters.cpp
 	src/Resources/Ee/Dmac/REeDmac.cpp
@@ -78,7 +77,6 @@ set(COMMON_SRC_FILES
 	src/Resources/Spu2/RSpu2.cpp
 	src/Resources/Spu2/Spu2CoreRegisters.cpp
 	src/Resources/Spu2/Spu2Cores.cpp
-	src/Resources/Spu2/Spu2CoreTable.cpp
 	src/Resources/Spu2/Spu2Registers.cpp
 	src/Controller/Gs/Crtc/CCrtc.cpp
 	src/Controller/Gs/Core/CGsCore.cpp

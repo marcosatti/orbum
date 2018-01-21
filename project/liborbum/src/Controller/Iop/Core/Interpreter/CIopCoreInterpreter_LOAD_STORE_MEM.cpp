@@ -1,3 +1,5 @@
+#include <boost/format.hpp>
+
 #include "Core.hpp"
 
 #include "Controller/Iop/Core/Interpreter/CIopCoreInterpreter.hpp"

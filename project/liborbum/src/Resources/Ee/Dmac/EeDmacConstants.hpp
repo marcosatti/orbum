@@ -4,7 +4,7 @@
 
 /// Contains static channel properties for the EE DMAC channels.
 /// See EE Users Manual page 42.
-struct EeDmacChannelTable
+struct EeDmacConstants
 {
 
 	enum class PhysicalMode
@@ -37,5 +37,19 @@ struct EeDmacChannelTable
 	/// See EE Users Manual page 64.
 	static constexpr int STS_MAP[4] = { 0, 5, 8, 3 };
 	static constexpr int STD_MAP[4] = { 0, 1, 2, 6 };
+
+	static constexpr char * MNEMONICS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
+	{
+		"VIF0",
+		"VIF1",
+		"GIF",
+		"fromIPU",
+		"toIPU",
+		"SIF0",
+		"SIF1",
+		"SIF2",
+		"fromSPR",
+		"toSPR"
+	};
 };
 

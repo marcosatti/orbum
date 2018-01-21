@@ -3,7 +3,7 @@
 #include "Controller/Spu2/CSpu2.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Spu2/Spu2CoreTable.hpp"
+#include "Resources/Spu2/Spu2CoreConstants.hpp"
 
 CSpu2::CSpu2(Core * core) : 
 	CController(core)
@@ -159,9 +159,9 @@ int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core) const
 	// Calculate final address.
 	uptr address;
 	if (in_left_block)
-		address = Spu2CoreTable::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_left + static_cast<uptr>(channel_offset);
+		address = Spu2CoreConstants::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_left + static_cast<uptr>(channel_offset);
 	else
-		address = Spu2CoreTable::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_right + static_cast<uptr>(channel_offset);
+		address = Spu2CoreConstants::SPU2_STATIC_INFO[spu2_core.core_id].base_tsa_right + static_cast<uptr>(channel_offset);
 
 		
 	//log(Debug, "SPU2 core %d ADMA write ATTR.dma_offset = 0x%08X, channel_offset = 0x%08X, address = 0x%08X. FIFO queue size = 0x%X.", spu2_core.core_id, spu2_core.attr.dma_offset, channel_offset, address, spu2_core.FifoQueue->read_available());

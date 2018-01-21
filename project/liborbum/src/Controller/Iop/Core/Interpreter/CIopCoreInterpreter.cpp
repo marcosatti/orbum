@@ -1,5 +1,6 @@
 #include <utility>
 #include <algorithm>
+#include <sstream>
 #include <boost/format.hpp>
 
 #include "Core.hpp"
@@ -9,6 +10,8 @@
 #include "Controller/Iop/Core/Interpreter/CIopCoreInterpreter.hpp"
 
 #include "Resources/RResources.hpp"
+#include "Resources/Iop/Dmac/IopDmacConstants.hpp"
+#include "Resources/Iop/Intc/IopIntcConstants.hpp"
 
 CIopCoreInterpreter::CIopCoreInterpreter(Core * core) :
 	CController(core)
@@ -143,44 +146,59 @@ void CIopCoreInterpreter::handle_interrupt_check() const
 void CIopCoreInterpreter::debug_print_interrupt_info() const
 {
 	auto& r = core->get_resources();
-	
 	auto& stat = r.iop.intc.stat;
 	auto& mask = r.iop.intc.mask;
 
 	BOOST_LOG(Core::get_logger()) << 
-		boost::format("IOPCore interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d. Printing interrupt sources:")
+		boost::format("IOPCore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
 		% DEBUG_LOOP_COUNTER
 		% r.iop.core.r3000.pc.read_uword()
 		% r.iop.core.r3000.bdelay.is_branch_pending();
 
+	std::stringstream sources;
+
 	// Check the INTC.
-	for (auto& irq_field : IopIntcRegister_Stat::IRQ_KEYS)
 	{
-		const Bitfield DEBUG_LOG_INTC_FILTER[] = 
+		const Bitfield FILTER[] = 
 		{ 
 			IopIntcRegister_Stat::VBLANK, 
 			IopIntcRegister_Stat::EVBLANK 
 		};
-		if (std::end(DEBUG_LOG_INTC_FILTER) != std::find(std::begin(DEBUG_LOG_INTC_FILTER), std::end(DEBUG_LOG_INTC_FILTER), irq_field))
-			continue;
 
-		if (stat.extract_field(irq_field) & mask.extract_field(irq_field))
+		bool source_triggered = false;
+
+		for (auto& irq_field : IopIntcRegister_Stat::IRQ_KEYS)
 		{
-			BOOST_LOG(Core::get_logger()) << boost::format("INTC source %d") % irq_field.start;
+			if (stat.extract_field(irq_field) & mask.extract_field(irq_field))
+			{
+				source_triggered = true;
+
+				if (std::end(FILTER) != std::find(std::begin(FILTER), std::end(FILTER), irq_field))
+					continue;
+
+				sources << "INTC source " << IopIntcConstants::MNEMONICS[irq_field.start] << ", ";
+			}
 		}
+		
+		if (!source_triggered)
+			sources << "No INTC sources (?), ";
 	}
 
 	// Print DMAC sources if it was a source.
 	if (stat.extract_field(IopIntcRegister_Stat::DMAC) 
 		& mask.extract_field(IopIntcRegister_Mask::DMAC))
 	{
+		const int half = Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2;
+		const int FILTER[] = 
+		{ 
+			-1
+			// 9,
+			// 10
+		};
+
 		auto& icr0 = r.iop.dmac.icr0;
 		auto& icr1 = r.iop.dmac.icr1;
-
-		BOOST_LOG(Core::get_logger()) << "Printing IOP DMAC interrupt sources:";
-
-		const int half = Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS / 2;
-		bool dmac_source_triggered = false;
+		bool source_triggered = false;
 
 		// Check first half of channels (ICR0).
 		for(int i = 0; i < half; i++)
@@ -188,8 +206,12 @@ void CIopCoreInterpreter::debug_print_interrupt_info() const
 			if (icr0.extract_field(IopDmacRegister_Icr0::CHANNEL_TCI_KEYS[i])
 				&& icr0.extract_field(IopDmacRegister_Icr0::CHANNEL_TCM_KEYS[i]))
 			{
-				BOOST_LOG(Core::get_logger()) << boost::format("ICR0 channel %d") % i;
-				dmac_source_triggered = true;
+				source_triggered = true;
+				
+				if (std::end(FILTER) != std::find(std::begin(FILTER), std::end(FILTER), i))
+					continue;
+
+				sources << "DMAC ICR0 channel " << IopDmacConstants::MNEMONICS[i] << ", ";
 			}
 		}
 		// Check second half of channels (ICR1).
@@ -198,15 +220,26 @@ void CIopCoreInterpreter::debug_print_interrupt_info() const
 			if (icr1.extract_field(IopDmacRegister_Icr1::CHANNEL_TCI_KEYS[i])
 				&& icr1.extract_field(IopDmacRegister_Icr1::CHANNEL_TCM_KEYS[i]))
 			{
-				BOOST_LOG(Core::get_logger()) << boost::format("ICR1 channel %d") % i;
-				dmac_source_triggered = true;
+				source_triggered = true;
+				
+				if (std::end(FILTER) != std::find(std::begin(FILTER), std::end(FILTER), i))
+					continue;
+
+				sources << "DMAC ICR1 channel " << IopDmacConstants::MNEMONICS[half + i] << ", ";
 			}
 		}
 
 		// Maybe we missed it? :(
-		if (!dmac_source_triggered)
-			BOOST_LOG(Core::get_logger()) << "IOP DMAC did not have any sources triggered! Too slow, buddy? Look into this!";
+		// This is probably ok - the DMAC might have finished a transfer during
+		// the ISR of the IOP (ie: INTC DMAC stat bit is set after it has been
+		// ack'd), but the IOP doesn't seem to care. It simply returns without 
+		// doing anything harmful.
+		if (!source_triggered)
+			sources << "No DMAC channels (?), ";
 	}
+
+	if (sources.tellp())
+		BOOST_LOG(core->get_logger()) << "IopCore Interrupt sources: " << sources.str();
 }
 #endif
 

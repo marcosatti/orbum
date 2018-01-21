@@ -6,7 +6,7 @@
 #include "Controller/Ee/Dmac/CEeDmac.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Ee/Dmac/EeDmacChannelTable.hpp"
+#include "Resources/Ee/Dmac/EeDmacConstants.hpp"
 
 using LogicalMode = EeDmacChannelRegister_Chcr::LogicalMode;
 using Direction = EeDmacChannelRegister_Chcr::Direction;
@@ -440,7 +440,7 @@ bool CEeDmac::is_source_stall_control_on(EeDmacChannel & channel) const
 	if (channel.chcr->get_direction() == Direction::FROM)
 	{
 		const uword STS = r.ee.dmac.ctrl.extract_field(EeDmacRegister_Ctrl::STS);
-		if (*channel.channel_id == EeDmacChannelTable::STS_MAP[STS])
+		if (*channel.channel_id == EeDmacConstants::STS_MAP[STS])
 		{
 			return true;
 		}
@@ -456,7 +456,7 @@ bool CEeDmac::is_drain_stall_control_on(EeDmacChannel & channel) const
 	if (channel.chcr->get_direction() == Direction::TO)
 	{
 		auto STD = r.ee.dmac.ctrl.extract_field(EeDmacRegister_Ctrl::STD);
-		if (*channel.channel_id == EeDmacChannelTable::STD_MAP[STD])
+		if (*channel.channel_id == EeDmacConstants::STD_MAP[STD])
 		{
 			return true;
 		}

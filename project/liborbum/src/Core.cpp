@@ -156,7 +156,7 @@ boost::log::sources::logger_mt & Core::get_logger()
 
 void Core::dump_all_memory() const
 {
-	std::string base = "./dumps/";
+	const std::string base = "./dumps/";
 	get_resources().ee.main_memory.write_to_file(base + "End_Dump_EE.bin");
 	get_resources().iop.main_memory.write_to_file(base + "End_Dump_IOP.bin");
 	get_resources().spu2.main_memory.write_to_file(base + "End_Dump_SPU2.bin");

@@ -1,3 +1,5 @@
+#include <sstream>
+#include <algorithm>
 #include <boost/format.hpp>
 
 #include "Core.hpp"
@@ -8,7 +10,8 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
 #include "Resources/RResources.hpp"
-#include "Resources/Ee/Dmac/EeDmacChannelTable.hpp"
+#include "Resources/Ee/Dmac/EeDmacConstants.hpp"
+#include "Resources/Ee/Intc/EeIntcConstants.hpp"
 
 CEeCoreInterpreter::CEeCoreInterpreter(Core * core) :
 	CController(core),
@@ -148,50 +151,82 @@ void CEeCoreInterpreter::debug_print_interrupt_info() const
 	auto& r = core->get_resources();
 
 	auto& cop0 = r.ee.core.cop0;
-	auto& stat = r.ee.intc.stat;
-	auto& mask = r.ee.intc.mask;
-
 	uword ip_cause = cop0.cause.extract_field(EeCoreCop0Register_Cause::IP);
 	uword im_status = cop0.status.extract_field(EeCoreCop0Register_Status::IM);
 
 	BOOST_LOG(Core::get_logger()) << 
-		boost::format("EECore interrupt exception occurred @ cycle = 0x%llX, PC = 0x%08X, BD = %d. Printing interrupt sources:")
+		boost::format("EECore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
 		 % DEBUG_LOOP_COUNTER
 		 % r.ee.core.r5900.pc.read_uword()
 		 % r.ee.core.r5900.bdelay.is_branch_pending();
 
+	std::stringstream sources;
+
 	// Check the INTC.
 	if ((ip_cause & im_status) & 0x4)
 	{
+		const Bitfield FILTER[] = 
+		{
+			Bitfield(0, 0)
+			//EeIntcRegister_Stat::VBON, 
+			//EeIntcRegister_Stat::VBOF 
+		};
+
+		auto& stat = r.ee.intc.stat;
+		auto& mask = r.ee.intc.mask;
+		bool source_triggered = false;
+
 		for (auto& irq_field : EeIntcRegister_Stat::IRQ_KEYS)
 		{
 			if (stat.extract_field(irq_field) & mask.extract_field(irq_field))
-				BOOST_LOG(Core::get_logger()) << boost::format("INTC source interrupt, bit %d") % irq_field.start;
+			{
+				source_triggered = true;
+				
+				if (std::end(FILTER) != std::find(std::begin(FILTER), std::end(FILTER), irq_field))
+					continue;
+
+				sources << "INTC source " << EeIntcConstants::MNEMONICS[irq_field.start] << ", ";
+			}
 		}
+
+		if (!source_triggered)
+			sources << "No INTC sources (?), ";
 	}
 
 	// Check the DMAC.
 	if ((ip_cause & im_status) & 0x8)
 	{
-		auto& dmac = r.ee.dmac;
-		auto& dmac_stat = dmac.stat;
-		bool dmac_source_triggered = false;
+		const int FILTER[] = 
+		{ 
+			-1
+			// 5,
+			// 6,
+		};
+
+		auto& stat = r.ee.dmac.stat;
+		bool source_triggered = false;
 
 		// Check through STAT for triggered channels.
 		for (int i = 0; i < Constants::EE::DMAC::NUMBER_DMAC_CHANNELS; i++)
 		{
-			if (dmac_stat.extract_field(EeDmacRegister_Stat::CHANNEL_CIS_KEYS[i])
-				&& dmac_stat.extract_field(EeDmacRegister_Stat::CHANNEL_CIM_KEYS[i]))
+			if (stat.extract_field(EeDmacRegister_Stat::CHANNEL_CIS_KEYS[i])
+				&& stat.extract_field(EeDmacRegister_Stat::CHANNEL_CIM_KEYS[i]))
 			{
-				BOOST_LOG(Core::get_logger()) << boost::format("DMAC channel interrupt, channel %d") % i;
-				dmac_source_triggered = true;
+				source_triggered = true;
+
+				if (std::end(FILTER) != std::find(std::begin(FILTER), std::end(FILTER), i))
+					continue;
+
+				sources << "DMAC channel " << EeDmacConstants::MNEMONICS[i] << ", ";
 			}
 		}
 
-		// Maybe we missed it? :(
-		if (!dmac_source_triggered)
-			BOOST_LOG(Core::get_logger()) << boost::format("DMAC had no interrupts - might be too slow?");
+		if (!source_triggered)
+			sources << "No DMAC channels (?), ";
 	}
+
+	if (sources.tellp())
+		BOOST_LOG(core->get_logger()) << "EeCore Interrupt sources: " << sources.str();
 }
 #endif
 

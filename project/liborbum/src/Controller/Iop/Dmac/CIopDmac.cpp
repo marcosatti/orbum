@@ -103,9 +103,6 @@ int CIopDmac::time_step(const int ticks_available) const
 		}
 	}
 
-	// Check for ICR0 or ICR1 interrupt bit status, send interrupt to IOP INTC (IRQ 3) if not masked.
-	handle_interrupt_check();
-
 	return 1;
 }
 
@@ -286,13 +283,6 @@ void CIopDmac::handle_interrupt_check() const
 		auto _lock = r.iop.intc.stat.scope_lock();
 		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::DMAC, 1);
 	}
-	/*
-	else
-	{
-		r.iop.dmac.icr0.insert_field(IopDmacRegister_Icr0::MASTER_INTERRUPT, 0);
-		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::DMAC, 0);
-	}
-	*/
 }
 
 int CIopDmac::transfer_data(IopDmacChannel & channel) const
@@ -369,6 +359,9 @@ void CIopDmac::set_state_suspended(IopDmacChannel & channel) const
 
 	// Set channel transfer complete interrupt bit.
 	r.iop.dmac.icrw.set_channel_tci(&channel, 1);
+
+	// Check for ICR0 or ICR1 interrupt bit status, send interrupt to IOP INTC (IRQ 3) if not masked.
+	handle_interrupt_check();
 }
 
 bool CIopDmac::read_chain_source_tag(IopDmacChannel & channel) const

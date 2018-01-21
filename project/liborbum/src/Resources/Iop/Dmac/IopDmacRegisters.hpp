@@ -48,6 +48,8 @@ public:
 ///
 /// Note on scope lock: although the IOP and DMAC will never write to the same bit at the same time, there could be a race
 /// condition where different bits are written to, causing an inconsistency.
+/// 
+/// Note on the master interrupt bit: this is an edge triggered bit, cleared by the IOP.
 class IopDmacRegister_Icr0 : public SizedWordRegister, public ScopeLock
 {
 public:

@@ -5,7 +5,7 @@
 
 /// Contains static channel properties for the Spu2 Cores.
 /// See Spu2 Overview manual.
-struct Spu2CoreTable
+struct Spu2CoreConstants
 {
 	struct Spu2CoreInfo
 	{

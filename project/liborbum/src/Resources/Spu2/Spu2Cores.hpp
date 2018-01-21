@@ -5,7 +5,7 @@
 
 #include "Resources/Spu2/Spu2CoreRegisters.hpp"
 #include "Resources/Spu2/Spu2CoreVoice.hpp"
-#include "Resources/Spu2/Spu2CoreTable.hpp"
+#include "Resources/Spu2/Spu2CoreConstants.hpp"
 
 /// Base class representing a SPU2 core.
 /// There are 2 individual cores in the SPU2, each with 24 voice channels.
