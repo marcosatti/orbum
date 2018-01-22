@@ -118,7 +118,7 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 #endif
 
 	// Return the number of cycles completed.
-	return inst.get_info()->cpi;
+	return 1; // TODO: fix CPI's. inst.get_info()->cpi;
 }
 
 void CEeCoreInterpreter::handle_interrupt_check() const
@@ -155,7 +155,7 @@ void CEeCoreInterpreter::debug_print_interrupt_info() const
 	uword im_status = cop0.status.extract_field(EeCoreCop0Register_Status::IM);
 
 	BOOST_LOG(Core::get_logger()) << 
-		boost::format("EECore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
+		boost::format("EeCore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
 		 % DEBUG_LOOP_COUNTER
 		 % r.ee.core.r5900.pc.read_uword()
 		 % r.ee.core.r5900.bdelay.is_branch_pending();

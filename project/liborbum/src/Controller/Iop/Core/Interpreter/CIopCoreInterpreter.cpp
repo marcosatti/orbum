@@ -116,7 +116,7 @@ int CIopCoreInterpreter::time_step(const int ticks_available) const
 #endif
 	
 	// Return the number of cycles completed.
-	return inst.get_info()->cpi;
+	return 1; // TODO: fix CPI's. inst.get_info()->cpi;
 }
 
 void CIopCoreInterpreter::handle_interrupt_check() const
@@ -150,7 +150,7 @@ void CIopCoreInterpreter::debug_print_interrupt_info() const
 	auto& mask = r.iop.intc.mask;
 
 	BOOST_LOG(Core::get_logger()) << 
-		boost::format("IOPCore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
+		boost::format("IopCore IntEx @ cycle = 0x%llX, PC = 0x%08X, BD = %d.")
 		% DEBUG_LOOP_COUNTER
 		% r.iop.core.r3000.pc.read_uword()
 		% r.iop.core.r3000.bdelay.is_branch_pending();

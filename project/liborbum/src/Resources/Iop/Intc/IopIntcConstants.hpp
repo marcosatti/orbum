@@ -4,7 +4,7 @@
 
 struct IopIntcConstants
 {
-    static constexpr char * MNEMONICS[Constants::IOP::INTC::NUMBER_IRQ_LINES] =
+    static constexpr const char * MNEMONICS[Constants::IOP::INTC::NUMBER_IRQ_LINES] =
     {
         "VBLANK",
         "GPU", 

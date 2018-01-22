@@ -212,6 +212,7 @@ int CEeDmac::transfer_data(EeDmacChannel & channel) const
 void CEeDmac::set_state_suspended(EeDmacChannel & channel) const
 {
 	auto& r = core->get_resources();
+	auto _lock = r.ee.dmac.stat.scope_lock();
 
 	// Emit the interrupt status bit.
 	r.ee.dmac.stat.insert_field(EeDmacRegister_Stat::CHANNEL_CIS_KEYS[*channel.channel_id], 1);
@@ -424,7 +425,7 @@ bool CEeDmac::transfer_interleaved(EeDmacChannel & channel) const
 void CEeDmac::handle_interrupt_check() const
 {
 	auto& r = core->get_resources();
-	auto _stat_lock = r.ee.dmac.stat.scope_lock();
+	auto _lock = r.ee.dmac.stat.scope_lock();
 
 	// Set the interrupt line if there was a condition set, otherwise clear the interrupt line.
 	if (r.ee.dmac.stat.is_interrupt_pending())

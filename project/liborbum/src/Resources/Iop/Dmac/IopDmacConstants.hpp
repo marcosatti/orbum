@@ -4,7 +4,7 @@
 
 struct IopDmacConstants
 {
-    static constexpr char * MNEMONICS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] =
+    static constexpr const char * MNEMONICS[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS] =
     {
         "toMDEC",
         "fromMDEC",

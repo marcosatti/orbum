@@ -43,9 +43,14 @@ CoreOptions CoreOptions::make_default()
         "",
         "",
         "",
-        50,
+        100,
         std::thread::hardware_concurrency() - 1,
-        EnumMap<ControllerType::Type, double>(1.0)
+		{2.0, 1.0, 1.0, 1.0, // TODO: while in development, cheat for now :)
+		 1.0, 1.0, 1.0, 1.0,
+		 2.0, 1.0, 1.0, 1.0, 
+		 1.0, 1.0, 1.0, 1.0, 
+		 1.0, 1.0 }
+        // EnumMap<ControllerType::Type, double>(1.0)
     };
 }
 

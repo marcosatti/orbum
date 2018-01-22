@@ -38,7 +38,7 @@ struct EeDmacConstants
 	static constexpr int STS_MAP[4] = { 0, 5, 8, 3 };
 	static constexpr int STD_MAP[4] = { 0, 1, 2, 6 };
 
-	static constexpr char * MNEMONICS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
+	static constexpr const char * MNEMONICS[Constants::EE::DMAC::NUMBER_DMAC_CHANNELS] =
 	{
 		"VIF0",
 		"VIF1",

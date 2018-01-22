@@ -4,7 +4,7 @@
 
 struct EeIntcConstants
 {
-    static constexpr char * MNEMONICS[Constants::EE::INTC::NUMBER_IRQ_LINES] = 
+    static constexpr const char * MNEMONICS[Constants::EE::INTC::NUMBER_IRQ_LINES] = 
     {
         "GS",
         "SBUS",
