@@ -14,4 +14,4 @@ before_build:
 
 build:
   parallel: true
-  project: orbum.sln
+  project: build/orbum.sln
