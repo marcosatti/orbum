@@ -1,4 +1,5 @@
-# orbum [![Build Status](https://travis-ci.org/marco9999/orbum.svg?branch=master)](https://travis-ci.org/marco9999/orbum)
+# orbum [![Travis CI Status](https://travis-ci.org/marco9999/orbum.svg?branch=master)](https://travis-ci.org/marco9999/orbum) [![AppVeyor Status](https://ci.appveyor.com/api/projects/status/github/marco9999/orbum?branch=master&svg=true)](https://ci.appveyor.com/project/marco9999/orbum)
+
 
 #### PS2 Emulator
 An attempt at updating the PCSX2 codebase:
@@ -21,13 +22,19 @@ Status as of 2018/1/1:
 
 ## Build Instructions
 ### General Information
-CMake is used as the build system. Run the following command in a build subdirectory:
+The project uses the boost library as a dependency, which is configured through the boost-cmake submodule.
+
+Before building run the command:
+
+`git submodule update --init --recursive`
+
+CMake is used as the build system. Run the following commands to invoke a build:
+
+`mkdir build && cd build`
+
 `cmake ..`
 
-The project uses the boost library as a dependancy.
-Modify the external/CMakeLists.txt file to point to your local boost directory.
-
-Note: as soon as Boost-Cmake is ready for VS2017, it will be used instead.
+`make` (or equivilant)
 
 ## Running
 `./orbumfront`
