@@ -1,0 +1,17 @@
+image: Visual Studio 2017
+
+platform:
+  - x64
+
+matrix:
+  fast_finish: true
+
+before_build:
+  - cmd: git submodule update --init --recursive
+  - ps: New-Item -ItemType Directory -Force -Path build
+  - ps: cd build
+  - ps: cmake -G "Visual Studio 15 2017 Win64" ..
+
+build:
+  parallel: true
+  project: build/orbum.sln
