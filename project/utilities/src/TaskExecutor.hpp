@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 #include <stdexcept>
 #include <memory>
 #include <thread>
@@ -8,9 +9,8 @@
 #include <mutex>
 #include <atomic>
 #include <chrono>
+#include <string>
 #include <Queues.hpp>
-
-typedef MpmcQueue<std::function<void()>, 128> TaskQueue;
 
 struct BusyCounter
 {
@@ -39,17 +39,28 @@ struct BusyCounter
 	}
 
 private:
+#if defined(BUILD_DEBUG)
+    friend class Core;
+#endif
+
 	int busy_counter;
 	std::mutex busy_counter_mtx;
 	std::condition_variable busy_counter_cv;
 };
 
+/// Executor/Thread synchronisation resources.
+/// With ex_ptr, we don't care if two threads try to write to it at once -
+/// we only care that at least one exception occured, doesn't matter which one.
 struct TaskSync
 {
 	TaskSync() : exit(false) {}
 
-	TaskQueue task_queue;
-	BusyCounter busy_count;
+	SpmcQueue<std::function<void()>, 128> running_task_queue;
+	MpscQueue<std::function<void()>, 128> pending_task_queue;
+
+	BusyCounter thread_busy_counter;
+	MpscQueue<std::string, 32> thread_error_queue;
+	
 	bool exit;
 };
 
@@ -57,6 +68,8 @@ struct TaskSync
 class Worker
 {
 public:
+	static constexpr std::chrono::nanoseconds TIMEOUT = std::chrono::nanoseconds(500); 
+
     Worker(TaskSync & task_sync) :
 		local_exit(false),
         task_sync(task_sync)
@@ -70,38 +83,33 @@ public:
 		thread.join();
 	}
 
-	void handle_exception_check() const
-	{
-		if (ex_ptr)
-			std::rethrow_exception(ex_ptr);
-	}
-
 private:
     void main_thread_()
     {
-		while (!task_sync.exit && !ex_ptr && !local_exit)
+		while (!task_sync.exit && !local_exit)
 		{
 			std::function<void()> task_fn;
-			if (task_sync.task_queue.try_pop(task_fn, std::chrono::nanoseconds(500), [this] { task_sync.busy_count++; }))
+			if (task_sync.running_task_queue.try_pop(task_fn, TIMEOUT, [this] { task_sync.thread_busy_counter++; }))
 			{
 				try
 				{
 					task_fn();
 				}
-				catch (...)
+				catch (const std::exception & error)
 				{
-					ex_ptr = std::current_exception();
+					// Add exception to global queue for the executor to deal with.
+					std::string error_str(error.what());
+					task_sync.thread_error_queue.push(error_str);
 				}
-				task_sync.busy_count--;
+				task_sync.thread_busy_counter--;
 			}
 		}
     }
 
-
-	bool local_exit; // Kinda not needed but makes the code a bit nicer by not exposing join()
-	                 // publicly, instead guaranteeing the thread will exit.
+	bool local_exit; // Kinda not needed but makes the code a bit nicer by not 
+					 // exposing join() publicly, instead guaranteeing the 
+					 // thread will exit.
 	TaskSync & task_sync;
-	std::exception_ptr ex_ptr;
     std::thread thread;
 };
 
@@ -122,29 +130,43 @@ public:
 
     void enqueue_task(const std::function<void()> & fn)
     {
-		task_sync.task_queue.push(fn);
+		task_sync.pending_task_queue.push(fn);
     }
+
+	void dispatch()
+	{
+		while (!task_sync.pending_task_queue.is_empty())
+		{
+			std::function<void()> fn;
+			task_sync.pending_task_queue.pop(fn);
+			task_sync.running_task_queue.push(fn);
+		}
+	}
 
 	void wait_for_idle()
 	{
-		while (true)
+		// Wait for empty running task queue.
+		task_sync.running_task_queue.wait_for_empty();
+
+		// Wait for paused worker threads.
+		task_sync.thread_busy_counter.wait_for_idle();
+		
+		// Check if any exceptions occured, rethrow them on the current thread.
+		// TODO: only the first error is thrown for now... Not sure we will
+		//       ever change this.
+		if (!task_sync.thread_error_queue.is_empty())
 		{
-			// Wait for idle task threads.
-			task_sync.busy_count.wait_for_idle();
-
-			// Check if any worker raised an exception.
-			for (const auto& worker : workers)
-				worker->handle_exception_check();
-
-			// Make sure the task queue is actually empty - we could have caught
-			// the workers in a state where they are in the process of
-			// retrieving a task.
-			if (task_sync.task_queue.is_empty())
-				break;
+			std::string error_str;
+			task_sync.thread_error_queue.pop(error_str);
+			throw std::runtime_error(error_str);
 		}
 	}
 
 private:
+#if defined(BUILD_DEBUG)
+	friend class Core;
+#endif
+
 	TaskSync task_sync;
 	std::vector<std::unique_ptr<Worker>> workers;
 };

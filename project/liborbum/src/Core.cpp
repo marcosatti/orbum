@@ -6,6 +6,7 @@
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/sinks/text_file_backend.hpp>
+#include <boost/format.hpp>
 #include <chrono>
 
 #include "Core.hpp"
@@ -118,6 +119,17 @@ RResources & Core::get_resources() const
 
 void Core::run()
 {
+#if defined(BUILD_DEBUG)
+    static double DEBUG_TIME_ELAPSED = 0.0;
+    static double DEBUG_TIME_LOGGED = 0.0;
+    if ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) > 0.01e6)
+    {
+        BOOST_LOG(get_logger()) << boost::format("Emulation time elapsed: %.3f") % (DEBUG_TIME_ELAPSED / 1e6);
+        DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
+    }
+    DEBUG_TIME_ELAPSED += options.time_slice_per_run_us;
+#endif
+
     // Enqueue time events (always done on each run).
     auto event = ControllerEvent{ ControllerEvent::Type::Time, options.time_slice_per_run_us };
     for (int i = 0; i < static_cast<int>(ControllerType::Type::COUNT); i++) // TODO: find better syntax..
@@ -133,14 +145,20 @@ void Core::run()
         auto task = [this, entry] ()
         {
 			if (controllers[entry.t])
-				controllers[entry.t]->handle_event(entry.e);
+				controllers[entry.t]->handle_event_marshall_(entry.e);
         };
 
         task_executor->enqueue_task(task);
     }
 
-    // Wait for sync (task executor has no more tasks).
+    // Dispatch all tasks and wait for resynchronisation.
+    task_executor->dispatch();
 	task_executor->wait_for_idle();
+
+#if defined(BUILD_DEBUG)
+    if (!task_executor->task_sync.running_task_queue.is_empty() || task_executor->task_sync.thread_busy_counter.busy_counter)
+        throw std::runtime_error("Task queue was not empty!");
+#endif
 }
 
 void Core::enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event)

@@ -1,5 +1,6 @@
 #include <sstream>
 #include <algorithm>
+#include <atomic>
 #include <boost/format.hpp>
 
 #include "Core.hpp"
@@ -12,6 +13,10 @@
 #include "Resources/RResources.hpp"
 #include "Resources/Ee/Dmac/EeDmacConstants.hpp"
 #include "Resources/Ee/Intc/EeIntcConstants.hpp"
+
+#if defined(BUILD_DEBUG)
+std::atomic_bool DEBUG_IN_CONTROLLER_EECORE = false;
+#endif
 
 CEeCoreInterpreter::CEeCoreInterpreter(Core * core) :
 	CController(core),
@@ -30,6 +35,12 @@ CEeCoreInterpreter::~CEeCoreInterpreter()
 
 void CEeCoreInterpreter::handle_event(const ControllerEvent & event) const
 {
+#if defined(BUILD_DEBUG)
+    if (DEBUG_IN_CONTROLLER_EECORE)
+        throw std::runtime_error("EeCore controller is already running!");
+    DEBUG_IN_CONTROLLER_EECORE = true;
+#endif
+
 	switch (event.type)
 	{
 	case ControllerEvent::Type::Time:
@@ -44,6 +55,10 @@ void CEeCoreInterpreter::handle_event(const ControllerEvent & event) const
 		throw std::runtime_error("CEeCoreInterpreter event handler not implemented - please fix!");
 	}
 	}
+
+#if defined(BUILD_DEBUG)
+    DEBUG_IN_CONTROLLER_EECORE = false;
+#endif
 }
 
 int CEeCoreInterpreter::time_to_ticks(const double time_us) const

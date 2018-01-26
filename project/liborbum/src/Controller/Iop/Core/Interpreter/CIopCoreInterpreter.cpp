@@ -1,6 +1,7 @@
 #include <utility>
 #include <algorithm>
 #include <sstream>
+#include <atomic>
 #include <boost/format.hpp>
 
 #include "Core.hpp"
@@ -12,6 +13,10 @@
 #include "Resources/RResources.hpp"
 #include "Resources/Iop/Dmac/IopDmacConstants.hpp"
 #include "Resources/Iop/Intc/IopIntcConstants.hpp"
+
+#if defined(BUILD_DEBUG)
+std::atomic_bool DEBUG_IN_CONTROLLER_IOPCORE = false;
+#endif
 
 CIopCoreInterpreter::CIopCoreInterpreter(Core * core) :
 	CController(core)
@@ -29,6 +34,12 @@ CIopCoreInterpreter::~CIopCoreInterpreter()
 
 void CIopCoreInterpreter::handle_event(const ControllerEvent & event) const
 {
+#if defined(BUILD_DEBUG)
+    if (DEBUG_IN_CONTROLLER_IOPCORE)
+        throw std::runtime_error("IopCore controller is already running!");
+    DEBUG_IN_CONTROLLER_IOPCORE = true;
+#endif
+
 	switch (event.type)
 	{
 	case ControllerEvent::Type::Time:
@@ -43,6 +54,10 @@ void CIopCoreInterpreter::handle_event(const ControllerEvent & event) const
 		throw std::runtime_error("CIopCoreInterpreter event handler not implemented - please fix!");
 	}
 	}
+
+#if defined(BUILD_DEBUG)
+    DEBUG_IN_CONTROLLER_IOPCORE = false;
+#endif
 }
 
 int CIopCoreInterpreter::time_to_ticks(const double time_us) const

@@ -1,5 +1,9 @@
 #pragma once
 
+#if defined(BUILD_DEBUG)
+#include <atomic>
+#endif
+
 #include "Controller/ControllerEvent.hpp"
 
 class Core;
@@ -19,6 +23,11 @@ public:
     }
 
 	virtual void handle_event(const ControllerEvent & e) const = 0;
+
+    void handle_event_marshall_(const ControllerEvent & e)
+    {
+        handle_event(e);
+    }
 
 protected:
     Core * core;
