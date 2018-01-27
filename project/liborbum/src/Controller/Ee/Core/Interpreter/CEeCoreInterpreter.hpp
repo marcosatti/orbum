@@ -48,7 +48,7 @@ public:
 
 	/// Checks the COP0.Count register against the COP0.Compare register.
 	/// If the Count value == Compare value, an interrupt is generated.
-	void handle_count_event_check() const;
+	void handle_count_update(const int cpi) const;
 
 	/// The VU interpreter, used to call any COP2 instructions prefixed with V* as the mnemonic.
 	/// TODO: Will change in future when VU's are implemented.

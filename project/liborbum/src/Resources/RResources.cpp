@@ -1740,6 +1740,7 @@ void initialise_ee_core(RResources * r)
 	r->ee.core.cop0.registers[31] = &r->ee.core.cop0.reserved31;
 	r->ee.core.cop0.pcr_registers[0] = &r->ee.core.cop0.pcr0;
 	r->ee.core.cop0.pcr_registers[1] = &r->ee.core.cop0.pcr1;
+	r->ee.core.cop0.compare.cause = &r->ee.core.cop0.cause;
 
 	// FPU.
 	r->ee.core.fpu.cop0 = &r->ee.core.cop0;

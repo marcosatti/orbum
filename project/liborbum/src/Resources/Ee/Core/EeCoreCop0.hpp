@@ -33,7 +33,7 @@ public:
 	SizedWordRegister        	count;      // r9:  Timer Compare.
 	EeCoreCop0Register_EntryHi	entryhi;    // r10: High half (Virtual page number and ASID) of TLB entry.
 	EeCoreCop0Register_Cause	cause;	    // r13: Result of last exception taken. NEED TO BE INITALISED BEFORE COMPARE!
-	SizedWordRegister	        compare;    // r11: Timer reference value.
+	EeCoreCop0Register_Compare  compare;    // r11: Timer reference value.
 	EeCoreCop0Register_Status	status;     // r12: Processor Status Register.
 	SizedWordRegister		    epc;        // r14: Exception Program Counter.
 	EeCoreCop0Register_Prid		prid;       // r15: Processor Revision Identifier.

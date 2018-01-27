@@ -8,7 +8,8 @@ EeCoreCop0Register_Random::EeCoreCop0Register_Random() :
 EeCoreCop0Register_Status::EeCoreCop0Register_Status() :
 	SizedWordRegister(INITIAL_VALUE),
     interrupts_masked(true),
-    operating_context(MipsCoprocessor0::OperatingContext::Kernel)
+    operating_context(MipsCoprocessor0::OperatingContext::Kernel),
+	count_interrupts_enabled(false)
 {
 }
 
@@ -36,11 +37,18 @@ void EeCoreCop0Register_Status::handle_operating_context_update()
         throw std::runtime_error("EE COP0 could not determine CPU operating context! Please debug.");
 }
 
+void EeCoreCop0Register_Status::handle_count_interrupt_state_update()
+{
+	// 0x8000 is bit IM[7].
+	count_interrupts_enabled = (!interrupts_masked) && (read_uword() & 0x8000);
+}
+
 void EeCoreCop0Register_Status::write_uword(const uword value)
 {
     SizedWordRegister::write_uword(value);
     handle_interrupts_masked_update();
     handle_operating_context_update();
+	handle_count_interrupt_state_update(); // Depends on interrupts masked update.
 }
 
 EeCoreCop0Register_Cause::EeCoreCop0Register_Cause() :
@@ -88,4 +96,14 @@ EeCoreCop0Register_Prid::EeCoreCop0Register_Prid() :
 EeCoreCop0Register_Config::EeCoreCop0Register_Config() :
 	SizedWordRegister(INITIAL_VALUE)
 {
+}
+
+EeCoreCop0Register_Compare::EeCoreCop0Register_Compare() :
+	cause(nullptr)
+{
+}
+
+void EeCoreCop0Register_Compare::write_uword(const uword value)
+{
+	cause->clear_irq_line(8);
 }

@@ -65,7 +65,7 @@ int CEeCoreInterpreter::time_to_ticks(const double time_us) const
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EECore::EECORE_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeCore]);
 	
-	if (ticks < 10)
+	if (ticks < 16)
 	{
 		static bool warned = false;
 		if (!warned)
@@ -83,7 +83,8 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 	auto& r = core->get_resources();
 
 	// Check if any external interrupts are pending and immediately handle exception if there is one.
-	handle_interrupt_check();
+	if (ticks_available % 16 == 0)
+		handle_interrupt_check();
 	
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
 	const uptr pc_address = r.ee.core.r5900.pc.read_uword();
@@ -124,8 +125,7 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 	r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc);
 
 	// Update the COP0.Count register, and check for interrupt. See EE Core Users Manual page 70.
-	r.ee.core.cop0.count.offset(inst.get_info()->cpi);
-	handle_count_event_check();
+	handle_count_update(inst.get_info()->cpi);
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -245,19 +245,32 @@ void CEeCoreInterpreter::debug_print_interrupt_info() const
 }
 #endif
 
-void CEeCoreInterpreter::handle_count_event_check() const
+void CEeCoreInterpreter::handle_count_update(const int cpi) const
 {
 	auto& r = core->get_resources();
 	auto& count = r.ee.core.cop0.count;
-	auto& cause = r.ee.core.cop0.cause;
-	auto& compare = r.ee.core.cop0.compare;
+	auto& status = r.ee.core.cop0.status;
 
-	// Check the COP0.Count register against the COP0.Compare register. See EE Core Users Manual page 72 for details.
-	// The docs specify that an interrupt (IP[7]) is raised when the two values are equal.
-	if (count.read_uword() == compare.read_uword())
-		cause.set_irq_line(7);
-	else
-		cause.clear_irq_line(7);
+	count.offset(cpi);
+
+	// Only bother checking for interrupts if the counting is enabled.
+	if (status.count_interrupts_enabled)
+	{
+		auto& cause = r.ee.core.cop0.cause;
+		auto& compare = r.ee.core.cop0.compare;
+
+		// Check the COP0.Count register against the COP0.Compare register. 
+		// See EE Core Users Manual page 72 for details. The docs specify 
+		// that an interrupt (IP[7]) is raised when the two values are equal.
+		// We kind of cheat here a little - abusing the fact that if an
+		// interrupt is raised, writing to the compare register will clear
+		// the interrupt (which should be done in the ISR), so we can get
+		// away with a GTE comparison.
+		auto count_value = count.read_uword();
+		auto compare_value = compare.read_uword();
+		if (count_value >= compare_value)
+			cause.set_irq_line(7);
+	}
 }
 
 bool CEeCoreInterpreter::handle_cop0_usable() const

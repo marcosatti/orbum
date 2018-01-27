@@ -92,6 +92,7 @@ public:
     /// Upon writes:
     /// - Caches the operating context for COP0.
     /// - Caches the interrupt masked state for the CPU.
+	/// - Caches the internal Count register interrupt state.
     void write_uword(const uword value) override;
 
     /// Current cached CPU interrupts masked state.
@@ -99,6 +100,9 @@ public:
 
     /// Current cached COP0 operating context state.
     MipsCoprocessor0::OperatingContext operating_context;
+
+	/// Current cached Count register interrupt state.
+	bool count_interrupts_enabled;
 
 private:
     /// Updates the cached interrupt masked state.
@@ -108,6 +112,9 @@ private:
     /// Updates the operation context state.
     /// Uses the KSU, ERL and EXL bits.
     void handle_operating_context_update();
+
+	/// Updates the count interrupt state.
+	void handle_count_interrupt_state_update();
 };
 
 /// Cause register.
@@ -250,4 +257,16 @@ public:
 	static constexpr Bitfield V      = Bitfield(5, 1);
 	static constexpr Bitfield D      = Bitfield(6, 1);
 	static constexpr Bitfield PTAGHI = Bitfield(12, 31);
+};
+
+class EeCoreCop0Register_Compare : public SizedWordRegister
+{
+public:
+	EeCoreCop0Register_Compare();
+
+	/// Writing to the Compare register causes the status.IP[7] bit
+	/// to be cleared.
+	void write_uword(const uword value) override;
+	
+	EeCoreCop0Register_Cause * cause;
 };
