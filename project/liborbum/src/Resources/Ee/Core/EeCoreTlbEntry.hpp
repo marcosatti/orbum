@@ -1,5 +1,44 @@
 #pragma once
 
+/// Custom Mask type, provides useful cached values when constructed.
+struct Mask
+{
+	Mask(const uword pagemask = 0) :
+		pagemask(pagemask),
+		evenodd_mask(1 << 12),
+		tlb_mask(0xFFFFE000)
+	{
+		// Determine evenodd index.
+		// Values have been precalculated.
+		switch (pagemask & 0xFFF)
+		{
+		case 0x0: // 4KB
+			evenodd_mask = (1 << 12); break;
+		case 0x3: // 16 KB
+			evenodd_mask = (1 << 14); break;
+		case 0xF: // 64 KB
+			evenodd_mask = (1 << 16); break;
+		case 0x3F: // 256 KB
+			evenodd_mask = (1 << 18); break;
+		case 0xFF: // 1 MB
+			evenodd_mask = (1 << 20); break;
+		case 0x3FF: // 4 MB
+			evenodd_mask = (1 << 22); break;
+		case 0xFFF: // 16 MB
+			evenodd_mask = (1 << 24); break;
+		default:
+			throw std::runtime_error("Invalid mask supplied to TLB entry");
+		}
+
+		// Calculate mask for use in TLB.
+		tlb_mask = 0xFE000000 | (((~pagemask) & 0xFFF) << 13);
+	}
+
+	uword pagemask;
+	uword evenodd_mask;
+	uword tlb_mask;
+};
+
 /// EE Core TLB entry, similar to a MIPS TLB entry.
 /// A TLB entry is heavily related to the COP0 registers
 /// Entry{Hi, Lo0, Lo1}, PageMask and others.
@@ -8,17 +47,17 @@
 /// infomation, and index 1 correponds to the Odd information.
 struct EeCoreTlbEntry
 {
-	uword mask;
+	Mask mask;
 	uword vpn2;
-	uword g;
-	uword asid;
-	uword s;
+	bool g;
+	ubyte asid;
+	bool s;
 
 	struct
 	{
 		uword pfn;
-		uword c;
-		uword d;
-		uword v;
+		bool c;
+		bool d;
+		bool v;
 	} physical_info[2]; // Index 0 = Even, index 1 = Odd.
 };

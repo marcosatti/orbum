@@ -75,7 +75,7 @@ void CEeCoreInterpreter::TLBP(const EeCoreInstruction inst) const
 	{
 		// A match was found, but need to check ASID or G bit.
 		if (tlb.tlb_entry_at(tlb_index).asid == entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID) 
-			|| tlb.tlb_entry_at(tlb_index).g > 0)
+			|| tlb.tlb_entry_at(tlb_index).g)
 		{
 			// Entry was found.
 			value = static_cast<uword>(tlb_index);
@@ -101,27 +101,27 @@ void CEeCoreInterpreter::TLBR(const EeCoreInstruction inst) const
 
 	auto& tlb_entry = tlb.tlb_entry_at(static_cast<sword>(index.extract_field(EeCoreCop0Register_Index::INDEX)));
 
-	// PageMask.
-	pagemask.insert_field(EeCoreCop0Register_PageMask::MASK, tlb_entry.mask);
+	// PageMask. 
+	pagemask.insert_field(EeCoreCop0Register_PageMask::MASK, tlb_entry.mask.pagemask);
 
-	// entryhi.
-	entryhi.insert_field(EeCoreCop0Register_EntryHi::ASID, tlb_entry.asid);
+	// EntryHi.
+	entryhi.insert_field(EeCoreCop0Register_EntryHi::ASID, static_cast<uword>(tlb_entry.asid));
 	entryhi.insert_field(EeCoreCop0Register_EntryHi::VPN2, tlb_entry.vpn2);
 
 	// EntryLo0 (even).
-	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::S, tlb_entry.s);
+	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::S, static_cast<uword>(tlb_entry.s));
 	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::PFN, tlb_entry.physical_info[0].pfn);
-	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::C, tlb_entry.physical_info[0].c);
-	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::D, tlb_entry.physical_info[0].d);
-	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::V, tlb_entry.physical_info[0].v);
-	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::G, tlb_entry.g);
+	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::C, static_cast<uword>(tlb_entry.physical_info[0].c));
+	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::D, static_cast<uword>(tlb_entry.physical_info[0].d));
+	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::V, static_cast<uword>(tlb_entry.physical_info[0].v));
+	entrylo0.insert_field(EeCoreCop0Register_EntryLo0::G, static_cast<uword>(tlb_entry.g));
 
 	// EntryLo1 (odd).
 	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::PFN, tlb_entry.physical_info[1].pfn);
-	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::C, tlb_entry.physical_info[1].c);
-	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::D, tlb_entry.physical_info[1].d);
-	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::V, tlb_entry.physical_info[1].v);
-	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::G, tlb_entry.g);
+	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::C, static_cast<uword>(tlb_entry.physical_info[1].c));
+	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::D, static_cast<uword>(tlb_entry.physical_info[1].d));
+	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::V, static_cast<uword>(tlb_entry.physical_info[1].v));
+	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::G, static_cast<uword>(tlb_entry.g));
 }
 
 void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst) const
@@ -141,28 +141,28 @@ void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst) const
 
 	EeCoreTlbEntry tlb_entry;
 
-	// PageMask.
+	// PageMask. 
 	tlb_entry.mask = pagemask.extract_field(EeCoreCop0Register_PageMask::MASK);
 
-	// entryhi.
-	tlb_entry.asid = entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID);
+	// EntryHi.
+	tlb_entry.asid = static_cast<ubyte>(entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID));
 	tlb_entry.vpn2 = entryhi.extract_field(EeCoreCop0Register_EntryHi::VPN2);
 
 	// EntryLo0 (even).
-	tlb_entry.s = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::S);
+	tlb_entry.s = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::S) > 0;
 	tlb_entry.physical_info[0].pfn = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::PFN);
-	tlb_entry.physical_info[0].c = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::C);
-	tlb_entry.physical_info[0].d = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::D);
-	tlb_entry.physical_info[0].v = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::V);
+	tlb_entry.physical_info[0].c = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::C) > 0;
+	tlb_entry.physical_info[0].d = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::D) > 0;
+	tlb_entry.physical_info[0].v = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::V) > 0;
 	
 	// EntryLo1 (odd).
 	tlb_entry.physical_info[1].pfn = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::PFN);
-	tlb_entry.physical_info[1].c = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::C);
-	tlb_entry.physical_info[1].d = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::D);
-	tlb_entry.physical_info[1].v = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::V);
+	tlb_entry.physical_info[1].c = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::C) > 0;
+	tlb_entry.physical_info[1].d = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::D) > 0;
+	tlb_entry.physical_info[1].v = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::V) > 0;
 	
 	// G bit (and of Lo0 and Lo1)
-	tlb_entry.g = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G);
+	tlb_entry.g = (entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G)) > 0;
 
 	// Write to TLB.
 	tlb.set_tlb_entry_at(tlb_entry, index.extract_field(EeCoreCop0Register_Index::INDEX));
@@ -185,28 +185,28 @@ void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst) const
 
 	EeCoreTlbEntry tlb_entry;
 
-	// PageMask.
+	// PageMask. 
 	tlb_entry.mask = pagemask.extract_field(EeCoreCop0Register_PageMask::MASK);
 
-	// entryhi.
-	tlb_entry.asid = entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID);
+	// EntryHi.
+	tlb_entry.asid = static_cast<ubyte>(entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID));
 	tlb_entry.vpn2 = entryhi.extract_field(EeCoreCop0Register_EntryHi::VPN2);
 
 	// EntryLo0 (even).
-	tlb_entry.s = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::S);
+	tlb_entry.s = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::S) > 0;
 	tlb_entry.physical_info[0].pfn = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::PFN);
-	tlb_entry.physical_info[0].c = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::C);
-	tlb_entry.physical_info[0].d = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::D);
-	tlb_entry.physical_info[0].v = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::V);
+	tlb_entry.physical_info[0].c = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::C) > 0;
+	tlb_entry.physical_info[0].d = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::D) > 0;
+	tlb_entry.physical_info[0].v = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::V) > 0;
 
 	// EntryLo1 (odd).
 	tlb_entry.physical_info[1].pfn = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::PFN);
-	tlb_entry.physical_info[1].c = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::C);
-	tlb_entry.physical_info[1].d = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::D);
-	tlb_entry.physical_info[1].v = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::V);
+	tlb_entry.physical_info[1].c = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::C) > 0;
+	tlb_entry.physical_info[1].d = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::D) > 0;
+	tlb_entry.physical_info[1].v = entrylo1.extract_field(EeCoreCop0Register_EntryLo1::V) > 0;
 
 	// G bit (and of Lo0 and Lo1)
-	tlb_entry.g = entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G);
+	tlb_entry.g = (entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G)) > 0;
 
 	// Write to TLB.
 	tlb.set_tlb_entry_at(tlb_entry, random.extract_field(EeCoreCop0Register_Random::RANDOM));

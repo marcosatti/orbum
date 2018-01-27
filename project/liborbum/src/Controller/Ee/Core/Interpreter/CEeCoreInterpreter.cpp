@@ -666,11 +666,11 @@ bool CEeCoreInterpreter::translate_vaddress(const uptr virtual_address, const Mm
 		handle_mmu_error(virtual_address, access, TLB_REFILL, tlb_index);
 		return true;
 	}
-	auto& tlb_entry = tlb.tlb_entry_at(tlb_index);
+	const auto& tlb_entry = tlb.tlb_entry_at(tlb_index);
 
 	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
 	// TODO: Check if ASID checking is correct.
-	if (tlb_entry.g == 0)
+	if (!tlb_entry.g)
 	{
 		// Not a global page map, need to make sure ASID's are the same.
 		if (cop0.entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID) != tlb_entry.asid)
@@ -692,9 +692,7 @@ bool CEeCoreInterpreter::translate_vaddress(const uptr virtual_address, const Mm
 
 	// Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
 	// This is done by checking the LSB of the VPN from the original address accessed.
-	// Neat trick: +1 to the TLB mask to get the mask for the LSB of the VPN. Note that this mask is always equal to or greater than 4KB.
-	uword index_even_odd_mask = ((tlb_entry.mask << 12) | 0xFFF) + 1;
-	ubyte tlb_even_odd_index = (virtual_address & index_even_odd_mask) ? 1 : 0;
+	ubyte tlb_even_odd_index = (virtual_address & tlb_entry.mask.evenodd_mask) ? 1 : 0;
 
 	// Check if the entry is valid (V bit)
 	if (!tlb_entry.physical_info[tlb_even_odd_index].v)
@@ -720,7 +718,7 @@ bool CEeCoreInterpreter::translate_vaddress(const uptr virtual_address, const Mm
 	*/
 
 	// We are accessing main memory - combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
-	uword offset_mask = (tlb_entry.mask << 12) | 0xFFF;
+	uword offset_mask = (tlb_entry.mask.pagemask << 12) | 0xFFF;
 	physical_address = ((tlb_entry.physical_info[tlb_even_odd_index].pfn << 12) | (virtual_address & offset_mask));
 	return false;
 }
