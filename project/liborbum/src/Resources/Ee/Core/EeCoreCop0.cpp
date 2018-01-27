@@ -20,16 +20,5 @@ bool EeCoreCop0::is_usable()
 
 MipsCoprocessor0::OperatingContext EeCoreCop0::operating_context()
 {
-	const uword KSU = status.extract_field(EeCoreCop0Register_Status::KSU);
-	const uword ERL = status.extract_field(EeCoreCop0Register_Status::ERL);
-	const uword EXL = status.extract_field(EeCoreCop0Register_Status::EXL);
-
-	if (KSU == 2 && ERL == 0 && EXL == 0)
-		return MipsCoprocessor0::OperatingContext::User;
-	else if (KSU == 0 || ERL == 1 || EXL == 1)
-		return MipsCoprocessor0::OperatingContext::Kernel;
-	else if (KSU == 1 && ERL == 0 && EXL == 0)
-		return MipsCoprocessor0::OperatingContext::Supervisor;
-	else
-		throw std::runtime_error("EE COP0 could not determine CPU operating context! Please debug.");
+    return status.operating_context;
 }

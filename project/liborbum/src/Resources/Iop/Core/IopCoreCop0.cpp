@@ -20,12 +20,5 @@ bool IopCoreCop0::is_usable()
 
 MipsCoprocessor0::OperatingContext IopCoreCop0::operating_context()
 {
-	const uword KUc = status.extract_field(IopCoreCop0Register_Status::KUC);
-
-	if (KUc == 1)
-		return MipsCoprocessor0::OperatingContext::User;
-	else if (KUc == 0)
-		return MipsCoprocessor0::OperatingContext::Kernel;
-	else
-		throw std::runtime_error("IOP COP0 could not determine CPU operating context! Please debug.");
+	return status.operating_context;
 }

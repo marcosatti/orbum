@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 /// IOP Core COP0 registers.
@@ -47,17 +48,25 @@ public:
 	void push_exception_stack();
 	void pop_exception_stack();
 
-	/// Returns if all exceptions are currently masked ( = NOT ENABLED).
-	/// TODO: Implement, currently returns false always. Need to check ??? bits? The EE core says to check something...
-	bool is_exceptions_masked();
+	/// Upon writes:
+    /// - Caches the operating context for COP0.
+    /// - Caches the interrupt masked state for the CPU.
+    void write_uword(const uword value) override;
 
-	/// Returns if all interrupts are currently masked ( = NOT ENABLED).
-	/// Does so by checking the master IEc bit.
-	bool is_interrupts_masked();
+    /// Current cached CPU interrupts masked state.
+    bool interrupts_masked;
 
-	/// Returns if a given IRQ line (corresponding to IM bit) is masked ( = NOT ENABLED).
-	/// Does so by checking the IM[irq] bit.
-	bool is_irq_masked(const int irq);
+    /// Current cached COP0 operating context state.
+    MipsCoprocessor0::OperatingContext operating_context;
+
+private:
+    /// Updates the cached interrupt masked state.
+    /// Does so by checking the master ERL, EXL, EIE and IE bit.
+    void handle_interrupts_masked_update();
+
+    /// Updates the operation context state.
+    /// Uses the KSU, ERL and EXL bits.
+    void handle_operating_context_update();
 };
 
 /// Cause register of the IOP COP0.

@@ -22,19 +22,28 @@ void IopCoreCop0Register_Status::pop_exception_stack()
 	write_uword((value & (~0xF)) | ((value & 0x3C) >> 2));
 }
 
-bool IopCoreCop0Register_Status::is_exceptions_masked()
+void IopCoreCop0Register_Status::handle_interrupts_masked_update()
 {
-	return false;
+	interrupts_masked = !(extract_field(IEC) > 0);
 }
 
-bool IopCoreCop0Register_Status::is_interrupts_masked()
+void IopCoreCop0Register_Status::handle_operating_context_update()
 {
-	return !(extract_field(IEC) > 0);
+	const uword KUc = extract_field(IopCoreCop0Register_Status::KUC);
+
+	if (KUc == 1)
+		operating_context = MipsCoprocessor0::OperatingContext::User;
+	else if (KUc == 0)
+		operating_context = MipsCoprocessor0::OperatingContext::Kernel;
+	else
+		throw std::runtime_error("IOP COP0 could not determine CPU operating context! Please debug.");
 }
 
-bool IopCoreCop0Register_Status::is_irq_masked(const int irq)
+void IopCoreCop0Register_Status::write_uword(const uword value)
 {
-	return !((extract_field(IM) & (1 << irq)) > 0);
+    SizedWordRegister::write_uword(value);
+    handle_interrupts_masked_update();
+    handle_operating_context_update();
 }
 
 IopCoreCop0Register_Cause::IopCoreCop0Register_Cause() :

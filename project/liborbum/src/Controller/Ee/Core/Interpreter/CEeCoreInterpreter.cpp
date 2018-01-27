@@ -102,7 +102,7 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 			% DEBUG_LOOP_COUNTER
 			% pc_address
 			% r.ee.core.r5900.bdelay.is_branch_pending() 
-			% !r.ee.core.cop0.status.is_interrupts_masked()
+			% !r.ee.core.cop0.status.interrupts_masked
 			% ((!inst.value) ? "SLL (NOP)" : inst.get_info()->mnemonic);
 	}
 
@@ -144,7 +144,7 @@ void CEeCoreInterpreter::handle_interrupt_check() const
 
 	// Interrupt exceptions are only taken when conditions are correct.
 	// Interrupt exception checking follows the process on page 74 of the EE Core Users Manual.
-	if (!cop0.status.is_interrupts_masked())
+	if (!cop0.status.interrupts_masked)
 	{
 		uword ip_cause = cop0.cause.extract_field(EeCoreCop0Register_Cause::IP);
 		uword im_status = cop0.status.extract_field(EeCoreCop0Register_Status::IM);

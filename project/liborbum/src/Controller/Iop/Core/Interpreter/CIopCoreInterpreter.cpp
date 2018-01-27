@@ -103,7 +103,7 @@ int CIopCoreInterpreter::time_step(const int ticks_available) const
 			% DEBUG_LOOP_COUNTER
 			% pc_address
 			% r.iop.core.r3000.bdelay.is_branch_pending() 
-			% !r.iop.core.cop0.status.is_interrupts_masked()
+			% !r.iop.core.cop0.status.interrupts_masked
 			% ((!inst.value) ? "SLL (NOP)" : inst.get_info()->mnemonic);
 	}
 
@@ -141,7 +141,7 @@ void CIopCoreInterpreter::handle_interrupt_check() const
 	auto& cop0 = r.iop.core.cop0;
 
 	// Interrupt exceptions are only taken when conditions are correct.
-	if (!cop0.status.is_interrupts_masked())
+	if (!cop0.status.interrupts_masked)
 	{
 		uword ip_cause = cop0.cause.extract_field(IopCoreCop0Register_Cause::IP);
 		uword im_status = cop0.status.extract_field(IopCoreCop0Register_Status::IM);

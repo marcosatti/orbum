@@ -6,16 +6,41 @@ EeCoreCop0Register_Random::EeCoreCop0Register_Random() :
 }
 
 EeCoreCop0Register_Status::EeCoreCop0Register_Status() :
-	SizedWordRegister(INITIAL_VALUE)
+	SizedWordRegister(INITIAL_VALUE),
+    interrupts_masked(true),
+    operating_context(MipsCoprocessor0::OperatingContext::Kernel)
 {
 }
 
-bool EeCoreCop0Register_Status::is_interrupts_masked()
+void EeCoreCop0Register_Status::handle_interrupts_masked_update()
 {
-	return !((extract_field(ERL) == 0)
+	interrupts_masked = !((extract_field(ERL) == 0)
 		&& (extract_field(EXL) == 0)
 		&& (extract_field(IE) > 0) 
 		&& (extract_field(EIE) > 0));
+}
+
+void EeCoreCop0Register_Status::handle_operating_context_update()
+{
+    const uword KSU = extract_field(EeCoreCop0Register_Status::KSU);
+    const uword ERL = extract_field(EeCoreCop0Register_Status::ERL);
+    const uword EXL = extract_field(EeCoreCop0Register_Status::EXL);
+
+    if (KSU == 2 && ERL == 0 && EXL == 0)
+        operating_context = MipsCoprocessor0::OperatingContext::User;
+    else if (KSU == 0 || ERL == 1 || EXL == 1)
+        operating_context = MipsCoprocessor0::OperatingContext::Kernel;
+    else if (KSU == 1 && ERL == 0 && EXL == 0)
+        operating_context = MipsCoprocessor0::OperatingContext::Supervisor;
+    else
+        throw std::runtime_error("EE COP0 could not determine CPU operating context! Please debug.");
+}
+
+void EeCoreCop0Register_Status::write_uword(const uword value)
+{
+    SizedWordRegister::write_uword(value);
+    handle_interrupts_masked_update();
+    handle_operating_context_update();
 }
 
 EeCoreCop0Register_Cause::EeCoreCop0Register_Cause() :

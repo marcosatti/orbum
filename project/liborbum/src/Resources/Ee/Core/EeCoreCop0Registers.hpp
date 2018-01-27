@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 /// EE COP0 registers.
@@ -88,9 +89,25 @@ public:
 
 	EeCoreCop0Register_Status();
 
-	/// Returns if all interrupts are currently masked ( = NOT ENABLED).
-	/// Does so by checking the master EIE and IE bit.
-	bool is_interrupts_masked();
+    /// Upon writes:
+    /// - Caches the operating context for COP0.
+    /// - Caches the interrupt masked state for the CPU.
+    void write_uword(const uword value) override;
+
+    /// Current cached CPU interrupts masked state.
+    bool interrupts_masked;
+
+    /// Current cached COP0 operating context state.
+    MipsCoprocessor0::OperatingContext operating_context;
+
+private:
+    /// Updates the cached interrupt masked state.
+    /// Does so by checking the master ERL, EXL, EIE and IE bit.
+    void handle_interrupts_masked_update();
+
+    /// Updates the operation context state.
+    /// Uses the KSU, ERL and EXL bits.
+    void handle_operating_context_update();
 };
 
 /// Cause register.
