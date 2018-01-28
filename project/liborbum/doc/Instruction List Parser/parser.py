@@ -2,7 +2,7 @@ import pprint
 import pyexcel
 import json
 
-INPUT_INSTRUCTION_LIST_FILE = 'IOP Core Instruction Set.ods'
+INPUT_INSTRUCTION_LIST_FILE = 'EE Core Instruction Set.ods'
 OUTPUT_PARSED_LOOKUP_TREE_FILE = 'parsed_lookup_tree.json'
 ROOT_OPCODE_LOOKUP = 'opcode'
 CLASSES_LIST_COLNAMES_ROW = 2

@@ -3,10 +3,11 @@
 #include "Resources/Iop/Core/IopCoreCop0Registers.hpp"
 
 IopCoreCop0Register_Status::IopCoreCop0Register_Status() :
-	SizedWordRegister(INITIAL_VALUE)
+	SizedWordRegister(INITIAL_VALUE),
+	interrupts_masked(true),
+	operating_context(MipsCoprocessor0::OperatingContext::Kernel)
 {
 }
-
 
 void IopCoreCop0Register_Status::push_exception_stack()
 {

@@ -14,16 +14,25 @@ void CEeCoreInterpreter::PABSH(const EeCoreInstruction inst) const
 	
 	// Rd = ABS(Rt), No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
+	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		shword val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		if (val_source2 == VALUE_SHWORD_MIN) // Need to account for when the value is at the minimum for shword, as the absolute value will not fit in an shword. In this case it is set to abs(S16_MIN) - 1 aka S16_MAX.
-			reg_dest->write_uhword(i, VALUE_SHWORD_MAX);
-		else
-			reg_dest->write_uhword(i, std::abs(val_source2));
-	}
+	shword value0 = static_cast<shword>(reg_source1->read_uhword(0));
+	shword value1 = static_cast<shword>(reg_source1->read_uhword(1));
+	shword value2 = static_cast<shword>(reg_source1->read_uhword(2));
+	shword value3 = static_cast<shword>(reg_source1->read_uhword(3));
+	shword value4 = static_cast<shword>(reg_source1->read_uhword(4));
+	shword value5 = static_cast<shword>(reg_source1->read_uhword(5));
+	shword value6 = static_cast<shword>(reg_source1->read_uhword(6));
+	shword value7 = static_cast<shword>(reg_source1->read_uhword(7));
+
+	reg_dest->write_uhword(0, static_cast<uhword>(value0 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value0)));
+	reg_dest->write_uhword(1, static_cast<uhword>(value1 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value1)));
+	reg_dest->write_uhword(2, static_cast<uhword>(value2 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value2)));
+	reg_dest->write_uhword(3, static_cast<uhword>(value3 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value3)));
+	reg_dest->write_uhword(4, static_cast<uhword>(value4 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value4)));
+	reg_dest->write_uhword(5, static_cast<uhword>(value5 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value5)));
+	reg_dest->write_uhword(6, static_cast<uhword>(value6 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value6)));
+	reg_dest->write_uhword(7, static_cast<uhword>(value7 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value7)));
 }
 
 void CEeCoreInterpreter::PABSW(const EeCoreInstruction inst) const
@@ -32,32 +41,33 @@ void CEeCoreInterpreter::PABSW(const EeCoreInstruction inst) const
 	
 	// Rd = ABS(Rt), No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
+	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		sword val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		if (val_source2 == VALUE_SWORD_MIN) // Need to account for when the value is at the minimum for sword, as the absolute value will not fit in an sword. In this case it is set to abs(S32_MIN) - 1 aka S32_MAX.
-			reg_dest->write_uword(i, VALUE_SWORD_MAX);
-		else
-			reg_dest->write_uword(i, std::abs(val_source2));
-	}
+	sword value0 = static_cast<sword>(reg_source1->read_uword(0));
+	sword value1 = static_cast<sword>(reg_source1->read_uword(1));
+	sword value2 = static_cast<sword>(reg_source1->read_uword(2));
+	sword value3 = static_cast<sword>(reg_source1->read_uword(3));
+
+	reg_dest->write_uword(0, static_cast<uword>(value0 == VALUE_SWORD_MIN ? VALUE_SWORD_MAX : std::abs(value0)));
+	reg_dest->write_uword(1, static_cast<uword>(value0 == VALUE_SWORD_MIN ? VALUE_SWORD_MAX : std::abs(value1)));
+	reg_dest->write_uword(2, static_cast<uword>(value0 == VALUE_SWORD_MIN ? VALUE_SWORD_MAX : std::abs(value2)));
+	reg_dest->write_uword(3, static_cast<uword>(value0 == VALUE_SWORD_MIN ? VALUE_SWORD_MAX : std::abs(value3)));
 }
 
 void CEeCoreInterpreter::PLZCW(const EeCoreInstruction inst) const
 {
 	auto& r = core->get_resources();
 	
-	// Rd = ABS(Rt), No exceptions. I do not understand the manuals operation working...
+	// Rd = ABS(Rt), No exceptions. 
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_DWORD; i++)
-	{
-		uword val_source1 = reg_source1->read_uword(i);
-		uword count = count_leading_bits(val_source1) - 1; // Minus 1 as the PS2 spec requires this (exclude the sign bit in the count).
-		reg_dest->write_uword(i, count);
-	}
+	// Count = count - 1 as the PS2 spec requires this (exclude the sign bit in the count).
+	uword value0 = count_leading_bits(reg_source1->read_uword(0)) - 1;
+	uword value1 = count_leading_bits(reg_source1->read_uword(1)) - 1;
+
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
 }
 
 void CEeCoreInterpreter::ABS_S(const EeCoreInstruction inst) const

@@ -106,10 +106,11 @@ void CEeCoreInterpreter::PAND(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_udword(i, reg_source1->read_udword(i) & reg_source2->read_udword(i));
-	}
+	udword value0 = reg_source1->read_udword(0) & reg_source2->read_udword(0);
+	udword value1 = reg_source1->read_udword(1) & reg_source2->read_udword(1);
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst) const
@@ -122,10 +123,11 @@ void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_udword(i, ~(reg_source1->read_udword(i) | reg_source2->read_udword(i)));
-	}
+	udword value0 = ~(reg_source1->read_udword(0) | reg_source2->read_udword(0));
+	udword value1 = ~(reg_source1->read_udword(1) | reg_source2->read_udword(1));
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::POR(const EeCoreInstruction inst) const
@@ -138,10 +140,11 @@ void CEeCoreInterpreter::POR(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_udword(i, reg_source1->read_udword(i) | reg_source2->read_udword(i));
-	}
+	udword value0 = reg_source1->read_udword(0) | reg_source2->read_udword(0);
+	udword value1 = reg_source1->read_udword(1) | reg_source2->read_udword(1);
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst) const
@@ -154,8 +157,9 @@ void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_udword(i, reg_source1->read_udword(i) ^ reg_source2->read_udword(i));
-	}
+	udword value0 = reg_source1->read_udword(0) ^ reg_source2->read_udword(0);
+	udword value1 = reg_source1->read_udword(1) ^ reg_source2->read_udword(1);
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }

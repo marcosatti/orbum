@@ -13,17 +13,17 @@ void CEeCoreInterpreter::PCPYH(const EeCoreInstruction inst) const
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i += 4)
-	{
-		// Loop for getting the value from Rt.
-		uhword val_source1 = reg_source1->read_uhword(i);
-		for (auto j = 0; j < NUMBER_HWORDS_IN_QWORD / 2; j++)
-		{
-			// Inner loop for copying to Rd.
-			ubyte destIndex = i * 4 + j;
-			reg_dest->write_uhword(destIndex, val_source1);
-		}
-	}
+	uhword value0 = reg_source1->read_uhword(0);
+	uhword value4 = reg_source1->read_uhword(4);
+
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value0);
+	reg_dest->write_uhword(2, value0);
+	reg_dest->write_uhword(3, value0);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value4);
+	reg_dest->write_uhword(6, value4);
+	reg_dest->write_uhword(7, value4);
 }
 
 void CEeCoreInterpreter::PCPYLD(const EeCoreInstruction inst) const
@@ -35,14 +35,11 @@ void CEeCoreInterpreter::PCPYLD(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		if (i % 2 == 0) 
-			reg_dest->write_udword(i, reg_source2->read_udword(0));
-		else
-			reg_dest->write_udword(i, reg_source1->read_udword(0));
-	}
+	udword value0 = reg_source2->read_udword(0);
+	udword value1 = reg_source1->read_udword(0);
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PCPYUD(const EeCoreInstruction inst) const
@@ -54,14 +51,11 @@ void CEeCoreInterpreter::PCPYUD(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// I know a loop is not required for this instruction, but it makes it easier to copy and paste for other instructions, and makes it consistent.
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		if (i % 2 == 0)
-			reg_dest->write_udword(i, reg_source1->read_udword(1));
-		else
-			reg_dest->write_udword(i, reg_source2->read_udword(1));
-	}
+	udword value0 = reg_source1->read_udword(1);
+	udword value1 = reg_source2->read_udword(1);
+
+	reg_dest->write_udword(0, value0);
+	reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PEXCH(const EeCoreInstruction inst) const
@@ -72,21 +66,23 @@ void CEeCoreInterpreter::PEXCH(const EeCoreInstruction inst) const
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		for (auto j = 0; j < NUMBER_HWORDS_IN_QWORD / 2; j++)
-		{
-			ubyte destIndex = i * 4; // Start with the base index of which Dword we are in.
-			if (j == 1)
-				destIndex += 2;
-			else if (j == 2)
-				destIndex += 1;
-			else
-				destIndex += j;
+	uhword value0 = reg_source1->read_uhword(0);
+	uhword value1 = reg_source1->read_uhword(2);
+	uhword value2 = reg_source1->read_uhword(1);
+	uhword value3 = reg_source1->read_uhword(3);
+	uhword value4 = reg_source1->read_uhword(4);
+	uhword value5 = reg_source1->read_uhword(6);
+	uhword value6 = reg_source1->read_uhword(5);
+	uhword value7 = reg_source1->read_uhword(7);
 
-			reg_dest->write_uhword(destIndex, reg_source1->read_uhword(i * 4 + j));
-		}
-	}
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PEXCW(const EeCoreInstruction inst) const
@@ -97,18 +93,15 @@ void CEeCoreInterpreter::PEXCW(const EeCoreInstruction inst) const
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD / 2; i++)
-	{
-		ubyte destIndex; 
-		if (i == 1)
-			destIndex = 2;
-		else if (i == 2)
-			destIndex = 1;
-		else
-			destIndex = i;
+	uword value0 = reg_source1->read_uword(0);
+	uword value1 = reg_source1->read_uword(2);
+	uword value2 = reg_source1->read_uword(1);
+	uword value3 = reg_source1->read_uword(3);
 
-		reg_dest->write_uword(destIndex, reg_source1->read_uword(i));
-	}
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PEXEH(const EeCoreInstruction inst) const
@@ -119,21 +112,23 @@ void CEeCoreInterpreter::PEXEH(const EeCoreInstruction inst) const
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_DWORDS_IN_QWORD; i++)
-	{
-		for (auto j = 0; j < NUMBER_HWORDS_IN_QWORD / 2; j++)
-		{
-			ubyte destIndex = i * 4; // Start with the base index of which Dword we are in.
-			if (j == 0)
-				destIndex += 2;
-			else if (j == 2)
-				destIndex += 0;
-			else
-				destIndex += j;
+	uhword value0 = reg_source1->read_uhword(2);
+	uhword value1 = reg_source1->read_uhword(1);
+	uhword value2 = reg_source1->read_uhword(0);
+	uhword value3 = reg_source1->read_uhword(3);
+	uhword value4 = reg_source1->read_uhword(6);
+	uhword value5 = reg_source1->read_uhword(5);
+	uhword value6 = reg_source1->read_uhword(4);
+	uhword value7 = reg_source1->read_uhword(7);
 
-			reg_dest->write_uhword(destIndex, reg_source1->read_uhword(i * 4 + j));
-		}
-	}
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PEXEW(const EeCoreInstruction inst) const
@@ -144,18 +139,15 @@ void CEeCoreInterpreter::PEXEW(const EeCoreInstruction inst) const
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD / 2; i++)
-	{
-		ubyte destIndex;
-		if (i == 0)
-			destIndex = 2;
-		else if (i == 2)
-			destIndex = 0;
-		else
-			destIndex = i;
+	uword value0 = reg_source1->read_uword(2);
+	uword value1 = reg_source1->read_uword(1);
+	uword value2 = reg_source1->read_uword(0);
+	uword value3 = reg_source1->read_uword(3);
 
-		reg_dest->write_uword(destIndex, reg_source1->read_uword(i));
-	}
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PEXTLB(const EeCoreInstruction inst) const
@@ -167,11 +159,39 @@ void CEeCoreInterpreter::PEXTLB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD / 2; i++)
-	{
-			reg_dest->write_ubyte(i * 2, reg_source2->read_ubyte(i));
-			reg_dest->write_ubyte(i * 2 + 1, reg_source1->read_ubyte(i));
-	}
+	ubyte value0 = reg_source2->read_ubyte(0);
+	ubyte value1 = reg_source1->read_ubyte(0);
+	ubyte value2 = reg_source2->read_ubyte(1);
+	ubyte value3 = reg_source1->read_ubyte(1);
+	ubyte value4 = reg_source2->read_ubyte(2);
+	ubyte value5 = reg_source1->read_ubyte(2);
+	ubyte value6 = reg_source2->read_ubyte(3);
+	ubyte value7 = reg_source1->read_ubyte(3);
+	ubyte value8 = reg_source2->read_ubyte(4);
+	ubyte value9 = reg_source1->read_ubyte(4);
+	ubyte value10 = reg_source2->read_ubyte(5);
+	ubyte value11 = reg_source1->read_ubyte(5);
+	ubyte value12 = reg_source2->read_ubyte(6);
+	ubyte value13 = reg_source1->read_ubyte(6);
+	ubyte value14 = reg_source2->read_ubyte(7);
+	ubyte value15 = reg_source1->read_ubyte(7);
+
+	reg_dest->write_ubyte(0, value0);
+	reg_dest->write_ubyte(1, value1);
+	reg_dest->write_ubyte(2, value2);
+	reg_dest->write_ubyte(3, value3);
+	reg_dest->write_ubyte(4, value4);
+	reg_dest->write_ubyte(5, value5);
+	reg_dest->write_ubyte(6, value6);
+	reg_dest->write_ubyte(7, value7);
+	reg_dest->write_ubyte(8, value8);
+	reg_dest->write_ubyte(9, value9);
+	reg_dest->write_ubyte(10, value10);
+	reg_dest->write_ubyte(11, value11);
+	reg_dest->write_ubyte(12, value12);
+	reg_dest->write_ubyte(13, value13);
+	reg_dest->write_ubyte(14, value14);
+	reg_dest->write_ubyte(15, value15);
 }
 
 void CEeCoreInterpreter::PEXTLH(const EeCoreInstruction inst) const
@@ -183,11 +203,23 @@ void CEeCoreInterpreter::PEXTLH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD / 2; i++)
-	{
-		reg_dest->write_uhword(i * 2, reg_source2->read_uhword(i));
-		reg_dest->write_uhword(i * 2 + 1, reg_source1->read_uhword(i));
-	}
+	uhword value0 = reg_source2->read_uhword(0);
+	uhword value1 = reg_source1->read_uhword(0);
+	uhword value2 = reg_source2->read_uhword(1);
+	uhword value3 = reg_source1->read_uhword(1);
+	uhword value4 = reg_source2->read_uhword(2);
+	uhword value5 = reg_source1->read_uhword(2);
+	uhword value6 = reg_source2->read_uhword(3);
+	uhword value7 = reg_source1->read_uhword(3);
+
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PEXTLW(const EeCoreInstruction inst) const
@@ -199,11 +231,15 @@ void CEeCoreInterpreter::PEXTLW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD / 2; i++)
-	{
-		reg_dest->write_uword(i * 2, reg_source2->read_uword(i));
-		reg_dest->write_uword(i * 2 + 1, reg_source1->read_uword(i));
-	}
+	uword value0 = reg_source2->read_uword(0);
+	uword value1 = reg_source1->read_uword(0);
+	uword value2 = reg_source2->read_uword(1);
+	uword value3 = reg_source1->read_uword(1);
+
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PEXTUB(const EeCoreInstruction inst) const
@@ -215,11 +251,39 @@ void CEeCoreInterpreter::PEXTUB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = NUMBER_BYTES_IN_QWORD / 2; i > 0 ; i--)
-	{
-		reg_dest->write_ubyte((i - 1) * 2 + 1, reg_source1->read_ubyte((i - 1) + (NUMBER_BYTES_IN_QWORD / 2)));
-		reg_dest->write_ubyte((i - 1) * 2, reg_source2->read_ubyte((i - 1) + (NUMBER_BYTES_IN_QWORD / 2)));
-	}
+	ubyte value0 = reg_source2->read_ubyte(8);
+	ubyte value1 = reg_source1->read_ubyte(8);
+	ubyte value2 = reg_source2->read_ubyte(9);
+	ubyte value3 = reg_source1->read_ubyte(9);
+	ubyte value4 = reg_source2->read_ubyte(10);
+	ubyte value5 = reg_source1->read_ubyte(10);
+	ubyte value6 = reg_source2->read_ubyte(11);
+	ubyte value7 = reg_source1->read_ubyte(11);
+	ubyte value8 = reg_source2->read_ubyte(12);
+	ubyte value9 = reg_source1->read_ubyte(12);
+	ubyte value10 = reg_source2->read_ubyte(13);
+	ubyte value11 = reg_source1->read_ubyte(13);
+	ubyte value12 = reg_source2->read_ubyte(14);
+	ubyte value13 = reg_source1->read_ubyte(14);
+	ubyte value14 = reg_source2->read_ubyte(15);
+	ubyte value15 = reg_source1->read_ubyte(15);
+
+	reg_dest->write_ubyte(0, value0);
+	reg_dest->write_ubyte(1, value1);
+	reg_dest->write_ubyte(2, value2);
+	reg_dest->write_ubyte(3, value3);
+	reg_dest->write_ubyte(4, value4);
+	reg_dest->write_ubyte(5, value5);
+	reg_dest->write_ubyte(6, value6);
+	reg_dest->write_ubyte(7, value7);
+	reg_dest->write_ubyte(8, value8);
+	reg_dest->write_ubyte(9, value9);
+	reg_dest->write_ubyte(10, value10);
+	reg_dest->write_ubyte(11, value11);
+	reg_dest->write_ubyte(12, value12);
+	reg_dest->write_ubyte(13, value13);
+	reg_dest->write_ubyte(14, value14);
+	reg_dest->write_ubyte(15, value15);
 }
 
 void CEeCoreInterpreter::PEXTUH(const EeCoreInstruction inst) const
@@ -231,11 +295,23 @@ void CEeCoreInterpreter::PEXTUH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = NUMBER_HWORDS_IN_QWORD / 2; i > 0; i--)
-	{
-		reg_dest->write_uhword((i - 1) * 2 + 1, reg_source1->read_uhword((i - 1) + (NUMBER_HWORDS_IN_QWORD / 2)));
-		reg_dest->write_uhword((i - 1) * 2, reg_source2->read_uhword((i - 1) + (NUMBER_HWORDS_IN_QWORD / 2)));
-	}
+	uhword value0 = reg_source2->read_uhword(4);
+	uhword value1 = reg_source1->read_uhword(4);
+	uhword value2 = reg_source2->read_uhword(5);
+	uhword value3 = reg_source1->read_uhword(5);
+	uhword value4 = reg_source2->read_uhword(6);
+	uhword value5 = reg_source1->read_uhword(6);
+	uhword value6 = reg_source2->read_uhword(7);
+	uhword value7 = reg_source1->read_uhword(7);
+
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PEXTUW(const EeCoreInstruction inst) const
@@ -247,11 +323,15 @@ void CEeCoreInterpreter::PEXTUW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = NUMBER_WORDS_IN_QWORD / 2; i > 0; i--)
-	{
-		reg_dest->write_uword((i - 1) * 2 + 1, reg_source1->read_uword((i - 1) + (NUMBER_WORDS_IN_QWORD / 2)));
-		reg_dest->write_uword((i - 1) * 2, reg_source2->read_uword((i - 1) + (NUMBER_WORDS_IN_QWORD / 2)));
-	}
+	uword value0 = reg_source2->read_uword(2);
+	uword value1 = reg_source1->read_uword(2);
+	uword value2 = reg_source2->read_uword(3);
+	uword value3 = reg_source1->read_uword(3);
+
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PINTEH(const EeCoreInstruction inst) const
@@ -263,11 +343,23 @@ void CEeCoreInterpreter::PINTEH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i += 2)
-	{
-		reg_dest->write_uhword(i * 2, reg_source2->read_uhword(i));
-		reg_dest->write_uhword(i * 2 + 1, reg_source1->read_uhword(i));
-	}
+	uhword value0 = reg_source2->read_uhword(0);
+	uhword value1 = reg_source1->read_uhword(0);
+	uhword value2 = reg_source2->read_uhword(2);
+	uhword value3 = reg_source1->read_uhword(2);
+	uhword value4 = reg_source2->read_uhword(4);
+	uhword value5 = reg_source1->read_uhword(4);
+	uhword value6 = reg_source2->read_uhword(6);
+	uhword value7 = reg_source1->read_uhword(6);
+
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PINTH(const EeCoreInstruction inst) const
@@ -279,15 +371,23 @@ void CEeCoreInterpreter::PINTH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// Easier to write this instruction using two loops - one for Rs and one for Rt.
+	uhword value0 = reg_source2->read_uhword(0);
+	uhword value1 = reg_source1->read_uhword(4);
+	uhword value2 = reg_source2->read_uhword(1);
+	uhword value3 = reg_source1->read_uhword(5);
+	uhword value4 = reg_source2->read_uhword(2);
+	uhword value5 = reg_source1->read_uhword(6);
+	uhword value6 = reg_source2->read_uhword(3);
+	uhword value7 = reg_source1->read_uhword(7);
 
-	// Rt
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD / 2; i++)
-		reg_dest->write_uhword(i * 2, reg_source2->read_uhword(i));
-
-	// Rs
-	for (auto i = NUMBER_HWORDS_IN_QWORD / 2; i > 0 ; i--)
-		reg_dest->write_uhword((i - 1) * 2 + 1, reg_source1->read_uhword((i - 1) + (NUMBER_HWORDS_IN_QWORD / 2)));
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PPACB(const EeCoreInstruction inst) const
@@ -299,16 +399,39 @@ void CEeCoreInterpreter::PPACB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// Easier to write this instruction using two loops - one for Rs and one for Rt.
-	// Also dont need to use halfwords for this, just read the low-order bytes directly.
+	ubyte value0 = reg_source2->read_ubyte(0);
+	ubyte value1 = reg_source2->read_ubyte(2);
+	ubyte value2 = reg_source2->read_ubyte(4);
+	ubyte value3 = reg_source2->read_ubyte(6);
+	ubyte value4 = reg_source2->read_ubyte(8);
+	ubyte value5 = reg_source2->read_ubyte(10);
+	ubyte value6 = reg_source2->read_ubyte(12);
+	ubyte value7 = reg_source2->read_ubyte(14);
+	ubyte value8 = reg_source1->read_ubyte(0);
+	ubyte value9 = reg_source1->read_ubyte(2);
+	ubyte value10 = reg_source1->read_ubyte(4);
+	ubyte value11 = reg_source1->read_ubyte(6);
+	ubyte value12 = reg_source1->read_ubyte(8);
+	ubyte value13 = reg_source1->read_ubyte(10);
+	ubyte value14 = reg_source1->read_ubyte(12);
+	ubyte value15 = reg_source1->read_ubyte(14);
 
-	// Rt
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i += 2)
-		reg_dest->write_ubyte(i / 2, reg_source2->read_ubyte(i));
-
-	// Rs
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i += 2)
-		reg_dest->write_ubyte(i / 2 + (NUMBER_BYTES_IN_QWORD / 2), reg_source1->read_ubyte(i));
+	reg_dest->write_ubyte(0, value0);
+	reg_dest->write_ubyte(1, value1);
+	reg_dest->write_ubyte(2, value2);
+	reg_dest->write_ubyte(3, value3);
+	reg_dest->write_ubyte(4, value4);
+	reg_dest->write_ubyte(5, value5);
+	reg_dest->write_ubyte(6, value6);
+	reg_dest->write_ubyte(7, value7);
+	reg_dest->write_ubyte(8, value8);
+	reg_dest->write_ubyte(9, value9);
+	reg_dest->write_ubyte(10, value10);
+	reg_dest->write_ubyte(11, value11);
+	reg_dest->write_ubyte(12, value12);
+	reg_dest->write_ubyte(13, value13);
+	reg_dest->write_ubyte(14, value14);
+	reg_dest->write_ubyte(15, value15);
 }
 
 void CEeCoreInterpreter::PPACH(const EeCoreInstruction inst) const
@@ -320,16 +443,23 @@ void CEeCoreInterpreter::PPACH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// Easier to write this instruction using two loops - one for Rs and one for Rt.
-	// Also dont need to use words for this, just read the low-order hwords directly.
+	uhword value0 = reg_source2->read_uhword(0);
+	uhword value1 = reg_source2->read_uhword(2);
+	uhword value2 = reg_source2->read_uhword(4);
+	uhword value3 = reg_source2->read_uhword(6);
+	uhword value4 = reg_source1->read_uhword(0);
+	uhword value5 = reg_source1->read_uhword(2);
+	uhword value6 = reg_source1->read_uhword(4);
+	uhword value7 = reg_source1->read_uhword(6);
 
-	// Rt
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i += 2)
-		reg_dest->write_uhword(i / 2, reg_source2->read_uhword(i));
-
-	// Rs
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i += 2)
-		reg_dest->write_uhword(i / 2 + (NUMBER_HWORDS_IN_QWORD / 2), reg_source1->read_uhword(i));
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PPACW(const EeCoreInstruction inst) const
@@ -341,16 +471,15 @@ void CEeCoreInterpreter::PPACW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	// Easier to write this instruction using two loops - one for Rs and one for Rt.
-	// Also dont need to use dwords for this, just read the low-order words directly.
+	uword value0 = reg_source2->read_uword(0);
+	uword value1 = reg_source2->read_uword(2);
+	uword value2 = reg_source1->read_uword(0);
+	uword value3 = reg_source1->read_uword(2);
 
-	// Rt
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-		reg_dest->write_uword(i / 2, reg_source2->read_uword(i));
-
-	// Rs
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-		reg_dest->write_uword(i / 2 + (NUMBER_WORDS_IN_QWORD / 2), reg_source1->read_uword(i));
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PREVH(const EeCoreInstruction inst) const
@@ -359,27 +488,43 @@ void CEeCoreInterpreter::PREVH(const EeCoreInstruction inst) const
 	
 	// Rd = COPY_HW(Rt), No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
+	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD / 2; i++)
-	{
-		reg_dest->write_uhword((NUMBER_HWORDS_IN_QWORD / 2) - 1 - i, reg_source2->read_uhword(i)); // Lower 4 hwords.
-		reg_dest->write_uhword(NUMBER_HWORDS_IN_QWORD - 1 - i, reg_source2->read_uhword(i + (NUMBER_HWORDS_IN_QWORD / 2))); // Upper 4 hwords.
+	uhword value0 = reg_source1->read_uhword(3);
+	uhword value1 = reg_source1->read_uhword(2);
+	uhword value2 = reg_source1->read_uhword(1);
+	uhword value3 = reg_source1->read_uhword(0);
+	uhword value4 = reg_source1->read_uhword(7);
+	uhword value5 = reg_source1->read_uhword(6);
+	uhword value6 = reg_source1->read_uhword(5);
+	uhword value7 = reg_source1->read_uhword(4);
 
-	}
+	reg_dest->write_uhword(0, value0);
+	reg_dest->write_uhword(1, value1);
+	reg_dest->write_uhword(2, value2);
+	reg_dest->write_uhword(3, value3);
+	reg_dest->write_uhword(4, value4);
+	reg_dest->write_uhword(5, value5);
+	reg_dest->write_uhword(6, value6);
+	reg_dest->write_uhword(7, value7);
 }
 
 void CEeCoreInterpreter::PROT3W(const EeCoreInstruction inst) const
 {
 	auto& r = core->get_resources();
 	
-	// Rd = COPY_W(Rt), No exceptions. Bit of a weird one...
+	// Rd = COPY_W(Rt), No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
+	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	reg_dest->write_uword(0, reg_source2->read_uword(1));
-	reg_dest->write_uword(1, reg_source2->read_uword(2));
-	reg_dest->write_uword(2, reg_source2->read_uword(0));
-	reg_dest->write_uword(3, reg_source2->read_uword(3));
+	uword value0 = reg_source1->read_uword(1);
+	uword value1 = reg_source1->read_uword(2);
+	uword value2 = reg_source1->read_uword(0);
+	uword value3 = reg_source1->read_uword(3);
+
+	reg_dest->write_uword(0, value0);
+	reg_dest->write_uword(1, value1);
+	reg_dest->write_uword(2, value2);
+	reg_dest->write_uword(3, value3);
 }
 
