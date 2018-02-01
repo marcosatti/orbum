@@ -226,13 +226,13 @@ void CEeCoreInterpreter::PADDB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sbyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<sbyte>(reg_source2->read_ubyte(i));
-		sbyte result = val_source1 + val_source2;
-		reg_dest->write_ubyte(i, result);
-	}
+	ubyte value[NUMBER_BYTES_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		value[i] = reg_source1->read_ubyte(i) + reg_source2->read_ubyte(i);
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, value[i]);
 }
 
 void CEeCoreInterpreter::PADDH(const EeCoreInstruction inst) const
@@ -244,13 +244,13 @@ void CEeCoreInterpreter::PADDH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++) 
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = val_source1 + val_source2;
-		reg_dest->write_uhword(i, result);
-	}
+	uhword value[NUMBER_HWORDS_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		value[i] = reg_source1->read_uhword(i) + reg_source2->read_uhword(i);
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PADDSB(const EeCoreInstruction inst) const
@@ -262,19 +262,21 @@ void CEeCoreInterpreter::PADDSB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sbyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<sbyte>(reg_source2->read_ubyte(i));
-		shword result = val_source1 + val_source2;
+	shword value[NUMBER_BYTES_IN_QWORD];
 
-		if (result > VALUE_SBYTE_MAX)
-			reg_dest->write_ubyte(i, VALUE_SBYTE_MAX);
-		else if (result < VALUE_SBYTE_MIN)
-			reg_dest->write_ubyte(i, VALUE_SBYTE_MIN);
-		else
-			reg_dest->write_ubyte(i, static_cast<sbyte>(result));
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+	{
+		value[i] = static_cast<shword>(static_cast<sbyte>(reg_source1->read_ubyte(i)))
+			+ static_cast<shword>(static_cast<sbyte>(reg_source2->read_ubyte(i)));
+
+		if (value[i] > VALUE_SBYTE_MAX)
+			value[i] = VALUE_SBYTE_MAX;
+		else if (value[i] < VALUE_SBYTE_MIN)
+			value[i] = VALUE_SBYTE_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, static_cast<sbyte>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDSH(const EeCoreInstruction inst) const
@@ -286,19 +288,21 @@ void CEeCoreInterpreter::PADDSH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		sword result = val_source1 + val_source2;
+	sword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (result > VALUE_SHWORD_MAX)
-			reg_dest->write_uhword(i, VALUE_SHWORD_MAX);
-		else if (result < VALUE_SHWORD_MIN)
-			reg_dest->write_uhword(i, VALUE_SHWORD_MIN);
-		else
-			reg_dest->write_uhword(i, static_cast<shword>(result));
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sword>(static_cast<shword>(reg_source1->read_uhword(i))) 
+			+ static_cast<sword>(static_cast<shword>(reg_source2->read_uhword(i)));
+
+		if (value[i] > VALUE_SHWORD_MAX)
+			value[i] = VALUE_SHWORD_MAX;
+		else if (value[i] < VALUE_SHWORD_MIN)
+			value[i] = VALUE_SHWORD_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, static_cast<shword>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDSW(const EeCoreInstruction inst) const
@@ -310,19 +314,21 @@ void CEeCoreInterpreter::PADDSW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sdword result = val_source1 + val_source2;
+	sdword value[NUMBER_WORDS_IN_QWORD];
 
-		if (result > VALUE_SWORD_MAX)
-			reg_dest->write_uword(i, VALUE_SWORD_MAX);
-		else if (result < VALUE_SWORD_MIN)
-			reg_dest->write_uword(i, VALUE_SWORD_MIN);
-		else
-			reg_dest->write_uword(i, static_cast<sword>(result));
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(i))) 
+			+ static_cast<sdword>(static_cast<sword>(reg_source2->read_uword(i)));
+
+		if (value[i] > VALUE_SWORD_MAX)
+			value[i] = VALUE_SWORD_MAX;
+		else if (value[i] < VALUE_SWORD_MIN)
+			value[i] = VALUE_SWORD_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, static_cast<sword>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDUB(const EeCoreInstruction inst) const
@@ -334,17 +340,19 @@ void CEeCoreInterpreter::PADDUB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<ubyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<ubyte>(reg_source2->read_ubyte(i));
-		uhword result = val_source1 + val_source2;
+	uhword value[NUMBER_BYTES_IN_QWORD];
 
-		if (result > VALUE_UBYTE_MAX)
-			reg_dest->write_ubyte(i, VALUE_UBYTE_MAX);
-		else
-			reg_dest->write_ubyte(i, static_cast<ubyte>(result));
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+	{
+		value[i] = static_cast<uhword>(reg_source1->read_ubyte(i)) 
+			+ static_cast<uhword>(reg_source2->read_ubyte(i));
+
+		if (value[i] > VALUE_UBYTE_MAX)
+			value[i] = VALUE_UBYTE_MAX;
 	}
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, static_cast<ubyte>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDUH(const EeCoreInstruction inst) const
@@ -356,17 +364,19 @@ void CEeCoreInterpreter::PADDUH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<uhword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<uhword>(reg_source2->read_uhword(i));
-		uword result = val_source1 + val_source2;
+	uword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (result > VALUE_UHWORD_MAX)
-			reg_dest->write_uhword(i, VALUE_UHWORD_MAX);
-		else
-			reg_dest->write_uhword(i, static_cast<uhword>(result));
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<uword>(reg_source1->read_uhword(i)) 
+			+ static_cast<uhword>(reg_source2->read_uhword(i));
+
+		if (value[i] > VALUE_UHWORD_MAX)
+			value[i] = VALUE_UHWORD_MAX;
 	}
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, static_cast<uhword>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDUW(const EeCoreInstruction inst) const
@@ -378,35 +388,38 @@ void CEeCoreInterpreter::PADDUW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<uword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<uword>(reg_source2->read_uword(i));
-		udword result = val_source1 + val_source2;
+	udword value[NUMBER_WORDS_IN_QWORD];
 
-		if (result > VALUE_UWORD_MAX)
-			reg_dest->write_uword(i, VALUE_UWORD_MAX);
-		else
-			reg_dest->write_uword(i, static_cast<uword>(result));
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<udword>(reg_source1->read_uword(i)) 
+			+ static_cast<udword>(reg_source2->read_uword(i));
+
+		if (value[i] > VALUE_UWORD_MAX)
+			value[i] = VALUE_UWORD_MAX;
 	}
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, static_cast<uword>(value[i]));
 }
 
 void CEeCoreInterpreter::PADDW(const EeCoreInstruction inst) const
 {
 	auto& r = core->get_resources();
 	
-	// Parallel Rd[SW] = Rs[SW] + Rt[SW]
+	// Parallel Rd[SW] = Rs[SW] + Rt[SW].
+	// Not explicitly mentioned, but looks like it doesnt treat overflowing.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sword result = val_source1 + val_source2;
-		reg_dest->write_uword(i, result);
-	}
+	uword value[NUMBER_WORDS_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		value[i] = reg_source1->read_uword(i) + reg_source2->read_uword(i);
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PADSBH(const EeCoreInstruction inst) const
@@ -418,20 +431,18 @@ void CEeCoreInterpreter::PADSBH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = val_source1 - val_source2;
-		reg_dest->write_uhword(i, result);
-	}
-	for (auto i = NUMBER_HWORDS_IN_QWORD / 2; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = val_source1 + val_source2;
-		reg_dest->write_uhword(i, result);
-	}
+	uhword value[NUMBER_HWORDS_IN_QWORD];
+
+	// Sub
+	for (int i = 0; i < (NUMBER_HWORDS_IN_QWORD / 2); i++)
+		value[i] = reg_source1->read_uhword(i) - reg_source2->read_uhword(i);
+
+	// Add
+	for (int i = (NUMBER_HWORDS_IN_QWORD / 2); i < NUMBER_HWORDS_IN_QWORD; i++)
+		value[i] = reg_source1->read_uhword(i) + reg_source2->read_uhword(i);
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSUBB(const EeCoreInstruction inst) const
@@ -443,13 +454,13 @@ void CEeCoreInterpreter::PSUBB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sbyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<sbyte>(reg_source2->read_ubyte(i));
-		sbyte result = val_source1 - val_source2;
-		reg_dest->write_ubyte(i, result);
-	}
+	ubyte value[NUMBER_BYTES_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		value[i] = reg_source1->read_ubyte(i) - reg_source2->read_ubyte(i);
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSUBH(const EeCoreInstruction inst) const
@@ -461,13 +472,13 @@ void CEeCoreInterpreter::PSUBH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = val_source1 - val_source2;
-		reg_dest->write_uhword(i, result);
-	}
+	uhword value[NUMBER_HWORDS_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		value[i] = reg_source1->read_uhword(i) - reg_source2->read_uhword(i);
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSUBSB(const EeCoreInstruction inst) const
@@ -479,19 +490,21 @@ void CEeCoreInterpreter::PSUBSB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sbyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<sbyte>(reg_source2->read_ubyte(i));
-		shword result = val_source1 - val_source2;
+	shword value[NUMBER_BYTES_IN_QWORD];
 
-		if (result > VALUE_SBYTE_MAX)
-			reg_dest->write_ubyte(i, VALUE_SBYTE_MAX);
-		else if (result < VALUE_SBYTE_MIN)
-			reg_dest->write_ubyte(i, VALUE_SBYTE_MIN);
-		else
-			reg_dest->write_ubyte(i, static_cast<sbyte>(result));
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+	{
+		value[i] = static_cast<shword>(static_cast<sbyte>(reg_source1->read_ubyte(i)))
+			- static_cast<shword>(static_cast<sbyte>(reg_source2->read_ubyte(i)));
+
+		if (value[i] > VALUE_SBYTE_MAX)
+			value[i] = VALUE_SBYTE_MAX;
+		else if (value[i] < VALUE_SBYTE_MIN)
+			value[i] = VALUE_SBYTE_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, static_cast<sbyte>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBSH(const EeCoreInstruction inst) const
@@ -503,19 +516,21 @@ void CEeCoreInterpreter::PSUBSH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		sword result = val_source1 - val_source2;
+	sword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (result > VALUE_SHWORD_MAX)
-			reg_dest->write_uhword(i, VALUE_SHWORD_MAX);
-		else if (result < VALUE_SHWORD_MIN)
-			reg_dest->write_uhword(i, VALUE_SHWORD_MIN);
-		else
-			reg_dest->write_uhword(i, static_cast<shword>(result));
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sword>(static_cast<shword>(reg_source1->read_uhword(i)))
+			- static_cast<sword>(static_cast<shword>(reg_source2->read_uhword(i)));
+
+		if (value[i] > VALUE_SHWORD_MAX)
+			value[i] = VALUE_SHWORD_MAX;
+		else if (value[i] < VALUE_SHWORD_MIN)
+			value[i] = VALUE_SHWORD_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, static_cast<shword>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBSW(const EeCoreInstruction inst) const
@@ -527,19 +542,21 @@ void CEeCoreInterpreter::PSUBSW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sdword result = val_source1 - val_source2;
+	sdword value[NUMBER_WORDS_IN_QWORD];
 
-		if (result > VALUE_SWORD_MAX)
-			reg_dest->write_uword(i, VALUE_SWORD_MAX);
-		else if (result < VALUE_SWORD_MIN)
-			reg_dest->write_uword(i, VALUE_SWORD_MIN);
-		else
-			reg_dest->write_uword(i, static_cast<sword>(result));
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(i)))
+			- static_cast<sdword>(static_cast<sword>(reg_source2->read_uword(i)));
+
+		if (value[i] > VALUE_SWORD_MAX)
+			value[i] = VALUE_SWORD_MAX;
+		else if (value[i] < VALUE_SWORD_MIN)
+			value[i] = VALUE_SWORD_MIN;
 	}
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, static_cast<sword>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBUB(const EeCoreInstruction inst) const
@@ -551,17 +568,19 @@ void CEeCoreInterpreter::PSUBUB(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sbyte>(reg_source1->read_ubyte(i));
-		auto val_source2 = static_cast<sbyte>(reg_source2->read_ubyte(i));
-		shword result = val_source1 - val_source2;
+	shword value[NUMBER_BYTES_IN_QWORD];
 
-		if (result < 0)
-			reg_dest->write_ubyte(i, 0);
-		else
-			reg_dest->write_ubyte(i, static_cast<ubyte>(result));
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+	{
+		value[i] = static_cast<shword>(static_cast<uhword>(reg_source1->read_ubyte(i)))
+			- static_cast<shword>(static_cast<uhword>(reg_source2->read_ubyte(i)));
+
+		if (value[i] < 0)
+			value[i] = 0;
 	}
+
+	for (int i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
+		reg_dest->write_ubyte(i, static_cast<ubyte>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBUH(const EeCoreInstruction inst) const
@@ -573,17 +592,19 @@ void CEeCoreInterpreter::PSUBUH(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		sword result = val_source1 - val_source2;
+	sword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (result < 0)
-			reg_dest->write_uhword(i, 0);
-		else
-			reg_dest->write_uhword(i, static_cast<uhword>(result));
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sword>(static_cast<uword>(reg_source1->read_uhword(i)))
+			- static_cast<sword>(static_cast<uhword>(reg_source2->read_uhword(i)));
+
+		if (value[i] < 0)
+			value[i] = 0;
 	}
+
+	for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+		reg_dest->write_uhword(i, static_cast<uhword>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBUW(const EeCoreInstruction inst) const
@@ -595,17 +616,19 @@ void CEeCoreInterpreter::PSUBUW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uhword(i));
-		sdword result = val_source1 - val_source2;
+	sdword value[NUMBER_WORDS_IN_QWORD];
 
-		if (result < 0)
-			reg_dest->write_uword(i, 0);
-		else
-			reg_dest->write_uword(i, static_cast<uword>(result));
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+	{
+		value[i] = static_cast<sdword>(static_cast<udword>(reg_source1->read_uword(i)))
+			- static_cast<sdword>(static_cast<udword>(reg_source2->read_uword(i)));
+
+		if (value[i] < 0)
+			value[i] = 0;
 	}
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, static_cast<uword>(value[i]));
 }
 
 void CEeCoreInterpreter::PSUBW(const EeCoreInstruction inst) const
@@ -617,12 +640,12 @@ void CEeCoreInterpreter::PSUBW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sword result = val_source1 - val_source2;
-		reg_dest->write_uword(i, result);
-	}
+	uword value[NUMBER_WORDS_IN_QWORD];
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		value[i] = reg_source1->read_uword(i) - reg_source2->read_uword(i);
+
+	for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+		reg_dest->write_uword(i, value[i]);
 }
 

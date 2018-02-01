@@ -14,16 +14,26 @@ void CEeCoreInterpreter::PEXT5(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i += 2)
+	uword value[NUMBER_WORDS_IN_QWORD];
+
+	auto unpack = [&](const uhword value) -> uword
 	{
-		uhword packed_value = reg_source1->read_uhword(i);
-		uword temp0 = ((packed_value & 0x1F) << 3);
-		uword temp1 = ((packed_value & 0x3E0) >> 5) << 11;
-		uword temp2 = ((packed_value & 0x7C00) >> 10) << 19;
-		uword temp3 = ((packed_value & 0x8000) >> 16) << 31;
-		uword extended_value = temp3 | temp2 | temp1 | temp0;
-		reg_dest->write_uword(i / 2, extended_value);
-	}
+		uword temp0 = ((value & 0x1F) << 3);
+		uword temp1 = ((value & 0x3E0) >> 5) << 11;
+		uword temp2 = ((value & 0x7C00) >> 10) << 19;
+		uword temp3 = ((value & 0x8000) >> 16) << 31;
+		return (temp3 | temp2 | temp1 | temp0);
+	};
+
+	value[0] = unpack(reg_source1->read_uhword(0));
+	value[1] = unpack(reg_source1->read_uhword(2));
+	value[2] = unpack(reg_source1->read_uhword(4));
+	value[3] = unpack(reg_source1->read_uhword(6));
+
+	reg_dest->write_uword(0, value[0]);
+	reg_dest->write_uword(1, value[1]);
+	reg_dest->write_uword(2, value[2]);
+	reg_dest->write_uword(3, value[3]);
 }
 
 void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst) const
@@ -35,16 +45,27 @@ void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		uword extended_value = reg_source1->read_uword(i);
-		ubyte temp0 = ((extended_value & 0xF8) >> 3);
-		ubyte temp1 = ((extended_value & 0xF800) >> 11) << 5;
-		ubyte temp2 = ((extended_value & 0xF80000) >> 19) << 10;
-		ubyte temp3 = ((extended_value & 0x80000000) >> 31) << 15;
-		uword packed_value = 0x0 | temp3 | temp2 | temp1 | temp0; // Slightly different to the above instruction - need to make sure the empty space is packed with 0's.
-		reg_dest->write_uword(i, packed_value);
-	}
+	uhword value[NUMBER_WORDS_IN_QWORD];
+
+	auto pack = [&](const uword value) -> uhword
+	{		
+		uhword temp0 = ((value & 0xF8) >> 3);
+		uhword temp1 = ((value & 0xF800) >> 11) << 5;
+		uhword temp2 = ((value & 0xF80000) >> 19) << 10;
+		uhword temp3 = ((value & 0x80000000) >> 31) << 15;
+		return (temp3 | temp2 | temp1 | temp0);
+	};
+
+	value[0] = pack(reg_source1->read_uword(0));
+	value[1] = pack(reg_source1->read_uword(1));
+	value[2] = pack(reg_source1->read_uword(2));
+	value[3] = pack(reg_source1->read_uword(3));
+
+	// Upper 16 bits padded with 0's.
+	reg_dest->write_uword(0, static_cast<uword>(value[0]));
+	reg_dest->write_uword(2, static_cast<uword>(value[1]));
+	reg_dest->write_uword(4, static_cast<uword>(value[2]));
+	reg_dest->write_uword(6, static_cast<uword>(value[3]));
 }
 
 void CEeCoreInterpreter::CVT_S_W(const EeCoreInstruction inst) const
