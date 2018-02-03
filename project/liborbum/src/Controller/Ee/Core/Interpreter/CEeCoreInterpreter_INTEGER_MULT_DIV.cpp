@@ -157,37 +157,53 @@ void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	auto val_source2 = static_cast<shword>(reg_source2->read_uhword(0)); // Constant.
+    shword divisor = static_cast<shword>(reg_source2->read_uhword(0));
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
+    auto div = [divisor](const uword a) -> std::tuple<uword, uword>
+    {
+        sword sa = static_cast<sword>(a);
 
-		// Check for VALUE_S32_MIN / -1 (special condition).
-		if (val_source1 == VALUE_SWORD_MIN &&
-			val_source2 == -1)
-		{
-			lo.write_uword(i, static_cast<sword>(VALUE_SWORD_MIN));
-			hi.write_uword(i, static_cast<sword>(0));
-		}
-		// Check for divide by 0, in which case result is undefined (do nothing).
-		else if (val_source2 == 0)
-		{
-			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
-		}
-		// Else perform normal operation.
-		else
-		{
-			sword resultQ = val_source1 / val_source2;
-			sword resultR = val_source1 % val_source2;
+        // Check for VALUE_S32_MIN / -1 (special condition).
+        if (sa == VALUE_SWORD_MIN && divisor == -1)
+        {
+            return {
+                static_cast<uword>(VALUE_SWORD_MIN),
+                static_cast<uword>(0)
+            };
+        }
+        // Check for divide by 0, in which case result is undefined (do nothing).
+        else if (divisor == 0)
+        {
+            // TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
+            return {
+                static_cast<uword>(0),
+                static_cast<uword>(0)
+            };
+        }
+        // Else perform normal operation.
+        else
+        {
+            return {
+                static_cast<uword>(sa / divisor),
+                static_cast<uword>(sa % divisor)
+            };
+        }
+    };
 
-			// Quotient.
-			lo.write_uword(i, resultQ);
+    auto[q0, r0] = div(reg_source1->read_uword(0));
+    auto[q1, r1] = div(reg_source1->read_uword(1));
+    auto[q2, r2] = div(reg_source1->read_uword(2));
+    auto[q3, r3] = div(reg_source1->read_uword(3));
 
-			// Remainder.
-			hi.write_uword(i, resultR);
-		}
-	}
+    lo.write_uword(0, q0);
+    lo.write_uword(1, q1);
+    lo.write_uword(2, q2);
+    lo.write_uword(3, q3);
+
+    hi.write_uword(0, r0);
+    hi.write_uword(1, r1);
+    hi.write_uword(2, r2);
+    hi.write_uword(3, r3);
 }
 
 void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst) const
@@ -201,29 +217,35 @@ void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		auto val_source1 = static_cast<uword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<uword>(reg_source2->read_uword(i));
+    auto div = [](const uword a, const uword b) -> std::tuple<udword, udword>
+    {
+        // Check for divide by 0, in which case result is undefined (do nothing).
+        if (b == 0)
+        {
+            // TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
+            return {
+                static_cast<udword>(0),
+                static_cast<udword>(0)
+            };
+        }
+        // Else perform normal operation.
+        else
+        {
+            return {
+                static_cast<udword>(static_cast<sdword>(static_cast<sword>(a / b))),
+                static_cast<udword>(static_cast<sdword>(static_cast<sword>(a % b)))
+            };
+        }
+    };
 
-		// Check for divide by 0, in which case result is undefined (do nothing).
-		if (val_source2 == 0)
-		{
-			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to -1).
-		}
-		// Else perform normal operation.
-		else
-		{
-			udword resultQ = val_source1 / val_source2;
-			udword resultR = val_source1 % val_source2;
+    auto[q0, r0] = div(reg_source1->read_uword(0), reg_source2->read_uword(0));
+    auto[q1, r1] = div(reg_source1->read_uword(2), reg_source2->read_uword(2));
 
-			// Quotient.
-			lo.write_udword(i / 2, resultQ);
+    lo.write_udword(0, q0);
+    lo.write_udword(1, q1);
 
-			// Remainder.
-			hi.write_udword(i / 2, resultR);
-		}
-	}
+    hi.write_udword(0, r0);
+    hi.write_udword(1, r1);
 }
 
 void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst) const
@@ -237,36 +259,45 @@ void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		auto val_source1 = static_cast<uword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<uword>(reg_source2->read_uword(i));
+    auto div = [](const uword a, const uword b) -> std::tuple<udword, udword>
+    {
+        sword sa = static_cast<sword>(a);
+        sword sb = static_cast<sword>(b);
 
-		// Check for VALUE_S32_MIN / -1 (special condition).
-		if (val_source1 == VALUE_SWORD_MIN &&
-			val_source2 == -1)
-		{
-			lo.write_udword(i / 2, static_cast<sdword>(VALUE_SWORD_MIN));
-			hi.write_udword(i / 2, static_cast<sdword>(0));
-		}
-		// Check for divide by 0, in which case result is undefined (do nothing).
-		else if (val_source2 == 0)
-		{
-			// TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
-		}
-		// Else perform normal operation.
-		else
-		{
-			udword resultQ = val_source1 / val_source2;
-			udword resultR = val_source1 % val_source2;
+        if (a == VALUE_SWORD_MIN && b == -1)
+        {
+            return {
+                static_cast<udword>(static_cast<sdword>(VALUE_SWORD_MIN)),
+                static_cast<udword>(static_cast<sdword>(0))
+            };
+        }
+        // Check for divide by 0, in which case result is undefined (do nothing).
+        if (b == 0)
+        {
+            // TODO: check if old PCSX2 code is required (sets HI to the dividend and LO to 1 or -1 depending on if divisor is positive or negative).
+            return {
+                static_cast<udword>(0),
+                static_cast<udword>(0)
+            };
+        }
+        // Else perform normal operation.
+        else
+        {
+            return {
+                static_cast<udword>(static_cast<sdword>(sa / sb)),
+                static_cast<udword>(static_cast<sdword>(sa % sb))
+            };
+        }
+    };
 
-			// Quotient.
-			lo.write_udword(i / 2, resultQ);
+    auto[q0, r0] = div(reg_source1->read_uword(0), reg_source2->read_uword(0));
+    auto[q1, r1] = div(reg_source1->read_uword(2), reg_source2->read_uword(2));
 
-			// Remainder.
-			hi.write_udword(i / 2, resultR);
-		}
-	}
+    lo.write_udword(0, q0);
+    lo.write_udword(1, q1);
+
+    hi.write_udword(0, r0);
+    hi.write_udword(1, r1);
 }
 
 void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst) const
@@ -281,20 +312,38 @@ void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		sword result = val_source1 * val_source2;
+    uword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (i % 2 == 0)
-			reg_dest->write_uword(i / 2, result); // Write to Rd for even indexes. A0xB0, A2xB2, A4xB4, A6xB6.
+    auto mult = [](const uhword a, const uhword b) -> uword
+    {
+        sword sa = static_cast<sword>(static_cast<shword>(a));
+        sword sb = static_cast<sword>(static_cast<shword>(b));
+        return static_cast<uword>(sa * sb);
+    };
 
-		if ((i / 2) % 2 == 0)
-			lo.write_uword(((i / 2 > 0) ? i - 2 : i), result); // A0xB0, A1xB1, A4xB4, A5xB5. Array ternary operator is to select the correct index from 0 -> 3.
-		else
-			hi.write_uword(((i / 2 > 1) ? i - 4 : i - 2), result); // A2xB2, A3xB3, A6xB6, A7xB7. Array ternary operator is to select the correct index from 0 -> 3.
-	}
+    value[0] = mult(reg_source1->read_uhword(0), reg_source2->read_uhword(0));
+    value[1] = mult(reg_source1->read_uhword(1), reg_source2->read_uhword(1));
+    value[2] = mult(reg_source1->read_uhword(2), reg_source2->read_uhword(2));
+    value[3] = mult(reg_source1->read_uhword(3), reg_source2->read_uhword(3));
+    value[4] = mult(reg_source1->read_uhword(4), reg_source2->read_uhword(4));
+    value[5] = mult(reg_source1->read_uhword(5), reg_source2->read_uhword(5));
+    value[6] = mult(reg_source1->read_uhword(6), reg_source2->read_uhword(6));
+    value[7] = mult(reg_source1->read_uhword(7), reg_source2->read_uhword(7));
+
+    reg_dest->write_uword(0, value[0]);
+    reg_dest->write_uword(1, value[2]);
+    reg_dest->write_uword(2, value[4]);
+    reg_dest->write_uword(3, value[6]);
+
+    lo.write_uword(0, value[0]);
+    lo.write_uword(1, value[1]);
+    lo.write_uword(2, value[4]);
+    lo.write_uword(3, value[5]);
+
+    hi.write_uword(0, value[2]);
+    hi.write_uword(1, value[3]);
+    hi.write_uword(2, value[6]);
+    hi.write_uword(3, value[7]);
 }
 
 void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst) const
@@ -309,16 +358,29 @@ void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		auto val_source1 = static_cast<uword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<uword>(reg_source2->read_uword(i));
-		udword result = val_source1 * val_source2;
+    auto mult = [](const uword a, const uword b) -> std::tuple<udword, udword, udword>
+    {
+        udword da = static_cast<udword>(a);
+        udword db = static_cast<udword>(b);
+        udword result = da * db;
+        return {
+            result,
+            static_cast<udword>(static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF))),
+            static_cast<udword>(static_cast<sdword>(static_cast<sword>(result >> 32)))
+        };
+    };
 
-		lo.write_udword(i / 2, static_cast<udword>(static_cast<uword>(result & 0xFFFFFFFF)));
-		hi.write_udword(i / 2, static_cast<udword>(static_cast<uword>(result >> 32)));
-		reg_dest->write_udword(i / 2, result);
-	}
+    auto[value0, lo0, hi0] = mult(reg_source1->read_uword(0), reg_source1->read_uword(0));
+    auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
+
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value0);
+    
+    lo.write_udword(0, lo0);
+    lo.write_udword(1, lo1);
+
+    hi.write_udword(0, hi0);
+    hi.write_udword(1, hi1);
 }
 
 void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst) const
@@ -333,14 +395,27 @@ void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst) const
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sdword result = val_source1 * val_source2;
+    auto mult = [](const uword a, const uword b) -> std::tuple<udword, udword, udword>
+    {
+        sdword sda = static_cast<sdword>(static_cast<sword>(a));
+        sdword sdb = static_cast<sdword>(static_cast<sword>(b));
+        sdword result = sda * sdb;
+        return {
+            static_cast<udword>(result),
+            static_cast<udword>(static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF))),
+            static_cast<udword>(static_cast<sdword>(static_cast<sword>(result >> 32)))
+        };
+    };
 
-		lo.write_udword(i / 2, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
-		hi.write_udword(i / 2, static_cast<sdword>(static_cast<sword>(result >> 32)));
-		reg_dest->write_udword(i / 2, result);
-	}
+    auto[value0, lo0, hi0] = mult(reg_source1->read_uword(0), reg_source1->read_uword(0));
+    auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
+
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value0);
+
+    lo.write_udword(0, lo0);
+    lo.write_udword(1, lo1);
+
+    hi.write_udword(0, hi0);
+    hi.write_udword(1, hi1);
 }

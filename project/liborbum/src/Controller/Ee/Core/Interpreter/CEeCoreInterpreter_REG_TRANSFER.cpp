@@ -169,19 +169,22 @@ void CEeCoreInterpreter::PMFHL_LH(const EeCoreInstruction inst) const
 	
 	// Rd = (HI, LO). No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source1 = r.ee.core.r5900.hi;
-	auto& reg_source2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
-	sword HIIndex[] = { 2, -1, 3, -1, 6, -1, 7, -1 };
-	sword LOIndex[] = { 0, -1, 1, -1, 4, -1, 5, -1 };
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		if (HIIndex[i] != -1)
-			reg_dest->write_uhword(HIIndex[i], reg_source1.read_uhword(i));
-		if (LOIndex[i] != -1)
-			reg_dest->write_uhword(LOIndex[i], reg_source2.read_uhword(i));
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    value[0] = lo.read_uhword(0);
+    value[1] = lo.read_uhword(2);
+    value[2] = hi.read_uhword(0);
+    value[3] = hi.read_uhword(2);
+    value[4] = lo.read_uhword(4);
+    value[5] = lo.read_uhword(6);
+    value[6] = hi.read_uhword(4);
+    value[7] = hi.read_uhword(6);
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_LW(const EeCoreInstruction inst) const
@@ -190,19 +193,18 @@ void CEeCoreInterpreter::PMFHL_LW(const EeCoreInstruction inst) const
 	
 	// Rd = (HI, LO). No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source1 = r.ee.core.r5900.hi;
-	auto& reg_source2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
-	sword HIIndex[] = { 1, -1, 3, -1 };
-	sword LOIndex[] = { 0, -1, 2, -1 };
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		if (HIIndex[i] != -1)
-			reg_dest->write_uword(HIIndex[i], reg_source1.read_uword(i));
-		if (LOIndex[i] != -1)
-			reg_dest->write_uword(LOIndex[i], reg_source2.read_uword(i));
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    value[0] = lo.read_uword(0);
+    value[1] = hi.read_uword(0);
+    value[2] = lo.read_uword(2);
+    value[3] = hi.read_uword(2);
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_SH(const EeCoreInstruction inst) const
@@ -211,22 +213,29 @@ void CEeCoreInterpreter::PMFHL_SH(const EeCoreInstruction inst) const
 	
 	// Rd = (HI, LO). No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source1 = r.ee.core.r5900.hi;
-	auto& reg_source2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
-	sword HIIndex[] = { 2, 3, 6, 7 };
-	sword LOIndex[] = { 0, 1, 4, 5 };
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1.read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2.read_uword(i));
+    uhword value[NUMBER_HWORDS_IN_QWORD];
 
-		if (HIIndex[i] != -1)
-			reg_dest->write_uhword(HIIndex[i], saturating_word_to_hword(val_source1));
-		if (LOIndex[i] != -1)
-			reg_dest->write_uhword(LOIndex[i], saturating_word_to_hword(val_source2));
-	}
+    auto saturate = [](const uword value) -> uhword
+    {
+        sword svalue = static_cast<sword>(value);
+        shword shvalue = saturate_word_to_hword(svalue);
+        return static_cast<uhword>(shvalue);
+    };
+
+    value[0] = saturate(lo.read_uword(0));
+    value[1] = saturate(lo.read_uword(1));
+    value[2] = saturate(hi.read_uword(0));
+    value[3] = saturate(hi.read_uword(1));
+    value[4] = saturate(lo.read_uword(2));
+    value[5] = saturate(lo.read_uword(3));
+    value[6] = saturate(hi.read_uword(2));
+    value[7] = saturate(hi.read_uword(3));
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_SLW(const EeCoreInstruction inst) const
@@ -235,20 +244,22 @@ void CEeCoreInterpreter::PMFHL_SLW(const EeCoreInstruction inst) const
 	
 	// Rd = (HI, LO). No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source1 = r.ee.core.r5900.hi;
-	auto& reg_source2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	// Indexes 0 and 2 get copied.
-	sdword tempValue;
-	sword result;
+    auto clamp = [] (const uword lo, const uword hi) -> udword
+    {
+        udword dhi = static_cast<udword>(hi) << 32;
+        udword dlo = static_cast<udword>(lo);
+        sdword dvalue = static_cast<sdword>(saturate_dword_to_word(static_cast<sdword>(hi | lo)));
+        return static_cast<udword>(dvalue);
+    };
 
-	tempValue = static_cast<sdword>((static_cast<udword>(reg_source1.read_uword(0)) << 32) | static_cast<udword>(reg_source2.read_uword(0)));
-	result = saturating_dword_to_word(tempValue);
-	reg_dest->write_udword(0, result);
+    udword value0 = clamp(lo.read_uword(0), hi.read_uword(0));
+    udword value1 = clamp(lo.read_uword(2), hi.read_uword(2));
 
-	tempValue = static_cast<sdword>((static_cast<udword>(reg_source1.read_uword(2)) << 32) | static_cast<udword>(reg_source2.read_uword(2)));
-	result = saturating_dword_to_word(tempValue);
-	reg_dest->write_udword(1, result);
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PMFHL_UW(const EeCoreInstruction inst) const
@@ -257,19 +268,18 @@ void CEeCoreInterpreter::PMFHL_UW(const EeCoreInstruction inst) const
 	
 	// Rd = (HI, LO). No exceptions.
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	auto& reg_source1 = r.ee.core.r5900.hi;
-	auto& reg_source2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	// Use mappings to implement this instruction, -1 means not used, and >0 number means the index within Rd.
-	sword HIIndex[] = { -1, 1, -1, 3 };
-	sword LOIndex[] = { -1, 0, -1, 2 };
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		if (HIIndex[i] != -1)
-			reg_dest->write_uword(HIIndex[i], reg_source1.read_uword(i));
-		if (LOIndex[i] != -1)
-			reg_dest->write_uword(LOIndex[i], reg_source2.read_uword(i));
-	}
+    uword value0 = lo.read_uword(1);
+    uword value1 = hi.read_uword(1);
+    uword value2 = lo.read_uword(3);
+    uword value3 = hi.read_uword(3);
+
+    reg_dest->write_uword(0, value0);
+    reg_dest->write_uword(1, value1);
+    reg_dest->write_uword(2, value2);
+    reg_dest->write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PMFLO(const EeCoreInstruction inst) const
@@ -302,16 +312,19 @@ void CEeCoreInterpreter::PMTHL_LW(const EeCoreInstruction inst) const
 	
 	// (HI, LO) = Rs. No exceptions.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
-	auto& reg_dest1 = r.ee.core.r5900.hi;
-	auto& reg_dest2 = r.ee.core.r5900.lo;
+	auto& hi = r.ee.core.r5900.hi;
+	auto& lo = r.ee.core.r5900.lo;
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		if (i % 2 == 0)
-			reg_dest2.write_uword(i, reg_source1->read_uword(i));
-		else
-			reg_dest1.write_uword(i - 1, reg_source1->read_uword(i));
-	}
+    uword value0 = reg_source1->read_uword(0);
+    uword value1 = reg_source1->read_uword(1);
+    uword value2 = reg_source1->read_uword(2);
+    uword value3 = reg_source1->read_uword(3);
+
+    lo.write_uword(0, value0);
+    lo.write_uword(2, value2);
+
+    hi.write_uword(0, value1);
+    hi.write_uword(2, value3);
 }
 
 void CEeCoreInterpreter::PMTLO(const EeCoreInstruction inst) const

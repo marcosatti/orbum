@@ -222,12 +222,15 @@ void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt() & 0xF;
+	int shamt = inst.shamt() & 0xF;
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uhword(i, reg_source1->read_uhword(i) << shamt);
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        value[i] = reg_source1->read_uhword(i) << shamt;
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst) const
@@ -239,13 +242,25 @@ void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst) const
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
+
+    auto shift = [](const uword value, const int shamt) -> udword
+    {
+        sdword result = static_cast<sdword>(static_cast<sword>(value << shamt));
+        return static_cast<udword>(result);
+    };
+
+    udword value0 = shift(
+        reg_source1->read_uword(0),
+        reg_source2->read_uword(0) & 0x1F
+    );
 	
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		ubyte shamt = reg_source2->read_uword(i) & 0x1F;
-		sdword result = static_cast<sdword>(reg_source1->read_uword(i) << shamt);
-		reg_dest->write_udword(i / 2, result);
-	}
+    udword value1 = shift(
+        reg_source1->read_uword(2),
+        reg_source2->read_uword(2) & 0x1F
+    );
+
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst) const
@@ -256,12 +271,15 @@ void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt();
+	int shamt = inst.shamt();
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uword(i, reg_source1->read_uword(i) << shamt);
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        value[i] = reg_source1->read_uword(i) << shamt;
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst) const
@@ -272,12 +290,15 @@ void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt() & 0xF;
+	int shamt = inst.shamt() & 0xF;
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uhword(i, static_cast<shword>(reg_source1->read_uhword(i)) >> shamt);
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        value[i] = static_cast<uhword>(static_cast<shword>(reg_source1->read_uhword(i)) >> shamt);
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst) const
@@ -290,12 +311,24 @@ void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		ubyte shamt = reg_source2->read_uword(i) & 0x1F;
-		sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(i)) >> shamt);
-		reg_dest->write_udword(i / 2, result);
-	}
+    auto shift = [](const uword value, const int shamt) -> udword
+    {
+        sdword result = static_cast<sdword>(static_cast<sword>(value) >> shamt);
+        return static_cast<udword>(result);
+    };
+
+    udword value0 = shift(
+        reg_source1->read_uword(0),
+        reg_source2->read_uword(0) & 0x1F
+    );
+
+    udword value1 = shift(
+        reg_source1->read_uword(2),
+        reg_source2->read_uword(2) & 0x1F
+    );
+
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst) const
@@ -306,12 +339,15 @@ void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt();
+    int shamt = inst.shamt();
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uword(i, static_cast<sword>(reg_source1->read_uword(i)) >> shamt);
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        value[i] = static_cast<uword>(static_cast<sword>(reg_source1->read_uword(i)) >> shamt);
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst) const
@@ -322,12 +358,15 @@ void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt() & 0xF;
+    int shamt = inst.shamt() & 0xF;
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uhword(i, reg_source1->read_uhword(i) >> shamt);
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        value[i] = reg_source1->read_uhword(i) >> shamt;
+
+    for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst) const
@@ -340,12 +379,24 @@ void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i += 2)
-	{
-		ubyte shamt = reg_source2->read_uword(i) & 0x1F;
-		sdword result = static_cast<sdword>(reg_source1->read_uword(i) >> shamt);
-		reg_dest->write_udword(i / 2, result);
-	}
+    auto shift = [](const uword value, const int shamt) -> udword
+    {
+        sdword result = static_cast<sdword>(static_cast<sword>(value >> shamt));
+        return static_cast<udword>(result);
+    };
+
+    udword value0 = shift(
+        reg_source1->read_uword(0),
+        reg_source2->read_uword(0) & 0x1F
+    );
+
+    udword value1 = shift(
+        reg_source1->read_uword(2),
+        reg_source2->read_uword(2) & 0x1F
+    );
+
+    reg_dest->write_udword(0, value0);
+    reg_dest->write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst) const
@@ -356,12 +407,15 @@ void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst) const
 	// No Exceptions generated.
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = inst.shamt();
+    int shamt = inst.shamt();
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		reg_dest->write_uword(i, reg_source1->read_uword(i) >> shamt);
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        value[i] = reg_source1->read_uword(i) >> shamt;
+
+    for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst) const
@@ -370,7 +424,7 @@ void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst) const
 	
 	// Rd (lower 128-bits) = (Rs || Rt)(256-bit concatenation) >> SA. Logical shift? Not specified, but assumed to be.
 	// No Exceptions generated.
-	// TODO: check this instruction... were they high when they created this???
+	// TODO: check this instruction... not sure how to make this efficient???
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];

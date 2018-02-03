@@ -4,21 +4,21 @@
 
 #include "Utilities/Utilities.hpp"
 
-uword count_leading_bits(sword value)
+int count_leading_bits(const sword value)
 {
+
 	// If the value is 0, return 32 automatically.
 	if (value == 0)
 		return 32;
 
-	// If the sign bit is 1, we invert the bits to 0 for count-leading-zero.
-	if (value < 0)
-		value = ~value;
+	// If the sign bit is 1, we invert the bits to 0 for count-leading-zero.    
+    sword conditioned = value < 0 ? ~value : value;
 
 	// Perform our count leading zero.
-	uword num_leading_bits = 0;
-	for (int i = CHAR_BIT * sizeof value; i > 0; i--)
+	int num_leading_bits = 0;
+	for (int i = CHAR_BIT * sizeof(conditioned); i > 0; i--)
 	{
-		if ((value & (1 << (i - 1))) == 0)
+		if ((conditioned & (1 << (i - 1))) == 0)
 			num_leading_bits++;
 		else
 			break;
@@ -27,17 +27,17 @@ uword count_leading_bits(sword value)
 	return num_leading_bits;
 }
 
-shword saturating_word_to_hword(sword value)
+shword saturate_word_to_hword(const sword value)
 {
-	if (value > VALUE_SHWORD_MAX)
+	if (value > static_cast<sword>(VALUE_SHWORD_MAX))
 		return VALUE_SHWORD_MAX;
-	else if (value < VALUE_SHWORD_MIN)
+	else if (value < static_cast<sword>(VALUE_SHWORD_MIN))
 		return VALUE_SHWORD_MIN;
 	else 
 		return static_cast<shword>(value);
 }
 
-sword saturating_dword_to_word(sdword value)
+sword saturate_dword_to_word(const sdword value)
 {
 	if (value > VALUE_SWORD_MAX)
 		return VALUE_SWORD_MAX;

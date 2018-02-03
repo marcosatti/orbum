@@ -17,13 +17,20 @@ void CEeCoreInterpreter::PMAXH(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = std::max(val_source2, val_source1); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
-		reg_dest->write_uhword(i, result);
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    auto max = [](const uhword a, const uhword b) -> uhword
+    {
+        shword sa = static_cast<shword>(a);
+        shword sb = static_cast<shword>(b);
+        return static_cast<uhword>(std::max(a, b));
+    };
+
+    for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        value[i] = max(reg_source1->read_uhword(i), reg_source2->read_uhword(i));
+
+    for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst) const
@@ -36,13 +43,20 @@ void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sword result = std::max(val_source2, val_source1); // Format parameters this way as std::max returns parameter 0 if they are equal, and value in Rt is returned according to docs if they are equal.
-		reg_dest->write_uword(i, result);
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    auto max = [](const uword a, const uword b) -> uword
+    {
+        sword sa = static_cast<sword>(a);
+        sword sb = static_cast<sword>(b);
+        return static_cast<uword>(std::max(a, b));
+    };
+
+    for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        value[i] = max(reg_source1->read_uword(i), reg_source2->read_uword(i));
+
+    for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst) const
@@ -55,13 +69,20 @@ void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<shword>(reg_source1->read_uhword(i));
-		auto val_source2 = static_cast<shword>(reg_source2->read_uhword(i));
-		shword result = std::min(val_source1, val_source2); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
-		reg_dest->write_uhword(i, result);
-	}
+    uhword value[NUMBER_HWORDS_IN_QWORD];
+
+    auto max = [](const uhword a, const uhword b) -> uhword
+    {
+        shword sa = static_cast<shword>(a);
+        shword sb = static_cast<shword>(b);
+        return static_cast<uhword>(std::min(a, b));
+    };
+
+    for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        value[i] = max(reg_source1->read_uhword(i), reg_source2->read_uhword(i));
+
+    for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
+        reg_dest->write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst) const
@@ -74,13 +95,20 @@ void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst) const
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-	{
-		auto val_source1 = static_cast<sword>(reg_source1->read_uword(i));
-		auto val_source2 = static_cast<sword>(reg_source2->read_uword(i));
-		sword result = std::min(val_source1, val_source2); // Format parameters this way as std::min returns parameter 0 if they are equal, and value in Rs is returned according to docs if they are equal.
-		reg_dest->write_uword(i, result);
-	}
+    uword value[NUMBER_WORDS_IN_QWORD];
+
+    auto max = [](const uword a, const uword b) -> uword
+    {
+        sword sa = static_cast<sword>(a);
+        sword sb = static_cast<sword>(b);
+        return static_cast<uword>(std::min(a, b));
+    };
+
+    for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        value[i] = max(reg_source1->read_uword(i), reg_source2->read_uword(i));
+
+    for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
+        reg_dest->write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::MAX_S(const EeCoreInstruction inst) const
