@@ -1,4 +1,4 @@
-MipsInstructionInfo INSTRUCTION_TABLE[386] =
+MipsInstructionInfo INSTRUCTION_TABLE[387] =
 {
     { "SLL", 48, CPI_R5900_DEFAULT },
     { "SRL", 49, CPI_R5900_DEFAULT },
@@ -374,7 +374,8 @@ MipsInstructionInfo INSTRUCTION_TABLE[386] =
     { "LWU", 32, CPI_R5900_LOAD },
     { "SB", 33, CPI_R5900_STORE },
     { "SH", 34, CPI_R5900_STORE },
-    { "SWL", 36, CPI_R5900_STORE },
+    { "SWL", 35, CPI_R5900_STORE },
+    { "SW", 36, CPI_R5900_STORE },
     { "SDL", 37, CPI_R5900_STORE },
     { "SDR", 38, CPI_R5900_STORE },
     { "SWR", 39, CPI_R5900_STORE },

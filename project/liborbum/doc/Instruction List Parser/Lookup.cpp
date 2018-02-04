@@ -926,30 +926,32 @@ MipsInstructionInfo lookup(const MipsInstruction & inst)
         return &INSTRUCTION_TABLE[372];
     case 41:
         return &INSTRUCTION_TABLE[373];
-    case 43:
+    case 42:
         return &INSTRUCTION_TABLE[374];
-    case 44:
+    case 43:
         return &INSTRUCTION_TABLE[375];
-    case 45:
+    case 44:
         return &INSTRUCTION_TABLE[376];
-    case 46:
+    case 45:
         return &INSTRUCTION_TABLE[377];
-    case 47:
+    case 46:
         return &INSTRUCTION_TABLE[378];
-    case 49:
+    case 47:
         return &INSTRUCTION_TABLE[379];
-    case 51:
+    case 49:
         return &INSTRUCTION_TABLE[380];
-    case 54:
+    case 51:
         return &INSTRUCTION_TABLE[381];
-    case 55:
+    case 54:
         return &INSTRUCTION_TABLE[382];
-    case 57:
+    case 55:
         return &INSTRUCTION_TABLE[383];
-    case 62:
+    case 57:
         return &INSTRUCTION_TABLE[384];
-    case 63:
+    case 62:
         return &INSTRUCTION_TABLE[385];
+    case 63:
+        return &INSTRUCTION_TABLE[386];
     default:
         throw std::runtime_error("Could not determine instruction");
     }

@@ -64,17 +64,19 @@ def build_instruction_tree(inst_entry):
             'cpi': entry['CPI'],
         }
 
-    if inst_entry['Class'] == 'OPCODE':
+    base_class_name = inst_entry['Class']
+    inst_name = inst_entry['Instruction']
+
+    if dict_deep_find(inst_name, lookup_tree):
+        raise ValueError(f'Instruction {inst_name} already exists.')
+
+    if base_class_name == 'OPCODE':
         insert_entry(lookup_tree, inst_entry)
     else:
         # Find the base class by searching the tree.
-        base_class_name = inst_entry['Class']
-        inst_name = inst_entry['Instruction']
         base_class = dict_deep_find(base_class_name, lookup_tree)
         if not base_class:
             raise ValueError(f'Base class {base_class_name} not found.')
-        if dict_deep_find(inst_name, lookup_tree):
-            raise ValueError(f'Instruction {inst_name} already exists.')
         insert_entry(base_class, inst_entry)
 
 

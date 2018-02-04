@@ -1,6 +1,6 @@
 #include "Resources/Ee/Core/EeCoreInstruction.hpp"
 
-MipsInstructionInfo EE_CORE_INSTRUCTION_TABLE[386] =
+MipsInstructionInfo EE_CORE_INSTRUCTION_TABLE[387] =
 {
 	{ "SLL", 48, EeCoreInstruction::CPI_R5900_DEFAULT },
 	{ "SRL", 49, EeCoreInstruction::CPI_R5900_DEFAULT },
@@ -376,7 +376,8 @@ MipsInstructionInfo EE_CORE_INSTRUCTION_TABLE[386] =
 	{ "LWU", 32, EeCoreInstruction::CPI_R5900_LOAD },
 	{ "SB", 33, EeCoreInstruction::CPI_R5900_STORE },
 	{ "SH", 34, EeCoreInstruction::CPI_R5900_STORE },
-	{ "SWL", 36, EeCoreInstruction::CPI_R5900_STORE },
+	{ "SWL", 35, EeCoreInstruction::CPI_R5900_STORE },
+	{ "SW", 36, EeCoreInstruction::CPI_R5900_STORE },
 	{ "SDL", 37, EeCoreInstruction::CPI_R5900_STORE },
 	{ "SDR", 38, EeCoreInstruction::CPI_R5900_STORE },
 	{ "SWR", 39, EeCoreInstruction::CPI_R5900_STORE },
@@ -389,7 +390,6 @@ MipsInstructionInfo EE_CORE_INSTRUCTION_TABLE[386] =
 	{ "SQC2", 46, EeCoreInstruction::CPI_R5900_STORE },
 	{ "SD", 47, EeCoreInstruction::CPI_R5900_STORE }
 };
-
 
 EeCoreInstruction::EeCoreInstruction(const uword value) :
 	MipsInstruction(value),
@@ -1332,30 +1332,32 @@ MipsInstructionInfo * EeCoreInstruction::lookup() const
 		return &EE_CORE_INSTRUCTION_TABLE[372];
 	case 41:
 		return &EE_CORE_INSTRUCTION_TABLE[373];
-	case 43:
+	case 42:
 		return &EE_CORE_INSTRUCTION_TABLE[374];
-	case 44:
+	case 43:
 		return &EE_CORE_INSTRUCTION_TABLE[375];
-	case 45:
+	case 44:
 		return &EE_CORE_INSTRUCTION_TABLE[376];
-	case 46:
+	case 45:
 		return &EE_CORE_INSTRUCTION_TABLE[377];
-	case 47:
+	case 46:
 		return &EE_CORE_INSTRUCTION_TABLE[378];
-	case 49:
+	case 47:
 		return &EE_CORE_INSTRUCTION_TABLE[379];
-	case 51:
+	case 49:
 		return &EE_CORE_INSTRUCTION_TABLE[380];
-	case 54:
+	case 51:
 		return &EE_CORE_INSTRUCTION_TABLE[381];
-	case 55:
+	case 54:
 		return &EE_CORE_INSTRUCTION_TABLE[382];
-	case 57:
+	case 55:
 		return &EE_CORE_INSTRUCTION_TABLE[383];
-	case 62:
+	case 57:
 		return &EE_CORE_INSTRUCTION_TABLE[384];
-	case 63:
+	case 62:
 		return &EE_CORE_INSTRUCTION_TABLE[385];
+	case 63:
+		return &EE_CORE_INSTRUCTION_TABLE[386];
 	default:
 		throw std::runtime_error("Could not determine instruction");
 	}

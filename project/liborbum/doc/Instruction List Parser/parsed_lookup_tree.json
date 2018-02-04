@@ -2755,6 +2755,13 @@
     "SWL": {
         "type": "instruction",
         "name": "SWL",
+        "class_index": 42,
+        "impl_index": 35,
+        "cpi": "CPI_R5900_STORE"
+    },
+    "SW": {
+        "type": "instruction",
+        "name": "SW",
         "class_index": 43,
         "impl_index": 36,
         "cpi": "CPI_R5900_STORE"
