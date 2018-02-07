@@ -31,6 +31,7 @@ int main(int argc, char * argv[])
 		}
 		catch (std::runtime_error & e)
 		{
+			BOOST_LOG(core.get_logger()) << "Core running fatal error: " << e.what();
 			std::cout << "Core running fatal error: " << e.what() << std::endl;
 		}
 

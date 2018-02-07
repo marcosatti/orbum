@@ -45,7 +45,7 @@ void ByteBus::map(const uptr address, ByteBusMappable * object)
 	while (true)
 	{
 		// Allocate pages within directory if needed.
-		page_table[directory_index].resize(static_cast<size_t>(max_pages_size));
+		page_table[directory_index].resize(static_cast<size_t>(max_pages_size), { 0, nullptr });
 
 		// Map object entry.
 		while (page_index < max_pages_size)
@@ -86,17 +86,32 @@ ByteBus::AddressProperties ByteBus::address_properties(const uptr address) const
 
 const ByteBus::Mapping & ByteBus::mapping_at(const AddressProperties & properties)
 {
-	auto& mapping = page_table[properties.vdn][properties.vpn];
-
 #if defined(BUILD_DEBUG)
-	if (mapping.object == nullptr)
+	auto throw_ = [&]()
 	{
-		uptr address = (properties.vdn << (page_mask.length + offset_mask.length)) 
-			| (properties.vpn << offset_mask.length) 
+		uptr address = (properties.vdn << (page_mask.length + offset_mask.length))
+			| (properties.vpn << offset_mask.length)
 			| (properties.offset);
 		std::string message = str(boost::format("ByteBus nullptr lookup, address (inc. offset) = 0x%08X.") % address);
 		throw std::runtime_error(message);
-	}
+	};
+#endif
+
+#if defined(BUILD_DEBUG)
+	if (properties.vdn > page_table.size())
+		throw_();
+#endif
+	auto& directory = page_table[properties.vdn];
+
+#if defined(BUILD_DEBUG)
+	if (properties.vpn > directory.size())
+		throw_();
+#endif
+	auto& mapping = directory[properties.vpn];
+
+#if defined(BUILD_DEBUG)
+	if (!mapping.object)
+		throw_();
 #endif
 
 	return mapping;
