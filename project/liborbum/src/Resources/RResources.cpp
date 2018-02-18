@@ -212,12 +212,12 @@ void initialise_ee_vpu(RResources * r)
 		r->ee.vpu.vu.unit_0.bus.map(0x4370, &r->ee.vpu.vu.unit_1.p);
 		r->ee.vpu.vu.unit_0.bus.map(0x43A0, &r->ee.vpu.vu.unit_1.pc); // TPC.
 
-		r->ee.vpu.vu.unit_0.bus.cull_memory();
+		r->ee.vpu.vu.unit_0.bus.optimise();
 	}
 	
 	// Init VU1 memory.
 	r->ee.vpu.vu.unit_1.bus.map(0x0000, &r->ee.vpu.vu.unit_1.memory_mem);
-	r->ee.vpu.vu.unit_1.bus.cull_memory();
+	r->ee.vpu.vu.unit_1.bus.optimise();
 
 	// Init VU0 COP0.
 	r->ee.vpu.vu.unit_0.cop0 = &r->ee.core.cop0;
@@ -563,7 +563,7 @@ void initialise_ee(RResources * r)
 			r->ee.bus.map(0x1000F380, &r->sbus_f380);
 		}
 
-		r->ee.bus.cull_memory();
+		r->ee.bus.optimise();
 	}
 }
 
@@ -1658,7 +1658,7 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1D000060, &r->sbus_f260);
 		}
 
-		r->iop.bus.cull_memory();
+		r->iop.bus.optimise();
 	}
 }
 

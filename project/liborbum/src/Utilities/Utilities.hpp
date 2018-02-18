@@ -1,8 +1,17 @@
 #pragma once
 
+#include <limits>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Primitive.hpp"
 #include "Common/Types/FpuFlags.hpp"
+
+/// Returns size of type in terms of number of bits (uses CHAR_BIT).
+template<typename T>
+constexpr int size_bits()
+{
+    return static_cast<int>(sizeof(T) * CHAR_BIT);
+}
 
 /// Formats an IEEE 754 float into a PS2 spec float, by clamping NaN's and +/-Infinity to +/-Fmax and rounding denormalised values towards +/-0.
 /// A PS2 spec float can be thought of as a subset of the IEEE 754 float.

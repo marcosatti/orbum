@@ -5,6 +5,12 @@
 /// Describes a bitfield within a primitive value.
 struct Bitfield
 {
+	constexpr Bitfield() :
+		start(0),
+		length(0)
+	{
+	}
+
 	constexpr Bitfield(const int start, const int length) :
 		start(start),
 		length(length)
@@ -54,6 +60,6 @@ struct Bitfield
 		return !operator==(rhs);
 	}
 
-	const int start;
-	const int length;
+	int start;
+	int length;
 };

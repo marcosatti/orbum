@@ -374,7 +374,7 @@ void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst) const
     auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
 
     reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value0);
+    reg_dest->write_udword(1, value1);
     
     lo.write_udword(0, lo0);
     lo.write_udword(1, lo1);
@@ -411,7 +411,7 @@ void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst) const
     auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
 
     reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value0);
+    reg_dest->write_udword(1, value1);
 
     lo.write_udword(0, lo0);
     lo.write_udword(1, lo1);
