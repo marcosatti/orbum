@@ -3,6 +3,7 @@
 #include "Common/Types/Bus/ByteBus.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Common/Types/Primitive.hpp"
 
 #include "Resources/Ee/Core/REeCore.hpp"
 #include "Resources/Ee/Dmac/REeDmac.hpp"
@@ -42,7 +43,7 @@ public:
 	RVpu vpu;
 
 	/// EE bus space.
-	ByteBus bus;
+	ByteBus<uptr> bus;
 
 	/// Main Memory (32MB).
 	ArrayByteMemory main_memory;

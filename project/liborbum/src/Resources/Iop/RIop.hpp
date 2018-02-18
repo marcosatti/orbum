@@ -4,6 +4,7 @@
 #include "Common/Types/Bus/ByteBus.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
+#include "Common/Types/Primitive.hpp"
 
 #include "Resources/Iop/Core/RIopCore.hpp"
 #include "Resources/Iop/Dmac/RIopDmac.hpp" 
@@ -30,7 +31,7 @@ struct RIop
 	RSio2 sio2;
 
 	/// The IOP physical memory space.
-	ByteBus bus;
+	ByteBus<uptr> bus;
 
 	/// IOP Main Memory (2MB).
 	ArrayByteMemory main_memory;

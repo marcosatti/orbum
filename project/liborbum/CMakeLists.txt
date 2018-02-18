@@ -5,7 +5,6 @@ project(liborbum CXX)
 set(COMMON_SRC_FILES
 	src/Utilities/Utilities.cpp
 	src/Core.cpp
-	src/Common/Types/Bus/ByteBus.cpp
 	src/Common/Types/FifoQueue/FifoQueue.cpp
 	src/Common/Types/Memory/ArrayByteMemory.cpp
 	src/Common/Types/Memory/ArrayHwordMemory.cpp

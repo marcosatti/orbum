@@ -7,6 +7,7 @@
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Common/Types/Register/MapperHwordWordRegister.hpp"
 #include "Common/Types/Mips/MipsCoprocessor.hpp"
+#include "Common/Types/Primitive.hpp"
 
 #include "Resources/Ee/Vpu/Vu/VuUnitRegisters.hpp"
 
@@ -68,7 +69,7 @@ public:
 	/// VU0 contains a physical memory map of its real working space (& mirrors) and the VU1 registers.
 	/// For VU1, it is just a direct map of its real working space (needed to keep it OOP friendly).
 	/// See EE Users Manual page 84.
-	ByteBus bus;
+	ByteBus<uhword> bus;
 	
 	/// Mappers for the VI (Hword) registers to WordRegisters.
 	/// Used by different things, eg: ccr registers for VU0 and bus mappings for VU1.
