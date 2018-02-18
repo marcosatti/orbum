@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <tuple>
 
 #include "Common/Types/Primitive.hpp"
 #include "Common/Types/Bitfield.hpp"
@@ -11,21 +12,11 @@ struct ByteBusMappable;
 /// ByteBus is responsible for converting the PS2's physical memory into host memory.
 /// It is byte-addressable, and can map up to 4 GiB (full 32-bit space).
 /// The mapping method is actually just a 2 level (directory and pages) page table!
-
-/// * Why is two levels used instead of one?
-/// Some mapped storage such as the EE registers are separated only by 16 bytes. This means that in order to support every register, the page size would have to be 16B.
-/// This creates a sort of wasteful memory problem, as we would need to have 4GB / 16B = 268,435,456 page table entries (pointers).
-/// At 8 bytes a pointer (running in 64-bit mode), we would use up 2GB of memory, just for pointers! This is wasteful.
-/// Instead, if we use a two level structure with for example a directory size of 4MB, we only allocate pointers for the directories used.
-/// For the directory table, we require 4GB / 4MB = 1,024 directories, and 1,024 * 8B = 8KB of memory.
-/// For a single directory, we require 4M * 8B = 32MB of memory for pointers. Still not ideal, but certainly not as bad.
-/// However, this works well with the EE physical map, where registers are often clumped together. This means that typically only a handful of directories are created.
-/// The advantage of keeping a page size of 16B is we have more fine grained control of memory, rather than having to allocate a big block of memory.
-/// A similar situation occurs for the IOP's bus space.
+/// The page size is variable (per directory), allowing for minimal memory usage.
 class ByteBus
 {
 public:
-	ByteBus(const int page_mask_length, const int offset_mask_length);
+	ByteBus(const int directory_mask_length);
 
 	/// Map an object onto the bus, starting at the given address.
 	/// The map size is dependant on the object. See ByteBusMappable::bus_size().
@@ -44,40 +35,30 @@ public:
 	void write_uqword(const BusContext context, const uptr address, const uqword value);
 
 	/// Culls the page table to reduce memory footprint.
-	/// Use after all mappings are initialised.
+	/// Use after all mappings are initialised. Reduces the directories 
+	/// overall sizes by cutting off any unused end, and resizes the pages
+	/// for the optimal page size within a directory.
 	void cull_memory();
 
 private:
-	/// Internal bus parameters used when accessing it in order to calcualate
-	/// the correct address. Making them const provides the compiler optimisation
-	/// chances (bus will never be initialised again anyway).
+	/// Internal bus parameters used.
 	const Bitfield directory_mask;
-    const Bitfield page_mask;
-    const Bitfield offset_mask;
 
-	/// Returns (using this bus' context):
-	/// - VDN (virtual directory number).
-	/// - VPN (virtual page number).
-	/// - Offset.
-	struct AddressProperties
-	{
-		usize vdn;
-		usize vpn;
-		usize offset;
-	};
-	AddressProperties address_properties(const uptr address) const;
+	/// Returns the VDN (virtual directory number) for the address 
+	/// given using the Bus' context.
+	size_t get_vdn(const uptr address) const;
 
 	/// Mapping table.
 	/// Structure: [directories] -> [pages] -> mapping object.
 	/// The base address is kept to work out the correct offset later.
-	struct Mapping
-	{
-		uptr base_address;
-		ByteBusMappable * object;
-	};
-	std::vector<std::vector<Mapping>> page_table;
+	/// Initially it is assumed that all pages are using 1 byte page sizes.
+	/// Call cull_memory() after all mappings have been made to increase
+	/// this page size to the optimal value.
+	///                Current  Optimal  Pages           BaseAddr  Object
+	std::vector<std::tuple<int, int, std::vector<std::tuple<uptr, ByteBusMappable*>>>> table;
 
-	/// Given the address properties, performs a lookup in the page table and returns the mapped entry.
-	/// On a nullptr object being retrieved, a runtime_error is thrown (debug builds only).
-	const Mapping & mapping_at(const AddressProperties & properties);
+	/// Given the address properties, performs a lookup in the page
+	/// table and returns the mapped entry. On a nullptr object being 
+	/// retrieved, a runtime_error is thrown (debug builds only).
+	const std::tuple<uptr, ByteBusMappable*> & get_mapping(const uptr address);
 };

@@ -16,6 +16,10 @@ ubyte get_float_exponent(const f32 value);
 /// Example: in 0b1110001..., the answer is 3.
 int count_leading_bits(const sword value);
 
+/// Counts trailing zeros from a 32-bit value.
+/// Example: in 0b...0100, the answer is 2.
+int count_trailing_zeros(const uword value);
+
 /// Saturates values to the next smallest size, if above the maximum value allowed.
 /// Eg: for 0x02345678 to hword, this becomes 0x7FFF;
 shword saturate_word_to_hword(const sword value);

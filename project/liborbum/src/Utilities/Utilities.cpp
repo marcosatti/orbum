@@ -6,7 +6,6 @@
 
 int count_leading_bits(const sword value)
 {
-
 	// If the value is 0, return 32 automatically.
 	if (value == 0)
 		return 32;
@@ -25,6 +24,25 @@ int count_leading_bits(const sword value)
 	}
 
 	return num_leading_bits;
+}
+
+int count_trailing_zeros(const uword value)
+{
+	// If the value is 0, return 32 automatically.
+	if (value == 0)
+		return 32;
+
+	// Perform our count trailing zero.
+	int num_trailing_zeros = 0;
+	for (int i = 0; i < CHAR_BIT * sizeof(value); i++)
+	{
+		if ((value & (1 << i)) == 0)
+			num_trailing_zeros++;
+		else
+			break;
+	}
+
+	return num_trailing_zeros;
 }
 
 shword saturate_word_to_hword(const sword value)

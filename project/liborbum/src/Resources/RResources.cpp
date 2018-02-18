@@ -211,10 +211,13 @@ void initialise_ee_vpu(RResources * r)
 		r->ee.vpu.vu.unit_0.bus.map(0x4360, &r->ee.vpu.vu.unit_1.q);
 		r->ee.vpu.vu.unit_0.bus.map(0x4370, &r->ee.vpu.vu.unit_1.p);
 		r->ee.vpu.vu.unit_0.bus.map(0x43A0, &r->ee.vpu.vu.unit_1.pc); // TPC.
+
+		r->ee.vpu.vu.unit_0.bus.cull_memory();
 	}
 	
 	// Init VU1 memory.
 	r->ee.vpu.vu.unit_1.bus.map(0x0000, &r->ee.vpu.vu.unit_1.memory_mem);
+	r->ee.vpu.vu.unit_1.bus.cull_memory();
 
 	// Init VU0 COP0.
 	r->ee.vpu.vu.unit_0.cop0 = &r->ee.core.cop0;
@@ -559,6 +562,8 @@ void initialise_ee(RResources * r)
 			r->ee.bus.map(0x1000F300, &r->sbus_f300);
 			r->ee.bus.map(0x1000F380, &r->sbus_f380);
 		}
+
+		r->ee.bus.cull_memory();
 	}
 }
 
@@ -1652,6 +1657,8 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1D000040, &r->sbus_f240);
 			r->iop.bus.map(0x1D000060, &r->sbus_f260);
 		}
+
+		r->iop.bus.cull_memory();
 	}
 }
 
@@ -1748,16 +1755,6 @@ void initialise_ee_core(RResources * r)
 	r->ee.core.fpu.fcr[31] = &r->ee.core.fpu.csr;
 }
 
-void cull_bus_size(RResources * r)
-{
-	// Cull every bus used to reduce memory footprint.
-	// TODO: make it so that it's done after each bus is created...
-	r->ee.vpu.vu.unit_0.bus.cull_memory();
-	r->ee.vpu.vu.unit_1.bus.cull_memory();
-	r->ee.bus.cull_memory();
-	r->iop.bus.cull_memory();
-}
-
 void initialise_resources(const std::unique_ptr<RResources> & r)
 {
 	initialise_ee_core(r.get());
@@ -1776,7 +1773,5 @@ void initialise_resources(const std::unique_ptr<RResources> & r)
 
 	initialise_ee(r.get());
 	initialise_iop(r.get());
-
-	cull_bus_size(r.get());
 }
 
