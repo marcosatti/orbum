@@ -13,7 +13,7 @@ VuUnit_Base::VuUnit_Base(const int core_id) :
 	core_id(core_id),
 	vi_zero_register(0, true),
 	vi{nullptr},
-	bus(16) // TODO: fine tune.
+	bus(8) // TODO: fine tune.
 {
 }
 
