@@ -3,8 +3,7 @@
 
 #include "Resources/Ee/Core/EeCoreTlb.hpp"
 
-EeCoreTlb::EeCoreTlb() :
-    last_used_index(0)
+EeCoreTlb::EeCoreTlb()
 {
 }
 
@@ -12,48 +11,30 @@ int EeCoreTlb::find_tlb_entry_index(const uptr vaddress)
 {
     // A bit of profile guided optimisation here - try searching the most
     // commonly used areas of the TLB first (follows BIOS mapping).
-    
-    if (is_match(vaddress, last_used_index))
-    {
-        return last_used_index;
-    }
-
-    if (is_match(vaddress, last_used_index_older))
-    {
-        std::swap(last_used_index, last_used_index_older);
-        return last_used_index;
-    }
-
-    auto set_lui_and_return = [this](const int index)
-    {
-        last_used_index_older = last_used_index;
-        last_used_index = index;
-        return index;
-    };
 
     // SPR occupies TLB entry 0.
     if (is_match(vaddress, 0))
-        return set_lui_and_return(0);
+        return 0;
 
     // Userspace occupies TLB entries 13 -> 30.
     for (int i = 13; i <= 30; i++)
         if (is_match(vaddress, i))
-            return set_lui_and_return(i);
+            return i;
 
     // Kernel occupies TLB entries 1 -> 12.
     for (int i = 1; i <= 12; i++)
         if (is_match(vaddress, i))
-            return set_lui_and_return(i);
+            return i;
 
     // Extended occupies TLB entries 31 -> 38.
 	for (int i = 31; i < 38; i++)
         if (is_match(vaddress, i))
-            return set_lui_and_return(i);
+            return i;
 
     // Others at 38 -> 47.
     for (int i = 38; i < 47; i++)
         if (is_match(vaddress, i))
-            return set_lui_and_return(i);
+            return i;
 
 	// No match was found, return -1 for the caller to deal with.
 	return -1;

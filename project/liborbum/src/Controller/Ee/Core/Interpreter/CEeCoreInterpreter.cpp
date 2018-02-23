@@ -3,9 +3,10 @@
 #include <atomic>
 #include <boost/format.hpp>
 
+#include "Utilities/Utilities.hpp"
+
 #include "Core.hpp"
 #include "Common/Options.hpp"
-#include "Utilities/Utilities.hpp"
 
 #include "Controller/Ee/Core/Interpreter/CEeCoreInterpreter.hpp"
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
@@ -598,140 +599,149 @@ void CEeCoreInterpreter::handle_mmu_error(const uptr address, const MmuAccess ac
 
 bool CEeCoreInterpreter::translate_vaddress(const uptr virtual_address, const MmuAccess access, uptr & physical_address) const
 {
-	auto& r = core->get_resources();
+    auto fallback = [this](const uptr virtual_address, const MmuAccess access, uptr & physical_address)
+    {
+        auto& r = core->get_resources();
 
-	// This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
-	// I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
-	//  but I'm confident this is what it meant (I also dont see another way to do it).
-	// TODO: try to reduce the spaghetti code-ness of this... however the lookup process is complicated and error propogation is needed, so may not be able to do much.
-	auto& cop0 = r.ee.core.cop0;
-	auto& tlb = r.ee.core.tlb;
+        // This process follows the information and diagram given on page 121 & 122 of the EE Core Users Manual. 
+        // I am unsure if this is exactly what happens, as the information is a bit vague on how to obtain the page mask and ASID, 
+        //  but I'm confident this is what it meant (I also dont see another way to do it).
+        // TODO: try to reduce the spaghetti code-ness of this... however the lookup process is complicated and error propogation is needed, so may not be able to do much.
+        auto& cop0 = r.ee.core.cop0;
+        auto& tlb = r.ee.core.tlb;
 
 #if defined(BUILD_DEBUG)
-	static uword DEBUG_VA_BREAKPOINT = 0xFFFFFFFF;
-	if (virtual_address == DEBUG_VA_BREAKPOINT)
-	{
-		BOOST_LOG(Core::get_logger()) << boost::format("EE MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
-		 	% DEBUG_LOOP_COUNTER % r.ee.core.r5900.pc.read_uword() % DEBUG_VA_BREAKPOINT % (access == READ) ? "READ" : "WRITE";
-	}
+        static uword DEBUG_VA_BREAKPOINT = 0xFFFFFFFF;
+        if (virtual_address == DEBUG_VA_BREAKPOINT)
+        {
+            BOOST_LOG(Core::get_logger()) << boost::format("EE MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).")
+                % DEBUG_LOOP_COUNTER % r.ee.core.r5900.pc.read_uword() % DEBUG_VA_BREAKPOINT % (access == READ) ? "READ" : "WRITE";
+        }
 #endif
 
-	// Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
-	// Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.
-	auto context = cop0.operating_context();
-	if (context == MipsCoprocessor0::OperatingContext::User)
-	{
-		// Operating in user mode.
-		if (!(virtual_address <= Constants::MIPS::MMU::VADDRESS_USER_UPPER_BOUND))
-		{
-			handle_mmu_error(virtual_address, access, ADDRESS, -1);
-			return true;
-		}
-	}
-	else if (context == MipsCoprocessor0::OperatingContext::Supervisor)
-	{
-		// Operating in supervisor mode.
-		if (!((virtual_address >= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_LOWER_BOUND_2 && virtual_address <= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_1)
-			|| (virtual_address <= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_2)))
-		{
-			handle_mmu_error(virtual_address, access, ADDRESS, -1);
-			return true;
-		}
-	}
+        // Stage 1 - determine which CPU context we are in (user, supervisor or kernel) and check address bounds.
+        // Note that a VA is valid over the full address space in kernel mode - there is no need to check bounds.
+        auto context = cop0.operating_context();
+        if (context == MipsCoprocessor0::OperatingContext::User)
+        {
+            // Operating in user mode.
+            if (!(virtual_address <= Constants::MIPS::MMU::VADDRESS_USER_UPPER_BOUND))
+            {
+                handle_mmu_error(virtual_address, access, ADDRESS, -1);
+                return true;
+            }
+        }
+        else if (context == MipsCoprocessor0::OperatingContext::Supervisor)
+        {
+            // Operating in supervisor mode.
+            if (!((virtual_address >= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_LOWER_BOUND_2 && virtual_address <= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_1)
+                || (virtual_address <= Constants::MIPS::MMU::VADDRESS_SUPERVISOR_UPPER_BOUND_2)))
+            {
+                handle_mmu_error(virtual_address, access, ADDRESS, -1);
+                return true;
+            }
+        }
 
-	// Stage 2 - perform TLB lookup and perform checks.
-	// If we are operating in kernel mode, then SOME addreses are unmapped, and we do not need to perform a TLB lookup.
-	if (context == MipsCoprocessor0::OperatingContext::Kernel)
-	{
-		// Test for kseg0
-		if (virtual_address >= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
-		{
-			// We are in kseg0, so to get the physical address we just minus the kseg0 base address of 0x80000000.
-			// We also do not test for the Config.K0 status, as we do not involve caches unless it is an explicit request.
-			physical_address = (virtual_address - Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2);
-			return false;
-		}
+        // Stage 2 - perform TLB lookup and perform checks.
+        // If we are operating in kernel mode, then SOME addreses are unmapped, and we do not need to perform a TLB lookup.
+        if (context == MipsCoprocessor0::OperatingContext::Kernel)
+        {
+            // Test for kseg0
+            if (virtual_address >= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2 && virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_2)
+            {
+                // We are in kseg0, so to get the physical address we just minus the kseg0 base address of 0x80000000.
+                // We also do not test for the Config.K0 status, as we do not involve caches unless it is an explicit request.
+                physical_address = (virtual_address - Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_2);
+                return false;
+            }
 
-		// Test for kseg1
-		if (virtual_address >= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3 && virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_3)
-		{
-			// We are in kseg1, so to get the physical address we just minus the kseg1 base address of 0xA0000000.
-			physical_address = (virtual_address - Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3);
-			return false;
-		}
+            // Test for kseg1
+            if (virtual_address >= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3 && virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_3)
+            {
+                // We are in kseg1, so to get the physical address we just minus the kseg1 base address of 0xA0000000.
+                physical_address = (virtual_address - Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_LOWER_BOUND_3);
+                return false;
+            }
 
-		// Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
-		if (cop0.status.extract_field(EeCoreCop0Register_Status::ERL) == 1) 
-		{
-			if (virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
-			{
-				// We are in kuseg unmapped region, so just return the VA.
-				physical_address = virtual_address;
-				return false;
-			}
-		}
-	}
+            // Test for Status.ERL = 1 (indicating kuseg is unmapped). Note that the VA still has to be within the segment bounds for this to work.
+            if (cop0.status.extract_field(EeCoreCop0Register_Status::ERL) == 1)
+            {
+                if (virtual_address <= Constants::MIPS::MMU::MMU::VADDRESS_KERNEL_UPPER_BOUND_1)
+                {
+                    // We are in kuseg unmapped region, so just return the VA.
+                    physical_address = virtual_address;
+                    return false;
+                }
+            }
+        }
 
-	// Check if its in the TLB and get the information.
-	int tlb_index = tlb.find_tlb_entry_index(virtual_address);
-	if (tlb_index == -1)
-	{
-		handle_mmu_error(virtual_address, access, TLB_REFILL, tlb_index);
-		return true;
-	}
-	const auto& tlb_entry = tlb.tlb_entry_at(tlb_index);
+        // Check if its in the TLB and get the information.
+        int tlb_index = tlb.find_tlb_entry_index(virtual_address);
+        if (tlb_index == -1)
+        {
+            handle_mmu_error(virtual_address, access, TLB_REFILL, tlb_index);
+            return true;
+        }
+        const auto& tlb_entry = tlb.tlb_entry_at(tlb_index);
 
-	// Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
-	// TODO: Check if ASID checking is correct.
-	if (!tlb_entry.g)
-	{
-		// Not a global page map, need to make sure ASID's are the same.
-		if (cop0.entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID) != tlb_entry.asid)
-		{
-			handle_mmu_error(virtual_address, access, TLB_REFILL, tlb_index);
-			return true;
-		}
-	}
+        // Check the global bit, and check ASID if needed (against the ASID value in the EntryHi COP0 register).
+        // TODO: Check if ASID checking is correct.
+        if (!tlb_entry.g)
+        {
+            // Not a global page map, need to make sure ASID's are the same.
+            if (cop0.entryhi.extract_field(EeCoreCop0Register_EntryHi::ASID) != tlb_entry.asid)
+            {
+                handle_mmu_error(virtual_address, access, TLB_REFILL, tlb_index);
+                return true;
+            }
+        }
 
-	// Stage 3 - Assess if the page is valid and it is marked dirty. Also check for the scratchpad ram access.
-	// Check if accessing scratchpad.
-	if (tlb_entry.s)
-	{
-		// As mentioned in the TLB implementation (see the class EeCoreTlb), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
-		// This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
-		physical_address = 0x70000000 + (virtual_address & Constants::MASK_16KB);
-		return false;
-	}
+        // Stage 3 - Assess if the page is valid and it is marked dirty. Also check for the scratchpad ram access.
+        // Check if accessing scratchpad.
+        if (tlb_entry.s)
+        {
+            // As mentioned in the TLB implementation (see the class EeCoreTlb), the scratchpad ram is allocated in the TLB as a continuous block of 4 x 4KB pages (16KB).
+            // This means that the VPN occupies the upper 18 bits, with the 2 next lower bits selecting which 4KB page we are in (0 -> 3).
+            physical_address = 0x70000000 + (virtual_address & Constants::MASK_16KB);
+            return false;
+        }
 
-	// Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
-	// This is done by checking the LSB of the VPN from the original address accessed.
-	ubyte tlb_even_odd_index = (virtual_address & tlb_entry.mask.evenodd_mask) ? 1 : 0;
+        // Need to check now before continuing if the VPN is for a even or odd page (0 = Even, 1 = Odd). 
+        // This is done by checking the LSB of the VPN from the original address accessed.
+        ubyte tlb_even_odd_index = (virtual_address & tlb_entry.mask.evenodd_mask) ? 1 : 0;
 
-	// Check if the entry is valid (V bit)
-	if (!tlb_entry.physical_info[tlb_even_odd_index].v)
-	{
-		handle_mmu_error(virtual_address, access, TLB_INVALID, tlb_index);
-		return true;
-	}
+        // Check if the entry is valid (V bit)
+        if (!tlb_entry.physical_info[tlb_even_odd_index].v)
+        {
+            handle_mmu_error(virtual_address, access, TLB_INVALID, tlb_index);
+            return true;
+        }
 
-	// Check if entry is allowed writes (dirty flag) and raise TLB modified exception if writing occurs.
-	if (!tlb_entry.physical_info[tlb_even_odd_index].d && access == WRITE)
-	{
-		handle_mmu_error(virtual_address, access, TLB_MODIFIED, tlb_index);
-		return true;
-	}
+        // Check if entry is allowed writes (dirty flag) and raise TLB modified exception if writing occurs.
+        if (!tlb_entry.physical_info[tlb_even_odd_index].d && access == WRITE)
+        {
+            handle_mmu_error(virtual_address, access, TLB_MODIFIED, tlb_index);
+            return true;
+        }
 
-	// Stage 4 - calculate final physical address from TLB entry.
-	// Cache access?
-	// TODO: Left unimplemented for now. The location is still refering to main memory.
-	/*
-	if (tlbEntry.physical_info[mIndexEvenOdd].mC > 0)
-	{
-	}
-	*/
+        // Stage 4 - calculate final physical address from TLB entry.
+        // Cache access?
+        // TODO: Left unimplemented for now. The location is still refering to main memory.
+        /*
+        if (tlbEntry.physical_info[mIndexEvenOdd].mC > 0)
+        {
+        }
+        */
 
-	// We are accessing main memory - combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
-	uword offset_mask = (tlb_entry.mask.pagemask << 12) | 0xFFF;
-	physical_address = ((tlb_entry.physical_info[tlb_even_odd_index].pfn << 12) | (virtual_address & offset_mask));
-	return false;
+        // We are accessing main memory - combine PFN with offset using the TLB entry mask, to get the physical address (PhyAddr = PFN (shifted) | Offset).
+        uword offset_mask = (tlb_entry.mask.pagemask << 12) | 0xFFF;
+        physical_address = ((tlb_entry.physical_info[tlb_even_odd_index].pfn << 12) | (virtual_address & offset_mask));
+        return false;
+    };
+
+    auto& r = core->get_resources();
+    auto& translation_cache = r.ee.core.translation_cache;
+    auto& status = r.ee.core.cop0.status;
+    
+    return translation_cache.lookup(status.operating_context, virtual_address, access, physical_address, fallback);
 }

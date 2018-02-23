@@ -40,10 +40,5 @@ private:
 
     /// Checks whether the given virtual address matches the TLB entry by index.
     bool is_match(const uptr vaddress, const int index) const;
-
-    /// TLB lookup cache to speed up matching.
-    /// These indexes are tried first before considering the others.
-    int last_used_index;
-    int last_used_index_older;
 };
 

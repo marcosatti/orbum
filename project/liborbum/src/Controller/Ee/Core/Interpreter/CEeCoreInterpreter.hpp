@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Constants.hpp"
+#include "Common/Types/Mips/MmuAccess.hpp"
 
 #include "Controller/CController.hpp"
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
@@ -949,7 +950,6 @@ public:
 
 	/// Internal types used within/to access MMU.
 	enum MmuError { ADDRESS, TLB_REFILL, TLB_INVALID, TLB_MODIFIED };
-	enum MmuAccess { READ, WRITE };
 
 	/// Converts a given MmuError and MmuAccess to an EeCoreException and handles it (through handle_exception()).
 	/// Also sets the required COP0 TLB information.
