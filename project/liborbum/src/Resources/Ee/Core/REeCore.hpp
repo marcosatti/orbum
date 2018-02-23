@@ -32,5 +32,5 @@ struct REeCore
 	ArrayByteMemory scratchpad_memory;
 
     /// Emulator address translation cache.
-    TranslationCache<128, uptr> translation_cache;
+    TranslationCache<3, uptr> translation_cache;
 };

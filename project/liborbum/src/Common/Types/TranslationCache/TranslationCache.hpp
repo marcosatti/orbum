@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <array>
 #include <functional>
+#include <iostream>
+#include <string>
+#include <boost/format.hpp>
 
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Mips/MmuAccess.hpp"
@@ -22,9 +25,9 @@ public:
 
     ArrayLruCache() :
         current_cache_size(0),
-        cache{ std::make_tuple(0, 0, 0) },
-        hit_counter(0),
-        miss_counter(0)
+        cache{ std::make_tuple(0, 0, 0) }
+        //hit_counter(0),
+        //miss_counter(0)
     {
     }
 
@@ -38,14 +41,14 @@ public:
         if (entry_it != cache.end())
         {
             // Found an entry, return it.
-            hit_counter++;
+            //hit_counter++;
             std::get<2>(*entry_it) += 1;
             return std::get<1>(*entry_it);
         }
         else
         {
             // Didn't find an entry, return nothing so the caller can deal with.
-            miss_counter++;
+            //miss_counter++;
             return std::nullopt;
         }
     }
@@ -60,12 +63,26 @@ public:
         entry_access_count = 0;
     }
 
+	//std::string debug_sprint_stats() const
+	//{
+	//	double hit_pc = 100.0 * hit_counter / (hit_counter + miss_counter + 1);
+	//	double miss_pc = 100.0 * miss_counter / (hit_counter + miss_counter + 1);
+	//	return boost::str(
+	//		boost::format("Cache stats - total: %d, hits: %d, miss: %d, hits_pc: %.2f%%, miss_pc: %.2f%%.")
+	//		% (hit_counter + miss_counter) 
+	//		% hit_counter
+	//		% miss_counter
+	//		% hit_pc 
+	//		% miss_pc
+	//	);
+	//}
+
 private:
     size_t current_cache_size;
     Cache cache;
 
-    size_t hit_counter;
-    size_t miss_counter;
+    //size_t hit_counter;
+    //size_t miss_counter;
 
     /// Finds the entry with the lowest access count to evict, and returns its position.
     typename Cache::iterator find_eviction_entry()
@@ -97,10 +114,18 @@ class TranslationCache
 {
 public:
     typedef std::function<bool(const AddressTy, const MmuAccess, AddressTy&)> FallbackFn;
-    typedef ArrayLruCache<Size, AddressTy, AddressTy> Cache;
+	typedef ArrayLruCache<Size, AddressTy, AddressTy> Cache;
 
     bool lookup(const OperatingContext context, const AddressTy virtual_address, const MmuAccess access, AddressTy & physical_address, const FallbackFn & fallback_lookup)
     {
+		//lookup_counter++;
+		//if (lookup_counter % 10000000 == 0)
+		//{
+		//	std::cout << "(User) " << user_lru_cache.debug_sprint_stats() << std::endl; 
+		//	std::cout << "(Supervisor) " << supervisor_lru_cache.debug_sprint_stats() << std::endl;
+		//	std::cout << "(Kernel) " << kernel_lru_cache.debug_sprint_stats() << std::endl;
+		//}
+
         const AddressTy va_masked_4kb = virtual_address & (~static_cast<AddressTy>(0xFFF));
 
         Cache * cache;
@@ -137,4 +162,6 @@ private:
     Cache user_lru_cache;
     Cache supervisor_lru_cache;
     Cache kernel_lru_cache;
+
+	//size_t lookup_counter = 0;
 };
