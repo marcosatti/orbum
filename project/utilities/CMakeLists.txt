@@ -9,17 +9,16 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/project/utilities/src/EnumMap.hpp"
 )
 
-add_library(utilities STATIC ${COMMON_SRC_FILES})
+add_library(utilities INTERFACE)
 
-# Allow Visual Studio to recognise this as a project.
-set_target_properties(
+target_sources(
 	utilities
-	PROPERTIES 
-		LINKER_LANGUAGE CXX
+	INTERFACE 
+		"${COMMON_SRC_FILES}"
 )
 
 target_include_directories(
 	utilities 
-	PUBLIC
+	INTERFACE
 		"${CMAKE_SOURCE_DIR}/project/utilities/src"
 )

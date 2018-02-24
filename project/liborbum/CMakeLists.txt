@@ -265,7 +265,7 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Utilities/Utilities.hpp"
 )
 
-add_library(liborbum ${COMMON_SRC_FILES})
+add_library(liborbum "${COMMON_SRC_FILES}")
 
 target_include_directories(
 	liborbum 

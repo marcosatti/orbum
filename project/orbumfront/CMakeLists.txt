@@ -6,12 +6,12 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/project/orbumfront/src/OrbumFront.cpp"
 )
 
-add_executable(orbumfront ${COMMON_SRC_FILES})
+add_executable(orbumfront "${COMMON_SRC_FILES}")
 
 target_link_libraries(
 	orbumfront 
 	PUBLIC
-		${CMAKE_THREAD_LIBS_INIT}
+		"${CMAKE_THREAD_LIBS_INIT}"
 		utilities
 		liborbum
 )
