@@ -91,7 +91,8 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 	const uptr pc_address = r.ee.core.r5900.pc.read_uword();
 	uptr physical_address;
 	bool mmu_error = translate_vaddress(pc_address, READ, physical_address); // TODO: Add error checking for address bus error.
-	EeCoreInstruction inst = EeCoreInstruction(r.ee.bus.read_uword(BusContext::Ee, physical_address));
+	uword raw_inst = r.ee.bus.read_uword(BusContext::Ee, physical_address);
+	EeCoreInstruction inst = EeCoreInstruction(raw_inst);
 
 #if defined(BUILD_DEBUG)
 	static size_t DEBUG_LOOP_BREAKPOINT = 0x1000000143DE40;
@@ -120,7 +121,8 @@ int CEeCoreInterpreter::time_step(const int ticks_available) const
 #endif
 
 	// Run the instruction, which is based on the implementation index.
-	(this->*EECORE_INSTRUCTION_TABLE[inst.get_info()->impl_index])(inst);
+	const int impl_index = inst.get_info()->impl_index;
+	(this->*EECORE_INSTRUCTION_TABLE[impl_index])(inst);
 
 	// Increment PC.
 	r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc);
