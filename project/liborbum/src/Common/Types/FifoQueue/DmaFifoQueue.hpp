@@ -8,11 +8,11 @@
 #include "Common/Types/FifoQueue/FifoQueue.hpp"
 
 /// SPSC-backed DMA FIFO queue.
-template<size_t capacity = 1024>
+template<size_t Size = 1024>
 class DmaFifoQueue : public FifoQueue
 {
 public:
-	typedef SpscQueue<ubyte, capacity> QueueTy;
+	using QueueTy = SpscQueue<ubyte, Size>;
 
 	/// Initialise FIFO queue (set to empty).
 	void initialise() override

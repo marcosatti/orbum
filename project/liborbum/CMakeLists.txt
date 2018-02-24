@@ -276,9 +276,10 @@ target_include_directories(
 # TODO: Sort out later into proper build configurations.
 # Also disable MSVC non-safe copy warnings.
 target_compile_definitions(
-	liborbum PUBLIC 
-	 "_SCL_SECURE_NO_WARNINGS"
-	"BUILD_DEBUG"
+	liborbum 
+	PUBLIC 
+		"_SCL_SECURE_NO_WARNINGS"
+		"BUILD_DEBUG"
 )
 
 target_link_libraries(

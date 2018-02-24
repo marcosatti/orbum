@@ -7,6 +7,7 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/project/utilities/src/TaskExecutor.hpp"
 	"${CMAKE_SOURCE_DIR}/project/utilities/src/Queues.hpp"
 	"${CMAKE_SOURCE_DIR}/project/utilities/src/EnumMap.hpp"
+	"${CMAKE_SOURCE_DIR}/project/utilities/src/Caches.hpp"
 )
 
 add_library(utilities INTERFACE)
@@ -21,4 +22,10 @@ target_include_directories(
 	utilities 
 	INTERFACE
 		"${CMAKE_SOURCE_DIR}/project/utilities/src"
+)
+
+target_link_libraries(
+	utilities 
+	INTERFACE
+		Boost::boost
 )
