@@ -4,11 +4,11 @@
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
-void CVuInterpreter::NOP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::NOP(VuUnit_Base * unit, const VuInstruction inst)
 {
 }
 
-void CVuInterpreter::CLIP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::CLIP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -18,7 +18,7 @@ void CVuInterpreter::CLIP(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::RINIT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::RINIT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -28,7 +28,7 @@ void CVuInterpreter::RINIT(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::RGET(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::RGET(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -38,7 +38,7 @@ void CVuInterpreter::RGET(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::RNEXT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::RNEXT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -48,7 +48,7 @@ void CVuInterpreter::RNEXT(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::RXOR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::RXOR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -58,7 +58,7 @@ void CVuInterpreter::RXOR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::WAITQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::WAITQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -68,7 +68,7 @@ void CVuInterpreter::WAITQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBEQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBEQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -78,7 +78,7 @@ void CVuInterpreter::IBEQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBGEZ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBGEZ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -88,7 +88,7 @@ void CVuInterpreter::IBGEZ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBGTZ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBGTZ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -98,7 +98,7 @@ void CVuInterpreter::IBGTZ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBLEZ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBLEZ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -108,7 +108,7 @@ void CVuInterpreter::IBLEZ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBLTZ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBLTZ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -118,7 +118,7 @@ void CVuInterpreter::IBLTZ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IBNE(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IBNE(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -128,7 +128,7 @@ void CVuInterpreter::IBNE(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::B(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::B(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -138,7 +138,7 @@ void CVuInterpreter::B(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::BAL(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::BAL(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -148,7 +148,7 @@ void CVuInterpreter::BAL(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::JR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::JR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -158,7 +158,7 @@ void CVuInterpreter::JR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::JALR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::JALR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -168,7 +168,7 @@ void CVuInterpreter::JALR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::WAITP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::WAITP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -178,7 +178,7 @@ void CVuInterpreter::WAITP(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::XGKICK(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::XGKICK(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -188,7 +188,7 @@ void CVuInterpreter::XGKICK(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::XTOP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::XTOP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -198,7 +198,7 @@ void CVuInterpreter::XTOP(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::XITOP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::XITOP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::AND(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::AND(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -18,7 +18,7 @@ void CEeCoreInterpreter::AND(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) & reg_source2->read_udword(0));
 }
 
-void CEeCoreInterpreter::ANDI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ANDI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -31,7 +31,7 @@ void CEeCoreInterpreter::ANDI(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) & imm);
 }
 
-void CEeCoreInterpreter::NOR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::NOR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -44,7 +44,7 @@ void CEeCoreInterpreter::NOR(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, ~(reg_source1->read_udword(0) | reg_source2->read_udword(0)));
 }
 
-void CEeCoreInterpreter::OR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::OR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -57,7 +57,7 @@ void CEeCoreInterpreter::OR(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) | reg_source2->read_udword(0));
 }
 
-void CEeCoreInterpreter::ORI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ORI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -70,7 +70,7 @@ void CEeCoreInterpreter::ORI(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) | imm);
 }
 
-void CEeCoreInterpreter::XOR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::XOR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -83,7 +83,7 @@ void CEeCoreInterpreter::XOR(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) ^ reg_source2->read_udword(0));
 }
 
-void CEeCoreInterpreter::XORI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::XORI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -96,7 +96,7 @@ void CEeCoreInterpreter::XORI(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) ^ imm);
 }
 
-void CEeCoreInterpreter::PAND(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PAND(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -113,7 +113,7 @@ void CEeCoreInterpreter::PAND(const EeCoreInstruction inst) const
 	reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -130,7 +130,7 @@ void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst) const
 	reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::POR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::POR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -147,7 +147,7 @@ void CEeCoreInterpreter::POR(const EeCoreInstruction inst) const
 	reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

@@ -1,7 +1,7 @@
 #pragma once
 
 /// All EE Core exceptions in terms of EXCCODE(2)
-/// See page 94 of the EE Core Users Manual. value.
+/// See page 94 of the EE Core Users Manual.
 enum class EeCoreException
 {
     // Level 1.

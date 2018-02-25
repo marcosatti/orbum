@@ -18,56 +18,56 @@ class CIopDmac : public CController
 public:
 	CIopDmac(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 	
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 	
 	/// Check through the channels and initate data transfers.
 	/// If a channel is enabled for transfer, data units (32-bit) are sent.
-	int time_step(const int ticks_available) const;
+	int time_step(const int ticks_available);
 
 	/////////////////////////////////
 	// DMAC Logical Mode Functions //
 	/////////////////////////////////
 
 	/// Do a normal/block logical mode transfer through the specified DMA channel.
-	bool transfer_normal_burst(IopDmacChannel & channel) const;
+	bool transfer_normal_burst(IopDmacChannel & channel);
 
 	/// Do a normal/slice logical mode transfer through the specified DMA channel.
-	bool transfer_normal_slice(IopDmacChannel & channel) const;
+	bool transfer_normal_slice(IopDmacChannel & channel);
 
 	/// Do a chain logical mode transfer through the specified DMA channel.
-	bool transfer_chain(IopDmacChannel & channel) const;
+	bool transfer_chain(IopDmacChannel & channel);
 
 	///////////////////////////
 	// DMAC Helper Functions //
 	///////////////////////////
 
 	/// Checks if there is an DMA transfer interrupt pending, and handles the interrupting of the IOP Core (through the INTC).
-	void handle_interrupt_check() const;
+	void handle_interrupt_check();
 
 	/// Transfers data units (32-bits) between mem <-> channel.
 	/// Returns the number of data units transfered.
 	/// On the condition that the channel FIFO is empty (source) or full (drain), returns 0.
-	int transfer_data(IopDmacChannel & channel) const;
+	int transfer_data(IopDmacChannel & channel);
 
 	/// Sets the DMAC and channel state for suspend conditions.
-	void set_state_suspended(IopDmacChannel & channel) const;
+	void set_state_suspended(IopDmacChannel & channel);
 
 	/// Returns if the channel is enabled, based on the index (use PCR0 or PCR1).
-	bool is_channel_enabled(IopDmacChannel & channel) const;
+	bool is_channel_enabled(IopDmacChannel & channel);
 
 	/// Returns if the channel is enabled for an IRQ tag interrupt (checks PCR1).
-	bool is_channel_irq_enabled(IopDmacChannel & channel) const;
+	bool is_channel_irq_enabled(IopDmacChannel & channel);
 
 	/////////////////////////////////
 	// Chain Mode Helper Functions //
 	/////////////////////////////////
 
 	/// Sets mDMAtag to the tag from the TADR register.
-	bool read_chain_source_tag(IopDmacChannel & channel) const;
+	bool read_chain_source_tag(IopDmacChannel & channel);
 
 	/// Sets mDMAtag to the tag from the channel queue.
-	bool read_chain_dest_tag(IopDmacChannel & channel) const;
+	bool read_chain_dest_tag(IopDmacChannel & channel);
 };

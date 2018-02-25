@@ -17,56 +17,56 @@ class CVif : public CController
 public:
 	CVif(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 	
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 
 	/// Steps through the VIF core state:
 	/// - Check the FIFO queue and process data if available.
-	int time_step(const int ticks_available) const;
+	int time_step(const int ticks_available);
 
 	/// VIFcode handler functions.
 	/// See EE Users Manual page 87 onwards.
-	void INSTRUCTION_UNSUPPORTED(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void NOP(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void BASE(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void ITOP(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void STMOD(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MSKPATH3(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MARK(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void FLUSHE(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void FLUSH(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void FLUSHA(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MSCAL(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MSCNT(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MSCALF(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void STMASK(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void STROW(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void STCOL(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void MPG(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void DIRECT(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void DIRECTHL(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_S_32(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_S_16(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_S_8(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V2_32(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V2_16(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V2_8(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V3_32(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V3_16(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V3_8(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V4_32(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V4_16(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V4_8(VifUnit_Base * unit, const VifcodeInstruction inst) const;
-	void UNPACK_V4_5(VifUnit_Base * unit, const VifcodeInstruction inst) const;
+	void INSTRUCTION_UNSUPPORTED(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void NOP(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void BASE(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void ITOP(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void STMOD(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MSKPATH3(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MARK(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void FLUSHE(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void FLUSH(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void FLUSHA(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MSCAL(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MSCNT(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MSCALF(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void STMASK(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void STROW(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void STCOL(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void MPG(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void DIRECT(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void DIRECTHL(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_S_32(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_S_16(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_S_8(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V2_32(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V2_16(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V2_8(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V3_32(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V3_16(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V3_8(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V4_32(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V4_16(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V4_8(VifUnit_Base * unit, const VifcodeInstruction inst);
+	void UNPACK_V4_5(VifUnit_Base * unit, const VifcodeInstruction inst);
 
 	/// Static arrays needed to call the appropriate VIFcode handler function.
 	/// In total there are 34 unique instructions, based on the VIFcodeInstructionTable unique index.
-	void(CVif::* INSTRUCTION_TABLE[Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])(VifUnit_Base * unit, const VifcodeInstruction inst) const =
+	void(CVif::* INSTRUCTION_TABLE[Constants::EE::VPU::VIF::NUMBER_INSTRUCTIONS])(VifUnit_Base * unit, const VifcodeInstruction inst) =
 	{
 		&CVif::INSTRUCTION_UNSUPPORTED,
 		&CVif::NOP,

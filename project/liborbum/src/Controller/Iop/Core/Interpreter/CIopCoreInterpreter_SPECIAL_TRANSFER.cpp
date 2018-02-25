@@ -4,11 +4,11 @@
 
 #include "Resources/RResources.hpp"
 
-void CIopCoreInterpreter::MFC0(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MFC0(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
 		return;
 
 	auto& reg_dest = r.iop.core.r3000.gpr[inst.rt()];
@@ -17,11 +17,11 @@ void CIopCoreInterpreter::MFC0(const IopCoreInstruction inst) const
 	reg_dest->write_uword(static_cast<uword>(reg_source->read_uword()));
 }
 
-void CIopCoreInterpreter::MTC0(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MTC0(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
 		return;
 
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rt()];
@@ -30,7 +30,7 @@ void CIopCoreInterpreter::MTC0(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source->read_uword());
 }
 
-void CIopCoreInterpreter::MFHI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MFHI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -41,7 +41,7 @@ void CIopCoreInterpreter::MFHI(const IopCoreInstruction inst) const
 	reg_dest->write_uword(hi.read_uword());
 }
 
-void CIopCoreInterpreter::MFLO(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MFLO(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -52,7 +52,7 @@ void CIopCoreInterpreter::MFLO(const IopCoreInstruction inst) const
 	reg_dest->write_uword(lo.read_uword());
 }
 
-void CIopCoreInterpreter::MTHI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MTHI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -63,7 +63,7 @@ void CIopCoreInterpreter::MTHI(const IopCoreInstruction inst) const
 	hi.write_uword(reg_source1->read_uword());
 }
 
-void CIopCoreInterpreter::MTLO(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MTLO(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

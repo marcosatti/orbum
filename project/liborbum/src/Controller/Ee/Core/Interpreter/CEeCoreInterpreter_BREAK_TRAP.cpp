@@ -8,13 +8,13 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::BREAK(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BREAK(const EeCoreInstruction inst)
 {
 	// EXCEPTION(BREAKPOINT)
 	handle_exception(EeCoreException::EX_BREAK);
 }
 
-void CEeCoreInterpreter::SYSCALL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SYSCALL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -36,7 +36,7 @@ void CEeCoreInterpreter::SYSCALL(const EeCoreInstruction inst) const
 	handle_exception(EeCoreException::EX_SYSTEMCALL);
 }
 
-void CEeCoreInterpreter::TEQ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TEQ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -51,7 +51,7 @@ void CEeCoreInterpreter::TEQ(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TEQI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TEQI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -65,7 +65,7 @@ void CEeCoreInterpreter::TEQI(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TGE(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TGE(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -80,7 +80,7 @@ void CEeCoreInterpreter::TGE(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TGEI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TGEI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -94,7 +94,7 @@ void CEeCoreInterpreter::TGEI(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TGEIU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TGEIU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -108,7 +108,7 @@ void CEeCoreInterpreter::TGEIU(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TGEU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TGEU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -123,7 +123,7 @@ void CEeCoreInterpreter::TGEU(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TLT(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLT(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -138,7 +138,7 @@ void CEeCoreInterpreter::TLT(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TLTI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLTI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -152,7 +152,7 @@ void CEeCoreInterpreter::TLTI(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TLTIU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLTIU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -166,7 +166,7 @@ void CEeCoreInterpreter::TLTIU(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TLTU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLTU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -178,7 +178,7 @@ void CEeCoreInterpreter::TLTU(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TNE(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TNE(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -193,7 +193,7 @@ void CEeCoreInterpreter::TNE(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::TNEI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TNEI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -207,7 +207,7 @@ void CEeCoreInterpreter::TNEI(const EeCoreInstruction inst) const
 		handle_exception(EeCoreException::EX_TRAP);
 }
 
-void CEeCoreInterpreter::ERET(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ERET(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

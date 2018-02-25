@@ -8,13 +8,13 @@
 
 #include "Resources/RResources.hpp"
 
-void CIopCoreInterpreter::BREAK(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BREAK(const IopCoreInstruction inst)
 {
 	// EXCEPTION(BREAKPOINT)
 	handle_exception(IopCoreException::EX_BREAK);
 }
 
-void CIopCoreInterpreter::SYSCALL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SYSCALL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 
@@ -35,55 +35,55 @@ void CIopCoreInterpreter::SYSCALL(const IopCoreInstruction inst) const
 	handle_exception(IopCoreException::EX_SYSTEMCALL);
 }
 
-void CIopCoreInterpreter::TLBP(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::TLBP(const IopCoreInstruction inst)
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void CIopCoreInterpreter::TLBR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::TLBR(const IopCoreInstruction inst)
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void CIopCoreInterpreter::TLBWI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::TLBWI(const IopCoreInstruction inst)
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void CIopCoreInterpreter::TLBWR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::TLBWR(const IopCoreInstruction inst)
 {
 	throw std::runtime_error("IOP TLB instructions not implemented.");
 }
 
-void CIopCoreInterpreter::LWC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::LWC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::SWC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SWC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CFC0(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CFC0(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CTC0(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CTC0(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::RFE(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::RFE(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 
@@ -100,175 +100,175 @@ void CIopCoreInterpreter::RFE(const IopCoreInstruction inst) const
 	r.iop.core.cop0.cause.clear_all_irq();
 }
 
-void CIopCoreInterpreter::RTPS(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::RTPS(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCLIP(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCLIP(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::OP(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::OP(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::DPCS(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::DPCS(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::INTPL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::INTPL(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::MVMVA(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MVMVA(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCDS(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCDS(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CDP(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CDP(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCDT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCDT(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCCS(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCCS(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CC(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CC(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCS(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCS(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::NCT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NCT(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::SQR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SQR(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::DCPL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::DCPL(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::DPCT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::DPCT(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::AVSZ3(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::AVSZ3(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::AVSZ4(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::AVSZ4(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::RTPT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::RTPT(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::GPF(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::GPF(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::GPL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::GPL(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::MFC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MFC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CFC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CFC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::MTC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MTC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;
 #endif
 }
 
-void CIopCoreInterpreter::CTC2(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::CTC2(const IopCoreInstruction inst)
 {
 #if defined(BUILD_DEBUG)
 	BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) Unknown R3000 opcode encountered (%s)!") % __FILENAME__ % __LINE__ % __FUNCTION__;

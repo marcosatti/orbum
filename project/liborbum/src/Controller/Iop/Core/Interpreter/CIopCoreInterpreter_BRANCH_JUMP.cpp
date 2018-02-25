@@ -4,7 +4,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CIopCoreInterpreter::BEQ(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BEQ(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 
@@ -20,7 +20,7 @@ void CIopCoreInterpreter::BEQ(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::BGEZ(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BGEZ(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -34,7 +34,7 @@ void CIopCoreInterpreter::BGEZ(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::BGEZAL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BGEZAL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -51,7 +51,7 @@ void CIopCoreInterpreter::BGEZAL(const IopCoreInstruction inst) const
 	}
 }
 
-void CIopCoreInterpreter::BGTZ(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BGTZ(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -65,7 +65,7 @@ void CIopCoreInterpreter::BGTZ(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::BLEZ(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BLEZ(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -79,7 +79,7 @@ void CIopCoreInterpreter::BLEZ(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::BLTZ(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BLTZ(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -93,7 +93,7 @@ void CIopCoreInterpreter::BLTZ(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::BLTZAL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BLTZAL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -110,7 +110,7 @@ void CIopCoreInterpreter::BLTZAL(const IopCoreInstruction inst) const
 	}
 }
 
-void CIopCoreInterpreter::BNE(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::BNE(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -126,7 +126,7 @@ void CIopCoreInterpreter::BNE(const IopCoreInstruction inst) const
 		r.iop.core.r3000.bdelay.set_branch_itype(r.iop.core.r3000.pc, offset);
 }
 
-void CIopCoreInterpreter::J(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::J(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -134,7 +134,7 @@ void CIopCoreInterpreter::J(const IopCoreInstruction inst) const
 	r.iop.core.r3000.bdelay.set_branch_jtype(r.iop.core.r3000.pc, inst.addr());
 }
 
-void CIopCoreInterpreter::JR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::JR(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -143,7 +143,7 @@ void CIopCoreInterpreter::JR(const IopCoreInstruction inst) const
 	r.iop.core.r3000.bdelay.set_branch_direct(reg_source1->read_uword());
 }
 
-void CIopCoreInterpreter::JAL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::JAL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -153,7 +153,7 @@ void CIopCoreInterpreter::JAL(const IopCoreInstruction inst) const
 	r.iop.core.r3000.bdelay.set_branch_jtype(r.iop.core.r3000.pc, inst.addr());
 }
 
-void CIopCoreInterpreter::JALR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::JALR(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

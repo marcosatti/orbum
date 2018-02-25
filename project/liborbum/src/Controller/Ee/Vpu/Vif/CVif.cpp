@@ -8,7 +8,7 @@ CVif::CVif(Core * core) :
 {
 }
 
-void CVif::handle_event(const ControllerEvent & event) const
+void CVif::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -26,7 +26,7 @@ void CVif::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CVif::time_to_ticks(const double time_us) const
+int CVif::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Vif]);
 	
@@ -43,7 +43,7 @@ int CVif::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CVif::time_step(const int ticks_available) const
+int CVif::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 
@@ -91,143 +91,143 @@ int CVif::time_step(const int ticks_available) const
 	return 1;
 }
 
-void CVif::INSTRUCTION_UNSUPPORTED(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::INSTRUCTION_UNSUPPORTED(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 	throw std::runtime_error("VIFcode CMD field was invalid! Please fix.");
 }
 
-void CVif::NOP(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::NOP(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::BASE(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::BASE(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::ITOP(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::ITOP(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::STMOD(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::STMOD(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MSKPATH3(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MSKPATH3(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MARK(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MARK(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::FLUSHE(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::FLUSHE(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::FLUSH(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::FLUSH(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::FLUSHA(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::FLUSHA(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MSCAL(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MSCAL(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MSCNT(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MSCNT(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MSCALF(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MSCALF(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::STMASK(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::STMASK(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::STROW(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::STROW(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::STCOL(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::STCOL(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::MPG(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::MPG(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::DIRECT(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::DIRECT(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::DIRECTHL(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::DIRECTHL(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_S_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_S_32(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_S_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_S_16(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_S_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_S_8(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V2_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V2_32(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V2_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V2_16(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V2_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V2_8(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V3_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V3_32(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V3_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V3_16(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V3_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V3_8(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V4_32(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V4_32(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V4_16(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V4_16(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V4_8(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V4_8(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }
 
-void CVif::UNPACK_V4_5(VifUnit_Base * unit, const VifcodeInstruction inst) const
+void CVif::UNPACK_V4_5(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
 }

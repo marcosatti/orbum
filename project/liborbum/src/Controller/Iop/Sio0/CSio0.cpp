@@ -9,7 +9,7 @@ CSio0::CSio0(Core * core) :
 {
 }
 
-void CSio0::handle_event(const ControllerEvent & event) const
+void CSio0::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CSio0::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CSio0::time_to_ticks(const double time_us) const
+int CSio0::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::SIO0::SIO0_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Sio0]);
 	
@@ -44,7 +44,7 @@ int CSio0::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CSio0::time_step(const int ticks_available) const
+int CSio0::time_step(const int ticks_available)
 {
 	handle_reset_check();
 	handle_irq_check();
@@ -52,7 +52,7 @@ int CSio0::time_step(const int ticks_available) const
 	return ticks_available;
 }
 
-void CSio0::handle_reset_check() const
+void CSio0::handle_reset_check()
 {
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio0.ctrl;
@@ -71,7 +71,7 @@ void CSio0::handle_reset_check() const
 	}
 }
 
-void CSio0::handle_irq_check() const 
+void CSio0::handle_irq_check() 
 {
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio0.ctrl;

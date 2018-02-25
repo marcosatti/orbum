@@ -9,7 +9,7 @@ CVuInterpreter::CVuInterpreter(Core * core) :
 {
 }
 
-void CVuInterpreter::handle_event(const ControllerEvent & event) const
+void CVuInterpreter::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CVuInterpreter::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CVuInterpreter::time_to_ticks(const double time_us) const
+int CVuInterpreter::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::VPU::VU::VU_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Vu]);
 
@@ -44,7 +44,7 @@ int CVuInterpreter::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CVuInterpreter::time_step(const int ticks_available) const
+int CVuInterpreter::time_step(const int ticks_available)
 {
 	// TODO: Not yet implemented.
 	DEBUG_LOOP_COUNTER++;

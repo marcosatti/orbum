@@ -14,18 +14,18 @@ class CCdvd : public CController
 public:
 	CCdvd(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 
 	/// Checks and processes the CDVD state for any actions to be performed.
-	int time_step(const int ticks_available) const;
+	int time_step(const int ticks_available);
 
 	/// N Command instructions and table.
 	/// In theory there can be 256 (ubyte) total instructions, but only a handful of them are implemented.
-	void NCMD_INSTRUCTION_UNKNOWN() const;
-	void(CCdvd::* NCMD_INSTRUCTION_TABLE[Constants::CDVD::NUMBER_NCMD_INSTRUCTIONS])() const =
+	void NCMD_INSTRUCTION_UNKNOWN();
+	void(CCdvd::* NCMD_INSTRUCTION_TABLE[Constants::CDVD::NUMBER_NCMD_INSTRUCTIONS])() =
 	{
 		/* 0x00 */ &CCdvd::NCMD_INSTRUCTION_UNKNOWN,
 		/* 0x01 */ &CCdvd::NCMD_INSTRUCTION_UNKNOWN,
@@ -288,13 +288,13 @@ public:
 	/// S Command instructions and table.
 	/// In theory there can be 256 (ubyte) total instructions, but only a handful of them are implemented.
 	/// Notation: "Mnemonic" (3:1) means 3 parameter bytes in (S_DATA_IN FIFO), 1 result byte out (S_DATA_OUT).
-	void SCMD_INSTRUCTION_UNKNOWN() const;
-	void SCMD_INSTRUCTION_15() const;      // "sceCdForbidDVDP" (0:1).
-	void SCMD_INSTRUCTION_40() const;      // "sceCdOpenConfig" (3:1).
-	void SCMD_INSTRUCTION_41() const;      // "sceCdReadConfig" (0:16).
-	void SCMD_INSTRUCTION_42() const;      // "sceCdWriteConfig" (16:1).
-	void SCMD_INSTRUCTION_43() const;      // "sceCdCloseConfig" (0:1).
-	void(CCdvd::* SCMD_INSTRUCTION_TABLE[Constants::CDVD::NUMBER_SCMD_INSTRUCTIONS])() const =
+	void SCMD_INSTRUCTION_UNKNOWN();
+	void SCMD_INSTRUCTION_15();      // "sceCdForbidDVDP" (0:1).
+	void SCMD_INSTRUCTION_40();      // "sceCdOpenConfig" (3:1).
+	void SCMD_INSTRUCTION_41();      // "sceCdReadConfig" (0:16).
+	void SCMD_INSTRUCTION_42();      // "sceCdWriteConfig" (16:1).
+	void SCMD_INSTRUCTION_43();      // "sceCdCloseConfig" (0:1).
+	void(CCdvd::* SCMD_INSTRUCTION_TABLE[Constants::CDVD::NUMBER_SCMD_INSTRUCTIONS])() =
 	{ 
 		/* 0x00 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x01 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,

@@ -9,7 +9,7 @@ CIopIntc::CIopIntc(Core * core) :
 {
 }
 
-void CIopIntc::handle_event(const ControllerEvent & event) const
+void CIopIntc::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CIopIntc::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CIopIntc::time_to_ticks(const double time_us) const
+int CIopIntc::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::IopIntc]);
 	
@@ -44,7 +44,7 @@ int CIopIntc::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CIopIntc::time_step(const int ticks_available) const
+int CIopIntc::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.intc.ctrl;

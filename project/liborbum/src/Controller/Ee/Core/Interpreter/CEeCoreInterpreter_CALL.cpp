@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::BGEZAL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGEZAL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -22,7 +22,7 @@ void CEeCoreInterpreter::BGEZAL(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::BGEZALL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGEZALL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -41,7 +41,7 @@ void CEeCoreInterpreter::BGEZALL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BLTZAL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLTZAL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -58,7 +58,7 @@ void CEeCoreInterpreter::BLTZAL(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::BLTZALL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLTZALL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -77,7 +77,7 @@ void CEeCoreInterpreter::BLTZALL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::JAL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::JAL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -86,7 +86,7 @@ void CEeCoreInterpreter::JAL(const EeCoreInstruction inst) const
 	r.ee.core.r5900.bdelay.set_branch_jtype(r.ee.core.r5900.pc, inst.addr());
 }
 
-void CEeCoreInterpreter::JALR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::JALR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

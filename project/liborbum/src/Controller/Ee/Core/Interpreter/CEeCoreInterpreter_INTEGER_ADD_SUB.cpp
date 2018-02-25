@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::ADD(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADD(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -19,13 +19,13 @@ void CEeCoreInterpreter::ADD(const EeCoreInstruction inst) const
 	sdword result = val_source1 + val_source2;
 
 	// Check for over/under flow.
-	if (handle_over_or_underflow_32(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_32_check(val_source1, val_source2))
         return;
 	
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::ADDI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADDI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -38,13 +38,13 @@ void CEeCoreInterpreter::ADDI(const EeCoreInstruction inst) const
 	sdword result = val_source + imm;
 
 	// Check for over/under flow.
-	if (handle_over_or_underflow_32(val_source, imm))
+	if (!handle_no_over_or_underflow_32_check(val_source, imm))
         return;
 
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::ADDIU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADDIU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -59,7 +59,7 @@ void CEeCoreInterpreter::ADDIU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::ADDU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADDU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -75,7 +75,7 @@ void CEeCoreInterpreter::ADDU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DADD(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DADD(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -89,13 +89,13 @@ void CEeCoreInterpreter::DADD(const EeCoreInstruction inst) const
 	sdword result = val_source1 + val_source2;
 
 	// Check for over/under flow.
-	if (handle_over_or_underflow_64(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_64_check(val_source1, val_source2))
         return;
 		
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DADDI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DADDI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -108,13 +108,13 @@ void CEeCoreInterpreter::DADDI(const EeCoreInstruction inst) const
 	sdword result = val_source + imm;
 
 	// Check for over/under flow.
-    if (handle_over_or_underflow_64(val_source, imm))
+    if (!handle_no_over_or_underflow_64_check(val_source, imm))
         return;
 
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DADDIU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DADDIU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -129,7 +129,7 @@ void CEeCoreInterpreter::DADDIU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DADDU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DADDU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -145,7 +145,7 @@ void CEeCoreInterpreter::DADDU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DSUB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSUB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -159,13 +159,13 @@ void CEeCoreInterpreter::DSUB(const EeCoreInstruction inst) const
 	sdword result = val_source1 - val_source2;
 
 	// Check for over/under flow.
-	if (handle_over_or_underflow_64(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_64_check(val_source1, val_source2))
 		return;
 
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::DSUBU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSUBU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -181,7 +181,7 @@ void CEeCoreInterpreter::DSUBU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SUB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SUB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -195,13 +195,13 @@ void CEeCoreInterpreter::SUB(const EeCoreInstruction inst) const
 	sdword result = val_source1 - val_source2;
 
 	// Check for over/under flow.
-	if (handle_over_or_underflow_32(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_32_check(val_source1, val_source2))
 		return;
 
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SUBU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SUBU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -217,7 +217,7 @@ void CEeCoreInterpreter::SUBU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::PADDB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -235,7 +235,7 @@ void CEeCoreInterpreter::PADDB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, value[i]);
 }
 
-void CEeCoreInterpreter::PADDH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -253,7 +253,7 @@ void CEeCoreInterpreter::PADDH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PADDSB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDSB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -279,7 +279,7 @@ void CEeCoreInterpreter::PADDSB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, static_cast<sbyte>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDSH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDSH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -305,7 +305,7 @@ void CEeCoreInterpreter::PADDSH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, static_cast<shword>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDSW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDSW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -331,7 +331,7 @@ void CEeCoreInterpreter::PADDSW(const EeCoreInstruction inst) const
 		reg_dest->write_uword(i, static_cast<sword>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDUB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDUB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -355,7 +355,7 @@ void CEeCoreInterpreter::PADDUB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, static_cast<ubyte>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDUH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDUH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -379,7 +379,7 @@ void CEeCoreInterpreter::PADDUH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, static_cast<uhword>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -403,7 +403,7 @@ void CEeCoreInterpreter::PADDUW(const EeCoreInstruction inst) const
 		reg_dest->write_uword(i, static_cast<uword>(value[i]));
 }
 
-void CEeCoreInterpreter::PADDW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADDW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -422,7 +422,7 @@ void CEeCoreInterpreter::PADDW(const EeCoreInstruction inst) const
 		reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PADSBH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PADSBH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -445,7 +445,7 @@ void CEeCoreInterpreter::PADSBH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSUBB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -463,7 +463,7 @@ void CEeCoreInterpreter::PSUBB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSUBH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -481,7 +481,7 @@ void CEeCoreInterpreter::PSUBH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSUBSB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBSB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -507,7 +507,7 @@ void CEeCoreInterpreter::PSUBSB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, static_cast<sbyte>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBSH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBSH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -533,7 +533,7 @@ void CEeCoreInterpreter::PSUBSH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, static_cast<shword>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBSW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBSW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -559,7 +559,7 @@ void CEeCoreInterpreter::PSUBSW(const EeCoreInstruction inst) const
 		reg_dest->write_uword(i, static_cast<sword>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBUB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBUB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -583,7 +583,7 @@ void CEeCoreInterpreter::PSUBUB(const EeCoreInstruction inst) const
 		reg_dest->write_ubyte(i, static_cast<ubyte>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBUH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBUH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -607,7 +607,7 @@ void CEeCoreInterpreter::PSUBUH(const EeCoreInstruction inst) const
 		reg_dest->write_uhword(i, static_cast<uhword>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -631,7 +631,7 @@ void CEeCoreInterpreter::PSUBUW(const EeCoreInstruction inst) const
 		reg_dest->write_uword(i, static_cast<uword>(value[i]));
 }
 
-void CEeCoreInterpreter::PSUBW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSUBW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

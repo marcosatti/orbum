@@ -1,10 +1,6 @@
 #pragma once
 
-#include <Caches.hpp>
-
-#include "Common/Types/Primitive.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
-#include "Common/Types/TranslationCache/TranslationCache.hpp"
 
 #include "Resources/Ee/Core/EeCoreR5900.hpp"
 #include "Resources/Ee/Core/EeCoreCop0.hpp"
@@ -32,7 +28,4 @@ struct REeCore
 
 	/// Scratchpad memory.
 	ArrayByteMemory scratchpad_memory;
-
-    /// Emulator address translation cache.
-    TranslationCache<3, uptr, LruCache> translation_cache;
 };

@@ -12,7 +12,7 @@ CCrtc::CCrtc(Core * core) :
 {
 }
 
-void CCrtc::handle_event(const ControllerEvent & event) const
+void CCrtc::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -30,7 +30,7 @@ void CCrtc::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CCrtc::time_to_ticks(const double time_us) const
+int CCrtc::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT * core->get_options().system_biases[ControllerType::Type::Crtc]);
 	
@@ -47,7 +47,7 @@ int CCrtc::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CCrtc::time_step(const int ticks_available) const
+int CCrtc::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 

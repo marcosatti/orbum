@@ -9,7 +9,7 @@ CEeIntc::CEeIntc(Core * core) :
 {
 }
 
-void CEeIntc::handle_event(const ControllerEvent & event) const
+void CEeIntc::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CEeIntc::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CEeIntc::time_to_ticks(const double time_us) const
+int CEeIntc::time_to_ticks(const double time_us)
 {
 	// TODO: find out for sure.
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeIntc]);
@@ -45,7 +45,7 @@ int CEeIntc::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CEeIntc::time_step(const int ticks_available) const
+int CEeIntc::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 	auto& cause = r.ee.core.cop0.cause;

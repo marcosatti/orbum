@@ -10,7 +10,7 @@ CSpu2::CSpu2(Core * core) :
 {
 }
 
-void CSpu2::handle_event(const ControllerEvent & event) const
+void CSpu2::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -28,7 +28,7 @@ void CSpu2::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CSpu2::time_to_ticks(const double time_us) const
+int CSpu2::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Spu2]);
 	
@@ -46,7 +46,7 @@ int CSpu2::time_to_ticks(const double time_us) const
 }
 
 
-int CSpu2::time_step(const int ticks_available) const
+int CSpu2::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 
@@ -63,7 +63,7 @@ int CSpu2::time_step(const int ticks_available) const
 	return 1;
 }
 
-bool CSpu2::handle_dma_transfer(Spu2Core_Base & spu2_core) const
+bool CSpu2::handle_dma_transfer(Spu2Core_Base & spu2_core)
 {
 	// Check which DMA mode we are in, based on the ATTR.DMAMODE bits. Either manual DMA read/writes or auto DMA read/writes are possible.
 	// If we are using auto DMA, the ADMAS register still needs to be set properly.
@@ -113,7 +113,7 @@ bool CSpu2::handle_dma_transfer(Spu2Core_Base & spu2_core) const
 	return (dma_count > 0);
 }
 
-bool CSpu2::handle_sound_generation(Spu2Core_Base & spu2_core) const
+bool CSpu2::handle_sound_generation(Spu2Core_Base & spu2_core)
 {
 	// Check if core is enabled.
 	if (!spu2_core.attr.extract_field(Spu2CoreRegister_Attr::COREENABLE))
@@ -122,7 +122,7 @@ bool CSpu2::handle_sound_generation(Spu2Core_Base & spu2_core) const
 	return true;
 }
 
-int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core) const
+int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core)
 {
 	// TODO: Check this, its probably wrong. The write addresses are also meant to be used in conjunction with the current read address (double buffer).
 	// Note: TSA is not used here! The write addresses are fixed. See pages 13, 28 and 55 of the SPU2 Overview manual.
@@ -176,12 +176,12 @@ int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core) const
 	return 1;
 }
 
-int CSpu2::transfer_data_adma_read(Spu2Core_Base & spu2_core) const
+int CSpu2::transfer_data_adma_read(Spu2Core_Base & spu2_core)
 {
 	throw std::runtime_error("SPU2 ADMA read not yet implemented. Look into the ATTR.DMAMODE bits, as this might be incorrectly called.");
 }
 
-int CSpu2::transfer_data_mdma_write(Spu2Core_Base & spu2_core) const
+int CSpu2::transfer_data_mdma_write(Spu2Core_Base & spu2_core)
 {
 	// TODO: Check this!
 
@@ -216,12 +216,12 @@ int CSpu2::transfer_data_mdma_write(Spu2Core_Base & spu2_core) const
 	return 1;
 }
 
-int CSpu2::transfer_data_mdma_read(Spu2Core_Base & spu2_core) const
+int CSpu2::transfer_data_mdma_read(Spu2Core_Base & spu2_core)
 {
 	throw std::runtime_error("SPU2 MDMA read not yet implemented. Look into the ATTR.DMAMODE bits, as this might be incorrectly called.");
 }
 
-uhword CSpu2::read_hword_memory(Spu2Core_Base & spu2_core, const uptr address) const
+uhword CSpu2::read_hword_memory(Spu2Core_Base & spu2_core, const uptr address)
 {
 	auto& r = core->get_resources();
 
@@ -235,7 +235,7 @@ uhword CSpu2::read_hword_memory(Spu2Core_Base & spu2_core, const uptr address) c
 	return r.spu2.main_memory.read_uhword(address);
 }
 
-void CSpu2::write_hword_memory(Spu2Core_Base & spu2_core, const uptr address, const uhword value) const
+void CSpu2::write_hword_memory(Spu2Core_Base & spu2_core, const uptr address, const uhword value)
 {
 	auto& r = core->get_resources();
 
@@ -249,7 +249,7 @@ void CSpu2::write_hword_memory(Spu2Core_Base & spu2_core, const uptr address, co
 	r.spu2.main_memory.write_uhword(address, value);
 }
 
-void CSpu2::handle_interrupt_check(Spu2Core_Base & spu2_core) const
+void CSpu2::handle_interrupt_check(Spu2Core_Base & spu2_core)
 {
 	auto& r = core->get_resources();
 

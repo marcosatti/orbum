@@ -6,7 +6,7 @@
 
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 
-void CVuInterpreter::IADD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IADD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// ID = IS + IT.
 	auto& reg_source1 = unit->vi[inst.fs()]; // IS.
@@ -16,7 +16,7 @@ void CVuInterpreter::IADD(VuUnit_Base * unit, const VuInstruction inst) const
 	reg_dest->write_uhword(reg_source1->read_uhword() + reg_source2->read_uhword());
 }
 
-void CVuInterpreter::IADDI(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IADDI(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -26,7 +26,7 @@ void CVuInterpreter::IADDI(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IADDIU(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IADDIU(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -36,7 +36,7 @@ void CVuInterpreter::IADDIU(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IAND(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IAND(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -46,7 +46,7 @@ void CVuInterpreter::IAND(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::IOR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::IOR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -56,7 +56,7 @@ void CVuInterpreter::IOR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ISUB(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ISUB(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -66,7 +66,7 @@ void CVuInterpreter::ISUB(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ISUBIU(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ISUBIU(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

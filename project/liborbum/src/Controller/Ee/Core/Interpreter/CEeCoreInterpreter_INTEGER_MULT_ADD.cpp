@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::MADD(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADD(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -28,13 +28,13 @@ void CEeCoreInterpreter::MADD(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
 }
 
-void CEeCoreInterpreter::MADD1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADD1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MADD(inst);
 }
 
-void CEeCoreInterpreter::MADDU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADDU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -57,13 +57,13 @@ void CEeCoreInterpreter::MADDU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, static_cast<udword>(static_cast<uword>(result & 0xFFFFFFFF)));
 }
 
-void CEeCoreInterpreter::MADDU1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADDU1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MADDU(inst);
 }
 
-void CEeCoreInterpreter::PHMADH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PHMADH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 
@@ -115,7 +115,7 @@ void CEeCoreInterpreter::PHMADH(const EeCoreInstruction inst) const
 	hi.write_uword(2, value[3]);
 }
 
-void CEeCoreInterpreter::PHMSBH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PHMSBH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -167,7 +167,7 @@ void CEeCoreInterpreter::PHMSBH(const EeCoreInstruction inst) const
 	hi.write_uword(2, value[3]);
 }
 
-void CEeCoreInterpreter::PMADDH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMADDH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -215,7 +215,7 @@ void CEeCoreInterpreter::PMADDH(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value[5]);
 }
 
-void CEeCoreInterpreter::PMADDUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMADDUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -254,7 +254,7 @@ void CEeCoreInterpreter::PMADDUW(const EeCoreInstruction inst) const
 	hi.write_udword(1, hi1);
 }
 
-void CEeCoreInterpreter::PMADDW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMADDW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -293,7 +293,7 @@ void CEeCoreInterpreter::PMADDW(const EeCoreInstruction inst) const
 	hi.write_udword(1, hi1);
 }
 
-void CEeCoreInterpreter::PMSUBH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMSUBH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -341,7 +341,7 @@ void CEeCoreInterpreter::PMSUBH(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value[5]);
 }
 
-void CEeCoreInterpreter::PMSUBW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMSUBW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

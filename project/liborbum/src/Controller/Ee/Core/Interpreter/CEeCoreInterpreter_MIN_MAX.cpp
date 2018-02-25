@@ -7,7 +7,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::PMAXH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMAXH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -33,7 +33,7 @@ void CEeCoreInterpreter::PMAXH(const EeCoreInstruction inst) const
         reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -59,7 +59,7 @@ void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst) const
         reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -85,7 +85,7 @@ void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst) const
         reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -111,13 +111,13 @@ void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst) const
         reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::MAX_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MAX_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = MAX(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
 		return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -132,13 +132,13 @@ void CEeCoreInterpreter::MAX_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MIN_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MIN_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = MIN(Fs, Ft), flags set.
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
 		return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs

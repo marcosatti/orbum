@@ -4,7 +4,7 @@
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
-void CVuInterpreter::FSAND(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FSAND(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void CVuInterpreter::FSAND(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FSEQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FSEQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void CVuInterpreter::FSEQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FSOR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FSOR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void CVuInterpreter::FSOR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FSSET(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FSSET(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void CVuInterpreter::FSSET(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FMAND(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FMAND(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void CVuInterpreter::FMAND(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FMEQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FMEQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void CVuInterpreter::FMEQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FMOR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FMOR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void CVuInterpreter::FMOR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FCAND(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FCAND(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -84,7 +84,7 @@ void CVuInterpreter::FCAND(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FCEQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FCEQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -94,7 +94,7 @@ void CVuInterpreter::FCEQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FCOR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FCOR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -104,7 +104,7 @@ void CVuInterpreter::FCOR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FCSET(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FCSET(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -114,7 +114,7 @@ void CVuInterpreter::FCSET(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FCGET(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FCGET(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

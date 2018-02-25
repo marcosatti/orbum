@@ -7,7 +7,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::DSRA(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRA(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -20,7 +20,7 @@ void CEeCoreInterpreter::DSRA(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
 }
 
-void CEeCoreInterpreter::DSLL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSLL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -33,7 +33,7 @@ void CEeCoreInterpreter::DSLL(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
 }
 
-void CEeCoreInterpreter::DSLL32(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSLL32(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -46,7 +46,7 @@ void CEeCoreInterpreter::DSLL32(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
 }
 
-void CEeCoreInterpreter::DSLLV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSLLV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -60,7 +60,7 @@ void CEeCoreInterpreter::DSLLV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
 }
 
-void CEeCoreInterpreter::DSRA32(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRA32(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -73,7 +73,7 @@ void CEeCoreInterpreter::DSRA32(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
 }
 
-void CEeCoreInterpreter::DSRAV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRAV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -87,7 +87,7 @@ void CEeCoreInterpreter::DSRAV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
 }
 
-void CEeCoreInterpreter::DSRL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -100,7 +100,7 @@ void CEeCoreInterpreter::DSRL(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
 }
 
-void CEeCoreInterpreter::DSRL32(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRL32(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -113,7 +113,7 @@ void CEeCoreInterpreter::DSRL32(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
 }
 
-void CEeCoreInterpreter::DSRLV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DSRLV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -127,7 +127,7 @@ void CEeCoreInterpreter::DSRLV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
 }
 
-void CEeCoreInterpreter::SLL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -141,7 +141,7 @@ void CEeCoreInterpreter::SLL(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SLLV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLLV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -156,7 +156,7 @@ void CEeCoreInterpreter::SLLV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SRA(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SRA(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -170,7 +170,7 @@ void CEeCoreInterpreter::SRA(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SRAV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SRAV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -185,7 +185,7 @@ void CEeCoreInterpreter::SRAV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SRL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SRL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -199,7 +199,7 @@ void CEeCoreInterpreter::SRL(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SRLV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SRLV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -214,7 +214,7 @@ void CEeCoreInterpreter::SRLV(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -233,7 +233,7 @@ void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst) const
         reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -263,7 +263,7 @@ void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst) const
     reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -282,7 +282,7 @@ void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst) const
         reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -301,7 +301,7 @@ void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst) const
         reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -331,7 +331,7 @@ void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst) const
     reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -350,7 +350,7 @@ void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst) const
         reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -369,7 +369,7 @@ void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst) const
         reg_dest->write_uhword(i, value[i]);
 }
 
-void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -399,7 +399,7 @@ void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst) const
     reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -418,7 +418,7 @@ void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst) const
         reg_dest->write_uword(i, value[i]);
 }
 
-void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

@@ -9,7 +9,7 @@ CIopTimers::CIopTimers(Core * core) :
 {
 }
 
-void CIopTimers::handle_event(const ControllerEvent & event) const
+void CIopTimers::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -33,7 +33,7 @@ void CIopTimers::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CIopTimers::time_to_ticks(const double time_us) const
+int CIopTimers::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::IopTimers]);
 
@@ -50,7 +50,7 @@ int CIopTimers::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-void CIopTimers::tick_timer(const ControllerEvent::Type ce_type) const
+void CIopTimers::tick_timer(const ControllerEvent::Type ce_type)
 {
 	auto& r = core->get_resources();
 
@@ -96,7 +96,7 @@ void CIopTimers::tick_timer(const ControllerEvent::Type ce_type) const
 	}
 }
 
-void CIopTimers::handle_timer_interrupt(IopTimersUnit_Base * unit, const bool has_overflowed, const bool has_reached_target) const
+void CIopTimers::handle_timer_interrupt(IopTimersUnit_Base * unit, const bool has_overflowed, const bool has_reached_target)
 {
 	auto& r = core->get_resources();
 
@@ -153,7 +153,7 @@ void CIopTimers::handle_timer_interrupt(IopTimersUnit_Base * unit, const bool ha
 	}
 }
 
-bool CIopTimers::handle_timer_overflow(IopTimersUnit_Base * unit) const
+bool CIopTimers::handle_timer_overflow(IopTimersUnit_Base * unit)
 {
 	if (unit->count.is_overflowed_and_reset())
 	{
@@ -168,7 +168,7 @@ bool CIopTimers::handle_timer_overflow(IopTimersUnit_Base * unit) const
 	return false;
 }
 
-bool CIopTimers::handle_timer_target(IopTimersUnit_Base * unit) const
+bool CIopTimers::handle_timer_target(IopTimersUnit_Base * unit)
 {
 	if (unit->count.read_uword() == unit->compare.read_uword())
 	{

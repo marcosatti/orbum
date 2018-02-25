@@ -7,7 +7,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::BEQ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BEQ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -23,7 +23,7 @@ void CEeCoreInterpreter::BEQ(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BEQL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BEQL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -41,7 +41,7 @@ void CEeCoreInterpreter::BEQL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BGEZ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGEZ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -55,7 +55,7 @@ void CEeCoreInterpreter::BGEZ(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BGEZL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGEZL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -71,7 +71,7 @@ void CEeCoreInterpreter::BGEZL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BGTZ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGTZ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -85,7 +85,7 @@ void CEeCoreInterpreter::BGTZ(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BGTZL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BGTZL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -101,7 +101,7 @@ void CEeCoreInterpreter::BGTZL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BLEZ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLEZ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -115,7 +115,7 @@ void CEeCoreInterpreter::BLEZ(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BLEZL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLEZL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -131,7 +131,7 @@ void CEeCoreInterpreter::BLEZL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BLTZ(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLTZ(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -145,7 +145,7 @@ void CEeCoreInterpreter::BLTZ(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BLTZL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BLTZL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -161,7 +161,7 @@ void CEeCoreInterpreter::BLTZL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BNE(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BNE(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -177,7 +177,7 @@ void CEeCoreInterpreter::BNE(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BNEL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BNEL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -195,13 +195,13 @@ void CEeCoreInterpreter::BNEL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BC0F(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC0F(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -215,13 +215,13 @@ void CEeCoreInterpreter::BC0F(const EeCoreInstruction inst) const
 #endif
 }
 
-void CEeCoreInterpreter::BC0FL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC0FL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == false). Coprocessor Unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -235,13 +235,13 @@ void CEeCoreInterpreter::BC0FL(const EeCoreInstruction inst) const
 #endif
 }
 
-void CEeCoreInterpreter::BC0T(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC0T(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -255,13 +255,13 @@ void CEeCoreInterpreter::BC0T(const EeCoreInstruction inst) const
 #endif
 }
 
-void CEeCoreInterpreter::BC0TL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC0TL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TODO: Implement.
 	// BRANCH(CPCOND0 == true). Coprocessor Unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -275,12 +275,12 @@ void CEeCoreInterpreter::BC0TL(const EeCoreInstruction inst) const
 #endif
 }
 
-void CEeCoreInterpreter::BC1F(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC1F(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -289,12 +289,12 @@ void CEeCoreInterpreter::BC1F(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BC1FL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC1FL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// BRANCH(FCR31[C flag] == 0). Coprocessor Unusable exception.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -305,12 +305,12 @@ void CEeCoreInterpreter::BC1FL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::BC1T(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC1T(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -319,12 +319,12 @@ void CEeCoreInterpreter::BC1T(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 }
 
-void CEeCoreInterpreter::BC1TL(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::BC1TL(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// BRANCH(FCR31[C flag] == 1). Coprocessor Unusable exception.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	const shword offset = inst.s_imm();
@@ -335,7 +335,7 @@ void CEeCoreInterpreter::BC1TL(const EeCoreInstruction inst) const
 		r.ee.core.r5900.bdelay.advance_pc(r.ee.core.r5900.pc); // Immediate jump to the instruction at PC + 8 (nullify next instruction).
 }
 
-void CEeCoreInterpreter::J(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::J(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -343,7 +343,7 @@ void CEeCoreInterpreter::J(const EeCoreInstruction inst) const
 	r.ee.core.r5900.bdelay.set_branch_jtype(r.ee.core.r5900.pc, inst.addr());
 }
 
-void CEeCoreInterpreter::JR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::JR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

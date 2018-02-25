@@ -13,22 +13,22 @@ class CIopTimers : public CController
 public:
 	CIopTimers(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 	
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 	
 	/// Updates the timers with the specified clock source type.
-	void tick_timer(const ControllerEvent::Type ce_type) const;
+	void tick_timer(const ControllerEvent::Type ce_type);
 
 	/// Checks the timer status and count values for interrupt conditions.
-	void handle_timer_interrupt(IopTimersUnit_Base * unit, const bool has_overflowed, const bool has_reached_target) const;
+	void handle_timer_interrupt(IopTimersUnit_Base * unit, const bool has_overflowed, const bool has_reached_target);
 
 	/// Checks for overflow conditions and handles certain conditions.
 	/// Returns if a timer overflow event happened.
-	bool handle_timer_overflow(IopTimersUnit_Base * unit) const;
+	bool handle_timer_overflow(IopTimersUnit_Base * unit);
 
 	/// Checks for target conditions and handles certain conditions.
 	/// Returns if a timer target event happened.
-	bool handle_timer_target(IopTimersUnit_Base * unit) const;
+	bool handle_timer_target(IopTimersUnit_Base * unit);
 };

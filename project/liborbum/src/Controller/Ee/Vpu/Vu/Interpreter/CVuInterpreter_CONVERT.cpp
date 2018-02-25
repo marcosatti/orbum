@@ -4,7 +4,7 @@
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
-void CVuInterpreter::FTOI0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FTOI0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void CVuInterpreter::FTOI0(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FTOI4(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FTOI4(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void CVuInterpreter::FTOI4(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FTOI12(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FTOI12(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void CVuInterpreter::FTOI12(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::FTOI15(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::FTOI15(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void CVuInterpreter::FTOI15(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ITOF0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ITOF0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void CVuInterpreter::ITOF0(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ITOF4(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ITOF4(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void CVuInterpreter::ITOF4(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ITOF12(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ITOF12(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void CVuInterpreter::ITOF12(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ITOF15(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ITOF15(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

@@ -8,7 +8,7 @@
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnitRegisters.hpp"
 
-void CVuInterpreter::ABS(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ABS(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -18,7 +18,7 @@ void CVuInterpreter::ABS(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -28,7 +28,7 @@ void CVuInterpreter::ADD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -38,7 +38,7 @@ void CVuInterpreter::ADDi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -48,7 +48,7 @@ void CVuInterpreter::ADDq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::ADDbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -58,31 +58,31 @@ void CVuInterpreter::ADDbc(VuUnit_Base * unit, const VuInstruction inst, const i
 #endif
 }
 
-void CVuInterpreter::ADDbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDbc(unit, inst, 0);
 }
 
-void CVuInterpreter::ADDbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDbc(unit, inst, 1);
 }
 
-void CVuInterpreter::ADDbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDbc(unit, inst, 2);
 }
 
-void CVuInterpreter::ADDbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDbc(unit, inst, 3);
 }
 
-void CVuInterpreter::ADDA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -92,7 +92,7 @@ void CVuInterpreter::ADDA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDAi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -102,7 +102,7 @@ void CVuInterpreter::ADDAi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDAq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -112,7 +112,7 @@ void CVuInterpreter::ADDAq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ADDAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::ADDAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -122,31 +122,31 @@ void CVuInterpreter::ADDAbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::ADDAbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDAbc(unit, inst, 0);
 }
 
-void CVuInterpreter::ADDAbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDAbc(unit, inst, 1);
 }
 
-void CVuInterpreter::ADDAbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDAbc(unit, inst, 2);
 }
 
-void CVuInterpreter::ADDAbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ADDAbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	ADDAbc(unit, inst, 3);
 }
 
-void CVuInterpreter::SUB(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUB(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Fd = Fs - Ft.
 	auto& reg_dest = unit->vf[inst.fd()];
@@ -169,7 +169,7 @@ void CVuInterpreter::SUB(VuUnit_Base * unit, const VuInstruction inst) const
 	}
 }
 
-void CVuInterpreter::SUBi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -179,7 +179,7 @@ void CVuInterpreter::SUBi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SUBq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -189,7 +189,7 @@ void CVuInterpreter::SUBq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SUBbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::SUBbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -199,31 +199,31 @@ void CVuInterpreter::SUBbc(VuUnit_Base * unit, const VuInstruction inst, const i
 #endif
 }
 
-void CVuInterpreter::SUBbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBbc(unit, inst, 0);
 }
 
-void CVuInterpreter::SUBbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBbc(unit, inst, 1);
 }
 
-void CVuInterpreter::SUBbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBbc(unit, inst, 2);
 }
 
-void CVuInterpreter::SUBbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBbc(unit, inst, 3);
 }
 
-void CVuInterpreter::SUBA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -233,7 +233,7 @@ void CVuInterpreter::SUBA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SUBAi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -243,7 +243,7 @@ void CVuInterpreter::SUBAi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SUBAq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -253,7 +253,7 @@ void CVuInterpreter::SUBAq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SUBAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::SUBAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -263,31 +263,31 @@ void CVuInterpreter::SUBAbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::SUBAbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBAbc(unit, inst, 0);
 }
 
-void CVuInterpreter::SUBAbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBAbc(unit, inst, 1);
 }
 
-void CVuInterpreter::SUBAbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBAbc(unit, inst, 2);
 }
 
-void CVuInterpreter::SUBAbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SUBAbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	SUBAbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MUL(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MUL(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -297,7 +297,7 @@ void CVuInterpreter::MUL(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -307,7 +307,7 @@ void CVuInterpreter::MULi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -317,7 +317,7 @@ void CVuInterpreter::MULq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MULbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -327,31 +327,31 @@ void CVuInterpreter::MULbc(VuUnit_Base * unit, const VuInstruction inst, const i
 #endif
 }
 
-void CVuInterpreter::MULbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MULbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MULbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MULbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MULA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -361,7 +361,7 @@ void CVuInterpreter::MULA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULAi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -371,7 +371,7 @@ void CVuInterpreter::MULAi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULAq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -381,7 +381,7 @@ void CVuInterpreter::MULAq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MULAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MULAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -391,31 +391,31 @@ void CVuInterpreter::MULAbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::MULAbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULAbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MULAbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULAbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MULAbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULAbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MULAbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MULAbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MULAbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MADD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -425,7 +425,7 @@ void CVuInterpreter::MADD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -435,7 +435,7 @@ void CVuInterpreter::MADDi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -445,7 +445,7 @@ void CVuInterpreter::MADDq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MADDbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -455,31 +455,31 @@ void CVuInterpreter::MADDbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::MADDbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MADDbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MADDbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MADDbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MADDA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -489,7 +489,7 @@ void CVuInterpreter::MADDA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDAi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -499,7 +499,7 @@ void CVuInterpreter::MADDAi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDAq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -509,7 +509,7 @@ void CVuInterpreter::MADDAq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MADDAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MADDAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -519,31 +519,31 @@ void CVuInterpreter::MADDAbc(VuUnit_Base * unit, const VuInstruction inst, const
 #endif
 }
 
-void CVuInterpreter::MADDAbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDAbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MADDAbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDAbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MADDAbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDAbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MADDAbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MADDAbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MADDAbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MSUB(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUB(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -553,7 +553,7 @@ void CVuInterpreter::MSUB(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -563,7 +563,7 @@ void CVuInterpreter::MSUBi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -573,7 +573,7 @@ void CVuInterpreter::MSUBq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MSUBbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -583,31 +583,31 @@ void CVuInterpreter::MSUBbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::MSUBbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MSUBbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MSUBbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MSUBbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MSUBA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -617,7 +617,7 @@ void CVuInterpreter::MSUBA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBAi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -627,7 +627,7 @@ void CVuInterpreter::MSUBAi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBAq(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAq(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -637,7 +637,7 @@ void CVuInterpreter::MSUBAq(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MSUBAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MSUBAbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -647,31 +647,31 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base * unit, const VuInstruction inst, const
 #endif
 }
 
-void CVuInterpreter::MSUBAbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBAbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MSUBAbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBAbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MSUBAbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBAbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MSUBAbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MSUBAbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MSUBAbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MAX(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAX(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -681,7 +681,7 @@ void CVuInterpreter::MAX(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MAXi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAXi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -691,7 +691,7 @@ void CVuInterpreter::MAXi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MAXbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MAXbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -701,31 +701,31 @@ void CVuInterpreter::MAXbc(VuUnit_Base * unit, const VuInstruction inst, const i
 #endif
 }
 
-void CVuInterpreter::MAXbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAXbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MAXbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MAXbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAXbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MAXbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MAXbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAXbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MAXbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MAXbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MAXbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MAXbc(unit, inst, 3);
 }
 
-void CVuInterpreter::MINI(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINI(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -735,7 +735,7 @@ void CVuInterpreter::MINI(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MINIi(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINIi(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -745,7 +745,7 @@ void CVuInterpreter::MINIi(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MINIbc(VuUnit_Base * unit, const VuInstruction inst, const int idx) const
+void CVuInterpreter::MINIbc(VuUnit_Base * unit, const VuInstruction inst, const int idx)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -755,31 +755,31 @@ void CVuInterpreter::MINIbc(VuUnit_Base * unit, const VuInstruction inst, const 
 #endif
 }
 
-void CVuInterpreter::MINIbc_0(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINIbc_0(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MINIbc(unit, inst, 0);
 }
 
-void CVuInterpreter::MINIbc_1(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINIbc_1(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MINIbc(unit, inst, 1);
 }
 
-void CVuInterpreter::MINIbc_2(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINIbc_2(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MINIbc(unit, inst, 2);
 }
 
-void CVuInterpreter::MINIbc_3(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MINIbc_3(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// Call base function.
 	MINIbc(unit, inst, 3);
 }
 
-void CVuInterpreter::OPMULA(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::OPMULA(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -789,7 +789,7 @@ void CVuInterpreter::OPMULA(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::OPMSUB(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::OPMSUB(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -799,7 +799,7 @@ void CVuInterpreter::OPMSUB(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::DIV(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::DIV(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -809,7 +809,7 @@ void CVuInterpreter::DIV(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SQRT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SQRT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -819,7 +819,7 @@ void CVuInterpreter::SQRT(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::RSQRT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::RSQRT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

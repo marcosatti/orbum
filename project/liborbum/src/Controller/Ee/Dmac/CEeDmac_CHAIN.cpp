@@ -7,12 +7,12 @@
 #include "Resources/Ee/Dmac/EeDmacChannels.hpp"
 #include "Resources/Ee/Dmac/EeDmacChannelRegisters.hpp"
 
-void CEeDmac::CHAIN_TAGID_UNKNOWN(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_TAGID_UNKNOWN(EeDmacChannel & channel)
 {
 	throw std::runtime_error("EE DMAC chain mode called invalid tag ID");
 }
 
-void CEeDmac::CHAIN_SRC_CNT(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_CNT(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after the tag, and reads the next qword as the next tag.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -26,7 +26,7 @@ void CEeDmac::CHAIN_SRC_CNT(EeDmacChannel & channel) const
 	channel.tadr->insert_field(EeDmacChannelRegister_Addr::ADDR, next_tag_addr);
 }
 
-void CEeDmac::CHAIN_SRC_NEXT(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_NEXT(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after the tag, and reads the ADDR field as the next tag.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -40,7 +40,7 @@ void CEeDmac::CHAIN_SRC_NEXT(EeDmacChannel & channel) const
 	channel.tadr->insert_field(EeDmacChannelRegister_Addr::SPR, channel.chcr->dma_tag.spr());
 }
 
-void CEeDmac::CHAIN_SRC_REF(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_REF(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords from ADDR field, and reads the next qword as the tag.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -53,7 +53,7 @@ void CEeDmac::CHAIN_SRC_REF(EeDmacChannel & channel) const
 	channel.tadr->offset(NUMBER_BYTES_IN_QWORD);
 }
 
-void CEeDmac::CHAIN_SRC_REFS(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_REFS(EeDmacChannel & channel)
 {
 	// Set stall control to on (STADR is updated within the main DMAC logic).
 	channel.chcr->tag_stall = true;
@@ -69,7 +69,7 @@ void CEeDmac::CHAIN_SRC_REFS(EeDmacChannel & channel) const
 	channel.tadr->offset(NUMBER_BYTES_IN_QWORD);// SPR flag unchanged within TADR register.
 }
 
-void CEeDmac::CHAIN_SRC_REFE(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_REFE(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords from ADDR, and suspends after packet transfer.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -83,7 +83,7 @@ void CEeDmac::CHAIN_SRC_REFE(EeDmacChannel & channel) const
 	channel.chcr->tag_exit = true;
 }
 
-void CEeDmac::CHAIN_SRC_CALL(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_CALL(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after tag, and pushes the next qword after the tag onto the stack. Sets the next tag to ADDR field.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -109,7 +109,7 @@ void CEeDmac::CHAIN_SRC_CALL(EeDmacChannel & channel) const
 	}
 }
 
-void CEeDmac::CHAIN_SRC_RET(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_RET(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after tag, pops next tag from stack. If stack level = 0, transfers QWC qwords after tag and suspends transfer.
 
@@ -135,7 +135,7 @@ void CEeDmac::CHAIN_SRC_RET(EeDmacChannel & channel) const
 	channel.madr->insert_field(EeDmacChannelRegister_Addr::SPR, channel.tadr->extract_field(EeDmacChannelRegister_Addr::SPR));
 }
 
-void CEeDmac::CHAIN_SRC_END(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_SRC_END(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after tag, and suspends after packet transfer.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -146,7 +146,7 @@ void CEeDmac::CHAIN_SRC_END(EeDmacChannel & channel) const
 	channel.chcr->tag_exit = true;
 }
 
-void CEeDmac::CHAIN_DST_CNT(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_DST_CNT(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and reads the next qword as the next tag.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());
@@ -156,7 +156,7 @@ void CEeDmac::CHAIN_DST_CNT(EeDmacChannel & channel) const
 	channel.madr->insert_field(EeDmacChannelRegister_Addr::SPR, channel.chcr->dma_tag.spr());
 }
 
-void CEeDmac::CHAIN_DST_CNTS(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_DST_CNTS(EeDmacChannel & channel)
 {
 	// Set stall control to on (STADR is updated within the main DMAC logic).
 	channel.chcr->tag_stall = true;
@@ -169,7 +169,7 @@ void CEeDmac::CHAIN_DST_CNTS(EeDmacChannel & channel) const
 	channel.madr->insert_field(EeDmacChannelRegister_Addr::SPR, channel.chcr->dma_tag.spr());
 }
 
-void CEeDmac::CHAIN_DST_END(EeDmacChannel & channel) const
+void CEeDmac::CHAIN_DST_END(EeDmacChannel & channel)
 {
 	// Transfers QWC qwords after the tag to tag.ADDR, and suspends transfer after completing.
 	channel.qwc->write_uword(channel.chcr->dma_tag.qwc());

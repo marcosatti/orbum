@@ -9,7 +9,7 @@ CIpu::CIpu(Core * core) :
 {
 }
 
-void CIpu::handle_event(const ControllerEvent & event) const
+void CIpu::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CIpu::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CIpu::time_to_ticks(const double time_us) const
+int CIpu::time_to_ticks(const double time_us)
 {
 	// TODO: find out for sure.
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Ipu]);
@@ -45,7 +45,7 @@ int CIpu::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CIpu::time_step(const int ticks_available) const
+int CIpu::time_step(const int ticks_available)
 {
 	// Not yet implemented.
 	return ticks_available;

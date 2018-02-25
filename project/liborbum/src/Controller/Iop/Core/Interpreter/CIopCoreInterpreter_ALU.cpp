@@ -4,7 +4,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CIopCoreInterpreter::ADD(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ADD(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -18,13 +18,13 @@ void CIopCoreInterpreter::ADD(const IopCoreInstruction inst) const
 	
 	sword result = val_source1 + val_source2;
 
-	if (handle_over_or_underflow_32(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_32_check(val_source1, val_source2))
         return;
 
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::ADDI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ADDI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -37,13 +37,13 @@ void CIopCoreInterpreter::ADDI(const IopCoreInstruction inst) const
 
 	sword result = val_source + imm;
 
-	if (handle_over_or_underflow_32(val_source, imm))
+	if (!handle_no_over_or_underflow_32_check(val_source, imm))
         return;
 
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::ADDIU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ADDIU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -59,7 +59,7 @@ void CIopCoreInterpreter::ADDIU(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::ADDU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ADDU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -76,7 +76,7 @@ void CIopCoreInterpreter::ADDU(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::SUB(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SUB(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -90,13 +90,13 @@ void CIopCoreInterpreter::SUB(const IopCoreInstruction inst) const
 
 	sword result = val_source1 - val_source2;
 
-	if (handle_over_or_underflow_32(val_source1, val_source2))
+	if (!handle_no_over_or_underflow_32_check(val_source1, val_source2))
         return;
 
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::SUBU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SUBU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -113,7 +113,7 @@ void CIopCoreInterpreter::SUBU(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::DIV(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::DIV(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -153,7 +153,7 @@ void CIopCoreInterpreter::DIV(const IopCoreInstruction inst) const
 	}
 }
 
-void CIopCoreInterpreter::DIVU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::DIVU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -186,7 +186,7 @@ void CIopCoreInterpreter::DIVU(const IopCoreInstruction inst) const
 	}
 }
 
-void CIopCoreInterpreter::MULT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MULT(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -206,7 +206,7 @@ void CIopCoreInterpreter::MULT(const IopCoreInstruction inst) const
 	hi.write_uword(static_cast<sword>((result >> 32) & 0xFFFFFFFF));
 }
 
-void CIopCoreInterpreter::MULTU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::MULTU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -226,7 +226,7 @@ void CIopCoreInterpreter::MULTU(const IopCoreInstruction inst) const
 	hi.write_uword(static_cast<uword>((result >> 32) & 0xFFFFFFFF));
 }
 
-void CIopCoreInterpreter::SLL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -239,7 +239,7 @@ void CIopCoreInterpreter::SLL(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() << shamt);
 }
 
-void CIopCoreInterpreter::SLLV(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLLV(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -253,7 +253,7 @@ void CIopCoreInterpreter::SLLV(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() << shamt);
 }
 
-void CIopCoreInterpreter::SRA(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SRA(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -266,7 +266,7 @@ void CIopCoreInterpreter::SRA(const IopCoreInstruction inst) const
 	reg_dest->write_uword(static_cast<sword>(reg_source1->read_uword()) >> shamt);
 }
 
-void CIopCoreInterpreter::SRAV(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SRAV(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -280,7 +280,7 @@ void CIopCoreInterpreter::SRAV(const IopCoreInstruction inst) const
 	reg_dest->write_uword(static_cast<sword>(reg_source1->read_uword()) >> shamt);
 }
 
-void CIopCoreInterpreter::SRL(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SRL(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -293,7 +293,7 @@ void CIopCoreInterpreter::SRL(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() >> shamt);
 }
 
-void CIopCoreInterpreter::SRLV(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SRLV(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -307,7 +307,7 @@ void CIopCoreInterpreter::SRLV(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() >> shamt);
 }
 
-void CIopCoreInterpreter::AND(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::AND(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -320,7 +320,7 @@ void CIopCoreInterpreter::AND(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() & reg_source2->read_uword());
 }
 
-void CIopCoreInterpreter::ANDI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ANDI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -333,7 +333,7 @@ void CIopCoreInterpreter::ANDI(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() & imm);
 }
 
-void CIopCoreInterpreter::NOR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::NOR(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -346,7 +346,7 @@ void CIopCoreInterpreter::NOR(const IopCoreInstruction inst) const
 	reg_dest->write_uword(~(reg_source1->read_uword() | reg_source2->read_uword()));
 }
 
-void CIopCoreInterpreter::OR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::OR(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -359,7 +359,7 @@ void CIopCoreInterpreter::OR(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() | reg_source2->read_uword());
 }
 
-void CIopCoreInterpreter::ORI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::ORI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -372,7 +372,7 @@ void CIopCoreInterpreter::ORI(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() | imm);
 }
 
-void CIopCoreInterpreter::XOR(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::XOR(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -385,7 +385,7 @@ void CIopCoreInterpreter::XOR(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() ^ reg_source2->read_uword());
 }
 
-void CIopCoreInterpreter::XORI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::XORI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -398,7 +398,7 @@ void CIopCoreInterpreter::XORI(const IopCoreInstruction inst) const
 	reg_dest->write_uword(reg_source1->read_uword() ^ imm);
 }
 
-void CIopCoreInterpreter::SLT(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLT(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -416,7 +416,7 @@ void CIopCoreInterpreter::SLT(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::SLTI(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLTI(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -433,7 +433,7 @@ void CIopCoreInterpreter::SLTI(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::SLTIU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLTIU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -450,7 +450,7 @@ void CIopCoreInterpreter::SLTIU(const IopCoreInstruction inst) const
 	reg_dest->write_uword(result);
 }
 
-void CIopCoreInterpreter::SLTU(const IopCoreInstruction inst) const
+void CIopCoreInterpreter::SLTU(const IopCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

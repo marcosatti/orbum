@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::PCPYH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCPYH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -26,7 +26,7 @@ void CEeCoreInterpreter::PCPYH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value4);
 }
 
-void CEeCoreInterpreter::PCPYLD(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCPYLD(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -42,7 +42,7 @@ void CEeCoreInterpreter::PCPYLD(const EeCoreInstruction inst) const
 	reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PCPYUD(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCPYUD(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -58,7 +58,7 @@ void CEeCoreInterpreter::PCPYUD(const EeCoreInstruction inst) const
 	reg_dest->write_udword(1, value1);
 }
 
-void CEeCoreInterpreter::PEXCH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXCH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -85,7 +85,7 @@ void CEeCoreInterpreter::PEXCH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PEXCW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXCW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -104,7 +104,7 @@ void CEeCoreInterpreter::PEXCW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value3);
 }
 
-void CEeCoreInterpreter::PEXEH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXEH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -131,7 +131,7 @@ void CEeCoreInterpreter::PEXEH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PEXEW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXEW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -150,7 +150,7 @@ void CEeCoreInterpreter::PEXEW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value3);
 }
 
-void CEeCoreInterpreter::PEXTLB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTLB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -194,7 +194,7 @@ void CEeCoreInterpreter::PEXTLB(const EeCoreInstruction inst) const
 	reg_dest->write_ubyte(15, value15);
 }
 
-void CEeCoreInterpreter::PEXTLH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTLH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -222,7 +222,7 @@ void CEeCoreInterpreter::PEXTLH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PEXTLW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTLW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -242,7 +242,7 @@ void CEeCoreInterpreter::PEXTLW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value3);
 }
 
-void CEeCoreInterpreter::PEXTUB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTUB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -286,7 +286,7 @@ void CEeCoreInterpreter::PEXTUB(const EeCoreInstruction inst) const
 	reg_dest->write_ubyte(15, value15);
 }
 
-void CEeCoreInterpreter::PEXTUH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTUH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -314,7 +314,7 @@ void CEeCoreInterpreter::PEXTUH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PEXTUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXTUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -334,7 +334,7 @@ void CEeCoreInterpreter::PEXTUW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value3);
 }
 
-void CEeCoreInterpreter::PINTEH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PINTEH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -362,7 +362,7 @@ void CEeCoreInterpreter::PINTEH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PINTH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PINTH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -390,7 +390,7 @@ void CEeCoreInterpreter::PINTH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PPACB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PPACB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -434,7 +434,7 @@ void CEeCoreInterpreter::PPACB(const EeCoreInstruction inst) const
 	reg_dest->write_ubyte(15, value15);
 }
 
-void CEeCoreInterpreter::PPACH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PPACH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -462,7 +462,7 @@ void CEeCoreInterpreter::PPACH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PPACW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PPACW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -482,7 +482,7 @@ void CEeCoreInterpreter::PPACW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value3);
 }
 
-void CEeCoreInterpreter::PREVH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PREVH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -509,7 +509,7 @@ void CEeCoreInterpreter::PREVH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, value7);
 }
 
-void CEeCoreInterpreter::PROT3W(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PROT3W(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

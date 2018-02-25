@@ -16,7 +16,7 @@ CEeDmac::CEeDmac(Core * core) :
 {
 }
 
-void CEeDmac::handle_event(const ControllerEvent & event) const
+void CEeDmac::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -34,7 +34,7 @@ void CEeDmac::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CEeDmac::time_to_ticks(const double time_us) const
+int CEeDmac::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeDmac]);
 	
@@ -51,7 +51,7 @@ int CEeDmac::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CEeDmac::time_step(const int ticks_available) const
+int CEeDmac::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 
@@ -100,7 +100,7 @@ int CEeDmac::time_step(const int ticks_available) const
 	return 1;
 }
 
-int CEeDmac::transfer_data(EeDmacChannel & channel) const
+int CEeDmac::transfer_data(EeDmacChannel & channel)
 {
 	// Determine the runtime direction of data flow by checking the CHCR.DIR field.
 	Direction direction = channel.chcr->get_direction();
@@ -209,7 +209,7 @@ int CEeDmac::transfer_data(EeDmacChannel & channel) const
 	}
 }
 
-void CEeDmac::set_state_suspended(EeDmacChannel & channel) const
+void CEeDmac::set_state_suspended(EeDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 	auto _lock = r.ee.dmac.stat.scope_lock();
@@ -221,12 +221,12 @@ void CEeDmac::set_state_suspended(EeDmacChannel & channel) const
 	channel.chcr->insert_field(EeDmacChannelRegister_Chcr::STR, 0);
 }
 
-void CEeDmac::set_state_failed_transfer(EeDmacChannel & channel) const
+void CEeDmac::set_state_failed_transfer(EeDmacChannel & channel)
 {
 	throw std::runtime_error("EE DMAC failed transfer not implemented.");
 }
 
-bool CEeDmac::transfer_normal(EeDmacChannel & channel) const
+bool CEeDmac::transfer_normal(EeDmacChannel & channel)
 {
 	// Perform pre-start checks.
 	if (!channel.chcr->dma_started)
@@ -281,7 +281,7 @@ bool CEeDmac::transfer_normal(EeDmacChannel & channel) const
 	}
 }
 
-bool CEeDmac::transfer_chain(EeDmacChannel & channel) const
+bool CEeDmac::transfer_chain(EeDmacChannel & channel)
 {
 	// Perform pre-start checks.
 	if (!channel.chcr->dma_started)
@@ -377,7 +377,7 @@ bool CEeDmac::transfer_chain(EeDmacChannel & channel) const
 	}
 }
 
-bool CEeDmac::transfer_interleaved(EeDmacChannel & channel) const
+bool CEeDmac::transfer_interleaved(EeDmacChannel & channel)
 {
 	throw std::runtime_error("EE DMAC interleave mode not fully implemented (fix me up).");
 
@@ -422,7 +422,7 @@ bool CEeDmac::transfer_interleaved(EeDmacChannel & channel) const
 	*/
 }
 
-void CEeDmac::handle_interrupt_check() const
+void CEeDmac::handle_interrupt_check()
 {
 	auto& r = core->get_resources();
 	auto _lock = r.ee.dmac.stat.scope_lock();
@@ -434,7 +434,7 @@ void CEeDmac::handle_interrupt_check() const
 		r.ee.core.cop0.cause.clear_irq_line(3);
 }
 
-bool CEeDmac::is_source_stall_control_on(EeDmacChannel & channel) const
+bool CEeDmac::is_source_stall_control_on(EeDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -450,7 +450,7 @@ bool CEeDmac::is_source_stall_control_on(EeDmacChannel & channel) const
 	return false;
 }
 
-bool CEeDmac::is_drain_stall_control_on(EeDmacChannel & channel) const
+bool CEeDmac::is_drain_stall_control_on(EeDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -466,7 +466,7 @@ bool CEeDmac::is_drain_stall_control_on(EeDmacChannel & channel) const
 	return false;
 }
 
-void CEeDmac::set_dmac_stall_control_stadr(EeDmacChannel & channel) const
+void CEeDmac::set_dmac_stall_control_stadr(EeDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -474,7 +474,7 @@ void CEeDmac::set_dmac_stall_control_stadr(EeDmacChannel & channel) const
 	r.ee.dmac.stadr.write_uword(MADR);
 }
 
-void CEeDmac::set_dmac_stall_control_sis() const
+void CEeDmac::set_dmac_stall_control_sis()
 {
 	auto& r = core->get_resources();
 	auto _stat_lock = r.ee.dmac.stat.scope_lock();
@@ -483,7 +483,7 @@ void CEeDmac::set_dmac_stall_control_sis() const
 	r.ee.dmac.stat.insert_field(EeDmacRegister_Stat::SIS, 1);
 }
 
-bool CEeDmac::is_drain_stall_control_waiting(EeDmacChannel & channel) const
+bool CEeDmac::is_drain_stall_control_waiting(EeDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -501,7 +501,7 @@ bool CEeDmac::is_drain_stall_control_waiting(EeDmacChannel & channel) const
 	return false;
 }
 
-uqword CEeDmac::read_qword_memory(const uptr address, const bool spr_access) const
+uqword CEeDmac::read_qword_memory(const uptr address, const bool spr_access)
 {
 	auto& r = core->get_resources(); 
 
@@ -512,7 +512,7 @@ uqword CEeDmac::read_qword_memory(const uptr address, const bool spr_access) con
 		return r.ee.bus.read_uqword(BusContext::Ee, address);
 }
 
-void CEeDmac::write_qword_memory(const uptr address, const bool spr_access, const uqword data) const
+void CEeDmac::write_qword_memory(const uptr address, const bool spr_access, const uqword data)
 {
 	auto& r = core->get_resources(); 
 	
@@ -523,7 +523,7 @@ void CEeDmac::write_qword_memory(const uptr address, const bool spr_access, cons
 		r.ee.bus.write_uqword(BusContext::Ee, address, data);
 }
 
-bool CEeDmac::read_chain_source_tag(EeDmacChannel & channel) const
+bool CEeDmac::read_chain_source_tag(EeDmacChannel & channel)
 {
 	// Get tag memory address (TADR).
 	const uptr tadr = channel.tadr->extract_field(EeDmacChannelRegister_Addr::ADDR);
@@ -559,7 +559,7 @@ bool CEeDmac::read_chain_source_tag(EeDmacChannel & channel) const
 	return true;
 }
 
-bool CEeDmac::read_chain_dest_tag(EeDmacChannel & channel) const
+bool CEeDmac::read_chain_dest_tag(EeDmacChannel & channel)
 {
 	// Read tag from channel FIFO. If no data is available, try again next cycle.
 	if (!channel.dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_QWORD))

@@ -9,7 +9,7 @@ CGsCore::CGsCore(Core * core) :
 {
 }
 
-void CGsCore::handle_event(const ControllerEvent & event) const
+void CGsCore::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -27,7 +27,7 @@ void CGsCore::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CGsCore::time_to_ticks(const double time_us) const
+int CGsCore::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::GSCore::GSCORE_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::GsCore]);
 	
@@ -44,7 +44,7 @@ int CGsCore::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CGsCore::time_step(const int ticks_available) const
+int CGsCore::time_step(const int ticks_available)
 {
 	// Not yet implemented.
 	return ticks_available;

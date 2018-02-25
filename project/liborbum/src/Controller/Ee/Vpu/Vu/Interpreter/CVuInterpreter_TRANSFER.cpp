@@ -6,7 +6,7 @@
 
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 
-void CVuInterpreter::MOVE(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MOVE(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -16,7 +16,7 @@ void CVuInterpreter::MOVE(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MFIR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MFIR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -26,7 +26,7 @@ void CVuInterpreter::MFIR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MTIR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MTIR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -36,7 +36,7 @@ void CVuInterpreter::MTIR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MR32(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MR32(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -46,7 +46,7 @@ void CVuInterpreter::MR32(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::LQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::LQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -56,7 +56,7 @@ void CVuInterpreter::LQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::LQD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::LQD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -66,7 +66,7 @@ void CVuInterpreter::LQD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::LQI(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::LQI(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -76,7 +76,7 @@ void CVuInterpreter::LQI(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SQ(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SQ(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -86,7 +86,7 @@ void CVuInterpreter::SQ(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SQD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SQD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -96,7 +96,7 @@ void CVuInterpreter::SQD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::SQI(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::SQI(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// MEM(Ft) = Fs
 	auto& reg_source1 = unit->vf[inst.fs()];
@@ -115,7 +115,7 @@ void CVuInterpreter::SQI(VuUnit_Base * unit, const VuInstruction inst) const
 	reg_source2->write_uhword(reg_source2->read_uhword() + 1);
 }
 
-void CVuInterpreter::ILW(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ILW(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -125,7 +125,7 @@ void CVuInterpreter::ILW(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ISW(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ISW(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -135,7 +135,7 @@ void CVuInterpreter::ISW(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ILWR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ILWR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -145,7 +145,7 @@ void CVuInterpreter::ILWR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ISWR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ISWR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// MEM(Fs) = Ft.
 	auto& reg_source1 = unit->vi[inst.ft()]; // Data.
@@ -161,7 +161,7 @@ void CVuInterpreter::ISWR(VuUnit_Base * unit, const VuInstruction inst) const
 	if (inst.test_dest_w()) unit->bus.write_uword(BusContext::Vu, address + 12, static_cast<uword>(reg_source1->read_uhword()));
 }
 
-void CVuInterpreter::LOI(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::LOI(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -171,7 +171,7 @@ void CVuInterpreter::LOI(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::MFP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::MFP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

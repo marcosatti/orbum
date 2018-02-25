@@ -11,13 +11,13 @@ class CIopIntc : public CController
 public:
 	CIopIntc(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 	
 	/// Checks through the INTC STAT and MASK bits and sends an interrupt
 	/// to the IOP Core on the INT2 line.
-	int time_step(const int ticks_available) const;
+	int time_step(const int ticks_available);
 };
 

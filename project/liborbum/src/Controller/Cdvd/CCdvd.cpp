@@ -10,7 +10,7 @@ CCdvd::CCdvd(Core * core) :
 {
 }
 
-void CCdvd::handle_event(const ControllerEvent & event) const
+void CCdvd::handle_event(const ControllerEvent & event)
 {
 	auto& r = core->get_resources();
 
@@ -30,7 +30,7 @@ void CCdvd::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CCdvd::time_to_ticks(const double time_us) const
+int CCdvd::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::CDVD::CDVD_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Cdvd]);
 
@@ -47,7 +47,7 @@ int CCdvd::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CCdvd::time_step(const int ticks_available) const
+int CCdvd::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 
@@ -78,12 +78,12 @@ int CCdvd::time_step(const int ticks_available) const
 	return 1;
 }
 
-void CCdvd::NCMD_INSTRUCTION_UNKNOWN() const
+void CCdvd::NCMD_INSTRUCTION_UNKNOWN()
 {
 	throw std::runtime_error("CDVD N_CMD unknown instruction called");
 }
 
-void CCdvd::SCMD_INSTRUCTION_UNKNOWN() const
+void CCdvd::SCMD_INSTRUCTION_UNKNOWN()
 {
 	throw std::runtime_error("CDVD S_CMD unknown instruction called");
 }

@@ -15,7 +15,7 @@ CIopDmac::CIopDmac(Core * core) :
 {
 }
 
-void CIopDmac::handle_event(const ControllerEvent & event) const
+void CIopDmac::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -33,7 +33,7 @@ void CIopDmac::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CIopDmac::time_to_ticks(const double time_us) const
+int CIopDmac::time_to_ticks(const double time_us)
 {
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::IopDmac]);
 	
@@ -50,7 +50,7 @@ int CIopDmac::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-int CIopDmac::time_step(const int ticks_available) const
+int CIopDmac::time_step(const int ticks_available)
 {
 	auto& r = core->get_resources();
 
@@ -106,7 +106,7 @@ int CIopDmac::time_step(const int ticks_available) const
 	return 1;
 }
 
-bool CIopDmac::transfer_normal_burst(IopDmacChannel & channel) const
+bool CIopDmac::transfer_normal_burst(IopDmacChannel & channel)
 {
 	// Perform pre-start checks.
 	if (!channel.chcr->dma_started)
@@ -146,7 +146,7 @@ bool CIopDmac::transfer_normal_burst(IopDmacChannel & channel) const
 	}
 }
 
-bool CIopDmac::transfer_normal_slice(IopDmacChannel & channel) const
+bool CIopDmac::transfer_normal_slice(IopDmacChannel & channel)
 {
 	// Perform pre-start checks.
 	if (!channel.chcr->dma_started)
@@ -186,7 +186,7 @@ bool CIopDmac::transfer_normal_slice(IopDmacChannel & channel) const
 	}
 }
 
-bool CIopDmac::transfer_chain(IopDmacChannel & channel) const
+bool CIopDmac::transfer_chain(IopDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -271,7 +271,7 @@ bool CIopDmac::transfer_chain(IopDmacChannel & channel) const
 	}
 }
 
-void CIopDmac::handle_interrupt_check() const
+void CIopDmac::handle_interrupt_check()
 {
 	auto& r = core->get_resources();
 	auto _icr0_lock = r.iop.dmac.icr0.scope_lock();
@@ -285,7 +285,7 @@ void CIopDmac::handle_interrupt_check() const
 	}
 }
 
-int CIopDmac::transfer_data(IopDmacChannel & channel) const
+int CIopDmac::transfer_data(IopDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -348,7 +348,7 @@ int CIopDmac::transfer_data(IopDmacChannel & channel) const
 	return 1;
 }
 
-void CIopDmac::set_state_suspended(IopDmacChannel & channel) const
+void CIopDmac::set_state_suspended(IopDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 	auto _icr0_lock = r.iop.dmac.icr0.scope_lock();
@@ -364,7 +364,7 @@ void CIopDmac::set_state_suspended(IopDmacChannel & channel) const
 	handle_interrupt_check();
 }
 
-bool CIopDmac::read_chain_source_tag(IopDmacChannel & channel) const
+bool CIopDmac::read_chain_source_tag(IopDmacChannel & channel)
 {
 	auto& r = core->get_resources();
 
@@ -418,7 +418,7 @@ bool CIopDmac::read_chain_source_tag(IopDmacChannel & channel) const
 	return true;
 }
 
-bool CIopDmac::read_chain_dest_tag(IopDmacChannel & channel) const
+bool CIopDmac::read_chain_dest_tag(IopDmacChannel & channel)
 {
 	// Read tag from channel FIFO. If no data is available, try again next cycle.
 	if (!channel.dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_QWORD))

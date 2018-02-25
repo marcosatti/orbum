@@ -9,7 +9,7 @@ CEeTimers::CEeTimers(Core * core) :
 {
 }
 
-void CEeTimers::handle_event(const ControllerEvent & event) const
+void CEeTimers::handle_event(const ControllerEvent & event)
 {
 	switch (event.type)
 	{
@@ -33,7 +33,7 @@ void CEeTimers::handle_event(const ControllerEvent & event) const
 	}
 }
 
-int CEeTimers::time_to_ticks(const double time_us) const
+int CEeTimers::time_to_ticks(const double time_us)
 {
 	// TODO: find out for sure.
 	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeTimers]);
@@ -51,7 +51,7 @@ int CEeTimers::time_to_ticks(const double time_us) const
 	return ticks;
 }
 
-void CEeTimers::tick_timer(const ControllerEvent::Type ce_type) const
+void CEeTimers::tick_timer(const ControllerEvent::Type ce_type)
 {
 	auto& r = core->get_resources();
 
@@ -97,7 +97,7 @@ void CEeTimers::tick_timer(const ControllerEvent::Type ce_type) const
 	}
 }
 
-void CEeTimers::handle_timer_interrupt(EeTimersUnit & unit) const
+void CEeTimers::handle_timer_interrupt(EeTimersUnit & unit)
 {
 	auto& r = core->get_resources();
 
@@ -125,7 +125,7 @@ void CEeTimers::handle_timer_interrupt(EeTimersUnit & unit) const
 	}
 }
 
-void CEeTimers::handle_timer_zret(EeTimersUnit & unit) const
+void CEeTimers::handle_timer_zret(EeTimersUnit & unit)
 {
 	// Check for ZRET condition.
 	if (unit.mode->extract_field(EeTimersUnitRegister_Mode::ZRET))

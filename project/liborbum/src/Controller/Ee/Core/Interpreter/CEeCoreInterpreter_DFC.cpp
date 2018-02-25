@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::PEXT5(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PEXT5(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -36,7 +36,7 @@ void CEeCoreInterpreter::PEXT5(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, value[3]);
 }
 
-void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -68,12 +68,12 @@ void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst) const
 	reg_dest->write_uword(6, static_cast<uword>(value[3]));
 }
 
-void CEeCoreInterpreter::CVT_S_W(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::CVT_S_W(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = CONVERT_AND_ROUND<sword -> f32>(Fs) (Exception on FPU unusable).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -82,12 +82,12 @@ void CEeCoreInterpreter::CVT_S_W(const EeCoreInstruction inst) const
 	reg_dest.write_float(static_cast<f32>(reg_source1.read_uword()));
 }
 
-void CEeCoreInterpreter::CVT_W_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::CVT_W_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = CONVERT_AND_ROUND<f32 -> sword>(Fs) (Exception on FPU unusable). Clamping occurs if exponent is > 0x9D.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs

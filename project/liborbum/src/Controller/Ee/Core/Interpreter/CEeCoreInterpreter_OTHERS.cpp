@@ -5,17 +5,17 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::SYNC_STYPE(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SYNC_STYPE(const EeCoreInstruction inst)
 {
 	// TODO: not sure I need to implement anything, since there is no hardware to be synced.
 }
 
-void CEeCoreInterpreter::PREF(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PREF(const EeCoreInstruction inst)
 {
 	// TODO: Probably dont need to implement, as its just a prefetch which is meaningless in an emulator.
 }
 
-void CEeCoreInterpreter::DI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -31,7 +31,7 @@ void CEeCoreInterpreter::DI(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::EI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::EI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -47,17 +47,17 @@ void CEeCoreInterpreter::EI(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::CACHE(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::CACHE(const EeCoreInstruction inst)
 {
 	// TODO: Probably dont need to implement, as cache is not implemented in an emulator.
 }
 
-void CEeCoreInterpreter::TLBP(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLBP(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// PROBE_TLB(index). Coprocessor unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	uword value = 0x80000000; // Only set index if an entry is found, otherwise return with the sign bit = 1, indicating not found..
@@ -84,12 +84,12 @@ void CEeCoreInterpreter::TLBP(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::TLBR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLBR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// COP0{PageMask, entryhi/Lo} = GET_TLB(index). Coprocessor unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	auto& index = r.ee.core.cop0.index;
@@ -124,12 +124,12 @@ void CEeCoreInterpreter::TLBR(const EeCoreInstruction inst) const
 	entrylo1.insert_field(EeCoreCop0Register_EntryLo1::G, static_cast<uword>(tlb_entry.g));
 }
 
-void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TLB[Index] = COP0{PageMask, entryhi/Lo}. Coprocessor unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	auto& index = r.ee.core.cop0.index;
@@ -168,12 +168,12 @@ void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst) const
 	tlb.set_tlb_entry_at(tlb_entry, index.extract_field(EeCoreCop0Register_Index::INDEX));
 }
 
-void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TLB[random] = COP0{PageMask, entryhi/Lo}. Coprocessor unusable exception.
-	if (handle_cop0_usable())
+	if (!handle_cop0_usable())
         return;
 
 	auto& random = r.ee.core.cop0.random;

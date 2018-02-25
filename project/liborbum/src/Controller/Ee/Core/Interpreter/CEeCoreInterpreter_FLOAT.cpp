@@ -5,13 +5,13 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::ADD_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADD_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -28,13 +28,13 @@ void CEeCoreInterpreter::ADD_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::ADDA_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ADDA_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// ACC = Fs + Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -51,13 +51,13 @@ void CEeCoreInterpreter::ADDA_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MADD_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADD_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
@@ -76,13 +76,13 @@ void CEeCoreInterpreter::MADD_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MADDA_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MADDA_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// ACC = ACC + (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
@@ -100,13 +100,13 @@ void CEeCoreInterpreter::MADDA_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MUL_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MUL_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -123,13 +123,13 @@ void CEeCoreInterpreter::MUL_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MULA_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MULA_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// ACC = Fs * Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -146,13 +146,13 @@ void CEeCoreInterpreter::MULA_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::DIV_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DIV_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = Fs / Ft (Exception on FPU unusable).
 	// TODO: Check if status bits need to be set.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -184,14 +184,14 @@ void CEeCoreInterpreter::DIV_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MSUB_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MSUB_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -209,14 +209,14 @@ void CEeCoreInterpreter::MSUB_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::MSUBA_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MSUBA_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// ACC = ACC - (Fs * Ft) (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
 	// TODO: Check if this needs to be done in 2 stages (with checks), where stage 1 does multiply, stage 2 does addition. Old PCSX2 clamps/rounds all values before doing anything and only checks conditions at the end.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -233,13 +233,13 @@ void CEeCoreInterpreter::MSUBA_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::SUB_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SUB_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -256,13 +256,13 @@ void CEeCoreInterpreter::SUB_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::SUBA_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SUBA_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// ACC = Fs - Ft (Exception on FPU unusable).
 	// FPU status bits set on exponent overflow/underflow (no exception generated).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs

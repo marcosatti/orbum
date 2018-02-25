@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::DIV(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DIV(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -45,13 +45,13 @@ void CEeCoreInterpreter::DIV(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::DIV1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DIV1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIV(inst);
 }
 
-void CEeCoreInterpreter::DIVU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DIVU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -84,13 +84,13 @@ void CEeCoreInterpreter::DIVU(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::DIVU1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::DIVU1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	DIVU(inst);
 }
 
-void CEeCoreInterpreter::MULT(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MULT(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -112,13 +112,13 @@ void CEeCoreInterpreter::MULT(const EeCoreInstruction inst) const
 	hi.write_udword(0, static_cast<sdword>(static_cast<sword>(result >> 32)));
 }
 
-void CEeCoreInterpreter::MULT1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MULT1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MULT(inst);
 }
 
-void CEeCoreInterpreter::MULTU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MULTU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -140,13 +140,13 @@ void CEeCoreInterpreter::MULTU(const EeCoreInstruction inst) const
 	hi.write_udword(0, static_cast<udword>(static_cast<sdword>(static_cast<sword>(result >> 32))));
 }
 
-void CEeCoreInterpreter::MULTU1(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::MULTU1(const EeCoreInstruction inst)
 {
 	// Pipeline 1 instruction - delegate to normal instruction.
 	MULTU(inst);
 }
 
-void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -206,7 +206,7 @@ void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst) const
     hi.write_uword(3, r3);
 }
 
-void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -248,7 +248,7 @@ void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst) const
     hi.write_udword(1, r1);
 }
 
-void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -300,7 +300,7 @@ void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst) const
     hi.write_udword(1, r1);
 }
 
-void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -346,7 +346,7 @@ void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst) const
     hi.write_uword(3, value[7]);
 }
 
-void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -383,7 +383,7 @@ void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst) const
     hi.write_udword(1, hi1);
 }
 
-void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	

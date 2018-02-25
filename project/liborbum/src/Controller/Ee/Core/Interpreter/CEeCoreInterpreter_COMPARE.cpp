@@ -5,7 +5,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::SLT(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLT(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -23,7 +23,7 @@ void CEeCoreInterpreter::SLT(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SLTI(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLTI(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -40,7 +40,7 @@ void CEeCoreInterpreter::SLTI(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SLTIU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLTIU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -57,7 +57,7 @@ void CEeCoreInterpreter::SLTIU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::SLTU(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SLTU(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -75,7 +75,7 @@ void CEeCoreInterpreter::SLTU(const EeCoreInstruction inst) const
 	reg_dest->write_udword(0, result);
 }
 
-void CEeCoreInterpreter::PCEQB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCEQB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -94,7 +94,7 @@ void CEeCoreInterpreter::PCEQB(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::PCEQH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCEQH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -113,7 +113,7 @@ void CEeCoreInterpreter::PCEQH(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::PCEQW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCEQW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -132,7 +132,7 @@ void CEeCoreInterpreter::PCEQW(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::PCGTB(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCGTB(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -151,7 +151,7 @@ void CEeCoreInterpreter::PCGTB(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::PCGTH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCGTH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -170,7 +170,7 @@ void CEeCoreInterpreter::PCGTH(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::PCGTW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PCGTW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -189,13 +189,13 @@ void CEeCoreInterpreter::PCGTW(const EeCoreInstruction inst) const
 	}
 }
 
-void CEeCoreInterpreter::C_EQ_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::C_EQ_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// (FCR[31] or CSR, C field) = (Fs == Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -211,14 +211,14 @@ void CEeCoreInterpreter::C_EQ_S(const EeCoreInstruction inst) const
 		csr.insert_field(EeCoreFpuRegister_Csr::C, 0);
 }
 
-void CEeCoreInterpreter::C_F_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::C_F_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// TODO: Whats the point of this instruction? Docs say something about a comparison but it always sets the C field to 0 regardless...
 	// (FCR[31] or CSR, C field) = 0
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& csr = r.ee.core.fpu.csr; // FCR[31] aka control status register.
@@ -226,13 +226,13 @@ void CEeCoreInterpreter::C_F_S(const EeCoreInstruction inst) const
 	csr.insert_field(EeCoreFpuRegister_Csr::C, 0);
 }
 
-void CEeCoreInterpreter::C_LE_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::C_LE_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// (FCR[31] or CSR, C field) = (Fs <= Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -248,13 +248,13 @@ void CEeCoreInterpreter::C_LE_S(const EeCoreInstruction inst) const
 		csr.insert_field(EeCoreFpuRegister_Csr::C, 0);
 }
 
-void CEeCoreInterpreter::C_LT_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::C_LT_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// (FCR[31] or CSR, C field) = (Fs < Ft) ? 1 : 0)
 	// No Exceptions generated, except for coprocessor unavailable.
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs

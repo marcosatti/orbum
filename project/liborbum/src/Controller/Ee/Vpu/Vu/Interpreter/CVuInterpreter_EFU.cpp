@@ -4,7 +4,7 @@
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
-void CVuInterpreter::ESADD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ESADD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -14,7 +14,7 @@ void CVuInterpreter::ESADD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ERSADD(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ERSADD(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -24,7 +24,7 @@ void CVuInterpreter::ERSADD(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ELENG(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ELENG(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -34,7 +34,7 @@ void CVuInterpreter::ELENG(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ERLENG(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ERLENG(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -44,7 +44,7 @@ void CVuInterpreter::ERLENG(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::EATANxy(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::EATANxy(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -54,7 +54,7 @@ void CVuInterpreter::EATANxy(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::EATANxz(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::EATANxz(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -64,7 +64,7 @@ void CVuInterpreter::EATANxz(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ESUM(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ESUM(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -74,7 +74,7 @@ void CVuInterpreter::ESUM(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ERCPR(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ERCPR(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -84,7 +84,7 @@ void CVuInterpreter::ERCPR(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ESQRT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ESQRT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -94,7 +94,7 @@ void CVuInterpreter::ESQRT(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ERSQRT(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ERSQRT(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -104,7 +104,7 @@ void CVuInterpreter::ERSQRT(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::ESIN(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::ESIN(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -114,7 +114,7 @@ void CVuInterpreter::ESIN(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::EATAN(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::EATAN(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)
@@ -124,7 +124,7 @@ void CVuInterpreter::EATAN(VuUnit_Base * unit, const VuInstruction inst) const
 #endif
 }
 
-void CVuInterpreter::EEXP(VuUnit_Base * unit, const VuInstruction inst) const
+void CVuInterpreter::EEXP(VuUnit_Base * unit, const VuInstruction inst)
 {
 	// TODO: Implement.
 #if defined(BUILD_DEBUG)

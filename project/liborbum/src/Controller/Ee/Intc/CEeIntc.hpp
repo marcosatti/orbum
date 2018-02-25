@@ -12,13 +12,13 @@ class CEeIntc : public CController
 public:
 	CEeIntc(Core * core);
 
-	void handle_event(const ControllerEvent & event) const override;
+	void handle_event(const ControllerEvent & event) override;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us) const;
+	int time_to_ticks(const double time_us);
 	
 	/// Checks the INTC STAT and MASK registers and sends an interrupt to the EE Core on the INT0 line.
 	/// See EE Core Users Manual page 73-75 for the EE Core details. Note that on page 75, there is a typo, where the INTx lines are mixed up on bits 10 and 11 (verified through running through bios code).
-	int time_step(const int ticks_available) const;	
+	int time_step(const int ticks_available);	
 };
 

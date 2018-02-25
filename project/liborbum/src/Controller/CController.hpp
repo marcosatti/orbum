@@ -22,10 +22,11 @@ public:
     {
     }
 
-	virtual void handle_event(const ControllerEvent & e) const = 0;
+	virtual void handle_event(const ControllerEvent & e) = 0;
 
     void handle_event_marshall_(const ControllerEvent & e)
     {
+        // Used for inserting pre/post-event hooks (debugging).
         handle_event(e);
     }
 

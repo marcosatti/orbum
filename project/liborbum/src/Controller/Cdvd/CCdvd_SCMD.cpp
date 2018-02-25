@@ -4,7 +4,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CCdvd::SCMD_INSTRUCTION_15() const
+void CCdvd::SCMD_INSTRUCTION_15()
 {
 	auto& r = core->get_resources();
 
@@ -12,7 +12,7 @@ void CCdvd::SCMD_INSTRUCTION_15() const
 	r.cdvd.s_data_out.write_ubyte(0x5);
 }
 
-void CCdvd::SCMD_INSTRUCTION_40() const
+void CCdvd::SCMD_INSTRUCTION_40()
 {
 	auto& r = core->get_resources();
 
@@ -28,7 +28,7 @@ void CCdvd::SCMD_INSTRUCTION_40() const
 	r.cdvd.s_data_out.write_ubyte(0);
 }
 
-void CCdvd::SCMD_INSTRUCTION_41() const
+void CCdvd::SCMD_INSTRUCTION_41()
 {
 	auto& r = core->get_resources();
 
@@ -40,7 +40,7 @@ void CCdvd::SCMD_INSTRUCTION_41() const
 	r.cdvd.s_data_out.write(reinterpret_cast<ubyte*>(buffer), 16);
 }
 
-void CCdvd::SCMD_INSTRUCTION_42() const
+void CCdvd::SCMD_INSTRUCTION_42()
 {
 	auto& r = core->get_resources();
 	
@@ -53,7 +53,7 @@ void CCdvd::SCMD_INSTRUCTION_42() const
 	r.cdvd.s_data_out.write_ubyte(0);
 }
 
-void CCdvd::SCMD_INSTRUCTION_43() const
+void CCdvd::SCMD_INSTRUCTION_43()
 {
 	auto& r = core->get_resources();
 

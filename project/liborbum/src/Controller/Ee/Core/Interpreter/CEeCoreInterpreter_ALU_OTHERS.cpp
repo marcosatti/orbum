@@ -8,7 +8,7 @@
 
 #include "Resources/RResources.hpp"
 
-void CEeCoreInterpreter::PABSH(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PABSH(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -35,7 +35,7 @@ void CEeCoreInterpreter::PABSH(const EeCoreInstruction inst) const
 	reg_dest->write_uhword(7, static_cast<uhword>(value7 == VALUE_SHWORD_MIN ? VALUE_SHWORD_MAX : std::abs(value7)));
 }
 
-void CEeCoreInterpreter::PABSW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PABSW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -54,7 +54,7 @@ void CEeCoreInterpreter::PABSW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(3, static_cast<uword>(value0 == VALUE_SWORD_MIN ? VALUE_SWORD_MAX : std::abs(value3)));
 }
 
-void CEeCoreInterpreter::PLZCW(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::PLZCW(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
@@ -70,12 +70,12 @@ void CEeCoreInterpreter::PLZCW(const EeCoreInstruction inst) const
 	reg_dest->write_uword(1, value1);
 }
 
-void CEeCoreInterpreter::ABS_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::ABS_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = ABS(Fs) (Exception on FPU unusable only).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -86,12 +86,12 @@ void CEeCoreInterpreter::ABS_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(std::abs(reg_source1.read_float())); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
-void CEeCoreInterpreter::NEG_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::NEG_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = NEG(Fs) (Exception on FPU unusable only).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -102,12 +102,12 @@ void CEeCoreInterpreter::NEG_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(-reg_source1.read_float()); // Do not have to check for IEEE -> PS2 float compatibility as there should never be an invalid float in the register to begin with.
 }
 
-void CEeCoreInterpreter::RSQRT_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::RSQRT_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = RSQRT(Fs, Ft) (Exception on FPU unusable only).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
@@ -144,12 +144,12 @@ void CEeCoreInterpreter::RSQRT_S(const EeCoreInstruction inst) const
 	reg_dest.write_float(result);
 }
 
-void CEeCoreInterpreter::SQRT_S(const EeCoreInstruction inst) const
+void CEeCoreInterpreter::SQRT_S(const EeCoreInstruction inst)
 {
 	auto& r = core->get_resources();
 	
 	// Fd = SQRT(Ft) (Exception on FPU unusable only).
-	if (handle_cop1_usable())
+	if (!handle_cop1_usable())
         return;
 
 	auto& reg_source2 = r.ee.core.fpu.fpr[inst.rt()]; // Ft
