@@ -122,10 +122,16 @@ void Core::run()
 #if defined(BUILD_DEBUG)
     static double DEBUG_TIME_ELAPSED = 0.0;
     static double DEBUG_TIME_LOGGED = 0.0;
+	static std::chrono::high_resolution_clock::time_point DEBUG_T1 = std::chrono::high_resolution_clock::now();
     if ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) > 0.01e6)
     {
-        BOOST_LOG(get_logger()) << boost::format("Emulation time elapsed: %.3f") % (DEBUG_TIME_ELAPSED / 1e6);
+		std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
+        BOOST_LOG(get_logger()) << boost::format("Emulation time elapsed: %.3f (%.4fx)") 
+			% (DEBUG_TIME_ELAPSED / 1e6)
+			% ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count());
         DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
+		DEBUG_T1 = DEBUG_T2;
     }
     DEBUG_TIME_ELAPSED += options.time_slice_per_run_us;
 #endif

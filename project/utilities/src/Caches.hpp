@@ -7,11 +7,11 @@
 #include <boost/compute/detail/lru_cache.hpp>
 
 /// Small LFU cache that uses an array with access counts for eviction.
-template<size_t Size, typename KeyTy, typename ValueTy>
+template<int Size, typename KeyTy, typename ValueTy>
 class ArrayLfuCache
 {
 private:
-    using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
+    using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
     using CacheContainer = std::array<typename CacheEntry, Size>;
 
 public:
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    size_t current_cache_size;
+    int current_cache_size;
     CacheContainer cache;
 
     /// Finds the entry with the lowest access count to evict, and returns its position.
@@ -79,11 +79,11 @@ private:
 };
 
 /// Small LRU cache that uses an array with access timestamps for eviction.
-template<size_t Size, typename KeyTy, typename ValueTy>
+template<int Size, typename KeyTy, typename ValueTy>
 class ArrayLruCache
 {
 private:
-	using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
+	using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
 	using CacheContainer = std::array<typename CacheEntry, Size>;
 
 public:
@@ -126,8 +126,8 @@ public:
 	}
 
 private:
-	size_t total_cache_access;
-	size_t current_cache_size;
+	int total_cache_access;
+	int current_cache_size;
 	CacheContainer cache;
 
 	/// Finds the entry with the lowest timestamp to evict, and returns its position.
@@ -154,11 +154,11 @@ private:
 };
 
 /// Wrapper around the Boost LRU cache to provide a get std::optional interface.
-template<size_t Size, typename KeyTy, typename ValueTy>
+template<int Size, typename KeyTy, typename ValueTy>
 class HashedLruCache
 {
 public:
-    LruCache() :
+	HashedLruCache() :
         cache(Size)
     {
     }
