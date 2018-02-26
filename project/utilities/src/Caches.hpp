@@ -6,16 +6,16 @@
 #include <array>
 #include <boost/compute/detail/lru_cache.hpp>
 
-/// Small LRU cache that uses an array with access counts for eviction.
+/// Small LFU cache that uses an array with access counts for eviction.
 template<size_t Size, typename KeyTy, typename ValueTy>
-class ArrayLruCache
+class ArrayLfuCache
 {
 private:
     using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
     using CacheContainer = std::array<typename CacheEntry, Size>;
 
 public:
-    ArrayLruCache() :
+    ArrayLfuCache() :
         current_cache_size(0),
         cache{ std::make_tuple(KeyTy(), ValueTy(), 0) }
     {
@@ -80,21 +80,21 @@ private:
 
 /// Small LRU cache that uses an array with access timestamps for eviction.
 template<size_t Size, typename KeyTy, typename ValueTy>
-class TimestampedArrayLruCache
+class ArrayLruCache
 {
 private:
 	using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
 	using CacheContainer = std::array<typename CacheEntry, Size>;
 
 public:
-	TimestampedArrayLruCache() :
+	ArrayLruCache() :
 		total_cache_access(0),
 		current_cache_size(0),
 		cache{ std::make_tuple(KeyTy(), ValueTy(), 0) }
 	{
 	}
 
-	/// Returns the value associated with the key and increments the access count.
+	/// Returns the value associated with the key and sets the access timestamp.
 	std::optional<const ValueTy> get(const KeyTy key)
 	{
 		auto entry_it = std::find_if(cache.begin(), cache.begin() + current_cache_size, [&key](const CacheEntry & e) {
@@ -130,7 +130,7 @@ private:
 	size_t current_cache_size;
 	CacheContainer cache;
 
-	/// Finds the entry with the lowest access count to evict, and returns its position.
+	/// Finds the entry with the lowest timestamp to evict, and returns its position.
 	typename CacheContainer::iterator find_eviction_entry()
 	{
 		if (current_cache_size >= Size)
@@ -155,7 +155,7 @@ private:
 
 /// Wrapper around the Boost LRU cache to provide a get std::optional interface.
 template<size_t Size, typename KeyTy, typename ValueTy>
-class LruCache
+class HashedLruCache
 {
 public:
     LruCache() :

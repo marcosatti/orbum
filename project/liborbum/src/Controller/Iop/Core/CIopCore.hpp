@@ -62,7 +62,7 @@ protected:
 
 private:
     /// Address translation cache, see translate_address().
-    TranslationCache<8, uptr, 0xFFF, TimestampedArrayLruCache> translation_cache;
+    TranslationCache<8, uptr, 0xFFF, ArrayLruCache> translation_cache;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
 	int time_to_ticks(const double time_us);
