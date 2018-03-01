@@ -8,6 +8,12 @@
 #include <boost/log/sinks/text_file_backend.hpp>
 #include <boost/format.hpp>
 #include <chrono>
+#include <Macros.hpp>
+
+#if defined(ENV_WINDOWS)
+#define NOMINMAX
+#include <Windows.h>
+#endif
 
 #include "Core.hpp"
 
@@ -45,7 +51,7 @@ CoreOptions CoreOptions::make_default()
         "",
         "",
         200,
-        3, //std::thread::hardware_concurrency() - 1,
+        4, //std::thread::hardware_concurrency() - 1,
 		{2.0, 1.0, 1.0, 1.0, // TODO: while in development, cheat for now :)
 		 1.0, 1.0, 1.0, 1.0,
 		 2.0, 1.0, 1.0, 1.0, 
@@ -127,9 +133,13 @@ void Core::run()
     {
 		std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
-        BOOST_LOG(get_logger()) << boost::format("Emulation time elapsed: %.3f (%.4fx)") 
+        std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)") 
 			% (DEBUG_TIME_ELAPSED / 1e6)
-			% ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count());
+			% ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
+		BOOST_LOG(get_logger()) << info;
+#if defined(ENV_WINDOWS)
+		SetConsoleTitle(info.c_str());
+#endif
         DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
 		DEBUG_T1 = DEBUG_T2;
     }

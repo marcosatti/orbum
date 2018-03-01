@@ -60,7 +60,7 @@ public:
 	static constexpr Bitfield IRM_4            = Bitfield(4, 1);
 	static constexpr Bitfield IRM_5            = Bitfield(5, 1);
 	static constexpr Bitfield IRM_6            = Bitfield(6, 1);
-	static constexpr Bitfield ERROR            = Bitfield(15, 1);
+	static constexpr Bitfield ERROR_            = Bitfield(15, 1);
 	static constexpr Bitfield TCM_0            = Bitfield(16, 1);
 	static constexpr Bitfield TCM_1            = Bitfield(17, 1);
 	static constexpr Bitfield TCM_2            = Bitfield(18, 1);

@@ -397,11 +397,10 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
     auto& status = r.ee.core.cop0.status;
 	auto& tlb = r.ee.core.tlb;
 
-#if 0 //defined(BUILD_DEBUG)
+#if defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
-		std::make_pair(0xBF801040, 0xBF801050),
-		std::make_pair(0xBF808200, 0xBF808300)
+		std::make_pair(0xFFFFFFFF, 0xFFFFFFFF)
 	};
 
 	for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)

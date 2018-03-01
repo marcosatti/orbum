@@ -22,7 +22,7 @@ bool IopDmacRegister_Icr0::is_interrupt_pending_and_set_master()
 	uword TCI = (reg_value & 0x7F000000) >> 24;
 	
 	// Check for channel interrupts or error interrupt. Set the master interrupt bit if any of the conditions are true.
-	if (((TCM & TCI) && extract_field(MASTER_ENABLE)) || extract_field(ERROR))
+	if (((TCM & TCI) && extract_field(MASTER_ENABLE)) || extract_field(ERROR_))
 	{
 		insert_field(MASTER_INTERRUPT, 1);
 		return true;

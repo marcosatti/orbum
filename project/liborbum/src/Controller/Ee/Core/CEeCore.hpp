@@ -72,7 +72,7 @@ private:
 	size_t translation_cache_tlb_write_count;
 
     /// Address translation cache, see translate_address().
-    TranslationCache<1, 2, 1, 1, 1, 4, uptr, 0xFFF, ArrayLruCache> translation_cache;
+    TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
 	int time_to_ticks(const double time_us);
