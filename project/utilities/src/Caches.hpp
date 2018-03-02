@@ -12,7 +12,7 @@ class ArrayLfuCache
 {
 private:
     using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
-    using CacheContainer = std::array<typename CacheEntry, Size>;
+    using CacheContainer = std::array<CacheEntry, Size>;
 
 public:
     ArrayLfuCache() :
@@ -84,7 +84,7 @@ class ArrayLruCache
 {
 private:
 	using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
-	using CacheContainer = std::array<typename CacheEntry, Size>;
+	using CacheContainer = std::array<CacheEntry, Size>;
 
 public:
 	ArrayLruCache() :

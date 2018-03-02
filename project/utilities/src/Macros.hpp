@@ -5,7 +5,7 @@
 /// Platform macros, to make sure they are universal.
 #if defined(__WINDOWS__) || defined(_WIN32) || defined(_WIN64)
  #define ENV_WINDOWS
-#elif defined(__UNIX) || defined(__UNIX__) || defined(__APPLE__) || defined(__MACH__) || defined(__LINUX__)
+#elif defined(__UNIX) || defined(__UNIX__) || defined(__APPLE__) || defined(__MACH__) || defined(__LINUX__) || defined(unix) || defined(linux) || defined(__unix__) || defined(__linux__)
  #define ENV_UNIX
 #endif
 

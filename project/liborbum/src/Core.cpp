@@ -10,11 +10,6 @@
 #include <chrono>
 #include <Macros.hpp>
 
-#if defined(ENV_WINDOWS)
-#define NOMINMAX
-#include <Windows.h>
-#endif
-
 #include "Core.hpp"
 
 #include "Controller/Gs/Crtc/CCrtc.hpp"
@@ -37,6 +32,13 @@
 #include "Controller/Ee/Core/Interpreter/CEeCoreInterpreter.hpp"
 
 #include "Resources/RResources.hpp"
+
+#if defined(ENV_WINDOWS)
+ #define NOMINMAX
+ #include <Windows.h>
+#elif defined(ENV_UNIX)
+ #include <iostream>
+#endif
 
 boost::log::sources::logger_mt Core::logger;
 
@@ -139,6 +141,8 @@ void Core::run()
 		BOOST_LOG(get_logger()) << info;
 #if defined(ENV_WINDOWS)
 		SetConsoleTitle(info.c_str());
+#elif defined(ENV_UNIX)
+        std::cout << "\033]0;" << info << "\007";
 #endif
         DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
 		DEBUG_T1 = DEBUG_T2;
