@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8.2)
 project(orbumfront CXX)
 
 set(COMMON_SRC_FILES
-	"${CMAKE_SOURCE_DIR}/project/orbumfront/src/OrbumFront.cpp"
+	"${CMAKE_SOURCE_DIR}/orbumfront/src/OrbumFront.cpp"
 )
 
 add_executable(orbumfront "${COMMON_SRC_FILES}")

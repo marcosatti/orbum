@@ -203,6 +203,7 @@ void CIopCore::debug_print_interrupt_info()
 
 void CIopCore::debug_print_ksprintf()
 {
+#if 0
     auto& r = core->get_resources();
     uptr pc = r.iop.core.r3000.pc.read_uword();
 
@@ -239,6 +240,7 @@ void CIopCore::debug_print_ksprintf()
 
         BOOST_LOG(Core::get_logger()) << boost::format("IOP ksprintf message: %s") % buffer;
     }
+#endif
 }
 #endif
 

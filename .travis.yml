@@ -1,27 +1,42 @@
 language: cpp
+sudo: required
+dist: xenial
+os: linux
 
-matrix:
-  include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - cmake
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+before_install:
+  # Pre
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -q
+  - sudo apt-get install wget -y
 
-install: true
+  # GCC
+  - sudo apt-get install g++-7 -y
+
+  # CMake
+  - CMAKE_URL="https://cmake.org/files/v3.11/cmake-3.11.1-Linux-x86_64.tar.gz"
+  - mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+  - export PATH=$(pwd)/cmake/bin:${PATH}
+
+  # Boost
+  - BOOST_URL="https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz"
+  - mkdir boost && travis_retry wget --no-check-certificate --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost
+  - cd boost
+  - ./bootstrap.sh --with-libraries=log,filesystem
+  - ./b2 -d0 -j2 variant=release link=shared threading=multi address-model=64 runtime-link=shared
+  - cd ..
+  - BOOST_ROOT="./boost"
+
+install:
+  - export CC=gcc-7
+  - export CXX=g++-7
+  - which ${CC}
+  - which ${CXX}
+  - which cmake
 
 before_script:
-  - eval "${MATRIX_EVAL}"
-  - echo "CC test... `${CC} --verison`"
-  - echo "CXX test... `${CXX} --verison`"
   - mkdir -p build
   - cd build
 
 script:
-  - cmake ..
-  - cmake --build .
+  - cmake -DBOOST_ROOT=${BOOST_ROOT} ..
+  - make -j2

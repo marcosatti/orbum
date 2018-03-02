@@ -22,17 +22,14 @@ Status as of 2018/1/1:
 
 ## Build Instructions
 ### General Information
-The project uses the boost library as a dependency, which is configured through the boost-cmake submodule.
+CMake is used as the build system. 
+The project uses the boost library as a dependency, which is configured by the CMake FindBoost module.
 
-Before building run the command:
-
-`git submodule update --init --recursive`
-
-CMake is used as the build system. Run the following commands to invoke a build:
+Run the following commands to invoke a build:
 
 `mkdir build && cd build`
 
-`cmake ..`
+`cmake ..` optionally specifying `-DBOOST_ROOT={path}` depending on your environment.
 
 `make` (or equivilant)
 
@@ -45,6 +42,8 @@ Other bios' are not currently supported or tested with.
 Upon Ctrl-C, memory dumps will be placed in the `dumps/` folder.
 Logging will save files to `logs/` (uses boost logging).
 Please create these folders, they are not done automatically.
+
+These folders should be placed relative to the executable.
 
 ## Licence
 

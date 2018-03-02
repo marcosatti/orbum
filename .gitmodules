@@ -1,4 +1,0 @@
-[submodule "external/boost"]
-	path = external/boost
-	url = https://github.com/Orphis/boost-cmake.git
-	ignore = dirty
