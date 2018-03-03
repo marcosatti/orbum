@@ -393,8 +393,6 @@ void CEeCore::handle_exception(const EeCoreException exception)
 std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
 {
     auto& r = core->get_resources();
-    auto& status = r.ee.core.cop0.status;
-	auto& tlb = r.ee.core.tlb;
 
 #if defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
@@ -422,7 +420,7 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
 		return translate_address_fallback(virtual_address, rw_access, id_access); 
 	};
 
-    return translation_cache.lookup(status.operating_context, virtual_address, rw_access, id_access, fallback_fn);
+    return translation_cache.lookup(virtual_address, rw_access, id_access, fallback_fn);
 }
 
 std::optional<uptr> CEeCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)

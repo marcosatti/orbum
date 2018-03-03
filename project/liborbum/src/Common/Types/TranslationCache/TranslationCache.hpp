@@ -24,7 +24,7 @@ public:
     using FallbackFn = std::function<std::optional<AddressTy>(const AddressTy, const MmuRwAccess, const MmuIdAccess)>;
 
     /// Performs the virtual address to physical address translation.
-    std::optional<AddressTy> lookup(const OperatingContext context, const AddressTy virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access, const FallbackFn & fallback_lookup)
+    std::optional<AddressTy> lookup(const AddressTy virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access, const FallbackFn & fallback_lookup)
     {
         const AddressTy key = virtual_address & (~CacheMask);
 

@@ -302,7 +302,6 @@ void CIopCore::handle_exception(const IopCoreException exception)
 std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
 {
 	auto& r = core->get_resources();
-	auto& status = r.iop.core.cop0.status;
 
 #if defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
@@ -326,13 +325,17 @@ std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, cons
 #endif
 
 	// Check if a write is being performed with isolate cache turned on - don't run through the cache.
+    auto& status = r.iop.core.cop0.status;
 	if (status.extract_field(IopCoreCop0Register_Status::ISC) && rw_access == WRITE)
 		return translate_address_fallback(virtual_address, rw_access, id_access);
 
-	using namespace std::placeholders;
-    auto fallback_fn = std::bind(&CIopCore::translate_address_fallback, this, _1, _2, _3);
+    // Using std::bind seems to cause this to make dynamic allocations... using lambdas doesn't (at least on GCC).
+    auto fallback_fn = [this](const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access) -> std::optional<uptr>
+    {
+        return translate_address_fallback(virtual_address, rw_access, id_access);
+    };
 
-    return translation_cache.lookup(status.operating_context, virtual_address, rw_access, id_access, fallback_fn);
+    return translation_cache.lookup(virtual_address, rw_access, id_access, fallback_fn);
 }
 
 std::optional<uptr> CIopCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
