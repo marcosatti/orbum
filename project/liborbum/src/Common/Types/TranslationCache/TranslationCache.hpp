@@ -47,7 +47,10 @@ public:
 				cache->insert(key, *result);
 		}
 
-        return result ? std::make_optional((*result) | (virtual_address & CacheMask)) : std::nullopt;
+		if (result)
+			*result = (*result | (virtual_address & CacheMask));
+
+		return result;
     }
 
     /// Flushes the caches of all translation results.
