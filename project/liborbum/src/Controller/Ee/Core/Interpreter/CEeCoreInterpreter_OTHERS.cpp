@@ -164,8 +164,9 @@ void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst)
 	// G bit (and of Lo0 and Lo1)
 	tlb_entry.g = (entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G)) > 0;
 
-	// Write to TLB.
+	// Write to TLB and flush emulator cache.
 	tlb.set_tlb_entry_at(tlb_entry, index.extract_field(EeCoreCop0Register_Index::INDEX));
+	translation_cache.flush();
 }
 
 void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst)
@@ -208,7 +209,8 @@ void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst)
 	// G bit (and of Lo0 and Lo1)
 	tlb_entry.g = (entrylo0.extract_field(EeCoreCop0Register_EntryLo0::G) & entrylo1.extract_field(EeCoreCop0Register_EntryLo1::G)) > 0;
 
-	// Write to TLB.
+	// Write to TLB and flush emulator cache.
 	tlb.set_tlb_entry_at(tlb_entry, random.extract_field(EeCoreCop0Register_Random::RANDOM));
+	translation_cache.flush();
 }
 

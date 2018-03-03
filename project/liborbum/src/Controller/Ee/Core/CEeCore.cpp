@@ -15,8 +15,7 @@ std::atomic_bool DEBUG_IN_CONTROLLER_EECORE = false;
 #endif
 
 CEeCore::CEeCore(Core * core) :
-	CController(core),
-	translation_cache_tlb_write_count(0)
+	CController(core)
 {
 }
 
@@ -417,14 +416,11 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
 	}
 #endif
 
-	if (translation_cache_tlb_write_count != tlb.write_count)
-	{
-		translation_cache.flush();
-		translation_cache_tlb_write_count = tlb.write_count;
-	}
-
-	using namespace std::placeholders;
-    auto fallback_fn = std::bind(&CEeCore::translate_address_fallback, this, _1, _2, _3);
+	// Using std::bind seems to cause this to make dynamic allocations... using lambdas doesn't (at least on GCC).
+    auto fallback_fn = [this](const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access) -> std::optional<uptr>
+	{ 
+		return translate_address_fallback(virtual_address, rw_access, id_access); 
+	};
 
     return translation_cache.lookup(status.operating_context, virtual_address, rw_access, id_access, fallback_fn);
 }

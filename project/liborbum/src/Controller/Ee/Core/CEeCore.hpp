@@ -66,14 +66,10 @@ protected:
 	/// If the EE Core's TLB is modified, the whole cache is flushed.
 	std::optional<uptr> translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access);
 
-private:
-	/// Cached TLB write count - indicates the translation cache is valid
-	/// for this "timestamp".
-	size_t translation_cache_tlb_write_count;
-
     /// Address translation cache, see translate_address().
     TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache;
 
+private:
 	/// Converts a time duration into the number of ticks that would have occurred.
 	int time_to_ticks(const double time_us);
 

@@ -12,11 +12,6 @@ class EeCoreTlb
 public:
     EeCoreTlb();
 
-	/// TLB write count, used by the emulator for various tasks
-	/// ie: cache coherency checks. Incremented whenever a TLB
-	/// entry is written (set_tlb_entry_at).
-	size_t write_count;
-
 	/// Performs an iterative lookup on the TLB for the given VPN 
     /// contained in the virtual address. A return value of -1 
     /// indicates an entry was not found. Any functions that call

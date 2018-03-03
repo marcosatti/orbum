@@ -3,8 +3,7 @@
 
 #include "Resources/Ee/Core/EeCoreTlb.hpp"
 
-EeCoreTlb::EeCoreTlb() :
-    write_count(0)
+EeCoreTlb::EeCoreTlb()
 {
 }
 
@@ -89,5 +88,4 @@ bool EeCoreTlb::is_match(const uptr vaddress, const int index) const
 void EeCoreTlb::set_tlb_entry_at(const EeCoreTlbEntry& entry, const int index)
 {
 	tlb_entries[index] = entry;
-    write_count++;
 }
