@@ -13,6 +13,10 @@
 #include "Common/Types/Bus/BusContext.hpp"
 #include "Common/Types/Bus/ByteBusMappable.hpp"
 
+#if defined(BUILD_DEBUG)
+ #define DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS 1
+#endif
+
 /// ByteBus is responsible for converting the PS2's physical memory into host memory.
 /// It is byte-addressable, and can map the full range of the address type used.
 /// The mapping method is actually just a 2 level (directory and pages) page table!
@@ -167,7 +171,7 @@ const typename ByteBus<AddressTy>::Page & ByteBus<AddressTy>::get_page(const Add
 {
 	const size_t vdn = get_vdn(address);
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (vdn >= table.size())
 		throw std::runtime_error(str(boost::format("ByteBus lookup: no directory exists, address = 0x%08X.") % address));
 #endif
@@ -175,14 +179,14 @@ const typename ByteBus<AddressTy>::Page & ByteBus<AddressTy>::get_page(const Add
 	const auto& directory = table[vdn];
 	const size_t page_index = directory.page_mask.extract_from(address);
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (page_index >= directory.page_table.size())
 		throw std::runtime_error(str(boost::format("ByteBus lookup: no page exists (probably culled), address = 0x%08X.") % address));
 #endif
 
 	const auto& page = directory.page_table[page_index];
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (page.object == nullptr)
 		throw std::runtime_error(str(boost::format("ByteBus lookup: nullptr object, address = 0x%08X.") % address));
 #endif
@@ -212,7 +216,7 @@ uhword ByteBus<AddressTy>::read_uhword(const BusContext context, const AddressTy
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -226,7 +230,7 @@ void ByteBus<AddressTy>::write_uhword(const BusContext context, const AddressTy 
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_HWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -240,7 +244,7 @@ uword ByteBus<AddressTy>::read_uword(const BusContext context, const AddressTy a
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -254,7 +258,7 @@ void ByteBus<AddressTy>::write_uword(const BusContext context, const AddressTy a
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_WORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -268,7 +272,7 @@ udword ByteBus<AddressTy>::read_udword(const BusContext context, const AddressTy
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -282,7 +286,7 @@ void ByteBus<AddressTy>::write_udword(const BusContext context, const AddressTy 
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_DWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -296,7 +300,7 @@ uqword ByteBus<AddressTy>::read_uqword(const BusContext context, const AddressTy
 	auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -310,7 +314,7 @@ void ByteBus<AddressTy>::write_uqword(const BusContext context, const AddressTy 
 	const auto& page = get_page(address);
 	usize offset = address - page.base_address;
 
-#if defined(BUILD_DEBUG)
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
 	if (offset % NUMBER_BYTES_IN_QWORD != 0)
 		throw std::runtime_error("Tried to access ByteBus with an unaligned offset.");
 #endif
@@ -321,7 +325,8 @@ void ByteBus<AddressTy>::write_uqword(const BusContext context, const AddressTy 
 template<typename AddressTy>
 void ByteBus<AddressTy>::optimise()
 {
-	// Make the page table within each directory as coarse as possible (resize to optimal alignment).
+	// Make the page table within each directory have a page size
+	// as coarse as possible (page size becomes optimal alignment).
 	for (auto& directory : table)
 	{
 		if (directory.page_mask.start != directory.optimal_alignment)
