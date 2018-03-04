@@ -563,6 +563,44 @@ void initialise_ee(RResources * r)
 			r->ee.bus.map(0x1000F380, &r->sbus_f380);
 		}
 
+        // CDVD Registers.
+        {
+            r->ee.bus.map(0x1F402004, &r->cdvd.n_command);
+            r->ee.bus.map(0x1F402005, &r->cdvd.n_rdy_din);
+            r->ee.bus.map(0x1F402006, &r->cdvd.n_data_out);
+            r->ee.bus.map(0x1F402007, &r->cdvd.break_);
+            r->ee.bus.map(0x1F402008, &r->cdvd.intr_stat);
+            r->ee.bus.map(0x1F40200A, &r->cdvd.status);
+            r->ee.bus.map(0x1F40200B, &r->cdvd.tray_state);
+            r->ee.bus.map(0x1F40200C, &r->cdvd.crt_minute);
+            r->ee.bus.map(0x1F40200D, &r->cdvd.crt_second);
+            r->ee.bus.map(0x1F40200E, &r->cdvd.crt_frame);
+            r->ee.bus.map(0x1F40200F, &r->cdvd.type);
+            r->ee.bus.map(0x1F402013, &r->cdvd.register_2013);
+            r->ee.bus.map(0x1F402015, &r->cdvd.rsv);
+            r->ee.bus.map(0x1F402016, &r->cdvd.s_command);
+            r->ee.bus.map(0x1F402017, &r->cdvd.s_rdy_din);
+            r->ee.bus.map(0x1F402018, &r->cdvd.s_data_out);
+            r->ee.bus.map(0x1F402020, &r->cdvd.key_20);
+            r->ee.bus.map(0x1F402021, &r->cdvd.key_21);
+            r->ee.bus.map(0x1F402022, &r->cdvd.key_22);
+            r->ee.bus.map(0x1F402023, &r->cdvd.key_23);
+            r->ee.bus.map(0x1F402024, &r->cdvd.key_24);
+            r->ee.bus.map(0x1F402028, &r->cdvd.key_28);
+            r->ee.bus.map(0x1F402029, &r->cdvd.key_29);
+            r->ee.bus.map(0x1F40202A, &r->cdvd.key_2a);
+            r->ee.bus.map(0x1F40202B, &r->cdvd.key_2b);
+            r->ee.bus.map(0x1F40202C, &r->cdvd.key_2c);
+            r->ee.bus.map(0x1F402030, &r->cdvd.key_30);
+            r->ee.bus.map(0x1F402031, &r->cdvd.key_31);
+            r->ee.bus.map(0x1F402032, &r->cdvd.key_32);
+            r->ee.bus.map(0x1F402033, &r->cdvd.key_33);
+            r->ee.bus.map(0x1F402034, &r->cdvd.key_34);
+            r->ee.bus.map(0x1F402038, &r->cdvd.key_38);
+            r->ee.bus.map(0x1F402039, &r->cdvd.key_xor);
+            r->ee.bus.map(0x1F40203A, &r->cdvd.dec_set);
+        }
+
 		r->ee.bus.optimise();
 	}
 }

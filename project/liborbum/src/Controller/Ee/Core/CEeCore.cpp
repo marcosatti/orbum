@@ -397,7 +397,7 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
 #if defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
-		std::make_pair(0xFFFFFFFF, 0xFFFFFFFF)
+		std::make_pair(0x1F402000, 0x1F402040)
 	};
 
 	for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)

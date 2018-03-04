@@ -47,7 +47,12 @@ const EeCoreTlbEntry & EeCoreTlb::tlb_entry_at(const int index) const
 
 int EeCoreTlb::generate_new_tlb_index()
 {
-	throw std::runtime_error("New TLB index not implemented.");
+    // TODO: not implemented properly, but PCSX2 doesn't seems to do anything
+    // here as well (looks like it's managed by the BIOS). See EE Core Users
+    // manual page 64 for details. Index 47 is always the upper bound that
+    // the COP0.Random register can be, which is where this value is used.
+    // See also the EE core translate_address() function where this is called.
+    return 47;
 }
 
 bool EeCoreTlb::is_match(const uptr vaddress, const int index) const
