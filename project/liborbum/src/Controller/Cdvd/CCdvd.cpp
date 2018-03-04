@@ -21,6 +21,9 @@ void CCdvd::handle_event(const ControllerEvent & event)
 		int ticks_remaining = time_to_ticks(event.data.time_us);
 		while (ticks_remaining > 0)
 			ticks_remaining -= time_step(ticks_remaining);
+
+		handle_rtc_increment(event.data.time_us);
+		
 		break;
 	}
 	default:
@@ -76,6 +79,14 @@ int CCdvd::time_step(const int ticks_available)
 	}
 
 	return 1;
+}
+
+void CCdvd::handle_rtc_increment(const double time_us)
+{
+	auto& r = core->get_resources();
+	auto& rtc = r.cdvd.rtc;
+
+	rtc.increment(time_us);
 }
 
 void CCdvd::NCMD_INSTRUCTION_UNKNOWN()

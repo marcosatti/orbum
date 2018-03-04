@@ -3,6 +3,7 @@
 #include "Resources/Cdvd/CdvdFifoQueues.hpp"
 #include "Resources/Cdvd/CdvdRegisters.hpp"
 #include "Resources/Cdvd/CdvdNvrams.hpp"
+#include "Resources/Cdvd/CdvdRtc.hpp"
 
 /// CD-ROM / DVD (CDVD) resources that is attached through the IOP.
 /// No official documentation - everything comes from PCSX2. Thanks to everyone involved!
@@ -59,4 +60,7 @@ struct RCdvd
 	/// CDVD NVRAM state.
 	/// TODO: Assumes the correct bios for now, change to be dynamic later.
 	CdvdNvram_000 nvram;
+
+	/// CDVD RTC state.
+	CdvdRtc rtc;
 };
