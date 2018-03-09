@@ -99,6 +99,11 @@ void ArrayHwordMemory::write_uqword(const size_t offset, const uqword value)
 		*reinterpret_cast<uqword*>(&memory[offset]) = value;
 }
 
+std::vector<uhword>& ArrayHwordMemory::get_memory()
+{
+    return memory;
+}
+
 void ArrayHwordMemory::read_from_file(const std::string & path, const size_t file_length)
 {
 	std::ifstream file(path, std::ios_base::binary);

@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <atomic>
 #include <boost/format.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 #include "Utilities/Utilities.hpp"
 
@@ -198,6 +199,46 @@ void CIopCore::debug_print_interrupt_info()
 
 	if (sources.tellp())
 		BOOST_LOG(core->get_logger()) << "IopCore Interrupt sources: " << sources.str();
+}
+
+void CIopCore::debug_print_ksprintf()
+{
+    auto& r = core->get_resources();
+    uptr pc = r.iop.core.r3000.pc.read_uword();
+
+    if (pc == 0x86D0)
+    {
+        auto& memory = r.iop.main_memory.get_memory();
+
+        // Get format string, replace all newline characters.
+        std::string format_str = std::string((char*)&memory[r.iop.core.r3000.gpr[6]->read_uword()]);
+        std::replace(format_str.begin(), format_str.end(), '\r', ' ');
+        std::replace(format_str.begin(), format_str.end(), '\n', ' ');
+        boost::trim(format_str);
+
+        // Get the ksprintf argument list.
+        char * arg_list = (char*)&memory[r.iop.core.r3000.gpr[7]->read_uword()];
+
+        // Preprocessing: need to find all guest pointer (%s, %n) references and 
+        // convert them to host pointer addresses, otherwise we will get an access violation...
+        // TODO: for now, just print pointer, too much work otherwise.
+        for (auto it = format_str.begin(); it != format_str.end(); it++)
+        {
+            if (*it == '%')
+            {
+                // Assuming that %s and %n are never prefixed with width/etc specifiers...
+                // Also assuming that a pointer references main memory always.
+                auto it1 = it + 1;
+                if ((*it1 == 's') || (*it1 == 'n'))
+                    *it1 = 'X';
+            }
+        }
+
+        char buffer[0x200];
+        vsnprintf(buffer, 0x200, format_str.c_str(), (va_list)arg_list);
+
+        BOOST_LOG(Core::get_logger()) << boost::format("IOP ksprintf message: %s") % buffer;
+    }
 }
 #endif
 

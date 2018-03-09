@@ -52,6 +52,10 @@ protected:
 #if defined(BUILD_DEBUG)
 	/// Prints debug information about interrupt sources.
 	void debug_print_interrupt_info();
+
+    /// Special hook into ksprintf @ PC = 0x86D0 - directly output to emulator log.
+    /// Format string stored in $a2, va_list in $a3.
+    void debug_print_ksprintf();
 #endif
 
 	/// Performs a cached translation lookup from the given virtual address 

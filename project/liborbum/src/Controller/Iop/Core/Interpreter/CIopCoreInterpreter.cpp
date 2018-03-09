@@ -25,8 +25,8 @@ int CIopCoreInterpreter::time_step(const int ticks_available)
 	IopCoreInstruction inst = IopCoreInstruction(raw_inst);
 
 #if defined(BUILD_DEBUG)
-	static size_t DEBUG_LOOP_BREAKPOINT = 0x100000000000B500;
-	static uptr DEBUG_PC_BREAKPOINT = 0x0;
+	static size_t DEBUG_LOOP_BREAKPOINT = 0x1000000000000000;
+	static uptr DEBUG_PC_BREAKPOINT = 0xFFFF86D0;
 	static uword DEBUG_INST_VAL_BREAKPOINT = 0x42000010; // COP0 RFE
 
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -50,6 +50,9 @@ int CIopCoreInterpreter::time_step(const int ticks_available)
 	{
 		BOOST_LOG(Core::get_logger()) << boost::format("IOPCore PC breakpoint hit @ cycle = 0x%llX, PC = 0x%08X.") % DEBUG_LOOP_COUNTER % pc_address;
 	}
+
+    // Special hook into ksprintf @ PC = 0x86D0, we can print to emulator log directly.
+    debug_print_ksprintf();
 #endif
 	
 	// Run the instruction.

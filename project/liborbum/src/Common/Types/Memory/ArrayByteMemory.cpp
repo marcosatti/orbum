@@ -140,3 +140,8 @@ usize ArrayByteMemory::byte_bus_map_size() const
 {
 	return static_cast<usize>(size);
 }
+
+std::vector<ubyte>& ArrayByteMemory::get_memory()
+{
+    return memory;
+}

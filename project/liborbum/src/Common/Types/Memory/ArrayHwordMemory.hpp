@@ -32,6 +32,10 @@ public:
 	uqword read_uqword(const size_t offset) override;
 	void write_uqword(const size_t offset, const uqword value) override;
 
+    /// Get a reference to the memory storage.
+    /// Used for the emulator: sometimes we need to peek and poke directly.
+    std::vector<uhword> & get_memory();
+
 private:
 	/// Total size of the hword memory.
     size_t size;

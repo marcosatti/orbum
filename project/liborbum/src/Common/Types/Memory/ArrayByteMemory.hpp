@@ -37,6 +37,10 @@ public:
 	/// ByteBusMappable overrides.
 	usize byte_bus_map_size() const override;
 
+    /// Get a reference to the memory storage.
+    /// Used for the emulator: sometimes we need to peek and poke directly.
+    std::vector<ubyte> & get_memory();
+
 private:
 	/// Total size of the byte memory.
 	size_t size;
