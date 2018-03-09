@@ -14,7 +14,7 @@
 #include "Common/Types/Bus/ByteBusMappable.hpp"
 
 #if defined(BUILD_DEBUG)
- #define DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS 1
+ #define DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS 0
 #endif
 
 /// ByteBus is responsible for converting the PS2's physical memory into host memory.

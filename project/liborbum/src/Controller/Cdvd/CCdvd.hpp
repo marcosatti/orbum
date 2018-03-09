@@ -22,6 +22,9 @@ public:
 	/// Checks and processes the CDVD state for any actions to be performed.
 	int time_step(const int ticks_available);
 
+	/// Increments the RTC state by the microseconds specified.
+	void handle_rtc_increment(const double time_us);
+
 	/// N Command instructions and table.
 	/// In theory there can be 256 (ubyte) total instructions, but only a handful of them are implemented.
 	void NCMD_INSTRUCTION_UNKNOWN();
@@ -289,6 +292,7 @@ public:
 	/// In theory there can be 256 (ubyte) total instructions, but only a handful of them are implemented.
 	/// Notation: "Mnemonic" (3:1) means 3 parameter bytes in (S_DATA_IN FIFO), 1 result byte out (S_DATA_OUT).
 	void SCMD_INSTRUCTION_UNKNOWN();
+	void SCMD_INSTRUCTION_08();      // "sceCdReadRTC" (0:8).
 	void SCMD_INSTRUCTION_15();      // "sceCdForbidDVDP" (0:1).
 	void SCMD_INSTRUCTION_40();      // "sceCdOpenConfig" (3:1).
 	void SCMD_INSTRUCTION_41();      // "sceCdReadConfig" (0:16).
@@ -304,7 +308,7 @@ public:
 		/* 0x05 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x06 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x07 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
-		/* 0x08 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
+		/* 0x08 */ &CCdvd::SCMD_INSTRUCTION_08,
 		/* 0x09 */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x0A */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,
 		/* 0x0B */ &CCdvd::SCMD_INSTRUCTION_UNKNOWN,

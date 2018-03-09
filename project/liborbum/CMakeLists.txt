@@ -137,6 +137,8 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/CdvdNvrams.hpp"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/CdvdRegisters.cpp"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/CdvdRegisters.hpp"
+	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/CdvdRtc.cpp"
+	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/CdvdRtc.hpp"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/RCdvd.cpp"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Cdvd/RCdvd.hpp"
 	"${CMAKE_SOURCE_DIR}/project/liborbum/src/Resources/Ee/Core/EeCoreCop0.cpp"

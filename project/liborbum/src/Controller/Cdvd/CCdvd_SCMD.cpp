@@ -4,6 +4,22 @@
 
 #include "Resources/RResources.hpp"
 
+void CCdvd::SCMD_INSTRUCTION_08()
+{
+	auto& r = core->get_resources();
+	auto& rtc = r.cdvd.rtc;
+
+	// Return RTC value.
+	r.cdvd.s_data_out.write_ubyte(0); // Always 0 (success?)
+	r.cdvd.s_data_out.write_ubyte(rtc.second); // Seconds
+	r.cdvd.s_data_out.write_ubyte(rtc.minute); // Minutes
+	r.cdvd.s_data_out.write_ubyte(rtc.hour); // Hours
+	r.cdvd.s_data_out.write_ubyte(0); // Always 0
+	r.cdvd.s_data_out.write_ubyte(rtc.day); // Day
+	r.cdvd.s_data_out.write_ubyte(rtc.month); // Month
+	r.cdvd.s_data_out.write_ubyte(rtc.year); // Year
+}
+
 void CCdvd::SCMD_INSTRUCTION_15()
 {
 	auto& r = core->get_resources();
