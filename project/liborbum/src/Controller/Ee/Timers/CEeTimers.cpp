@@ -55,7 +55,7 @@ void CEeTimers::tick_timer(const ControllerEvent::Type ce_type)
 {
 	auto& r = core->get_resources();
 
-	// Update the timers which are set to count based on the type of event recieved.
+	// Update the timers which are set to count based on the type of event received.
 	for (auto& unit : r.ee.timers.units)
 	{
 		auto _lock = unit.mode->scope_lock();

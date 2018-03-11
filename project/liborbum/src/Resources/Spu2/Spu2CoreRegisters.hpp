@@ -96,11 +96,16 @@ public:
 };
 
 /// SPU2 Core STATX register.
-/// TODO: find out more, not much to go on.
+/// Lots of good info can be found by looking at where the IOP BIOS SPU2 debug 
+/// strings are used. BIOS will detect the SPU2 has timed out if many of these 
+/// bits are not set correctly, which it tries for 256 (0x100) / 3841 (0xF01) 
+/// times depending on the bit.
 class Spu2CoreRegister_Statx : public SizedHwordRegister
 {
 public:
-	static constexpr Bitfield NEEDDATA = Bitfield(7, 1);
+	static constexpr Bitfield UNKNOWN4 = Bitfield(4, 2);  // Unknown, referenced from BIOS.
+	static constexpr Bitfield DREQ     = Bitfield(7, 1);  // Request for more data (confirmed with BIOS).
+	static constexpr Bitfield WRDY_M   = Bitfield(10, 1); // (write?) ready flag? BIOS waits for this to be 0, otherwise it says SPU2 has timed out.
 };
 
 /// SPU2 Core ADMAS register.

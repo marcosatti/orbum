@@ -6,7 +6,7 @@
 
 /// SPU2 system logic.
 /// 2 steps involved:
-///  1. Check through the DMA channels, and send/recieve data as necessary.
+///  1. Check through the DMA channels, and send/receive data as necessary.
 ///  2. Process audio and play samples at 44.1 or 48.0 kHz.
 class CSpu2 : public CController
 {

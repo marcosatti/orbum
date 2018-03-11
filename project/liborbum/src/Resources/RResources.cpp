@@ -1651,30 +1651,30 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F80104C, &r->iop.sio0.ctrl);
 
 			// SIO2 Registers.
-			r->iop.bus.map(0x1F808200, &r->iop.sio2.port0_ctrl3);
-			r->iop.bus.map(0x1F808204, &r->iop.sio2.port1_ctrl3);
-			r->iop.bus.map(0x1F808208, &r->iop.sio2.port2_ctrl3);
-			r->iop.bus.map(0x1F80820C, &r->iop.sio2.port3_ctrl3);
-			r->iop.bus.map(0x1F808210, &r->iop.sio2.port4_ctrl3);
-			r->iop.bus.map(0x1F808214, &r->iop.sio2.port5_ctrl3);
-			r->iop.bus.map(0x1F808218, &r->iop.sio2.port6_ctrl3);
-			r->iop.bus.map(0x1F80821C, &r->iop.sio2.port7_ctrl3);
-			r->iop.bus.map(0x1F808220, &r->iop.sio2.port8_ctrl3);
-			r->iop.bus.map(0x1F808224, &r->iop.sio2.port9_ctrl3);
-			r->iop.bus.map(0x1F808228, &r->iop.sio2.porta_ctrl3);
-			r->iop.bus.map(0x1F80822C, &r->iop.sio2.portb_ctrl3);
-			r->iop.bus.map(0x1F808230, &r->iop.sio2.portc_ctrl3);
-			r->iop.bus.map(0x1F808234, &r->iop.sio2.portd_ctrl3);
-			r->iop.bus.map(0x1F808238, &r->iop.sio2.porte_ctrl3);
-			r->iop.bus.map(0x1F80823C, &r->iop.sio2.portf_ctrl3);
-			r->iop.bus.map(0x1F808240, &r->iop.sio2.port0_ctrl1);
-			r->iop.bus.map(0x1F808244, &r->iop.sio2.port0_ctrl2);
-			r->iop.bus.map(0x1F808248, &r->iop.sio2.port1_ctrl1);
-			r->iop.bus.map(0x1F80824C, &r->iop.sio2.port1_ctrl2);
-			r->iop.bus.map(0x1F808250, &r->iop.sio2.port2_ctrl1);
-			r->iop.bus.map(0x1F808254, &r->iop.sio2.port2_ctrl2);
-			r->iop.bus.map(0x1F808258, &r->iop.sio2.port3_ctrl1);
-			r->iop.bus.map(0x1F80825C, &r->iop.sio2.port3_ctrl2);
+			r->iop.bus.map(0x1F808200, &r->iop.sio2.port_0.ctrl_3);
+			r->iop.bus.map(0x1F808204, &r->iop.sio2.port_1.ctrl_3);
+			r->iop.bus.map(0x1F808208, &r->iop.sio2.port_2.ctrl_3);
+			r->iop.bus.map(0x1F80820C, &r->iop.sio2.port_3.ctrl_3);
+			r->iop.bus.map(0x1F808210, &r->iop.sio2.port_4.ctrl_3);
+			r->iop.bus.map(0x1F808214, &r->iop.sio2.port_5.ctrl_3);
+			r->iop.bus.map(0x1F808218, &r->iop.sio2.port_6.ctrl_3);
+			r->iop.bus.map(0x1F80821C, &r->iop.sio2.port_7.ctrl_3);
+			r->iop.bus.map(0x1F808220, &r->iop.sio2.port_8.ctrl_3);
+			r->iop.bus.map(0x1F808224, &r->iop.sio2.port_9.ctrl_3);
+			r->iop.bus.map(0x1F808228, &r->iop.sio2.port_a.ctrl_3);
+			r->iop.bus.map(0x1F80822C, &r->iop.sio2.port_b.ctrl_3);
+			r->iop.bus.map(0x1F808230, &r->iop.sio2.port_c.ctrl_3);
+			r->iop.bus.map(0x1F808234, &r->iop.sio2.port_d.ctrl_3);
+			r->iop.bus.map(0x1F808238, &r->iop.sio2.port_e.ctrl_3);
+			r->iop.bus.map(0x1F80823C, &r->iop.sio2.port_f.ctrl_3);
+			r->iop.bus.map(0x1F808240, &r->iop.sio2.port_0.ctrl_1);
+			r->iop.bus.map(0x1F808244, &r->iop.sio2.port_0.ctrl_2);
+			r->iop.bus.map(0x1F808248, &r->iop.sio2.port_1.ctrl_1);
+			r->iop.bus.map(0x1F80824C, &r->iop.sio2.port_1.ctrl_2);
+			r->iop.bus.map(0x1F808250, &r->iop.sio2.port_2.ctrl_1);
+			r->iop.bus.map(0x1F808254, &r->iop.sio2.port_2.ctrl_2);
+			r->iop.bus.map(0x1F808258, &r->iop.sio2.port_3.ctrl_1);
+			r->iop.bus.map(0x1F80825C, &r->iop.sio2.port_3.ctrl_2);
 			r->iop.bus.map(0x1F808260, &r->iop.sio2.data_in);
 			r->iop.bus.map(0x1F808264, &r->iop.sio2.data_out);
 			r->iop.bus.map(0x1F808268, &r->iop.sio2.ctrl);
@@ -1739,8 +1739,34 @@ void initialise_iop_timers(RResources * r)
 
 void initialise_iop_sio2(RResources * r)
 {
-	r->iop.sio2.data_in.data_fifo = &r->iop.sio2.data_fifo;
-	r->iop.sio2.data_out.data_fifo = &r->iop.sio2.data_fifo;
+	r->iop.sio2.ports[0].ctrl_1 = &r->iop.sio2.port_0.ctrl_1;
+	r->iop.sio2.ports[0].ctrl_2 = &r->iop.sio2.port_0.ctrl_2;
+	r->iop.sio2.ports[0].ctrl_3 = &r->iop.sio2.port_0.ctrl_3;
+
+	r->iop.sio2.ports[1].ctrl_1 = &r->iop.sio2.port_1.ctrl_1;
+	r->iop.sio2.ports[1].ctrl_2 = &r->iop.sio2.port_1.ctrl_2;
+	r->iop.sio2.ports[1].ctrl_3 = &r->iop.sio2.port_1.ctrl_3;
+
+	r->iop.sio2.ports[2].ctrl_1 = &r->iop.sio2.port_2.ctrl_1;
+	r->iop.sio2.ports[2].ctrl_2 = &r->iop.sio2.port_2.ctrl_2;
+	r->iop.sio2.ports[2].ctrl_3 = &r->iop.sio2.port_2.ctrl_3;
+
+	r->iop.sio2.ports[3].ctrl_1 = &r->iop.sio2.port_3.ctrl_1;
+	r->iop.sio2.ports[3].ctrl_2 = &r->iop.sio2.port_3.ctrl_2;
+	r->iop.sio2.ports[3].ctrl_3 = &r->iop.sio2.port_3.ctrl_3;
+
+	r->iop.sio2.ports[4].ctrl_3 = &r->iop.sio2.port_4.ctrl_3;
+	r->iop.sio2.ports[5].ctrl_3 = &r->iop.sio2.port_5.ctrl_3;
+	r->iop.sio2.ports[6].ctrl_3 = &r->iop.sio2.port_6.ctrl_3;
+	r->iop.sio2.ports[7].ctrl_3 = &r->iop.sio2.port_7.ctrl_3;
+	r->iop.sio2.ports[8].ctrl_3 = &r->iop.sio2.port_8.ctrl_3;
+	r->iop.sio2.ports[9].ctrl_3 = &r->iop.sio2.port_9.ctrl_3;
+	r->iop.sio2.ports[10].ctrl_3 = &r->iop.sio2.port_a.ctrl_3;
+	r->iop.sio2.ports[11].ctrl_3 = &r->iop.sio2.port_b.ctrl_3;
+	r->iop.sio2.ports[12].ctrl_3 = &r->iop.sio2.port_c.ctrl_3;
+	r->iop.sio2.ports[13].ctrl_3 = &r->iop.sio2.port_d.ctrl_3;
+	r->iop.sio2.ports[14].ctrl_3 = &r->iop.sio2.port_e.ctrl_3;
+	r->iop.sio2.ports[15].ctrl_3 = &r->iop.sio2.port_f.ctrl_3;
 }
 
 void initialise_ee_core(RResources * r)

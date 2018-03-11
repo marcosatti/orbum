@@ -268,6 +268,7 @@ struct Constants
 
 		struct SIO2
 		{
+			static constexpr int NUMBER_PORTS = 16;
 			static constexpr double SIO2_CLK_SPEED = 2000000.0; // 2 MHz. From here: https://en.wikipedia.org/wiki/PlayStation_2_technical_specifications.
 		};
 

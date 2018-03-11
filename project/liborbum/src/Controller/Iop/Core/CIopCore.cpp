@@ -221,13 +221,13 @@ void CIopCore::debug_print_ksprintf()
 
         // Preprocessing: need to find all guest pointer (%s, %n) references and 
         // convert them to host pointer addresses, otherwise we will get an access violation...
-        // TODO: for now, just print pointer, too much work otherwise.
         for (auto it = format_str.begin(); it != format_str.end(); it++)
         {
             if (*it == '%')
             {
                 // Assuming that %s and %n are never prefixed with width/etc specifiers...
                 // Also assuming that a pointer references main memory always.
+				// TODO: for now, just print pointer, too much work otherwise.
                 auto it1 = it + 1;
                 if ((*it1 == 's') || (*it1 == 'n'))
                     *it1 = 'X';
@@ -347,9 +347,8 @@ std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, cons
 #if defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
-        std::make_pair(0xFFFFFFFF, 0xFFFFFFFF)
-        //std::make_pair(0xBF801040, 0xBF801050),
-		//std::make_pair(0xBF808200, 0xBF808300)
+		std::make_pair(0xBF808200, 0xBF80823F),
+        std::make_pair(0xBF808260, 0xBF808280)
 	};
 
 	for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)

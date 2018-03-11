@@ -132,7 +132,7 @@ int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core)
 	{
 		// Set 'no data available' magic values for SPU2 registers (done on each try).
 		spu2_core.admas.set_adma_running(false);	
-		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 1);
+		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::DREQ, 1);
 		return 0;
 	}
 
@@ -140,7 +140,7 @@ int CSpu2::transfer_data_adma_write(Spu2Core_Base & spu2_core)
 	uhword data;
 	spu2_core.dma_fifo_queue->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD);
 	spu2_core.admas.set_adma_running(true);	
-	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 0);
+	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::DREQ, 0);
 
 	// Depending on the current transfer count, we are in the left or right sound channel data block (from SPU2-X/Dma.cpp).
 	// Data incoming is in a striped pattern with 0x100 hwords for the left channel, followed by 0x100 hwords for the right channel, repeated.
@@ -189,14 +189,14 @@ int CSpu2::transfer_data_mdma_write(Spu2Core_Base & spu2_core)
 	if (!spu2_core.dma_fifo_queue->has_read_available(NUMBER_BYTES_IN_HWORD))
 	{
 		// Set 'no data available' magic values for SPU2 registers.
-		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 1);
+		spu2_core.statx.insert_field(Spu2CoreRegister_Statx::DREQ, 1);
 		return 0;
 	}
 
 	// Read in data and set 'data available' magic values for SPU2 registers.
 	uhword data;
 	spu2_core.dma_fifo_queue->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_HWORD);
-	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::NEEDDATA, 0);
+	spu2_core.statx.insert_field(Spu2CoreRegister_Statx::DREQ, 0);
 
 	// Calculate write address. Make sure address is not outside 2MB limit (remember, we are addressing by hwords).
 	uhword tsal_addr_lo = spu2_core.tsal.read_uhword();
