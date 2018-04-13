@@ -1,6 +1,7 @@
 #include <sstream>
 #include <algorithm>
 #include <atomic>
+#include <cstdarg>
 #include <boost/format.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
@@ -203,7 +204,6 @@ void CIopCore::debug_print_interrupt_info()
 
 void CIopCore::debug_print_ksprintf()
 {
-#if 0
     auto& r = core->get_resources();
     uptr pc = r.iop.core.r3000.pc.read_uword();
 
@@ -212,35 +212,25 @@ void CIopCore::debug_print_ksprintf()
         auto& memory = r.iop.main_memory.get_memory();
 
         // Get format string, replace all newline characters.
-        std::string format_str = std::string((char*)&memory[r.iop.core.r3000.gpr[6]->read_uword()]);
+		uptr address = r.iop.core.r3000.gpr[6]->read_uword();
+        std::string format_str = std::string(reinterpret_cast<char*>(&memory[address]));
         std::replace(format_str.begin(), format_str.end(), '\r', ' ');
         std::replace(format_str.begin(), format_str.end(), '\n', ' ');
         boost::trim(format_str);
 
         // Get the ksprintf argument list.
-        char * arg_list = (char*)&memory[r.iop.core.r3000.gpr[7]->read_uword()];
+        const char * arg_list = reinterpret_cast<char*>(&memory[r.iop.core.r3000.gpr[7]->read_uword()]);
 
-        // Preprocessing: need to find all guest pointer (%s, %n) references and 
-        // convert them to host pointer addresses, otherwise we will get an access violation...
-        // TODO: for now, just print pointer, too much work otherwise.
-        for (auto it = format_str.begin(); it != format_str.end(); it++)
-        {
-            if (*it == '%')
-            {
-                // Assuming that %s and %n are never prefixed with width/etc specifiers...
-                // Also assuming that a pointer references main memory always.
-                auto it1 = it + 1;
-                if ((*it1 == 's') || (*it1 == 'n'))
-                    *it1 = 'X';
-            }
-        }
+        // Need to find all guest pointer (%s, %n) references and convert them to host pointer addresses, 
+		// otherwise we will get an access violation and/or wrong data... Then print it.
+        std::string output = vsnprintf_list_convert(format_str, arg_list, [&](const uptr address)
+		{
+			// Assume that all addresses are referencing main memory.
+			return reinterpret_cast<std::uintptr_t>(&memory[address]);
+		});
 
-        char buffer[0x200];
-        vsnprintf(buffer, 0x200, format_str.c_str(), (va_list)arg_list);
-
-        BOOST_LOG(Core::get_logger()) << boost::format("IOP ksprintf message: %s") % buffer;
+        BOOST_LOG(Core::get_logger()) << boost::format("IOP ksprintf message: %s") % output;
     }
-#endif
 }
 #endif
 

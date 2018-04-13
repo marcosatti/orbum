@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <functional>
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Primitive.hpp"
@@ -39,3 +40,8 @@ sword saturate_dword_to_word(const sdword value);
 /// Thanks to http://stackoverflow.com/questions/199333/how-to-detect-integer-overflow-in-c-c
 bool test_over_or_underflow_32(const sword x, const sword y);
 bool test_over_or_underflow_64(const sdword x, const sdword y);
+
+/// Iterates through a printf specifier converting guest pointers into host pointers within the args_list (ie: va_args) argument.
+/// Also takes in a address conversion handler that returns the converted host pointer address.
+/// Assumes the args_list is a sequential block of variables to print in memory.
+std::string vsnprintf_list_convert(const std::string & format_str, const char * args_list, const std::function<std::uintptr_t(const uptr)> & convert_pointer_fn);

@@ -1,6 +1,11 @@
 #include <climits>
 #include <cmath>
+#include <cstring>
 #include <stdexcept>
+#include <string>
+#include <sstream>
+#include <boost/format.hpp>
+#include <Language.hpp>
 
 #include "Utilities/Utilities.hpp"
 
@@ -141,4 +146,102 @@ ubyte get_float_exponent(const f32 value)
 	sword exp;
 	std::frexp(value, &exp);
 	return static_cast<ubyte>(exp);
+}
+
+template<typename Ty>
+int print_single_arg(std::stringstream & buffer, const char * arg_start, const std::string::const_iterator & start_it, const std::string::const_iterator & end_it)
+{
+	buffer << boost::format(std::string(start_it, end_it)) % *reinterpret_cast<const Ty*>(arg_start);
+	return sizeof(Ty);
+}
+
+std::string vsnprintf_list_convert(const std::string & format_str, const char * args_list, const std::function<std::uintptr_t(const uptr)> & convert_pointer_fn)
+{
+	std::stringstream buffer;
+	int current_args_list_pos = 0;
+
+	for (auto it1 = format_str.begin(); it1 != format_str.end(); it1++)
+	{
+		// Normal character.
+		char current_char = *it1;
+		if (current_char != '%')
+		{
+			buffer << current_char;
+			continue;
+		}
+
+		// Percent escape.
+		char next_char = *(it1 + 1);
+		if (next_char == '%')
+		{
+			buffer << '%';
+			it1 += 1;
+			continue;	
+		}
+
+		// In a specifier, sub-search for the type and print the formatted string.
+		// Start search from next character.
+		auto it2 = it1 + 1;
+		while (true)
+		{
+			char specifier_type = *it2;
+			switch (specifier_type)
+			{
+			case 'h':
+			case 'l':
+			case 'j':
+			case 'z':
+			case 't':
+			case 'L':
+			{
+				throw std::runtime_error("Length modifier not handled yet.");
+			}
+			case 'n':
+			{
+				throw std::runtime_error("%n not handled yet.");
+			}
+			case 'p':
+			case 'i':
+			case 'd':
+			case 'u':
+			case 'o':
+			case 'x':
+			case 'X':
+			case 'c':
+			{
+				current_args_list_pos += print_single_arg<uword>(buffer, args_list + current_args_list_pos, it1, it2 + 1);
+				goto specifier_found;
+			}
+			case 'f':
+			case 'F':
+			case 'e':
+			case 'E':
+			case 'g':
+			case 'G':
+			case 'a':
+			case 'A':
+			{
+				current_args_list_pos += print_single_arg<udword>(buffer, args_list + current_args_list_pos, it1, it2 + 1);
+				goto specifier_found;
+			}
+			case 's':
+			{
+        		const uptr guest_pointer = *(const uptr*)(args_list + current_args_list_pos);
+				const char * host_pointer = reinterpret_cast<const char*>(convert_pointer_fn(guest_pointer));
+				current_args_list_pos += print_single_arg<uptr>(buffer, reinterpret_cast<const char*>(&host_pointer), it1, it2 + 1);
+				goto specifier_found;
+			}
+			}
+
+			it2++;
+
+			if (it2 == format_str.end())
+				throw std::runtime_error("Specifier end not found, at end of string.");
+		}
+
+specifier_found:
+		it1 += it2 - it1;
+	}
+
+	return buffer.str();
 }
