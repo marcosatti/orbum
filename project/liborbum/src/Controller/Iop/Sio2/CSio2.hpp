@@ -2,6 +2,15 @@
 
 #include "Controller/CController.hpp"
 
+/// SIO2 controller.
+/// Basic operation from BIOS perspective:
+/// 1. Set CTRL register value, for writing.
+/// 2. For each port, set CTRL 1/2 registers (unused within emulator).
+/// 3. For each port, set CTRL 3 registers.
+/// 4. Send command data to the data_in FIFO.
+/// 5. Turn on the SIO2 DMA channels for reading and writing.
+/// 6. Set CTRL register value, for reading.
+/// 7. Repeat.
 class CSio2 : public CController
 {
 public:
