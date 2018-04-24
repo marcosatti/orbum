@@ -1,8 +1,11 @@
+# CMake 3.8.2 is needed for C++17 support.
 cmake_minimum_required(VERSION 3.8.2)
 
-#if(APPLE and not TARGET_IOS)
-#	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" cache string "Minimum OS X deployment version")
-#endif()
+#######################
+# Pre-project options #
+#######################
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" cache string "Minimum OS X deployment version")
+
 
 project(orbum CXX)
 
@@ -47,3 +50,11 @@ find_package(Boost REQUIRED COMPONENTS log filesystem)
 add_subdirectory(liborbum)
 add_subdirectory(orbumfront)
 add_subdirectory(utilities)
+
+
+#########################
+# Visual Studio Options #
+#########################
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT orbumfront)
+set_property(TARGET orbumfront PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
