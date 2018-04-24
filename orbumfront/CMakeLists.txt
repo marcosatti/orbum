@@ -13,7 +13,7 @@ target_link_libraries(
 	PUBLIC
 		"${CMAKE_THREAD_LIBS_INIT}"
 		utilities
-		liborbum
+		orbum
 )
 
 # TODO: Sort out later into proper build configurations.

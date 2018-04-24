@@ -271,10 +271,10 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Utilities/Utilities.hpp"
 )
 
-add_library(liborbum "${COMMON_SRC_FILES}")
+add_library(orbum "${COMMON_SRC_FILES}")
 
 target_include_directories(
-	liborbum 
+	orbum 
 	PUBLIC
 		"${Boost_INCLUDE_DIR}"
 		"${CMAKE_SOURCE_DIR}/liborbum/src"
@@ -283,21 +283,21 @@ target_include_directories(
 # TODO: Sort out later into proper build configurations.
 # Also disable MSVC non-safe copy warnings.
 target_compile_definitions(
-	liborbum 
+	orbum 
 	PUBLIC 
 		"_SCL_SECURE_NO_WARNINGS"
 		"BUILD_DEBUG"
 )
 
 target_link_libraries(
-	liborbum 
+	orbum 
 	PUBLIC
 		utilities
 		${Boost_LIBRARIES}
 )
 
 install(
-	TARGETS liborbum 
+	TARGETS orbum 
 	ARCHIVE DESTINATION "lib/static"
 	LIBRARY DESTINATION "lib"
 )
