@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 #include <boost/format.hpp>
-#include <Language.hpp>
 
 #include "Utilities/Utilities.hpp"
 
@@ -187,20 +186,27 @@ std::string vsnprintf_list_convert(const std::string & format_str, const char * 
 			char specifier_type = *it2;
 			switch (specifier_type)
 			{
-			case 'h':
-			case 'l':
-			case 'j':
-			case 'z':
-			case 't':
-			case 'L':
-			{
-				throw std::runtime_error("Length modifier not handled yet.");
-			}
+			// TODO: this is not needed currently... On most compilers the printf 
+			// length modifiers are the same, so it's never a problem 
+			// (just passthrough unmodified to printer).
+			// case 'h':
+			// case 'l':
+			// case 'j':
+			// case 'z':
+			// case 't':
+			// case 'L':
+			// {
+			// 	throw std::runtime_error("Length modifier not handled yet.");
+			// }
 			case 'n':
 			{
 				throw std::runtime_error("%n not handled yet.");
 			}
 			case 'p':
+			{
+				current_args_list_pos += print_single_arg<uptr>(buffer, args_list + current_args_list_pos, it1, it2 + 1);
+				goto specifier_found;
+			}
 			case 'i':
 			case 'd':
 			case 'u':
@@ -228,7 +234,8 @@ std::string vsnprintf_list_convert(const std::string & format_str, const char * 
 			{
         		const uptr guest_pointer = *(const uptr*)(args_list + current_args_list_pos);
 				const char * host_pointer = reinterpret_cast<const char*>(convert_pointer_fn(guest_pointer));
-				current_args_list_pos += print_single_arg<uptr>(buffer, reinterpret_cast<const char*>(&host_pointer), it1, it2 + 1);
+				buffer << boost::format(std::string(it1, it2 + 1)) % host_pointer;
+				current_args_list_pos += sizeof(uptr);
 				goto specifier_found;
 			}
 			}

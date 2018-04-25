@@ -205,21 +205,22 @@ void CIopCore::debug_print_interrupt_info()
 void CIopCore::debug_print_ksprintf()
 {
     auto& r = core->get_resources();
-    uptr pc = r.iop.core.r3000.pc.read_uword();
+    const uptr pc = r.iop.core.r3000.pc.read_uword();
 
     if (pc == 0x86D0)
     {
         auto& memory = r.iop.main_memory.get_memory();
 
-        // Get format string, replace all newline characters.
-		uptr address = r.iop.core.r3000.gpr[6]->read_uword();
-        std::string format_str = std::string(reinterpret_cast<char*>(&memory[address]));
+        // Get format string ($a2), replace all newline characters.
+		const uptr format_ptr = r.iop.core.r3000.gpr[6]->read_uword();
+        std::string format_str = std::string(reinterpret_cast<const char*>(&memory[format_ptr]));
         std::replace(format_str.begin(), format_str.end(), '\r', ' ');
         std::replace(format_str.begin(), format_str.end(), '\n', ' ');
         boost::trim(format_str);
 
-        // Get the ksprintf argument list.
-        const char * arg_list = reinterpret_cast<char*>(&memory[r.iop.core.r3000.gpr[7]->read_uword()]);
+        // Get the ksprintf argument list pointer ($a3).
+		const uptr args_list_ptr = r.iop.core.r3000.gpr[7]->read_uword();
+        const char * arg_list = reinterpret_cast<const char*>(&memory[args_list_ptr]);
 
         // Need to find all guest pointer (%s, %n) references and convert them to host pointer addresses, 
 		// otherwise we will get an access violation and/or wrong data... Then print it.

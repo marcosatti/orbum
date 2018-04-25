@@ -55,6 +55,8 @@ protected:
 
     /// Special hook into ksprintf @ PC = 0x86D0 - directly output to emulator log.
     /// Format string stored in $a2, va_list in $a3.
+	/// TODO: this is crap, doesn't accurately work in most cases as its missing static parts of final string.
+	/// Need to hook into write() syscall instead for stdout (see pcsx2).
     void debug_print_ksprintf();
 #endif
 
