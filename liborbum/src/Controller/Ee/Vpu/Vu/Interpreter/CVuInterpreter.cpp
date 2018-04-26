@@ -47,6 +47,8 @@ int CVuInterpreter::time_to_ticks(const double time_us)
 int CVuInterpreter::time_step(const int ticks_available)
 {
 	// TODO: Not yet implemented.
+#if defined(BUILD_DEBUG)
 	DEBUG_LOOP_COUNTER++;
+#endif
 	return 1;
 }

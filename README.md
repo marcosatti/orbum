@@ -41,7 +41,6 @@ Other bios' are not currently supported or tested with.
 
 Upon Ctrl-C, memory dumps will be placed in the `dumps/` folder.
 Logging will save files to `logs/` (uses boost logging).
-Please create these folders, they are not done automatically.
 
 These folders should be placed relative to the executable.
 

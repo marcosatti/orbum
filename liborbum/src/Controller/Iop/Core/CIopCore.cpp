@@ -27,11 +27,13 @@ CIopCore::CIopCore(Core * core) :
 
 CIopCore::~CIopCore()
 {
+#if defined(BUILD_DEBUG)
 	auto& r = core->get_resources();
 	BOOST_LOG(Core::get_logger()) << 
 		boost::format("IOP Core exiting @ Cycle = 0x%llX, PC = 0x%08X.") 
 		% DEBUG_LOOP_COUNTER 
 		% r.iop.core.r3000.pc.read_uword();
+#endif
 }
 
 void CIopCore::handle_event(const ControllerEvent & event)

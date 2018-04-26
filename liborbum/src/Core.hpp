@@ -30,8 +30,9 @@ struct SHARED_EXPORT CoreOptions
     // us = microseconds.
 	// Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
 
-	/* Log dir path.             */ std::string log_dir_path;
+	/* Log dir path.             */ std::string logs_dir_path;
 	/* Roms dir path.            */ std::string roms_dir_path;
+	/* Memory dumps dir path.    */ std::string dumps_dir_path;
 	/* Boot ROM file name.       */ std::string boot_rom_file_name;
 	/* ROM1 file name.           */ std::string rom1_file_name;
 	/* ROM2 file name.           */ std::string rom2_file_name;

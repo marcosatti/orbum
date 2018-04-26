@@ -7,7 +7,9 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/sinks/text_file_backend.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 #include <chrono>
+#include <Console.hpp>
 #include <Macros.hpp>
 
 #include "Core.hpp"
@@ -33,21 +35,15 @@
 
 #include "Resources/RResources.hpp"
 
-#if defined(ENV_WINDOWS)
- #define NOMINMAX
- #include <Windows.h>
-#elif defined(ENV_UNIX)
- #include <iostream>
-#endif
-
 boost::log::sources::logger_mt Core::logger;
 
 CoreOptions CoreOptions::make_default()
 {
     return CoreOptions 
     {
-		"logs/",
-		"bios/",
+		"./logs/",
+		"./bios/",
+		"./dumps/",
         "scph10000.bin",
         "",
         "",
@@ -133,17 +129,16 @@ void Core::run()
 	static std::chrono::high_resolution_clock::time_point DEBUG_T1 = std::chrono::high_resolution_clock::now();
     if ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) > 0.01e6)
     {
-		std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
-        std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)") 
+		const std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
+		const std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
+        
+        const std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)") 
 			% (DEBUG_TIME_ELAPSED / 1e6)
 			% ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
+
 		BOOST_LOG(get_logger()) << info;
-#if defined(ENV_WINDOWS)
-		SetConsoleTitle(info.c_str());
-#elif defined(ENV_UNIX)
-        std::cout << "\033]0;" << info << "\007";
-#endif
+		//print_title(info);
+
         DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
 		DEBUG_T1 = DEBUG_T2;
     }
@@ -199,20 +194,21 @@ boost::log::sources::logger_mt & Core::get_logger()
 
 void Core::dump_all_memory() const
 {
-	const std::string base = "./dumps/";
-	get_resources().ee.main_memory.write_to_file(base + "End_Dump_EE.bin");
-	get_resources().iop.main_memory.write_to_file(base + "End_Dump_IOP.bin");
-	get_resources().spu2.main_memory.write_to_file(base + "End_Dump_SPU2.bin");
-	get_resources().cdvd.nvram.memory.write_to_file(base + "End_Dump_CDVD_NVRAM.bin");
+	boost::filesystem::create_directory(options.dumps_dir_path);
+	get_resources().ee.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_EE.bin");
+	get_resources().iop.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_IOP.bin");
+	get_resources().spu2.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_SPU2.bin");
+	get_resources().cdvd.nvram.memory.write_to_file(options.dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
 	BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
 }
 
 void Core::init_logging()
 {
+	boost::filesystem::create_directory(options.logs_dir_path);
 	boost::log::add_common_attributes();
 	boost::log::add_file_log
 	(
-		boost::log::keywords::file_name = options.log_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
+		boost::log::keywords::file_name = options.logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
 		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
 	);
 	boost::log::add_console_log

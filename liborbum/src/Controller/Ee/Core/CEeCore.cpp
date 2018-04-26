@@ -1,5 +1,6 @@
 #include <sstream>
 #include <boost/format.hpp>
+#include <Console.hpp>
 
 #include "Core.hpp"
 #include "Utilities/Utilities.hpp"
@@ -21,11 +22,13 @@ CEeCore::CEeCore(Core * core) :
 
 CEeCore::~CEeCore()
 {
+#if defined(BUILD_DEBUG)
 	auto& r = core->get_resources();
 	BOOST_LOG(Core::get_logger()) << 
 		boost::format("EE Core exiting @ Cycle = 0x%llX, PC = 0x%08X.") 
 		% DEBUG_LOOP_COUNTER 
 		% r.ee.core.r5900.pc.read_uword();
+#endif
 }
 
 void CEeCore::handle_event(const ControllerEvent & event)
@@ -34,6 +37,12 @@ void CEeCore::handle_event(const ControllerEvent & event)
     if (DEBUG_IN_CONTROLLER_EECORE)
         throw std::runtime_error("EeCore controller is already running!");
     DEBUG_IN_CONTROLLER_EECORE = true;
+	static size_t DEBUG_COUNTER = 0;
+#endif
+
+#if defined(BUILD_DEBUG)
+	static std::chrono::high_resolution_clock::time_point DEBUG_OVERHEAD = std::chrono::high_resolution_clock::now();
+	const std::chrono::high_resolution_clock::time_point DEBUG_T1 = std::chrono::high_resolution_clock::now();
 #endif
 
 	switch (event.type)
@@ -52,6 +61,30 @@ void CEeCore::handle_event(const ControllerEvent & event)
 	}
 
 #if defined(BUILD_DEBUG)
+	const std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
+
+	const std::chrono::duration<double, std::micro> run_duration = DEBUG_T2 - DEBUG_T1;
+	const std::chrono::duration<double, std::micro> overhead_duration = DEBUG_T1 - DEBUG_OVERHEAD;
+	const std::chrono::duration<double, std::micro> total_duration = run_duration + overhead_duration;
+
+	DEBUG_OVERHEAD = std::chrono::high_resolution_clock::now();
+
+	const std::string info = str(boost::format("EE Core benchmark; total: %.3f us, run: %.3f us (%.1f%%), overhead: %.3f us (%.1f%%)")
+		% total_duration.count()
+		% run_duration.count()
+		% ((run_duration / total_duration) * 100.0)
+		% overhead_duration.count()
+		% ((overhead_duration / total_duration) * 100.0));
+
+	//BOOST_LOG(core->get_logger()) << info;
+
+	if (DEBUG_COUNTER % 100 == 0)
+		print_title(info);
+
+#endif
+
+#if defined(BUILD_DEBUG)
+	DEBUG_COUNTER++;
     DEBUG_IN_CONTROLLER_EECORE = false;
 #endif
 }

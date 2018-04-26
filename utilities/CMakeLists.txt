@@ -8,19 +8,21 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/utilities/src/Queues.hpp"
 	"${CMAKE_SOURCE_DIR}/utilities/src/EnumMap.hpp"
 	"${CMAKE_SOURCE_DIR}/utilities/src/Caches.hpp"
+	"${CMAKE_SOURCE_DIR}/utilities/src/Console.hpp"
+	"${CMAKE_SOURCE_DIR}/utilities/src/Console.cpp"
 )
 
-add_library(utilities INTERFACE)
+add_library(utilities STATIC "${COMMON_SRC_FILES}")
 
 target_sources(
 	utilities
-	INTERFACE 
+	PUBLIC 
 		"${COMMON_SRC_FILES}"
 )
 
 target_include_directories(
 	utilities 
-	INTERFACE
+	PUBLIC
 		"${Boost_INCLUDE_DIR}"
 		"${CMAKE_SOURCE_DIR}/utilities/src"
 )
