@@ -111,6 +111,11 @@ Core::~Core()
 	BOOST_LOG(get_logger()) << "Core shutting down";
 }
 
+boost::log::sources::logger_mt & Core::get_logger()
+{
+    return logger;
+}
+
 void Core::run()
 {
 #if defined(BUILD_DEBUG)

@@ -56,10 +56,7 @@ public:
 	~Core();
 
 	/// Returns a reference to the logging functionality.
-	static boost::log::sources::logger_mt & get_logger()
-	{
-		return logger;
-	}
+    static boost::log::sources::logger_mt & get_logger();
 
 	/// Returns the runtime core options.
 	const CoreOptions & get_options() const
