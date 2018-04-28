@@ -27,10 +27,10 @@ void CEeCoreInterpreter::PMAXH(const EeCoreInstruction inst)
     };
 
     for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        value[i] = max(reg_source1->read_uhword(i), reg_source2->read_uhword(i));
+        value[i] = max(reg_source1.read_uhword(i), reg_source2.read_uhword(i));
 
     for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst)
@@ -53,10 +53,10 @@ void CEeCoreInterpreter::PMAXW(const EeCoreInstruction inst)
     };
 
     for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        value[i] = max(reg_source1->read_uword(i), reg_source2->read_uword(i));
+        value[i] = max(reg_source1.read_uword(i), reg_source2.read_uword(i));
 
     for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst)
@@ -79,10 +79,10 @@ void CEeCoreInterpreter::PMINH(const EeCoreInstruction inst)
     };
 
     for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        value[i] = max(reg_source1->read_uhword(i), reg_source2->read_uhword(i));
+        value[i] = max(reg_source1.read_uhword(i), reg_source2.read_uhword(i));
 
     for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst)
@@ -105,10 +105,10 @@ void CEeCoreInterpreter::PMINW(const EeCoreInstruction inst)
     };
 
     for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        value[i] = max(reg_source1->read_uword(i), reg_source2->read_uword(i));
+        value[i] = max(reg_source1.read_uword(i), reg_source2.read_uword(i));
 
     for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::MAX_S(const EeCoreInstruction inst)

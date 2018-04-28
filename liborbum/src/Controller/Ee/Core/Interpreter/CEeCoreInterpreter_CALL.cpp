@@ -13,11 +13,11 @@ void CEeCoreInterpreter::BGEZAL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 >= 0)
 	{
-		r.ee.core.r5900.gpr[31]->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+		r.ee.core.r5900.gpr[31].write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 	}
 }
@@ -30,11 +30,11 @@ void CEeCoreInterpreter::BGEZALL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 >= 0)
 	{
-		r.ee.core.r5900.gpr[31]->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+		r.ee.core.r5900.gpr[31].write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 	}
 	else
@@ -49,11 +49,11 @@ void CEeCoreInterpreter::BLTZAL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 < 0)
 	{
-		r.ee.core.r5900.gpr[31]->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+		r.ee.core.r5900.gpr[31].write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 	}
 }
@@ -66,11 +66,11 @@ void CEeCoreInterpreter::BLTZALL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 < 0)
 	{
-		r.ee.core.r5900.gpr[31]->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+		r.ee.core.r5900.gpr[31].write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
 	}
 	else
@@ -82,7 +82,7 @@ void CEeCoreInterpreter::JAL(const EeCoreInstruction inst)
 	auto& r = core->get_resources();
 	
 	// JUMP_LINK(). No exceptions.
-	r.ee.core.r5900.gpr[31]->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+	r.ee.core.r5900.gpr[31].write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
 	r.ee.core.r5900.bdelay.set_branch_jtype(r.ee.core.r5900.pc, inst.addr());
 }
 
@@ -94,6 +94,6 @@ void CEeCoreInterpreter::JALR(const EeCoreInstruction inst)
 	auto& reg_source = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	reg_dest->write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
-	r.ee.core.r5900.bdelay.set_branch_direct(reg_source->read_uword(0));
+	reg_dest.write_udword(0, static_cast<udword>(r.ee.core.r5900.pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION * 2));
+	r.ee.core.r5900.bdelay.set_branch_direct(reg_source.read_uword(0));
 }

@@ -15,12 +15,12 @@ void CEeCoreInterpreter::SLT(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<sdword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<sdword>(reg_source2.read_udword(0));
 
 	sdword result = (val_source1 < val_source2) ? 1 : 0;
 
-	reg_dest->write_udword(0, result);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SLTI(const EeCoreInstruction inst)
@@ -33,11 +33,11 @@ void CEeCoreInterpreter::SLTI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	auto imm = static_cast<sdword>(inst.s_imm());
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	sdword result = (val_source1 < imm) ? 1 : 0;
 
-	reg_dest->write_udword(0, result);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SLTIU(const EeCoreInstruction inst)
@@ -50,11 +50,11 @@ void CEeCoreInterpreter::SLTIU(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	auto imm = static_cast<udword>(static_cast<sdword>(inst.s_imm()));
 
-	auto val_source1 = static_cast<udword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<udword>(reg_source1.read_udword(0));
 
 	udword result = (val_source1 < imm) ? 1 : 0;
 
-	reg_dest->write_udword(0, result);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SLTU(const EeCoreInstruction inst)
@@ -67,12 +67,12 @@ void CEeCoreInterpreter::SLTU(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	auto val_source1 = static_cast<udword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<udword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<udword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<udword>(reg_source2.read_udword(0));
 
 	udword result = (val_source1 < val_source2) ? 1 : 0;
 
-	reg_dest->write_udword(0, result);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::PCEQB(const EeCoreInstruction inst)
@@ -87,10 +87,10 @@ void CEeCoreInterpreter::PCEQB(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
 	{
-		ubyte val_source1 = reg_source1->read_ubyte(i);
-		ubyte val_source2 = reg_source2->read_ubyte(i);
+		ubyte val_source1 = reg_source1.read_ubyte(i);
+		ubyte val_source2 = reg_source2.read_ubyte(i);
 		ubyte result = (val_source1 == val_source2) ? 0xFF : 0x00;
-		reg_dest->write_ubyte(i, result);
+		reg_dest.write_ubyte(i, result);
 	}
 }
 
@@ -106,10 +106,10 @@ void CEeCoreInterpreter::PCEQH(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		uhword val_source1 = reg_source1->read_uhword(i);
-		uhword val_source2 = reg_source2->read_uhword(i);
+		uhword val_source1 = reg_source1.read_uhword(i);
+		uhword val_source2 = reg_source2.read_uhword(i);
 		uhword result = (val_source1 == val_source2) ? 0xFFFF : 0x0000;
-		reg_dest->write_uhword(i, result);
+		reg_dest.write_uhword(i, result);
 	}
 }
 
@@ -125,10 +125,10 @@ void CEeCoreInterpreter::PCEQW(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
 	{
-		uword val_source1 = reg_source1->read_uword(i);
-		uword val_source2 = reg_source2->read_uword(i);
+		uword val_source1 = reg_source1.read_uword(i);
+		uword val_source2 = reg_source2.read_uword(i);
 		uword result = (val_source1 == val_source2) ? 0xFFFFFFFF : 0x00000000;
-		reg_dest->write_uword(i, result);
+		reg_dest.write_uword(i, result);
 	}
 }
 
@@ -144,10 +144,10 @@ void CEeCoreInterpreter::PCGTB(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_BYTES_IN_QWORD; i++)
 	{
-		ubyte val_source1 = reg_source1->read_ubyte(i);
-		ubyte val_source2 = reg_source2->read_ubyte(i);
+		ubyte val_source1 = reg_source1.read_ubyte(i);
+		ubyte val_source2 = reg_source2.read_ubyte(i);
 		ubyte result = (val_source1 > val_source2) ? 0xFF : 0x00;
-		reg_dest->write_ubyte(i, result);
+		reg_dest.write_ubyte(i, result);
 	}
 }
 
@@ -163,10 +163,10 @@ void CEeCoreInterpreter::PCGTH(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
 	{
-		uhword val_source1 = reg_source1->read_uhword(i);
-		uhword val_source2 = reg_source2->read_uhword(i);
+		uhword val_source1 = reg_source1.read_uhword(i);
+		uhword val_source2 = reg_source2.read_uhword(i);
 		uhword result = (val_source1 > val_source2) ? 0xFFFF : 0x0000;
-		reg_dest->write_uhword(i, result);
+		reg_dest.write_uhword(i, result);
 	}
 }
 
@@ -182,10 +182,10 @@ void CEeCoreInterpreter::PCGTW(const EeCoreInstruction inst)
 
 	for (auto i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
 	{
-		uword val_source1 = reg_source1->read_uword(i);
-		uword val_source2 = reg_source2->read_uword(i);
+		uword val_source1 = reg_source1.read_uword(i);
+		uword val_source2 = reg_source2.read_uword(i);
 		uword result = (val_source1 > val_source2) ? 0xFFFFFFFF : 0x00000000;
-		reg_dest->write_uword(i, result);
+		reg_dest.write_uword(i, result);
 	}
 }
 

@@ -68,7 +68,8 @@ protected:
 
 private:
     /// Address translation cache, see translate_address().
-    TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache;
+	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_data;
+	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_inst;
 
 	/// Converts a time duration into the number of ticks that would have occurred.
 	int time_to_ticks(const double time_us);
@@ -77,5 +78,5 @@ private:
 	/// The IOP Core has no TLB - all virtual addresses are directly converted to
     /// physical addresses based on kernel segments. Currently if the CPU is not 
     /// in a kernel context or an MMU error occurs, a runtime_error exception will be thrown.
-	std::optional<uptr> translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access);
+	std::optional<uptr> translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access);
 };

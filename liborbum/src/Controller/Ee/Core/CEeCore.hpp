@@ -67,7 +67,8 @@ protected:
 	std::optional<uptr> translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access);
 
     /// Address translation cache, see translate_address().
-    TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache;
+	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_data;
+	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_inst;
 
 private:
 	/// Converts a time duration into the number of ticks that would have occurred.
@@ -79,5 +80,5 @@ private:
 	/// Stage 2 performs a TLB lookup and checks the ASID and G bits.
 	/// Stage 3 tests the valid and dirty flags, and determines if the VPN is for the even or odd PFN.
 	/// Stage 4 calculates the final physical address.
-	std::optional<uptr> translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access);
+	std::optional<uptr> translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access);
 };

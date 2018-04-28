@@ -166,7 +166,8 @@ void CEeCoreInterpreter::TLBWI(const EeCoreInstruction inst)
 
 	// Write to TLB and flush emulator cache.
 	tlb.set_tlb_entry_at(tlb_entry, index.extract_field(EeCoreCop0Register_Index::INDEX));
-	translation_cache.flush();
+	translation_cache_data.flush();
+	translation_cache_inst.flush();
 }
 
 void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst)
@@ -211,6 +212,7 @@ void CEeCoreInterpreter::TLBWR(const EeCoreInstruction inst)
 
 	// Write to TLB and flush emulator cache.
 	tlb.set_tlb_entry_at(tlb_entry, random.extract_field(EeCoreCop0Register_Random::RANDOM));
-	translation_cache.flush();
+	translation_cache_data.flush();
+	translation_cache_inst.flush();
 }
 

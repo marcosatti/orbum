@@ -25,15 +25,15 @@ void CEeCoreInterpreter::PEXT5(const EeCoreInstruction inst)
 		return (temp3 | temp2 | temp1 | temp0);
 	};
 
-	value[0] = unpack(reg_source1->read_uhword(0));
-	value[1] = unpack(reg_source1->read_uhword(2));
-	value[2] = unpack(reg_source1->read_uhword(4));
-	value[3] = unpack(reg_source1->read_uhword(6));
+	value[0] = unpack(reg_source1.read_uhword(0));
+	value[1] = unpack(reg_source1.read_uhword(2));
+	value[2] = unpack(reg_source1.read_uhword(4));
+	value[3] = unpack(reg_source1.read_uhword(6));
 
-	reg_dest->write_uword(0, value[0]);
-	reg_dest->write_uword(1, value[1]);
-	reg_dest->write_uword(2, value[2]);
-	reg_dest->write_uword(3, value[3]);
+	reg_dest.write_uword(0, value[0]);
+	reg_dest.write_uword(1, value[1]);
+	reg_dest.write_uword(2, value[2]);
+	reg_dest.write_uword(3, value[3]);
 }
 
 void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst)
@@ -56,16 +56,16 @@ void CEeCoreInterpreter::PPAC5(const EeCoreInstruction inst)
 		return (temp3 | temp2 | temp1 | temp0);
 	};
 
-	value[0] = pack(reg_source1->read_uword(0));
-	value[1] = pack(reg_source1->read_uword(1));
-	value[2] = pack(reg_source1->read_uword(2));
-	value[3] = pack(reg_source1->read_uword(3));
+	value[0] = pack(reg_source1.read_uword(0));
+	value[1] = pack(reg_source1.read_uword(1));
+	value[2] = pack(reg_source1.read_uword(2));
+	value[3] = pack(reg_source1.read_uword(3));
 
 	// Upper 16 bits padded with 0's.
-	reg_dest->write_uword(0, static_cast<uword>(value[0]));
-	reg_dest->write_uword(2, static_cast<uword>(value[1]));
-	reg_dest->write_uword(4, static_cast<uword>(value[2]));
-	reg_dest->write_uword(6, static_cast<uword>(value[3]));
+	reg_dest.write_uword(0, static_cast<uword>(value[0]));
+	reg_dest.write_uword(2, static_cast<uword>(value[1]));
+	reg_dest.write_uword(4, static_cast<uword>(value[2]));
+	reg_dest.write_uword(6, static_cast<uword>(value[3]));
 }
 
 void CEeCoreInterpreter::CVT_S_W(const EeCoreInstruction inst)

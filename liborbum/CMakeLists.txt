@@ -50,6 +50,7 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/Register/SizedWordRegister.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/Register/WordRegister.cpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/Register/WordRegister.hpp"
+	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/Register/PcRegisters.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/ScopeLock.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Common/Types/TranslationCache/TranslationCache.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Controller/CController.hpp"

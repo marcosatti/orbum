@@ -21,30 +21,19 @@ private:
 	using CacheTy_ = CacheTy<Size, AddressTy, AddressTy>;
 
 public:
-    using FallbackFn = std::function<std::optional<AddressTy>(const AddressTy, const MmuRwAccess, const MmuIdAccess)>;
+    using FallbackFn = std::function<std::optional<AddressTy>(const AddressTy, const MmuRwAccess)>;
 
     /// Performs the virtual address to physical address translation.
-    std::optional<AddressTy> lookup(const AddressTy virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access, const FallbackFn & fallback_lookup)
+    std::optional<AddressTy> lookup(const AddressTy virtual_address, const MmuRwAccess rw_access, const FallbackFn & fallback_lookup)
     {
         const AddressTy key = virtual_address & (~CacheMask);
 
-		CacheTy_ * cache = nullptr;
-		switch (id_access)
-		{
-		case INSTRUCTION:
-			cache = &instruction_cache; break;
-		case DATA:
-			cache = &data_cache; break;
-		default:
-			throw std::runtime_error("Unrecognised id_access");
-		}
-
-		std::optional<AddressTy> result = cache->get(key);
+		std::optional<AddressTy> result = cache.get(key);
 		if (!result)
 		{
-			result = fallback_lookup(key, rw_access, id_access);
+			result = fallback_lookup(key, rw_access);
 			if (result)
-				cache->insert(key, *result);
+				cache.insert(key, *result);
 		}
 
 		if (result)
@@ -56,11 +45,9 @@ public:
     /// Flushes the caches of all translation results.
     void flush()
     {
-		instruction_cache = CacheTy_();
-		data_cache = CacheTy_();
+		cache = CacheTy_();
     }
 
 private:
-	CacheTy_ instruction_cache;
-	CacheTy_ data_cache;
+	CacheTy_ cache;
 };

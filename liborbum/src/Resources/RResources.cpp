@@ -136,20 +136,11 @@ void initialise_ee_vpu(RResources * r)
 	r->ee.vpu.vif.units[0] = &r->ee.vpu.vif.unit_0;
 	r->ee.vpu.vif.units[1] = &r->ee.vpu.vif.unit_1;
 
-	// Init vi registers.
-	r->ee.vpu.vu.unit_0.vi[0] = &r->ee.vpu.vu.unit_0.vi_zero_register;
-	r->ee.vpu.vu.unit_1.vi[0] = &r->ee.vpu.vu.unit_1.vi_zero_register;
-	for (int i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS - 1; i++)
-	{
-		r->ee.vpu.vu.unit_0.vi[i + 1] = &r->ee.vpu.vu.unit_0.vi_base[i];
-		r->ee.vpu.vu.unit_1.vi[i + 1] = &r->ee.vpu.vu.unit_1.vi_base[i];
-	}	
-
 	// Init vi_32 wrappers.
 	for (int i = 0; i < Constants::EE::VPU::VU::NUMBER_VI_REGISTERS; i++)
 	{
-		r->ee.vpu.vu.unit_0.vi_32[i].hword_register = r->ee.vpu.vu.unit_0.vi[i];
-		r->ee.vpu.vu.unit_1.vi_32[i].hword_register = r->ee.vpu.vu.unit_1.vi[i];
+		r->ee.vpu.vu.unit_0.vi_32[i].hword_register = &r->ee.vpu.vu.unit_0.vi[i];
+		r->ee.vpu.vu.unit_1.vi_32[i].hword_register = &r->ee.vpu.vu.unit_1.vi[i];
 	}
 
 	// Init unit_0.ccr registers.
@@ -1702,11 +1693,6 @@ void initialise_iop(RResources * r)
 
 void initialise_iop_core(RResources * r)
 {
-	// R3000.
-	r->iop.core.r3000.gpr[0] = &r->iop.core.r3000.zero_register;
-	for (int i = 0; i < 31; i++)
-		r->iop.core.r3000.gpr[i + 1] = &r->iop.core.r3000.gpr_base[i];
-
 	// COP0.
 	r->iop.core.cop0.registers[0] = &r->iop.core.cop0.indx;
 	r->iop.core.cop0.registers[1] = &r->iop.core.cop0.rand;
@@ -1745,11 +1731,6 @@ void initialise_iop_sio2(RResources * r)
 
 void initialise_ee_core(RResources * r)
 {
-	// R5900.
-	r->ee.core.r5900.gpr[0] = &r->ee.core.r5900.zero_register;
-	for (int i = 0; i < 31; i++)
-		r->ee.core.r5900.gpr[i + 1] = &r->ee.core.r5900.gpr_base[i];
-
 	// COP0.
 	r->ee.core.cop0.registers[0] = &r->ee.core.cop0.index;
 	r->ee.core.cop0.registers[1] = &r->ee.core.cop0.random;

@@ -103,7 +103,7 @@ void CVuInterpreter::SQI(VuUnit_Base * unit, const VuInstruction inst)
 	auto& reg_source2 = unit->vi[inst.ft()]; // Mem Addr.
 
 	// Real address obtained by VI * 16 (qword addressing).
-	uword address = reg_source2->read_uhword() * NUMBER_BYTES_IN_QWORD;
+	uword address = reg_source2.read_uhword() * NUMBER_BYTES_IN_QWORD;
 
 	// 32-bit write for each dest subfield.
 	if (inst.test_dest_x()) unit->bus.write_uword(BusContext::Vu, address, reg_source1.read_uword(0));
@@ -112,7 +112,7 @@ void CVuInterpreter::SQI(VuUnit_Base * unit, const VuInstruction inst)
 	if (inst.test_dest_w()) unit->bus.write_uword(BusContext::Vu, address + 12, reg_source1.read_uword(3));
 
 	// Post increment.
-	reg_source2->write_uhword(reg_source2->read_uhword() + 1);
+	reg_source2.write_uhword(reg_source2.read_uhword() + 1);
 }
 
 void CVuInterpreter::ILW(VuUnit_Base * unit, const VuInstruction inst)
@@ -152,13 +152,13 @@ void CVuInterpreter::ISWR(VuUnit_Base * unit, const VuInstruction inst)
 	auto& reg_source2 = unit->vi[inst.fs()]; // Mem Addr.
 
 	// Real address obtained by VI * 16.
-	uword address = reg_source2->read_uhword() * NUMBER_BYTES_IN_QWORD;
+	uword address = reg_source2.read_uhword() * NUMBER_BYTES_IN_QWORD;
 
 	// 32-bit write for each dest subfield. Upper 16-bits of VI[Ft] value is set to 0.
-	if (inst.test_dest_x()) unit->bus.write_uword(BusContext::Vu, address, static_cast<uword>(reg_source1->read_uhword()));
-	if (inst.test_dest_y()) unit->bus.write_uword(BusContext::Vu, address + 4, static_cast<uword>(reg_source1->read_uhword()));
-	if (inst.test_dest_z()) unit->bus.write_uword(BusContext::Vu, address + 8, static_cast<uword>(reg_source1->read_uhword()));
-	if (inst.test_dest_w()) unit->bus.write_uword(BusContext::Vu, address + 12, static_cast<uword>(reg_source1->read_uhword()));
+	if (inst.test_dest_x()) unit->bus.write_uword(BusContext::Vu, address, static_cast<uword>(reg_source1.read_uhword()));
+	if (inst.test_dest_y()) unit->bus.write_uword(BusContext::Vu, address + 4, static_cast<uword>(reg_source1.read_uhword()));
+	if (inst.test_dest_z()) unit->bus.write_uword(BusContext::Vu, address + 8, static_cast<uword>(reg_source1.read_uhword()));
+	if (inst.test_dest_w()) unit->bus.write_uword(BusContext::Vu, address + 12, static_cast<uword>(reg_source1.read_uhword()));
 }
 
 void CVuInterpreter::LOI(VuUnit_Base * unit, const VuInstruction inst)

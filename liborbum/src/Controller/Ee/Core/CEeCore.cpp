@@ -425,9 +425,9 @@ void CEeCore::handle_exception(const EeCoreException exception)
 
 std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
 {
-    auto& r = core->get_resources();
-
 #if defined(BUILD_DEBUG)
+	auto& r = core->get_resources();
+
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
 		std::make_pair(0x1F402000, 0x1F402040)
@@ -447,16 +447,23 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
 	}
 #endif
 
-	// Using std::bind seems to cause this to make dynamic allocations... using lambdas doesn't (at least on GCC).
-    auto fallback_fn = [this](const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access) -> std::optional<uptr>
+    auto fallback_fn = [this](const uptr virtual_address, const MmuRwAccess rw_access) -> std::optional<uptr>
 	{ 
-		return translate_address_fallback(virtual_address, rw_access, id_access); 
+		return translate_address_fallback(virtual_address, rw_access); 
 	};
 
-    return translation_cache.lookup(virtual_address, rw_access, id_access, fallback_fn);
+	switch (id_access)
+	{
+	case INSTRUCTION:
+		return translation_cache_inst.lookup(virtual_address, rw_access, fallback_fn);
+	case DATA:
+		return translation_cache_data.lookup(virtual_address, rw_access, fallback_fn);
+	}
+
+	throw std::runtime_error("Unrecognised id_access");
 }
 
-std::optional<uptr> CEeCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
+std::optional<uptr> CEeCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access)
 {
     // This process follows the information and diagram given on page 121 & 122
     // of the EE Core Users Manual. 

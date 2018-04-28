@@ -14,12 +14,12 @@ void CEeCoreInterpreter::SB(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_ubyte(BusContext::Ee, *physical_address, reg_source2->read_ubyte(0));
+	r.ee.bus.write_ubyte(BusContext::Ee, *physical_address, reg_source2.read_ubyte(0));
 }
 
 void CEeCoreInterpreter::SD(const EeCoreInstruction inst)
@@ -31,12 +31,12 @@ void CEeCoreInterpreter::SD(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_udword(BusContext::Ee, *physical_address, reg_source2->read_udword(0));
+	r.ee.bus.write_udword(BusContext::Ee, *physical_address, reg_source2.read_udword(0));
 }
 
 void CEeCoreInterpreter::SDL(const EeCoreInstruction inst)
@@ -50,7 +50,7 @@ void CEeCoreInterpreter::SDL(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
@@ -64,7 +64,7 @@ void CEeCoreInterpreter::SDL(const EeCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_udword(BusContext::Ee, *physical_address, ((reg_source2->read_udword(0) >> (56 - shift))) | (value & (0xFFFFFFFFFFFFFF00 << shift)));
+	r.ee.bus.write_udword(BusContext::Ee, *physical_address, ((reg_source2.read_udword(0) >> (56 - shift))) | (value & (0xFFFFFFFFFFFFFF00 << shift)));
 }
 
 void CEeCoreInterpreter::SDR(const EeCoreInstruction inst)
@@ -78,7 +78,7 @@ void CEeCoreInterpreter::SDR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
@@ -92,7 +92,7 @@ void CEeCoreInterpreter::SDR(const EeCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_udword(BusContext::Ee, *physical_address, ((reg_source2->read_udword(0) << shift) | (value & (0x00FFFFFFFFFFFFFF >> (56 - shift)))));
+	r.ee.bus.write_udword(BusContext::Ee, *physical_address, ((reg_source2.read_udword(0) << shift) | (value & (0x00FFFFFFFFFFFFFF >> (56 - shift)))));
 }
 
 void CEeCoreInterpreter::SH(const EeCoreInstruction inst)
@@ -104,12 +104,12 @@ void CEeCoreInterpreter::SH(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_uhword(BusContext::Ee, *physical_address, reg_source2->read_uhword(0));
+	r.ee.bus.write_uhword(BusContext::Ee, *physical_address, reg_source2.read_uhword(0));
 }
 
 void CEeCoreInterpreter::SW(const EeCoreInstruction inst)
@@ -121,12 +121,12 @@ void CEeCoreInterpreter::SW(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_uword(BusContext::Ee, *physical_address, reg_source2->read_uword(0));
+	r.ee.bus.write_uword(BusContext::Ee, *physical_address, reg_source2.read_uword(0));
 }
 
 void CEeCoreInterpreter::SWL(const EeCoreInstruction inst)
@@ -140,7 +140,7 @@ void CEeCoreInterpreter::SWL(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -154,7 +154,7 @@ void CEeCoreInterpreter::SWL(const EeCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_uword(BusContext::Ee, *physical_address, ((reg_source2->read_uword(0) >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
+	r.ee.bus.write_uword(BusContext::Ee, *physical_address, ((reg_source2.read_uword(0) >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
 }
 
 void CEeCoreInterpreter::SWR(const EeCoreInstruction inst)
@@ -168,7 +168,7 @@ void CEeCoreInterpreter::SWR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -182,7 +182,7 @@ void CEeCoreInterpreter::SWR(const EeCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_uword(BusContext::Ee, *physical_address, ((reg_source2->read_uword(0) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
+	r.ee.bus.write_uword(BusContext::Ee, *physical_address, ((reg_source2.read_uword(0) << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 
 void CEeCoreInterpreter::SQ(const EeCoreInstruction inst)
@@ -194,12 +194,12 @@ void CEeCoreInterpreter::SQ(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.ee.bus.write_uqword(BusContext::Ee, *physical_address, reg_source2->read_uqword());
+	r.ee.bus.write_uqword(BusContext::Ee, *physical_address, reg_source2.read_uqword());
 }
 
 void CEeCoreInterpreter::SWC1(const EeCoreInstruction inst)
@@ -214,7 +214,7 @@ void CEeCoreInterpreter::SWC1(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = (reg_source1->read_uword(0) + imm);
+	uptr virtual_address = (reg_source1.read_uword(0) + imm);
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
@@ -234,7 +234,7 @@ void CEeCoreInterpreter::SQC2(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.vpu.vu.unit_0.vf[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword(0) + imm;
+	uptr virtual_address = reg_source1.read_uword(0) + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;

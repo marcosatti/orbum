@@ -13,7 +13,7 @@ void CVuInterpreter::IADD(VuUnit_Base * unit, const VuInstruction inst)
 	auto& reg_source2 = unit->vi[inst.ft()]; // IT.
 	auto& reg_dest = unit->vi[inst.fd()]; // ID.
 
-	reg_dest->write_uhword(reg_source1->read_uhword() + reg_source2->read_uhword());
+	reg_dest.write_uhword(reg_source1.read_uhword() + reg_source2.read_uhword());
 }
 
 void CVuInterpreter::IADDI(VuUnit_Base * unit, const VuInstruction inst)

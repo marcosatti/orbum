@@ -26,8 +26,8 @@ void CEeCoreInterpreter::QMFC2(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source1 = r.ee.vpu.vu.unit_0.vf[inst.rd()];
 
-	reg_dest->write_udword(0, reg_source1.read_udword(0));
-	reg_dest->write_udword(1, reg_source1.read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::QMTC2(const EeCoreInstruction inst)
@@ -47,8 +47,8 @@ void CEeCoreInterpreter::QMTC2(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.vpu.vu.unit_0.vf[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	reg_dest.write_udword(0, reg_source1->read_udword(0));
-	reg_dest.write_udword(1, reg_source1->read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::CFC2(const EeCoreInstruction inst)
@@ -67,7 +67,7 @@ void CEeCoreInterpreter::CFC2(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source1 = r.ee.vpu.vu.unit_0.ccr[inst.rd()];
 
-	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_uword()));
+	reg_dest.write_udword(0, static_cast<sdword>(reg_source1->read_uword()));
 }
 
 void CEeCoreInterpreter::CTC2(const EeCoreInstruction inst)
@@ -86,7 +86,7 @@ void CEeCoreInterpreter::CTC2(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.vpu.vu.unit_0.ccr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 
-	reg_dest->write_uword(static_cast<uword>(reg_source1->read_uword(0)));
+	reg_dest->write_uword(static_cast<uword>(reg_source1.read_uword(0)));
 }
 
 void CEeCoreInterpreter::BC2F(const EeCoreInstruction inst)

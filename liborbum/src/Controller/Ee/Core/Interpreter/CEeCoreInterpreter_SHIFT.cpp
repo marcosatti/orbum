@@ -17,7 +17,7 @@ void CEeCoreInterpreter::DSRA(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
+	reg_dest.write_udword(0, static_cast<sdword>(reg_source1.read_udword(0)) >> shamt);
 }
 
 void CEeCoreInterpreter::DSLL(const EeCoreInstruction inst)
@@ -30,7 +30,7 @@ void CEeCoreInterpreter::DSLL(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) << shamt);
 }
 
 void CEeCoreInterpreter::DSLL32(const EeCoreInstruction inst)
@@ -43,7 +43,7 @@ void CEeCoreInterpreter::DSLL32(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt() + 32;
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) << shamt);
 }
 
 void CEeCoreInterpreter::DSLLV(const EeCoreInstruction inst)
@@ -55,9 +55,9 @@ void CEeCoreInterpreter::DSLLV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x3F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x3F;
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) << shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) << shamt);
 }
 
 void CEeCoreInterpreter::DSRA32(const EeCoreInstruction inst)
@@ -70,7 +70,7 @@ void CEeCoreInterpreter::DSRA32(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt() + 32;
 
-	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
+	reg_dest.write_udword(0, static_cast<sdword>(reg_source1.read_udword(0)) >> shamt);
 }
 
 void CEeCoreInterpreter::DSRAV(const EeCoreInstruction inst)
@@ -82,9 +82,9 @@ void CEeCoreInterpreter::DSRAV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x3F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x3F;
 
-	reg_dest->write_udword(0, static_cast<sdword>(reg_source1->read_udword(0)) >> shamt);
+	reg_dest.write_udword(0, static_cast<sdword>(reg_source1.read_udword(0)) >> shamt);
 }
 
 void CEeCoreInterpreter::DSRL(const EeCoreInstruction inst)
@@ -97,7 +97,7 @@ void CEeCoreInterpreter::DSRL(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) >> shamt);
 }
 
 void CEeCoreInterpreter::DSRL32(const EeCoreInstruction inst)
@@ -110,7 +110,7 @@ void CEeCoreInterpreter::DSRL32(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt() + 32;
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) >> shamt);
 }
 
 void CEeCoreInterpreter::DSRLV(const EeCoreInstruction inst)
@@ -122,9 +122,9 @@ void CEeCoreInterpreter::DSRLV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x3F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x3F;
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) >> shamt);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) >> shamt);
 }
 
 void CEeCoreInterpreter::SLL(const EeCoreInstruction inst)
@@ -137,8 +137,8 @@ void CEeCoreInterpreter::SLL(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0) << shamt));
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0) << shamt));
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SLLV(const EeCoreInstruction inst)
@@ -150,10 +150,10 @@ void CEeCoreInterpreter::SLLV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x1F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x1F;
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0) << shamt));
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0) << shamt));
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SRA(const EeCoreInstruction inst)
@@ -166,8 +166,8 @@ void CEeCoreInterpreter::SRA(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0)) >> shamt);
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0)) >> shamt);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SRAV(const EeCoreInstruction inst)
@@ -179,10 +179,10 @@ void CEeCoreInterpreter::SRAV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x1F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x1F;
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0)) >> shamt);
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0)) >> shamt);
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SRL(const EeCoreInstruction inst)
@@ -195,8 +195,8 @@ void CEeCoreInterpreter::SRL(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	ubyte shamt = inst.shamt();
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0) >> shamt));
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0) >> shamt));
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::SRLV(const EeCoreInstruction inst)
@@ -208,10 +208,10 @@ void CEeCoreInterpreter::SRLV(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
-	ubyte shamt = reg_source2->read_ubyte(0) & 0x1F;
+	ubyte shamt = reg_source2.read_ubyte(0) & 0x1F;
 
-	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0) >> shamt));
-	reg_dest->write_udword(0, result);
+	sdword result = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0) >> shamt));
+	reg_dest.write_udword(0, result);
 }
 
 void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst)
@@ -227,10 +227,10 @@ void CEeCoreInterpreter::PSLLH(const EeCoreInstruction inst)
     uhword value[NUMBER_HWORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        value[i] = reg_source1->read_uhword(i) << shamt;
+        value[i] = reg_source1.read_uhword(i) << shamt;
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst)
@@ -250,17 +250,17 @@ void CEeCoreInterpreter::PSLLVW(const EeCoreInstruction inst)
     };
 
     udword value0 = shift(
-        reg_source1->read_uword(0),
-        reg_source2->read_uword(0) & 0x1F
+        reg_source1.read_uword(0),
+        reg_source2.read_uword(0) & 0x1F
     );
 	
     udword value1 = shift(
-        reg_source1->read_uword(2),
-        reg_source2->read_uword(2) & 0x1F
+        reg_source1.read_uword(2),
+        reg_source2.read_uword(2) & 0x1F
     );
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst)
@@ -276,10 +276,10 @@ void CEeCoreInterpreter::PSLLW(const EeCoreInstruction inst)
     uword value[NUMBER_WORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        value[i] = reg_source1->read_uword(i) << shamt;
+        value[i] = reg_source1.read_uword(i) << shamt;
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst)
@@ -295,10 +295,10 @@ void CEeCoreInterpreter::PSRAH(const EeCoreInstruction inst)
     uhword value[NUMBER_HWORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        value[i] = static_cast<uhword>(static_cast<shword>(reg_source1->read_uhword(i)) >> shamt);
+        value[i] = static_cast<uhword>(static_cast<shword>(reg_source1.read_uhword(i)) >> shamt);
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst)
@@ -318,17 +318,17 @@ void CEeCoreInterpreter::PSRAVW(const EeCoreInstruction inst)
     };
 
     udword value0 = shift(
-        reg_source1->read_uword(0),
-        reg_source2->read_uword(0) & 0x1F
+        reg_source1.read_uword(0),
+        reg_source2.read_uword(0) & 0x1F
     );
 
     udword value1 = shift(
-        reg_source1->read_uword(2),
-        reg_source2->read_uword(2) & 0x1F
+        reg_source1.read_uword(2),
+        reg_source2.read_uword(2) & 0x1F
     );
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst)
@@ -344,10 +344,10 @@ void CEeCoreInterpreter::PSRAW(const EeCoreInstruction inst)
     uword value[NUMBER_WORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        value[i] = static_cast<uword>(static_cast<sword>(reg_source1->read_uword(i)) >> shamt);
+        value[i] = static_cast<uword>(static_cast<sword>(reg_source1.read_uword(i)) >> shamt);
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst)
@@ -363,10 +363,10 @@ void CEeCoreInterpreter::PSRLH(const EeCoreInstruction inst)
     uhword value[NUMBER_HWORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        value[i] = reg_source1->read_uhword(i) >> shamt;
+        value[i] = reg_source1.read_uhword(i) >> shamt;
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst)
@@ -386,17 +386,17 @@ void CEeCoreInterpreter::PSRLVW(const EeCoreInstruction inst)
     };
 
     udword value0 = shift(
-        reg_source1->read_uword(0),
-        reg_source2->read_uword(0) & 0x1F
+        reg_source1.read_uword(0),
+        reg_source2.read_uword(0) & 0x1F
     );
 
     udword value1 = shift(
-        reg_source1->read_uword(2),
-        reg_source2->read_uword(2) & 0x1F
+        reg_source1.read_uword(2),
+        reg_source2.read_uword(2) & 0x1F
     );
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst)
@@ -412,10 +412,10 @@ void CEeCoreInterpreter::PSRLW(const EeCoreInstruction inst)
     uword value[NUMBER_WORDS_IN_QWORD];
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        value[i] = reg_source1->read_uword(i) >> shamt;
+        value[i] = reg_source1.read_uword(i) >> shamt;
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst)
@@ -435,10 +435,10 @@ void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst)
 	// Can use the STL class "bitset" to perform what we need... MUCH more cleaner than the old PCSX2 code.
 	// This forms our 256-bit 'type' from 4 x 64-bits.
 	std::bitset<256> result;
-	(result |= reg_source1->read_udword(0)) <<= 64;
-	(result |= reg_source1->read_udword(1)) <<= 64;
-	(result |= reg_source2->read_udword(0)) <<= 64;
-	(result |= reg_source2->read_udword(1));
+	(result |= reg_source1.read_udword(0)) <<= 64;
+	(result |= reg_source1.read_udword(1)) <<= 64;
+	(result |= reg_source2.read_udword(0)) <<= 64;
+	(result |= reg_source2.read_udword(1));
 
 	// Perform the right shift.
 	result >>= shamt;
@@ -452,6 +452,6 @@ void CEeCoreInterpreter::QFSRV(const EeCoreInstruction inst)
 		temp64 = result >> (64 * i);
 		temp64 &= VALUE_UDWORD_MAX;
 		udword result_int = temp64.to_ullong();
-		reg_dest->write_udword(i, result_int);
+		reg_dest.write_udword(i, result_int);
 	}
 }

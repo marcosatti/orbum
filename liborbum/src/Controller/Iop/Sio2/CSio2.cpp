@@ -37,7 +37,7 @@ int CSio2::time_to_ticks(const double time_us)
 		static bool warned = false;
 		if (!warned)
 		{
-			BOOST_LOG(Core::get_logger()) << "Sio0 ticks too low - increase time delta";
+			BOOST_LOG(Core::get_logger()) << "Sio2 ticks too low - increase time delta";
 			warned = true;
 		}
 	}

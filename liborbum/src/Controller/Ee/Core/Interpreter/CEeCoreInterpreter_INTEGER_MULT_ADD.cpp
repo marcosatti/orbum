@@ -17,15 +17,15 @@ void CEeCoreInterpreter::MADD(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	sword val_source1 = static_cast<sword>(reg_source1->read_uword(0));
-	sword val_source2 = static_cast<sword>(reg_source2->read_uword(0));
+	sword val_source1 = static_cast<sword>(reg_source1.read_uword(0));
+	sword val_source2 = static_cast<sword>(reg_source2.read_uword(0));
 	sdword val_lo = static_cast<sdword>(static_cast<sword>(lo.read_uword(0)));
 	sdword val_hi = static_cast<sdword>(static_cast<sword>(hi.read_uword(0)));
 	sdword result = (val_hi << 32 | val_lo) + (val_source1 * val_source2);
 
 	lo.write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
 	hi.write_udword(0, static_cast<sdword>(static_cast<sword>(result >> 32)));
-	reg_dest->write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
+	reg_dest.write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
 }
 
 void CEeCoreInterpreter::MADD1(const EeCoreInstruction inst)
@@ -46,15 +46,15 @@ void CEeCoreInterpreter::MADDU(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	uword val_source1 = static_cast<uword>(reg_source1->read_uword(0));
-	uword val_source2 = static_cast<uword>(reg_source2->read_uword(0));
+	uword val_source1 = static_cast<uword>(reg_source1.read_uword(0));
+	uword val_source2 = static_cast<uword>(reg_source2.read_uword(0));
 	udword val_lo = static_cast<udword>(static_cast<uword>(lo.read_uword(0)));
 	udword val_hi = static_cast<udword>(static_cast<uword>(hi.read_uword(0)));
 	udword result = (val_hi << 32 | val_lo) + (val_source1 * val_source2);
 
 	lo.write_udword(0, static_cast<udword>(static_cast<uword>(result & 0xFFFFFFFF)));
 	hi.write_udword(0, static_cast<udword>(static_cast<uword>(result >> 32)));
-	reg_dest->write_udword(0, static_cast<udword>(static_cast<uword>(result & 0xFFFFFFFF)));
+	reg_dest.write_udword(0, static_cast<udword>(static_cast<uword>(result & 0xFFFFFFFF)));
 }
 
 void CEeCoreInterpreter::MADDU1(const EeCoreInstruction inst)
@@ -87,26 +87,26 @@ void CEeCoreInterpreter::PHMADH(const EeCoreInstruction inst)
 	};
 
 	value[0] = madd(
-		reg_source1->read_uhword(0), reg_source2->read_uhword(0),
-		reg_source1->read_uhword(1), reg_source2->read_uhword(1)
+		reg_source1.read_uhword(0), reg_source2.read_uhword(0),
+		reg_source1.read_uhword(1), reg_source2.read_uhword(1)
 	);
 	value[1] = madd(
-		reg_source1->read_uhword(2), reg_source2->read_uhword(2),
-		reg_source1->read_uhword(3), reg_source2->read_uhword(3)
+		reg_source1.read_uhword(2), reg_source2.read_uhword(2),
+		reg_source1.read_uhword(3), reg_source2.read_uhword(3)
 	);
 	value[2] = madd(
-		reg_source1->read_uhword(4), reg_source2->read_uhword(4),
-		reg_source1->read_uhword(5), reg_source2->read_uhword(5)
+		reg_source1.read_uhword(4), reg_source2.read_uhword(4),
+		reg_source1.read_uhword(5), reg_source2.read_uhword(5)
 	);
 	value[3] = madd(
-		reg_source1->read_uhword(6), reg_source2->read_uhword(6),
-		reg_source1->read_uhword(7), reg_source2->read_uhword(7)
+		reg_source1.read_uhword(6), reg_source2.read_uhword(6),
+		reg_source1.read_uhword(7), reg_source2.read_uhword(7)
 	);
 
-	reg_dest->write_uword(0, value[0]);
-	reg_dest->write_uword(1, value[1]);
-	reg_dest->write_uword(2, value[2]);
-	reg_dest->write_uword(3, value[3]);
+	reg_dest.write_uword(0, value[0]);
+	reg_dest.write_uword(1, value[1]);
+	reg_dest.write_uword(2, value[2]);
+	reg_dest.write_uword(3, value[3]);
 
 	lo.write_uword(0, value[0]);
 	lo.write_uword(2, value[2]);
@@ -139,26 +139,26 @@ void CEeCoreInterpreter::PHMSBH(const EeCoreInstruction inst)
 	};
 
 	value[0] = madd(
-		reg_source1->read_uhword(0), reg_source2->read_uhword(0),
-		reg_source1->read_uhword(1), reg_source2->read_uhword(1)
+		reg_source1.read_uhword(0), reg_source2.read_uhword(0),
+		reg_source1.read_uhword(1), reg_source2.read_uhword(1)
 	);
 	value[1] = madd(
-		reg_source1->read_uhword(2), reg_source2->read_uhword(2),
-		reg_source1->read_uhword(3), reg_source2->read_uhword(3)
+		reg_source1.read_uhword(2), reg_source2.read_uhword(2),
+		reg_source1.read_uhword(3), reg_source2.read_uhword(3)
 	);
 	value[2] = madd(
-		reg_source1->read_uhword(4), reg_source2->read_uhword(4),
-		reg_source1->read_uhword(5), reg_source2->read_uhword(5)
+		reg_source1.read_uhword(4), reg_source2.read_uhword(4),
+		reg_source1.read_uhword(5), reg_source2.read_uhword(5)
 	);
 	value[3] = madd(
-		reg_source1->read_uhword(6), reg_source2->read_uhword(6),
-		reg_source1->read_uhword(7), reg_source2->read_uhword(7)
+		reg_source1.read_uhword(6), reg_source2.read_uhword(6),
+		reg_source1.read_uhword(7), reg_source2.read_uhword(7)
 	);
 
-	reg_dest->write_uword(0, value[0]);
-	reg_dest->write_uword(1, value[1]);
-	reg_dest->write_uword(2, value[2]);
-	reg_dest->write_uword(3, value[3]);
+	reg_dest.write_uword(0, value[0]);
+	reg_dest.write_uword(1, value[1]);
+	reg_dest.write_uword(2, value[2]);
+	reg_dest.write_uword(3, value[3]);
 
 	lo.write_uword(0, value[0]);
 	lo.write_uword(2, value[2]);
@@ -190,14 +190,14 @@ void CEeCoreInterpreter::PMADDH(const EeCoreInstruction inst)
 		return ((sa * sb) + sc);
 	};
 
-	value[0] = madd(reg_source1->read_uhword(0), reg_source2->read_uhword(0), lo.read_uword(0));
-	value[1] = madd(reg_source1->read_uhword(1), reg_source2->read_uhword(1), lo.read_uword(1));
-	value[2] = madd(reg_source1->read_uhword(2), reg_source2->read_uhword(2), hi.read_uword(0));
-	value[3] = madd(reg_source1->read_uhword(3), reg_source2->read_uhword(3), hi.read_uword(1));
-	value[4] = madd(reg_source1->read_uhword(4), reg_source2->read_uhword(4), lo.read_uword(2));
-	value[5] = madd(reg_source1->read_uhword(5), reg_source2->read_uhword(5), lo.read_uword(3));
-	value[6] = madd(reg_source1->read_uhword(6), reg_source2->read_uhword(6), hi.read_uword(2));
-	value[7] = madd(reg_source1->read_uhword(7), reg_source2->read_uhword(7), hi.read_uword(3));
+	value[0] = madd(reg_source1.read_uhword(0), reg_source2.read_uhword(0), lo.read_uword(0));
+	value[1] = madd(reg_source1.read_uhword(1), reg_source2.read_uhword(1), lo.read_uword(1));
+	value[2] = madd(reg_source1.read_uhword(2), reg_source2.read_uhword(2), hi.read_uword(0));
+	value[3] = madd(reg_source1.read_uhword(3), reg_source2.read_uhword(3), hi.read_uword(1));
+	value[4] = madd(reg_source1.read_uhword(4), reg_source2.read_uhword(4), lo.read_uword(2));
+	value[5] = madd(reg_source1.read_uhword(5), reg_source2.read_uhword(5), lo.read_uword(3));
+	value[6] = madd(reg_source1.read_uhword(6), reg_source2.read_uhword(6), hi.read_uword(2));
+	value[7] = madd(reg_source1.read_uhword(7), reg_source2.read_uhword(7), hi.read_uword(3));
 
 	lo.write_uword(0, value[0]);
 	lo.write_uword(1, value[1]);
@@ -209,10 +209,10 @@ void CEeCoreInterpreter::PMADDH(const EeCoreInstruction inst)
 	hi.write_uword(2, value[6]);
 	hi.write_uword(3, value[7]);
 
-	reg_dest->write_uword(0, value[0]);
-	reg_dest->write_uword(1, value[2]);
-	reg_dest->write_uword(2, value[4]);
-	reg_dest->write_uword(3, value[5]);
+	reg_dest.write_uword(0, value[0]);
+	reg_dest.write_uword(1, value[2]);
+	reg_dest.write_uword(2, value[4]);
+	reg_dest.write_uword(3, value[5]);
 }
 
 void CEeCoreInterpreter::PMADDUW(const EeCoreInstruction inst)
@@ -241,11 +241,11 @@ void CEeCoreInterpreter::PMADDUW(const EeCoreInstruction inst)
 		};
 	};
 
-	auto[value0, lo0, hi0] = madd(reg_source1->read_uword(0), reg_source2->read_uword(0), lo.read_uword(0), hi.read_uword(0));
-	auto[value1, lo1, hi1] = madd(reg_source1->read_uword(2), reg_source2->read_uword(2), lo.read_uword(2), hi.read_uword(2));
+	auto[value0, lo0, hi0] = madd(reg_source1.read_uword(0), reg_source2.read_uword(0), lo.read_uword(0), hi.read_uword(0));
+	auto[value1, lo1, hi1] = madd(reg_source1.read_uword(2), reg_source2.read_uword(2), lo.read_uword(2), hi.read_uword(2));
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 
 	lo.write_udword(0, lo0);
 	lo.write_udword(1, lo1);
@@ -280,11 +280,11 @@ void CEeCoreInterpreter::PMADDW(const EeCoreInstruction inst)
 		};
 	};
 
-	auto[value0, lo0, hi0] = madd(reg_source1->read_uword(0), reg_source2->read_uword(0), lo.read_uword(0), hi.read_uword(0));
-	auto[value1, lo1, hi1] = madd(reg_source1->read_uword(2), reg_source2->read_uword(2), lo.read_uword(2), hi.read_uword(2));
+	auto[value0, lo0, hi0] = madd(reg_source1.read_uword(0), reg_source2.read_uword(0), lo.read_uword(0), hi.read_uword(0));
+	auto[value1, lo1, hi1] = madd(reg_source1.read_uword(2), reg_source2.read_uword(2), lo.read_uword(2), hi.read_uword(2));
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 
 	lo.write_udword(0, lo0);
 	lo.write_udword(1, lo1);
@@ -316,14 +316,14 @@ void CEeCoreInterpreter::PMSUBH(const EeCoreInstruction inst)
 		return (sc - (sa * sb));
 	};
 
-	value[0] = madd(reg_source1->read_uhword(0), reg_source2->read_uhword(0), lo.read_uword(0));
-	value[1] = madd(reg_source1->read_uhword(1), reg_source2->read_uhword(1), lo.read_uword(1));
-	value[2] = madd(reg_source1->read_uhword(2), reg_source2->read_uhword(2), hi.read_uword(0));
-	value[3] = madd(reg_source1->read_uhword(3), reg_source2->read_uhword(3), hi.read_uword(1));
-	value[4] = madd(reg_source1->read_uhword(4), reg_source2->read_uhword(4), lo.read_uword(2));
-	value[5] = madd(reg_source1->read_uhword(5), reg_source2->read_uhword(5), lo.read_uword(3));
-	value[6] = madd(reg_source1->read_uhword(6), reg_source2->read_uhword(6), hi.read_uword(2));
-	value[7] = madd(reg_source1->read_uhword(7), reg_source2->read_uhword(7), hi.read_uword(3));
+	value[0] = madd(reg_source1.read_uhword(0), reg_source2.read_uhword(0), lo.read_uword(0));
+	value[1] = madd(reg_source1.read_uhword(1), reg_source2.read_uhword(1), lo.read_uword(1));
+	value[2] = madd(reg_source1.read_uhword(2), reg_source2.read_uhword(2), hi.read_uword(0));
+	value[3] = madd(reg_source1.read_uhword(3), reg_source2.read_uhword(3), hi.read_uword(1));
+	value[4] = madd(reg_source1.read_uhword(4), reg_source2.read_uhword(4), lo.read_uword(2));
+	value[5] = madd(reg_source1.read_uhword(5), reg_source2.read_uhword(5), lo.read_uword(3));
+	value[6] = madd(reg_source1.read_uhword(6), reg_source2.read_uhword(6), hi.read_uword(2));
+	value[7] = madd(reg_source1.read_uhword(7), reg_source2.read_uhword(7), hi.read_uword(3));
 
 	lo.write_uword(0, value[0]);
 	lo.write_uword(1, value[1]);
@@ -335,10 +335,10 @@ void CEeCoreInterpreter::PMSUBH(const EeCoreInstruction inst)
 	hi.write_uword(2, value[6]);
 	hi.write_uword(3, value[7]);
 
-	reg_dest->write_uword(0, value[0]);
-	reg_dest->write_uword(1, value[2]);
-	reg_dest->write_uword(2, value[4]);
-	reg_dest->write_uword(3, value[5]);
+	reg_dest.write_uword(0, value[0]);
+	reg_dest.write_uword(1, value[2]);
+	reg_dest.write_uword(2, value[4]);
+	reg_dest.write_uword(3, value[5]);
 }
 
 void CEeCoreInterpreter::PMSUBW(const EeCoreInstruction inst)
@@ -367,11 +367,11 @@ void CEeCoreInterpreter::PMSUBW(const EeCoreInstruction inst)
 		};
 	};
 
-	auto[value0, lo0, hi0] = madd(reg_source1->read_uword(0), reg_source2->read_uword(0), lo.read_uword(0), hi.read_uword(0));
-	auto[value1, lo1, hi1] = madd(reg_source1->read_uword(2), reg_source2->read_uword(2), lo.read_uword(2), hi.read_uword(2));
+	auto[value0, lo0, hi0] = madd(reg_source1.read_uword(0), reg_source2.read_uword(0), lo.read_uword(0), hi.read_uword(0));
+	auto[value1, lo1, hi1] = madd(reg_source1.read_uword(2), reg_source2.read_uword(2), lo.read_uword(2), hi.read_uword(2));
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 
 	lo.write_udword(0, lo0);
 	lo.write_udword(1, lo1);

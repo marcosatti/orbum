@@ -15,7 +15,7 @@ void CEeCoreInterpreter::AND(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) & reg_source2->read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0) & reg_source2.read_udword(0));
 }
 
 void CEeCoreInterpreter::ANDI(const EeCoreInstruction inst)
@@ -28,7 +28,7 @@ void CEeCoreInterpreter::ANDI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	udword imm = static_cast<udword>(inst.u_imm());
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) & imm);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) & imm);
 }
 
 void CEeCoreInterpreter::NOR(const EeCoreInstruction inst)
@@ -41,7 +41,7 @@ void CEeCoreInterpreter::NOR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	reg_dest->write_udword(0, ~(reg_source1->read_udword(0) | reg_source2->read_udword(0)));
+	reg_dest.write_udword(0, ~(reg_source1.read_udword(0) | reg_source2.read_udword(0)));
 }
 
 void CEeCoreInterpreter::OR(const EeCoreInstruction inst)
@@ -54,7 +54,7 @@ void CEeCoreInterpreter::OR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) | reg_source2->read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0) | reg_source2.read_udword(0));
 }
 
 void CEeCoreInterpreter::ORI(const EeCoreInstruction inst)
@@ -67,7 +67,7 @@ void CEeCoreInterpreter::ORI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	sdword imm = static_cast<sdword>(inst.u_imm());
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) | imm);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) | imm);
 }
 
 void CEeCoreInterpreter::XOR(const EeCoreInstruction inst)
@@ -80,7 +80,7 @@ void CEeCoreInterpreter::XOR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) ^ reg_source2->read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0) ^ reg_source2.read_udword(0));
 }
 
 void CEeCoreInterpreter::XORI(const EeCoreInstruction inst)
@@ -93,7 +93,7 @@ void CEeCoreInterpreter::XORI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	udword imm = static_cast<udword>(inst.u_imm());
 
-	reg_dest->write_udword(0, reg_source1->read_udword(0) ^ imm);
+	reg_dest.write_udword(0, reg_source1.read_udword(0) ^ imm);
 }
 
 void CEeCoreInterpreter::PAND(const EeCoreInstruction inst)
@@ -106,11 +106,11 @@ void CEeCoreInterpreter::PAND(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	udword value0 = reg_source1->read_udword(0) & reg_source2->read_udword(0);
-	udword value1 = reg_source1->read_udword(1) & reg_source2->read_udword(1);
+	udword value0 = reg_source1.read_udword(0) & reg_source2.read_udword(0);
+	udword value1 = reg_source1.read_udword(1) & reg_source2.read_udword(1);
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst)
@@ -123,11 +123,11 @@ void CEeCoreInterpreter::PNOR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	udword value0 = ~(reg_source1->read_udword(0) | reg_source2->read_udword(0));
-	udword value1 = ~(reg_source1->read_udword(1) | reg_source2->read_udword(1));
+	udword value0 = ~(reg_source1.read_udword(0) | reg_source2.read_udword(0));
+	udword value1 = ~(reg_source1.read_udword(1) | reg_source2.read_udword(1));
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::POR(const EeCoreInstruction inst)
@@ -140,11 +140,11 @@ void CEeCoreInterpreter::POR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	udword value0 = reg_source1->read_udword(0) | reg_source2->read_udword(0);
-	udword value1 = reg_source1->read_udword(1) | reg_source2->read_udword(1);
+	udword value0 = reg_source1.read_udword(0) | reg_source2.read_udword(0);
+	udword value1 = reg_source1.read_udword(1) | reg_source2.read_udword(1);
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst)
@@ -157,9 +157,9 @@ void CEeCoreInterpreter::PXOR(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	udword value0 = reg_source1->read_udword(0) ^ reg_source2->read_udword(0);
-	udword value1 = reg_source1->read_udword(1) ^ reg_source2->read_udword(1);
+	udword value0 = reg_source1.read_udword(0) ^ reg_source2.read_udword(0);
+	udword value1 = reg_source1.read_udword(1) ^ reg_source2.read_udword(1);
 
-	reg_dest->write_udword(0, value0);
-	reg_dest->write_udword(1, value1);
+	reg_dest.write_udword(0, value0);
+	reg_dest.write_udword(1, value1);
 }

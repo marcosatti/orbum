@@ -16,8 +16,8 @@ void CEeCoreInterpreter::DIV(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	auto val_source1 = static_cast<sword>(reg_source1->read_uword(0));
-	auto val_source2 = static_cast<sword>(reg_source2->read_uword(0));
+	auto val_source1 = static_cast<sword>(reg_source1.read_uword(0));
+	auto val_source2 = static_cast<sword>(reg_source2.read_uword(0));
 
 	// Check for VALUE_S32_MIN / -1 (special condition).
 	if (val_source1 == VALUE_SWORD_MIN &&
@@ -62,8 +62,8 @@ void CEeCoreInterpreter::DIVU(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	auto val_source1 = static_cast<uword>(reg_source1->read_uword(0));
-	auto val_source2 = static_cast<uword>(reg_source2->read_uword(0));
+	auto val_source1 = static_cast<uword>(reg_source1.read_uword(0));
+	auto val_source2 = static_cast<uword>(reg_source2.read_uword(0));
 
 	// Check for divide by 0, in which case result is undefined (do nothing).
 	if (val_source2 == 0)
@@ -102,12 +102,12 @@ void CEeCoreInterpreter::MULT(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	auto val_source1 = static_cast<sdword>(static_cast<sword>(reg_source1->read_uword(0)));
-	auto val_source2 = static_cast<sdword>(static_cast<sword>(reg_source2->read_uword(0)));
+	auto val_source1 = static_cast<sdword>(static_cast<sword>(reg_source1.read_uword(0)));
+	auto val_source2 = static_cast<sdword>(static_cast<sword>(reg_source2.read_uword(0)));
 
 	sdword result = val_source1 * val_source2;
 
-	reg_dest->write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
+	reg_dest.write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
 	lo.write_udword(0, static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF)));
 	hi.write_udword(0, static_cast<sdword>(static_cast<sword>(result >> 32)));
 }
@@ -130,12 +130,12 @@ void CEeCoreInterpreter::MULTU(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-	auto val_source1 = static_cast<udword>(reg_source1->read_uword(0));
-	auto val_source2 = static_cast<udword>(reg_source2->read_uword(0));
+	auto val_source1 = static_cast<udword>(reg_source1.read_uword(0));
+	auto val_source2 = static_cast<udword>(reg_source2.read_uword(0));
 
 	udword result = val_source1 * val_source2;
 
-	reg_dest->write_udword(0, static_cast<udword>(static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF))));
+	reg_dest.write_udword(0, static_cast<udword>(static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF))));
 	lo.write_udword(0, static_cast<udword>(static_cast<sdword>(static_cast<sword>(result & 0xFFFFFFFF))));
 	hi.write_udword(0, static_cast<udword>(static_cast<sdword>(static_cast<sword>(result >> 32))));
 }
@@ -157,7 +157,7 @@ void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst)
 	auto& lo = r.ee.core.r5900.lo;
 	auto& hi = r.ee.core.r5900.hi;
 
-    shword divisor = static_cast<shword>(reg_source2->read_uhword(0));
+    shword divisor = static_cast<shword>(reg_source2.read_uhword(0));
 
     auto div = [divisor](const uword a) -> std::tuple<uword, uword>
     {
@@ -190,10 +190,10 @@ void CEeCoreInterpreter::PDIVBW(const EeCoreInstruction inst)
         }
     };
 
-    auto[q0, r0] = div(reg_source1->read_uword(0));
-    auto[q1, r1] = div(reg_source1->read_uword(1));
-    auto[q2, r2] = div(reg_source1->read_uword(2));
-    auto[q3, r3] = div(reg_source1->read_uword(3));
+    auto[q0, r0] = div(reg_source1.read_uword(0));
+    auto[q1, r1] = div(reg_source1.read_uword(1));
+    auto[q2, r2] = div(reg_source1.read_uword(2));
+    auto[q3, r3] = div(reg_source1.read_uword(3));
 
     lo.write_uword(0, q0);
     lo.write_uword(1, q1);
@@ -238,8 +238,8 @@ void CEeCoreInterpreter::PDIVUW(const EeCoreInstruction inst)
         }
     };
 
-    auto[q0, r0] = div(reg_source1->read_uword(0), reg_source2->read_uword(0));
-    auto[q1, r1] = div(reg_source1->read_uword(2), reg_source2->read_uword(2));
+    auto[q0, r0] = div(reg_source1.read_uword(0), reg_source2.read_uword(0));
+    auto[q1, r1] = div(reg_source1.read_uword(2), reg_source2.read_uword(2));
 
     lo.write_udword(0, q0);
     lo.write_udword(1, q1);
@@ -290,8 +290,8 @@ void CEeCoreInterpreter::PDIVW(const EeCoreInstruction inst)
         }
     };
 
-    auto[q0, r0] = div(reg_source1->read_uword(0), reg_source2->read_uword(0));
-    auto[q1, r1] = div(reg_source1->read_uword(2), reg_source2->read_uword(2));
+    auto[q0, r0] = div(reg_source1.read_uword(0), reg_source2.read_uword(0));
+    auto[q1, r1] = div(reg_source1.read_uword(2), reg_source2.read_uword(2));
 
     lo.write_udword(0, q0);
     lo.write_udword(1, q1);
@@ -321,19 +321,19 @@ void CEeCoreInterpreter::PMULTH(const EeCoreInstruction inst)
         return static_cast<uword>(sa * sb);
     };
 
-    value[0] = mult(reg_source1->read_uhword(0), reg_source2->read_uhword(0));
-    value[1] = mult(reg_source1->read_uhword(1), reg_source2->read_uhword(1));
-    value[2] = mult(reg_source1->read_uhword(2), reg_source2->read_uhword(2));
-    value[3] = mult(reg_source1->read_uhword(3), reg_source2->read_uhword(3));
-    value[4] = mult(reg_source1->read_uhword(4), reg_source2->read_uhword(4));
-    value[5] = mult(reg_source1->read_uhword(5), reg_source2->read_uhword(5));
-    value[6] = mult(reg_source1->read_uhword(6), reg_source2->read_uhword(6));
-    value[7] = mult(reg_source1->read_uhword(7), reg_source2->read_uhword(7));
+    value[0] = mult(reg_source1.read_uhword(0), reg_source2.read_uhword(0));
+    value[1] = mult(reg_source1.read_uhword(1), reg_source2.read_uhword(1));
+    value[2] = mult(reg_source1.read_uhword(2), reg_source2.read_uhword(2));
+    value[3] = mult(reg_source1.read_uhword(3), reg_source2.read_uhword(3));
+    value[4] = mult(reg_source1.read_uhword(4), reg_source2.read_uhword(4));
+    value[5] = mult(reg_source1.read_uhword(5), reg_source2.read_uhword(5));
+    value[6] = mult(reg_source1.read_uhword(6), reg_source2.read_uhword(6));
+    value[7] = mult(reg_source1.read_uhword(7), reg_source2.read_uhword(7));
 
-    reg_dest->write_uword(0, value[0]);
-    reg_dest->write_uword(1, value[2]);
-    reg_dest->write_uword(2, value[4]);
-    reg_dest->write_uword(3, value[6]);
+    reg_dest.write_uword(0, value[0]);
+    reg_dest.write_uword(1, value[2]);
+    reg_dest.write_uword(2, value[4]);
+    reg_dest.write_uword(3, value[6]);
 
     lo.write_uword(0, value[0]);
     lo.write_uword(1, value[1]);
@@ -370,11 +370,11 @@ void CEeCoreInterpreter::PMULTUW(const EeCoreInstruction inst)
         };
     };
 
-    auto[value0, lo0, hi0] = mult(reg_source1->read_uword(0), reg_source1->read_uword(0));
-    auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
+    auto[value0, lo0, hi0] = mult(reg_source1.read_uword(0), reg_source1.read_uword(0));
+    auto[value1, lo1, hi1] = mult(reg_source1.read_uword(2), reg_source1.read_uword(2));
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
     
     lo.write_udword(0, lo0);
     lo.write_udword(1, lo1);
@@ -407,11 +407,11 @@ void CEeCoreInterpreter::PMULTW(const EeCoreInstruction inst)
         };
     };
 
-    auto[value0, lo0, hi0] = mult(reg_source1->read_uword(0), reg_source1->read_uword(0));
-    auto[value1, lo1, hi1] = mult(reg_source1->read_uword(2), reg_source1->read_uword(2));
+    auto[value0, lo0, hi0] = mult(reg_source1.read_uword(0), reg_source1.read_uword(0));
+    auto[value1, lo1, hi1] = mult(reg_source1.read_uword(2), reg_source1.read_uword(2));
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
 
     lo.write_udword(0, lo0);
     lo.write_udword(1, lo1);

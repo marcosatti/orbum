@@ -15,13 +15,13 @@ void CIopCoreInterpreter::LB(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
 	if (!physical_address)
 		return;
 
 	auto value = static_cast<sbyte>(r.iop.bus.read_ubyte(BusContext::Iop, *physical_address));
-	reg_dest->write_uword(static_cast<sword>(value));
+	reg_dest.write_uword(static_cast<sword>(value));
 }
 
 void CIopCoreInterpreter::LBU(const IopCoreInstruction inst)
@@ -33,13 +33,13 @@ void CIopCoreInterpreter::LBU(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
 	if (!physical_address)
 		return;
 
 	auto value = r.iop.bus.read_ubyte(BusContext::Iop, *physical_address);
-	reg_dest->write_uword(static_cast<uword>(value));
+	reg_dest.write_uword(static_cast<uword>(value));
 }
 
 void CIopCoreInterpreter::LH(const IopCoreInstruction inst)
@@ -51,13 +51,13 @@ void CIopCoreInterpreter::LH(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
 	if (!physical_address)
 		return;
 
 	auto value = static_cast<shword>(r.iop.bus.read_uhword(BusContext::Iop, *physical_address));
-	reg_dest->write_uword(static_cast<sword>(value));
+	reg_dest.write_uword(static_cast<sword>(value));
 }
 
 void CIopCoreInterpreter::LHU(const IopCoreInstruction inst)
@@ -69,13 +69,13 @@ void CIopCoreInterpreter::LHU(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
 	if (!physical_address)
 		return;
 
 	auto value = r.iop.bus.read_uhword(BusContext::Iop, *physical_address);
-	reg_dest->write_uword(static_cast<uword>(value));
+	reg_dest.write_uword(static_cast<uword>(value));
 }
 
 void CIopCoreInterpreter::LUI(const IopCoreInstruction inst)
@@ -88,7 +88,7 @@ void CIopCoreInterpreter::LUI(const IopCoreInstruction inst)
 
 	sword result = imm << 16;
 
-	reg_dest->write_uword(result);
+	reg_dest.write_uword(result);
 }
 
 void CIopCoreInterpreter::LW(const IopCoreInstruction inst)
@@ -100,13 +100,13 @@ void CIopCoreInterpreter::LW(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
 	if (!physical_address)
 		return;
 
 	auto value = r.iop.bus.read_uword(BusContext::Iop, *physical_address);
-	reg_dest->write_uword(static_cast<sword>(value));
+	reg_dest.write_uword(static_cast<sword>(value));
 }
 
 void CIopCoreInterpreter::LWL(const IopCoreInstruction inst)
@@ -120,7 +120,7 @@ void CIopCoreInterpreter::LWL(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -129,7 +129,7 @@ void CIopCoreInterpreter::LWL(const IopCoreInstruction inst)
 		return;
 
 	auto value = r.iop.bus.read_uword(BusContext::Iop, *physical_address);
-	reg_dest->write_uword((reg_dest->read_uword() & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
+	reg_dest.write_uword((reg_dest.read_uword() & (0x00FFFFFF >> shift)) | (value << (24 - shift)));
 }
 
 void CIopCoreInterpreter::LWR(const IopCoreInstruction inst)
@@ -143,7 +143,7 @@ void CIopCoreInterpreter::LWR(const IopCoreInstruction inst)
 	auto& reg_source = r.iop.core.r3000.gpr[inst.rs()]; // "Base"
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source->read_uword() + imm;
+	uptr virtual_address = reg_source.read_uword() + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -152,7 +152,7 @@ void CIopCoreInterpreter::LWR(const IopCoreInstruction inst)
 		return;
 
 	auto value = r.iop.bus.read_uword(BusContext::Iop, *physical_address);
-	reg_dest->write_uword((reg_dest->read_uword() & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
+	reg_dest.write_uword((reg_dest.read_uword() & (0xFFFFFF00 << (24 - shift))) | (value >> shift));
 }
 
 void CIopCoreInterpreter::SB(const IopCoreInstruction inst)
@@ -164,12 +164,12 @@ void CIopCoreInterpreter::SB(const IopCoreInstruction inst)
 	auto& reg_source2 = r.iop.core.r3000.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword() + imm;
+	uptr virtual_address = reg_source1.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.iop.bus.write_ubyte(BusContext::Iop, *physical_address, reg_source2->read_ubyte(0));
+	r.iop.bus.write_ubyte(BusContext::Iop, *physical_address, reg_source2.read_ubyte(0));
 }
 
 void CIopCoreInterpreter::SH(const IopCoreInstruction inst)
@@ -181,12 +181,12 @@ void CIopCoreInterpreter::SH(const IopCoreInstruction inst)
 	auto& reg_source2 = r.iop.core.r3000.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword() + imm;
+	uptr virtual_address = reg_source1.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.iop.bus.write_uhword(BusContext::Iop, *physical_address, reg_source2->read_uhword(0));
+	r.iop.bus.write_uhword(BusContext::Iop, *physical_address, reg_source2.read_uhword(0));
 }
 
 void CIopCoreInterpreter::SW(const IopCoreInstruction inst)
@@ -198,12 +198,12 @@ void CIopCoreInterpreter::SW(const IopCoreInstruction inst)
 	auto& reg_source2 = r.iop.core.r3000.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword() + imm;
+	uptr virtual_address = reg_source1.read_uword() + imm;
 	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
 	if (!physical_address)
 		return;
 
-	r.iop.bus.write_uword(BusContext::Iop, *physical_address, reg_source2->read_uword());
+	r.iop.bus.write_uword(BusContext::Iop, *physical_address, reg_source2.read_uword());
 }
 
 void CIopCoreInterpreter::SWL(const IopCoreInstruction inst)
@@ -217,7 +217,7 @@ void CIopCoreInterpreter::SWL(const IopCoreInstruction inst)
 	auto& reg_source2 = r.iop.core.r3000.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword() + imm;
+	uptr virtual_address = reg_source1.read_uword() + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -232,7 +232,7 @@ void CIopCoreInterpreter::SWL(const IopCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.iop.bus.write_uword(BusContext::Iop, *physical_address, ((reg_source2->read_uword() >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
+	r.iop.bus.write_uword(BusContext::Iop, *physical_address, ((reg_source2.read_uword() >> (24 - shift))) | (value & (0xFFFFFF00 << shift)));
 }
 
 void CIopCoreInterpreter::SWR(const IopCoreInstruction inst)
@@ -246,7 +246,7 @@ void CIopCoreInterpreter::SWR(const IopCoreInstruction inst)
 	auto& reg_source2 = r.iop.core.r3000.gpr[inst.rt()];
 	const shword imm = inst.s_imm();
 
-	uptr virtual_address = reg_source1->read_uword() + imm;
+	uptr virtual_address = reg_source1.read_uword() + imm;
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
@@ -261,6 +261,6 @@ void CIopCoreInterpreter::SWR(const IopCoreInstruction inst)
 	if (!physical_address)
 		return;
 
-	r.iop.bus.write_uword(BusContext::Iop, *physical_address, ((reg_source2->read_uword() << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
+	r.iop.bus.write_uword(BusContext::Iop, *physical_address, ((reg_source2.read_uword() << shift) | (value & (0x00FFFFFF >> (24 - shift)))));
 }
 

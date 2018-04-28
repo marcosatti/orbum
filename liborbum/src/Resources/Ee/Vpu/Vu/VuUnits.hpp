@@ -6,6 +6,7 @@
 #include "Common/Types/Register/SizedQwordRegister.hpp"
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Common/Types/Register/MapperHwordWordRegister.hpp"
+#include "Common/Types/Register/PcRegisters.hpp"
 #include "Common/Types/Mips/MipsCoprocessor.hpp"
 #include "Common/Types/Primitive.hpp"
 
@@ -26,9 +27,7 @@ public:
 	/// The first VI register is a constant 0 register.
 	/// See VU Users Manual page 18.
 	SizedQwordRegister vf[Constants::EE::VPU::VU::NUMBER_VF_REGISTERS];
-	SizedHwordRegister vi_zero_register;
-	SizedHwordRegister vi_base[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS - 1];
-	SizedHwordRegister * vi[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
+	SizedHwordRegister vi[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
 
 	/// ACC register. Used by instructions such as ADDA and MULA.
 	/// See VU Users Manual page 33.
@@ -60,7 +59,7 @@ public:
 	/// PC (program counter) register for micro subroutines.
 	/// Also known as the TPC (termination PC), treated as the same thing.
 	/// Made to be 32-bit even though only 16-bits are used (bus maps easier).
-	SizedWordRegister pc;
+	WordPcRegister pc;
 
 	/// The CMSAR register used for micro subroutine execution.
 	/// See VU Users Manual page 202.

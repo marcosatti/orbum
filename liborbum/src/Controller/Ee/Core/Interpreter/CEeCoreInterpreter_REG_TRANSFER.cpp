@@ -13,7 +13,7 @@ void CEeCoreInterpreter::MFHI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.hi;
 
-	reg_dest->write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MFLO(const EeCoreInstruction inst)
@@ -24,7 +24,7 @@ void CEeCoreInterpreter::MFLO(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.lo;
 
-	reg_dest->write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MOVN(const EeCoreInstruction inst)
@@ -36,8 +36,8 @@ void CEeCoreInterpreter::MOVN(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	if (reg_source2->read_udword(0) != 0)
-		reg_dest->write_udword(0, reg_source1->read_udword(0));
+	if (reg_source2.read_udword(0) != 0)
+		reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MOVZ(const EeCoreInstruction inst)
@@ -49,8 +49,8 @@ void CEeCoreInterpreter::MOVZ(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 
-	if (reg_source2->read_udword(0) == 0)
-		reg_dest->write_udword(0, reg_source1->read_udword(0));
+	if (reg_source2.read_udword(0) == 0)
+		reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MTHI(const EeCoreInstruction inst)
@@ -61,7 +61,7 @@ void CEeCoreInterpreter::MTHI(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_dest = r.ee.core.r5900.hi;
 
-	reg_dest.write_udword(0, reg_source1->read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MTLO(const EeCoreInstruction inst)
@@ -72,7 +72,7 @@ void CEeCoreInterpreter::MTLO(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_dest = r.ee.core.r5900.lo;
 
-	reg_dest.write_udword(0, reg_source1->read_udword(0));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MFHI1(const EeCoreInstruction inst)
@@ -83,7 +83,7 @@ void CEeCoreInterpreter::MFHI1(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.hi;
 
-	reg_dest->write_udword(0, reg_source1.read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::MFLO1(const EeCoreInstruction inst)
@@ -94,7 +94,7 @@ void CEeCoreInterpreter::MFLO1(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.lo;
 
-	reg_dest->write_udword(0, reg_source1.read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::MTHI1(const EeCoreInstruction inst)
@@ -105,7 +105,7 @@ void CEeCoreInterpreter::MTHI1(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_dest = r.ee.core.r5900.hi;
 
-	reg_dest.write_udword(1, reg_source1->read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::MTLO1(const EeCoreInstruction inst)
@@ -116,7 +116,7 @@ void CEeCoreInterpreter::MTLO1(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_dest = r.ee.core.r5900.lo;
 
-	reg_dest.write_udword(1, reg_source1->read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(0));
 }
 
 void CEeCoreInterpreter::PMFHI(const EeCoreInstruction inst)
@@ -127,8 +127,8 @@ void CEeCoreInterpreter::PMFHI(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source1 = r.ee.core.r5900.hi;
 
-	reg_dest->write_udword(0, reg_source1.read_udword(0));
-	reg_dest->write_udword(1, reg_source1.read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::PMFHL(const EeCoreInstruction inst)
@@ -184,7 +184,7 @@ void CEeCoreInterpreter::PMFHL_LH(const EeCoreInstruction inst)
     value[7] = hi.read_uhword(6);
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_LW(const EeCoreInstruction inst)
@@ -204,7 +204,7 @@ void CEeCoreInterpreter::PMFHL_LW(const EeCoreInstruction inst)
     value[3] = hi.read_uword(2);
 
     for (int i = 0; i < NUMBER_WORDS_IN_QWORD; i++)
-        reg_dest->write_uword(i, value[i]);
+        reg_dest.write_uword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_SH(const EeCoreInstruction inst)
@@ -235,7 +235,7 @@ void CEeCoreInterpreter::PMFHL_SH(const EeCoreInstruction inst)
     value[7] = saturate(hi.read_uword(3));
 
     for (int i = 0; i < NUMBER_HWORDS_IN_QWORD; i++)
-        reg_dest->write_uhword(i, value[i]);
+        reg_dest.write_uhword(i, value[i]);
 }
 
 void CEeCoreInterpreter::PMFHL_SLW(const EeCoreInstruction inst)
@@ -258,8 +258,8 @@ void CEeCoreInterpreter::PMFHL_SLW(const EeCoreInstruction inst)
     udword value0 = clamp(lo.read_uword(0), hi.read_uword(0));
     udword value1 = clamp(lo.read_uword(2), hi.read_uword(2));
 
-    reg_dest->write_udword(0, value0);
-    reg_dest->write_udword(1, value1);
+    reg_dest.write_udword(0, value0);
+    reg_dest.write_udword(1, value1);
 }
 
 void CEeCoreInterpreter::PMFHL_UW(const EeCoreInstruction inst)
@@ -276,10 +276,10 @@ void CEeCoreInterpreter::PMFHL_UW(const EeCoreInstruction inst)
     uword value2 = lo.read_uword(3);
     uword value3 = hi.read_uword(3);
 
-    reg_dest->write_uword(0, value0);
-    reg_dest->write_uword(1, value1);
-    reg_dest->write_uword(2, value2);
-    reg_dest->write_uword(3, value3);
+    reg_dest.write_uword(0, value0);
+    reg_dest.write_uword(1, value1);
+    reg_dest.write_uword(2, value2);
+    reg_dest.write_uword(3, value3);
 }
 
 void CEeCoreInterpreter::PMFLO(const EeCoreInstruction inst)
@@ -290,8 +290,8 @@ void CEeCoreInterpreter::PMFLO(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rd()];
 	auto& reg_source2 = r.ee.core.r5900.lo;
 
-	reg_dest->write_udword(0, reg_source2.read_udword(0));
-	reg_dest->write_udword(1, reg_source2.read_udword(1));
+	reg_dest.write_udword(0, reg_source2.read_udword(0));
+	reg_dest.write_udword(1, reg_source2.read_udword(1));
 }
 
 void CEeCoreInterpreter::PMTHI(const EeCoreInstruction inst)
@@ -302,8 +302,8 @@ void CEeCoreInterpreter::PMTHI(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.hi;
 
-	reg_dest.write_udword(0, reg_source1->read_udword(0));
-	reg_dest.write_udword(1, reg_source1->read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::PMTHL_LW(const EeCoreInstruction inst)
@@ -315,10 +315,10 @@ void CEeCoreInterpreter::PMTHL_LW(const EeCoreInstruction inst)
 	auto& hi = r.ee.core.r5900.hi;
 	auto& lo = r.ee.core.r5900.lo;
 
-    uword value0 = reg_source1->read_uword(0);
-    uword value1 = reg_source1->read_uword(1);
-    uword value2 = reg_source1->read_uword(2);
-    uword value3 = reg_source1->read_uword(3);
+    uword value0 = reg_source1.read_uword(0);
+    uword value1 = reg_source1.read_uword(1);
+    uword value2 = reg_source1.read_uword(2);
+    uword value3 = reg_source1.read_uword(3);
 
     lo.write_uword(0, value0);
     lo.write_uword(2, value2);
@@ -335,8 +335,8 @@ void CEeCoreInterpreter::PMTLO(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto& reg_dest = r.ee.core.r5900.lo;
 
-	reg_dest.write_udword(0, reg_source1->read_udword(0));
-	reg_dest.write_udword(1, reg_source1->read_udword(1));
+	reg_dest.write_udword(0, reg_source1.read_udword(0));
+	reg_dest.write_udword(1, reg_source1.read_udword(1));
 }
 
 void CEeCoreInterpreter::MFC1(const EeCoreInstruction inst)
@@ -350,20 +350,20 @@ void CEeCoreInterpreter::MFC1(const EeCoreInstruction inst)
 	auto& reg_dest = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_source1 = r.ee.core.fpu.fpr[inst.rd()]; // Fs
 
-	reg_dest->write_uword(0, reg_source1.read_uword());
+	reg_dest.write_uword(0, reg_source1.read_uword());
 
 	// Sign extend
 	if (reg_source1.read_float() < 0.0)
 	{
-		reg_dest->write_uword(1, VALUE_UWORD_MAX);
-		reg_dest->write_uword(2, VALUE_UWORD_MAX);
-		reg_dest->write_uword(3, VALUE_UWORD_MAX);
+		reg_dest.write_uword(1, VALUE_UWORD_MAX);
+		reg_dest.write_uword(2, VALUE_UWORD_MAX);
+		reg_dest.write_uword(3, VALUE_UWORD_MAX);
 	}
 	else
 	{
-		reg_dest->write_uword(1, 0);
-		reg_dest->write_uword(2, 0);
-		reg_dest->write_uword(3, 0);
+		reg_dest.write_uword(1, 0);
+		reg_dest.write_uword(2, 0);
+		reg_dest.write_uword(3, 0);
 	}
 }
 
@@ -392,6 +392,6 @@ void CEeCoreInterpreter::MTC1(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rt()];
 	auto& reg_dest = r.ee.core.fpu.fpr[inst.rd()]; // Fs
 
-	reg_dest.write_uword(reg_source1->read_uword(0));
+	reg_dest.write_uword(reg_source1.read_uword(0));
 }
 

@@ -29,7 +29,7 @@ public:
 
     /// Sets a pending branch which combines the current PC address with
     /// the offset specified. Used for I-type instructions (imm's).
-    void set_branch_itype(WordRegister & pc, const shword imm)
+    void set_branch_itype(WordPcRegister & pc, const shword imm)
     {
         current_slot = slots + 1;
         branch_pc = (pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION) + (imm << 2);
@@ -37,7 +37,7 @@ public:
 
     /// Sets a pending branch which combines the current PC address with
     /// the region address. Used for J-type instructions.
-    void set_branch_jtype(WordRegister & pc, const uptr j_region_addr)
+    void set_branch_jtype(WordPcRegister & pc, const uptr j_region_addr)
     {
         current_slot = slots + 1;
         branch_pc = ((pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION) & 0xF0000000) | (j_region_addr << 2);
@@ -45,7 +45,7 @@ public:
 
     /// Advances the PC by either incrementing by 1 instruction,
     /// or taking a branch if all slots have been used.
-    void advance_pc(WordRegister & pc)
+    void advance_pc(WordPcRegister & pc)
     {
         if (current_slot)
         {

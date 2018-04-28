@@ -16,8 +16,8 @@ void CEeCoreInterpreter::BEQ(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<sdword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<sdword>(reg_source2.read_udword(0));
 
 	if (val_source1 == val_source2)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -32,8 +32,8 @@ void CEeCoreInterpreter::BEQL(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<sdword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<sdword>(reg_source2.read_udword(0));
 
 	if (val_source1 == val_source2)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -49,7 +49,7 @@ void CEeCoreInterpreter::BGEZ(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 >= 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -63,7 +63,7 @@ void CEeCoreInterpreter::BGEZL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 >= 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -79,7 +79,7 @@ void CEeCoreInterpreter::BGTZ(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 > 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -93,7 +93,7 @@ void CEeCoreInterpreter::BGTZL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 > 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -109,7 +109,7 @@ void CEeCoreInterpreter::BLEZ(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 <= 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -123,7 +123,7 @@ void CEeCoreInterpreter::BLEZL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 <= 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -139,7 +139,7 @@ void CEeCoreInterpreter::BLTZ(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 < 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -153,7 +153,7 @@ void CEeCoreInterpreter::BLTZL(const EeCoreInstruction inst)
 	auto& reg_source1 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
 
 	if (val_source1 < 0)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -170,8 +170,8 @@ void CEeCoreInterpreter::BNE(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<sdword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<sdword>(reg_source2.read_udword(0));
 
 	if (val_source1 != val_source2)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -186,8 +186,8 @@ void CEeCoreInterpreter::BNEL(const EeCoreInstruction inst)
 	auto& reg_source2 = r.ee.core.r5900.gpr[inst.rs()];
 	auto offset = inst.s_imm();
 
-	auto val_source1 = static_cast<sdword>(reg_source1->read_udword(0));
-	auto val_source2 = static_cast<sdword>(reg_source2->read_udword(0));
+	auto val_source1 = static_cast<sdword>(reg_source1.read_udword(0));
+	auto val_source2 = static_cast<sdword>(reg_source2.read_udword(0));
 
 	if (val_source1 != val_source2)
 		r.ee.core.r5900.bdelay.set_branch_itype(r.ee.core.r5900.pc, offset);
@@ -349,5 +349,5 @@ void CEeCoreInterpreter::JR(const EeCoreInstruction inst)
 	
 	// JUMP(). Address error exception generated upon instruction load - but not in this instruction.
 	auto& reg_source = r.ee.core.r5900.gpr[inst.rs()];
-	r.ee.core.r5900.bdelay.set_branch_direct(reg_source->read_uword(0));
+	r.ee.core.r5900.bdelay.set_branch_direct(reg_source.read_uword(0));
 }

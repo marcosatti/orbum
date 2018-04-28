@@ -3,6 +3,7 @@
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/Register/SizedQwordRegister.hpp"
+#include "Common/Types/Register/PcRegisters.hpp"
 #include "Common/Types/Mips/BranchDelaySlot.hpp"
 
 /// The R5900 is the EE Core's CPU. 
@@ -16,7 +17,7 @@ public:
 
 	/// The 32-bit Program Counter (PC) register. See EE Core Users manual, pg 61.
 	/// Points to the current instruction virtual address.
-	SizedWordRegister pc;
+	WordPcRegister pc;
 	
 	/// Branch delay slot holding area.
 	BranchDelaySlot<> bdelay;
@@ -25,9 +26,7 @@ public:
 	/// The upper 64-bits are only used when specific instructions are run, such as 
 	/// using the EE Core specific multimedia instructions (parallel instructions). Example: PADDB.
 	/// See EE Core Users Manual, pg 60.
-	SizedQwordRegister zero_register;
-	SizedQwordRegister gpr_base[Constants::EE::EECore::R5900::NUMBER_GP_REGISTERS - 1];
-	SizedQwordRegister * gpr[Constants::EE::EECore::R5900::NUMBER_GP_REGISTERS];
+	SizedQwordRegister gpr[Constants::EE::EECore::R5900::NUMBER_GP_REGISTERS];
 
 	/// The HI and LO registers. See EE Core Users manual, pg 60.
 	/// These registers are used to hold the results of integer multiply and divide operations.
