@@ -452,15 +452,20 @@ std::optional<uptr> CEeCore::translate_address(const uptr virtual_address, const
 		return translate_address_fallback(virtual_address, rw_access); 
 	};
 
+	std::optional<uptr> result;
 	switch (id_access)
 	{
 	case INSTRUCTION:
-		return translation_cache_inst.lookup(virtual_address, rw_access, fallback_fn);
+		result = translation_cache_inst.lookup(virtual_address, rw_access, fallback_fn);
+		break;
 	case DATA:
-		return translation_cache_data.lookup(virtual_address, rw_access, fallback_fn);
+		result = translation_cache_data.lookup(virtual_address, rw_access, fallback_fn);
+		break;
+	default:
+		throw std::runtime_error("Unrecognised id_access");
 	}
 
-	throw std::runtime_error("Unrecognised id_access");
+	return result;
 }
 
 std::optional<uptr> CEeCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access)

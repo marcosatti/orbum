@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Common/Types/Primitive.hpp"
-#include "Common/Types/Register/WordRegister.hpp"
+#include "Common/Types/Register/PcRegisters.hpp"
 
 /// Contains functionallity for the branch delay slot featured in MIPS CPU's.
 /// A branch delay occurs when a jump/branch instruction is hit, 
@@ -10,7 +10,7 @@
 /// configured branch slots have been run, and then the jump/branch occurs.
 /// A default slot size of 1 is used by the EE and IOP cores.
 /// slot + 1 is used internally as this is the real amount of instruction cycles.
-template<int slots = 1>
+template<size_t slots = 1>
 class BranchDelaySlot
 {
 public:
@@ -75,6 +75,6 @@ public:
     }
 
 private:
-    int current_slot;
+    size_t current_slot;
     uptr branch_pc;
 };

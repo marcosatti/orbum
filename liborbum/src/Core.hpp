@@ -56,23 +56,38 @@ public:
 	~Core();
 
 	/// Returns a reference to the logging functionality.
-	static boost::log::sources::logger_mt & get_logger();
+	static boost::log::sources::logger_mt & get_logger()
+	{
+		return logger;
+	}
 
 	/// Returns the runtime core options.
-	const CoreOptions & get_options() const;
+	const CoreOptions & get_options() const
+	{
+		return options;
+	}
+
+	/// Returns the task executor.
+	TaskExecutor & get_task_executor() const
+	{
+		return *task_executor;
+	}
+
+	/// Returns a reference to the PS2 resources.
+	RResources & get_resources() const
+	{
+		return *resources;
+	}
+
+	/// Enqueues a controller event that is dispatched on the next synchronised run.
+	void enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event)
+	{
+		controller_event_queue.push({ c_type, event });
+	}
 
 	/// Runs the core and updates the state.
 	/// This is the main loop function.
 	void run();
-
-	/// Returns the task executor.
-	TaskExecutor & get_task_executor() const;
-
-	/// Returns a reference to the PS2 resources.
-	RResources & get_resources() const;
-
-	/// Enqueues a controller event that is dispatched on the next synchronised run.
-	void enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event);
 
 	/// Dumps all memory objects to the ./dumps folder.
 	void dump_all_memory() const;

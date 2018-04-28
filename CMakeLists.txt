@@ -1,5 +1,8 @@
 # CMake 3.8.2 is needed for C++17 support.
-cmake_minimum_required(VERSION 3.8.2)
+# CMake 3.9 is needed for LTO support.
+cmake_minimum_required(VERSION 3.9)
+cmake_policy(SET CMP0069 NEW) # Link time optimization support
+
 
 #######################
 # Pre-project options #
@@ -13,19 +16,28 @@ project(orbum CXX)
 ###########
 # Options #
 ###########
-
+ 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+
 set(BUILD_SHARED_LIBS on)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE on)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_result)
+if(ipo_result)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION on)
+endif()
         
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/out")
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
 
 ################

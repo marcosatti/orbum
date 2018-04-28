@@ -11,7 +11,7 @@ template<int Size, typename KeyTy, typename ValueTy>
 class ArrayLfuCache
 {
 private:
-    using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
+    using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
     using CacheContainer = std::array<CacheEntry, Size>;
 
 public:
@@ -24,7 +24,7 @@ public:
     /// Returns the value associated with the key and increments the access count.
     std::optional<const ValueTy> get(const KeyTy key)
     {
-        auto entry_it = std::find_if(cache.begin(), cache.begin() + current_cache_size, [&key](const CacheEntry & e) {
+        auto entry_it = std::find_if(cache.begin(), cache.begin() + current_cache_size, [key](const CacheEntry & e) {
             return std::get<0>(e) == key;
         });
 
@@ -52,7 +52,7 @@ public:
     }
 
 private:
-    int current_cache_size;
+    size_t current_cache_size;
     CacheContainer cache;
 
     /// Finds the entry with the lowest access count to evict, and returns its position.
@@ -83,7 +83,7 @@ template<int Size, typename KeyTy, typename ValueTy>
 class ArrayLruCache
 {
 private:
-	using CacheEntry = std::tuple<KeyTy, ValueTy, int>;
+	using CacheEntry = std::tuple<KeyTy, ValueTy, size_t>;
 	using CacheContainer = std::array<CacheEntry, Size>;
 
 public:
@@ -97,7 +97,7 @@ public:
 	/// Returns the value associated with the key and sets the access timestamp.
 	std::optional<const ValueTy> get(const KeyTy key)
 	{
-		auto entry_it = std::find_if(cache.begin(), cache.begin() + current_cache_size, [&key](const CacheEntry & e) {
+		auto entry_it = std::find_if(cache.begin(), cache.begin() + current_cache_size, [key](const CacheEntry & e) {
 			return std::get<0>(e) == key;
 		});
 
@@ -126,8 +126,8 @@ public:
 	}
 
 private:
-	int total_cache_access;
-	int current_cache_size;
+	size_t total_cache_access;
+	size_t current_cache_size;
 	CacheContainer cache;
 
 	/// Finds the entry with the lowest timestamp to evict, and returns its position.

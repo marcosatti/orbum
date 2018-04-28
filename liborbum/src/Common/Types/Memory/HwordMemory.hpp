@@ -23,10 +23,17 @@ public:
 
 	/// Reads hwords to the buffer given.
 	/// This is a wrapper around the read_uhword function, and should not be treated as a separate interface (not made virtual).
-	void read(const size_t offset, uhword * buffer, const size_t length);
+	void read(const size_t offset, uhword * buffer, const size_t length)
+	{
+		for (size_t i = 0; i < length; i++)
+			buffer[i] = read_uhword(offset + i);
+	}
 
 	/// Writes hwords from the buffer given.
 	/// This is a wrapper around the write_uhword function, and should not be treated as a separate interface (not made virtual).
-	void write(const size_t offset, const uhword * buffer, const size_t length);
+	void write(const size_t offset, const uhword * buffer, const size_t length)
+	{
+		for (size_t i = 0; i < length; i++)
+			write_uhword(offset + i, buffer[i]);
+	}
 };
-

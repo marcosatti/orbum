@@ -111,16 +111,6 @@ Core::~Core()
 	BOOST_LOG(get_logger()) << "Core shutting down";
 }
 
-const CoreOptions & Core::get_options() const
-{
-    return options;
-}
-
-RResources & Core::get_resources() const
-{
-    return *resources;
-}
-
 void Core::run()
 {
 #if defined(BUILD_DEBUG)
@@ -174,22 +164,6 @@ void Core::run()
     if (!task_executor->task_sync.running_task_queue.is_empty() || task_executor->task_sync.thread_busy_counter.busy_counter)
         throw std::runtime_error("Task queue was not empty!");
 #endif
-}
-
-void Core::enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event)
-{
-	EventEntry qe{ c_type, event };
-	controller_event_queue.push(qe);
-}
-
-TaskExecutor & Core::get_task_executor() const
-{
-	return *task_executor;
-}
-
-boost::log::sources::logger_mt & Core::get_logger()
-{
-	return logger;
 }
 
 void Core::dump_all_memory() const
