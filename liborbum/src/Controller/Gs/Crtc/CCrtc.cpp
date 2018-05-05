@@ -32,7 +32,7 @@ void CCrtc::handle_event(const ControllerEvent & event)
 
 int CCrtc::time_to_ticks(const double time_us)
 {
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT * core->get_options().system_biases[ControllerType::Type::Crtc]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::CRTC::PCRTC_CLK_SPEED_DEFAULT * core->get_options().system_bias_crtc);
 	
 	if (ticks < 10)
 	{

@@ -44,7 +44,12 @@ struct VifcodeInstruction : public MipsInstruction
 	}
 
 	/// Performs a lookup if required and returns the instruction details.
-	MipsInstructionInfo * get_info();
+	const MipsInstructionInfo * get_info()
+    {
+        if (!info)
+            info = lookup();
+        return info;
+    }
 
 private:
 	/// Instruction information (from performing lookup).

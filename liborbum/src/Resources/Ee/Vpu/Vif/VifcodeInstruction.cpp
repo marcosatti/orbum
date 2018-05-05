@@ -31,13 +31,6 @@ VifcodeInstruction::VifcodeInstruction(const uword value) :
 {
 }
 
-MipsInstructionInfo * VifcodeInstruction::get_info()
-{
-	if (!info)
-		info = lookup();
-	return info;
-}
-
 MipsInstructionInfo * VifcodeInstruction::lookup() const
 {
     switch (cmdhi())

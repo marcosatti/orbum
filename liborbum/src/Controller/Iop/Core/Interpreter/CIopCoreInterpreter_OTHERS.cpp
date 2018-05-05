@@ -98,6 +98,10 @@ void CIopCoreInterpreter::RFE(const IopCoreInstruction inst)
 	// be the last instruction executed before interrupts can occur 
 	// again.
 	r.iop.core.cop0.cause.clear_all_irq();
+
+    // Flush translation caches (context change).
+    translation_cache_data.flush();
+    translation_cache_inst.flush();
 }
 
 void CIopCoreInterpreter::RTPS(const IopCoreInstruction inst)

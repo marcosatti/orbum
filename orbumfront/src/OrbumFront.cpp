@@ -22,24 +22,27 @@ int main(int argc, char * argv[])
 
 	try 
 	{
-		Core core(CoreOptions::make_default());
+		CoreApi core(CoreOptions::make_default());
 
 		try
 		{
 			while (DEBUG_RUN)
 				core.run();
 		}
-		catch (std::runtime_error & e)
+		catch (const std::runtime_error & e)
 		{
-			BOOST_LOG(core.get_logger()) << "Core running fatal error: " << e.what();
 			std::cout << "Core running fatal error: " << e.what() << std::endl;
 		}
 
 		core.dump_all_memory();
 	}
+    catch (const std::exception & e)
+    {
+        std::cerr << "Core init/exit/internal fatal error: " << e.what() << std::endl;
+    }
 	catch (...)
 	{
-		std::cout << "Core init/exit/internal fatal error" << std::endl;
+		std::cerr << "Core init/exit/internal fatal error" << std::endl;
 	}
 
 	std::cout << "Exiting" << std::endl;

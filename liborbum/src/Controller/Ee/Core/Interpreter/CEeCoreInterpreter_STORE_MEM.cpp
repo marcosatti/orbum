@@ -15,7 +15,7 @@ void CEeCoreInterpreter::SB(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -32,7 +32,7 @@ void CEeCoreInterpreter::SD(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -54,13 +54,13 @@ void CEeCoreInterpreter::SDL(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
-	std::optional<uptr> physical_address = translate_address(dword_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(dword_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.ee.bus.read_udword(BusContext::Ee, *physical_address);
 
-	physical_address = translate_address(dword_address, WRITE, DATA); // Need to get phy address again, check for write conditions.
+	physical_address = translate_address_data(dword_address, WRITE); // Need to get phy address again, check for write conditions.
 	if (!physical_address)
 		return;
 
@@ -82,13 +82,13 @@ void CEeCoreInterpreter::SDR(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
-	std::optional<uptr> physical_address = translate_address(dword_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(dword_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.ee.bus.read_udword(BusContext::Ee, *physical_address);
 
-	physical_address = translate_address(dword_address, WRITE, DATA); // Need to get phy address again, check for write conditions.
+	physical_address = translate_address_data(dword_address, WRITE); // Need to get phy address again, check for write conditions.
 	if (!physical_address)
 		return;
 
@@ -105,7 +105,7 @@ void CEeCoreInterpreter::SH(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -122,7 +122,7 @@ void CEeCoreInterpreter::SW(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -144,13 +144,13 @@ void CEeCoreInterpreter::SWL(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.ee.bus.read_uword(BusContext::Ee, *physical_address);
 
-	physical_address = translate_address(word_address, WRITE, DATA); // Need to get phy address again, check for write conditions.
+	physical_address = translate_address_data(word_address, WRITE); // Need to get phy address again, check for write conditions.
 	if (!physical_address)
 		return;
 
@@ -172,13 +172,13 @@ void CEeCoreInterpreter::SWR(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.ee.bus.read_uword(BusContext::Ee, *physical_address);
 
-	physical_address = translate_address(word_address, WRITE, DATA); // Need to get phy address again, check for write conditions.
+	physical_address = translate_address_data(word_address, WRITE); // Need to get phy address again, check for write conditions.
 	if (!physical_address)
 		return;
 
@@ -195,7 +195,7 @@ void CEeCoreInterpreter::SQ(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -215,7 +215,7 @@ void CEeCoreInterpreter::SWC1(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = (reg_source1.read_uword(0) + imm);
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -235,7 +235,7 @@ void CEeCoreInterpreter::SQC2(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 

@@ -267,11 +267,12 @@ target_include_directories(
 )
 
 # TODO: Sort out later into proper build configurations.
-# Also disable MSVC non-safe copy warnings.
+# Also disable some warnings...
 target_compile_definitions(
 	orbum 
 	PUBLIC 
 		"_SCL_SECURE_NO_WARNINGS"
+		"_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING"
 		"BUILD_DEBUG"
 )
 

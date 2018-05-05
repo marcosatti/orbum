@@ -64,13 +64,15 @@ protected:
 	/// and access type, and returns the physical address. If the address is not
 	/// found within the cache the full lookup process will be invoked.
 	/// This should always be valid as the IOP has no TLB...
-	std::optional<uptr> translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access);
+    std::optional<uptr> translate_address_data(const uptr virtual_address, const MmuRwAccess rw_access);
+    std::optional<uptr> translate_address_inst(const uptr virtual_address);
+
+    /// Address translation cache, see translate_address().
+    /// Note: caches will be flushed when the operating context changes (visibility).
+    TranslationCache<6, uptr, 0xFFF, TimestampLruCache> translation_cache_data;
+    TranslationCache<6, uptr, 0xFFF, TimestampLruCache> translation_cache_inst;
 
 private:
-    /// Address translation cache, see translate_address().
-	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_data;
-	TranslationCache<3, uptr, 0xFFF, ArrayLruCache> translation_cache_inst;
-
 	/// Converts a time duration into the number of ticks that would have occurred.
 	int time_to_ticks(const double time_us);
 

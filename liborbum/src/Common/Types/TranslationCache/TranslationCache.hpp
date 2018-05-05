@@ -23,18 +23,20 @@ private:
 public:
     using FallbackFn = std::function<std::optional<AddressTy>(const AddressTy, const MmuRwAccess)>;
 
+    TranslationCache() :
+        fallback_fn(nullptr)
+    {
+    }
+
     /// Performs the virtual address to physical address translation.
-    std::optional<AddressTy> lookup(const AddressTy virtual_address, const MmuRwAccess rw_access, const FallbackFn & fallback_lookup)
+    std::optional<AddressTy> lookup(const AddressTy virtual_address, const MmuRwAccess rw_access)
     {
         const AddressTy key = virtual_address & (~CacheMask);
 
 		std::optional<AddressTy> result = cache.get(key);
-		if (!result)
-		{
-			result = fallback_lookup(key, rw_access);
-			if (result)
-				cache.insert(key, *result);
-		}
+
+        if (!result)
+            result = handle_fallback(key, rw_access);
 
 		if (result)
 			*result = (*result | (virtual_address & CacheMask));
@@ -48,6 +50,27 @@ public:
 		cache = CacheTy_();
     }
 
+    /// Sets the translation fallback function.
+    void set_fallback_lookup(const FallbackFn & fallback_fn)
+    {
+        this->fallback_fn = fallback_fn;
+    }
+
 private:
+    /// Performs a fallback lookup and inserts the result into the cache if its found. 
+    /// Returns the fallback result.
+    std::optional<AddressTy> handle_fallback(const AddressTy key, const MmuRwAccess rw_access)
+    {
+        if (!fallback_fn)
+            throw std::runtime_error("No fallback address translation function defined");
+
+        std::optional<AddressTy> result = fallback_fn(key, rw_access);
+        if (result)
+            cache.insert(key, *result);
+
+        return result;
+    }
+
+    FallbackFn fallback_fn;
 	CacheTy_ cache;
 };

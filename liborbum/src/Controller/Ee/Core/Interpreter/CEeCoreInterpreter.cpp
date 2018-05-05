@@ -23,11 +23,11 @@ int CEeCoreInterpreter::time_step(const int ticks_available)
 	
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
 	const uptr pc_address = r.ee.core.r5900.pc.read_uword();
-	uptr physical_address = translate_address(pc_address, READ, INSTRUCTION).value();
-	uword raw_inst = r.ee.bus.read_uword(BusContext::Ee, physical_address);
+	uptr physical_address = translate_address_inst(pc_address).value();
+    uword raw_inst = r.ee.bus.read_uword(BusContext::Ee, physical_address);
 	EeCoreInstruction inst = EeCoreInstruction(raw_inst);
 
-#if defined(BUILD_DEBUG)
+#if 0 //defined(BUILD_DEBUG)
 	static size_t DEBUG_LOOP_BREAKPOINT = 0x1000000143DE40;
 	static uptr DEBUG_PC_BREAKPOINT = 0x0;
 	if (DEBUG_LOOP_COUNTER >= DEBUG_LOOP_BREAKPOINT)
@@ -62,7 +62,8 @@ int CEeCoreInterpreter::time_step(const int ticks_available)
 
 	// Update the COP0.Count register, and check for interrupt. 
 	// See EE Core Users Manual page 70.
-	handle_count_update(inst.get_info()->cpi);
+    if (ticks_available % 16 == 0)
+	    handle_count_update(inst.get_info()->cpi * 16);
 
 #if defined(BUILD_DEBUG)
 	// Debug increment loop counter.
@@ -70,7 +71,7 @@ int CEeCoreInterpreter::time_step(const int ticks_available)
 #endif
 
 	// Return the number of cycles completed.
-	return 1; // TODO: fix CPI's. inst.get_info()->cpi;
+	return 3; // TODO: fix CPI's. inst.get_info()->cpi;
 }
 
 void CEeCoreInterpreter::INSTRUCTION_UNKNOWN(const EeCoreInstruction inst)

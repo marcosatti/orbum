@@ -397,13 +397,6 @@ EeCoreInstruction::EeCoreInstruction(const uword value) :
 {
 }
 
-MipsInstructionInfo * EeCoreInstruction::get_info()
-{
-	if (!info)
-		info = lookup();
-	return info;
-}
-
 MipsInstructionInfo * EeCoreInstruction::lookup() const
 {
 	switch (opcode())

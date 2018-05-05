@@ -29,7 +29,7 @@ void CGsCore::handle_event(const ControllerEvent & event)
 
 int CGsCore::time_to_ticks(const double time_us)
 {
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::GSCore::GSCORE_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::GsCore]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::GS::GSCore::GSCORE_CLK_SPEED * core->get_options().system_bias_gscore);
 	
 	if (ticks < 10)
 	{

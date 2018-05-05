@@ -100,13 +100,6 @@ IopCoreInstruction::IopCoreInstruction(const uword value) :
 {
 }
 
-MipsInstructionInfo * IopCoreInstruction::get_info()
-{
-	if (!info)
-		info = lookup();
-	return info;
-}
-
 MipsInstructionInfo * IopCoreInstruction::lookup() const
 {
     switch (opcode())

@@ -36,7 +36,7 @@ void CEeTimers::handle_event(const ControllerEvent & event)
 int CEeTimers::time_to_ticks(const double time_us)
 {
 	// TODO: find out for sure.
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::EeTimers]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_bias_eetimers);
 	
 	if (ticks < 10)
 	{

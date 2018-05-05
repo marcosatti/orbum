@@ -23,6 +23,13 @@ std::atomic_bool DEBUG_IN_CONTROLLER_IOPCORE = false;
 CIopCore::CIopCore(Core * core) :
 	CController(core)
 {
+    auto translation_fallback = [this](const uptr virtual_address, const MmuRwAccess rw_access)
+    {
+        return translate_address_fallback(virtual_address, rw_access);
+    };
+
+    translation_cache_data.set_fallback_lookup(translation_fallback);
+    translation_cache_inst.set_fallback_lookup(translation_fallback);
 }
 
 CIopCore::~CIopCore()
@@ -66,7 +73,7 @@ void CIopCore::handle_event(const ControllerEvent & event)
 
 int CIopCore::time_to_ticks(const double time_us)
 {
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPCore::IOPCORE_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::IopCore]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::IOP::IOPCore::IOPCORE_CLK_SPEED * core->get_options().system_bias_iopcore);
 	
 	if (ticks < 10)
 	{
@@ -333,13 +340,17 @@ void CIopCore::handle_exception(const IopCoreException exception)
 	{
 		pc.offset(-static_cast<sword>(Constants::MIPS::SIZE_MIPS_INSTRUCTION));
 	}
+
+    // Flush translation caches (context change).
+    translation_cache_data.flush();
+    translation_cache_inst.flush();
 }
 
-std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, const MmuRwAccess rw_access, const MmuIdAccess id_access)
+std::optional<uptr> CIopCore::translate_address_data(const uptr virtual_address, const MmuRwAccess rw_access)
 {
-	auto& r = core->get_resources();
+    auto& r = core->get_resources();
 
-#if defined(BUILD_DEBUG)
+#if 0 //defined(BUILD_DEBUG)
 	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
 	{
         std::make_pair(0xFFFFFFFF, 0xFFFFFFFF)
@@ -352,7 +363,7 @@ std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, cons
 		if (virtual_address >= range.first && virtual_address <= range.second)
 		{
 			BOOST_LOG(Core::get_logger()) << 
-				boost::format("IOP MMU breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
+				boost::format("IOP MMU data breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
 				% DEBUG_LOOP_COUNTER 
 				% r.iop.core.r3000.pc.read_uword() 
 				% virtual_address
@@ -363,23 +374,36 @@ std::optional<uptr> CIopCore::translate_address(const uptr virtual_address, cons
 
 	// Check if a write is being performed with isolate cache turned on - don't run through the cache.
     auto& status = r.iop.core.cop0.status;
-	if (status.extract_field(IopCoreCop0Register_Status::ISC) && rw_access == WRITE)
+	if (rw_access == WRITE && status.extract_field(IopCoreCop0Register_Status::ISC))
 		return translate_address_fallback(virtual_address, rw_access);
 
-    auto fallback_fn = [this](const uptr virtual_address, const MmuRwAccess rw_access) -> std::optional<uptr>
+    return translation_cache_data.lookup(virtual_address, rw_access);
+}
+
+std::optional<uptr> CIopCore::translate_address_inst(const uptr virtual_address)
+{
+#if 0 //defined(BUILD_DEBUG)
+    auto& r = core->get_resources();
+
+    static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] =
     {
-        return translate_address_fallback(virtual_address, rw_access);
+        std::make_pair(0x1F402000, 0x1F402040)
     };
 
-	switch (id_access)
-	{
-	case INSTRUCTION:
-		return translation_cache_inst.lookup(virtual_address, rw_access, fallback_fn);
-	case DATA:
-		return translation_cache_data.lookup(virtual_address, rw_access, fallback_fn);
-	}
+    for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)
+    {
+        if (virtual_address >= range.first && virtual_address <= range.second)
+        {
+            BOOST_LOG(Core::get_logger()) <<
+                boost::format("IOP MMU inst breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X.")
+                % DEBUG_LOOP_COUNTER
+                % r.iop.core.r3000.pc.read_uword()
+                % virtual_address;
+        }
+    }
+#endif
 
-	throw std::runtime_error("Unrecognised id_access");
+    return translation_cache_inst.lookup(virtual_address, READ);
 }
 
 std::optional<uptr> CIopCore::translate_address_fallback(const uptr virtual_address, const MmuRwAccess rw_access)

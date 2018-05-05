@@ -16,7 +16,7 @@ void CIopCoreInterpreter::LB(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -34,7 +34,7 @@ void CIopCoreInterpreter::LBU(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -52,7 +52,7 @@ void CIopCoreInterpreter::LH(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -70,7 +70,7 @@ void CIopCoreInterpreter::LHU(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -101,7 +101,7 @@ void CIopCoreInterpreter::LW(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -124,7 +124,7 @@ void CIopCoreInterpreter::LWL(const IopCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
@@ -147,7 +147,7 @@ void CIopCoreInterpreter::LWR(const IopCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
@@ -165,7 +165,7 @@ void CIopCoreInterpreter::SB(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -182,7 +182,7 @@ void CIopCoreInterpreter::SH(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -199,7 +199,7 @@ void CIopCoreInterpreter::SW(const IopCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source1.read_uword() + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, WRITE, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -221,14 +221,14 @@ void CIopCoreInterpreter::SWL(const IopCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.iop.bus.read_uword(BusContext::Iop, *physical_address);
 
 	// Need to get phy address again, check for write conditions.
-	physical_address = translate_address(word_address, WRITE, DATA);
+	physical_address = translate_address_data(word_address, WRITE);
 	if (!physical_address)
 		return;
 
@@ -250,14 +250,14 @@ void CIopCoreInterpreter::SWR(const IopCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
 	auto value = r.iop.bus.read_uword(BusContext::Iop, *physical_address);
 
 	// Need to get phy address again, check for write conditions.
-	physical_address = translate_address(word_address, WRITE, DATA);
+	physical_address = translate_address_data(word_address, WRITE);
 	if (!physical_address)
 		return;
 

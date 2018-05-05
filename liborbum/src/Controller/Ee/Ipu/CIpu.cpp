@@ -30,7 +30,7 @@ void CIpu::handle_event(const ControllerEvent & event)
 int CIpu::time_to_ticks(const double time_us)
 {
 	// TODO: find out for sure.
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Ipu]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_bias_ipu);
 	
 	if (ticks < 10)
 	{

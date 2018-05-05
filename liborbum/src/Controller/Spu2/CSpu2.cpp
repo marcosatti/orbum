@@ -30,7 +30,7 @@ void CSpu2::handle_event(const ControllerEvent & event)
 
 int CSpu2::time_to_ticks(const double time_us)
 {
-	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * core->get_options().system_biases[ControllerType::Type::Spu2]);
+	int ticks = static_cast<int>(time_us / 1.0e6 * Constants::SPU2::SPU2_CLK_SPEED * core->get_options().system_bias_spu2);
 	
 	if (ticks < 10)
 	{

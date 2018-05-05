@@ -20,7 +20,7 @@ int CIopCoreInterpreter::time_step(const int ticks_available)
 	
 	// Set the instruction holder to the instruction at the current PC, and get instruction details.
 	const uptr pc_address = r.iop.core.r3000.pc.read_uword();
-	uptr physical_address = translate_address(pc_address, READ, INSTRUCTION).value();
+	uptr physical_address = translate_address_inst(pc_address).value();
 	uword raw_inst = r.iop.bus.read_uword(BusContext::Iop, physical_address);
 	IopCoreInstruction inst = IopCoreInstruction(raw_inst);
 
@@ -68,7 +68,7 @@ int CIopCoreInterpreter::time_step(const int ticks_available)
 #endif
 	
 	// Return the number of cycles completed.
-	return 1; // TODO: fix CPI's. inst.get_info()->cpi;
+	return 3; // TODO: fix CPI's. inst.get_info()->cpi;
 }
 
 void CIopCoreInterpreter::INSTRUCTION_UNKNOWN(const IopCoreInstruction inst)

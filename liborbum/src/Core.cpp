@@ -49,13 +49,26 @@ CoreOptions CoreOptions::make_default()
         "",
         "",
         200,
-        3, //std::thread::hardware_concurrency() - 1,
-		{2.0, 1.0, 1.0, 1.0, // TODO: while in development, cheat for now :)
-		 1.0, 1.0, 1.0, 1.0,
-		 2.0, 1.0, 1.0, 1.0, 
-		 1.0, 1.0, 1.0, 1.0, 
-		 1.0, 1.0 }
-        // EnumMap<ControllerType::Type, double>(1.0)
+        4, //std::thread::hardware_concurrency() - 1,
+
+		1.0, 
+        1.0, 
+        1.0, 
+        1.0, 
+		1.0, 
+        1.0, 
+        1.0, 
+        1.0,
+		1.0, 
+        1.0, 
+        1.0, 
+        1.0, 
+		1.0, 
+        1.0, 
+        1.0, 
+        1.0, 
+		1.0,
+        1.0 
     };
 }
 
@@ -72,13 +85,19 @@ Core::Core(const CoreOptions & options) :
 	initialise_resources(resources);
 
 	// Initialise roms (boot_rom (required), rom1, rom2, erom).
-	get_resources().boot_rom.read_from_file(options.roms_dir_path + options.boot_rom_file_name, Constants::EE::ROM::SIZE_BOOT_ROM);
-	if (!options.rom1_file_name.empty())
-		get_resources().rom1.read_from_file(options.roms_dir_path + options.rom1_file_name, Constants::EE::ROM::SIZE_ROM1);
-	if (!options.rom2_file_name.empty())
-		get_resources().rom2.read_from_file(options.roms_dir_path + options.rom2_file_name, Constants::EE::ROM::SIZE_ROM2);
-	if (!options.erom_file_name.empty())
-		get_resources().erom.read_from_file(options.roms_dir_path + options.erom_file_name, Constants::EE::ROM::SIZE_EROM);
+    const std::string roms_dir_path = options.roms_dir_path;
+    const std::string boot_rom_file_name = options.boot_rom_file_name;
+    const std::string rom1_file_name = options.rom1_file_name;
+    const std::string rom2_file_name = options.rom2_file_name;
+    const std::string erom_file_name = options.erom_file_name;
+
+	get_resources().boot_rom.read_from_file(roms_dir_path + boot_rom_file_name, Constants::EE::ROM::SIZE_BOOT_ROM);
+	if (!rom1_file_name.empty())
+		get_resources().rom1.read_from_file(roms_dir_path + rom1_file_name, Constants::EE::ROM::SIZE_ROM1);
+	if (!rom2_file_name.empty())
+		get_resources().rom2.read_from_file(roms_dir_path + rom2_file_name, Constants::EE::ROM::SIZE_ROM2);
+	if (!erom_file_name.empty())
+		get_resources().erom.read_from_file(roms_dir_path + erom_file_name, Constants::EE::ROM::SIZE_EROM);
 
     // Initialise controllers.
     controllers[ControllerType::Type::EeCore] = std::make_unique<CEeCoreInterpreter>(this);
@@ -118,76 +137,86 @@ boost::log::sources::logger_mt & Core::get_logger()
 
 void Core::run()
 {
+    try
+    {
 #if defined(BUILD_DEBUG)
-    static double DEBUG_TIME_ELAPSED = 0.0;
-    static double DEBUG_TIME_LOGGED = 0.0;
-	static std::chrono::high_resolution_clock::time_point DEBUG_T1 = std::chrono::high_resolution_clock::now();
-    if ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) > 0.01e6)
-    {
-		const std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
-		const std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
-        
-        const std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)") 
-			% (DEBUG_TIME_ELAPSED / 1e6)
-			% ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
-
-		BOOST_LOG(get_logger()) << info;
-		//print_title(info);
-
-        DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
-		DEBUG_T1 = DEBUG_T2;
-    }
-    DEBUG_TIME_ELAPSED += options.time_slice_per_run_us;
-#endif
-
-    // Enqueue time events (always done on each run).
-    auto event = ControllerEvent{ ControllerEvent::Type::Time, options.time_slice_per_run_us };
-    for (int i = 0; i < static_cast<int>(ControllerType::Type::COUNT); i++) // TODO: find better syntax..
-    {
-        auto controller = static_cast<ControllerType::Type>(i);
-		enqueue_controller_event(controller, event);
-    }
-
-    // Package events into tasks and send to workers.
-	EventEntry entry;
-    while (controller_event_queue.try_pop(entry))
-    {
-        auto task = [this, entry] ()
+        static double DEBUG_TIME_ELAPSED = 0.0;
+        static double DEBUG_TIME_LOGGED = 0.0;
+        static std::chrono::high_resolution_clock::time_point DEBUG_T1 = std::chrono::high_resolution_clock::now();
+        if ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) > 0.01e6)
         {
-			if (controllers[entry.t])
-				controllers[entry.t]->handle_event_marshall_(entry.e);
-        };
+            const std::chrono::high_resolution_clock::time_point DEBUG_T2 = std::chrono::high_resolution_clock::now();
+            const std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
 
-        task_executor->enqueue_task(task);
-    }
+            const std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)")
+                % (DEBUG_TIME_ELAPSED / 1e6)
+                % ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
 
-    // Dispatch all tasks and wait for resynchronisation.
-    task_executor->dispatch();
-	task_executor->wait_for_idle();
+            BOOST_LOG(get_logger()) << info;
+            //print_title(info);
+
+            DEBUG_TIME_LOGGED = DEBUG_TIME_ELAPSED;
+            DEBUG_T1 = DEBUG_T2;
+        }
+        DEBUG_TIME_ELAPSED += options.time_slice_per_run_us;
+#endif
+
+        // Enqueue time events (always done on each run).
+        auto event = ControllerEvent{ ControllerEvent::Type::Time, options.time_slice_per_run_us };
+        for (int i = 0; i < static_cast<int>(ControllerType::Type::COUNT); i++) // TODO: find better syntax..
+        {
+            auto controller = static_cast<ControllerType::Type>(i);
+            enqueue_controller_event(controller, event);
+        }
+
+        // Package events into tasks and send to workers.
+        EventEntry entry;
+        while (controller_event_queue.try_pop(entry))
+        {
+            auto task = [this, entry]()
+            {
+                if (controllers[entry.t])
+                    controllers[entry.t]->handle_event_marshall_(entry.e);
+            };
+
+            task_executor->enqueue_task(task);
+        }
+
+        // Dispatch all tasks and wait for resynchronisation.
+        task_executor->dispatch();
+        task_executor->wait_for_idle();
 
 #if defined(BUILD_DEBUG)
-    if (!task_executor->task_sync.running_task_queue.is_empty() || task_executor->task_sync.thread_busy_counter.busy_counter)
-        throw std::runtime_error("Task queue was not empty!");
+        if (!task_executor->task_sync.running_task_queue.is_empty() || task_executor->task_sync.thread_busy_counter.busy_counter)
+            throw std::runtime_error("Task queue was not empty!");
 #endif
+    }
+    catch (const std::runtime_error & e)
+    {
+        BOOST_LOG(get_logger()) << "Core running fatal error: " << e.what();
+        throw;
+    }
 }
 
 void Core::dump_all_memory() const
 {
-	boost::filesystem::create_directory(options.dumps_dir_path);
-	get_resources().ee.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_EE.bin");
-	get_resources().iop.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_IOP.bin");
-	get_resources().spu2.main_memory.write_to_file(options.dumps_dir_path + "End_Dump_SPU2.bin");
-	get_resources().cdvd.nvram.memory.write_to_file(options.dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
+    const std::string dumps_dir_path = options.dumps_dir_path;
+	boost::filesystem::create_directory(dumps_dir_path);
+	get_resources().ee.main_memory.write_to_file(dumps_dir_path + "End_Dump_EE.bin");
+	get_resources().iop.main_memory.write_to_file(dumps_dir_path + "End_Dump_IOP.bin");
+	get_resources().spu2.main_memory.write_to_file(dumps_dir_path + "End_Dump_SPU2.bin");
+	get_resources().cdvd.nvram.memory.write_to_file(dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
 	BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
 }
 
 void Core::init_logging()
 {
-	boost::filesystem::create_directory(options.logs_dir_path);
+    const std::string logs_dir_path = options.logs_dir_path;
+	boost::filesystem::create_directory(logs_dir_path);
 	boost::log::add_common_attributes();
 	boost::log::add_file_log
 	(
-		boost::log::keywords::file_name = options.logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
+		boost::log::keywords::file_name = logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
 		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
 	);
 	boost::log::add_console_log
@@ -195,4 +224,24 @@ void Core::init_logging()
 		std::cout,
 		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
 	);
+}
+
+CoreApi::CoreApi(const CoreOptions & options)
+{
+    impl = new Core(options);
+}
+
+CoreApi::~CoreApi()
+{
+    delete impl;
+}
+
+void CoreApi::run()
+{
+    impl->run();
+}
+
+void CoreApi::dump_all_memory() const
+{
+    impl->dump_all_memory();
 }

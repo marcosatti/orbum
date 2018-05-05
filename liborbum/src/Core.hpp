@@ -15,45 +15,90 @@
 #include "Controller/ControllerEvent.hpp"
 #include "Controller/ControllerType.hpp"
 
+#ifdef orbum_EXPORTS
+ #define CORE_API SHARED_EXPORT
+#else
+ #define CORE_API SHARED_IMPORT
+#endif
+
 struct RResources;
 class CController;
 
 /// Core runtime options.
-struct SHARED_EXPORT CoreOptions
+struct CORE_API CoreOptions
 {
 	/// Contstructs default core options.
 	/// See inside for details.
 	static CoreOptions make_default();
 
 	// Notes: 
-    // For single-threaded operation, set number_workers to 1.
-    // us = microseconds.
-	// Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
+    // - For single-threaded operation, set number_workers to 1.
+    // - us = microseconds.
+	// - Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
+    // - Speed biases are a ratio, 1.0x is normal speed.
 
-	/* Log dir path.             */ std::string logs_dir_path;
-	/* Roms dir path.            */ std::string roms_dir_path;
-	/* Memory dumps dir path.    */ std::string dumps_dir_path;
-	/* Boot ROM file name.       */ std::string boot_rom_file_name;
-	/* ROM1 file name.           */ std::string rom1_file_name;
-	/* ROM2 file name.           */ std::string rom2_file_name;
-	/* EROM file name.           */ std::string erom_file_name;
+	/* Log dir path.             */ const char * logs_dir_path;
+	/* Roms dir path.            */ const char * roms_dir_path;
+	/* Memory dumps dir path.    */ const char * dumps_dir_path;
+	/* Boot ROM file name.       */ const char * boot_rom_file_name;
+	/* ROM1 file name.           */ const char * rom1_file_name;
+	/* ROM2 file name.           */ const char * rom2_file_name;
+	/* EROM file name.           */ const char * erom_file_name;
 
 	/* Time slice per run in us. */ double time_slice_per_run_us;
 
-    /* Number of worker threads .*/ size_t number_workers;
+    /* Number of worker threads. */ size_t number_workers;
 
-	/* System speed biases.      */ EnumMap<ControllerType::Type, double> system_biases;
+    /* EE Core speed bias.       */ double system_bias_eecore;
+    /* EE Dmac speed bias.       */ double system_bias_eedmac;
+    /* EE Timers speed bias.     */ double system_bias_eetimers;
+    /* EE Intc speed bias.       */ double system_bias_eeintc;
+    /* GIF speed bias.           */ double system_bias_gif;
+    /* IPU speed bias.           */ double system_bias_ipu;
+    /* VIF speed bias.           */ double system_bias_vif;
+    /* VU speed bias.            */ double system_bias_vu;
+    /* IOP Core speed bias.      */ double system_bias_iopcore;
+    /* IOP Dmac speed bias.      */ double system_bias_iopdmac;
+    /* IOP Timers speed bias.    */ double system_bias_ioptimers;
+    /* IOP Intc speed bias.      */ double system_bias_iopintc;
+    /* CDVD speed bias.          */ double system_bias_cdvd;
+    /* SPU2 speed bias.          */ double system_bias_spu2;
+    /* GS Core speed bias.       */ double system_bias_gscore;
+    /* CRTC speed bias.          */ double system_bias_crtc;
+    /* SIO0 speed bias.          */ double system_bias_sio0;
+    /* SIO2 speed bias.          */ double system_bias_sio2;
+};
+
+/// Exported Core class interface.
+class CORE_API CoreApi
+{
+public:
+    CoreApi(const CoreOptions & options);
+    ~CoreApi();
+
+    void run();
+    void dump_all_memory() const;
+
+private:
+    class Core * impl;
 };
 
 /// Entry point into all Orbum core emulation.
 /// This is the manager for the PS2's execution. 
 /// Execution occurs in synchronised blocks - the core waits until all events
 /// are processed by the controllers before dispatching any new ones.
-class SHARED_EXPORT Core
+class Core
 {
 public:
 	Core(const CoreOptions & options);
 	~Core();
+
+    /// Runs the core and updates the state.
+    /// This is the main loop function.
+    void run();
+
+    /// Dumps all memory objects to the ./dumps folder.
+    void dump_all_memory() const;
 
 	/// Returns a reference to the logging functionality.
     static boost::log::sources::logger_mt & get_logger();
@@ -81,13 +126,6 @@ public:
 	{
 		controller_event_queue.push({ c_type, event });
 	}
-
-	/// Runs the core and updates the state.
-	/// This is the main loop function.
-	void run();
-
-	/// Dumps all memory objects to the ./dumps folder.
-	void dump_all_memory() const;
 
 private:	
 	/// Initialises logging using options.

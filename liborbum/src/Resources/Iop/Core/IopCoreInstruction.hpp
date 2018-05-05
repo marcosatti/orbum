@@ -22,7 +22,12 @@ struct IopCoreInstruction : public MipsInstruction
 	static constexpr int CPI_COP_BRANCH_DELAY = 20;
 
 	/// Performs a lookup if required and returns the instruction details.
-	MipsInstructionInfo * get_info();
+	const MipsInstructionInfo * get_info()
+    {
+        if (!info)
+            info = lookup();
+        return info;
+    }
 
 private:
 	/// Instruction information (from performing lookup).

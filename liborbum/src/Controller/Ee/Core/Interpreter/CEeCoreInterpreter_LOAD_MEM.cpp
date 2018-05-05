@@ -15,7 +15,7 @@ void CEeCoreInterpreter::LB(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -33,7 +33,7 @@ void CEeCoreInterpreter::LBU(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -51,7 +51,7 @@ void CEeCoreInterpreter::LD(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -74,7 +74,7 @@ void CEeCoreInterpreter::LDL(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
-	std::optional<uptr> physical_address = translate_address(dword_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(dword_address, READ);
 	if (!physical_address)
 		return;
 
@@ -97,7 +97,7 @@ void CEeCoreInterpreter::LDR(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 7) << 3;
 	uptr dword_address = (virtual_address & 0xFFFFFFF8);
 
-	std::optional<uptr> physical_address = translate_address(dword_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(dword_address, READ);
 	if (!physical_address)
 		return;
 
@@ -115,7 +115,7 @@ void CEeCoreInterpreter::LH(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -133,7 +133,7 @@ void CEeCoreInterpreter::LHU(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -164,7 +164,7 @@ void CEeCoreInterpreter::LW(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -187,7 +187,7 @@ void CEeCoreInterpreter::LWL(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
@@ -210,7 +210,7 @@ void CEeCoreInterpreter::LWR(const EeCoreInstruction inst)
 	uword shift = (virtual_address & 3) << 3;
 	uptr word_address = (virtual_address & 0xFFFFFFFC);
 
-	std::optional<uptr> physical_address = translate_address(word_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(word_address, READ);
 	if (!physical_address)
 		return;
 
@@ -228,7 +228,7 @@ void CEeCoreInterpreter::LWU(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = reg_source.read_uword(0) + imm;
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -246,7 +246,7 @@ void CEeCoreInterpreter::LQ(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = (reg_source.read_uword(0) + imm);
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -267,7 +267,7 @@ void CEeCoreInterpreter::LWC1(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = (reg_source.read_uword(0) + imm);
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
@@ -288,7 +288,7 @@ void CEeCoreInterpreter::LQC2(const EeCoreInstruction inst)
 	const shword imm = inst.s_imm();
 
 	uptr virtual_address = (reg_source.read_uword(0) + imm);
-	std::optional<uptr> physical_address = translate_address(virtual_address, READ, DATA);
+	std::optional<uptr> physical_address = translate_address_data(virtual_address, READ);
 	if (!physical_address)
 		return;
 
