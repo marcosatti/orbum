@@ -11,6 +11,6 @@ before_build:
   - ps: cd build
   - ps: cmake -G "Visual Studio 15 2017 Win64" -DBOOST_ROOT="C:\Libraries\boost_1_66_0" ..
   
-build:orbummaster.zip
+build:orbum
   parallel: true
   project: build/orbum.sln
