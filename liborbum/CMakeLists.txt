@@ -227,7 +227,6 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio0/Sio0Registers.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/RSio2.cpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/RSio2.hpp"
-	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/Sio2Packet.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/Sio2Registers.cpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/Sio2Registers.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Iop/Sio2/Sio2PortRegisters.cpp"
