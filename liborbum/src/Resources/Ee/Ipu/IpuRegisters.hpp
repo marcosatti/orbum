@@ -50,3 +50,9 @@ public:
     bool is_busy();
     void set_busy();
 };
+
+class IpuRegister_Bp : public SizedWordRegister {
+    static constexpr Bitfield BP = Bitfield(0, 7);
+    static constexpr Bitfield IFC = Bitfield(8, 4);
+    static constexpr Bitfield FP = Bitfield(16, 2);
+};
