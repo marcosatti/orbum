@@ -17,3 +17,15 @@ public:
     bool is_busy();
     void set_busy();
 };
+
+
+class IpuRegister_Top : public SizedDwordRegister 
+{
+public:
+    static constexpr Bitfield BSTOP = Bitfield(0, 31);
+    static constexpr Bitfield BUSY  = Bitfield(63, 63);
+
+    /// BSTOP field is ineffective if BUSY is set to 1.
+    bool is_busy();
+    void set_busy();
+}
