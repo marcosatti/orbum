@@ -12,9 +12,9 @@ struct RIpu
 	/// IPU memory mapped registers. See page 21 of EE Users Manual.
 	/// 0x10002000
 	IpuRegister_Cmd cmd;
-	SizedWordRegister ctrl;
-	SizedWordRegister bp;
-	SizedDwordRegister top;
+	IpuRegister_Ctrl ctrl;
+	IpuRegister_Bp bp;
+	IpuRegister_Top top;
 	ArrayByteMemory   memory_2040;
 };
 
