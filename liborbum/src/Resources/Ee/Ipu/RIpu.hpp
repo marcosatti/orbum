@@ -11,10 +11,9 @@ struct RIpu
 
 	/// IPU memory mapped registers. See page 21 of EE Users Manual.
 	/// 0x10002000
-	IpuRegister_Cmd cmd;
+	IpuRegister_Cmd  cmd;
 	IpuRegister_Ctrl ctrl;
-	IpuRegister_Bp bp;
-	IpuRegister_Top top;
-	ArrayByteMemory   memory_2040;
+	IpuRegister_Bp   bp;
+	IpuRegister_Top  top;
+	ArrayByteMemory  memory_2040;
 };
-
