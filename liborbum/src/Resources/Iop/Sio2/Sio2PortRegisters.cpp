@@ -1,3 +1,5 @@
+#include "Core.hpp"
+
 #include "Resources/Iop/Sio2/Sio2PortRegisters.hpp"
 
 Sio2PortRegister_Ctrl3::Sio2PortRegister_Ctrl3() :
