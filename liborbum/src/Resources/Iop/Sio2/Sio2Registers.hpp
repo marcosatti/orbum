@@ -5,13 +5,11 @@
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
 /// SIO2 CTRL Register.
-/// Usual value is 0x3BC (initial BIOS value) OR'd with either 0xC (no effect) or 0x1.
-/// Basically no documentation from PCSX2 or by RE'ing the BIOS, however,
-/// the BIOS always reuses the previous value when writing to it. This suggests
-/// that bit 0 (aka DIR_RESET below) is a write only field that toggles the 
-/// internal direction of the SIO2, and is always zero on reads. Doesn't explain why
-/// 0xC is OR'd instead of zero though... maybe 0xC is a write only field too.
-/// TODO: would love to hardware test this theory.
+/// Bits 0, 2, 3 appear to be write only that toggle the send or receive mode.
+/// Not sure about bit 1, but assuming it is also a write only bit (not used 
+/// elsewhere). If bits 2 & 3 are set (ie: byte 0xC written), this is TX 
+/// (to SIO0) mode. If bit 0 is set (ie: byte 0x1 written), this is RX 
+/// (from SIO0) mode.
 class Sio2Register_Ctrl : public SizedWordRegister, public ScopeLock
 {
 public:
@@ -21,12 +19,10 @@ public:
 		TX, 
 		RX,
 	};
-
-	static constexpr Bitfield DIR_RESET = Bitfield(0, 1); // Resets the SIO if 0, and sets in TX direction, RX otherwise. Writes only.
-
+	
 	Sio2Register_Ctrl();
 
-	/// Upon writes, sets the current direction based on DIR_RESET then clears that bit.
+	/// Upon writes, sets the current direction and clears bits 0-3.
 	void write_uword(const uword value);
 
 	/// Scope locked for entire duration.
@@ -39,7 +35,7 @@ public:
 	/// Current transfer status to/from SIO0.
 	bool started;
 	size_t transfer_port;
-	size_t transfer_count;
+	size_t transfer_port_count;
 
 	/// Write latch, set to true on bus write, cleared by the controller.
 	bool write_latch;

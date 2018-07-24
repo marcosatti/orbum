@@ -1755,6 +1755,11 @@ void initialise_iop_sio2(RResources * r)
 	r->iop.sio2.ports[15].ctrl_3 = &r->iop.sio2.port_f.ctrl_3;
 }
 
+void initialise_iop_sio0(RResources * r)
+{
+	r->iop.sio0.data.stat = &r->iop.sio0.stat;
+}
+
 void initialise_ee_core(RResources * r)
 {
 	// COP0.
@@ -1811,6 +1816,7 @@ void initialise_resources(const std::unique_ptr<RResources> & r)
 	initialise_iop_dmac(r.get());
 	initialise_iop_timers(r.get());
 	initialise_iop_sio2(r.get());
+	initialise_iop_sio0(r.get());
 
 	initialise_cdvd(r.get());
 

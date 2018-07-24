@@ -1,3 +1,5 @@
+#include <boost/format.hpp>
+
 #include "Core.hpp"
 
 #include "Controller/Iop/Sio0/CSio0.hpp"
@@ -48,8 +50,9 @@ int CSio0::time_step(const int ticks_available)
 {
 	handle_reset_check();
 	handle_irq_check();
+	handle_transfer();
 
-	return ticks_available;
+	return 1;
 }
 
 void CSio0::handle_reset_check()
@@ -57,17 +60,18 @@ void CSio0::handle_reset_check()
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio0.ctrl;
 	auto& stat = r.iop.sio0.stat;
+	auto& data = r.iop.sio0.data;
+
+	auto _ctrl_lock = ctrl.scope_lock();
+	auto _stat_lock = stat.scope_lock();
 	
-	// Perform SIO0 reset (all relevant bits).
+	// Perform SIO0 reset (all relevant bits and FIFO).
 	if (ctrl.extract_field(Sio0Register_Ctrl::SIO_RESET))
 	{
-		auto _ctrl_lock = ctrl.scope_lock();
-		auto _stat_lock = stat.scope_lock();
-
 		ctrl.insert_field(Sio0Register_Ctrl::RESET_IRQ, 0);
-		stat.insert_field(Sio0Register_Stat::TX_RDY, 1);
-		stat.insert_field(Sio0Register_Stat::TX_EMPTY, 1);
 		stat.insert_field(Sio0Register_Stat::IRQ, 0);
+
+		data.initialise();
 	}
 }
 
@@ -77,20 +81,53 @@ void CSio0::handle_irq_check()
 	auto& ctrl = r.iop.sio0.ctrl;
 	auto& stat = r.iop.sio0.stat;
 	
+	auto _ctrl_lock = ctrl.scope_lock();
+	auto _stat_lock = stat.scope_lock();
+	
 	// Reset IRQ bit if it has been acknowledged by IOP.
 	if (ctrl.extract_field(Sio0Register_Ctrl::RESET_IRQ))
 	{
-		auto _ctrl_lock = ctrl.scope_lock();
-		auto _stat_lock = stat.scope_lock();
-
 		stat.insert_field(Sio0Register_Stat::IRQ, 0);
 		ctrl.insert_field(Sio0Register_Ctrl::RESET_IRQ, 0);
 	}
 
+	// Raise IRQ on the ACK line going high (if enabled).
+	if (ctrl.extract_field(Sio0Register_Ctrl::ACK_INT_EN) && stat.extract_field(Sio0Register_Stat::DSR))
+		stat.insert_field(Sio0Register_Stat::IRQ, 1);
+
 	// Raise IOP INTC IRQ if requested.
-	if (stat.extract_field(Sio0Register_Stat::IRQ)) 
+	if (stat.extract_field(Sio0Register_Stat::IRQ))
 	{
-		auto _lock = r.iop.intc.stat.scope_lock();
+		auto _stat_lock = r.iop.intc.stat.scope_lock();
 		r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO0, 1);
 	}
+}
+
+void CSio0::handle_transfer()
+{
+	auto& r = core->get_resources();
+	auto& command_queue = r.iop.sio0.data.command_queue;
+	auto& response_queue = r.iop.sio0.data.response_queue;
+	auto& stat = r.iop.sio0.stat;
+
+	// Sequential command/response action.
+	
+    auto _stat_lock = stat.scope_lock();
+
+	// Check there is data to send first, TX_RDY2 changes depending on this.
+	if (!command_queue.has_read_available(1))
+	{
+		stat.insert_field(Sio0Register_Stat::TX_RDY2, 1);
+		return;
+	}
+
+	if (!response_queue.has_write_available(1))
+		return;
+
+	ubyte cmd = command_queue.read_ubyte();
+
+	BOOST_LOG(Core::get_logger()) << str(boost::format("SIO0 received cmd: 0x%02X") % cmd);
+
+	// TODO: properly implement, for now just send back 0x00 for all commands received.
+	response_queue.write_ubyte(0);
 }

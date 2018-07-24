@@ -5,18 +5,33 @@
 #include "Resources/Iop/Sio2/Sio2Registers.hpp"
 
 Sio2Register_Ctrl::Sio2Register_Ctrl() :
-    direction(TX),
+    direction(Direction::TX),
     started(false),
-    port(0),
-    transfer_count(0),
+    transfer_port(0),
+    transfer_port_count(0),
 	write_latch(false)
 {
 }
 
 void Sio2Register_Ctrl::write_uword(const uword value)
 {
-    direction = (value & 0x1) ? Direction::RX : Direction::TX;
-    SizedWordRegister::write_uword(value & ~0x1);
+    switch (value & 0xF)
+    {
+    case 0x1:
+    {
+        direction = Direction::RX;
+        break;
+    }
+    case 0xC:
+    {
+        direction = Direction::TX;
+        break;
+    }
+    default:
+        throw std::runtime_error(str(boost::format("Unknown SIO2 ctrl value: 0x%08X.") % value));
+    }
+
+    SizedWordRegister::write_uword(value & ~0xF);
 }
 
 void Sio2Register_Ctrl::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
@@ -25,13 +40,6 @@ void Sio2Register_Ctrl::byte_bus_write_uword(const BusContext context, const usi
 	
     if (write_latch)
         BOOST_LOG(Core::get_logger()) << "SIO2 write latch was already set - please check (might be ok)!";
-
-    if (value != 0x3BD || value != 0x3BC)
-    {
-        BOOST_LOG(Core::get_logger()) << 
-            boost::format("Careful, SIO2 ctrl recv value not normal: 0x%08X.") 
-            % value;
-    }
 
 	write_uword(value);
 

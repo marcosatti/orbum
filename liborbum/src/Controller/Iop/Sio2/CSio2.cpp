@@ -77,9 +77,10 @@ void CSio2::handle_ctrl_check()
 		if (ctrl.direction == Direction::TX)
 			handle_sio0_reset();
 	
-		ctrl.started = true;
+		// Reset SIO2 port state and start transfer.
 		ctrl.transfer_port = 0;
-		ctrl.transfer_count = 0;
+    	ctrl.transfer_port_count = 0;
+		ctrl.started = true;
 
 		ctrl.write_latch = false; 
 	}
@@ -105,9 +106,15 @@ void CSio2::handle_port_trasnfer()
 		switch (ctrl.direction)
 		{
 		case Direction::TX:
-			transfer_data_tx(); break;
+		{
+			transfer_data_tx(); 
+			break;
+		}
 		case Direction::RX:
-			transfer_data_rx(); break;
+		{
+			transfer_data_rx(); 
+			break;
+		}
 		default:
 			throw std::runtime_error("Could not determine SIO2 transfer direction.");
 		}
@@ -120,31 +127,49 @@ void CSio2::transfer_data_tx()
 	auto& ctrl = r.iop.sio2.ctrl;
 	auto& ports = r.iop.sio2.ports;
 	auto& data_in = r.iop.sio2.data_in;
-	auto& sio0_stat = r.iop.sio0.stat;
 	auto& sio0_data = r.iop.sio0.data;
+	auto& sio0_ctrl = r.iop.sio0.ctrl;
+	auto& sio0_stat = r.iop.sio0.stat;
 	
 	auto& port = ports[ctrl.transfer_port];
 	size_t cmd_length = port.ctrl_3->extract_field(Sio2PortRegister_Ctrl3::CMDLEN);
 
 	// Send data to the SIO0.
-	if (ctrl.transfer_count != cmd_length)
+	if (ctrl.transfer_port_count != cmd_length)
 	{
-		if (data_in.has_read_available(1))
+		if (!sio0_stat.extract_field(Sio0Register_Stat::TX_RDY1))
+			return;
+			
+		if (!data_in.has_read_available(1))
+			return;
+		
+		// If it's the first byte, set the SIO0 pad port first when its ready.
+		if (ctrl.transfer_port_count == 0)
 		{
-			if (sio0_stat.extract_field(Sio0Register_Stat::TX_RDY1))
-			{
-				sio0_data.write_byte(data_in.read_ubyte());
-				ctrl.transfer_count += 1;
-			}
+			if (!sio0_stat.extract_field(Sio0Register_Stat::TX_RDY2))
+				return;
+
+			uhword sio0_padport = port.ctrl_3->extract_field(Sio2PortRegister_Ctrl3::PADPORT);
+			
+			auto _sio0_ctrl_lock = sio0_ctrl.scope_lock();
+			sio0_ctrl.insert_field(Sio0Register_Ctrl::PORT, sio0_padport);
 		}
+
+		ubyte data = data_in.read_ubyte();
+		sio0_data.write_ubyte(data);
+		ctrl.transfer_port_count += 1;
 	}
 
-	if (ctrl.transfer_count == cmd_length)
-		transfer_set_next_port();
+	// Finished with this port, move on to next.
+	if (ctrl.transfer_port_count == cmd_length)
+	{
+		ctrl.transfer_port += 1;
+    	ctrl.transfer_port_count = 0;
+	}
 
 	// All data received, stop transfering.
 	if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
-		transfer_stop(false);
+		ctrl.started = false;
 }
 
 void CSio2::transfer_data_rx()
@@ -153,54 +178,40 @@ void CSio2::transfer_data_rx()
 	auto& ctrl = r.iop.sio2.ctrl;
 	auto& ports = r.iop.sio2.ports;
 	auto& data_out = r.iop.sio2.data_out;
-	auto& sio0_stat = r.iop.sio0.stat;
 	auto& sio0_data = r.iop.sio0.data;
+	auto& sio0_stat = r.iop.sio0.stat;
 	
 	auto& port = ports[ctrl.transfer_port];
 	size_t response_length = port.ctrl_3->extract_field(Sio2PortRegister_Ctrl3::BUFSZ);
 
 	// Receive data from the SIO0.
-	if (ctrl.transfer_count != response_length)
+	if (ctrl.transfer_port_count != response_length)
 	{
-		if (sio0_stat.extract_field(Sio0Register_Stat::RX_NONEMPTY))
-		{
-			if (data_out.has_write_available(1))
-			{
-				data_out.write_ubyte(sio0_data.read_ubyte());
-				ctrl.transfer_count += 1;
-			}
-		}
+		if (!data_out.has_write_available(1))
+			return;
+
+		if (!sio0_stat.extract_field(Sio0Register_Stat::RX_NONEMPTY))
+			return;
+
+		ubyte data = sio0_data.read_ubyte();
+		data_out.write_ubyte(data);
+		ctrl.transfer_port_count += 1;
 	}
 
-	if (ctrl.transfer_count == response_length)
-		transfer_set_next_port();
+	// Finished with this port, move on to next.
+	if (ctrl.transfer_port_count == response_length)
+	{
+		ctrl.transfer_port += 1;
+    	ctrl.transfer_port_count = 0;
+	}
 
 	// All data received, stop transfering, raise IRQ on RX finish.
 	if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
-		transfer_stop(true);
-}
-
-void CSio2::transfer_set_next_port()
-{
-	auto& r = core->get_resources();
-	auto& ctrl = r.iop.sio2.ctrl;
-
-	ctrl.transfer_port += 1;
-	ctrl.transfer_count = 0;
-}
-
-void CSio2::transfer_stop(const bool raise_irq)
-{
-	auto& r = core->get_resources();
-	auto& ctrl = r.iop.sio2.ctrl;
-
-	ctrl.transfer_port = 0;
-	ctrl.started = false;
-
-	if (raise_irq)
 	{
+		ctrl.started = false;
+
 		auto& intc_stat = r.iop.intc.stat;
-		auto _lock = intc_stat.scope_lock();
+		auto _intc_lock = intc_stat.scope_lock();
 		intc_stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
 	}
 }
