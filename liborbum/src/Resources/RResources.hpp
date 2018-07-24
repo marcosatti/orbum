@@ -30,7 +30,7 @@ struct RResources
 
 	/// Various ROM banks. See PCSX2's source code ("MemoryTypes.h", "Memory.cpp", "IopMem.cpp") and the EE Users Manual page 20. 
 	/// BootROM (BIOS, 4MB). Allocated in EE & IOP physical memory space @ 0x1FC00000.
-	/// ROM1 (DVD Player, 256kB). Allocaled in EE & IOP physical memory space @ 0x1E000000.
+	/// ROM1 (DVD Player, 256kB). Allocated in EE & IOP physical memory space @ 0x1E000000.
 	/// EROM (DVD Player extensions, 1,792kB). Allocated in EE physical memory space @ 0x1E040000.
 	/// ROM2 (Chinese ROM extensions, 512kB). Allocated in EE physical memory space @ 0x1E400000.
 	ArrayByteMemory boot_rom;
@@ -41,7 +41,7 @@ struct RResources
 	/// Common resources.
 	/// The SBUS/SIF resources (sub-system interface), facilitates communication to and from the EE/IOP.
 	/// No official documentation, most code comes from PCSX2.
-	/// The PS2SDK also contains some informatiom: https://github.com/ps2dev/ps2sdk/blob/master/iop/kernel/include/sifman.h.
+	/// The PS2SDK also contains some information: https://github.com/ps2dev/ps2sdk/blob/master/iop/kernel/include/sifman.h.
 	SbusRegister_Mscom sbus_mscom; // Main - Sub-CPU command buffer.
 	SizedWordRegister  sbus_smcom; // Sub - Main-CPU command buffer.
 	SbusRegister_Msflg sbus_msflg; // Writes OR with the previous value.

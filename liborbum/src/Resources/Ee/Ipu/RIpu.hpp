@@ -2,6 +2,8 @@
 
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Common/Types/Register/SizedDwordRegister.hpp"
+#include "Resources/Ee/Ipu/IpuRegisters.hpp"
 
 struct RIpu
 {
@@ -9,10 +11,9 @@ struct RIpu
 
 	/// IPU memory mapped registers. See page 21 of EE Users Manual.
 	/// 0x10002000
-	SizedWordRegister cmd;
-	SizedWordRegister ctrl;
-	SizedWordRegister bp;
-	SizedWordRegister top;
-	ArrayByteMemory   memory_2040;
+	IpuRegister_Cmd  cmd;
+	IpuRegister_Ctrl ctrl;
+	IpuRegister_Bp   bp;
+	IpuRegister_Top  top;
+	ArrayByteMemory  memory_2040;
 };
-

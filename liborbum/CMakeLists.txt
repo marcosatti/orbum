@@ -163,6 +163,8 @@ set(COMMON_SRC_FILES
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/EeIntcRegisters.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/REeIntc.cpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/REeIntc.hpp"
+	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Ipu/IpuRegisters.cpp"
+	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Ipu/IpuRegisters.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Ipu/RIpu.cpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Ipu/RIpu.hpp"
 	"${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/REe.cpp"
