@@ -9,7 +9,7 @@
 /// 3. For each port, set CTRL 3 registers.
 /// 4. Send command data to the data_in FIFO.
 /// 5. Turn on the SIO2 DMA channels for reading and writing.
-/// 6. Set CTRL register value, for reading.
+/// 6. Set CTRL register value, for reading (based upon result from reading CTRL).
 /// 7. Repeat.
 class CSio2 : public CController
 {

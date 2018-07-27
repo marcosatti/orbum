@@ -71,16 +71,20 @@ void CSio2::handle_ctrl_check()
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio2.ctrl;
 	
-	if (ctrl.write_latch)
+	if (ctrl.write_latch && !ctrl.transfer_started)
 	{
-		// Perform SIO0 reset before initiating transfer if in the TX direction.
-		if (ctrl.direction == Direction::TX)
-			handle_sio0_reset();
-	
 		// Reset SIO2 port state and start transfer.
 		ctrl.transfer_port = 0;
     	ctrl.transfer_port_count = 0;
-		ctrl.started = true;
+		ctrl.transfer_started = true;
+		ctrl.transfer_direction = ctrl.get_direction();
+
+		// Perform SIO0 reset before initiating transfer if in the TX direction.
+		if (ctrl.transfer_direction == Direction::TX)
+			handle_sio0_reset();
+		
+		// Reset direction bits - they are write only (see register description).
+		ctrl.insert_field(Sio2Register_Ctrl::DIRECTION, 0);
 
 		ctrl.write_latch = false; 
 	}
@@ -101,9 +105,9 @@ void CSio2::handle_port_trasnfer()
 	auto& ctrl = r.iop.sio2.ctrl;
 	auto& ports = r.iop.sio2.ports;
 
-	if (ctrl.started)
+	if (ctrl.transfer_started)
 	{
-		switch (ctrl.direction)
+		switch (ctrl.transfer_direction)
 		{
 		case Direction::TX:
 		{
@@ -126,12 +130,23 @@ void CSio2::transfer_data_tx()
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio2.ctrl;
 	auto& ports = r.iop.sio2.ports;
-	auto& data_in = r.iop.sio2.data_in;
+	auto& data_in = r.fifo_tosio2;
 	auto& sio0_data = r.iop.sio0.data;
 	auto& sio0_ctrl = r.iop.sio0.ctrl;
 	auto& sio0_stat = r.iop.sio0.stat;
 	
 	auto& port = ports[ctrl.transfer_port];
+	auto _port_ctrl3_lock = port.ctrl_3->scope_lock();
+
+	if (!port.ctrl_3->port_transfer_started)
+	{
+		if (!port.ctrl_3->write_latch)
+			return;
+		
+		port.ctrl_3->port_transfer_started = true;
+		port.ctrl_3->write_latch = false;
+	}
+
 	size_t cmd_length = port.ctrl_3->extract_field(Sio2PortRegister_Ctrl3::CMDLEN);
 
 	// Send data to the SIO0.
@@ -143,9 +158,10 @@ void CSio2::transfer_data_tx()
 		if (!data_in.has_read_available(1))
 			return;
 		
-		// If it's the first byte, set the SIO0 pad port first when its ready.
+		// If it's the first byte, perform some initialisation.
 		if (ctrl.transfer_port_count == 0)
 		{
+			// Set the SIO0 pad port first when the SIO0 is ready.
 			if (!sio0_stat.extract_field(Sio0Register_Stat::TX_RDY2))
 				return;
 
@@ -167,9 +183,9 @@ void CSio2::transfer_data_tx()
     	ctrl.transfer_port_count = 0;
 	}
 
-	// All data received, stop transfering.
+	// All data sent, stop transfering.
 	if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
-		ctrl.started = false;
+		ctrl.transfer_started = false;
 }
 
 void CSio2::transfer_data_rx()
@@ -177,7 +193,7 @@ void CSio2::transfer_data_rx()
 	auto& r = core->get_resources();
 	auto& ctrl = r.iop.sio2.ctrl;
 	auto& ports = r.iop.sio2.ports;
-	auto& data_out = r.iop.sio2.data_out;
+	auto& data_out = r.fifo_fromsio2;
 	auto& sio0_data = r.iop.sio0.data;
 	auto& sio0_stat = r.iop.sio0.stat;
 	
@@ -208,7 +224,7 @@ void CSio2::transfer_data_rx()
 	// All data received, stop transfering, raise IRQ on RX finish.
 	if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
 	{
-		ctrl.started = false;
+		ctrl.transfer_started = false;
 
 		auto& intc_stat = r.iop.intc.stat;
 		auto _intc_lock = intc_stat.scope_lock();

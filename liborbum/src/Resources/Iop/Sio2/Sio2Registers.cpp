@@ -4,34 +4,29 @@
 
 #include "Resources/Iop/Sio2/Sio2Registers.hpp"
 
+using Direction = Sio2Register_Ctrl::Direction;
+
 Sio2Register_Ctrl::Sio2Register_Ctrl() :
-    direction(Direction::TX),
-    started(false),
+    transfer_started(false),
     transfer_port(0),
     transfer_port_count(0),
 	write_latch(false)
 {
 }
 
-void Sio2Register_Ctrl::write_uword(const uword value)
+Direction Sio2Register_Ctrl::get_direction()
 {
+    auto value = extract_field(DIRECTION);
+    
     switch (value & 0xF)
     {
     case 0x1:
-    {
-        direction = Direction::RX;
-        break;
-    }
+        return Direction::RX;
     case 0xC:
-    {
-        direction = Direction::TX;
-        break;
-    }
+        return Direction::TX;
     default:
         throw std::runtime_error(str(boost::format("Unknown SIO2 ctrl value: 0x%08X.") % value));
     }
-
-    SizedWordRegister::write_uword(value & ~0xF);
 }
 
 void Sio2Register_Ctrl::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)

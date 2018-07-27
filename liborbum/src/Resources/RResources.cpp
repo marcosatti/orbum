@@ -1666,8 +1666,8 @@ void initialise_iop(RResources * r)
 			r->iop.bus.map(0x1F808254, &r->iop.sio2.port_2.ctrl_2);
 			r->iop.bus.map(0x1F808258, &r->iop.sio2.port_3.ctrl_1);
 			r->iop.bus.map(0x1F80825C, &r->iop.sio2.port_3.ctrl_2);
-			r->iop.bus.map(0x1F808260, &r->iop.sio2.data_in);
-			r->iop.bus.map(0x1F808264, &r->iop.sio2.data_out);
+			r->iop.bus.map(0x1F808260, &r->fifo_tosio2);
+			r->iop.bus.map(0x1F808264, &r->fifo_fromsio2);
 			r->iop.bus.map(0x1F808268, &r->iop.sio2.ctrl);
 			r->iop.bus.map(0x1F80826C, &r->iop.sio2.recv1);
 			r->iop.bus.map(0x1F808270, &r->iop.sio2.recv2);

@@ -35,8 +35,6 @@ struct RSio2
 	Sio2Port ports[Constants::IOP::SIO2::NUMBER_PORTS];
 
 	/// Common registers.
-	DmaFifoQueue<> data_in;
-	DmaFifoQueue<> data_out;
 	Sio2Register_Ctrl ctrl;
 	SizedWordRegister recv1;         // TODO: for now, returns device unplugged magic value (0x1D100).
 	SizedWordRegister recv2;         // Constant 0xF value.

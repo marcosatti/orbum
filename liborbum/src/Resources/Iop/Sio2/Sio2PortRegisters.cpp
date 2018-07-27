@@ -3,7 +3,8 @@
 #include "Resources/Iop/Sio2/Sio2PortRegisters.hpp"
 
 Sio2PortRegister_Ctrl3::Sio2PortRegister_Ctrl3() :
-    write_latch(false)
+    write_latch(false),
+    port_transfer_started(false)
 {
 }
 
