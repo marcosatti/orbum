@@ -8,8 +8,8 @@
 /// Bits 0, 2, 3 appear to be write only that toggle the send or receive mode.
 /// Not sure about bit 1, but assuming it is also a write only bit (not used 
 /// elsewhere). If bits 2 & 3 are set (ie: byte 0xC written), this is TX 
-/// (to SIO0) mode. If bit 0 is set (ie: byte 0x1 written), this is RX 
-/// (from SIO0) mode. 
+/// (to SIO0) mode. If bit 0 is set (ie: byte 0x1 or 0xD written), this is RX 
+/// (from SIO0) mode. 0xC, 0x1 and 0xD are the normal values written by the IOP.
 class Sio2Register_Ctrl : public SizedWordRegister, public ScopeLock
 {
 public:

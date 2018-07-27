@@ -48,6 +48,12 @@ int CSio0::time_to_ticks(const double time_us)
 
 int CSio0::time_step(const int ticks_available)
 {
+	auto& r = core->get_resources();
+	auto& ctrl = r.iop.sio0.ctrl;
+
+	// CTRL locked for entire duration.
+	auto _ctrl_lock = ctrl.scope_lock();
+
 	handle_reset_check();
 	handle_irq_check();
 	handle_transfer();
@@ -62,7 +68,6 @@ void CSio0::handle_reset_check()
 	auto& stat = r.iop.sio0.stat;
 	auto& data = r.iop.sio0.data;
 
-	auto _ctrl_lock = ctrl.scope_lock();
 	auto _stat_lock = stat.scope_lock();
 	
 	// Perform SIO0 reset (all relevant bits and FIFO).
@@ -72,6 +77,11 @@ void CSio0::handle_reset_check()
 		stat.insert_field(Sio0Register_Stat::IRQ, 0);
 
 		data.initialise();
+
+		// Now ready to transmit data.
+		// TODO: not totally correct...
+		stat.insert_field(Sio0Register_Stat::TX_RDY1, 1);
+		ctrl.insert_field(Sio0Register_Ctrl::SIO_RESET, 0);
 	}
 }
 
@@ -130,4 +140,5 @@ void CSio0::handle_transfer()
 
 	// TODO: properly implement, for now just send back 0x00 for all commands received.
 	response_queue.write_ubyte(0);
+	stat.insert_field(Sio0Register_Stat::RX_NONEMPTY, 1);
 }

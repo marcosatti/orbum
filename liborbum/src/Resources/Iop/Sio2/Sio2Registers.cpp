@@ -21,6 +21,7 @@ Direction Sio2Register_Ctrl::get_direction()
     switch (value & 0xF)
     {
     case 0x1:
+    case 0xD:
         return Direction::RX;
     case 0xC:
         return Direction::TX;
