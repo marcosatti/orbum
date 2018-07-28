@@ -48,7 +48,7 @@ CoreOptions CoreOptions::make_default()
         "",
         "",
         "",
-        200,
+        10,
         4, //std::thread::hardware_concurrency() - 1,
 
         1.0,

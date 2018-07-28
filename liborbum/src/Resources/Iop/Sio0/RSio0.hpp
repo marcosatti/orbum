@@ -7,7 +7,7 @@
 /// Responsible for communication with controllers and memory cards.
 struct RSio0
 {
-    SizedHwordRegister data;
+    Sio0Register_Data data; // Hybrid FIFO port - can read and write to this port simultaneously.
     Sio0Register_Stat stat;
     SizedHwordRegister mode;
     Sio0Register_Ctrl ctrl;

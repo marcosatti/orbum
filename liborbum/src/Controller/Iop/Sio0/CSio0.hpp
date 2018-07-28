@@ -12,6 +12,7 @@ public:
     /// Converts a time duration into the number of ticks that would have occurred.
     int time_to_ticks(const double time_us);
 
+    /// Steps through the SIO0 state.
     int time_step(const int ticks_available);
 
     /// Performs a reset if needed.
@@ -19,4 +20,7 @@ public:
 
     /// Handles raising IRQ's with the IOP and resetting the state.
     void handle_irq_check();
+
+    /// Performs a send/receive of a command queued.
+    void handle_transfer();
 };

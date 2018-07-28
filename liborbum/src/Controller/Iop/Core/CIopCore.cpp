@@ -343,26 +343,22 @@ std::optional<uptr> CIopCore::translate_address_data(const uptr virtual_address,
 {
     auto& r = core->get_resources();
 
-#if 0 //defined(BUILD_DEBUG)
-	static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] = 
-	{
-        std::make_pair(0xFFFFFFFF, 0xFFFFFFFF)
-        //std::make_pair(0xBF801040, 0xBF801050),
-		//std::make_pair(0xBF808200, 0xBF808300)
-	};
+#if defined(BUILD_DEBUG)
+    static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] =
+        {
+            std::make_pair(0xBF808200, 0xBF80825C)};
 
-	for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)
-	{
-		if (virtual_address >= range.first && virtual_address <= range.second)
-		{
-			BOOST_LOG(Core::get_logger()) << 
-				boost::format("IOP MMU data breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).") 
-				% DEBUG_LOOP_COUNTER 
-				% r.iop.core.r3000.pc.read_uword() 
-				% virtual_address
-				% ((rw_access == READ) ? "READ" : "WRITE");
-		}
-	}
+    for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)
+    {
+        if (virtual_address >= range.first && virtual_address <= range.second)
+        {
+            BOOST_LOG(Core::get_logger()) << boost::format("IOP MMU data breakpoint hit @ cycle = 0x%llX, PC = 0x%08X, VA = 0x%08X (%s).")
+                                                 % DEBUG_LOOP_COUNTER
+                                                 % r.iop.core.r3000.pc.read_uword()
+                                                 % virtual_address
+                                                 % ((rw_access == READ) ? "READ" : "WRITE");
+        }
+    }
 #endif
 
     // Check if a write is being performed with isolate cache turned on - don't run through the cache.

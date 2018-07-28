@@ -44,8 +44,8 @@ struct EeDmacConstants
             "GIF",
             "fromIPU",
             "toIPU",
-            "SIF0",
-            "SIF1",
+            "SIF0 (from IOP)",
+            "SIF1 (to IOP)",
             "SIF2",
             "fromSPR",
             "toSPR"};

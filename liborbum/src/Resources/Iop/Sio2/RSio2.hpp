@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Common/Constants.hpp"
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Resources/Iop/Sio2/Sio2Ports.hpp"
 #include "Resources/Iop/Sio2/Sio2Registers.hpp"
 
 /// SIO2 resources.
@@ -12,37 +14,28 @@ struct RSio2
 {
     RSio2();
 
-    DmaFifoQueue<> data_fifo; // Fifo queue used for sending and receiving data (can change direction).
+    /// SIO2 ports (16 total).
+    Sio2Port_Full port_0;
+    Sio2Port_Full port_1;
+    Sio2Port_Full port_2;
+    Sio2Port_Full port_3;
+    Sio2Port_Slim port_4;
+    Sio2Port_Slim port_5;
+    Sio2Port_Slim port_6;
+    Sio2Port_Slim port_7;
+    Sio2Port_Slim port_8;
+    Sio2Port_Slim port_9;
+    Sio2Port_Slim port_a;
+    Sio2Port_Slim port_b;
+    Sio2Port_Slim port_c;
+    Sio2Port_Slim port_d;
+    Sio2Port_Slim port_e;
+    Sio2Port_Slim port_f;
+    Sio2Port ports[Constants::IOP::SIO2::NUMBER_PORTS];
 
-    SizedWordRegister port0_ctrl3; // TODO: figure out these names properly.
-    SizedWordRegister port1_ctrl3;
-    SizedWordRegister port2_ctrl3;
-    SizedWordRegister port3_ctrl3;
-    SizedWordRegister port4_ctrl3;
-    SizedWordRegister port5_ctrl3;
-    SizedWordRegister port6_ctrl3;
-    SizedWordRegister port7_ctrl3;
-    SizedWordRegister port8_ctrl3;
-    SizedWordRegister port9_ctrl3;
-    SizedWordRegister porta_ctrl3;
-    SizedWordRegister portb_ctrl3;
-    SizedWordRegister portc_ctrl3;
-    SizedWordRegister portd_ctrl3;
-    SizedWordRegister porte_ctrl3;
-    SizedWordRegister portf_ctrl3;
-
-    SizedWordRegister port0_ctrl1;
-    SizedWordRegister port0_ctrl2;
-    SizedWordRegister port1_ctrl1;
-    SizedWordRegister port1_ctrl2;
-    SizedWordRegister port2_ctrl1;
-    SizedWordRegister port2_ctrl2;
-    SizedWordRegister port3_ctrl1;
-    SizedWordRegister port3_ctrl2;
-    Sio2Register_Data data_in;
-    Sio2Register_Data data_out;
+    /// Common registers.
     Sio2Register_Ctrl ctrl;
-    SizedWordRegister recv1;
+    SizedWordRegister recv1; // TODO: for now, returns device unplugged magic value (0x1D100).
     SizedWordRegister recv2; // Constant 0xF value.
     SizedWordRegister recv3;
     SizedWordRegister register_8278;
