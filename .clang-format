@@ -27,6 +27,17 @@ ConstructorInitializerIndentWidth: '4'
 ContinuationIndentWidth: '4'
 Cpp11BracedListStyle: 'true'
 DerivePointerAlignment: 'false'
+IncludeBlocks: 'Regroup'
+IncludeCategories:
+  # C++ Standard Library
+  - Regex: '<[A-Za-z]+>'
+    Priority: -3
+  # Boost Library
+  - Regex: '<boost/'
+    Priority: -2
+  # Utilities-type Headers
+  - Regex: '<.+\.'
+    Priority: -1
 IndentCaseLabels: 'false'
 IndentWidth: '4'
 KeepEmptyLinesAtTheStartOfBlocks: 'true'
