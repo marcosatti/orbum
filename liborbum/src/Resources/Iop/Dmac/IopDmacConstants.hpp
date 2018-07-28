@@ -15,8 +15,8 @@ struct IopDmacConstants
         "OTClear",
         "SPU2c1",
         "DEV9",
-        "SIF0",
-        "SIF1",
+        "SIF0 (to EE)",
+        "SIF1 (from EE)",
         "toSIO2",
         "fromSIO2",
         "Undefined"

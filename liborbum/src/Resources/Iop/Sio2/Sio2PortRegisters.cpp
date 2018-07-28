@@ -10,12 +10,12 @@ Sio2PortRegister_Ctrl3::Sio2PortRegister_Ctrl3() :
 
 void Sio2PortRegister_Ctrl3::byte_bus_write_uword(const BusContext context, const usize offset, const uword value)
 {
-	auto _lock = scope_lock();
+	  auto _lock = scope_lock();
 
     if (write_latch)
         BOOST_LOG(Core::get_logger()) << "SIO2 CTRL3 write latch was already set - please check (might be ok)!";
 
-	write_uword(value);
+	  write_uword(value);
 
     write_latch = true;
 }
