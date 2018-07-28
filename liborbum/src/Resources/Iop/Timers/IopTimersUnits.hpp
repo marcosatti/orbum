@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Common/Types/Register/SizedWordRegister.hpp"
-
 #include "Resources/Iop/Timers/IopTimersUnitRegisters.hpp"
 
 /// Represents IOP Timer unit.
@@ -9,11 +8,11 @@
 class IopTimersUnit_Base
 {
 public:
-	IopTimersUnit_Base(const int unit_id);
+    IopTimersUnit_Base(const int unit_id);
 
-	int unit_id;
+    int unit_id;
 
-	IopTimersUnitRegister_Count count;
-	IopTimersUnitRegister_Mode  mode;
-	SizedWordRegister           compare;
+    IopTimersUnitRegister_Count count;
+    IopTimersUnitRegister_Mode mode;
+    SizedWordRegister compare;
 };

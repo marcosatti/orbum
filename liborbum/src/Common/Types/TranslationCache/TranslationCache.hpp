@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <utility>
+
 #include <Caches.hpp>
 
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
@@ -12,13 +13,13 @@ using OperatingContext = MipsCoprocessor0::OperatingContext;
 /// Emulator translation cache, used to speed up virtual address translation.
 /// Based around the MIPS translation process, using the current operating
 /// context and instruction/data access. This works as there is a minimum TLB
-/// page size (ie: 4KB on the EE Core), and everything else is a multiple of it. 
+/// page size (ie: 4KB on the EE Core), and everything else is a multiple of it.
 /// The unmapped memory regions are usually aligned to this value (care must be taken).
-template<int Size, typename AddressTy, AddressTy CacheMask, template<int, typename, typename> class CacheTy>
+template <int Size, typename AddressTy, AddressTy CacheMask, template <int, typename, typename> class CacheTy>
 class TranslationCache
 {
 private:
-	using CacheTy_ = CacheTy<Size, AddressTy, AddressTy>;
+    using CacheTy_ = CacheTy<Size, AddressTy, AddressTy>;
 
 public:
     using FallbackFn = std::function<std::optional<AddressTy>(const AddressTy, const MmuRwAccess)>;
@@ -33,31 +34,31 @@ public:
     {
         const AddressTy key = virtual_address & (~CacheMask);
 
-		std::optional<AddressTy> result = cache.get(key);
+        std::optional<AddressTy> result = cache.get(key);
 
         if (!result)
             result = handle_fallback(key, rw_access);
 
-		if (result)
-			*result = (*result | (virtual_address & CacheMask));
+        if (result)
+            *result = (*result | (virtual_address & CacheMask));
 
-		return result;
+        return result;
     }
 
     /// Flushes the caches of all translation results.
     void flush()
     {
-		cache = CacheTy_();
+        cache = CacheTy_();
     }
 
     /// Sets the translation fallback function.
-    void set_fallback_lookup(const FallbackFn & fallback_fn)
+    void set_fallback_lookup(const FallbackFn& fallback_fn)
     {
         this->fallback_fn = fallback_fn;
     }
 
 private:
-    /// Performs a fallback lookup and inserts the result into the cache if its found. 
+    /// Performs a fallback lookup and inserts the result into the cache if its found.
     /// Returns the fallback result.
     std::optional<AddressTy> handle_fallback(const AddressTy key, const MmuRwAccess rw_access)
     {
@@ -72,5 +73,5 @@ private:
     }
 
     FallbackFn fallback_fn;
-	CacheTy_ cache;
+    CacheTy_ cache;
 };

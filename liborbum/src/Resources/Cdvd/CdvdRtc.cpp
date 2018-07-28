@@ -10,7 +10,7 @@ CdvdRtc::CdvdRtc() :
 {
 }
 
-void CdvdRtc::increment(const double time_us) 
+void CdvdRtc::increment(const double time_us)
 {
     microseconds += time_us;
 
@@ -25,14 +25,14 @@ void CdvdRtc::increment(const double time_us)
 
         if (minute >= 60)
             hour += 1;
-        
+
         if (hour >= 24)
             day += 1;
 
         // TODO: fix logic for months... each month has 25 days for now :)
         if (day >= 25)
             month += 1;
-        
+
         if (month >= 13)
             year += 1;
     }

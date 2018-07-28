@@ -13,7 +13,7 @@ class Core;
 class CController
 {
 public:
-    CController(Core * core) :
+    CController(Core* core) :
         core(core)
     {
     }
@@ -22,14 +22,14 @@ public:
     {
     }
 
-	virtual void handle_event(const ControllerEvent & e) = 0;
+    virtual void handle_event(const ControllerEvent& e) = 0;
 
-    void handle_event_marshall_(const ControllerEvent & e)
+    void handle_event_marshall_(const ControllerEvent& e)
     {
         // Used for inserting pre/post-event hooks (debugging).
         handle_event(e);
     }
 
 protected:
-    Core * core;
+    Core* core;
 };

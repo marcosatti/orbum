@@ -15,22 +15,22 @@
 class EeRegister_Sio : public ArrayByteMemory
 {
 public:
-	EeRegister_Sio();
+    EeRegister_Sio();
 
-	static constexpr uptr PADDRESS_EE_REGISTER_SIO = 0x1000F100;
-	static constexpr size_t SIZE_EE_REGISTER_SIO = 0x00000100;
-	static constexpr size_t OFFSET_SIO_ISR = 0x30; // Actual address 0x1000F130.
-	static constexpr size_t OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
+    static constexpr uptr PADDRESS_EE_REGISTER_SIO = 0x1000F100;
+    static constexpr size_t SIZE_EE_REGISTER_SIO = 0x00000100;
+    static constexpr size_t OFFSET_SIO_ISR = 0x30;    // Actual address 0x1000F130.
+    static constexpr size_t OFFSET_SIO_TXFIFO = 0x80; // Actual address 0x1000F180.
 
-	void write_ubyte(const size_t offset, const ubyte value) override;
-	uword read_uword(const size_t offset) override;
-	void write_uword(const size_t offset, const uword value) override;
+    void write_ubyte(const size_t offset, const ubyte value) override;
+    uword read_uword(const size_t offset) override;
+    void write_uword(const size_t offset, const uword value) override;
 
 private:
 #if DEBUG_LOG_SIO_MESSAGES
-	// Varibles below needed for SIO messages output through the SIO_TXFIFO register.
-	static constexpr const char * SIO_BUFFER_PREFIX = "EE SIO Message";
-	std::string sio_buffer;
+    // Varibles below needed for SIO messages output through the SIO_TXFIFO register.
+    static constexpr const char* SIO_BUFFER_PREFIX = "EE SIO Message";
+    std::string sio_buffer;
 #endif
 };
 
@@ -41,18 +41,18 @@ private:
 class EeRegister_Mch : public ArrayByteMemory
 {
 public:
-	EeRegister_Mch();
+    EeRegister_Mch();
 
-	static constexpr uptr PADDRESS_EE_REGISTER_MCH = 0x1000F430;
-	static constexpr size_t SIZE_EE_REGISTER_MCH = 0x00000020;
-	static constexpr size_t OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
-	static constexpr size_t OFFSET_MCH_DRD = 0x10; // Actual address 0x1000F440.
+    static constexpr uptr PADDRESS_EE_REGISTER_MCH = 0x1000F430;
+    static constexpr size_t SIZE_EE_REGISTER_MCH = 0x00000020;
+    static constexpr size_t OFFSET_MCH_RICM = 0x00; // Actual address 0x1000F430.
+    static constexpr size_t OFFSET_MCH_DRD = 0x10;  // Actual address 0x1000F440.
 
-	uword read_uword(const size_t offset) override;
-	void write_uword(const size_t offset, const uword value) override;
+    uword read_uword(const size_t offset) override;
+    void write_uword(const size_t offset, const uword value) override;
 
 private:
-	// Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
-	int rdram_sdevid = 0;
-	static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
+    // Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
+    int rdram_sdevid = 0;
+    static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 };

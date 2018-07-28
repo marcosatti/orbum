@@ -5,8 +5,7 @@
 /// IOP INTC resources.
 struct RIopIntc
 {
-	IopIntcRegister_Ctrl ctrl; 
-	IopIntcRegister_Mask mask; 
-	IopIntcRegister_Stat stat;
+    IopIntcRegister_Ctrl ctrl;
+    IopIntcRegister_Mask mask;
+    IopIntcRegister_Stat stat;
 };
-

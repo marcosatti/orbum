@@ -1,49 +1,49 @@
+#include <chrono>
 #include <stdexcept>
 #include <thread>
-#include <boost/log/core.hpp>
+
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 #include <boost/log/attributes.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/sinks/text_file_backend.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
-#include <boost/log/sinks/text_file_backend.hpp>
-#include <boost/format.hpp>
-#include <boost/filesystem.hpp>
-#include <chrono>
+
 #include <Console.hpp>
 #include <Macros.hpp>
 
 #include "Core.hpp"
 
-#include "Controller/Gs/Crtc/CCrtc.hpp"
-#include "Controller/Gs/Core/CGsCore.hpp"
 #include "Controller/Cdvd/CCdvd.hpp"
-#include "Controller/Spu2/CSpu2.hpp"
-#include "Controller/Iop/Dmac/CIopDmac.hpp"
-#include "Controller/Iop/Intc/CIopIntc.hpp"
-#include "Controller/Iop/Timers/CIopTimers.hpp"
-#include "Controller/Iop/Sio0/CSio0.hpp"
-#include "Controller/Iop/Sio2/CSio2.hpp"
-#include "Controller/Ee/Vpu/Vif/CVif.hpp"
-#include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
-#include "Controller/Ee/Ipu/CIpu.hpp"
+#include "Controller/Ee/Core/Interpreter/CEeCoreInterpreter.hpp"
+#include "Controller/Ee/Dmac/CEeDmac.hpp"
 #include "Controller/Ee/Gif/CGif.hpp"
 #include "Controller/Ee/Intc/CEeIntc.hpp"
+#include "Controller/Ee/Ipu/CIpu.hpp"
 #include "Controller/Ee/Timers/CEeTimers.hpp"
-#include "Controller/Ee/Dmac/CEeDmac.hpp"
+#include "Controller/Ee/Vpu/Vif/CVif.hpp"
+#include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
+#include "Controller/Gs/Core/CGsCore.hpp"
+#include "Controller/Gs/Crtc/CCrtc.hpp"
 #include "Controller/Iop/Core/Interpreter/CIopCoreInterpreter.hpp"
-#include "Controller/Ee/Core/Interpreter/CEeCoreInterpreter.hpp"
-
+#include "Controller/Iop/Dmac/CIopDmac.hpp"
+#include "Controller/Iop/Intc/CIopIntc.hpp"
+#include "Controller/Iop/Sio0/CSio0.hpp"
+#include "Controller/Iop/Sio2/CSio2.hpp"
+#include "Controller/Iop/Timers/CIopTimers.hpp"
+#include "Controller/Spu2/CSpu2.hpp"
 #include "Resources/RResources.hpp"
 
 boost::log::sources::logger_mt Core::logger;
 
 CoreOptions CoreOptions::make_default()
 {
-    return CoreOptions 
-    {
-		"./logs/",
-		"./bios/",
-		"./dumps/",
+    return CoreOptions{
+        "./logs/",
+        "./bios/",
+        "./dumps/",
         "scph10000.bin",
         "",
         "",
@@ -51,53 +51,52 @@ CoreOptions CoreOptions::make_default()
         200,
         4, //std::thread::hardware_concurrency() - 1,
 
-		1.0, 
-        1.0, 
-        1.0, 
-        1.0, 
-		1.0, 
-        1.0, 
-        1.0, 
         1.0,
-		1.0, 
-        1.0, 
-        1.0, 
-        1.0, 
-		1.0, 
-        1.0, 
-        1.0, 
-        1.0, 
-		1.0,
-        1.0 
-    };
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0};
 }
 
-Core::Core(const CoreOptions & options) :
+Core::Core(const CoreOptions& options) :
     options(options)
 {
-	// Initialise logging.
-	init_logging();
+    // Initialise logging.
+    init_logging();
 
-	BOOST_LOG(get_logger()) << "Core initialising... please wait";
+    BOOST_LOG(get_logger()) << "Core initialising... please wait";
 
-	// Initialise resources.
-	resources = std::make_unique<RResources>();
-	initialise_resources(resources);
+    // Initialise resources.
+    resources = std::make_unique<RResources>();
+    initialise_resources(resources);
 
-	// Initialise roms (boot_rom (required), rom1, rom2, erom).
+    // Initialise roms (boot_rom (required), rom1, rom2, erom).
     const std::string roms_dir_path = options.roms_dir_path;
     const std::string boot_rom_file_name = options.boot_rom_file_name;
     const std::string rom1_file_name = options.rom1_file_name;
     const std::string rom2_file_name = options.rom2_file_name;
     const std::string erom_file_name = options.erom_file_name;
 
-	get_resources().boot_rom.read_from_file(roms_dir_path + boot_rom_file_name, Constants::EE::ROM::SIZE_BOOT_ROM);
-	if (!rom1_file_name.empty())
-		get_resources().rom1.read_from_file(roms_dir_path + rom1_file_name, Constants::EE::ROM::SIZE_ROM1);
-	if (!rom2_file_name.empty())
-		get_resources().rom2.read_from_file(roms_dir_path + rom2_file_name, Constants::EE::ROM::SIZE_ROM2);
-	if (!erom_file_name.empty())
-		get_resources().erom.read_from_file(roms_dir_path + erom_file_name, Constants::EE::ROM::SIZE_EROM);
+    get_resources().boot_rom.read_from_file(roms_dir_path + boot_rom_file_name, Constants::EE::ROM::SIZE_BOOT_ROM);
+    if (!rom1_file_name.empty())
+        get_resources().rom1.read_from_file(roms_dir_path + rom1_file_name, Constants::EE::ROM::SIZE_ROM1);
+    if (!rom2_file_name.empty())
+        get_resources().rom2.read_from_file(roms_dir_path + rom2_file_name, Constants::EE::ROM::SIZE_ROM2);
+    if (!erom_file_name.empty())
+        get_resources().erom.read_from_file(roms_dir_path + erom_file_name, Constants::EE::ROM::SIZE_EROM);
 
     // Initialise controllers.
     controllers[ControllerType::Type::EeCore] = std::make_unique<CEeCoreInterpreter>(this);
@@ -122,15 +121,15 @@ Core::Core(const CoreOptions & options) :
     // Task executor.
     task_executor = std::make_unique<TaskExecutor>(options.number_workers);
 
-	BOOST_LOG(get_logger()) << "Core initialised";
+    BOOST_LOG(get_logger()) << "Core initialised";
 }
 
 Core::~Core()
 {
-	BOOST_LOG(get_logger()) << "Core shutting down";
+    BOOST_LOG(get_logger()) << "Core shutting down";
 }
 
-boost::log::sources::logger_mt & Core::get_logger()
+boost::log::sources::logger_mt& Core::get_logger()
 {
     return logger;
 }
@@ -149,8 +148,8 @@ void Core::run()
             const std::chrono::duration<double, std::micro> duration = DEBUG_T2 - DEBUG_T1;
 
             const std::string info = str(boost::format("Emulation time elapsed: %.3f (%.4fx)")
-                % (DEBUG_TIME_ELAPSED / 1e6)
-                % ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
+                                         % (DEBUG_TIME_ELAPSED / 1e6)
+                                         % ((DEBUG_TIME_ELAPSED - DEBUG_TIME_LOGGED) / duration.count()));
 
             BOOST_LOG(get_logger()) << info;
             //print_title(info);
@@ -162,7 +161,7 @@ void Core::run()
 #endif
 
         // Enqueue time events (always done on each run).
-        auto event = ControllerEvent{ ControllerEvent::Type::Time, options.time_slice_per_run_us };
+        auto event = ControllerEvent{ControllerEvent::Type::Time, options.time_slice_per_run_us};
         for (int i = 0; i < static_cast<int>(ControllerType::Type::COUNT); i++) // TODO: find better syntax..
         {
             auto controller = static_cast<ControllerType::Type>(i);
@@ -173,8 +172,7 @@ void Core::run()
         EventEntry entry;
         while (controller_event_queue.try_pop(entry))
         {
-            auto task = [this, entry]()
-            {
+            auto task = [this, entry]() {
                 if (controllers[entry.t])
                     controllers[entry.t]->handle_event_marshall_(entry.e);
             };
@@ -191,7 +189,7 @@ void Core::run()
             throw std::runtime_error("Task queue was not empty!");
 #endif
     }
-    catch (const std::runtime_error & e)
+    catch (const std::runtime_error& e)
     {
         BOOST_LOG(get_logger()) << "Core running fatal error: " << e.what();
         throw;
@@ -201,32 +199,28 @@ void Core::run()
 void Core::dump_all_memory() const
 {
     const std::string dumps_dir_path = options.dumps_dir_path;
-	boost::filesystem::create_directory(dumps_dir_path);
-	get_resources().ee.main_memory.write_to_file(dumps_dir_path + "End_Dump_EE.bin");
-	get_resources().iop.main_memory.write_to_file(dumps_dir_path + "End_Dump_IOP.bin");
-	get_resources().spu2.main_memory.write_to_file(dumps_dir_path + "End_Dump_SPU2.bin");
-	get_resources().cdvd.nvram.memory.write_to_file(dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
-	BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
+    boost::filesystem::create_directory(dumps_dir_path);
+    get_resources().ee.main_memory.write_to_file(dumps_dir_path + "End_Dump_EE.bin");
+    get_resources().iop.main_memory.write_to_file(dumps_dir_path + "End_Dump_IOP.bin");
+    get_resources().spu2.main_memory.write_to_file(dumps_dir_path + "End_Dump_SPU2.bin");
+    get_resources().cdvd.nvram.memory.write_to_file(dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
+    BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
 }
 
 void Core::init_logging()
 {
     const std::string logs_dir_path = options.logs_dir_path;
-	boost::filesystem::create_directory(logs_dir_path);
-	boost::log::add_common_attributes();
-	boost::log::add_file_log
-	(
-		boost::log::keywords::file_name = logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
-		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
-	);
-	boost::log::add_console_log
-	(
-		std::cout,
-		boost::log::keywords::format = "[%TimeStamp%]: %Message%"
-	);
+    boost::filesystem::create_directory(logs_dir_path);
+    boost::log::add_common_attributes();
+    boost::log::add_file_log(
+        boost::log::keywords::file_name = logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
+        boost::log::keywords::format = "[%TimeStamp%]: %Message%");
+    boost::log::add_console_log(
+        std::cout,
+        boost::log::keywords::format = "[%TimeStamp%]: %Message%");
 }
 
-CoreApi::CoreApi(const CoreOptions & options)
+CoreApi::CoreApi(const CoreOptions& options)
 {
     impl = new Core(options);
 }

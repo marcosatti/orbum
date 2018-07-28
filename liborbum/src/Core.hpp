@@ -1,14 +1,16 @@
 #pragma once
 
-#include <utility>
-#include <memory>
 #include <functional>
+#include <memory>
+#include <utility>
 #include <vector>
+
+#include <boost/lockfree/queue.hpp>
 #include <boost/log/sources/logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-#include <boost/lockfree/queue.hpp>
-#include <Macros.hpp>
+
 #include <EnumMap.hpp>
+#include <Macros.hpp>
 #include <Queues.hpp>
 #include <TaskExecutor.hpp>
 
@@ -16,9 +18,9 @@
 #include "Controller/ControllerType.hpp"
 
 #ifdef orbum_EXPORTS
- #define CORE_API SHARED_EXPORT
+#define CORE_API SHARED_EXPORT
 #else
- #define CORE_API SHARED_IMPORT
+#define CORE_API SHARED_IMPORT
 #endif
 
 struct RResources;
@@ -27,25 +29,25 @@ class CController;
 /// Core runtime options.
 struct CORE_API CoreOptions
 {
-	/// Contstructs default core options.
-	/// See inside for details.
-	static CoreOptions make_default();
+    /// Contstructs default core options.
+    /// See inside for details.
+    static CoreOptions make_default();
 
-	// Notes: 
+    // Notes:
     // - For single-threaded operation, set number_workers to 1.
     // - us = microseconds.
-	// - Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
+    // - Boot ROM is required, other roms are optional -> empty string will cause it to not be loaded.
     // - Speed biases are a ratio, 1.0x is normal speed.
 
-	/* Log dir path.             */ const char * logs_dir_path;
-	/* Roms dir path.            */ const char * roms_dir_path;
-	/* Memory dumps dir path.    */ const char * dumps_dir_path;
-	/* Boot ROM file name.       */ const char * boot_rom_file_name;
-	/* ROM1 file name.           */ const char * rom1_file_name;
-	/* ROM2 file name.           */ const char * rom2_file_name;
-	/* EROM file name.           */ const char * erom_file_name;
+    /* Log dir path.             */ const char* logs_dir_path;
+    /* Roms dir path.            */ const char* roms_dir_path;
+    /* Memory dumps dir path.    */ const char* dumps_dir_path;
+    /* Boot ROM file name.       */ const char* boot_rom_file_name;
+    /* ROM1 file name.           */ const char* rom1_file_name;
+    /* ROM2 file name.           */ const char* rom2_file_name;
+    /* EROM file name.           */ const char* erom_file_name;
 
-	/* Time slice per run in us. */ double time_slice_per_run_us;
+    /* Time slice per run in us. */ double time_slice_per_run_us;
 
     /* Number of worker threads. */ size_t number_workers;
 
@@ -73,25 +75,25 @@ struct CORE_API CoreOptions
 class CORE_API CoreApi
 {
 public:
-    CoreApi(const CoreOptions & options);
+    CoreApi(const CoreOptions& options);
     ~CoreApi();
 
     void run();
     void dump_all_memory() const;
 
 private:
-    class Core * impl;
+    class Core* impl;
 };
 
 /// Entry point into all Orbum core emulation.
-/// This is the manager for the PS2's execution. 
+/// This is the manager for the PS2's execution.
 /// Execution occurs in synchronised blocks - the core waits until all events
 /// are processed by the controllers before dispatching any new ones.
 class Core
 {
 public:
-	Core(const CoreOptions & options);
-	~Core();
+    Core(const CoreOptions& options);
+    ~Core();
 
     /// Runs the core and updates the state.
     /// This is the main loop function.
@@ -100,58 +102,57 @@ public:
     /// Dumps all memory objects to the ./dumps folder.
     void dump_all_memory() const;
 
-	/// Returns a reference to the logging functionality.
-    static boost::log::sources::logger_mt & get_logger();
+    /// Returns a reference to the logging functionality.
+    static boost::log::sources::logger_mt& get_logger();
 
-	/// Returns the runtime core options.
-	const CoreOptions & get_options() const
-	{
-		return options;
-	}
+    /// Returns the runtime core options.
+    const CoreOptions& get_options() const
+    {
+        return options;
+    }
 
-	/// Returns the task executor.
-	TaskExecutor & get_task_executor() const
-	{
-		return *task_executor;
-	}
+    /// Returns the task executor.
+    TaskExecutor& get_task_executor() const
+    {
+        return *task_executor;
+    }
 
-	/// Returns a reference to the PS2 resources.
-	RResources & get_resources() const
-	{
-		return *resources;
-	}
+    /// Returns a reference to the PS2 resources.
+    RResources& get_resources() const
+    {
+        return *resources;
+    }
 
-	/// Enqueues a controller event that is dispatched on the next synchronised run.
-	void enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent & event)
-	{
-		controller_event_queue.push({ c_type, event });
-	}
+    /// Enqueues a controller event that is dispatched on the next synchronised run.
+    void enqueue_controller_event(const ControllerType::Type c_type, const ControllerEvent& event)
+    {
+        controller_event_queue.push({c_type, event});
+    }
 
-private:	
-	/// Initialises logging using options.
-	void init_logging();
+private:
+    /// Initialises logging using options.
+    void init_logging();
 
-	/// Logging source.
-	static boost::log::sources::logger_mt logger;
+    /// Logging source.
+    static boost::log::sources::logger_mt logger;
 
-	/// Core options.
-	CoreOptions options;
+    /// Core options.
+    CoreOptions options;
 
-	/// PS2 Resources.
-	std::unique_ptr<RResources> resources;
+    /// PS2 Resources.
+    std::unique_ptr<RResources> resources;
 
-	/// Controller Event handling queues.
-	struct EventEntry
-	{ 
-		ControllerType::Type t; 
-		ControllerEvent e;
-	};
-	MpmcQueue<EventEntry, 128> controller_event_queue;
+    /// Controller Event handling queues.
+    struct EventEntry
+    {
+        ControllerType::Type t;
+        ControllerEvent e;
+    };
+    MpmcQueue<EventEntry, 128> controller_event_queue;
 
-	/// Controllers.
-	EnumMap<ControllerType::Type, std::unique_ptr<CController>> controllers;
-	
-	/// Task executor.
-	std::unique_ptr<TaskExecutor> task_executor;
+    /// Controllers.
+    EnumMap<ControllerType::Type, std::unique_ptr<CController>> controllers;
+
+    /// Task executor.
+    std::unique_ptr<TaskExecutor> task_executor;
 };
-

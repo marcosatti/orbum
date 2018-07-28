@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Common/Constants.hpp"
-#include "Common/Types/Register/SizedWordRegister.hpp"
-#include "Common/Types/Register/PcRegisters.hpp"
 #include "Common/Types/Mips/BranchDelaySlot.hpp"
+#include "Common/Types/Register/PcRegisters.hpp"
+#include "Common/Types/Register/SizedWordRegister.hpp"
 
 /// The IOP MIPS R3000 CPU (used as the IOP / PSX CPU).
 /// It uses a little-endian configuration.
@@ -12,23 +12,22 @@
 class IopCoreR3000
 {
 public:
-	IopCoreR3000();
+    IopCoreR3000();
 
-	/// The 32-bit Program Counter (PC) register.
-	/// Points to the current instruction virtual address.
-	WordPcRegister pc;
+    /// The 32-bit Program Counter (PC) register.
+    /// Points to the current instruction virtual address.
+    WordPcRegister pc;
 
-	/// Branch delay slot holding area.
-	BranchDelaySlot<> bdelay;
+    /// Branch delay slot holding area.
+    BranchDelaySlot<> bdelay;
 
-	/// The 32 general purpose registers. They are each 32-bits long.
-	/// GPR[0] is hardwired to 0.
-	SizedWordRegister gpr[Constants::IOP::IOPCore::R3000::NUMBER_GP_REGISTERS];
+    /// The 32 general purpose registers. They are each 32-bits long.
+    /// GPR[0] is hardwired to 0.
+    SizedWordRegister gpr[Constants::IOP::IOPCore::R3000::NUMBER_GP_REGISTERS];
 
-	/// The HI and LO registers.
-	/// These registers are used to hold the results of integer multiply and divide operations.
-	/// They are 32-bit long.
-	SizedWordRegister hi;
-	SizedWordRegister lo;
+    /// The HI and LO registers.
+    /// These registers are used to hold the results of integer multiply and divide operations.
+    /// They are 32-bit long.
+    SizedWordRegister hi;
+    SizedWordRegister lo;
 };
-

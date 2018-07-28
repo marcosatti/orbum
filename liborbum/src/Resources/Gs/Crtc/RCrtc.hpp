@@ -3,6 +3,5 @@
 /// CRTC resources.
 class RCrtc
 {
-public:	
+public:
 };
-

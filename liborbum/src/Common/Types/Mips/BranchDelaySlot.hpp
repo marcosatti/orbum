@@ -4,13 +4,13 @@
 #include "Common/Types/Register/PcRegisters.hpp"
 
 /// Contains functionallity for the branch delay slot featured in MIPS CPU's.
-/// A branch delay occurs when a jump/branch instruction is hit, 
+/// A branch delay occurs when a jump/branch instruction is hit,
 /// and the subsequent instructions are known as the "branch slots".
-/// These instructions in the branch slots are executed until the number of 
+/// These instructions in the branch slots are executed until the number of
 /// configured branch slots have been run, and then the jump/branch occurs.
 /// A default slot size of 1 is used by the EE and IOP cores.
 /// slot + 1 is used internally as this is the real amount of instruction cycles.
-template<size_t slots = 1>
+template <size_t slots = 1>
 class BranchDelaySlot
 {
 public:
@@ -29,7 +29,7 @@ public:
 
     /// Sets a pending branch which combines the current PC address with
     /// the offset specified. Used for I-type instructions (imm's).
-    void set_branch_itype(WordPcRegister & pc, const shword imm)
+    void set_branch_itype(WordPcRegister& pc, const shword imm)
     {
         current_slot = slots + 1;
         branch_pc = (pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION) + (imm << 2);
@@ -37,7 +37,7 @@ public:
 
     /// Sets a pending branch which combines the current PC address with
     /// the region address. Used for J-type instructions.
-    void set_branch_jtype(WordPcRegister & pc, const uptr j_region_addr)
+    void set_branch_jtype(WordPcRegister& pc, const uptr j_region_addr)
     {
         current_slot = slots + 1;
         branch_pc = ((pc.read_uword() + Constants::MIPS::SIZE_MIPS_INSTRUCTION) & 0xF0000000) | (j_region_addr << 2);
@@ -45,7 +45,7 @@ public:
 
     /// Advances the PC by either incrementing by 1 instruction,
     /// or taking a branch if all slots have been used.
-    void advance_pc(WordPcRegister & pc)
+    void advance_pc(WordPcRegister& pc)
     {
         if (current_slot)
         {

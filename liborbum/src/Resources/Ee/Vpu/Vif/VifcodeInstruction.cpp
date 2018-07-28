@@ -1,37 +1,36 @@
 #include "Resources/Ee/Vpu/Vif/VifcodeInstruction.hpp"
 
 MipsInstructionInfo VIFCODE_INSTRUCTION_TABLE[21] =
-{
-    { "NOP", 1, 1 },
-    { "STCYCL", 2, 1 },
-    { "OFFSET", 3, 1 },
-    { "BASE", 4, 1 },
-    { "ITOP", 5, 1 },
-    { "STMOD", 6, 1 },
-    { "MSKPATH3", 7, 1 },
-    { "MARK", 8, 1 },
-    { "FLUSHE", 9, 1 },
-    { "FLUSH", 10, 1 },
-    { "FLUSHA", 11, 1 },
-    { "MSCAL", 12, 1 },
-    { "MSCALF", 13, 1 },
-    { "MSCNT", 14, 1 },
-    { "STMASK", 15, 2 },
-    { "STROW", 16, 5 },
-    { "STCOL", 17, 5 },
-    { "MPG", 18, 10 },
-    { "DIRECT", 19, 10 },
-    { "DIRECTHL", 20, 10 },
-    { "UNPACK", 21, 100 }
-};
+    {
+        {"NOP", 1, 1},
+        {"STCYCL", 2, 1},
+        {"OFFSET", 3, 1},
+        {"BASE", 4, 1},
+        {"ITOP", 5, 1},
+        {"STMOD", 6, 1},
+        {"MSKPATH3", 7, 1},
+        {"MARK", 8, 1},
+        {"FLUSHE", 9, 1},
+        {"FLUSH", 10, 1},
+        {"FLUSHA", 11, 1},
+        {"MSCAL", 12, 1},
+        {"MSCALF", 13, 1},
+        {"MSCNT", 14, 1},
+        {"STMASK", 15, 2},
+        {"STROW", 16, 5},
+        {"STCOL", 17, 5},
+        {"MPG", 18, 10},
+        {"DIRECT", 19, 10},
+        {"DIRECTHL", 20, 10},
+        {"UNPACK", 21, 100}};
 
 VifcodeInstruction::VifcodeInstruction(const uword value) :
-	MipsInstruction(value),
-	info(nullptr)
+    MipsInstruction(value),
+    info(nullptr)
 {
 }
 
-MipsInstructionInfo * VifcodeInstruction::lookup() const
+MipsInstructionInfo* VifcodeInstruction::lookup() const
 {
     switch (cmdhi())
     {

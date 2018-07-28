@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Common/Types/Primitive.hpp"
-#include "Common/Types/Mips/MipsInstructionInfo.hpp"
 #include "Common/Types/Mips/MipsInstruction.hpp"
+#include "Common/Types/Mips/MipsInstructionInfo.hpp"
+#include "Common/Types/Primitive.hpp"
 
 /// Extends the MIPS instruction type with additional fields available specific to the EECore.
 struct EeCoreInstruction : public MipsInstruction
@@ -49,7 +49,7 @@ struct EeCoreInstruction : public MipsInstruction
     static constexpr int CPI_COP_BRANCH_DELAY_LIKELY = 10;
 
     /// Performs a lookup if required and returns the instruction details.
-    const MipsInstructionInfo * get_info()
+    const MipsInstructionInfo* get_info()
     {
         if (!info)
             info = lookup();
@@ -57,9 +57,9 @@ struct EeCoreInstruction : public MipsInstruction
     }
 
 private:
-	/// Instruction information (from performing lookup).
-	MipsInstructionInfo * info;
+    /// Instruction information (from performing lookup).
+    MipsInstructionInfo* info;
 
-	/// Determines what instruction this is by performing a lookup.
-	MipsInstructionInfo * lookup() const;
+    /// Determines what instruction this is by performing a lookup.
+    MipsInstructionInfo* lookup() const;
 };

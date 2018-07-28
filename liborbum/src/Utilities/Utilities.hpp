@@ -1,14 +1,14 @@
 #pragma once
 
-#include <limits>
 #include <functional>
+#include <limits>
 
 #include "Common/Constants.hpp"
-#include "Common/Types/Primitive.hpp"
 #include "Common/Types/FpuFlags.hpp"
+#include "Common/Types/Primitive.hpp"
 
 /// Returns size of type in terms of number of bits (uses CHAR_BIT).
-template<typename T>
+template <typename T>
 constexpr int size_bits()
 {
     return static_cast<int>(sizeof(T) * CHAR_BIT);
@@ -17,7 +17,7 @@ constexpr int size_bits()
 /// Formats an IEEE 754 float into a PS2 spec float, by clamping NaN's and +/-Infinity to +/-Fmax and rounding denormalised values towards +/-0.
 /// A PS2 spec float can be thought of as a subset of the IEEE 754 float.
 /// When converting, a set of flags will be filled in that can be used to set eg: the VU MAC flags.
-f32 to_ps2_float(const f32 value, FpuFlags & flags);
+f32 to_ps2_float(const f32 value, FpuFlags& flags);
 
 /// Gets the exponent (8 bits starting from position 23).
 ubyte get_float_exponent(const f32 value);
@@ -44,4 +44,4 @@ bool test_over_or_underflow_64(const sdword x, const sdword y);
 /// Iterates through a printf specifier converting guest pointers into host pointers within the args_list (ie: va_args) argument.
 /// Also takes in a address conversion handler that returns the converted host pointer address.
 /// Assumes the args_list is a sequential block of variables to print in memory.
-std::string vsnprintf_list_convert(const std::string & format_str, const char * args_list, const std::function<std::uintptr_t(const uptr)> & convert_pointer_fn);
+std::string vsnprintf_list_convert(const std::string& format_str, const char* args_list, const std::function<std::uintptr_t(const uptr)>& convert_pointer_fn);

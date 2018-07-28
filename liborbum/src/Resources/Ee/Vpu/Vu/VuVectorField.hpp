@@ -4,19 +4,18 @@
 class VuVectorField
 {
 public:
-	enum Field
-	{
-		X = 0,
-		Y = 1,
-		Z = 2,
-		W = 3,
-	};
+    enum Field
+    {
+        X = 0,
+        Y = 1,
+        Z = 2,
+        W = 3,
+    };
 
-	static constexpr Field VECTOR_FIELDS[] =
-	{
-		VuVectorField::X,
-		VuVectorField::Y,
-		VuVectorField::Z,
-		VuVectorField::W
-	};
+    static constexpr Field VECTOR_FIELDS[] =
+        {
+            VuVectorField::X,
+            VuVectorField::Y,
+            VuVectorField::Z,
+            VuVectorField::W};
 };

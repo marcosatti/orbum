@@ -7,8 +7,8 @@
 /// - O flag set: the parsed value was NaN or +/- Inf (not supported by PS2).
 struct FpuFlags
 {
-	bool ZF;
-	bool SF;
-	bool UF;
-	bool OF;
+    bool ZF;
+    bool SF;
+    bool UF;
+    bool OF;
 };

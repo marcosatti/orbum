@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Controller/CController.hpp"
-
 #include "Resources/Ee/Timers/EeTimersUnits.hpp"
 
 class Core;
@@ -12,20 +11,19 @@ class Core;
 class CEeTimers : public CController
 {
 public:
-	CEeTimers(Core * core);
+    CEeTimers(Core* core);
 
-	void handle_event(const ControllerEvent & event) override;
-	
-	/// Converts a time duration into the number of ticks that would have occurred.
-	int time_to_ticks(const double time_us);
+    void handle_event(const ControllerEvent& event) override;
 
-	/// Updates the timers with the specified clock source type.
-	void tick_timer(const ControllerEvent::Type ce_type);
+    /// Converts a time duration into the number of ticks that would have occurred.
+    int time_to_ticks(const double time_us);
 
-	/// Checks the timer status and count values for interrupt conditions.
-	void handle_timer_interrupt(EeTimersUnit & unit);
+    /// Updates the timers with the specified clock source type.
+    void tick_timer(const ControllerEvent::Type ce_type);
 
-	/// Check for the ZRET condition and reset counter if enabled/met.
-	void handle_timer_zret(EeTimersUnit & unit);
+    /// Checks the timer status and count values for interrupt conditions.
+    void handle_timer_interrupt(EeTimersUnit& unit);
+
+    /// Check for the ZRET condition and reset counter if enabled/met.
+    void handle_timer_zret(EeTimersUnit& unit);
 };
-

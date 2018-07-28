@@ -8,11 +8,11 @@
 class HwordPcRegister final : public SizedHwordRegister
 {
 public:
-	using SizedHwordRegister::SizedHwordRegister;
+    using SizedHwordRegister::SizedHwordRegister;
 };
 
 class WordPcRegister final : public SizedWordRegister
 {
 public:
-	using SizedWordRegister::SizedWordRegister;
+    using SizedWordRegister::SizedWordRegister;
 };
