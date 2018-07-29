@@ -85,6 +85,9 @@ void CSio2::handle_ctrl_check()
         // Reset direction bits - they are write only (see register description).
         ctrl.insert_field(Sio2Register_Ctrl::DIRECTION, 0);
 
+        BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 ctrl set: %s direction") 
+            % (ctrl.transfer_direction == Direction::TX ? "TX" : "RX"));
+
         ctrl.write_latch = false;
     }
 }
@@ -146,6 +149,21 @@ void CSio2::handle_port_trasnfer()
     default:
         throw std::runtime_error("Could not determine SIO2 transfer direction.");
     }
+
+    // All data sent/received, stop transfering.
+    if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
+    {
+        if (ctrl.transfer_direction == Direction::RX)
+        {
+            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 RX finished: raising irq";
+            auto& intc_stat = r.iop.intc.stat;
+            auto _intc_lock = intc_stat.scope_lock();
+            intc_stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
+        }
+
+        BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX or RX all ports finished";
+        ctrl.transfer_started = false;
+    }
 }
 
 void CSio2::transfer_data_tx()
@@ -205,13 +223,6 @@ void CSio2::transfer_data_tx()
         ctrl.transfer_port += 1;
         ctrl.transfer_port_count = 0;
     }
-
-    // All data sent, stop transfering.
-    if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
-    {
-        BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX all ports finished";
-        ctrl.transfer_started = false;
-    }
 }
 
 void CSio2::transfer_data_rx()
@@ -250,18 +261,8 @@ void CSio2::transfer_data_rx()
     if (ctrl.transfer_port_count == response_length)
     {
         BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 RX port %d finished") % ctrl.transfer_port);
+        port.ctrl_3->port_transfer_started = false;
         ctrl.transfer_port += 1;
         ctrl.transfer_port_count = 0;
-    }
-
-    // All data received, stop transfering, raise IRQ on RX finish.
-    if (ctrl.transfer_port == Constants::IOP::SIO2::NUMBER_PORTS)
-    {
-        BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 RX all ports finished";
-        ctrl.transfer_started = false;
-
-        auto& intc_stat = r.iop.intc.stat;
-        auto _intc_lock = intc_stat.scope_lock();
-        intc_stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
     }
 }

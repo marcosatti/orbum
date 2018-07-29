@@ -346,7 +346,8 @@ std::optional<uptr> CIopCore::translate_address_data(const uptr virtual_address,
 #if defined(BUILD_DEBUG)
     static const std::pair<uptr, uptr> DEBUG_VA_BREAKPOINT_RANGES[] =
         {
-            std::make_pair(0xBF808200, 0xBF80825C)};
+            std::make_pair(0xBF808200, 0xBF80825C),
+            std::make_pair(0xBF808268, 0xBF808268)};
 
     for (const auto& range : DEBUG_VA_BREAKPOINT_RANGES)
     {
