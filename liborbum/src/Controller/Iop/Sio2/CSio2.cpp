@@ -85,9 +85,6 @@ void CSio2::handle_ctrl_check()
         // Reset direction bits - they are write only (see register description).
         ctrl.insert_field(Sio2Register_Ctrl::DIRECTION, 0);
 
-        BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 ctrl set: %s direction") 
-            % (ctrl.transfer_direction == Direction::TX ? "TX" : "RX"));
-
         ctrl.write_latch = false;
     }
 }
@@ -115,23 +112,11 @@ void CSio2::handle_port_trasnfer()
 
     if (!port.ctrl_3->port_transfer_started)
     {
-        static bool warned = false;
-
         if (!port.ctrl_3->write_latch)
-        {
-            if (!warned)
-            {
-                BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX/RX stalled: ctrl3 needs to be set by IOP first (write latch not set)";
-                warned = true;
-            }
             return;
-        }
-
-        warned = false;
 
         port.ctrl_3->port_transfer_started = true;
         port.ctrl_3->write_latch = false;
-        BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 TX port %d started") % ctrl.transfer_port);
     }
 
     switch (ctrl.transfer_direction)
@@ -155,13 +140,11 @@ void CSio2::handle_port_trasnfer()
     {
         if (ctrl.transfer_direction == Direction::RX)
         {
-            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 RX finished: raising irq";
             auto& intc_stat = r.iop.intc.stat;
             auto _intc_lock = intc_stat.scope_lock();
             intc_stat.insert_field(IopIntcRegister_Stat::SIO2, 1);
         }
 
-        BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX or RX all ports finished";
         ctrl.transfer_started = false;
     }
 }
@@ -184,26 +167,17 @@ void CSio2::transfer_data_tx()
     if (ctrl.transfer_port_count != cmd_length)
     {
         if (!sio0_stat.extract_field(Sio0Register_Stat::TX_RDY1))
-        {
-            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX stalled: SIO0 stat.TX_RDY1 not set";
             return;
-        }
 
         if (!data_in.has_read_available(1))
-        {
-            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX stalled: no FIFO data";
             return;
-        }
 
         // If it's the first byte, perform some initialisation.
         if (ctrl.transfer_port_count == 0)
         {
             // Set the SIO0 pad port first when the SIO0 is ready.
             if (!sio0_stat.extract_field(Sio0Register_Stat::TX_RDY2))
-            {
-                BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 TX stalled (init): SIO0 stat.TX_RDY2 not set";
                 return;
-            }
 
             uhword sio0_padport = port.ctrl_3->extract_field(Sio2PortRegister_Ctrl3::PADPORT);
 
@@ -219,7 +193,6 @@ void CSio2::transfer_data_tx()
     // Finished with this port, move on to next.
     if (ctrl.transfer_port_count == cmd_length)
     {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 TX port %d finished") % ctrl.transfer_port);
         ctrl.transfer_port += 1;
         ctrl.transfer_port_count = 0;
     }
@@ -241,16 +214,10 @@ void CSio2::transfer_data_rx()
     if (ctrl.transfer_port_count != response_length)
     {
         if (!data_out.has_write_available(1))
-        {
-            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 RX stalled: FIFO full";
             return;
-        }
 
         if (!sio0_stat.extract_field(Sio0Register_Stat::RX_NONEMPTY))
-        {
-            BOOST_LOG(Core::get_logger()) << "~~~~~~ SIO2 RX stalled: SIO0 stat.RX_NONEMPTY not set";
             return;
-        }
 
         ubyte data = sio0_data.read_ubyte();
         data_out.write_ubyte(data);
@@ -260,7 +227,6 @@ void CSio2::transfer_data_rx()
     // Finished with this port, move on to next.
     if (ctrl.transfer_port_count == response_length)
     {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~~ SIO2 RX port %d finished") % ctrl.transfer_port);
         port.ctrl_3->port_transfer_started = false;
         ctrl.transfer_port += 1;
         ctrl.transfer_port_count = 0;

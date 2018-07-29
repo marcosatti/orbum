@@ -120,8 +120,6 @@ void CSio0::handle_transfer()
 
     // Sequential command/response action.
 
-    auto _stat_lock = stat.scope_lock();
-
     // Check there is data to send first, TX_RDY2 changes depending on this.
     if (!command_queue.has_read_available(1))
     {
@@ -133,11 +131,10 @@ void CSio0::handle_transfer()
         return;
 
     ubyte cmd = command_queue.read_ubyte();
-    BOOST_LOG(Core::get_logger()) << str(boost::format("~~~~~ SIO0 received cmd: 0x%02X") % cmd);
 
     // TODO: properly implement, for now just send back 0x00 for all commands received.
     response_queue.write_ubyte(0);
-    BOOST_LOG(Core::get_logger()) << "~~~~~ SIO0 sent response: 0x00 (not connected)";
 
+    auto _stat_lock = stat.scope_lock();
     stat.insert_field(Sio0Register_Stat::RX_NONEMPTY, 1);
 }
