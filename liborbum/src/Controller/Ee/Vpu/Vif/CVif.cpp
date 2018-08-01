@@ -95,48 +95,96 @@ void CVif::INSTRUCTION_UNSUPPORTED(VifUnit_Base* unit, const VifcodeInstruction 
     throw std::runtime_error("VIFcode CMD field was invalid! Please fix.");
 }
 
-void CVif::NOP(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 103.
+void CVif::NOP(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	// nothing to do
 }
 
-void CVif::STCYCL(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 104.
+void CVif::STCYCL(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	// Writes CODE.IMMEDIATE to CYCLE
+	uword immediate = unit->code.IMMEDIATE.extract_from(unit->code.read_uword());
+	unit->cycle.write_uword(immediate);
 }
 
-void CVif::OFFSET(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 105.
+void CVif::OFFSET(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// Clear STAT.DBF
+	uword status = 0;
+	unit->stat.write_uword(unit->stat.DBF.insert_into(unit->stat.read_uword(), status));
+	
+	// Writes the lower 10 bits of CODE.IMMEDIATE to OFST
+	uword immediate = unit->code.IMMEDIATE.extract_from(unit->code.read_uword());
+	unit->ofst.write_uword(unit->ofst.OFFSET.extract_from(immediate));
+
+	// Transfer BASE to TOPS
+	unit->tops.write_uword(unit->base.read_uword());
 }
 
-void CVif::BASE(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 106.
+void CVif::BASE(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// Writes the lower 10 bits of CODE.IMMEDIATE to BASE
+	uword immediate = unit->code.IMMEDIATE.extract_from(unit->code.read_uword());
+	unit->base.write_uword(unit->base.BASE.extract_from(immediate));
 }
 
-void CVif::ITOP(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 107.
+void CVif::ITOP(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	uword immediate = unit->itops.ITOPS.extract_from(unit->code.read_uword());
+	unit->itops.write_uword(immediate);
 }
 
-void CVif::STMOD(VifUnit_Base* unit, const VifcodeInstruction inst)
+// Refer to EE Users Manual pg 108.
+void CVif::STMOD(VifUnit_Base * unit, const VifcodeInstruction inst)
 {
+	uword immediate = unit->mode.MOD.extract_from(unit->code.read_uword());
+	unit->mode.write_uword(immediate);
 }
 
 void CVif::MSKPATH3(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::MARK(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	uword immediate = unit->mark.MARK.extract_from(unit->code.read_uword());
+	unit->mark.write_uword(immediate);
 }
 
 void CVif::FLUSHE(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// TODO: Implement this
 }
 
 void CVif::FLUSH(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::FLUSHA(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::MSCAL(VifUnit_Base* unit, const VifcodeInstruction inst)
@@ -149,6 +197,10 @@ void CVif::MSCNT(VifUnit_Base* unit, const VifcodeInstruction inst)
 
 void CVif::MSCALF(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::STMASK(VifUnit_Base* unit, const VifcodeInstruction inst)
@@ -169,10 +221,18 @@ void CVif::MPG(VifUnit_Base* unit, const VifcodeInstruction inst)
 
 void CVif::DIRECT(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::DIRECTHL(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
+	// VIF1 only
+	if (unit->core_id != 1) return;
+
+	// TODO: Implement this
 }
 
 void CVif::UNPACK(VifUnit_Base* unit, const VifcodeInstruction inst)
