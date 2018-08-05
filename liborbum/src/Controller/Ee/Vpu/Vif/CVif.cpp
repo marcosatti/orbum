@@ -117,7 +117,7 @@ void CVif::OFFSET(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: OFFSET") % unit->core_id);
         return;
     }
 
@@ -137,7 +137,7 @@ void CVif::BASE(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: BASE") % unit->core_id);
         return;
     }
 
@@ -164,7 +164,7 @@ void CVif::MSKPATH3(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: MSKPATH3") % unit->core_id);
         return;
     }
 
@@ -185,7 +185,7 @@ void CVif::FLUSH(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: FLUSH") % unit->core_id);
         return;
     }
 
@@ -196,7 +196,7 @@ void CVif::FLUSHA(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: FLUSHA") % unit->core_id);
         return;
     }
 
@@ -215,7 +215,7 @@ void CVif::MSCALF(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: MSCALF") % unit->core_id);
         return;
     }
 
@@ -242,7 +242,7 @@ void CVif::DIRECT(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: DIRECT") % unit->core_id);
         return;
     }
 
@@ -253,7 +253,7 @@ void CVif::DIRECTHL(VifUnit_Base* unit, const VifcodeInstruction inst)
 {
     // VIF1 only
     if (unit->core_id != 1) {
-        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction") % unit->core_id);
+        BOOST_LOG(Core::get_logger()) << str(boost::format("Warning: VIF%d called a VIF1-only instruction: DIRECTHL") % unit->core_id);
         return;
     }
 
