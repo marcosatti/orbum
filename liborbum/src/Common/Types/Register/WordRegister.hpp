@@ -24,12 +24,14 @@ public:
     /// Read/write floats - wrappers around read/write uword.
     f32 read_float()
     {
-        return static_cast<f32>(read_uword());
+        uword raw = read_uword();
+        return *reinterpret_cast<f32*>(&raw);
     }
 
     void write_float(const f32 value)
     {
-        write_uword(static_cast<uword>(value));
+        f32 raw = value;
+        write_uword(*reinterpret_cast<uword*>(&raw));
     }
 
     /// Bitfield extraction/insertion.
