@@ -46,6 +46,17 @@ public:
     EeDmacChannelRegister_Addr madr;
     SizedWordRegister qwc;
     EeDmacChannelRegister_Chcr_Ty chcr;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(channel_id),
+            CEREAL_NVP(madr),
+            CEREAL_NVP(qwc),
+            CEREAL_NVP(chcr)
+        );
+    }
 };
 
 /// TADR EE DMAC channel, contains normal registers plus TADR register.

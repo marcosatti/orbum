@@ -109,6 +109,8 @@ struct Constants
 
             struct FPU
             {
+                static constexpr int NUMBER_REGISTERS = 32;
+                
                 // FPU Constants Fmax (positive) and Fmax (negative), used as the upper and lower bounds of a float value (instead of plus and minus infinity?).
                 static constexpr uword FMAX_POS = 0x7F7FFFFF; // Sign bit = 0 -> positive.
                 static constexpr uword FMAX_NEG = 0xFF7FFFFF; // Sign bit = 1 -> negative.

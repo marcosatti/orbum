@@ -11,4 +11,15 @@ struct RSio0
     Sio0Register_Stat stat;
     SizedHwordRegister mode;
     Sio0Register_Ctrl ctrl;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(data),
+            CEREAL_NVP(stat),
+            CEREAL_NVP(mode),
+            CEREAL_NVP(ctrl)
+        );
+    }
 };

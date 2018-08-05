@@ -66,4 +66,46 @@ struct RIop
     SizedWordRegister register_15f0;
     SizedWordRegister register_2070;
     SizedWordRegister register_3800;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(core),
+            CEREAL_NVP(dmac),
+            CEREAL_NVP(intc),
+            CEREAL_NVP(timers),
+            CEREAL_NVP(sio0),
+            CEREAL_NVP(sio2),
+            CEREAL_NVP(main_memory),
+            CEREAL_NVP(parallel_port),
+            CEREAL_NVP(hw_ssbus_spd_addr),
+            CEREAL_NVP(hw_ssbus_pio_addr),
+            CEREAL_NVP(hw_ssbus_spd_delay),
+            CEREAL_NVP(hw_ssbus_dev1_delay),
+            CEREAL_NVP(hw_ssbus_rom_delay),
+            CEREAL_NVP(hw_ssbus_spu_delay),
+            CEREAL_NVP(hw_ssbus_dev5_delay),
+            CEREAL_NVP(hw_ssbus_pio_delay),
+            CEREAL_NVP(hw_ssbus_com_delay),
+            CEREAL_NVP(hw_ram_size),
+            CEREAL_NVP(hw_ssbus_dev1_addr),
+            CEREAL_NVP(hw_ssbus_spu_addr),
+            CEREAL_NVP(hw_ssbus_dev5_addr),
+            CEREAL_NVP(hw_ssbus_spu1_addr),
+            CEREAL_NVP(hw_ssbus_dev9_addr3),
+            CEREAL_NVP(hw_ssbus_spu1_delay),
+            CEREAL_NVP(hw_ssbus_dev9_delay2),
+            CEREAL_NVP(hw_ssbus_dev9_delay3),
+            CEREAL_NVP(hw_ssbus_dev9_delay1),
+            CEREAL_NVP(hw_icfg),
+            CEREAL_NVP(register_1470),
+            CEREAL_NVP(register_1560),
+            CEREAL_NVP(register_1564),
+            CEREAL_NVP(register_1568),
+            CEREAL_NVP(register_15f0),
+            CEREAL_NVP(register_2070),
+            CEREAL_NVP(register_3800)
+        );
+    }
 };

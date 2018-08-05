@@ -40,4 +40,25 @@ struct RSpu2
     ArrayByteMemory memory_0746;
     ArrayByteMemory memory_07b0;
     ArrayByteMemory memory_07ce;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(core_0),
+            CEREAL_NVP(core_1),
+            CEREAL_NVP(spdif_out),
+            CEREAL_NVP(spdif_irqinfo),
+            CEREAL_NVP(spdif_07c4),
+            CEREAL_NVP(spdif_mode),
+            CEREAL_NVP(spdif_media),
+            CEREAL_NVP(spdif_07ca),
+            CEREAL_NVP(spdif_protect),
+            CEREAL_NVP(main_memory),
+            CEREAL_NVP(memory_0346),
+            CEREAL_NVP(memory_0746),
+            CEREAL_NVP(memory_07b0),
+            CEREAL_NVP(memory_07ce)
+        );
+    }
 };

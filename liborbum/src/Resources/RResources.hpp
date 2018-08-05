@@ -70,6 +70,49 @@ struct RResources
     DmaFifoQueue<> fifo_dev9;
     DmaFifoQueue<> fifo_fromsio2;
     DmaFifoQueue<> fifo_tosio2;
+
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            CEREAL_NVP(ee),
+            CEREAL_NVP(gs), 
+            CEREAL_NVP(iop), 
+            CEREAL_NVP(spu2), 
+            CEREAL_NVP(cdvd),
+            CEREAL_NVP(boot_rom),
+            CEREAL_NVP(rom1),
+            CEREAL_NVP(erom),
+            CEREAL_NVP(rom2),
+            CEREAL_NVP(sbus_mscom),
+            CEREAL_NVP(sbus_smcom),
+            CEREAL_NVP(sbus_msflg),
+            CEREAL_NVP(sbus_smflg),
+            CEREAL_NVP(sbus_f240),
+            CEREAL_NVP(sbus_f250),
+            CEREAL_NVP(sbus_f260),
+            CEREAL_NVP(sbus_f300),
+            CEREAL_NVP(sbus_f380),
+            CEREAL_NVP(fifo_vif0),
+            CEREAL_NVP(fifo_vif1),
+            CEREAL_NVP(fifo_gif),
+            CEREAL_NVP(fifo_fromipu),
+            CEREAL_NVP(fifo_toipu),
+            CEREAL_NVP(fifo_sif0),
+            CEREAL_NVP(fifo_sif1),
+            CEREAL_NVP(fifo_sif2),
+            CEREAL_NVP(fifo_frommdec),
+            CEREAL_NVP(fifo_tomdec),
+            CEREAL_NVP(fifo_cdvd),
+            CEREAL_NVP(fifo_spu2c0),
+            CEREAL_NVP(fifo_pio),
+            CEREAL_NVP(fifo_otclear),
+            CEREAL_NVP(fifo_spu2c1),
+            CEREAL_NVP(fifo_dev9),
+            CEREAL_NVP(fifo_fromsio2),
+            CEREAL_NVP(fifo_tosio2)
+        );
+    }
 };
 
 /// Initialises the resources by filling in references, performing bus mappings, etc.

@@ -17,4 +17,14 @@ public:
 
     /// Shared VU registers.
     VuRegister_Fbrst fbrst;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(unit_0),
+            CEREAL_NVP(unit_1),
+            CEREAL_NVP(fbrst)
+        );
+    }
 };

@@ -63,4 +63,47 @@ struct RCdvd
 
     /// CDVD RTC state.
     CdvdRtc rtc;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(n_command),
+            CEREAL_NVP(n_rdy_din),
+            CEREAL_NVP(n_data_out),
+            CEREAL_NVP(break_),
+            CEREAL_NVP(intr_stat),
+            CEREAL_NVP(status),
+            CEREAL_NVP(tray_state),
+            CEREAL_NVP(crt_minute),
+            CEREAL_NVP(crt_second),
+            CEREAL_NVP(crt_frame),
+            CEREAL_NVP(type),
+            CEREAL_NVP(register_2013),
+            CEREAL_NVP(rsv),
+            CEREAL_NVP(s_command),
+            CEREAL_NVP(s_rdy_din),
+            CEREAL_NVP(s_data_out),
+            CEREAL_NVP(key_20),
+            CEREAL_NVP(key_21),
+            CEREAL_NVP(key_22),
+            CEREAL_NVP(key_23),
+            CEREAL_NVP(key_24),
+            CEREAL_NVP(key_28),
+            CEREAL_NVP(key_29),
+            CEREAL_NVP(key_2a),
+            CEREAL_NVP(key_2b),
+            CEREAL_NVP(key_2c),
+            CEREAL_NVP(key_30),
+            CEREAL_NVP(key_31),
+            CEREAL_NVP(key_32),
+            CEREAL_NVP(key_33),
+            CEREAL_NVP(key_34),
+            CEREAL_NVP(key_38),
+            CEREAL_NVP(key_xor),
+            CEREAL_NVP(dec_set),
+            CEREAL_NVP(nvram),
+            CEREAL_NVP(rtc)
+        );
+    }
 };

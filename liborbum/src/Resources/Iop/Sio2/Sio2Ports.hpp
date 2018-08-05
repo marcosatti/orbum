@@ -18,6 +18,16 @@ public:
     Sio2PortRegister_Ctrl1 ctrl_1;
     Sio2PortRegister_Ctrl2 ctrl_2;
     Sio2PortRegister_Ctrl3 ctrl_3;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(ctrl_1),
+            CEREAL_NVP(ctrl_2),
+            CEREAL_NVP(ctrl_3)
+        );
+    }
 };
 
 /// Port that contains only 1 CTRL register (ctrl_3).
@@ -25,4 +35,12 @@ class Sio2Port_Slim
 {
 public:
     Sio2PortRegister_Ctrl3 ctrl_3;
+    
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(ctrl_3)
+        );
+    }
 };

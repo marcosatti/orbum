@@ -77,4 +77,14 @@ public:
 private:
     size_t current_slot;
     uptr branch_pc;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(current_slot),
+            CEREAL_NVP(branch_pc)
+        );
+    }
 };

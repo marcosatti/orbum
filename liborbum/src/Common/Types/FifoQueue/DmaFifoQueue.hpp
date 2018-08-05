@@ -52,6 +52,14 @@ public:
         return fifo_queue.has_write_available(n_bytes);
     }
 
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(fifo_queue)
+        );
+    }
+
 private:
     /// The backend for the FIFO queue.
     QueueTy fifo_queue;

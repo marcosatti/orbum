@@ -83,6 +83,19 @@ protected:
     int access_area_index;
     int access_max_block_index;
     int access_block_index;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(memory),
+            CEREAL_NVP(access_read_write),
+            CEREAL_NVP(access_area_index),
+            CEREAL_NVP(access_max_block_index),
+            CEREAL_NVP(access_block_index)
+        );
+    }
 };
 
 /// Class representing the NVRAM for bios versions v0.00 <= x < 1.70.

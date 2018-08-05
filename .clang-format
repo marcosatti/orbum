@@ -31,9 +31,12 @@ IncludeBlocks: 'Regroup'
 IncludeCategories:
   # C++ Standard Library
   - Regex: '<[A-Za-z]+>'
-    Priority: -3
+    Priority: -4
   # Boost Library
   - Regex: '<boost/'
+    Priority: -3
+  # Cereal Library
+  - Regex: '<cereal/'
     Priority: -2
   # Utilities-type Headers
   - Regex: '<.+\.'

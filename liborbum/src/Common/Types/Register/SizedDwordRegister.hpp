@@ -97,6 +97,14 @@ public:
             d = value;
     }
 
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(d)
+        );
+    }
+
 private:
     /// Primitive (sized) storage for register.
     union {

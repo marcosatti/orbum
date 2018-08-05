@@ -176,4 +176,17 @@ private:
     /// Read-only flag.
     /// Writes are silently discarded if turned on.
     bool read_only;
+
+public:
+    template<class Archive>
+    void save(Archive & archive) const
+    {
+        archive.saveBinaryValue(memory.data(), memory.size(), "memory");
+    }
+
+    template<class Archive>
+    void load(Archive & archive)
+    {     
+        archive.loadBinaryValue(memory.data(), memory.size(), "memory");
+    }
 };

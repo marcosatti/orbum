@@ -18,4 +18,17 @@ struct RIopTimers
 
     /// Timer abstractions.
     IopTimersUnit_Base* units[Constants::IOP::Timers::NUMBER_TIMERS];
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(unit_0),
+            CEREAL_NVP(unit_1),
+            CEREAL_NVP(unit_2),
+            CEREAL_NVP(unit_3),
+            CEREAL_NVP(unit_4),
+            CEREAL_NVP(unit_5)
+        );
+    }
 };

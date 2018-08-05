@@ -27,6 +27,15 @@ public:
     /// Resources.
     SizedByteRegister ready;
     DmaFifoQueue<> data_in;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(ready),
+            CEREAL_NVP(data_in)
+        );
+    }
 };
 
 /// CDVD N/S command FIFO register.

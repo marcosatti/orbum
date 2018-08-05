@@ -64,4 +64,13 @@ public:
     /// Reference to the SIO0 stat register, needed to change status bits
     /// depending on the different FIFO queue states (tx full/rx empty).
     Sio0Register_Stat* stat;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(command_queue),
+            CEREAL_NVP(response_queue)
+        );
+    }
 };

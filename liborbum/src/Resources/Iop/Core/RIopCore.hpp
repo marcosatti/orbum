@@ -16,4 +16,14 @@ struct RIopCore
 
     /// Scratchpad memory (1KB). Allocated at 0x1F800000.
     ArrayByteMemory scratchpad_memory;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(r3000),
+            CEREAL_NVP(cop0),
+            CEREAL_NVP(scratchpad_memory)
+        );
+    }
 };

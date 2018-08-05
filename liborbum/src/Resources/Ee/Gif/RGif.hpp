@@ -20,4 +20,23 @@ struct RGif
     SizedWordRegister p3cnt;
     SizedWordRegister p3tag;
     ArrayByteMemory memory_30b0;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(ctrl),
+            CEREAL_NVP(mode),
+            CEREAL_NVP(stat),
+            CEREAL_NVP(memory_3030),
+            CEREAL_NVP(tag0),
+            CEREAL_NVP(tag1),
+            CEREAL_NVP(tag2),
+            CEREAL_NVP(tag3),
+            CEREAL_NVP(cnt),
+            CEREAL_NVP(p3cnt),
+            CEREAL_NVP(p3tag),
+            CEREAL_NVP(memory_30b0)
+        );
+    }
 };

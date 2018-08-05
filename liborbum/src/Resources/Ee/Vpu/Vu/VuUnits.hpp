@@ -72,6 +72,24 @@ public:
     /// Mappers for the VI (Hword) registers to WordRegisters.
     /// Used by different things, eg: ccr registers for VU0 and bus mappings for VU1.
     MapperHwordWordRegister vi_32[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(core_id),
+            CEREAL_NVP(acc),
+            CEREAL_NVP(i),
+            CEREAL_NVP(q),
+            CEREAL_NVP(r),
+            CEREAL_NVP(p),
+            CEREAL_NVP(status),
+            CEREAL_NVP(mac),
+            CEREAL_NVP(clipping),
+            CEREAL_NVP(pc),
+            CEREAL_NVP(cmsar)
+        );
+    }
 };
 
 /// Represents VU0.

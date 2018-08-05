@@ -42,6 +42,16 @@ public:
     SizedWordRegister madr;
     IopDmacChannelRegister_Bcr bcr;
     IopDmacChannelRegister_Chcr_Ty chcr;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(madr),
+            CEREAL_NVP(bcr),
+            CEREAL_NVP(chcr)
+        );
+    }
 };
 
 /// TADR IOP DMAC channel, contains normal registers plus TADR register.

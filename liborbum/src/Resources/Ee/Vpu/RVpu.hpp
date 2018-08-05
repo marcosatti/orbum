@@ -16,4 +16,14 @@ public:
 
     /// VU structure.
     RVu vu;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(stat),
+            CEREAL_NVP(vif),
+            CEREAL_NVP(vu)
+        );
+    }
 };

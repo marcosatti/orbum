@@ -44,6 +44,16 @@ struct Mask
     uword pagemask;
     uword evenodd_mask;
     uword tlb_mask;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(pagemask),
+            CEREAL_NVP(evenodd_mask),
+            CEREAL_NVP(tlb_mask)
+        );
+    }
 };
 
 /// EE Core TLB entry, similar to a MIPS TLB entry.
@@ -66,5 +76,30 @@ struct EeCoreTlbEntry
         bool c;
         bool d;
         bool v;
+
+        template<class Archive>
+        void serialize(Archive & archive)
+        {
+            archive(
+                CEREAL_NVP(pfn),
+                CEREAL_NVP(c),
+                CEREAL_NVP(d),
+                CEREAL_NVP(v)
+            );
+        }
     } physical_info[2]; // Index 0 = Even, index 1 = Odd.
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(mask),
+            CEREAL_NVP(vpn2),
+            CEREAL_NVP(g),
+            CEREAL_NVP(asid),
+            CEREAL_NVP(s),
+            CEREAL_NVP(physical_info[0]),
+            CEREAL_NVP(physical_info[1])
+        );
+    }
 };

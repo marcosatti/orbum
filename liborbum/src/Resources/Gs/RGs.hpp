@@ -44,4 +44,37 @@ public:
 
     // 0x12002000.
     ArrayByteMemory memory_2000;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(crtc),
+            CEREAL_NVP(pmode),
+            CEREAL_NVP(smode1),
+            CEREAL_NVP(smode2),
+            CEREAL_NVP(srfsh),
+            CEREAL_NVP(synch1),
+            CEREAL_NVP(synch2),
+            CEREAL_NVP(syncv),
+            CEREAL_NVP(dispfb1),
+            CEREAL_NVP(display1),
+            CEREAL_NVP(dispfb2),
+            CEREAL_NVP(display2),
+            CEREAL_NVP(extbuf),
+            CEREAL_NVP(extdata),
+            CEREAL_NVP(extwrite),
+            CEREAL_NVP(bgcolor),
+            CEREAL_NVP(memory_00f0),
+            CEREAL_NVP(csr),
+            CEREAL_NVP(imr),
+            CEREAL_NVP(memory_1020),
+            CEREAL_NVP(busdir),
+            CEREAL_NVP(memory_1050),
+            CEREAL_NVP(siglblid),
+            CEREAL_NVP(memory_1090),
+            CEREAL_NVP(memory_1100),
+            CEREAL_NVP(memory_2000)
+        );
+    }
 };

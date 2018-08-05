@@ -16,4 +16,16 @@ struct RIpu
     IpuRegister_Bp bp;
     IpuRegister_Top top;
     ArrayByteMemory memory_2040;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(cmd),
+            CEREAL_NVP(ctrl),
+            CEREAL_NVP(bp),
+            CEREAL_NVP(top),
+            CEREAL_NVP(memory_2040)
+        );
+    }
 };

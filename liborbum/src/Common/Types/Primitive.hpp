@@ -76,6 +76,15 @@ struct uqword
         uw{uw0, uw1, uw2, uw3}
     {
     }
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(hi),
+            CEREAL_NVP(lo)
+        );
+    }
 };
 
 /// Primitive type min/max values.

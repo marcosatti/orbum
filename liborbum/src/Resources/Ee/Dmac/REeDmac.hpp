@@ -55,4 +55,46 @@ struct REeDmac
     ArrayByteMemory memory_f500;
     ArrayByteMemory memory_f530;
     ArrayByteMemory memory_f5a0;
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(channel_vif0),
+            CEREAL_NVP(channel_vif1),
+            CEREAL_NVP(channel_gif),
+            CEREAL_NVP(channel_fromipu),
+            CEREAL_NVP(channel_toipu),
+            CEREAL_NVP(channel_sif0),
+            CEREAL_NVP(channel_sif1),
+            CEREAL_NVP(channel_sif2),
+            CEREAL_NVP(channel_fromspr),
+            CEREAL_NVP(channel_tospr),
+            CEREAL_NVP(ctrl),
+            CEREAL_NVP(stat),
+            CEREAL_NVP(pcr),
+            CEREAL_NVP(sqwc),
+            CEREAL_NVP(rbsr),
+            CEREAL_NVP(rbor),
+            CEREAL_NVP(stadr),
+            CEREAL_NVP(enable_r),
+            CEREAL_NVP(enable_w),
+            CEREAL_NVP(memory_8060),
+            CEREAL_NVP(memory_9060),
+            CEREAL_NVP(memory_a060),
+            CEREAL_NVP(memory_b030),
+            CEREAL_NVP(memory_b440),
+            CEREAL_NVP(memory_c030),
+            CEREAL_NVP(memory_c440),
+            CEREAL_NVP(memory_c830),
+            CEREAL_NVP(memory_d030),
+            CEREAL_NVP(memory_d090),
+            CEREAL_NVP(memory_d440),
+            CEREAL_NVP(memory_d490),
+            CEREAL_NVP(memory_e070),
+            CEREAL_NVP(memory_f500),
+            CEREAL_NVP(memory_f530),
+            CEREAL_NVP(memory_f5a0)
+        );
+    }
 };
