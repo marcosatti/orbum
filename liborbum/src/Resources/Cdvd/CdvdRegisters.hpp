@@ -19,7 +19,7 @@ public:
     static constexpr Bitfield READY_EMPTY = Bitfield(6, 1); // DATA_OUT FIFO empty flag (from PCSX2 / bios).
     static constexpr Bitfield READY_BUSY = Bitfield(7, 1);  // Busy / command pending flag (from bios).
 
-    void initialise() override;
+    void initialize() override;
 
     ubyte read_ubyte() override;
     void write_ubyte(const ubyte value) override;

@@ -19,7 +19,7 @@ public:
     }
 
     /// Initialise memory.
-    void initialise() override
+    void initialize() override
     {
         std::vector<ubyte>(size, initial_value).swap(memory);
     }

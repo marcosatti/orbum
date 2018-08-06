@@ -11,7 +11,7 @@ class WordRegister : public ByteBusMappable
 {
 public:
     /// Initialise register.
-    virtual void initialise() = 0;
+    virtual void initialize() = 0;
 
     /// Read/write functions to access the register, with subclassed functionality.
     virtual ubyte read_ubyte(const size_t offset) = 0;

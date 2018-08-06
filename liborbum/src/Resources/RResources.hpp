@@ -15,7 +15,7 @@
 
 /// PS2 Resources state.
 /// Some resources have dependencies which need to be initialised after the
-/// resources have been created - you will need to manually call initialise().
+/// resources have been created - you will need to manually call initialize().
 struct RResources
 {
     RResources();

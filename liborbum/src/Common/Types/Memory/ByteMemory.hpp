@@ -11,7 +11,7 @@ class ByteMemory : public ByteBusMappable
 {
 public:
     /// Initialise memory.
-    virtual void initialise() = 0;
+    virtual void initialize() = 0;
 
     /// Read or write a value of a given type, to the specified byte index (offset).
     virtual ubyte read_ubyte(const size_t offset) = 0;

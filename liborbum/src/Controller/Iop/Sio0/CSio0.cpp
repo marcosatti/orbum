@@ -75,7 +75,7 @@ void CSio0::handle_reset_check()
         ctrl.insert_field(Sio0Register_Ctrl::RESET_IRQ, 0);
         stat.insert_field(Sio0Register_Stat::IRQ, 0);
 
-        data.initialise();
+        data.initialize();
 
         // Now ready to transmit data.
         // TODO: not totally correct...

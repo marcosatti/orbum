@@ -50,7 +50,7 @@ class Sio0Register_Data : public ByteRegister
 public:
     Sio0Register_Data();
 
-    void initialise() override;
+    void initialize() override;
 
     ubyte read_ubyte() override;
     void write_ubyte(const ubyte value) override;

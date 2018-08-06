@@ -17,7 +17,7 @@ public:
     }
 
     /// Initialise register.
-    void initialise() override
+    void initialize() override
     {
         d = initial_value;
     }

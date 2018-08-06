@@ -20,7 +20,7 @@ public:
     }
 
     /// Initialise memory.
-    void initialise() override
+    void initialize() override
     {
         std::vector<uhword>(size, initial_value).swap(memory);
     }

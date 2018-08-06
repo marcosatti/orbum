@@ -15,7 +15,7 @@ public:
     using QueueTy = SpscQueue<ubyte, Size>;
 
     /// Initialise FIFO queue (set to empty).
-    void initialise() override
+    void initialize() override
     {
         fifo_queue.reset();
     }

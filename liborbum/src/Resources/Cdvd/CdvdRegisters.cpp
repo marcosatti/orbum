@@ -3,10 +3,10 @@
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Core.hpp"
 
-void CdvdRegister_Ns_Rdy_Din::initialise()
+void CdvdRegister_Ns_Rdy_Din::initialize()
 {
-    ready.initialise();
-    data_in.initialise();
+    ready.initialize();
+    data_in.initialize();
 }
 
 ubyte CdvdRegister_Ns_Rdy_Din::read_ubyte()

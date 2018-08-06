@@ -52,7 +52,7 @@ public:
     void write_uword(const size_t offset, const uword value) override;
 
 private:
-    // Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
+    // Variables below needed by logic. Used by the BIOS to initialize/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
     int rdram_sdevid = 0;
     static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 };
