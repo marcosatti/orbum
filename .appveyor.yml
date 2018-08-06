@@ -6,6 +6,9 @@ platform:
 matrix:
   fast_finish: true
 
+install:
+  - git submodule update --init --recursive
+
 before_build:
   - ps: New-Item -ItemType Directory -Force -Path build
   - ps: cd build
