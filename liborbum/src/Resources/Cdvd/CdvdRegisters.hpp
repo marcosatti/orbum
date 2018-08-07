@@ -28,6 +28,7 @@ public:
     SizedByteRegister ready;
     DmaFifoQueue<> data_in;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
@@ -58,4 +59,14 @@ public:
 
     /// Reference to the ready register.
     CdvdRegister_Ns_Rdy_Din* ns_rdy_din;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedByteRegister>(this),
+            CEREAL_NVP(write_latch)
+        );
+    }
 };

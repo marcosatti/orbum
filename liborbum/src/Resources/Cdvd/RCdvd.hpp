@@ -17,8 +17,9 @@
 ///   This is set upon writing to the N_COMMAND register, where it also resets the INTR_STAT.CmdComplete bit. Use this in order to step the state within the emulator.
 ///   INTR_STAT.CmdComplete is set upon completion, and the IOP.INTC.CDROM bit is set.
 /// - N_2005 needs to be set to 0x4E upon boot (ready), seems to use 0x40 after that, or 0x0 if not ready...
-struct RCdvd
+class RCdvd
 {
+public:
     RCdvd();
 
     /// CDVD Registers.
@@ -64,6 +65,7 @@ struct RCdvd
     /// CDVD RTC state.
     CdvdRtc rtc;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

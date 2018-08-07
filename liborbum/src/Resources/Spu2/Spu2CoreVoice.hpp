@@ -22,6 +22,7 @@ public:
     SizedHwordRegister naxh;
     SizedHwordRegister naxl;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

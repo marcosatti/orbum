@@ -9,8 +9,9 @@
 /// REeCore declares the R5900 structure, co-processors, etc, forming the EE Core.
 /// For reference documentation, see the EE Core Users Manual (SCE).
 /// VU0 is attached to the EE Core as COP2, declared separately from here.
-struct REeCore
+class REeCore
 {
+public:
     REeCore();
 
     /// R5900 CPU.
@@ -28,6 +29,7 @@ struct REeCore
     /// Scratchpad memory.
     ArrayByteMemory scratchpad_memory;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

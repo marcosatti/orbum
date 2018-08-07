@@ -115,6 +115,18 @@ private:
 
     /// Updates the count interrupt state.
     void handle_count_interrupt_state_update();
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(interrupts_masked),
+            CEREAL_NVP(operating_context),
+            CEREAL_NVP(count_interrupts_enabled),
+        );
+    }
 };
 
 /// Cause register.
@@ -149,6 +161,16 @@ public:
 private:
     /// IRQ line flags.
     bool irq_lines[8];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(irq_lines)
+        );
+    }
 };
 
 class EeCoreCop0Register_Prid : public SizedWordRegister

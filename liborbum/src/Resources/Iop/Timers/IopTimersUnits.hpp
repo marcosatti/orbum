@@ -16,11 +16,11 @@ public:
     IopTimersUnitRegister_Mode mode;
     SizedWordRegister compare;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
         archive(
-            CEREAL_NVP(unit_id),
             CEREAL_NVP(count),
             CEREAL_NVP(mode),
             CEREAL_NVP(compare)

@@ -4,8 +4,9 @@
 #include "Resources/Iop/Timers/IopTimersUnits.hpp"
 
 /// IOP timers.
-struct RIopTimers
+class RIopTimers
 {
+public:
     RIopTimers();
 
     /// Contains 16-bit (0 -> 2) and 32-bit (3 -> 5) timers.
@@ -19,6 +20,7 @@ struct RIopTimers
     /// Timer abstractions.
     IopTimersUnit_Base* units[Constants::IOP::Timers::NUMBER_TIMERS];
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

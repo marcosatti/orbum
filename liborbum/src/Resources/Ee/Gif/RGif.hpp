@@ -3,8 +3,9 @@
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
-struct RGif
+class RGif
 {
+public:
     RGif();
 
     /// GIF memory mapped registers. See page 21 of EE Users Manual.
@@ -21,6 +22,7 @@ struct RGif
     SizedWordRegister p3tag;
     ArrayByteMemory memory_30b0;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

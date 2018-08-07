@@ -10,8 +10,9 @@
 /// Responsible for communication with controllers and memory cards.
 /// "SIO2 is a DMA interface for the SIO" - IopHW.h from PCSX2. See also IopSio2.h/cpp.
 /// A lot of information can be found through the PS2SDK too: https://github.com/ps2dev/ps2sdk/tree/master/iop/system/sio2log/src.
-struct RSio2
+class RSio2
 {
+public:
     RSio2();
 
     /// SIO2 ports (16 total).
@@ -42,6 +43,7 @@ struct RSio2
     SizedWordRegister register_827c;
     SizedWordRegister intr; // Also known as the STAT register.
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

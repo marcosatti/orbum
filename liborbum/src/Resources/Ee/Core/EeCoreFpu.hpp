@@ -37,6 +37,7 @@ public:
     /// Pointer to the EE Core COP0 coprocessor, needed for the Status register.
     EeCoreCop0* cop0;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

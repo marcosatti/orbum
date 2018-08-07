@@ -84,9 +84,7 @@ void IopTimersUnitRegister_Count::increment_32(const uword value)
 }
 
 IopTimersUnitRegister_Mode::IopTimersUnitRegister_Mode() :
-    write_latch(false),
-    is_enabled(false),
-    event_type(ControllerEventType::Time)
+    write_latch(false)
 {
 }
 
@@ -119,7 +117,7 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, 
     write_latch = true;
 }
 
-uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int unit_id)
+std::pair<uword, ControllerEventType> IopTimersUnitRegister_Mode::calculate_prescale_and_event(const int unit_id)
 {
     if (unit_id < 0 || unit_id > 5)
         throw std::runtime_error("Invalid IOP timer index to determine clock source!");
@@ -136,13 +134,11 @@ uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int uni
         {
             if (extract_field(EVENT_SRC) == 0)
             {
-                event_type = ControllerEventType::Time;
-                return 1;
+                return std::make_pair(1, ControllerEventType::Time);
             }
             else
             {
-                event_type = ControllerEventType::HBlank;
-                return 1;
+                return std::make_pair(1, ControllerEventType::HBlank);
             }
         }
     }
@@ -157,8 +153,7 @@ uword IopTimersUnitRegister_Mode::calculate_prescale_and_set_event(const int uni
         {
             if (extract_field(EVENT_SRC) == 0)
             {
-                event_type = ControllerEventType::Time;
-                return 1;
+                return std::make_pair(1, ControllerEventType::Time);
             }
             else
             {

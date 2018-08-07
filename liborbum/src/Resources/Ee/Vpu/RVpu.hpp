@@ -17,6 +17,7 @@ public:
     /// VU structure.
     RVu vu;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

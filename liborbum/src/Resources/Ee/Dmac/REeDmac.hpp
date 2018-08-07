@@ -6,8 +6,9 @@
 #include "Resources/Ee/Dmac/EeDmacRegisters.hpp"
 
 /// EE DMAC Resources. See page 41 onwards of the EE Users Manual.
-struct REeDmac
+class REeDmac
 {
+public:
     REeDmac();
 
     /// DMA Channels. See page 42 of the EE Users Manual.

@@ -5,8 +5,9 @@
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Ee/Ipu/IpuRegisters.hpp"
 
-struct RIpu
+class RIpu
 {
+public:
     RIpu();
 
     /// IPU memory mapped registers. See page 21 of EE Users Manual.
@@ -17,6 +18,7 @@ struct RIpu
     IpuRegister_Top top;
     ArrayByteMemory memory_2040;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

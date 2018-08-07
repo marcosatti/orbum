@@ -25,7 +25,7 @@
 #define CORE_API SHARED_IMPORT
 #endif
 
-struct RResources;
+class RResources;
 class CController;
 
 /// Core runtime options.

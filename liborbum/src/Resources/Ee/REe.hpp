@@ -57,6 +57,7 @@ public:
     EeRegister_Mch memory_mch; // No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initialisation.
     ArrayByteMemory memory_f450;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

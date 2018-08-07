@@ -62,6 +62,17 @@ public:
 
     // DMA tag holding area, set by the DMAC when a tag is read.
     IopDmatag dma_tag;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(dma_started),
+            CEREAL_NVP(dma_tag)
+        );
+    }
 };
 
 /// The IOP DMAC D_BCR register.
@@ -86,6 +97,16 @@ public:
     // The register value is not meant to change during the transfer.
     // This is directly accessible to the IOP DMAC which manipulates this value.
     size_t transfer_length;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(transfer_length)
+        );
+    }
 };
 
 // A base IOP TO DMAC D_CHCR register.

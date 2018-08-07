@@ -8,8 +8,9 @@
 
 /// IOP DMAC resources.
 /// See the no$psx docs and wisi and SP193's DMA docs for information.
-struct RIopDmac
+class RIopDmac
 {
+public:
     RIopDmac();
 
     /// DMAC Common Registers.
@@ -41,6 +42,7 @@ struct RIopDmac
     /// There are 14 channels in total (to make it even), with the last one being undefined.
     IopDmacChannel channels[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS - 1];
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

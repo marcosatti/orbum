@@ -31,6 +31,7 @@ public:
     EeTimersUnitRegister_Mode mode;
     SizedWordRegister compare;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
@@ -49,4 +50,14 @@ public:
     EeTimersUnit_Hold(const int unit_id);
 
     SizedWordRegister hold;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeTimersUnit_Base>(this),
+            CEREAL_NVP(hold)
+        );
+    }
 };

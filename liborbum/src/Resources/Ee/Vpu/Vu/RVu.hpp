@@ -18,6 +18,7 @@ public:
     /// Shared VU registers.
     VuRegister_Fbrst fbrst;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

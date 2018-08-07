@@ -40,11 +40,11 @@ public:
     VifUnitRegister_Fbrst fbrst;
     VifUnitRegister_Err err;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
         archive(
-            CEREAL_NVP(core_id),
             CEREAL_NVP(r0),
             CEREAL_NVP(r1),
             CEREAL_NVP(r2),

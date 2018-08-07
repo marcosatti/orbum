@@ -17,8 +17,9 @@
 /// some online resources exist for the PS1 which can help with certain parts, but
 /// otherwise it has been reversed engineered. Big props to PCSX2 and No$PSX docs -
 /// most of the implementation is based off their work.
-struct RIop
+class RIop
 {
+public:
     RIop();
 
     /// Sub resources.
@@ -67,6 +68,7 @@ struct RIop
     SizedWordRegister register_2070;
     SizedWordRegister register_3800;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

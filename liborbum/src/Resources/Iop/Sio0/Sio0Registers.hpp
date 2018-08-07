@@ -41,6 +41,7 @@ public:
     /// Scope locked bus writes.
     void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
 };
+
 /// SIO0 data "register".
 /// This is a hybrid FIFO port, where writing and reading access 2 different
 /// FIFO queues. Tx direction means from SIO2 to SIO0, Rx direction means from

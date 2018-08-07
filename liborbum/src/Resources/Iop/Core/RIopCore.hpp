@@ -4,8 +4,9 @@
 #include "Resources/Iop/Core/IopCoreCop0.hpp"
 #include "Resources/Iop/Core/IopCoreR3000.hpp"
 
-struct RIopCore
+class RIopCore
 {
+public:
     RIopCore();
 
     /// R3000 CPU.
@@ -17,6 +18,7 @@ struct RIopCore
     /// Scratchpad memory (1KB). Allocated at 0x1F800000.
     ArrayByteMemory scratchpad_memory;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

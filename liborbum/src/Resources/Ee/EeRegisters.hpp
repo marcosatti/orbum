@@ -32,6 +32,18 @@ private:
     static constexpr const char* SIO_BUFFER_PREFIX = "EE SIO Message";
     std::string sio_buffer;
 #endif
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this)
+#if DEBUG_LOG_SIO_MESSAGES
+            ,CEREAL_NVP(count)
+#endif
+        );
+    }
 };
 
 /// The MCH register class. No information available except for old PCSX2's code.
@@ -55,4 +67,14 @@ private:
     // Variables below needed by logic. Used by the BIOS to initialize/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
     int rdram_sdevid = 0;
     static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(rdram_sdevid)
+        );
+    }
 };

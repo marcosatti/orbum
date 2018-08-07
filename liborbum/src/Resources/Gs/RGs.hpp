@@ -45,6 +45,7 @@ public:
     // 0x12002000.
     ArrayByteMemory memory_2000;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

@@ -38,6 +38,7 @@ public:
     /// See the EE Core instruction QFSRV for more details (SA is only used for this instruction).
     SizedWordRegister sa;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

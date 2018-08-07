@@ -68,6 +68,20 @@ public:
     /// DMAtag holder, contains the current dma tag read, set by the DMAC.
     /// TODO: might be a way to omit this and just use the upper 16-bits, but for now extra information is required.
     EeDmatag dma_tag;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(dma_started),
+            CEREAL_NVP(tag_exit),
+            CEREAL_NVP(tag_stall),
+            CEREAL_NVP(tag_irq),
+            CEREAL_NVP(dma_tag),
+        );
+    }
 };
 
 /// DMAC ADDR (made up) register, used by the MADR, TADR and ASR registers.

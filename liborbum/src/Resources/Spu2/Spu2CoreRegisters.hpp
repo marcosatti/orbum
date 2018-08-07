@@ -93,6 +93,16 @@ public:
     /// Current auto/manual DMA transfer count state, in terms of hwords.
     /// Reset upon the register being written to.
     size_t dma_offset;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedHwordRegister>(this),
+            CEREAL_NVP(dma_offset)
+        );
+    }
 };
 
 /// SPU2 Core STATX register.

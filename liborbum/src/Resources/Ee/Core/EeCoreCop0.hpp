@@ -74,6 +74,7 @@ public:
     /// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
     SizedWordRegister* pcr_registers[Constants::EE::EECore::COP0::NUMBER_PCR_REGISTERS];
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

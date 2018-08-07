@@ -3,8 +3,9 @@
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Resources/Ee/Intc/EeIntcRegisters.hpp"
 
-struct REeIntc
+class REeIntc
 {
+public:
     REeIntc();
 
     /// EE INTC memory mapped registers. See page 24 of EE Users Manual.
@@ -12,6 +13,7 @@ struct REeIntc
     EeIntcRegister_Stat stat;
     ArrayByteMemory memory_f020;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

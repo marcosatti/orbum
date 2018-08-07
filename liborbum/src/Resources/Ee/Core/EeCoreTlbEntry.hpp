@@ -45,6 +45,7 @@ struct Mask
     uword evenodd_mask;
     uword tlb_mask;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
@@ -98,8 +99,7 @@ struct EeCoreTlbEntry
             CEREAL_NVP(g),
             CEREAL_NVP(asid),
             CEREAL_NVP(s),
-            CEREAL_NVP(physical_info[0]),
-            CEREAL_NVP(physical_info[1])
+            CEREAL_NVP(physical_info)
         );
     }
 };

@@ -5,8 +5,9 @@
 
 /// The EE Timers resources.
 /// Defines the 4 timers within the EE, as listed on page 33 onwards of the EE Users Manual.
-struct REeTimers
+class REeTimers
 {
+public:
     REeTimers();
 
     EeTimersUnit_Hold unit_0;
@@ -17,6 +18,7 @@ struct REeTimers
     /// Timer abstractions.
     EeTimersUnit units[Constants::EE::Timers::NUMBER_TIMERS];
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

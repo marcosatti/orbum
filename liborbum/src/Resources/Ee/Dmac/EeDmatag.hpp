@@ -74,4 +74,14 @@ struct EeDmatag
     /// tag1 is for bits 32-63.
     uword tag0;
     uword tag1;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(tag0),
+            CEREAL_NVP(tag1)
+        );
+    }
 };

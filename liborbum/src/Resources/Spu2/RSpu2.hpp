@@ -10,8 +10,9 @@
 /// No official documentation, except for the SPU2 Overview manual which does help.
 /// Most of the implementation comes from PCSX2. Thanks to everyone involved!
 /// The registers are assigned to the 0x1F900000 -> 0x1F900800 space in the IOP.
-struct RSpu2
+class RSpu2
 {
+public:
     RSpu2();
 
     /// SPU2 Cores.
@@ -41,6 +42,7 @@ struct RSpu2
     ArrayByteMemory memory_07b0;
     ArrayByteMemory memory_07ce;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
