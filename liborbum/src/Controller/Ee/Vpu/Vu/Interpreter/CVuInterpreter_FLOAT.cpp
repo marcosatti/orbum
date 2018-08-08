@@ -22,7 +22,8 @@ void CVuInterpreter::ABS(VuUnit_Base* unit, const VuInstruction inst)
             // const float val = reg_source.read_float(field);
             // const float result = to_ps2_float(std::abs(val), flags);
 
-            // ... but it might screw the PS2 floats out, so we do bit ops
+            // ... but it might screw the PS2 floats out, so we do bit ops by
+            // ANDing the value with 0x7FFFFFFF, setting the first bit to 0 (positive).
             const uword raw = reg_source.read_uword(field) & 0x7FFFFFFF;
             const float result = *reinterpret_cast<const float*>(&raw);
 
