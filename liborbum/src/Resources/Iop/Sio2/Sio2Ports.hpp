@@ -1,3 +1,7 @@
+#pragma once
+
+#include <cereal/cereal.hpp>
+
 #include "Resources/Iop/Sio2/Sio2PortRegisters.hpp"
 
 /// Describes an abstract SIO2 port.

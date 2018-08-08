@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 
 /// An IOP DMAtag type, as explained by wisi and SP193's IOP DMA docs.

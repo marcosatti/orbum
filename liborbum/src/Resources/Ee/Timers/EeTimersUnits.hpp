@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Ee/Timers/EeTimersUnitRegisters.hpp"
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Resources/Ee/Vpu/Vif/VifUnitRegisters.hpp"
 

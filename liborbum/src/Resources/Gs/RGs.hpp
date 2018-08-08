@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedDwordRegister.hpp"
 #include "Resources/Gs/Crtc/RCrtc.hpp"

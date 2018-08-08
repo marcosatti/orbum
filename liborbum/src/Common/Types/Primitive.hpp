@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <limits>
 
+#include <cereal/cereal.hpp>
+
 /// PS2 Primative Data Types.
 /// These types should be used throughout the emulator when operating on the PS2 system state.
 /// The PS2 and SCE manuals use this size terminology:

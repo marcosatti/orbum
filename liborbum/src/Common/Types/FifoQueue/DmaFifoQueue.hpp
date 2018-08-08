@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include <cereal/cereal.hpp>
+
 #include <Queues.hpp>
 
 #include "Common/Types/FifoQueue/FifoQueue.hpp"

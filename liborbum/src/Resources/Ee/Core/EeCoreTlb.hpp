@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Primitive.hpp"
 #include "Resources/Ee/Core/EeCoreTlbEntry.hpp"

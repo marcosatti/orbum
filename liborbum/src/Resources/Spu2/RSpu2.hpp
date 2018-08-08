@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Memory/ArrayHwordMemory.hpp"

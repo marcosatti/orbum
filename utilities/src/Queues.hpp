@@ -4,10 +4,11 @@
 #include <mutex>
 #include <stdexcept>
 #include <vector>
+#include <condition_variable>
 
 #include <boost/lockfree/spsc_queue.hpp>
 
-#include <condition_variable>
+#include <cereal/cereal.hpp>
 
 // TODO: the Mpsc/Spmc/Spsc classes are just Mpmc aliases...
 //       In order to support the "events" a mutex is needed

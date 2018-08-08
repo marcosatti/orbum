@@ -1,3 +1,7 @@
+#pragma once
+
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 
 /// Real time clock of the CDVD.

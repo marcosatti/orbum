@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Resources/Cdvd/CdvdFifoQueues.hpp"
 #include "Resources/Cdvd/CdvdNvrams.hpp"
 #include "Resources/Cdvd/CdvdRegisters.hpp"

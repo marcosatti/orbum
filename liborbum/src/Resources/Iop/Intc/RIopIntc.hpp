@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Resources/Iop/Intc/IopIntcRegisters.hpp"
 
 /// IOP INTC resources.

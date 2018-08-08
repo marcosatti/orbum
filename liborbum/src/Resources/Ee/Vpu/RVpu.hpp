@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Resources/Ee/Vpu/Vif/RVif.hpp"
 #include "Resources/Ee/Vpu/VpuRegisters.hpp"
 #include "Resources/Ee/Vpu/Vu/RVu.hpp"

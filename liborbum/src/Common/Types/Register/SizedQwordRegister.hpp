@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 #include "Common/Types/Register/QwordRegister.hpp"
 

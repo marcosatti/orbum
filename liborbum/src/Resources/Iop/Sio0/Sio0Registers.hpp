@@ -1,3 +1,7 @@
+#pragma once
+
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Bitfield.hpp"
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/ByteRegister.hpp"

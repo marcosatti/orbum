@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 
 #include "Common/Types/Register/SizedWordRegister.hpp"

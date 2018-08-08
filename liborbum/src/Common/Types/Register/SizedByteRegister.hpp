@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/ByteRegister.hpp"
 
 /// Sized Byte register.

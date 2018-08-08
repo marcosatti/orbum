@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Resources/Spu2/Spu2CoreConstants.hpp"

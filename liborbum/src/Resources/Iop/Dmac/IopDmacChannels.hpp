@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Iop/Dmac/IopDmacChannelRegisters.hpp"
@@ -65,4 +68,14 @@ public:
     }
 
     SizedWordRegister tadr;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<IopDmacChannel_Base<IopDmacChannelRegister_Chcr_Ty>>(this),
+            CEREAL_NVP(tadr)
+        );
+    }
 };

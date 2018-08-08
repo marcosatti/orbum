@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Resources/Spu2/Spu2CoreVoiceRegisters.hpp"
 

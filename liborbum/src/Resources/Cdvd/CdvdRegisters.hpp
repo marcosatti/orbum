@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 
 #include "Common/Types/Bitfield.hpp"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 /// Custom Mask type, provides useful cached values when constructed.
 class Mask
 {

@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"

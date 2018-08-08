@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Resources/Iop/Core/IopCoreCop0.hpp"
 #include "Resources/Iop/Core/IopCoreR3000.hpp"

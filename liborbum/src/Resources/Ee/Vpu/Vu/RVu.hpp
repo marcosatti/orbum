@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Resources/Ee/Vpu/Vu/VuRegisters.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"

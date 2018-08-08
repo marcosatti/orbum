@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Memory/ArrayHwordMemory.hpp"
 
 /// Contains information about the CDVD NVRAM state, used to store various data.

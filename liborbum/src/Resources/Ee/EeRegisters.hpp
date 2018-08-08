@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
 #include <cereal/access.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/string.hpp>

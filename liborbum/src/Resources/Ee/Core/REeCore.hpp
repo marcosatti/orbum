@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Resources/Ee/Core/EeCoreCop0.hpp"
 #include "Resources/Ee/Core/EeCoreFpu.hpp"

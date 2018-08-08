@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Mips/BranchDelaySlot.hpp"
 #include "Common/Types/Register/PcRegisters.hpp"
