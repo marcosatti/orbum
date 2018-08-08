@@ -1,4 +1,5 @@
 #include <boost/format.hpp>
+#include <cmath>
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
@@ -8,52 +9,129 @@
 
 void CVuInterpreter::ABS(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ABS: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ABS: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.ft()];
+
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            // std::abs uses compiler intrinsics internally, and hence it's
+            // sometimes faster than bit ops ...
+            // const float val = reg_source.read_float(field);
+            // const float result = to_ps2_float(std::abs(val), flags);
+
+            // ... but it might screw the PS2 floats out, so we do bit ops
+            const uword raw = reg_source.read_uword(field) & 0x7FFFFFFF;
+            const float result = *reinterpret_cast<const float*>(&raw);
+            
+            reg_dest.write_float(field, result);
+        }
+    }
 }
 
 void CVuInterpreter::ADD(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADD: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADD: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(field);
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) {
+        if (inst.test_dest_field(field)) {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDbc_0(VuUnit_Base* unit, const VuInstruction inst)
@@ -82,42 +160,108 @@ void CVuInterpreter::ADDbc_3(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::ADDA(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDA: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDA: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(field);
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDAi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDAi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDAi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDAq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDAq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDAq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDAbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) ADDAbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("ADDAbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a + b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::ADDAbc_0(VuUnit_Base* unit, const VuInstruction inst)
@@ -169,32 +313,78 @@ void CVuInterpreter::SUB(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::SUBi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) {
+        if (inst.test_dest_field(field)) {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) {
+        if (inst.test_dest_field(field)) {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBbc_0(VuUnit_Base* unit, const VuInstruction inst)
@@ -223,42 +413,108 @@ void CVuInterpreter::SUBbc_3(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::SUBA(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBA: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBA: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(field);
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBAi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBAi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBAi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBAq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBAq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBAq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBAbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SUBAbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SUBAbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a - b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::SUBAbc_0(VuUnit_Base* unit, const VuInstruction inst)
@@ -287,42 +543,108 @@ void CVuInterpreter::SUBAbc_3(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::MUL(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MUL: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MUL: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(field);
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULbc_0(VuUnit_Base* unit, const VuInstruction inst)
@@ -351,42 +673,108 @@ void CVuInterpreter::MULbc_3(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::MULA(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULA: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULA: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(field);
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULAi(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULAi: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULAi: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->i;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULAq(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULAq: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULAq: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedWordRegister& reg_source_2 = unit->q;
+    SizedQwordRegister& reg_dest = unit->acc;
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float();
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULAbc(VuUnit_Base* unit, const VuInstruction inst, const int idx)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) MULAbc: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("MULAbc: Not implemented.");
-#endif
+    SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
+    SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
+    SizedQwordRegister& reg_dest = unit->acc;
+    // const ubyte bc = inst.bc();
+    const ubyte bc = static_cast<ubyte>(idx);
+    
+    unit->status.clear_flags();
+
+    FpuFlags flags;
+    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    {
+        if (inst.test_dest_field(field)) 
+        {
+            const float a = reg_source_1.read_float(field);
+            const float b = reg_source_2.read_float(bc);
+            const float result = to_ps2_float(a * b, flags);
+            unit->mac.update_vector_field(field, flags);
+            reg_dest.write_float(field, result);
+        } 
+        else 
+        {
+            unit->mac.clear_vector_field(field);
+        }
+    }
 }
 
 void CVuInterpreter::MULAbc_0(VuUnit_Base* unit, const VuInstruction inst)
