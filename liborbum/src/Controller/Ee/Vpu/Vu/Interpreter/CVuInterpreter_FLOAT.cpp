@@ -1,5 +1,6 @@
-#include <boost/format.hpp>
 #include <cmath>
+
+#include <boost/format.hpp>
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
@@ -12,9 +13,9 @@ void CVuInterpreter::ABS(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source = unit->vf[inst.fs()];
     SizedQwordRegister& reg_dest = unit->vf[inst.ft()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             // std::abs uses compiler intrinsics internally, and hence it's
             // sometimes faster than bit ops ...
@@ -24,7 +25,7 @@ void CVuInterpreter::ABS(VuUnit_Base* unit, const VuInstruction inst)
             // ... but it might screw the PS2 floats out, so we do bit ops
             const uword raw = reg_source.read_uword(field) & 0x7FFFFFFF;
             const float result = *reinterpret_cast<const float*>(&raw);
-            
+
             reg_dest.write_float(field, result);
         }
     }
@@ -35,21 +36,21 @@ void CVuInterpreter::ADD(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -61,19 +62,21 @@ void CVuInterpreter::ADDi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) {
-        if (inst.test_dest_field(field)) {
+    for (auto field : VuVectorField::VECTOR_FIELDS)
+    {
+        if (inst.test_dest_field(field))
+        {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -85,21 +88,21 @@ void CVuInterpreter::ADDq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -113,21 +116,21 @@ void CVuInterpreter::ADDbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -163,21 +166,21 @@ void CVuInterpreter::ADDA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -189,21 +192,21 @@ void CVuInterpreter::ADDAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -215,21 +218,21 @@ void CVuInterpreter::ADDAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -243,21 +246,21 @@ void CVuInterpreter::ADDAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a + b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -316,19 +319,21 @@ void CVuInterpreter::SUBi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) {
-        if (inst.test_dest_field(field)) {
+    for (auto field : VuVectorField::VECTOR_FIELDS)
+    {
+        if (inst.test_dest_field(field))
+        {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -340,19 +345,21 @@ void CVuInterpreter::SUBq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) {
-        if (inst.test_dest_field(field)) {
+    for (auto field : VuVectorField::VECTOR_FIELDS)
+    {
+        if (inst.test_dest_field(field))
+        {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -366,21 +373,21 @@ void CVuInterpreter::SUBbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -416,21 +423,21 @@ void CVuInterpreter::SUBA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -442,21 +449,21 @@ void CVuInterpreter::SUBAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -468,21 +475,21 @@ void CVuInterpreter::SUBAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -496,21 +503,21 @@ void CVuInterpreter::SUBAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a - b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -546,21 +553,21 @@ void CVuInterpreter::MUL(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -572,21 +579,21 @@ void CVuInterpreter::MULi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -598,21 +605,21 @@ void CVuInterpreter::MULq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -626,21 +633,21 @@ void CVuInterpreter::MULbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -676,21 +683,21 @@ void CVuInterpreter::MULA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -702,21 +709,21 @@ void CVuInterpreter::MULAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -728,21 +735,21 @@ void CVuInterpreter::MULAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -756,21 +763,21 @@ void CVuInterpreter::MULAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float result = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -807,13 +814,13 @@ void CVuInterpreter::MADD(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -821,8 +828,8 @@ void CVuInterpreter::MADD(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -835,13 +842,13 @@ void CVuInterpreter::MADDi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -849,8 +856,8 @@ void CVuInterpreter::MADDi(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -863,13 +870,13 @@ void CVuInterpreter::MADDq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -877,8 +884,8 @@ void CVuInterpreter::MADDq(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -897,9 +904,9 @@ void CVuInterpreter::MADDbc(VuUnit_Base* unit, const VuInstruction inst, const i
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -907,8 +914,8 @@ void CVuInterpreter::MADDbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -945,13 +952,13 @@ void CVuInterpreter::MADDA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -959,8 +966,8 @@ void CVuInterpreter::MADDA(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -973,13 +980,13 @@ void CVuInterpreter::MADDAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -987,8 +994,8 @@ void CVuInterpreter::MADDAi(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1001,13 +1008,13 @@ void CVuInterpreter::MADDAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1015,8 +1022,8 @@ void CVuInterpreter::MADDAq(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1035,9 +1042,9 @@ void CVuInterpreter::MADDAbc(VuUnit_Base* unit, const VuInstruction inst, const 
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -1045,8 +1052,8 @@ void CVuInterpreter::MADDAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const float result = to_ps2_float(c + a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1083,13 +1090,13 @@ void CVuInterpreter::MSUB(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -1097,8 +1104,8 @@ void CVuInterpreter::MSUB(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1111,13 +1118,13 @@ void CVuInterpreter::MSUBi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1125,8 +1132,8 @@ void CVuInterpreter::MSUBi(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1139,13 +1146,13 @@ void CVuInterpreter::MSUBq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1153,8 +1160,8 @@ void CVuInterpreter::MSUBq(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1173,9 +1180,9 @@ void CVuInterpreter::MSUBbc(VuUnit_Base* unit, const VuInstruction inst, const i
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -1183,8 +1190,8 @@ void CVuInterpreter::MSUBbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1221,13 +1228,13 @@ void CVuInterpreter::MSUBA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -1235,8 +1242,8 @@ void CVuInterpreter::MSUBA(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1249,13 +1256,13 @@ void CVuInterpreter::MSUBAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1263,8 +1270,8 @@ void CVuInterpreter::MSUBAi(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1277,13 +1284,13 @@ void CVuInterpreter::MSUBAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-    
+
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1291,8 +1298,8 @@ void CVuInterpreter::MSUBAq(VuUnit_Base* unit, const VuInstruction inst)
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1311,9 +1318,9 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base* unit, const VuInstruction inst, const 
     unit->status.clear_flags();
 
     FpuFlags flags;
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -1321,8 +1328,8 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const float result = to_ps2_float(c - a * b, flags);
             unit->mac.update_vector_field(field, flags);
             reg_dest.write_float(field, result);
-        } 
-        else 
+        }
+        else
         {
             unit->mac.clear_vector_field(field);
         }
@@ -1359,9 +1366,9 @@ void CVuInterpreter::MAX(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -1376,9 +1383,9 @@ void CVuInterpreter::MAXi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1395,9 +1402,9 @@ void CVuInterpreter::MAXbc(VuUnit_Base* unit, const VuInstruction inst, const in
 
     const ubyte bc = static_cast<ubyte>(idx);
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -1436,9 +1443,9 @@ void CVuInterpreter::MINI(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
@@ -1453,9 +1460,9 @@ void CVuInterpreter::MINIi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
@@ -1472,9 +1479,9 @@ void CVuInterpreter::MINIbc(VuUnit_Base* unit, const VuInstruction inst, const i
 
     const ubyte bc = static_cast<ubyte>(idx);
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
@@ -1509,50 +1516,106 @@ void CVuInterpreter::MINIbc_3(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::OPMULA(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) OPMULA: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("OPMULA: Not implemented.");
-#endif
+    SizedQwordRegister& fs = unit->vf[inst.fs()];
+    SizedQwordRegister& ft = unit->vf[inst.ft()];
+    SizedQwordRegister& acc = unit->acc;
+
+    FpuFlags flags;
+
+    acc.write_float(VuVectorField::X, to_ps2_float(
+                                          fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
+    unit->mac.update_vector_field(VuVectorField::X, flags);
+
+    acc.write_float(VuVectorField::Y, to_ps2_float(
+                                          fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
+    unit->mac.update_vector_field(VuVectorField::Y, flags);
+
+    acc.write_float(VuVectorField::Z, to_ps2_float(
+                                          fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
+    unit->mac.update_vector_field(VuVectorField::Z, flags);
 }
 
 void CVuInterpreter::OPMSUB(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) OPMSUB: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("OPMSUB: Not implemented.");
-#endif
+    SizedQwordRegister& fd = unit->vf[inst.fd()];
+    SizedQwordRegister& fs = unit->vf[inst.fs()];
+    SizedQwordRegister& ft = unit->vf[inst.ft()];
+    SizedQwordRegister& acc = unit->acc;
+
+    FpuFlags flags;
+    fd.write_float(VuVectorField::X, to_ps2_float(
+                                         acc.read_float(VuVectorField::X) - fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
+    unit->mac.update_vector_field(VuVectorField::X, flags);
+
+    fd.write_float(VuVectorField::Y, to_ps2_float(
+                                         acc.read_float(VuVectorField::Y) - fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
+    unit->mac.update_vector_field(VuVectorField::Y, flags);
+
+    fd.write_float(VuVectorField::Z, to_ps2_float(
+                                         acc.read_float(VuVectorField::Z) - fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
+    unit->mac.update_vector_field(VuVectorField::Z, flags);
 }
 
 void CVuInterpreter::DIV(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) DIV: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("DIV: Not implemented.");
-#endif
+    SizedWordRegister& q = unit->q;
+    SizedQwordRegister& fs = unit->vf[inst.fs()];
+    SizedQwordRegister& ft = unit->vf[inst.ft()];
+
+    FpuFlags flags;
+    const float result = to_ps2_float(fs.read_float(inst.fsf()) / ft.read_float(inst.ftf()), flags);
+
+    unit->status.clear_flags();
+    
+    if (ft.read_float(inst.ftf()) == 0.0f) 
+    {
+        if (fs.read_float(inst.ftf()) == 0.0f) {
+            unit->status.insert_field(VuUnitRegister_Status::I, 1);
+        } 
+        else 
+        {
+            unit->status.insert_field(VuUnitRegister_Status::D, 1);
+        }
+    }
+
+    q.write_float(result);
 }
 
 void CVuInterpreter::SQRT(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) SQRT: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("SQRT: Not implemented.");
-#endif
+    SizedWordRegister& q = unit->q;
+    SizedQwordRegister& ft = unit->vf[inst.ft()];
+
+    const float result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
+    
+    unit->status.clear_flags();
+
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) {
+        unit->status.insert_field(VuUnitRegister_Status::I, 1);
+    }
+
+    unit->status.insert_field(VuUnitRegister_Status::D, 0);
+
+    q.write_float(result);
 }
 
 void CVuInterpreter::RSQRT(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) RSQRT: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("RSQRT: Not implemented.");
-#endif
+    SizedWordRegister& q = unit->q;
+    SizedQwordRegister& ft = unit->vf[inst.ft()];
+
+    const float result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
+    
+    unit->status.clear_flags();
+
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) {
+        unit->status.insert_field(VuUnitRegister_Status::I, 1);
+    }
+
+    if (ft.read_float(inst.ftf()) == 0.0f) {
+        unit->status.insert_field(VuUnitRegister_Status::D, 1);
+    }
+
+    FpuFlags flag;
+    q.write_float(to_ps2_float(1 / result, flag));
 }
