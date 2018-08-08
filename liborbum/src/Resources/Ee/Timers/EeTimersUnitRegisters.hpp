@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Controller/ControllerEvent.hpp"
@@ -75,10 +77,10 @@ public:
     /// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
     bool write_latch;
 
-    /// Calculates unit parameters including:
+    /// Returns unit properties:
     /// - The event source this timer follows.
     /// - The prescale that should be set on the count register.
-    std::pair<uword, ControllerEventType> calculate_prescale_and_set_event();
+    std::pair<uword, ControllerEventType> get_properties();
 
 public:
     template<class Archive>

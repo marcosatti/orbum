@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Resources/Iop/Dmac/IopDmatag.hpp"

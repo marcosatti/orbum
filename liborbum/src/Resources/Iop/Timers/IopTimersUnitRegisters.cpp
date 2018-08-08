@@ -117,7 +117,14 @@ void IopTimersUnitRegister_Mode::byte_bus_write_uword(const BusContext context, 
     write_latch = true;
 }
 
-std::pair<uword, ControllerEventType> IopTimersUnitRegister_Mode::calculate_prescale_and_event(const int unit_id)
+bool IopTimersUnitRegister_Mode::is_enabled()
+{
+    bool irq_on_of = extract_field(IopTimersUnitRegister_Mode::IRQ_ON_OF) > 0;
+    bool irq_on_target = extract_field(IopTimersUnitRegister_Mode::IRQ_ON_TARGET) > 0;
+    return irq_on_of || irq_on_target;
+}
+
+std::pair<uword, ControllerEventType> IopTimersUnitRegister_Mode::get_properties(const int unit_id)
 {
     if (unit_id < 0 || unit_id > 5)
         throw std::runtime_error("Invalid IOP timer index to determine clock source!");

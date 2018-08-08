@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Resources/Ee/Dmac/EeDmatag.hpp"
@@ -79,7 +81,7 @@ public:
             CEREAL_NVP(tag_exit),
             CEREAL_NVP(tag_stall),
             CEREAL_NVP(tag_irq),
-            CEREAL_NVP(dma_tag),
+            CEREAL_NVP(dma_tag)
         );
     }
 };

@@ -1,8 +1,9 @@
 #pragma once
 
 /// Custom Mask type, provides useful cached values when constructed.
-struct Mask
+class Mask
 {
+public:
     Mask(const uword pagemask = 0) :
         pagemask(pagemask),
         evenodd_mask(1 << 12),
@@ -63,8 +64,9 @@ public:
 /// See EE Core Users Manual page 120 - 123 about the TLB.
 /// For the internal struct array below, index 0 corresponds to the Even
 /// infomation, and index 1 correponds to the Odd information.
-struct EeCoreTlbEntry
+class EeCoreTlbEntry
 {
+public:
     Mask mask;
     uword vpn2;
     bool g;
@@ -90,6 +92,7 @@ struct EeCoreTlbEntry
         }
     } physical_info[2]; // Index 0 = Even, index 1 = Odd.
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

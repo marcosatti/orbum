@@ -31,6 +31,7 @@ public:
     SizedWordRegister hi;
     SizedWordRegister lo;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

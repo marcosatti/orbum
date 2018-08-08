@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Controller/ControllerEvent.hpp"
@@ -83,18 +85,21 @@ public:
 
     IopTimersUnitRegister_Mode();
 
-    /// When written to, caches timer event source and enabled status (looks at IRQ conditions).
-    /// Also resets the count register on write. Scope locked for the entire duration.
+    /// Sets the write latch, used to trigger resets/initialization.
     void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
     void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
+
+    /// Checks the IRQ conditions to see if this timer is "enabled"
+    /// (timer is only useful if an IRQ condition is set).
+    bool is_enabled();
 
     /// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
     bool write_latch;
 
-    /// Calculates unit parameters:
+    /// Returns unit properties:
     /// - The event source this timer follows.
     /// - The prescale that should be set on the count register.
-    std::pair<uword, ControllerEventType> calculate_prescale_and_event(const int unit_id);
+    std::pair<uword, ControllerEventType> get_properties(const int unit_id);
 
 public:
     template<class Archive>
@@ -102,8 +107,7 @@ public:
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
-            CEREAL_NVP(write_latch),
-            CEREAL_NVP(event_type)
+            CEREAL_NVP(write_latch)
         );
     }
 };

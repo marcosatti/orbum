@@ -42,6 +42,7 @@ public:
     /// Array of COP0 registers.
     SizedWordRegister* registers[Constants::IOP::IOPCore::COP0::NUMBER_REGISTERS];
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

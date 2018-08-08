@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Datetime.hpp"
 
 std::string datetime_fmt(const char* format, const std::time_t datetime)

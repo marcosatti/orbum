@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/ByteRegister.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
@@ -52,7 +54,7 @@ public:
             CEREAL_NVP(transfer_port),
             CEREAL_NVP(transfer_port_count),
             CEREAL_NVP(transfer_direction),
-            CEREAL_NVP(write_latch),
+            CEREAL_NVP(write_latch)
         );
     }
 };

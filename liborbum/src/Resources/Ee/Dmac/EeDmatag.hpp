@@ -5,8 +5,9 @@
 
 /// An EE DMAtag type, as explained on page 58 of the EE Users Manual.
 /// Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred to as 64-bits in the map data below).
-struct EeDmatag
+class EeDmatag
 {
+public:
     static constexpr Bitfield QWC = Bitfield(0, 16);  // For tag0.
     static constexpr Bitfield TAG = Bitfield(16, 16); // For tag0. Needed by CHCR register (all upper 16 bits).
     static constexpr Bitfield PCE = Bitfield(26, 2);  // For tag0.

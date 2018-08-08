@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 

@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Bitfield.hpp"
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"

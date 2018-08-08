@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cereal/access.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/string.hpp>
+
 #include "Common/Options.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 
@@ -38,9 +42,9 @@ public:
     void serialize(Archive & archive)
     {
         archive(
-            cereal::base_class<SizedWordRegister>(this)
+            cereal::base_class<ArrayByteMemory>(this)
 #if DEBUG_LOG_SIO_MESSAGES
-            ,CEREAL_NVP(count)
+            ,CEREAL_NVP(sio_buffer)
 #endif
         );
     }
@@ -73,8 +77,11 @@ public:
     void serialize(Archive & archive)
     {
         archive(
-            cereal::base_class<SizedWordRegister>(this),
+            cereal::base_class<ArrayByteMemory>(this),
             CEREAL_NVP(rdram_sdevid)
         );
     }
 };
+
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(EeRegister_Sio, cereal::specialization::member_serialize);
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(EeRegister_Mch, cereal::specialization::member_serialize);

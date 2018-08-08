@@ -66,6 +66,7 @@ public:
     /// depending on the different FIFO queue states (tx full/rx empty).
     Sio0Register_Stat* stat;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

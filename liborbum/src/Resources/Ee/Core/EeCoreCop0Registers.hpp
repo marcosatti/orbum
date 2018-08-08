@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
@@ -124,7 +126,7 @@ public:
             cereal::base_class<SizedWordRegister>(this),
             CEREAL_NVP(interrupts_masked),
             CEREAL_NVP(operating_context),
-            CEREAL_NVP(count_interrupts_enabled),
+            CEREAL_NVP(count_interrupts_enabled)
         );
     }
 };

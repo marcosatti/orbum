@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Resources/Ee/Dmac/EeDmacChannelRegisters.hpp"
 
@@ -47,6 +49,7 @@ public:
     SizedWordRegister qwc;
     EeDmacChannelRegister_Chcr_Ty chcr;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {
@@ -70,6 +73,16 @@ public:
     }
 
     EeDmacChannelRegister_Addr tadr;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
+            CEREAL_NVP(tadr)
+        );
+    }
 };
 
 /// ASR EE DMAC channel, contains normal TADR registers plus ASR registers.
@@ -83,6 +96,16 @@ public:
     }
 
     EeDmacChannelRegister_Addr asr[2];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeDmacChannel_Tadr<EeDmacChannelRegister_Chcr_Ty>>(this),
+            CEREAL_NVP(asr)
+        );
+    }
 };
 
 /// SADR EE DMAC channel, contains normal registers plus SADR register.
@@ -96,6 +119,16 @@ public:
     }
 
     SizedWordRegister sadr;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
+            CEREAL_NVP(sadr)
+        );
+    }
 };
 
 /// TADR + SADR EE DMAC channel, contains normal registers plus TADR + SADR registers.
@@ -110,4 +143,15 @@ public:
 
     EeDmacChannelRegister_Addr tadr;
     SizedWordRegister sadr;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
+            CEREAL_NVP(tadr),
+            CEREAL_NVP(sadr)
+        );
+    }
 };

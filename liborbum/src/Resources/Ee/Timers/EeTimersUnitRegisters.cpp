@@ -80,7 +80,7 @@ bool EeTimersUnitRegister_Mode::is_gate_hblnk_special()
     return ((extract_field(CLKS) == 3) && (extract_field(GATS) == 0));
 }
 
-std::pair<uword, ControllerEventType> EeTimersUnitRegister_Mode::calculate_prescale_and_set_event()
+std::pair<uword, ControllerEventType> EeTimersUnitRegister_Mode::get_properties()
 {
     uword source = extract_field(CLKS);
     if (source == 0x0)

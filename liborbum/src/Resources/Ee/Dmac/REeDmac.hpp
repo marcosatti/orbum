@@ -57,6 +57,7 @@ public:
     ArrayByteMemory memory_f530;
     ArrayByteMemory memory_f5a0;
 
+public:
     template<class Archive>
     void serialize(Archive & archive)
     {

@@ -118,14 +118,6 @@ public:
             q = value;
     }
 
-    template<class Archive>
-    void serialize(Archive & archive)
-    {
-        archive(
-            CEREAL_NVP(q)
-        );
-    }
-
 private:
     /// Primitive (sized) storage for register.
     union {
@@ -142,4 +134,13 @@ private:
     /// Read-only flag.
     /// Writes are silently discarded if turned on.
     bool read_only;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(q)
+        );
+    }
 };
