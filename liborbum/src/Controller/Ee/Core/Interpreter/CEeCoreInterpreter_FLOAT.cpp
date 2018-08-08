@@ -164,12 +164,13 @@ void CEeCoreInterpreter::DIV_S(const EeCoreInstruction inst)
     if (reg_source1.read_float() != 0 && reg_source2.read_float() == 0)
     {
         csr.set_d_flag_sticky(1);
-        result = static_cast<f32>(Constants::EE::EECore::FPU::FMAX_POS);
+
+        result = *reinterpret_cast<const f32*>(&Constants::EE::EECore::FPU::FMAX_POS);
     }
     else if (reg_source1.read_float() == 0 && reg_source2.read_float() == 0)
     {
         csr.set_i_flag_sticky(1);
-        result = static_cast<f32>(Constants::EE::EECore::FPU::FMAX_POS);
+        result = *reinterpret_cast<const f32*>(&Constants::EE::EECore::FPU::FMAX_POS);
     }
     else
     {
