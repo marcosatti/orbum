@@ -38,8 +38,6 @@ void CVuInterpreter::ADD(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -64,8 +62,6 @@ void CVuInterpreter::ADDi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -89,8 +85,6 @@ void CVuInterpreter::ADDq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -117,8 +111,6 @@ void CVuInterpreter::ADDbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -168,8 +160,6 @@ void CVuInterpreter::ADDA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -194,8 +184,6 @@ void CVuInterpreter::ADDAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -219,8 +207,6 @@ void CVuInterpreter::ADDAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -247,8 +233,6 @@ void CVuInterpreter::ADDAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -299,8 +283,6 @@ void CVuInterpreter::SUB(VuUnit_Base* unit, const VuInstruction inst)
     auto& reg_source1 = unit->vf[inst.fs()];
     auto& reg_source2 = unit->vf[inst.ft()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -320,8 +302,6 @@ void CVuInterpreter::SUBi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -346,8 +326,6 @@ void CVuInterpreter::SUBq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -374,8 +352,6 @@ void CVuInterpreter::SUBbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -425,8 +401,6 @@ void CVuInterpreter::SUBA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -451,8 +425,6 @@ void CVuInterpreter::SUBAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -476,8 +448,6 @@ void CVuInterpreter::SUBAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -504,8 +474,6 @@ void CVuInterpreter::SUBAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -555,8 +523,6 @@ void CVuInterpreter::MUL(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -581,8 +547,6 @@ void CVuInterpreter::MULi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -605,9 +569,7 @@ void CVuInterpreter::MULq(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
-    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];    
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -634,8 +596,6 @@ void CVuInterpreter::MULbc(VuUnit_Base* unit, const VuInstruction inst, const in
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -685,8 +645,6 @@ void CVuInterpreter::MULA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_2 = unit->vf[inst.ft()];
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -711,8 +669,6 @@ void CVuInterpreter::MULAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->i;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -736,8 +692,6 @@ void CVuInterpreter::MULAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_dest = unit->acc;
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -764,8 +718,6 @@ void CVuInterpreter::MULAbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -816,8 +768,6 @@ void CVuInterpreter::MADD(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -844,8 +794,6 @@ void CVuInterpreter::MADDi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -871,8 +819,6 @@ void CVuInterpreter::MADDq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -901,8 +847,6 @@ void CVuInterpreter::MADDbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -954,8 +898,6 @@ void CVuInterpreter::MADDA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -982,8 +924,6 @@ void CVuInterpreter::MADDAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -1009,8 +949,6 @@ void CVuInterpreter::MADDAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1039,8 +977,6 @@ void CVuInterpreter::MADDAbc(VuUnit_Base* unit, const VuInstruction inst, const 
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1092,8 +1028,6 @@ void CVuInterpreter::MSUB(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -1120,8 +1054,6 @@ void CVuInterpreter::MSUBi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -1147,8 +1079,6 @@ void CVuInterpreter::MSUBq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1177,8 +1107,6 @@ void CVuInterpreter::MSUBbc(VuUnit_Base* unit, const VuInstruction inst, const i
     SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1230,8 +1158,6 @@ void CVuInterpreter::MSUBA(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -1258,8 +1184,6 @@ void CVuInterpreter::MSUBAi(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
 
-    unit->status.clear_flags();
-
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -1285,8 +1209,6 @@ void CVuInterpreter::MSUBAq(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source_2 = unit->q;
     SizedQwordRegister& reg_source_3 = unit->acc;
     SizedQwordRegister& reg_dest = unit->acc;
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1315,8 +1237,6 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base* unit, const VuInstruction inst, const 
     SizedQwordRegister& reg_dest = unit->acc;
     // const ubyte bc = inst.bc();
     const ubyte bc = static_cast<ubyte>(idx);
-
-    unit->status.clear_flags();
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -1523,16 +1443,13 @@ void CVuInterpreter::OPMULA(VuUnit_Base* unit, const VuInstruction inst)
 
     FpuFlags flags;
 
-    acc.write_float(VuVectorField::X, to_ps2_float(
-                                          fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
+    acc.write_float(VuVectorField::X, to_ps2_float(fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
     unit->mac.update_vector_field(VuVectorField::X, flags);
 
-    acc.write_float(VuVectorField::Y, to_ps2_float(
-                                          fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
+    acc.write_float(VuVectorField::Y, to_ps2_float(fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
     unit->mac.update_vector_field(VuVectorField::Y, flags);
 
-    acc.write_float(VuVectorField::Z, to_ps2_float(
-                                          fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
+    acc.write_float(VuVectorField::Z, to_ps2_float(fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
     unit->mac.update_vector_field(VuVectorField::Z, flags);
 }
 
@@ -1544,16 +1461,13 @@ void CVuInterpreter::OPMSUB(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& acc = unit->acc;
 
     FpuFlags flags;
-    fd.write_float(VuVectorField::X, to_ps2_float(
-                                         acc.read_float(VuVectorField::X) - fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
+    fd.write_float(VuVectorField::X, to_ps2_float(acc.read_float(VuVectorField::X) - fs.read_float(VuVectorField::Y) * ft.read_float(VuVectorField::Z), flags));
     unit->mac.update_vector_field(VuVectorField::X, flags);
 
-    fd.write_float(VuVectorField::Y, to_ps2_float(
-                                         acc.read_float(VuVectorField::Y) - fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
+    fd.write_float(VuVectorField::Y, to_ps2_float(acc.read_float(VuVectorField::Y) - fs.read_float(VuVectorField::Z) * ft.read_float(VuVectorField::X), flags));
     unit->mac.update_vector_field(VuVectorField::Y, flags);
 
-    fd.write_float(VuVectorField::Z, to_ps2_float(
-                                         acc.read_float(VuVectorField::Z) - fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
+    fd.write_float(VuVectorField::Z, to_ps2_float(acc.read_float(VuVectorField::Z) - fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
     unit->mac.update_vector_field(VuVectorField::Z, flags);
 }
 
@@ -1565,17 +1479,19 @@ void CVuInterpreter::DIV(VuUnit_Base* unit, const VuInstruction inst)
 
     FpuFlags flags;
     const float result = to_ps2_float(fs.read_float(inst.fsf()) / ft.read_float(inst.ftf()), flags);
-
-    unit->status.clear_flags();
     
+    // If ft[ftf] is 0, division by zero occurs...
     if (ft.read_float(inst.ftf()) == 0.0f) 
     {
-        if (fs.read_float(inst.ftf()) == 0.0f) {
-            unit->status.insert_field(VuUnitRegister_Status::I, 1);
+        // ...and if the dividend is 0, set the I flag, otherwise the D flag
+        // See VU Users Manual pg 40
+        if (fs.read_float(inst.fsf()) == 0.0f) 
+        {
+            unit->status.set_i_flag_sticky(1);
         } 
         else 
         {
-            unit->status.insert_field(VuUnitRegister_Status::D, 1);
+            unit->status.set_d_flag_sticky(1);
         }
     }
 
@@ -1588,14 +1504,14 @@ void CVuInterpreter::SQRT(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& ft = unit->vf[inst.ft()];
 
     const float result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
-    
-    unit->status.clear_flags();
 
-    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) {
-        unit->status.insert_field(VuUnitRegister_Status::I, 1);
+    // If the float is negative, set the I flag
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) 
+    {
+        unit->status.set_i_flag_sticky(1);
     }
 
-    unit->status.insert_field(VuUnitRegister_Status::D, 0);
+    unit->status.set_d_flag_sticky(0);
 
     q.write_float(result);
 }
@@ -1604,19 +1520,20 @@ void CVuInterpreter::RSQRT(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedWordRegister& q = unit->q;
     SizedQwordRegister& ft = unit->vf[inst.ft()];
+    SizedQwordRegister& fs = unit->vf[inst.fs()];
 
     const float result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
-    
-    unit->status.clear_flags();
 
-    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) {
-        unit->status.insert_field(VuUnitRegister_Status::I, 1);
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) 
+    {
+        unit->status.set_i_flag_sticky(1);
     }
 
-    if (ft.read_float(inst.ftf()) == 0.0f) {
-        unit->status.insert_field(VuUnitRegister_Status::D, 1);
+    if (ft.read_float(inst.ftf()) == 0.0f) 
+    {
+        unit->status.set_d_flag_sticky(1);
     }
 
     FpuFlags flag;
-    q.write_float(to_ps2_float(1 / result, flag));
+    q.write_float(to_ps2_float(fs.read_float(inst.fsf()) / result, flag));
 }
