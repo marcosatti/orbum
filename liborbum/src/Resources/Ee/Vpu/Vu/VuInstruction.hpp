@@ -50,15 +50,34 @@ struct VuInstruction : public MipsInstruction
         return static_cast<ubyte>(FT.extract_from(value));
     }
 
+    inline ubyte it() const
+    {
+        // FT and IT differ in name only
+        return ft();
+    }
+
     ubyte fs() const
     {
         return static_cast<ubyte>(FS.extract_from(value));
+    }
+
+    inline ubyte is() const
+    {
+        // FS and IS differ in name only
+        return fs();
     }
 
     ubyte fd() const
     {
         return static_cast<ubyte>(FD.extract_from(value));
     }
+
+    inline ubyte id() const
+    {
+        // FD and ID differ in name only
+        return fs();
+    }
+
 
     ubyte opcode() const
     {
@@ -83,6 +102,16 @@ struct VuInstruction : public MipsInstruction
     uhword imm11() const
     {
         return static_cast<uhword>(IMM11.extract_from(value));
+    }
+
+    uhword imm12() const
+    {
+        return static_cast<uhword>(IMM11.extract_from(value) | (DEST.extract_from(value) & 1) << 11);
+    }
+
+    uhword imm15() const
+    {
+        return static_cast<uhword>(IMM11.extract_from(value) | DEST.extract_from(value));
     }
 
     uword imm24() const
