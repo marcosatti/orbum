@@ -94,7 +94,7 @@ void CVuInterpreter::ITOF0(VuUnit_Base* unit, const VuInstruction inst)
             uword u = fs.read_uword(field);
             
             // No fractional parts to worry about, just cast it
-            const f32 result = static_cast<f32>(result);
+            const f32 result = static_cast<f32>(u);
 
             ft.write_float(field, result);
         }
