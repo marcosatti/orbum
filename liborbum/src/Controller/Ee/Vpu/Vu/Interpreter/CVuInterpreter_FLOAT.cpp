@@ -1534,6 +1534,8 @@ void CVuInterpreter::OPMULA(VuUnit_Base* unit, const VuInstruction inst)
 
     acc.write_float(VuVectorField::Z, to_ps2_float(fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
     unit->mac.update_vector_field(VuVectorField::Z, flags);
+
+    unit->mac.clear_vector_field(VuVectorField::W);
 }
 
 void CVuInterpreter::OPMSUB(VuUnit_Base* unit, const VuInstruction inst)
@@ -1552,6 +1554,8 @@ void CVuInterpreter::OPMSUB(VuUnit_Base* unit, const VuInstruction inst)
 
     fd.write_float(VuVectorField::Z, to_ps2_float(acc.read_float(VuVectorField::Z) - fs.read_float(VuVectorField::X) * ft.read_float(VuVectorField::Y), flags));
     unit->mac.update_vector_field(VuVectorField::Z, flags);
+
+    unit->mac.clear_vector_field(VuVectorField::W);
 }
 
 void CVuInterpreter::DIV(VuUnit_Base* unit, const VuInstruction inst)
