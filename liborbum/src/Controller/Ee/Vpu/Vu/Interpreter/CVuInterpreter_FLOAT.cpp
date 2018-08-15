@@ -776,8 +776,16 @@ void CVuInterpreter::MADD(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+
+            // According to the VU manual,
+            // MAC flag and status flag are set according to the final result
+            // and the sticky flags indicate the exceptions raised during multiplication
+            const float multiplied = to_ps2_float(a * b, flags);
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+
             reg_dest.write_float(field, result);
         }
         else
@@ -802,8 +810,13 @@ void CVuInterpreter::MADDi(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -828,8 +841,13 @@ void CVuInterpreter::MADDq(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -856,8 +874,13 @@ void CVuInterpreter::MADDbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -906,8 +929,13 @@ void CVuInterpreter::MADDA(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -932,8 +960,13 @@ void CVuInterpreter::MADDAi(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -958,8 +991,13 @@ void CVuInterpreter::MADDAq(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -986,8 +1024,13 @@ void CVuInterpreter::MADDAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c + a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c + multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1036,8 +1079,13 @@ void CVuInterpreter::MSUB(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1062,8 +1110,13 @@ void CVuInterpreter::MSUBi(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1088,8 +1141,13 @@ void CVuInterpreter::MSUBq(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1116,8 +1174,13 @@ void CVuInterpreter::MSUBbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1166,8 +1229,13 @@ void CVuInterpreter::MSUBA(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(field);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1192,8 +1260,13 @@ void CVuInterpreter::MSUBAi(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1218,8 +1291,13 @@ void CVuInterpreter::MSUBAq(VuUnit_Base* unit, const VuInstruction inst)
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float();
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
@@ -1246,8 +1324,13 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const float a = reg_source_1.read_float(field);
             const float b = reg_source_2.read_float(bc);
             const float c = reg_source_3.read_float(field);
-            const float result = to_ps2_float(c - a * b, flags);
+            
+            const float multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
+
+            const float result = to_ps2_float(c - multiplied, flags);
+            unit->mac.update_vector_field(field, flags);
+            
             reg_dest.write_float(field, result);
         }
         else
