@@ -30,6 +30,20 @@ int count_leading_bits(const sword value);
 /// Example: in 0b...0100, the answer is 2.
 int count_trailing_zeros(const uword value);
 
+/// Parses `source` of type U as a N-bit integer, converting it to an int of type T.
+template<typename T, typename U, unsigned int N>
+T extend_integer(const U source)
+{
+    // For a 5 bit integer, it's the first 4 bits (0b01111)
+    constexpr T value_mask = (1 << (N - 1)) - 1;
+    // For converting a 5 bit to a 32 bit integer, it's the last (32-4) bits
+    constexpr T non_value_mask = (-1) ^ value_mask;
+
+    const T sign = ((T)source >> (N - 1)) & 1;
+    const T value = (T)source & value_mask;
+    return (sign == 0) ? value : non_value_mask | value;
+}
+
 /// Saturates values to the next smallest size, if above the maximum value allowed.
 /// Eg: for 0x02345678 to hword, this becomes 0x7FFF;
 shword saturate_word_to_hword(const sword value);
