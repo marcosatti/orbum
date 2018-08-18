@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Resources/Spu2/Spu2CoreVoiceRegisters.hpp"
 
@@ -21,4 +23,26 @@ public:
     SizedHwordRegister lsaxl;
     SizedHwordRegister naxh;
     SizedHwordRegister naxl;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(voll),
+            CEREAL_NVP(volr),
+            CEREAL_NVP(pitch),
+            CEREAL_NVP(adsr1),
+            CEREAL_NVP(adsr2),
+            CEREAL_NVP(envx),
+            CEREAL_NVP(volxl),
+            CEREAL_NVP(volxr),
+            CEREAL_NVP(ssah),
+            CEREAL_NVP(ssal),
+            CEREAL_NVP(lsaxh),
+            CEREAL_NVP(lsaxl),
+            CEREAL_NVP(naxh),
+            CEREAL_NVP(naxl)
+        );
+    }
 };

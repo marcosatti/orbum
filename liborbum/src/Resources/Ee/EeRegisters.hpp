@@ -1,5 +1,10 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/string.hpp>
+
 #include "Common/Options.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 
@@ -32,6 +37,18 @@ private:
     static constexpr const char* SIO_BUFFER_PREFIX = "EE SIO Message";
     std::string sio_buffer;
 #endif
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<ArrayByteMemory>(this)
+#if DEBUG_LOG_SIO_MESSAGES
+            ,CEREAL_NVP(sio_buffer)
+#endif
+        );
+    }
 };
 
 /// The MCH register class. No information available except for old PCSX2's code.
@@ -52,7 +69,20 @@ public:
     void write_uword(const size_t offset, const uword value) override;
 
 private:
-    // Variables below needed by logic. Used by the BIOS to initialise/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
+    // Variables below needed by logic. Used by the BIOS to initialize/test the RDRAM. See old PCSX2 code (Hw.h/HwRead.cpp/HwWrite.cpp).
     int rdram_sdevid = 0;
     static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<ArrayByteMemory>(this),
+            CEREAL_NVP(rdram_sdevid)
+        );
+    }
 };
+
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(EeRegister_Sio, cereal::specialization::member_serialize);
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(EeRegister_Mch, cereal::specialization::member_serialize);

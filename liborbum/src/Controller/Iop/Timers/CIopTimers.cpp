@@ -58,23 +58,18 @@ void CIopTimers::tick_timer(const ControllerEvent::Type ce_type)
     {
         auto _lock = unit->mode.scope_lock();
 
+        auto[prescale, event_type] = unit->mode.get_properties(unit->unit_id);
+
         // Check if we need to perform reset proceedures.
         if (unit->mode.write_latch)
         {
-            // Work out if the timer is used meaningfully (enabled).
-            bool irq_on_of = unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_OF) > 0;
-            bool irq_on_target = unit->mode.extract_field(IopTimersUnitRegister_Mode::IRQ_ON_TARGET) > 0;
-            unit->mode.is_enabled = irq_on_of || irq_on_target;
-
             // Reset the count register.
-            uword prescale = unit->mode.calculate_prescale_and_set_event(unit->unit_id);
             unit->count.reset_prescale(prescale);
-
             unit->mode.write_latch = false;
         }
 
         // Count only if the timer is "enabled", and mode is equal to the event source.
-        if (!unit->mode.is_enabled || ce_type != unit->mode.event_type)
+        if (!unit->mode.is_enabled() || ce_type != event_type)
             continue;
 
         // Perform a gated tick if on, else increment normally.

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
@@ -67,6 +70,17 @@ private:
     /// Updates the operation context state.
     /// Uses the KSU, ERL and EXL bits.
     void handle_operating_context_update();
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(interrupts_masked),
+            CEREAL_NVP(operating_context)
+        );
+    }
 };
 
 /// Cause register of the IOP COP0.
@@ -95,6 +109,16 @@ public:
 private:
     /// IRQ line flags.
     bool irq_lines[8];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(irq_lines)
+        );
+    }
 };
 
 /// The PRId register of the IOP COP0.

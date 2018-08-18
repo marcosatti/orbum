@@ -12,7 +12,7 @@ class FifoQueue : public ByteBusMappable
 {
 public:
     /// Initialise FIFO queue.
-    virtual void initialise() = 0;
+    virtual void initialize() = 0;
 
     /// Reads byte(s) from the FIFO queue (pop).
     virtual ubyte read_ubyte() = 0;

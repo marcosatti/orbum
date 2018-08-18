@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 #include "Common/Types/Register/DwordRegister.hpp"
 
@@ -17,7 +19,7 @@ public:
     }
 
     /// Initialise register.
-    void initialise() override
+    void initialize() override
     {
         d = initial_value;
     }
@@ -112,4 +114,13 @@ private:
     /// Read-only flag.
     /// Writes are silently discarded if turned on.
     bool read_only;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(d)
+        );
+    }
 };

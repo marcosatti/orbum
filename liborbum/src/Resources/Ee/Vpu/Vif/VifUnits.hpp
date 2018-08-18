@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Resources/Ee/Vpu/Vif/VifUnitRegisters.hpp"
 
@@ -39,4 +41,35 @@ public:
     VifUnitRegister_Stat stat;
     VifUnitRegister_Fbrst fbrst;
     VifUnitRegister_Err err;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(r0),
+            CEREAL_NVP(r1),
+            CEREAL_NVP(r2),
+            CEREAL_NVP(r3),
+            CEREAL_NVP(c0),
+            CEREAL_NVP(c1),
+            CEREAL_NVP(c2),
+            CEREAL_NVP(c3),
+            CEREAL_NVP(cycle),
+            CEREAL_NVP(mask),
+            CEREAL_NVP(mode),
+            CEREAL_NVP(itop),
+            CEREAL_NVP(itops),
+            CEREAL_NVP(base),
+            CEREAL_NVP(ofst),
+            CEREAL_NVP(top),
+            CEREAL_NVP(tops),
+            CEREAL_NVP(mark),
+            CEREAL_NVP(num),
+            CEREAL_NVP(code),
+            CEREAL_NVP(stat),
+            CEREAL_NVP(fbrst),
+            CEREAL_NVP(err)
+        );
+    }
 };

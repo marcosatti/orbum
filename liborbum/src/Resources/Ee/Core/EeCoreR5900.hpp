@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Mips/BranchDelaySlot.hpp"
 #include "Common/Types/Register/PcRegisters.hpp"
@@ -37,4 +39,18 @@ public:
     /// The SA register is used for holding funnel shift instruction results.
     /// See the EE Core instruction QFSRV for more details (SA is only used for this instruction).
     SizedWordRegister sa;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(pc),
+            CEREAL_NVP(bdelay),
+            CEREAL_NVP(gpr),
+            CEREAL_NVP(hi),
+            CEREAL_NVP(lo),
+            CEREAL_NVP(sa)
+        );
+    }
 };

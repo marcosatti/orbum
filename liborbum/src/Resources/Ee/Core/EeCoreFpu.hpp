@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
+#include "Common/Constants.hpp"
 #include "Common/Types/Mips/MipsCoprocessor.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Ee/Core/EeCoreCop0.hpp"
@@ -18,7 +21,7 @@ public:
 
     /// 32 general purpose registers, called FPR's.
     /// See EE Core Users Manual, page 157.
-    SizedWordRegister fpr[32];
+    SizedWordRegister fpr[Constants::EE::EECore::FPU::NUMBER_REGISTERS];
 
     /// Accumulator register, used for multiply-accumulate type instructions.
     /// See EE Core Users Manual, page 157.
@@ -31,8 +34,20 @@ public:
 
     /// Array of control registers.
     /// Only FCR[0] and [31] are defined.
-    SizedWordRegister* fcr[32];
+    SizedWordRegister* fcr[Constants::EE::EECore::FPU::NUMBER_REGISTERS];
 
     /// Pointer to the EE Core COP0 coprocessor, needed for the Status register.
     EeCoreCop0* cop0;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(fpr),
+            CEREAL_NVP(acc),
+            CEREAL_NVP(irr),
+            CEREAL_NVP(csr)
+        );
+    }
 };

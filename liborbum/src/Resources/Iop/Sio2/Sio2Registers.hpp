@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/ByteRegister.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
@@ -41,4 +44,18 @@ public:
 
     /// Write latch, set to true on bus write, cleared by the controller.
     bool write_latch;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(transfer_started),
+            CEREAL_NVP(transfer_port),
+            CEREAL_NVP(transfer_port_count),
+            CEREAL_NVP(transfer_direction),
+            CEREAL_NVP(write_latch)
+        );
+    }
 };

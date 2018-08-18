@@ -10,10 +10,10 @@
 class MapperHwordWordRegister : public WordRegister
 {
 public:
-    /// Initialise register (initialise underlying register).
-    void initialise() override
+    /// Initialise register (initialize underlying register).
+    void initialize() override
     {
-        hword_register->initialise();
+        hword_register->initialize();
     }
 
     ubyte read_ubyte(const size_t offset) override

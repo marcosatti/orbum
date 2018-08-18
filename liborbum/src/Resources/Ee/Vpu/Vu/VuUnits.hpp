@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Bus/ByteBus.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
@@ -72,6 +75,26 @@ public:
     /// Mappers for the VI (Hword) registers to WordRegisters.
     /// Used by different things, eg: ccr registers for VU0 and bus mappings for VU1.
     MapperHwordWordRegister vi_32[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(vf),
+            CEREAL_NVP(vi),
+            CEREAL_NVP(acc),
+            CEREAL_NVP(i),
+            CEREAL_NVP(q),
+            CEREAL_NVP(r),
+            CEREAL_NVP(p),
+            CEREAL_NVP(status),
+            CEREAL_NVP(mac),
+            CEREAL_NVP(clipping),
+            CEREAL_NVP(pc),
+            CEREAL_NVP(cmsar)
+        );
+    }
 };
 
 /// Represents VU0.
@@ -97,6 +120,17 @@ public:
 
     /// Reference to the EE Core COP0 coprocessor, needed for the Status register.
     EeCoreCop0* cop0;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<VuUnit_Base>(this),
+            CEREAL_NVP(memory_micro),
+            CEREAL_NVP(memory_mem)
+        );
+    }
 };
 
 /// Represents VU1.
@@ -108,4 +142,15 @@ public:
     /// VU memory, defined on page 18 of the VU Users Manual.
     ArrayByteMemory memory_micro; // 16 KiB.
     ArrayByteMemory memory_mem;   // 16 KiB.
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<VuUnit_Base>(this),
+            CEREAL_NVP(memory_micro),
+            CEREAL_NVP(memory_mem)
+        );
+    }
 };

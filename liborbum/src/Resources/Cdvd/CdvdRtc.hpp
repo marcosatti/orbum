@@ -1,3 +1,7 @@
+#pragma once
+
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 
 /// Real time clock of the CDVD.
@@ -21,4 +25,19 @@ public:
 private:
     /// Number of microseconds that have passed, used by emulator.
     double microseconds;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(second),
+            CEREAL_NVP(minute),
+            CEREAL_NVP(hour),
+            CEREAL_NVP(day),
+            CEREAL_NVP(month),
+            CEREAL_NVP(year),
+            CEREAL_NVP(microseconds)
+        );
+    }
 };

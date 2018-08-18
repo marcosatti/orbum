@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 /// Custom Mask type, provides useful cached values when constructed.
-struct Mask
+class Mask
 {
+public:
     Mask(const uword pagemask = 0) :
         pagemask(pagemask),
         evenodd_mask(1 << 12),
@@ -44,6 +47,17 @@ struct Mask
     uword pagemask;
     uword evenodd_mask;
     uword tlb_mask;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(pagemask),
+            CEREAL_NVP(evenodd_mask),
+            CEREAL_NVP(tlb_mask)
+        );
+    }
 };
 
 /// EE Core TLB entry, similar to a MIPS TLB entry.
@@ -52,8 +66,9 @@ struct Mask
 /// See EE Core Users Manual page 120 - 123 about the TLB.
 /// For the internal struct array below, index 0 corresponds to the Even
 /// infomation, and index 1 correponds to the Odd information.
-struct EeCoreTlbEntry
+class EeCoreTlbEntry
 {
+public:
     Mask mask;
     uword vpn2;
     bool g;
@@ -66,5 +81,30 @@ struct EeCoreTlbEntry
         bool c;
         bool d;
         bool v;
+
+        template<class Archive>
+        void serialize(Archive & archive)
+        {
+            archive(
+                CEREAL_NVP(pfn),
+                CEREAL_NVP(c),
+                CEREAL_NVP(d),
+                CEREAL_NVP(v)
+            );
+        }
     } physical_info[2]; // Index 0 = Even, index 1 = Odd.
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(mask),
+            CEREAL_NVP(vpn2),
+            CEREAL_NVP(g),
+            CEREAL_NVP(asid),
+            CEREAL_NVP(s),
+            CEREAL_NVP(physical_info)
+        );
+    }
 };

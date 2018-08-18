@@ -1,12 +1,15 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Primitive.hpp"
 
 /// An IOP DMAtag type, as explained by wisi and SP193's IOP DMA docs.
 /// Although a DMAtag is 128-bit long, only the lower 2 x 32-bits are used (referred to as 64-bits in the map data below).
 /// The other 64-bits are discarded upon reading the tag.
-struct IopDmatag
+class IopDmatag
 {
+public:
     static constexpr Bitfield ADDR = Bitfield(0, 24);   // For tag0.
     static constexpr Bitfield IRQ = Bitfield(30, 1);    // For tag0.
     static constexpr Bitfield ERT = Bitfield(31, 1);    // For tag0.
@@ -56,4 +59,14 @@ struct IopDmatag
     /// tag1 is for bits 32-63.
     uword tag0;
     uword tag1;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(tag0),
+            CEREAL_NVP(tag1)
+        );
+    }
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Iop/Timers/IopTimersUnitRegisters.hpp"
 
@@ -15,4 +17,15 @@ public:
     IopTimersUnitRegister_Count count;
     IopTimersUnitRegister_Mode mode;
     SizedWordRegister compare;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(count),
+            CEREAL_NVP(mode),
+            CEREAL_NVP(compare)
+        );
+    }
 };

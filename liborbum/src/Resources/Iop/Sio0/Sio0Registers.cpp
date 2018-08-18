@@ -17,10 +17,10 @@ Sio0Register_Data::Sio0Register_Data() :
 {
 }
 
-void Sio0Register_Data::initialise()
+void Sio0Register_Data::initialize()
 {
-    command_queue.initialise();
-    response_queue.initialise();
+    command_queue.initialize();
+    response_queue.initialize();
 }
 
 ubyte Sio0Register_Data::read_ubyte()

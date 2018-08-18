@@ -3,10 +3,12 @@
 #include <functional>
 #include <mutex>
 #include <stdexcept>
+#include <vector>
+#include <condition_variable>
 
 #include <boost/lockfree/spsc_queue.hpp>
 
-#include <condition_variable>
+#include <cereal/cereal.hpp>
 
 // TODO: the Mpsc/Spmc/Spsc classes are just Mpmc aliases...
 //       In order to support the "events" a mutex is needed
@@ -140,6 +142,36 @@ private:
     std::condition_variable empty_cv;
     std::condition_variable full_cv;
     QueueTy queue;
+
+public:
+    template<class Archive>
+    void save(Archive & archive) const
+    {
+        size_t length = queue.read_available();
+        std::vector<ItemTy> vec(length);
+
+        for (size_t i = 0; i < length; i++)
+          vec[i] = *(&queue.front() + i * sizeof(ItemTy));
+
+        archive(CEREAL_NVP(length));
+        archive.saveBinaryValue(vec.data(), vec.size(), "data");
+    }
+
+    template<class Archive>
+    void load(Archive & archive)
+    {
+        queue.reset();
+
+        size_t length;
+        archive(CEREAL_NVP(length));
+
+        std::vector<ItemTy> vec(length);        
+
+        archive.loadBinaryValue(vec.data(), vec.size(), "data");
+
+        for (const auto& item : vec)
+            queue.push(item);
+    }
 };
 
 /// MPSC blocking/try queue.

@@ -9,6 +9,8 @@
 #include <boost/log/sources/logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 
+#include <cereal/archives/json.hpp>
+
 #include <EnumMap.hpp>
 #include <Macros.hpp>
 #include <Queues.hpp>
@@ -23,7 +25,7 @@
 #define CORE_API SHARED_IMPORT
 #endif
 
-struct RResources;
+class RResources;
 class CController;
 
 /// Core runtime options.
@@ -42,6 +44,7 @@ struct CORE_API CoreOptions
     /* Log dir path.             */ const char* logs_dir_path;
     /* Roms dir path.            */ const char* roms_dir_path;
     /* Memory dumps dir path.    */ const char* dumps_dir_path;
+    /* Save states dir path.     */ const char* save_states_dir_path;
     /* Boot ROM file name.       */ const char* boot_rom_file_name;
     /* ROM1 file name.           */ const char* rom1_file_name;
     /* ROM2 file name.           */ const char* rom2_file_name;
@@ -80,6 +83,7 @@ public:
 
     void run();
     void dump_all_memory() const;
+    void save_state();
 
 private:
     class Core* impl;
@@ -92,6 +96,8 @@ private:
 class Core
 {
 public:
+    static constexpr const char * DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S";
+    
     Core(const CoreOptions& options);
     ~Core();
 
@@ -155,4 +161,11 @@ private:
 
     /// Task executor.
     std::unique_ptr<TaskExecutor> task_executor;
+
+public:
+    /// Save the current emulator state. JSON is used for debugging purposes
+    /// (makes it easy to view state).
+    /// TODO: for debugging only for now - some things are not serialized,
+    /// but most of the important stuff is. 
+    void save_state();
 };

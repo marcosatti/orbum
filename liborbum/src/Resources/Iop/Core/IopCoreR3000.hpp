@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Mips/BranchDelaySlot.hpp"
 #include "Common/Types/Register/PcRegisters.hpp"
@@ -30,4 +32,17 @@ public:
     /// They are 32-bit long.
     SizedWordRegister hi;
     SizedWordRegister lo;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(pc),
+            CEREAL_NVP(bdelay),
+            CEREAL_NVP(gpr),
+            CEREAL_NVP(hi),
+            CEREAL_NVP(lo)
+        );
+    }
 };

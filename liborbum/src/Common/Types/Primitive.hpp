@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <limits>
 
+#include <cereal/cereal.hpp>
+
 /// PS2 Primative Data Types.
 /// These types should be used throughout the emulator when operating on the PS2 system state.
 /// The PS2 and SCE manuals use this size terminology:
@@ -75,6 +77,15 @@ struct uqword
     uqword(const uword uw0, const uword uw1, const uword uw2, const uword uw3) :
         uw{uw0, uw1, uw2, uw3}
     {
+    }
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(hi),
+            CEREAL_NVP(lo)
+        );
     }
 };
 

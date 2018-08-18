@@ -58,12 +58,13 @@ void CEeTimers::tick_timer(const ControllerEvent::Type ce_type)
     for (auto& unit : r.ee.timers.units)
     {
         auto _lock = unit.mode->scope_lock();
+        
+        auto[prescale, event_type] = unit.mode->get_properties();
 
         // Check if we need to perform reset proceedures.
         if (unit.mode->write_latch)
         {
             // Reset the count register.
-            uword prescale = unit.mode->calculate_prescale_and_set_event();
             unit.count->reset_prescale(prescale);
 
             unit.mode->write_latch = false;
@@ -71,7 +72,7 @@ void CEeTimers::tick_timer(const ControllerEvent::Type ce_type)
 
         // Count only if enabled.
         bool unit_enabled = unit.mode->extract_field(EeTimersUnitRegister_Mode::CUE);
-        bool is_same_clk_source = ce_type == unit.mode->event_type;
+        bool is_same_clk_source = ce_type == event_type;
         if (!unit_enabled || !is_same_clk_source)
             continue;
 

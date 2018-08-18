@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
@@ -73,4 +75,52 @@ public:
 
     /// Array of PCR0/PCR1, used by the MFPC/MTPC instructions.
     SizedWordRegister* pcr_registers[Constants::EE::EECore::COP0::NUMBER_PCR_REGISTERS];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(index),
+            CEREAL_NVP(random),
+            CEREAL_NVP(entrylo0),
+            CEREAL_NVP(entrylo1),
+            CEREAL_NVP(context),
+            CEREAL_NVP(pagemask),
+            CEREAL_NVP(wired),
+            CEREAL_NVP(reserved7),
+            CEREAL_NVP(badvaddr),
+            CEREAL_NVP(count),
+            CEREAL_NVP(entryhi),
+            CEREAL_NVP(cause),
+            CEREAL_NVP(compare),
+            CEREAL_NVP(status),
+            CEREAL_NVP(epc),
+            CEREAL_NVP(prid),
+            CEREAL_NVP(config),
+            CEREAL_NVP(reserved17),
+            CEREAL_NVP(reserved18),
+            CEREAL_NVP(reserved19),
+            CEREAL_NVP(reserved20),
+            CEREAL_NVP(reserved21),
+            CEREAL_NVP(reserved22),
+            CEREAL_NVP(badpaddr),
+            CEREAL_NVP(reserved26),
+            CEREAL_NVP(reserved27),
+            CEREAL_NVP(taglo),
+            CEREAL_NVP(taghi),
+            CEREAL_NVP(errorepc),
+            CEREAL_NVP(reserved31),
+            CEREAL_NVP(bpc),
+            CEREAL_NVP(iab),
+            CEREAL_NVP(iabm),
+            CEREAL_NVP(dab),
+            CEREAL_NVP(dabm),
+            CEREAL_NVP(dvb),
+            CEREAL_NVP(dvbm),
+            CEREAL_NVP(pccr),
+            CEREAL_NVP(pcr0),
+            CEREAL_NVP(pcr1)
+        );
+    }
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Iop/Dmac/IopDmacChannelRegisters.hpp"
@@ -8,8 +10,9 @@
 
 /// IOP DMAC resources.
 /// See the no$psx docs and wisi and SP193's DMA docs for information.
-struct RIopDmac
+class RIopDmac
 {
+public:
     RIopDmac();
 
     /// DMAC Common Registers.
@@ -40,4 +43,30 @@ struct RIopDmac
     /// IOP DMA channel abstrations.
     /// There are 14 channels in total (to make it even), with the last one being undefined.
     IopDmacChannel channels[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS - 1];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(pcr0),
+            CEREAL_NVP(icr0),
+            CEREAL_NVP(pcr1),
+            CEREAL_NVP(icr1),
+            CEREAL_NVP(gctrl),
+            CEREAL_NVP(channel_tomdec),
+            CEREAL_NVP(channel_frommdec),
+            CEREAL_NVP(channel_sif2),
+            CEREAL_NVP(channel_cdvd),
+            CEREAL_NVP(channel_spu2c0),
+            CEREAL_NVP(channel_pio),
+            CEREAL_NVP(channel_otclear),
+            CEREAL_NVP(channel_spu2c1),
+            CEREAL_NVP(channel_dev9),
+            CEREAL_NVP(channel_sif0),
+            CEREAL_NVP(channel_sif1),
+            CEREAL_NVP(channel_tosio2),
+            CEREAL_NVP(channel_fromsio2)
+        );
+    }
 };

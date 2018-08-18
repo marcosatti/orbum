@@ -13,6 +13,7 @@
 
 #include <Console.hpp>
 #include <Macros.hpp>
+#include <Datetime.hpp>
 
 #include "Core.hpp"
 
@@ -44,6 +45,7 @@ CoreOptions CoreOptions::make_default()
         "./logs/",
         "./bios/",
         "./dumps/",
+        "./saves/",
         "scph10000.bin",
         "",
         "",
@@ -69,6 +71,31 @@ CoreOptions CoreOptions::make_default()
         1.0,
         1.0,
         1.0};
+}
+
+CoreApi::CoreApi(const CoreOptions& options)
+{
+    impl = new Core(options);
+}
+
+CoreApi::~CoreApi()
+{
+    delete impl;
+}
+
+void CoreApi::run()
+{
+    impl->run();
+}
+
+void CoreApi::dump_all_memory() const
+{
+    impl->dump_all_memory();
+}
+
+void CoreApi::save_state()
+{
+    impl->save_state();
 }
 
 Core::Core(const CoreOptions& options) :
@@ -200,11 +227,10 @@ void Core::dump_all_memory() const
 {
     const std::string dumps_dir_path = options.dumps_dir_path;
     boost::filesystem::create_directory(dumps_dir_path);
-    get_resources().ee.main_memory.write_to_file(dumps_dir_path + "End_Dump_EE.bin");
-    get_resources().iop.main_memory.write_to_file(dumps_dir_path + "End_Dump_IOP.bin");
-    get_resources().spu2.main_memory.write_to_file(dumps_dir_path + "End_Dump_SPU2.bin");
-    get_resources().cdvd.nvram.memory.write_to_file(dumps_dir_path + "End_Dump_CDVD_NVRAM.bin");
-    BOOST_LOG(get_logger()) << "Dumped all memory objects ok";
+    get_resources().ee.main_memory.write_to_file(dumps_dir_path + "dump_ee_" + datetime_fmt(Core::DATETIME_FORMAT) + ".bin");
+    get_resources().iop.main_memory.write_to_file(dumps_dir_path + "dump_iop_" + datetime_fmt(Core::DATETIME_FORMAT) + ".bin");
+    get_resources().spu2.main_memory.write_to_file(dumps_dir_path + "dump_spu2_" + datetime_fmt(Core::DATETIME_FORMAT) + ".bin");
+    get_resources().cdvd.nvram.memory.write_to_file(dumps_dir_path + "dump_cdvd_nvram_" + datetime_fmt(Core::DATETIME_FORMAT) + ".bin");
 }
 
 void Core::init_logging()
@@ -212,30 +238,24 @@ void Core::init_logging()
     const std::string logs_dir_path = options.logs_dir_path;
     boost::filesystem::create_directory(logs_dir_path);
     boost::log::add_common_attributes();
+    
     boost::log::add_file_log(
-        boost::log::keywords::file_name = logs_dir_path + "liborbum_%Y-%m-%d_%H-%M-%S.log",
+        boost::log::keywords::file_name = logs_dir_path + "log_" + datetime_fmt(Core::DATETIME_FORMAT) + ".log",
         boost::log::keywords::format = "[%TimeStamp%]: %Message%");
     boost::log::add_console_log(
         std::cout,
         boost::log::keywords::format = "[%TimeStamp%]: %Message%");
 }
 
-CoreApi::CoreApi(const CoreOptions& options)
+void Core::save_state() 
 {
-    impl = new Core(options);
-}
+    const std::string save_states_dir_path = options.save_states_dir_path;
+    boost::filesystem::create_directory(save_states_dir_path);
 
-CoreApi::~CoreApi()
-{
-    delete impl;
-}
+    std::ofstream fout(save_states_dir_path + "save_" + datetime_fmt(Core::DATETIME_FORMAT) + ".json", std::ios_base::out);
+    if (!fout)
+        throw std::runtime_error("Unable to write file");
 
-void CoreApi::run()
-{
-    impl->run();
-}
-
-void CoreApi::dump_all_memory() const
-{
-    impl->dump_all_memory();
+    cereal::JSONOutputArchive oarchive(fout);
+    oarchive(get_resources());
 }

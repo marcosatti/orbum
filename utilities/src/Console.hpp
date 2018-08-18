@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 /// Prints a string to the console title bar.

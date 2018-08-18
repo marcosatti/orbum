@@ -1,5 +1,10 @@
 #pragma once
 
+#include <utility>
+
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Controller/ControllerEvent.hpp"
@@ -41,6 +46,18 @@ private:
     /// (ie: needs x amount before 1 is added to the count).
     int prescale_target;
     int prescale_count;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(is_overflowed),
+            CEREAL_NVP(prescale_target),
+            CEREAL_NVP(prescale_count)
+        );
+    }
 };
 
 /// The Timer Mode register type.
@@ -69,23 +86,29 @@ public:
 
     IopTimersUnitRegister_Mode();
 
-    /// When written to, caches timer event source and enabled status (looks at IRQ conditions).
-    /// Also resets the count register on write. Scope locked for the entire duration.
+    /// Sets the write latch, used to trigger resets/initialization.
     void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
     void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
+
+    /// Checks the IRQ conditions to see if this timer is "enabled"
+    /// (timer is only useful if an IRQ condition is set).
+    bool is_enabled();
 
     /// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
     bool write_latch;
 
-    /// Holds the cached result of if the timer is enabled, based on the interrupt bits set.
-    /// Used as a way to increase performance by skipping over useless timers.
-    bool is_enabled;
+    /// Returns unit properties:
+    /// - The event source this timer follows.
+    /// - The prescale that should be set on the count register.
+    std::pair<uword, ControllerEventType> get_properties(const int unit_id);
 
-    /// Calculates unit parameters including:
-    /// - Internally sets the event source this timer follows.
-    /// - Returns the prescale that should be set on the count register.
-    uword calculate_prescale_and_set_event(const int unit_id);
-
-    /// Holds the cached result of which event type this timer is following.
-    ControllerEventType event_type;
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(write_latch)
+        );
+    }
 };

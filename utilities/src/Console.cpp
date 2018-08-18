@@ -1,5 +1,4 @@
 #include "Console.hpp"
-
 #include "Macros.hpp"
 
 #if defined(ENV_WINDOWS)

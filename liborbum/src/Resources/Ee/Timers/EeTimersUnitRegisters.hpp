@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Common/Types/ScopeLock.hpp"
 #include "Controller/ControllerEvent.hpp"
@@ -32,6 +35,18 @@ private:
     /// (ie: needs x amount before 1 is added to the count).
     int prescale_target;
     int prescale_count;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(is_overflowed),
+            CEREAL_NVP(prescale_target),
+            CEREAL_NVP(prescale_count)
+        );
+    }
 };
 
 /// The Timer Mode register type. See EE Users Manual page 36.
@@ -63,11 +78,18 @@ public:
     /// Bus write latch. Signifies that the timer unit should be reset (ie: reset count with the prescale below).
     bool write_latch;
 
-    /// Calculates unit parameters including:
-    /// - Internally sets the event source this timer follows.
-    /// - Returns the prescale that should be set on the count register.
-    uword calculate_prescale_and_set_event();
+    /// Returns unit properties:
+    /// - The event source this timer follows.
+    /// - The prescale that should be set on the count register.
+    std::pair<uword, ControllerEventType> get_properties();
 
-    /// Holds the cached result of which event type this timer is following.
-    ControllerEventType event_type;
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedWordRegister>(this),
+            CEREAL_NVP(write_latch)
+        );
+    }
 };

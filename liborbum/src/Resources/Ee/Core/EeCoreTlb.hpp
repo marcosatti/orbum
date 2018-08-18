@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Primitive.hpp"
 #include "Resources/Ee/Core/EeCoreTlbEntry.hpp"
@@ -39,4 +41,13 @@ private:
 
     /// Checks whether the given virtual address matches the TLB entry by index.
     bool is_match(const uptr vaddress, const int index) const;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(tlb_entries)
+        );
+    }
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Mips/MipsCoprocessor0.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
@@ -41,4 +43,29 @@ public:
 
     /// Array of COP0 registers.
     SizedWordRegister* registers[Constants::IOP::IOPCore::COP0::NUMBER_REGISTERS];
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(indx),
+            CEREAL_NVP(rand),
+            CEREAL_NVP(tlbl),
+            CEREAL_NVP(bpc),
+            CEREAL_NVP(context),
+            CEREAL_NVP(bda),
+            CEREAL_NVP(pidmask),
+            CEREAL_NVP(dcic),
+            CEREAL_NVP(badv),
+            CEREAL_NVP(bdam),
+            CEREAL_NVP(tlbh),
+            CEREAL_NVP(bpcm),
+            CEREAL_NVP(status),
+            CEREAL_NVP(cause),
+            CEREAL_NVP(epc),
+            CEREAL_NVP(prid),
+            CEREAL_NVP(erreg)
+        );
+    }
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Bus/ByteBus.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Primitive.hpp"
@@ -56,4 +58,27 @@ public:
     SizedWordRegister register_f420;
     EeRegister_Mch memory_mch; // No documentation (except for name)! From old PCSX2. Needed by the BIOS for RDRAM initialisation.
     ArrayByteMemory memory_f450;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(core),
+            CEREAL_NVP(dmac),
+            CEREAL_NVP(intc),
+            CEREAL_NVP(timers),
+            CEREAL_NVP(ipu),
+            CEREAL_NVP(gif),
+            CEREAL_NVP(vpu),
+            CEREAL_NVP(main_memory),
+            CEREAL_NVP(unknown_1a000000),
+            CEREAL_NVP(memory_sio),
+            CEREAL_NVP(register_f400),
+            CEREAL_NVP(memory_f410),
+            CEREAL_NVP(register_f420),
+            CEREAL_NVP(memory_mch),
+            CEREAL_NVP(memory_f450)
+        );
+    }
 };

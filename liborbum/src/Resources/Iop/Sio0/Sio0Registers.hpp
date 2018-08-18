@@ -1,3 +1,7 @@
+#pragma once
+
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Bitfield.hpp"
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/ByteRegister.hpp"
@@ -41,6 +45,7 @@ public:
     /// Scope locked bus writes.
     void byte_bus_write_uhword(const BusContext context, const usize offset, const uhword value) override;
 };
+
 /// SIO0 data "register".
 /// This is a hybrid FIFO port, where writing and reading access 2 different
 /// FIFO queues. Tx direction means from SIO2 to SIO0, Rx direction means from
@@ -50,7 +55,7 @@ class Sio0Register_Data : public ByteRegister
 public:
     Sio0Register_Data();
 
-    void initialise() override;
+    void initialize() override;
 
     ubyte read_ubyte() override;
     void write_ubyte(const ubyte value) override;
@@ -64,4 +69,14 @@ public:
     /// Reference to the SIO0 stat register, needed to change status bits
     /// depending on the different FIFO queue states (tx full/rx empty).
     Sio0Register_Stat* stat;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(command_queue),
+            CEREAL_NVP(response_queue)
+        );
+    }
 };

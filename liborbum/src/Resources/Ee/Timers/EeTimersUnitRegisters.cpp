@@ -50,8 +50,7 @@ void EeTimersUnitRegister_Count::reset_prescale(const int prescale_target)
 }
 
 EeTimersUnitRegister_Mode::EeTimersUnitRegister_Mode() :
-    write_latch(false),
-    event_type(ControllerEventType::Time)
+    write_latch(false)
 {
 }
 
@@ -81,28 +80,24 @@ bool EeTimersUnitRegister_Mode::is_gate_hblnk_special()
     return ((extract_field(CLKS) == 3) && (extract_field(GATS) == 0));
 }
 
-uword EeTimersUnitRegister_Mode::calculate_prescale_and_set_event()
+std::pair<uword, ControllerEventType> EeTimersUnitRegister_Mode::get_properties()
 {
     uword source = extract_field(CLKS);
     if (source == 0x0)
     {
-        event_type = ControllerEventType::Time;
-        return 1;
+        return std::make_pair(1, ControllerEventType::Time);
     }
     else if (source == 0x1)
     {
-        event_type = ControllerEventType::Time;
-        return 16;
+        return std::make_pair(16, ControllerEventType::Time);
     }
     else if (source == 0x2)
     {
-        event_type = ControllerEventType::Time;
-        return 256;
+        return std::make_pair(256, ControllerEventType::Time);
     }
     else if (source == 0x3)
     {
-        event_type = ControllerEventType::HBlank;
-        return 1;
+        return std::make_pair(1, ControllerEventType::HBlank);
     }
     else
     {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Types/Register/SizedWordRegister.hpp"
 #include "Resources/Ee/Timers/EeTimersUnitRegisters.hpp"
 
@@ -30,6 +32,17 @@ public:
     EeTimersUnitRegister_Count count;
     EeTimersUnitRegister_Mode mode;
     SizedWordRegister compare;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(count),
+            CEREAL_NVP(mode),
+            CEREAL_NVP(compare)
+        );
+    }
 };
 
 /// EE Timer with HOLD register, for timers 0 and 1.
@@ -39,4 +52,14 @@ public:
     EeTimersUnit_Hold(const int unit_id);
 
     SizedWordRegister hold;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<EeTimersUnit_Base>(this),
+            CEREAL_NVP(hold)
+        );
+    }
 };

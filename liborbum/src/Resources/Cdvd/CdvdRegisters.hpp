@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+#include <cereal/types/polymorphic.hpp>
+
 #include "Common/Types/Bitfield.hpp"
 #include "Common/Types/FifoQueue/DmaFifoQueue.hpp"
 #include "Common/Types/Register/ByteRegister.hpp"
@@ -19,7 +22,7 @@ public:
     static constexpr Bitfield READY_EMPTY = Bitfield(6, 1); // DATA_OUT FIFO empty flag (from PCSX2 / bios).
     static constexpr Bitfield READY_BUSY = Bitfield(7, 1);  // Busy / command pending flag (from bios).
 
-    void initialise() override;
+    void initialize() override;
 
     ubyte read_ubyte() override;
     void write_ubyte(const ubyte value) override;
@@ -27,6 +30,16 @@ public:
     /// Resources.
     SizedByteRegister ready;
     DmaFifoQueue<> data_in;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(ready),
+            CEREAL_NVP(data_in)
+        );
+    }
 };
 
 /// CDVD N/S command FIFO register.
@@ -49,4 +62,14 @@ public:
 
     /// Reference to the ready register.
     CdvdRegister_Ns_Rdy_Din* ns_rdy_din;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            cereal::base_class<SizedByteRegister>(this),
+            CEREAL_NVP(write_latch)
+        );
+    }
 };

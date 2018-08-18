@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/cereal.hpp>
+
 #include "Common/Constants.hpp"
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Memory/ArrayHwordMemory.hpp"
@@ -10,8 +12,9 @@
 /// No official documentation, except for the SPU2 Overview manual which does help.
 /// Most of the implementation comes from PCSX2. Thanks to everyone involved!
 /// The registers are assigned to the 0x1F900000 -> 0x1F900800 space in the IOP.
-struct RSpu2
+class RSpu2
 {
+public:
     RSpu2();
 
     /// SPU2 Cores.
@@ -40,4 +43,26 @@ struct RSpu2
     ArrayByteMemory memory_0746;
     ArrayByteMemory memory_07b0;
     ArrayByteMemory memory_07ce;
+
+public:
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(core_0),
+            CEREAL_NVP(core_1),
+            CEREAL_NVP(spdif_out),
+            CEREAL_NVP(spdif_irqinfo),
+            CEREAL_NVP(spdif_07c4),
+            CEREAL_NVP(spdif_mode),
+            CEREAL_NVP(spdif_media),
+            CEREAL_NVP(spdif_07ca),
+            CEREAL_NVP(spdif_protect),
+            CEREAL_NVP(main_memory),
+            CEREAL_NVP(memory_0346),
+            CEREAL_NVP(memory_0746),
+            CEREAL_NVP(memory_07b0),
+            CEREAL_NVP(memory_07ce)
+        );
+    }
 };

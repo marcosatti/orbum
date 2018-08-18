@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include <cereal/cereal.hpp>
+
 #include <Queues.hpp>
 
 #include "Common/Types/FifoQueue/FifoQueue.hpp"
@@ -15,7 +17,7 @@ public:
     using QueueTy = SpscQueue<ubyte, Size>;
 
     /// Initialise FIFO queue (set to empty).
-    void initialise() override
+    void initialize() override
     {
         fifo_queue.reset();
     }
@@ -50,6 +52,14 @@ public:
     bool has_write_available(const size_t n_bytes) const override
     {
         return fifo_queue.has_write_available(n_bytes);
+    }
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive(
+            CEREAL_NVP(fifo_queue)
+        );
     }
 
 private:

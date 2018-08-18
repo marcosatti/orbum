@@ -9,7 +9,7 @@ class HwordMemory
 {
 public:
     /// Initialise memory.
-    virtual void initialise() = 0;
+    virtual void initialize() = 0;
 
     /// Read or write a value of a given type, to the specified hword index (offset).
     virtual uhword read_uhword(const size_t offset) = 0;
