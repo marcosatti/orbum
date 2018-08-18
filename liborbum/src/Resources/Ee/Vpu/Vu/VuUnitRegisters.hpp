@@ -32,9 +32,6 @@ public:
     void set_o_flag_sticky(const uword value);
     void set_i_flag_sticky(const uword value);
     void set_d_flag_sticky(const uword value);
-
-    /// Clear the non-sticky flags, which should be done on each instruction that modifies this register.
-    void clear_flags();
 };
 
 /// The VU unit MAC flags register.
