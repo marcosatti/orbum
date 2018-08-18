@@ -113,19 +113,19 @@ f32 to_ps2_float(const f32 value, FpuFlags& flags)
     {
         // Set OF flag, clamp to +/- Fmax.
         flags.OF = true;
-        return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::FMAX_NEG : Constants::EE::EECore::FPU::FMAX_POS);
+        return *reinterpret_cast<const f32*>(flags.SF ? &Constants::EE::EECore::FPU::FMAX_NEG : &Constants::EE::EECore::FPU::FMAX_POS);
     }
     case FP_NAN:
     {
         // Set OF flag, clamp to +/- Fmax.
         flags.OF = true;
-        return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::FMAX_NEG : Constants::EE::EECore::FPU::FMAX_POS);
+        return *reinterpret_cast<const f32*>(flags.SF ? &Constants::EE::EECore::FPU::FMAX_NEG : &Constants::EE::EECore::FPU::FMAX_POS);
     }
     case FP_SUBNORMAL:
     {
         // Set UF flag, round to +/- 0.
         flags.UF = true;
-        return static_cast<f32>(flags.SF ? Constants::EE::EECore::FPU::ZERO_NEG : Constants::EE::EECore::FPU::ZERO_POS);
+        return *reinterpret_cast<const f32*>(flags.SF ? &Constants::EE::EECore::FPU::ZERO_NEG : &Constants::EE::EECore::FPU::ZERO_POS);
     }
     case FP_ZERO:
     {

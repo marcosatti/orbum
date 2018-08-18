@@ -35,7 +35,7 @@ public:
     VifUnitRegister_Ofst ofst;
     VifUnitRegister_Top top;
     VifUnitRegister_Tops tops;
-    VifUnitRegister_Mask mark;
+    VifUnitRegister_Mark mark;
     VifUnitRegister_Num num;
     VifUnitRegister_Code code;
     VifUnitRegister_Stat stat;

@@ -122,7 +122,7 @@ void CEeCoreInterpreter::RSQRT_S(const EeCoreInstruction inst)
     if (val_source2 == 0.0F)
     {
         csr.set_d_flag_sticky(1);
-        result = static_cast<f32>(Constants::EE::EECore::FPU::FMAX_POS);
+        result = *reinterpret_cast<const f32*>(&Constants::EE::EECore::FPU::FMAX_POS);
     }
     else if (val_source2 < 0.0F)
     {

@@ -27,12 +27,13 @@ public:
     /// Read/write floats - wrappers around read/write uword.
     f32 read_float(const size_t offset)
     {
-        return static_cast<f32>(read_uword(offset));
+        const uword raw = read_uword(offset);
+        return *reinterpret_cast<const f32*>(&raw);
     }
 
     void write_float(const size_t offset, const f32 value)
     {
-        write_uword(offset, static_cast<uword>(value));
+        write_uword(offset, *reinterpret_cast<const uword*>(&value));
     }
 
     /// ByteBusMappable overrides.
