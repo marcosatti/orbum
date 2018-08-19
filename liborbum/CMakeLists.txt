@@ -159,6 +159,8 @@ set(COMMON_SRC_FILES
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Gif/RGif.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Gif/RGif.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Gif/Giftag.hpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Gif/GifRegisters.cpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Gif/GifRegisters.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/EeIntcConstants.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/EeIntcRegisters.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Intc/EeIntcRegisters.hpp"

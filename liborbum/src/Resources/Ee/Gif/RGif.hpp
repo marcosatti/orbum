@@ -4,6 +4,7 @@
 
 #include "Common/Types/Memory/ArrayByteMemory.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
+#include "Resources/Ee/Gif/GifRegisters.hpp"
 
 class RGif
 {
@@ -11,7 +12,7 @@ public:
     RGif();
 
     /// GIF memory mapped registers. See page 21 of EE Users Manual.
-    SizedWordRegister ctrl;
+    GifRegister_Ctrl ctrl;
     SizedWordRegister mode;
     SizedWordRegister stat;
     ArrayByteMemory memory_3030;

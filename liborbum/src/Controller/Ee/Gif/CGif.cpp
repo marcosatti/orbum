@@ -28,7 +28,6 @@ void CGif::handle_event(const ControllerEvent& event)
 
 int CGif::time_to_ticks(const double time_us)
 {
-    // TODO: find out for sure.
     int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::EEBUS_CLK_SPEED * core->get_options().system_bias_gif);
 
     if (ticks < 10)
@@ -47,23 +46,56 @@ int CGif::time_to_ticks(const double time_us)
 int CGif::time_step(const int ticks_available)
 {
     auto& r = core->get_resources();
+    auto& ctrl = r.ee.gif.ctrl;
     auto& fifo_gif_path1 = r.fifo_gif_path1;
     auto& fifo_gif_path2 = r.fifo_gif_path2;
     auto& fifo_gif_path3 = r.fifo_gif_path3;
 
+    // Prioritise paths by 1 -> 2 -> 3.
+    // TODO: GIF code does not do path arbitration currently.
+    // See EE Users Manual page 149. 
     DmaFifoQueue<>* paths[3] = {&fifo_gif_path1, &fifo_gif_path2, &fifo_gif_path3};
 
-    uqword tag;
     for (auto& fifo : paths)
     {
-        if (fifo->has_read_available(NUMBER_BYTES_IN_QWORD))
-            fifo->read(reinterpret_cast<ubyte*>(&tag), NUMBER_BYTES_IN_QWORD);
+        if (!fifo->has_read_available(NUMBER_BYTES_IN_QWORD))
+            continue;
+
+        uqword data;
+        fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_QWORD);
+
+        if (!ctrl.transfer_started)
+        {
+            ctrl.transfer_started = true;
+            handle_tag(Giftag(data));
+        }
         else
         {
-            if (fifo->has_read_available(1))
-                BOOST_LOG(Core::get_logger()) << "Still data for the GIF waiting...";
+            handle_data(data);
+        }
+
+        if (ctrl.transfer_end_of_packet)
+        {
+            if (ctrl.transfer_data_count == ctrl.transfer_data_target)
+                ctrl.transfer_started = false;
         }
     }
 
     return 1;
+}
+
+void CGif::handle_tag(const Giftag tag)
+{
+    auto& r = core->get_resources();
+    auto& ctrl = r.ee.gif.ctrl;
+
+    ctrl.transfer_data_count = 0;
+}
+
+void CGif::handle_data(const uqword data)
+{
+    auto& r = core->get_resources();
+    auto& ctrl = r.ee.gif.ctrl;
+    
+    ctrl.transfer_data_count += 1;
 }
