@@ -46,6 +46,24 @@ int CGif::time_to_ticks(const double time_us)
 
 int CGif::time_step(const int ticks_available)
 {
-    // Not yet implemented.
-    return ticks_available;
+    auto& r = core->get_resources();
+    auto& fifo_gif_path1 = r.fifo_gif_path1;
+    auto& fifo_gif_path2 = r.fifo_gif_path2;
+    auto& fifo_gif_path3 = r.fifo_gif_path3;
+
+    DmaFifoQueue<>* paths[3] = {&fifo_gif_path1, &fifo_gif_path2, &fifo_gif_path3};
+
+    uqword tag;
+    for (auto& fifo : paths)
+    {
+        if (fifo->has_read_available(NUMBER_BYTES_IN_QWORD))
+            fifo->read(reinterpret_cast<ubyte*>(&tag), NUMBER_BYTES_IN_QWORD);
+        else
+        {
+            if (fifo->has_read_available(1))
+                BOOST_LOG(Core::get_logger()) << "Still data for the GIF waiting...";
+        }
+    }
+
+    return 1;
 }

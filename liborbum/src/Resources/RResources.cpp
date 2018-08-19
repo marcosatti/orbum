@@ -119,7 +119,7 @@ void initialise_ee_dmac(RResources* r)
     // Init DMA FIFO queues.
     r->ee.dmac.channels[0].dma_fifo_queue = &r->fifo_vif0;
     r->ee.dmac.channels[1].dma_fifo_queue = &r->fifo_vif1;
-    r->ee.dmac.channels[2].dma_fifo_queue = &r->fifo_gif;
+    r->ee.dmac.channels[2].dma_fifo_queue = &r->fifo_gif_path3;
     r->ee.dmac.channels[3].dma_fifo_queue = &r->fifo_fromipu;
     r->ee.dmac.channels[4].dma_fifo_queue = &r->fifo_toipu;
     r->ee.dmac.channels[5].dma_fifo_queue = &r->fifo_sif0;
@@ -419,7 +419,7 @@ void initialise_ee(RResources* r)
             // FIFO Registers.
             r->ee.bus.map(0x10004000, &r->fifo_vif0);
             r->ee.bus.map(0x10005000, &r->fifo_vif1);
-            r->ee.bus.map(0x10006000, &r->fifo_gif);
+            r->ee.bus.map(0x10006000, &r->fifo_gif_path3);
             r->ee.bus.map(0x10007000, &r->fifo_fromipu);
             r->ee.bus.map(0x10007010, &r->fifo_toipu);
 

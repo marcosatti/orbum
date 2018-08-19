@@ -43,6 +43,29 @@ static_assert(sizeof(f32) * CHAR_BIT == 32, "f32 is not 32-bits long!");
 /// TODO: Look into boost/multiprecision (uint128_t) for endianess and compiler ordering?
 struct uqword
 {
+    constexpr uqword() :
+        lo(0),
+        hi(0)
+    {
+    }
+
+    constexpr uqword(const udword ud) :
+        lo(ud),
+        hi(ud)
+    {
+    }
+
+    constexpr uqword(const udword lo, const udword hi) :
+        lo(lo),
+        hi(hi)
+    {
+    }
+
+    constexpr uqword(const uword uw0, const uword uw1, const uword uw2, const uword uw3) :
+        uw{uw0, uw1, uw2, uw3}
+    {
+    }
+
     union {
         struct
         {
@@ -55,29 +78,6 @@ struct uqword
         uhword uh[8];
         ubyte ub[16];
     };
-
-    uqword() :
-        lo(0),
-        hi(0)
-    {
-    }
-
-    uqword(const udword ud) :
-        lo(ud),
-        hi(ud)
-    {
-    }
-
-    uqword(const udword lo, const udword hi) :
-        lo(lo),
-        hi(hi)
-    {
-    }
-
-    uqword(const uword uw0, const uword uw1, const uword uw2, const uword uw3) :
-        uw{uw0, uw1, uw2, uw3}
-    {
-    }
 
     template<class Archive>
     void serialize(Archive & archive)

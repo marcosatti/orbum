@@ -54,10 +54,10 @@ public:
     SbusRegister_F300 sbus_f300; // TODO: related to psx sif2/gpu? Investigate (see PCSX2).
     SizedWordRegister sbus_f380;
 
-    /// FIFO Queue registers, attached to both the EE and IOP DMAC channels.
+    /// DMA FIFO queues, attached to both the EE and IOP DMAC channels.
     DmaFifoQueue<> fifo_vif0;
     DmaFifoQueue<> fifo_vif1;
-    DmaFifoQueue<> fifo_gif;
+    DmaFifoQueue<> fifo_gif_path3;
     DmaFifoQueue<> fifo_fromipu;
     DmaFifoQueue<> fifo_toipu;
     DmaFifoQueue<> fifo_sif0;
@@ -73,6 +73,10 @@ public:
     DmaFifoQueue<> fifo_dev9;
     DmaFifoQueue<> fifo_fromsio2;
     DmaFifoQueue<> fifo_tosio2;
+
+    // GIF FIFO queues (alternate paths).
+    DmaFifoQueue<> fifo_gif_path1;
+    DmaFifoQueue<> fifo_gif_path2;
 
 public:
     template<class Archive>
@@ -99,7 +103,7 @@ public:
             CEREAL_NVP(sbus_f380),
             CEREAL_NVP(fifo_vif0),
             CEREAL_NVP(fifo_vif1),
-            CEREAL_NVP(fifo_gif),
+            CEREAL_NVP(fifo_gif_path3),
             CEREAL_NVP(fifo_fromipu),
             CEREAL_NVP(fifo_toipu),
             CEREAL_NVP(fifo_sif0),

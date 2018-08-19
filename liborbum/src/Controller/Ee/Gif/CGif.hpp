@@ -2,6 +2,7 @@
 
 #include "Controller/CController.hpp"
 
+/// GIF interface, controls data between the EE (EE Core, VPU1) to the GS.
 class CGif : public CController
 {
 public:

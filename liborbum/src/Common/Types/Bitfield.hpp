@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "Common/Types/Primitive.hpp"
+
 /// Describes a bitfield within a primitive value.
 struct Bitfield
 {
@@ -48,6 +50,35 @@ struct Bitfield
         T cleaned_value = value & (~shifted_mask<T>());
         T cleaned_field_value = (field_value & unshifted_mask<T>()) << start;
         return cleaned_value | cleaned_field_value;
+    }
+
+    template <typename To, typename From>
+    constexpr To extract_from(const From value) const
+    {
+        return static_cast<To>((value & shifted_mask<From>()) >> start);
+    }
+
+    template <typename To, typename From>
+    constexpr To insert_into(const From value, const From field_value) const
+    {
+        From cleaned_value = value & (~shifted_mask<From>());
+        From cleaned_field_value = (field_value & unshifted_mask<From>()) << start;
+        return static_cast<To>(cleaned_value | cleaned_field_value);
+    }
+
+    /// qword template specialization.
+    template <typename To>
+    constexpr To extract_from(const uqword value) const
+    {
+        // Most (all?) bitfields within uqword types are aligned to 64 bit 
+        // boundaries... But this should be easy to implement if needed.
+        if ((start < 64) && ((length + start) >= 64))
+            throw std::logic_error("Cannot extract bitfield over 64 bit boundary from a uqword [not implemented]");
+
+        if (start < 64)
+            return Bitfield(start, length).extract_from<To>(value.lo);
+        else
+            return Bitfield(start - 64, length).extract_from<To>(value.hi);
     }
 
     constexpr bool operator==(const Bitfield& rhs) const
