@@ -4,6 +4,9 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 
+// All instructions here are related to the EFU (Elementary Functio Unit).
+// All results produced by those instructions are stored in the P register.
+
 void CVuInterpreter::ESADD(VuUnit_Base* unit, const VuInstruction inst)
 {
     // P = VF[fs](x)^2 + VF[fs](y)^2 + VF[fs](z)^2

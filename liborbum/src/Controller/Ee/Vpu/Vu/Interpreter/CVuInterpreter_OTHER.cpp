@@ -5,6 +5,13 @@
 #include "Core.hpp"
 #include "Resources/RResources.hpp"
 
+// Miscellaneous VU instructions.
+// Includes:-
+// - random (R* instructions)
+// - branching & jumps
+// - GIF/VIF interaction
+// - WAIT* instruciotns (synchronization between different VU execution units)
+
 void CVuInterpreter::NOP(VuUnit_Base* unit, const VuInstruction inst)
 {
     return;
@@ -35,7 +42,7 @@ void CVuInterpreter::RINIT(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source = unit->vf[inst.fs()];
     SizedWordRegister& reg_dest = unit->r;
     
-    // Writes a float consisting of 23 bits of R as mantissa and 001111111 as exp+sign.
+    // Writes a float consisting 23 bits of R as mantissa and 001111111 as exp+sign.
     constexpr uword append = 0b001111111 << 23;
     const f32 fsf = (reg_source.read_uword(inst.fsf()) & 0x7FFFFF) | append;
     reg_dest.write_uword(fsf);
@@ -102,7 +109,7 @@ void CVuInterpreter::IBEQ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() == reg_source_2.read_uhword()) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
@@ -112,7 +119,7 @@ void CVuInterpreter::IBGEZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() >= 0) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
@@ -122,7 +129,7 @@ void CVuInterpreter::IBGTZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() > 0) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
@@ -132,7 +139,7 @@ void CVuInterpreter::IBLEZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() <= 0) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
@@ -142,7 +149,7 @@ void CVuInterpreter::IBLTZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() < 0) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
@@ -153,13 +160,13 @@ void CVuInterpreter::IBNE(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() != reg_source_2.read_uhword()) 
     {
-        unit->pc.offset(inst.imm11() * 8);
+        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
     }
 }
 
 void CVuInterpreter::B(VuUnit_Base* unit, const VuInstruction inst)
 {
-    unit->pc.offset(inst.imm11() * 8);
+    unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
 }
 
 void CVuInterpreter::BAL(VuUnit_Base* unit, const VuInstruction inst)
@@ -168,7 +175,7 @@ void CVuInterpreter::BAL(VuUnit_Base* unit, const VuInstruction inst)
 
     constexpr uword next_addr_offset = 16;
     reg_dest.write_uhword(unit->pc.read_uword() + next_addr_offset);
-    unit->pc.offset(inst.imm11() * 8);
+    unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
 }
 
 void CVuInterpreter::JR(VuUnit_Base* unit, const VuInstruction inst)

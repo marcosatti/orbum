@@ -3,6 +3,9 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 
+// All instructions here are related to the flags.
+// Mostly straightforward.
+
 void CVuInterpreter::FSAND(VuUnit_Base* unit, const VuInstruction inst)
 {
     const uword status = unit->status.read_uword();

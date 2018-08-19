@@ -8,6 +8,8 @@
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 #include "Utilities/Utilities.hpp"
 
+// All instructions here are related to float arithmetic.
+// 
 // Explaination for the comments:
 // VF[x]    - the x-th register of VF
 // VF[x](f) - the f field of the x-th register of VF, if not specified

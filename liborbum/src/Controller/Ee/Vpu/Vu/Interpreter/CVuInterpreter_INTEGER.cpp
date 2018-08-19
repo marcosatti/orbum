@@ -5,6 +5,8 @@
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 #include "Utilities/Utilities.hpp"
 
+// All instructions here are related to integer arithmetics.
+
 void CVuInterpreter::IADD(VuUnit_Base* unit, const VuInstruction inst)
 {
     // VI[id] = VI[is] + VI[it]
