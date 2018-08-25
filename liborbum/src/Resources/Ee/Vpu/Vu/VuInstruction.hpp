@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Types/Mips/MipsInstruction.hpp"
+#include "Common/Types/Mips/MipsInstructionInfo.hpp"
 #include "Resources/Ee/Vpu/Vu/VuVectorField.hpp"
 
 /// A VU instruction type, which is used to extract information out of the parsed 32-bit value.
@@ -101,7 +102,7 @@ struct VuInstruction : public MipsInstruction
 
     ubyte imm5() const {
         // FD is IMM5 in some instructions
-        return static_cast<uhword>(FD.extract_from(value));
+        return static_cast<ubyte>(FD.extract_from(value));
     }
 
     uhword imm11() const
@@ -116,7 +117,7 @@ struct VuInstruction : public MipsInstruction
 
     uhword imm15() const
     {
-        return static_cast<uhword>(IMM11.extract_from(value) | DEST.extract_from(value));
+        return static_cast<uhword>(IMM11.extract_from(value) | (DEST.extract_from(value) << 11));
     }
 
     uword imm24() const

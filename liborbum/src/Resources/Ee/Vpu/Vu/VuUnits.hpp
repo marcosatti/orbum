@@ -12,6 +12,7 @@
 #include "Common/Types/Register/PcRegisters.hpp"
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Common/Types/Register/SizedQwordRegister.hpp"
+#include "Controller/Ee/Vpu/Vu/VuBranchDelaySlot.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnitRegisters.hpp"
 
 class EeCoreCop0;
@@ -62,6 +63,7 @@ public:
     /// Also known as the TPC (termination PC), treated as the same thing.
     /// Made to be 32-bit even though only 16-bits are used (bus maps easier).
     WordPcRegister pc;
+    VuBranchDelaySlot<> bdelay;
 
     /// The CMSAR register used for micro subroutine execution.
     /// See VU Users Manual page 202.

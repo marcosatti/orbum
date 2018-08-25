@@ -4,6 +4,7 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 #include "Resources/RResources.hpp"
+#include "Utilities/Utilities.hpp"
 
 // Miscellaneous VU instructions.
 // Includes:-
@@ -44,7 +45,7 @@ void CVuInterpreter::RINIT(VuUnit_Base* unit, const VuInstruction inst)
     
     // Writes a float consisting 23 bits of R as mantissa and 001111111 as exp+sign.
     constexpr uword append = 0b001111111 << 23;
-    const f32 fsf = (reg_source.read_uword(inst.fsf()) & 0x7FFFFF) | append;
+    const uword fsf = (reg_source.read_uword(inst.fsf()) & 0x7FFFFF) | append;
     reg_dest.write_uword(fsf);
 }
 
@@ -109,7 +110,8 @@ void CVuInterpreter::IBEQ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() == reg_source_2.read_uhword()) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
@@ -119,7 +121,8 @@ void CVuInterpreter::IBGEZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() >= 0) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
@@ -129,7 +132,8 @@ void CVuInterpreter::IBGTZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() > 0) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
@@ -139,7 +143,8 @@ void CVuInterpreter::IBLEZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() <= 0) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
@@ -149,7 +154,8 @@ void CVuInterpreter::IBLTZ(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() < 0) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
@@ -160,29 +166,43 @@ void CVuInterpreter::IBNE(VuUnit_Base* unit, const VuInstruction inst)
 
     if (reg_source_1.read_uhword() != reg_source_2.read_uhword()) 
     {
-        unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+        shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+        unit->bdelay.set_branch_itype(unit->pc, offset_by);
     }
 }
 
 void CVuInterpreter::B(VuUnit_Base* unit, const VuInstruction inst)
 {
-    unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+    shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+    unit->bdelay.set_branch_itype(unit->pc, offset_by);
 }
 
 void CVuInterpreter::BAL(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_dest = unit->vi[inst.it()];
 
-    constexpr uword next_addr_offset = 16;
-    reg_dest.write_uhword(unit->pc.read_uword() + next_addr_offset);
-    unit->pc.offset(inst.imm11() * NUMBER_BYTES_IN_DWORD);
+    if (unit->bdelay.is_branch_pending())
+    {
+        // If there is a pending branch, the linked register becomes the
+        // second instruction of said branch
+        reg_dest.write_uhword((unit->bdelay.get_branch_pc() + 8) / 8);
+    }
+    else
+    {
+        // Otherwise, the linked register is the instruction next to the
+        // branch delay slot
+        reg_dest.write_uhword((unit->pc.read_uword() + 2 * 8) / 8);
+    }
+
+    shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
+    unit->bdelay.set_branch_itype(unit->pc, offset_by);
 }
 
 void CVuInterpreter::JR(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
 
-    unit->pc.write_uword(reg_source_1.read_uhword());
+    unit->bdelay.set_branch_jtype(unit->pc, reg_source_1.read_uhword());
 }
 
 void CVuInterpreter::JALR(VuUnit_Base* unit, const VuInstruction inst)
@@ -190,9 +210,20 @@ void CVuInterpreter::JALR(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
     SizedHwordRegister& reg_dest = unit->vi[inst.it()];
 
-    constexpr uword next_addr_offset = 16;
-    reg_dest.write_uhword(unit->pc.read_uword() + next_addr_offset);
-    unit->pc.write_uword(reg_source_1.read_uhword());
+    if (unit->bdelay.is_branch_pending())
+    {
+        // If there is a pending branch, the linked register becomes the
+        // second instruction of said branch
+        reg_dest.write_uhword((unit->bdelay.get_branch_pc() + 8) / 8);
+    }
+    else
+    {
+        // Otherwise, the linked register is the instruction next to the
+        // branch delay slot
+        reg_dest.write_uhword((unit->pc.read_uword() + 2 * 8) / 8);
+    }
+
+    unit->bdelay.set_branch_jtype(unit->pc, reg_source_1.read_uhword());
 }
 
 void CVuInterpreter::WAITP(VuUnit_Base* unit, const VuInstruction inst)

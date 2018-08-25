@@ -67,7 +67,7 @@ void CVuInterpreter::LQ(VuUnit_Base* unit, const VuInstruction inst)
         if (inst.test_dest_field(field)) 
         {
             // Investigate?: Endianness scares me
-            reg_dest.write_float(source.uw[field], field);
+            reg_dest.write_uword(field, source.uw[field]);
         }
     }
 }
@@ -88,7 +88,7 @@ void CVuInterpreter::LQD(VuUnit_Base* unit, const VuInstruction inst)
         if (inst.test_dest_field(field)) 
         {
             // Investigate?: Endianness scares me
-            reg_dest.write_float(source.uw[field], field);
+            reg_dest.write_uword(field, source.uw[field]);
         }
     }
 }
@@ -106,7 +106,7 @@ void CVuInterpreter::LQI(VuUnit_Base* unit, const VuInstruction inst)
         if (inst.test_dest_field(field)) 
         {
             // Investigate?: Endianness scares me
-            reg_dest.write_float(source.uw[field], field);
+            reg_dest.write_uword(field, source.uw[field]);
         }
     }
 
