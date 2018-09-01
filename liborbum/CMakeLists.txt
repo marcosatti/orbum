@@ -188,6 +188,7 @@ set(COMMON_SRC_FILES
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/VpuRegisters.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/RVu.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/RVu.hpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstruction.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstruction.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuRegisters.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuUnitRegisters.cpp"
