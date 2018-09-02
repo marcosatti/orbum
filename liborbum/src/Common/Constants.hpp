@@ -177,6 +177,9 @@ struct Constants
 
         struct VPU
         {
+            // A VU Instruction is 8 bytes long
+            static constexpr const int SIZE_VU_INSTRUCTION = 8;
+
             struct VIF
             {
                 // Number of instructions is based off the CMD field in the VIFcode, without the leading interrupt bit and the m bit in the UNPACK instructions. See EE Users Manual page 87.

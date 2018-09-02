@@ -3,122 +3,92 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 
+// All instructions here are related to the flags.
+// Mostly straightforward.
+
 void CVuInterpreter::FSAND(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FSAND: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FSAND: Not implemented.");
-#endif
+    const uword status = unit->status.read_uword();
+    SizedHwordRegister& vi = unit->vi[inst.it()];
+    vi.write_uhword(status & inst.imm12());
 }
 
 void CVuInterpreter::FSEQ(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FSEQ: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FSEQ: Not implemented.");
-#endif
+    const uword status = unit->status.read_uword();
+    SizedHwordRegister& vi = unit->vi[inst.it()];
+    vi.write_uhword((uhword)(status == inst.imm12()));
 }
 
 void CVuInterpreter::FSOR(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FSOR: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FSOR: Not implemented.");
-#endif
+    const uword status = unit->status.read_uword();
+    SizedHwordRegister& vi = unit->vi[inst.it()];
+    vi.write_uhword(status | inst.imm12());
 }
 
 void CVuInterpreter::FSSET(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FSSET: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FSSET: Not implemented.");
-#endif
+    SizedWordRegister& status = unit->status;
+    // Set the sticky flags
+    // 0xFC0 == 0b111111000000
+    status.write_uhword(0, status.read_uhword(0) | (inst.imm12() & 0xFC0));
 }
 
 void CVuInterpreter::FMAND(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FMAND: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FMAND: Not implemented.");
-#endif
+    SizedHwordRegister& it = unit->vi[inst.it()];
+    const uword mac = unit->mac.read_uword();
+    const uhword is = unit->vi[inst.is()].read_uhword();
+    it.write_uhword(mac & is);
 }
 
 void CVuInterpreter::FMEQ(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FMEQ: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FMEQ: Not implemented.");
-#endif
+    SizedHwordRegister& it = unit->vi[inst.it()];
+    const uword mac = unit->mac.read_uword();
+    const uhword is = unit->vi[inst.is()].read_uhword();
+    it.write_uhword(mac == is);
 }
 
 void CVuInterpreter::FMOR(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FMOR: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FMOR: Not implemented.");
-#endif
+    SizedHwordRegister& it = unit->vi[inst.it()];
+    const uword mac = unit->mac.read_uword();
+    const uhword is = unit->vi[inst.is()].read_uhword();
+    it.write_uhword(mac | is);
 }
 
 void CVuInterpreter::FCAND(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FCAND: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FCAND: Not implemented.");
-#endif
+    SizedHwordRegister& vi01 = unit->vi[1];
+    const uword clipping = unit->clipping.read_uword();
+    vi01.write_uhword((clipping & inst.imm24()) > 0);
 }
 
 void CVuInterpreter::FCEQ(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FCEQ: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FCEQ: Not implemented.");
-#endif
+    SizedHwordRegister& vi01 = unit->vi[1];
+    const uword clipping = unit->clipping.read_uword();
+    vi01.write_uhword(clipping == inst.imm24());
 }
 
 void CVuInterpreter::FCOR(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FCOR: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FCOR: Not implemented.");
-#endif
+    SizedHwordRegister& vi01 = unit->vi[1];
+    const uword clipping = unit->clipping.read_uword();
+    vi01.write_uhword((clipping | inst.imm24()) == 0xFFFFFF);
 }
 
 void CVuInterpreter::FCSET(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FCSET: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FCSET: Not implemented.");
-#endif
+    SizedWordRegister& clipping = unit->clipping;
+    clipping.write_uword(inst.imm24());
 }
 
 void CVuInterpreter::FCGET(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO: Implement.
-#if defined(BUILD_DEBUG)
-    BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) FCGET: Not implemented.") % __FILENAME__ % __LINE__;
-#else
-    throw std::runtime_error("FCGET: Not implemented.");
-#endif
+    SizedHwordRegister& it = unit->vi[inst.it()];
+    const uhword clipping = unit->clipping.read_uword();
+    it.write_uhword(clipping & 0xFFF);
 }
