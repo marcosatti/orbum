@@ -76,7 +76,7 @@ public:
         return current_slot > 0;
     }
 
-private:
+protected:
     size_t current_slot;
     uptr branch_pc;
 

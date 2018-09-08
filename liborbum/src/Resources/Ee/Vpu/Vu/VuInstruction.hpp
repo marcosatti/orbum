@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common/Types/Mips/MipsInstruction.hpp"
+#include "Common/Types/Mips/MipsInstructionInfo.hpp"
 #include "Resources/Ee/Vpu/Vu/VuVectorField.hpp"
 
 /// A VU instruction type, which is used to extract information out of the parsed 32-bit value.
@@ -50,15 +51,34 @@ struct VuInstruction : public MipsInstruction
         return static_cast<ubyte>(FT.extract_from(value));
     }
 
+    inline ubyte it() const
+    {
+        // FT and IT differ in name only
+        return ft();
+    }
+
     ubyte fs() const
     {
         return static_cast<ubyte>(FS.extract_from(value));
+    }
+
+    inline ubyte is() const
+    {
+        // FS and IS differ in name only
+        return fs();
     }
 
     ubyte fd() const
     {
         return static_cast<ubyte>(FD.extract_from(value));
     }
+
+    inline ubyte id() const
+    {
+        // FD and ID differ in name only
+        return fs();
+    }
+
 
     ubyte opcode() const
     {
@@ -80,9 +100,24 @@ struct VuInstruction : public MipsInstruction
         return static_cast<ubyte>(FSF.extract_from(value));
     }
 
+    ubyte imm5() const {
+        // FD is IMM5 in some instructions
+        return static_cast<ubyte>(FD.extract_from(value));
+    }
+
     uhword imm11() const
     {
         return static_cast<uhword>(IMM11.extract_from(value));
+    }
+
+    uhword imm12() const
+    {
+        return static_cast<uhword>(IMM11.extract_from(value) | (DEST.extract_from(value) & 1) << 11);
+    }
+
+    uhword imm15() const
+    {
+        return static_cast<uhword>(IMM11.extract_from(value) | (DEST.extract_from(value) << 11));
     }
 
     uword imm24() const

@@ -3,6 +3,14 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 
+// All instructions here are related to the conversion between floating-points and 
+// fixed-points.
+//
+// FTOIx are the instructions for converting a float to a fixed with (32-x) bits
+// as the integer part, and (x) bits as the fractional part.
+//
+// ITOFx are the instructions for converting a fixed to a float.
+
 void CVuInterpreter::FTOI0(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedQwordRegister& ft = unit->vf[inst.ft()];

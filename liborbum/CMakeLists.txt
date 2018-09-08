@@ -81,6 +81,7 @@ set(COMMON_SRC_FILES
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Timers/CEeTimers.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vif/CVif.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vif/CVif.hpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vu/VuBranchDelaySlot.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter_CONVERT.cpp"
