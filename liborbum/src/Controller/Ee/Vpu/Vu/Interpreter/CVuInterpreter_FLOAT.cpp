@@ -38,6 +38,10 @@ void CVuInterpreter::ABS(VuUnit_Base* unit, const VuInstruction inst)
 
             reg_dest.write_float(field, result);
         }
+        else
+        {
+            unit->mac.clear_vector_field(field);
+        }
     }
 }
 
@@ -1470,6 +1474,10 @@ void CVuInterpreter::MAX(VuUnit_Base* unit, const VuInstruction inst)
             const f32 b = reg_source_2.read_float(field);
             reg_dest.write_float(field, std::max(a, b));
         }
+        else
+        {
+            unit->mac.clear_vector_field(field);
+        }
     }
 }
 
@@ -1488,6 +1496,10 @@ void CVuInterpreter::MAXi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             reg_dest.write_float(field, std::max(a, b));
+        }
+        else
+        {
+            unit->mac.clear_vector_field(field);
         }
     }
 }
@@ -1509,6 +1521,10 @@ void CVuInterpreter::MAXbc(VuUnit_Base* unit, const VuInstruction inst, const in
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             reg_dest.write_float(field, std::max(a, b));
+        }
+        else
+        {
+            unit->mac.clear_vector_field(field);
         }
     }
 }
@@ -1553,6 +1569,10 @@ void CVuInterpreter::MINI(VuUnit_Base* unit, const VuInstruction inst)
             const f32 b = reg_source_2.read_float(field);
             reg_dest.write_float(field, std::min(a, b));
         }
+        else
+        {
+            unit->mac.clear_vector_field(field);
+        }
     }
 }
 
@@ -1571,6 +1591,10 @@ void CVuInterpreter::MINIi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             reg_dest.write_float(field, std::min(a, b));
+        }
+        else
+        {
+            unit->mac.clear_vector_field(field);
         }
     }
 }
@@ -1592,6 +1616,10 @@ void CVuInterpreter::MINIbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             reg_dest.write_float(field, std::min(a, b));
+        }
+        else
+        {
+            unit->mac.clear_vector_field(field);
         }
     }
 }
