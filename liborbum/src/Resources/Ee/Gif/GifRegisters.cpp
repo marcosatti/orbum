@@ -2,8 +2,9 @@
 
 GifRegister_Ctrl::GifRegister_Ctrl() :
     transfer_started(false),
-    transfer_data_target(0),
-    transfer_data_count(0),
-    transfer_end_of_packet(false)
+    tag(),
+    transfer_register_count(0),
+    transfer_loop_count(0),
+    rgbaq_q(1.0f)
 {
 }

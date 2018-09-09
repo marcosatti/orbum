@@ -39,14 +39,16 @@ public:
         Disabled // Disabled means the same operation mode as Image.
     };
 
+    Giftag() = default;
+
     Giftag(const uqword tag) :
         tag(tag)
     {
     }
 
-    int nloop() const
+    size_t nloop() const
     {
-        return NLOOP.extract_from<int>(tag);
+        return NLOOP.extract_from<size_t>(tag);
     }
 
     bool eop() const
@@ -57,6 +59,12 @@ public:
     bool pre() const
     {
         return EOP.extract_from<int>(tag) > 0;
+    }
+
+    udword prim() const
+    {
+        // The PRIM register is dword in size.
+        return PRIM.extract_from<udword>(tag);
     }
 
     DataFormat flg() const
@@ -76,94 +84,108 @@ public:
         }
     }
 
-    int nreg() const
+    size_t nreg() const
     {
-        int nreg = NREG.extract_from<int>(tag);
+        size_t nreg = NREG.extract_from<size_t>(tag);
 
-        if (nreg >= 16 || nreg < 0)
+        if (nreg >= 16)
             throw std::runtime_error("Unknown nreg value");
 
         return (nreg == 0) ? 16 : nreg;
     }
 
-    int regs0() const
+    size_t regs0() const
     {
-        return REGS0.extract_from<int>(tag);
+        return REGS0.extract_from<size_t>(tag);
     }
 
-    int regs1() const
+    size_t regs1() const
     {
-        return REGS1.extract_from<int>(tag);
+        return REGS1.extract_from<size_t>(tag);
     }
 
-    int regs2() const
+    size_t regs2() const
     {
-        return REGS2.extract_from<int>(tag);
+        return REGS2.extract_from<size_t>(tag);
     }
 
-    int regs3() const
+    size_t regs3() const
     {
-        return REGS3.extract_from<int>(tag);
+        return REGS3.extract_from<size_t>(tag);
     }
 
-    int regs4() const
+    size_t regs4() const
     {
-        return REGS4.extract_from<int>(tag);
+        return REGS4.extract_from<size_t>(tag);
     }
 
-    int regs5() const
+    size_t regs5() const
     {
-        return REGS5.extract_from<int>(tag);
+        return REGS5.extract_from<size_t>(tag);
     }
 
-    int regs6() const
+    size_t regs6() const
     {
-        return REGS6.extract_from<int>(tag);
+        return REGS6.extract_from<size_t>(tag);
     }
 
-    int regs7() const
+    size_t regs7() const
     {
-        return REGS7.extract_from<int>(tag);
+        return REGS7.extract_from<size_t>(tag);
     }
 
-    int regs8() const
+    size_t regs8() const
     {
-        return REGS8.extract_from<int>(tag);
+        return REGS8.extract_from<size_t>(tag);
     }
 
-    int regs9() const
+    size_t regs9() const
     {
-        return REGS9.extract_from<int>(tag);
+        return REGS9.extract_from<size_t>(tag);
     }
 
-    int regs10() const
+    size_t regs10() const
     {
-        return REGS10.extract_from<int>(tag);
+        return REGS10.extract_from<size_t>(tag);
     }
 
-    int regs11() const
+    size_t regs11() const
     {
-        return REGS11.extract_from<int>(tag);
+        return REGS11.extract_from<size_t>(tag);
     }
 
-    int regs12() const
+    size_t regs12() const
     {
-        return REGS12.extract_from<int>(tag);
+        return REGS12.extract_from<size_t>(tag);
     }
 
-    int regs13() const
+    size_t regs13() const
     {
-        return REGS13.extract_from<int>(tag);
+        return REGS13.extract_from<size_t>(tag);
     }
 
-    int regs14() const
+    size_t regs14() const
     {
-        return REGS14.extract_from<int>(tag);
+        return REGS14.extract_from<size_t>(tag);
     }
 
-    int regs15() const
+    size_t regs15() const
     {
-        return REGS15.extract_from<int>(tag);
+        return REGS15.extract_from<size_t>(tag);
+    }
+
+    size_t regs(const size_t descriptor_index) const
+    {
+        using RegisterDescriptor = size_t(Giftag::*)() const;
+        static const RegisterDescriptor register_descriptors[] = { 
+            &Giftag::regs0, &Giftag::regs1, &Giftag::regs2, &Giftag::regs3, 
+            &Giftag::regs4, &Giftag::regs5, &Giftag::regs6, &Giftag::regs7,
+            &Giftag::regs8, &Giftag::regs9, &Giftag::regs10, &Giftag::regs11, 
+            &Giftag::regs12, &Giftag::regs13, &Giftag::regs14, &Giftag::regs15
+        };
+
+        auto fn = register_descriptors[descriptor_index];
+        return (this->*fn)();
     }
 
 private:

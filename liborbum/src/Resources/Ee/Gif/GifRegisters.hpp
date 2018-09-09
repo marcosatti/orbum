@@ -6,6 +6,8 @@
 #include "Common/Types/Bitfield.hpp"
 #include "Common/Types/Register/SizedWordRegister.hpp"
 
+#include "Resources/Ee/Gif/Giftag.hpp"
+
 class GifRegister_Ctrl : public SizedWordRegister
 {
 public:
@@ -14,17 +16,20 @@ public:
 
     GifRegister_Ctrl();
 
-    /// Indicates whether the GIF is currently processing a GS primitive 
-    /// (excluding the tag). Reset upon finishing a GS primitive.
+    /// Indicates whether the GIF is currently processing GS primitive 
+    /// data (otherwise read a tag). Reset upon finishing a GS primitive.
     bool transfer_started;
 
-    /// Number of qwords total/left for the current GS primitive.
-    /// Set by the tag read.
-    size_t transfer_data_target;
-    size_t transfer_data_count;
+    /// Current transfer tag being processed.
+    Giftag tag;
 
-    /// End of GS packet indicator. Set by the tag read.
-    bool transfer_end_of_packet;
+    /// Number of registers / loops processed for the current tag.
+    size_t transfer_register_count;
+    size_t transfer_loop_count;
+
+    /// Special holding area for the RGBAQ.Q value, set when the ST 
+    /// register descriptor is written to. See EE Users manual page 153/154.
+    f32 rgbaq_q;
 
 public:
     template<class Archive>
@@ -33,9 +38,9 @@ public:
         archive(
             cereal::base_class<SizedWordRegister>(this),
             CEREAL_NVP(transfer_started),
-            CEREAL_NVP(transfer_data_target),
-            CEREAL_NVP(transfer_data_count),
-            CEREAL_NVP(transfer_end_of_packet)
+            CEREAL_NVP(tag),
+            CEREAL_NVP(transfer_register_count),
+            CEREAL_NVP(transfer_loop_count),
         );
     }
 };

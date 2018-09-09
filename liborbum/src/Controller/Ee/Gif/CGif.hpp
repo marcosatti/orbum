@@ -19,5 +19,9 @@ public:
 
     void handle_tag(const Giftag tag);
 
-    void handle_data(const uqword data);
+    void handle_data_packed(const uqword data);
+
+    void handle_data_reglist(const udword data);
+
+    void handle_data_image(const uqword data);
 };
