@@ -119,36 +119,6 @@ public:
     finished:; // Done.
     }
 
-    /// Given the address properties, performs a lookup in the page
-    /// table and returns the mapped entry. On a nullptr object being
-    /// retrieved, a runtime_error is thrown (debug builds only).
-    const Page& get_page(const AddressTy address) const
-    {
-        const size_t vdn = get_vdn(address);
-
-#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
-        if (vdn >= table.size())
-            throw std::runtime_error(str(boost::format("ByteBus lookup: no directory exists, address = 0x%08X.") % address));
-#endif
-
-        const auto& directory = table[vdn];
-        const size_t page_index = directory.page_mask.extract_from(address);
-
-#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
-        if (page_index >= directory.page_table.size())
-            throw std::runtime_error(str(boost::format("ByteBus lookup: no page exists (probably culled), address = 0x%08X.") % address));
-#endif
-
-        const auto& page = directory.page_table[page_index];
-
-#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
-        if (page.object == nullptr)
-            throw std::runtime_error(str(boost::format("ByteBus lookup: nullptr object, address = 0x%08X.") % address));
-#endif
-
-        return page;
-    }
-
     /// Read or write to a mapped object.
     ubyte read_ubyte(const BusContext context, const AddressTy address) const
     {
@@ -292,6 +262,36 @@ public:
     }
 
 private:
+    /// Given the address properties, performs a lookup in the page
+    /// table and returns the mapped entry. On a nullptr object being
+    /// retrieved, a runtime_error is thrown (debug builds only).
+    const Page& get_page(const AddressTy address) const
+    {
+        const size_t vdn = get_vdn(address);
+
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
+        if (vdn >= table.size())
+            throw std::runtime_error(str(boost::format("ByteBus lookup: no directory exists, address = 0x%08X.") % address));
+#endif
+
+        const auto& directory = table[vdn];
+        const size_t page_index = directory.page_mask.extract_from(address);
+
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
+        if (page_index >= directory.page_table.size())
+            throw std::runtime_error(str(boost::format("ByteBus lookup: no page exists (probably culled), address = 0x%08X.") % address));
+#endif
+
+        const auto& page = directory.page_table[page_index];
+
+#if DEBUG_BYTEBUS_RUNTIME_LOOKUP_CHECKS
+        if (page.object == nullptr)
+            throw std::runtime_error(str(boost::format("ByteBus lookup: nullptr object, address = 0x%08X.") % address));
+#endif
+
+        return page;
+    }
+
     /// Returns the VDN (virtual directory number) for the address
     /// given using this Bus' context.
     size_t get_vdn(const AddressTy address) const

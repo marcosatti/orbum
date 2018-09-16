@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Controller/Ee/Gif/CGif.hpp"
 
 #include "Core.hpp"
@@ -51,6 +53,8 @@ int CGif::time_step(const int ticks_available)
     auto& fifo_gif_path2 = r.fifo_gif_path2;
     auto& fifo_gif_path3 = r.fifo_gif_path3;
 
+    int cycles_consumed = 0;
+
     // Prioritise paths by 1 -> 2 -> 3.
     // TODO: GIF code does not do path arbitration currently.
     // See EE Users Manual page 149. 
@@ -58,6 +62,7 @@ int CGif::time_step(const int ticks_available)
 
     for (auto& fifo : paths)
     {
+        // A GIFtag is always read before processing data.
         if (!ctrl.transfer_started)
         {
             if (!fifo->has_read_available(NUMBER_BYTES_IN_QWORD))
@@ -67,7 +72,8 @@ int CGif::time_step(const int ticks_available)
             fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_QWORD);
 
             ctrl.transfer_started = true;
-            handle_tag(Giftag(data));
+
+            cycles_consumed = handle_tag(Giftag(data));
         }
         else
         {
@@ -81,17 +87,21 @@ int CGif::time_step(const int ticks_available)
                 uqword data;
                 fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_QWORD);
 
-                handle_data_packed(data);
+                cycles_consumed = handle_data_packed(data);
             }
             case Giftag::DataFormat::Reglist:
             {
-                if (!fifo->has_read_available(NUMBER_BYTES_IN_DWORD))
+                // TODO: maybe a weird situation can occur where there is only 
+                // 1 dword available which should be processed first before 
+                // attempting processing of other paths... Probably should make
+                // this proper at some stage. Manual doesn't really say what to do...
+                if (!fifo->has_read_available(NUMBER_BYTES_IN_QWORD))
                     continue;
 
                 uqword data;
-                fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_DWORD);
+                fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_QWORD);
 
-                handle_data_packed(data);
+                cycles_consumed = handle_data_reglist(data);
             }
             case Giftag::DataFormat::Image:
             case Giftag::DataFormat::Disabled:
@@ -102,21 +112,30 @@ int CGif::time_step(const int ticks_available)
                 uqword data;
                 fifo->read(reinterpret_cast<ubyte*>(&data), NUMBER_BYTES_IN_QWORD);
 
-                handle_data_image(data);
+                cycles_consumed = handle_data_image(data);
+            }
+            default:
+            {
+                throw std::runtime_error("Unknown GIF data processing method");
             }
             }
         }
 
         if (ctrl.tag.eop())
         {
-            throw std::runtime_error("End of GS packet reached");
+            throw std::runtime_error("End of GS packet reached - what do we do?");
         }
+
+        // Do not process other paths if at least one path was successfully processed.
+        if (cycles_consumed)
+            break;
     }
 
-    return 1;
+    // At least 1 cycle is consumed always if no paths had data available for processing.
+    return std::max(cycles_consumed, 1);
 }
 
-void CGif::handle_tag(const Giftag tag)
+int CGif::handle_tag(const Giftag tag)
 {
     auto& r = core->get_resources();
     auto& ctrl = r.ee.gif.ctrl;
@@ -146,9 +165,14 @@ void CGif::handle_tag(const Giftag tag)
             }
         }
     }
+
+    // 1 cycle consumed for the tag, and 1 cycle for the handling of the PRIM data
+    // (always done even if it's not used). See the descriptions of the transfer
+    // modes in the EE Users Manual page 153, 159, 160.
+    return 2;
 }
 
-void CGif::handle_data_packed(const uqword data)
+int CGif::handle_data_packed(const uqword data)
 {
     auto& r = core->get_resources();
     auto& ctrl = r.ee.gif.ctrl;
@@ -169,6 +193,7 @@ void CGif::handle_data_packed(const uqword data)
 
         //auto& prim = r.gs.prim;
         //prim.write_udword(prim_value);
+        break;
     }
     case 0x1:
     {
@@ -190,6 +215,7 @@ void CGif::handle_data_packed(const uqword data)
         //rgbaq.write_field(GsRegister_Rgbaq::B, b_value);
         //rgbaq.write_field(GsRegister_Rgbaq::A, a_value);
         //rgbaq.write_field(GsRegister_Rgbaq::Q, q_value);
+        break;
     }
     case 0x2:
     {
@@ -208,6 +234,7 @@ void CGif::handle_data_packed(const uqword data)
         //auto& st = r.gs.st;
         //st.write_field(GsRegister_St::S, s_value);
         //st.write_field(GsRegister_St::T, t_value);
+        break;
     }
     case 0x3:
     {
@@ -221,6 +248,7 @@ void CGif::handle_data_packed(const uqword data)
         //auto& uv = r.gs.uv;
         //uv.write_field(GsRegister_Uv::U, u_value);
         //uv.write_field(GsRegister_Uv::V, v_value);
+        break;
     }
     case 0x4:
     {
@@ -242,10 +270,11 @@ void CGif::handle_data_packed(const uqword data)
         //xyzf->write_field(GsRegister_Xyzf::Y, y_value);
         //xyzf->write_field(GsRegister_Xyzf::Z, z_value);
         //xyzf->write_field(GsRegister_Xyzf::F, f_value);
+        break;
     }
     case 0x5:
     {
-        // XYZ2
+        // XYZ2/3
         constexpr Bitfield X = Bitfield(0, 16);
         constexpr Bitfield Y = Bitfield(32, 16);
         constexpr Bitfield Z = Bitfield(64, 32);
@@ -260,30 +289,35 @@ void CGif::handle_data_packed(const uqword data)
         //xyz->write_field(GsRegister_Xyzf::X, x_value);
         //xyz->write_field(GsRegister_Xyzf::Y, y_value);
         //xyz->write_field(GsRegister_Xyzf::Z, z_value);
+        break;
     }
     case 0x6:
     {
         // TEX0_1
         //auto& tex0_1 = r.gs.tex0_1;
         //tex0_1.write_udword(data.lo);
+        break;
     }
     case 0x7:
     {
         // TEX0_2
         //auto& tex0_2 = r.gs.tex0_2;
         //tex0_2.write_udword(data.lo);
+        break;
     }
     case 0x8:
     {
         // CLAMP_1
         //auto& clamp_1 = r.gs.clamp_1;
         //clamp_1.write_udword(data.lo);
+        break;
     }
     case 0x9:
     {
         // CLAMP_2
         //auto& clamp_2 = r.gs.clamp_2;
         //clamp_2.write_udword(data.lo);
+        break;
     }
     case 0xA:
     {
@@ -296,6 +330,7 @@ void CGif::handle_data_packed(const uqword data)
 
         //auto& fog = r.gs.fog;
         //fog.write_field(GsRegister_Fog::F, f_value);
+        break;
     }
     case 0xB:
     {
@@ -307,12 +342,14 @@ void CGif::handle_data_packed(const uqword data)
         // XYZF3
         //auto& xyzf3 = r.gs.xyzf3;
         //xyzf3.write_udword(data.lo);
+        break;
     }
     case 0xD:
     {
         // XYZ3
         //auto& xyz3 = r.gs.xyz3;
         //xyz3.write_udword(data.lo);
+        break;
     }
     case 0xE:
     {
@@ -323,10 +360,12 @@ void CGif::handle_data_packed(const uqword data)
         udword data_value = data.lo;
 
         //r.gs.bus.write_udword(BusContext::Gif, addr_value, data_value);
+        break;
     }
     case 0xF:
     {
         // NOP    
+        break;
     }
     default:
     {
@@ -343,36 +382,174 @@ void CGif::handle_data_packed(const uqword data)
 
     if (ctrl.transfer_loop_count == ctrl.tag.nloop())
         ctrl.transfer_started = false;
+
+    return 1;
 }
 
-void CGif::handle_data_reglist(const udword data)
+int CGif::handle_data_reglist(const uqword data)
 {
     auto& r = core->get_resources();
     auto& ctrl = r.ee.gif.ctrl;
-    
-    ctrl.transfer_register_count += 1;
-    if (ctrl.transfer_register_count == ctrl.tag.nreg())
-    {
-        ctrl.transfer_register_count = 0;
-        ctrl.transfer_loop_count += 1;
-    }
 
-    if (ctrl.transfer_loop_count == ctrl.tag.nloop())
-        ctrl.transfer_started = false;
+    udword datas[] = { data.lo, data.hi };
+    for (auto& data : datas)
+    {
+        // Get the register descirptor.
+        size_t register_descirptor = ctrl.tag.regs(ctrl.transfer_register_count);
+
+        // Write data directly to the GS register.
+        // See EE Users Manual page 159 onwards for processing details.
+        switch (register_descirptor)
+        {
+        case 0x0:
+        {
+            // PRIM
+            //auto& prim = r.gs.prim;
+            //prim.write_udword(data);
+            break;
+        }
+        case 0x1:
+        {
+            // RGBAQ
+            //auto& rgbaq = r.gs.rgbaq;
+            //rgbaq.write_udword(data);
+            break;
+        }
+        case 0x2:
+        {
+            // ST
+            //auto& st = r.gs.st;
+            //st.write_udword(data);
+            break;
+        }
+        case 0x3:
+        {
+            // UV
+            //auto& uv = r.gs.uv;
+            //uv.write_udword(data);
+            break;
+        }
+        case 0x4:
+        {
+            // XYZF2
+            //auto& xyzf2 = r.gs.xyzf2;
+            //xyzf2.write_udword(data);
+            break;
+        }
+        case 0x5:
+        {
+            // XYZ2
+            //auto& xyz2 = r.gs.xyz2;
+            //xyz2.write_udword(data);
+            break;
+        }
+        case 0x6:
+        {
+            // TEX0_1
+            //auto& tex0_1 = r.gs.tex0_1;
+            //tex0_1.write_udword(data);
+            break;
+        }
+        case 0x7:
+        {
+            // TEX0_2
+            //auto& tex0_2 = r.gs.tex0_2;
+            //tex0_2.write_udword(data);
+            break;
+        }
+        case 0x8:
+        {
+            // CLAMP_1
+            //auto& clamp_1 = r.gs.clamp_1;
+            //clamp_1.write_udword(data);
+            break;
+        }
+        case 0x9:
+        {
+            // CLAMP_2
+            //auto& clamp_2 = r.gs.clamp_2;
+            //clamp_2.write_udword(data);
+            break;
+        }
+        case 0xA:
+        {
+            // FOG
+            //auto& fog = r.gs.fog;
+            //fog.write_udword(data);
+            break;
+        }
+        case 0xB:
+        {
+            // Reserved
+            throw std::runtime_error("Reserved register descriptor read from GIFtag");
+        }
+        case 0xC:
+        {
+            // XYZF3
+            //auto& xyzf3 = r.gs.xyzf3;
+            //xyzf3.write_udword(data);
+            break;
+        }
+        case 0xD:
+        {
+            // XYZ3
+            //auto& xyz3 = r.gs.xyz3;
+            //xyz3.write_udword(data);
+            break;
+        }
+        case 0xE:
+        {
+            // A+D (packed address + data)
+            // No-op for REGLIST mode. See EE Users Manual page 159.
+            break;
+        }
+        case 0xF:
+        {
+            // NOP    
+            break;
+        }
+        default:
+        {
+            throw std::runtime_error("Unknown register descriptor given");
+        }
+        }
+
+        ctrl.transfer_register_count += 1;
+        if (ctrl.transfer_register_count == ctrl.tag.nreg())
+        {
+            ctrl.transfer_register_count = 0;
+            ctrl.transfer_loop_count += 1;
+        }
+
+        if (ctrl.transfer_loop_count == ctrl.tag.nloop())
+        {
+            ctrl.transfer_started = false;
+            break;
+        }
+    }
+    
+    // Although not stated, I'm gussing the GIF consumes an extra cycle even when
+    // NREGS is odd (ie: upper 64-bits of last qword of data discarded).
+    return 2;
 }
 
-void CGif::handle_data_image(const uqword data)
+int CGif::handle_data_image(const uqword data)
 {
     auto& r = core->get_resources();
     auto& ctrl = r.ee.gif.ctrl;
-    
-    ctrl.transfer_register_count += 1;
-    if (ctrl.transfer_register_count == ctrl.tag.nreg())
+    //auto& hwreg = r.gs.hwreg;
+
+    udword datas[] = { data.lo, data.hi };
+    for (auto& data : datas)
     {
-        ctrl.transfer_register_count = 0;
-        ctrl.transfer_loop_count += 1;
+        // Data is output sequentially to the HWREG transfer register of the GS.
+        // See EE Users manual page 160.
+        //hwreg.write_udword(data);
     }
 
+    ctrl.transfer_loop_count += 1;
     if (ctrl.transfer_loop_count == ctrl.tag.nloop())
         ctrl.transfer_started = false;
+
+    return 1;
 }
