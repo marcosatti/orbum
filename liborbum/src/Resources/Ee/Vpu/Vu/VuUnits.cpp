@@ -15,7 +15,8 @@ VuUnit_Base::VuUnit_Base(const int core_id) :
        SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister(),
        SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister(),
        SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister(), SizedHwordRegister()},
-    bus(8) // TODO: fine tune.
+    bus(8), // TODO: fine tune.
+    operation_state(VuOperationState::Ready)
 {
 }
 

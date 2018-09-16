@@ -12,7 +12,8 @@
 #include "Common/Types/Register/PcRegisters.hpp"
 #include "Common/Types/Register/SizedHwordRegister.hpp"
 #include "Common/Types/Register/SizedQwordRegister.hpp"
-#include "Controller/Ee/Vpu/Vu/VuBranchDelaySlot.hpp"
+#include "Resources/Ee/Vpu/Vu/VuBranchDelaySlot.hpp"
+#include "Resources/Ee/Vpu/Vu/VuState.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnitRegisters.hpp"
 
 class EeCoreCop0;
@@ -78,6 +79,9 @@ public:
     /// Used by different things, eg: ccr registers for VU0 and bus mappings for VU1.
     MapperHwordWordRegister vi_32[Constants::EE::VPU::VU::NUMBER_VI_REGISTERS];
 
+    /// VU operation state. The VU has 3 operation states: Ready, Run, Stop.
+    VuOperationState operation_state;
+    
 public:
     template<class Archive>
     void serialize(Archive & archive)

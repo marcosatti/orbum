@@ -1,24 +1,19 @@
 #pragma once
 
-#include "Controller/CController.hpp"
+#include "Controller/Ee/Vpu/Vu/CVu.hpp"
 #include "Resources/Ee/Vpu/Vu/VuInstruction.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 
 class Core;
 
 /// The VU0/1 interpreter.
-class CVuInterpreter : public CController
+class CVuInterpreter : public CVu
 {
 public:
     CVuInterpreter(Core* core);
 
-    void handle_event(const ControllerEvent& event) override;
-
-    /// Converts a time duration into the number of ticks that would have occurred.
-    int time_to_ticks(const double time_us);
-
     /// Steps through the VU core state, executing one macro and one micro instruction.
-    int time_step(const int ticks_available);
+    int time_step(const int ticks_available) override;
 
     //////////////////////////
     // Common Functionality //
