@@ -381,4 +381,8 @@ public:
         &CVuInterpreter::XTOP,
         &CVuInterpreter::XITOP
     };
+
+private:
+    int execute_upper_instruction(VuUnit_Base* unit, VuInstruction inst);
+    int execute_lower_instruction(VuUnit_Base* unit, VuInstruction inst);
 };
