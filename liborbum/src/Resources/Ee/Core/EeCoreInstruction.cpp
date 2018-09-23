@@ -509,7 +509,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
         case 63:
             return &EE_CORE_INSTRUCTION_TABLE[51];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 1:
@@ -549,7 +549,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
         case 25:
             return &EE_CORE_INSTRUCTION_TABLE[67];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 28:
@@ -611,7 +611,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 31:
                 return &EE_CORE_INSTRUCTION_TABLE[92];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 40:
@@ -655,7 +655,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 27:
                 return &EE_CORE_INSTRUCTION_TABLE[110];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 9:
@@ -707,7 +707,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 31:
                 return &EE_CORE_INSTRUCTION_TABLE[132];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 41:
@@ -741,7 +741,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 30:
                 return &EE_CORE_INSTRUCTION_TABLE[145];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 0:
@@ -787,7 +787,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
         case 63:
             return &EE_CORE_INSTRUCTION_TABLE[166];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 16:
@@ -807,7 +807,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 3:
                 return &EE_CORE_INSTRUCTION_TABLE[170];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 16:
@@ -829,7 +829,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 57:
                 return &EE_CORE_INSTRUCTION_TABLE[177];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 0:
@@ -837,7 +837,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
         case 4:
             return &EE_CORE_INSTRUCTION_TABLE[179];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 17:
@@ -857,7 +857,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 3:
                 return &EE_CORE_INSTRUCTION_TABLE[183];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 16:
@@ -911,7 +911,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 53:
                 return &EE_CORE_INSTRUCTION_TABLE[206];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 20:
@@ -921,7 +921,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 32:
                 return &EE_CORE_INSTRUCTION_TABLE[207];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 0:
@@ -933,7 +933,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
         case 6:
             return &EE_CORE_INSTRUCTION_TABLE[211];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 18:
@@ -957,7 +957,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
                 case 3:
                     return &EE_CORE_INSTRUCTION_TABLE[215];
                 default:
-                    throw std::runtime_error("Could not determine instruction");
+                    throw std::runtime_error("EE Core: Could not determine instruction");
                 }
             }
             case 1:
@@ -969,7 +969,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 6:
                 return &EE_CORE_INSTRUCTION_TABLE[219];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         case 1:
@@ -1015,7 +1015,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
                 case 16:
                     return &EE_CORE_INSTRUCTION_TABLE[236];
                 default:
-                    throw std::runtime_error("Could not determine instruction");
+                    throw std::runtime_error("EE Core: Could not determine instruction");
                 }
             }
             case 61:
@@ -1057,7 +1057,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
                 case 16:
                     return &EE_CORE_INSTRUCTION_TABLE[253];
                 default:
-                    throw std::runtime_error("Could not determine instruction");
+                    throw std::runtime_error("EE Core: Could not determine instruction");
                 }
             }
             case 62:
@@ -1097,7 +1097,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
                 case 16:
                     return &EE_CORE_INSTRUCTION_TABLE[269];
                 default:
-                    throw std::runtime_error("Could not determine instruction");
+                    throw std::runtime_error("EE Core: Could not determine instruction");
                 }
             }
             case 63:
@@ -1135,7 +1135,7 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
                 case 16:
                     return &EE_CORE_INSTRUCTION_TABLE[284];
                 default:
-                    throw std::runtime_error("Could not determine instruction");
+                    throw std::runtime_error("EE Core: Could not determine instruction");
                 }
             }
             case 0:
@@ -1249,11 +1249,11 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
             case 57:
                 return &EE_CORE_INSTRUCTION_TABLE[339];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("EE Core: Could not determine instruction");
             }
         }
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("EE Core: Could not determine instruction");
         }
     }
     case 2:
@@ -1351,6 +1351,6 @@ MipsInstructionInfo* EeCoreInstruction::lookup() const
     case 63:
         return &EE_CORE_INSTRUCTION_TABLE[386];
     default:
-        throw std::runtime_error("Could not determine instruction");
+        throw std::runtime_error("EE Core: Could not determine instruction");
     }
 }

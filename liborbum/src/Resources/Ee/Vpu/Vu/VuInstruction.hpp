@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common/Constants.hpp"
 #include "Common/Types/Mips/MipsInstruction.hpp"
 #include "Common/Types/Mips/MipsInstructionInfo.hpp"
 #include "Resources/Ee/Vpu/Vu/VuVectorField.hpp"
@@ -165,4 +166,7 @@ struct VuInstruction : public MipsInstruction
     {
         return W.extract_from(value) > 0;
     }
+
+    MipsInstructionInfo lower_lookup() const;
+    MipsInstructionInfo upper_lookup() const;
 };

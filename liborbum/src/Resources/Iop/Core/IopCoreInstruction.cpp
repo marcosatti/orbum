@@ -165,7 +165,7 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
         case 43:
             return &IOP_CORE_INSTRUCTION_TABLE[27];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("IOP Core: Could not determine instruction");
         }
     }
     case 1:
@@ -181,7 +181,7 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
         case 16:
             return &IOP_CORE_INSTRUCTION_TABLE[31];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("IOP Core: Could not determine instruction");
         }
     }
     case 16:
@@ -199,7 +199,7 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
         case 16:
             return &IOP_CORE_INSTRUCTION_TABLE[36];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("IOP Core: Could not determine instruction");
         }
     }
     case 18:
@@ -219,7 +219,7 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
             case 6:
                 return &IOP_CORE_INSTRUCTION_TABLE[40];
             default:
-                throw std::runtime_error("Could not determine instruction");
+                throw std::runtime_error("IOP Core: Could not determine instruction");
             }
         }
         case 1:
@@ -265,7 +265,7 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
         case 62:
             return &IOP_CORE_INSTRUCTION_TABLE[61];
         default:
-            throw std::runtime_error("Could not determine instruction");
+            throw std::runtime_error("IOP Core: Could not determine instruction");
         }
     }
     case 2:
@@ -325,6 +325,6 @@ MipsInstructionInfo* IopCoreInstruction::lookup() const
     case 58:
         return &IOP_CORE_INSTRUCTION_TABLE[89];
     default:
-        throw std::runtime_error("Could not determine instruction");
+        throw std::runtime_error("IOP Core: Could not determine instruction");
     }
 }
