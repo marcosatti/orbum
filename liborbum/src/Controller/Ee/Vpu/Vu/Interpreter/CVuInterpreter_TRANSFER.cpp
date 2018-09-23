@@ -3,6 +3,7 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
+#include "Utilities/Utilities.hpp"
 
 // All instructions here are related to registers.
 // Particularly load/store
@@ -59,7 +60,8 @@ void CVuInterpreter::LQ(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source = unit->vi[inst.is()];
     SizedQwordRegister& reg_dest = unit->vf[inst.ft()];
     
-    const uword address = (inst.imm11() + reg_source.read_uhword()) * NUMBER_BYTES_IN_QWORD;
+    const shword offset = extend_integer<uhword, shword, 11>(inst.imm11());
+    const uword address = (offset + reg_source.read_uhword()) * NUMBER_BYTES_IN_QWORD;
     const uqword source = unit->bus.read_uqword(BusContext::Vu, address);
 
     for (auto field : VuVectorField::VECTOR_FIELDS) 
@@ -119,7 +121,8 @@ void CVuInterpreter::SQ(VuUnit_Base* unit, const VuInstruction inst)
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedHwordRegister& reg_source_2 = unit->vi[inst.it()];
     
-    const uword address = (inst.imm11() + reg_source_2.read_uhword()) * NUMBER_BYTES_IN_QWORD;
+    const shword offset = extend_integer<uhword, shword, 11>(inst.imm11());
+    const uword address = (offset + reg_source_2.read_uhword()) * NUMBER_BYTES_IN_QWORD;
 
     for (auto field : VuVectorField::VECTOR_FIELDS) 
     {
@@ -174,9 +177,18 @@ void CVuInterpreter::ILW(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source = unit->vi[inst.is()];
     SizedHwordRegister& reg_dest = unit->vi[inst.it()];
 
-    const uword address = (inst.imm15() + reg_source.read_uhword()) * NUMBER_BYTES_IN_QWORD;
-    const uword source = unit->bus.read_uqword(BusContext::Vu, address).uw[inst.dest()];
-    reg_dest.write_uhword(static_cast<uhword>(source));
+    const shword offset = extend_integer<uhword, shword, 11>(inst.imm11());
+    const uword address = (offset + reg_source.read_uhword()) * NUMBER_BYTES_IN_QWORD;
+
+    // Note: the operation is undefined when multiple fields are specified
+    for (auto field : VuVectorField::VECTOR_FIELDS)
+    {
+        if (inst.test_dest_field(field))
+        {
+            const uword source = unit->bus.read_uqword(BusContext::Vu, address).uw[field];
+            reg_dest.write_uhword(static_cast<uhword>(source));
+        }
+    }   
 }
 
 void CVuInterpreter::ISW(VuUnit_Base* unit, const VuInstruction inst)
@@ -184,7 +196,8 @@ void CVuInterpreter::ISW(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source_1 = unit->vi[inst.it()];
     SizedHwordRegister& reg_source_2 = unit->vi[inst.is()];
 
-    const uword address = (inst.imm15() + reg_source_2.read_uhword()) * NUMBER_BYTES_IN_QWORD;
+    const shword offset = extend_integer<uhword, shword, 11>(inst.imm11());
+    const uword address = (offset + reg_source_2.read_uhword()) * NUMBER_BYTES_IN_QWORD;
 
     for (auto field : VuVectorField::VECTOR_FIELDS)
     {
@@ -200,9 +213,16 @@ void CVuInterpreter::ILWR(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source = unit->vi[inst.is()];
     SizedHwordRegister& reg_dest = unit->vi[inst.it()];
 
+    // Note: the operation is undefined when multiple fields are specified
     const uword address = reg_source.read_uhword() * NUMBER_BYTES_IN_QWORD;
-    const uword source = unit->bus.read_uqword(BusContext::Vu, address).uw[inst.dest()];
-    reg_dest.write_uhword(static_cast<uhword>(source));
+    for (auto field : VuVectorField::VECTOR_FIELDS)
+    {
+        if (inst.test_dest_field(field))
+        {
+            const uword source = unit->bus.read_uqword(BusContext::Vu, address).uw[field];
+            reg_dest.write_uhword(static_cast<uhword>(source));
+        }
+    }
 }
 
 void CVuInterpreter::ISWR(VuUnit_Base* unit, const VuInstruction inst)
