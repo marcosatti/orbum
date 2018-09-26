@@ -107,7 +107,7 @@ void CSio0::handle_irq_check()
     // Raise IOP INTC IRQ if requested.
     if (stat.extract_field(Sio0Register_Stat::IRQ))
     {
-        auto _stat_lock = r.iop.intc.stat.scope_lock();
+        auto _stat_lock_sub = r.iop.intc.stat.scope_lock();
         r.iop.intc.stat.insert_field(IopIntcRegister_Stat::SIO0, 1);
     }
 }
