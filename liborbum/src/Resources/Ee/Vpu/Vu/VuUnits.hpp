@@ -88,6 +88,7 @@ public:
     FdivPipeline fdiv;
     EfuPipeline efu;
     IaluPipeline ialu;
+    LsuPipeline lsu;
 
 public:
     template<class Archive>

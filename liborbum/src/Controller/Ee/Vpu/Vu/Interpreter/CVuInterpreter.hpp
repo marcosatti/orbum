@@ -2,6 +2,7 @@
 
 #include "Controller/Ee/Vpu/Vu/CVu.hpp"
 #include "Resources/Ee/Vpu/Vu/VuInstruction.hpp"
+#include "Resources/Ee/Vpu/Vu/VuInstructionDecoder.hpp"
 #include "Resources/Ee/Vpu/Vu/VuUnits.hpp"
 
 class Core;
@@ -383,6 +384,8 @@ public:
     };
 
 private:
-    int execute_upper_instruction(VuUnit_Base* unit, VuInstruction inst);
-    int execute_lower_instruction(VuUnit_Base* unit, VuInstruction inst);
+    bool check_data_hazard(VuUnit_Base* unit, const VuInstructionDecoder& decoder) const;
+    
+    int execute_upper_instruction(VuUnit_Base* unit, VuInstruction inst, MipsInstructionInfo info, const VuInstructionDecoder& decoder);
+    int execute_lower_instruction(VuUnit_Base* unit, VuInstruction inst, MipsInstructionInfo info, const VuInstructionDecoder& decoder);
 };

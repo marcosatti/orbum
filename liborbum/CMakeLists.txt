@@ -193,6 +193,8 @@ set(COMMON_SRC_FILES
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuBranchDelaySlot.hpp"    
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstruction.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstruction.hpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstructionDecoder.cpp"
+    "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuInstructionDecoder.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuPipelines.cpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuPipelines.hpp"
     "${CMAKE_SOURCE_DIR}/liborbum/src/Resources/Ee/Vpu/Vu/VuRegisters.hpp"

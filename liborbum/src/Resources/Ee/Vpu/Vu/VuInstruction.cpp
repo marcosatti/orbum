@@ -31,7 +31,7 @@ MipsInstructionInfo VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTR
         // Lower Instructions
         {"LQ", 109, 6, VuPipeline::Basic},
         {"SQ", 112, 6, VuPipeline::Basic},
-        {"ILW", 115, 6, VuPipeline::Basic},
+        {"ILW", 115, 6, VuPipeline::LSU},
         {"ISW", 116, 6, VuPipeline::Basic},
         {"IADDIU", 100, 6, VuPipeline::IALU},
         {"ISUBIU", 104, 6, VuPipeline::IALU},
@@ -86,7 +86,7 @@ MipsInstructionInfo VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTR
         {"EATAN", 159, 56, VuPipeline::EFU},
         {"LQD", 110, 6, VuPipeline::Basic},
         {"RSQRT", 97, 15, VuPipeline::FDIV},
-        {"ILWR", 117, 6, VuPipeline::Basic},
+        {"ILWR", 117, 6, VuPipeline::LSU},
         {"RINIT", 119, 6, VuPipeline::Basic},
         {"ELENG", 150, 20, VuPipeline::EFU},
         {"ESUM", 154, 14, VuPipeline::EFU},

@@ -36,7 +36,8 @@ public:
 
     virtual bool is_using_register(uhword reg) const
     {
-        return using_register == reg;
+        // R0 is hardwired to 0.
+        return reg != 0 && using_register == reg;
     }
 
 protected:

@@ -92,9 +92,7 @@ void CVuInterpreter::RXOR(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::WAITQ(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO:
-    // Actual synchronization. 
-    // The VU Interpreter is synchronous, I imagine, so synchronization is actually unneeded.
+    // WAITQ is handled as a special case in the interpreter
 
 #if defined(BUILD_DEBUG)
     BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) WAITQ is called!") % __FILENAME__ % __LINE__;
@@ -228,9 +226,7 @@ void CVuInterpreter::JALR(VuUnit_Base* unit, const VuInstruction inst)
 
 void CVuInterpreter::WAITP(VuUnit_Base* unit, const VuInstruction inst)
 {
-    // TODO:
-    // Actual synchronization. 
-    // The VU Interpreter is synchronous, I imagine, so synchronization is actually unneeded.
+    // WAITP is handled as a special case in the interpreter
 
 #if defined(BUILD_DEBUG)
     BOOST_LOG(Core::get_logger()) << boost::format("(%s, %d) WAITP is called!") % __FILENAME__ % __LINE__;
