@@ -21,13 +21,12 @@ public:
     VuRegister_Fbrst fbrst;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(unit_0),
             CEREAL_NVP(unit_1),
-            CEREAL_NVP(fbrst)
-        );
+            CEREAL_NVP(fbrst));
     }
 };

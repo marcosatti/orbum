@@ -16,13 +16,12 @@ public:
     ArrayByteMemory memory_f020;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(mask),
             CEREAL_NVP(stat),
-            CEREAL_NVP(memory_f020)
-        );
+            CEREAL_NVP(memory_f020));
     }
 };

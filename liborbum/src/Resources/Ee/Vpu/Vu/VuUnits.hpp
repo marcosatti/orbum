@@ -1,8 +1,9 @@
 #pragma once
 
+#include <optional>
+
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include <optional>
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Bus/ByteBus.hpp"
@@ -83,7 +84,7 @@ public:
 
     /// VU operation state. The VU has 3 operation states: Ready, Run, Stop.
     VuOperationState operation_state;
-    
+
     /// VU pipelines.
     FmacPipeline fmac[4];
     FdivPipeline fdiv;
@@ -92,8 +93,8 @@ public:
     LsuPipeline lsu;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(vf),
@@ -107,8 +108,7 @@ public:
             CEREAL_NVP(mac),
             CEREAL_NVP(clipping),
             CEREAL_NVP(pc),
-            CEREAL_NVP(cmsar)
-        );
+            CEREAL_NVP(cmsar));
     }
 };
 
@@ -141,14 +141,13 @@ public:
     std::optional<SizedWordRegister> transferred_reg;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<VuUnit_Base>(this),
             CEREAL_NVP(memory_micro),
-            CEREAL_NVP(memory_mem)
-        );
+            CEREAL_NVP(memory_mem));
     }
 };
 
@@ -163,13 +162,12 @@ public:
     ArrayByteMemory memory_mem;   // 16 KiB.
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<VuUnit_Base>(this),
             CEREAL_NVP(memory_micro),
-            CEREAL_NVP(memory_mem)
-        );
+            CEREAL_NVP(memory_mem));
     }
 };

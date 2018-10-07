@@ -6,7 +6,7 @@
 struct MipsPipeline
 {
     MipsPipeline(uhword cycles = 0, uhword reg = 0) :
-        finish_in(cycles), 
+        finish_in(cycles),
         using_register(reg)
     {
     }
@@ -27,7 +27,7 @@ public:
         finish_in = 0;
         return cycles_consumed;
     }
-    
+
     /// Checks whether the pipeline is still running.
     bool is_running() const
     {

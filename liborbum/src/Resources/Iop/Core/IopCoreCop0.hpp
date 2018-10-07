@@ -45,8 +45,8 @@ public:
     SizedWordRegister* registers[Constants::IOP::IOPCore::COP0::NUMBER_REGISTERS];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(indx),
@@ -65,7 +65,6 @@ public:
             CEREAL_NVP(cause),
             CEREAL_NVP(epc),
             CEREAL_NVP(prid),
-            CEREAL_NVP(erreg)
-        );
+            CEREAL_NVP(erreg));
     }
 };

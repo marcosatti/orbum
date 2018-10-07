@@ -37,15 +37,14 @@ private:
     int prescale_count;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
             CEREAL_NVP(is_overflowed),
             CEREAL_NVP(prescale_target),
-            CEREAL_NVP(prescale_count)
-        );
+            CEREAL_NVP(prescale_count));
     }
 };
 
@@ -84,12 +83,11 @@ public:
     std::pair<uword, ControllerEventType> get_properties();
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
-            CEREAL_NVP(write_latch)
-        );
+            CEREAL_NVP(write_latch));
     }
 };

@@ -51,15 +51,14 @@ public:
     EeDmacChannelRegister_Chcr_Ty chcr;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(channel_id),
             CEREAL_NVP(madr),
             CEREAL_NVP(qwc),
-            CEREAL_NVP(chcr)
-        );
+            CEREAL_NVP(chcr));
     }
 };
 
@@ -76,13 +75,12 @@ public:
     EeDmacChannelRegister_Addr tadr;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
-            CEREAL_NVP(tadr)
-        );
+            CEREAL_NVP(tadr));
     }
 };
 
@@ -99,13 +97,12 @@ public:
     EeDmacChannelRegister_Addr asr[2];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<EeDmacChannel_Tadr<EeDmacChannelRegister_Chcr_Ty>>(this),
-            CEREAL_NVP(asr)
-        );
+            CEREAL_NVP(asr));
     }
 };
 
@@ -122,13 +119,12 @@ public:
     SizedWordRegister sadr;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
-            CEREAL_NVP(sadr)
-        );
+            CEREAL_NVP(sadr));
     }
 };
 
@@ -146,13 +142,12 @@ public:
     SizedWordRegister sadr;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<EeDmacChannel_Base<EeDmacChannelRegister_Chcr_Ty>>(this),
             CEREAL_NVP(tadr),
-            CEREAL_NVP(sadr)
-        );
+            CEREAL_NVP(sadr));
     }
 };

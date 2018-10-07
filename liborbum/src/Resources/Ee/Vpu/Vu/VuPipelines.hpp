@@ -5,7 +5,8 @@
 
 struct VuPipeline
 {
-    enum {
+    enum
+    {
         FMAC = 0,
         FDIV = 1,
         EFU = 2,
@@ -42,7 +43,7 @@ struct FmacPipeline : public MipsPipeline
     {
         const uhword using_reg = using_register >> 4;
         const uhword reg_field = using_register & 0b1111;
-        
+
         // True if the pipeline is running, is using the same register, and is using the same fields
         // Also true if it is VF00 that is being written into (it is hardwired to 0)
         return is_running() && (using_reg == reg) && ((reg_field ^ field) != 0b1111);
@@ -71,7 +72,7 @@ struct FdivPipeline : public MipsPipeline
 struct EfuPipeline : public MipsPipeline
 {
     using MipsPipeline::MipsPipeline;
-    
+
     SizedWordRegister new_p;
 };
 

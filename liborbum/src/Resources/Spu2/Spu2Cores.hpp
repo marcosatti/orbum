@@ -148,8 +148,8 @@ public:
     Spu2CoreVoice* voices[Constants::SPU2::NUMBER_CORE_VOICES];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(pmon0),
@@ -271,7 +271,6 @@ public:
             CEREAL_NVP(voice_20),
             CEREAL_NVP(voice_21),
             CEREAL_NVP(voice_22),
-            CEREAL_NVP(voice_23)
-        );
+            CEREAL_NVP(voice_23));
     }
 };

@@ -152,15 +152,15 @@ private:
     bool read_only;
 
 public:
-    template<class Archive>
-    void save(Archive & archive) const
+    template <class Archive>
+    void save(Archive& archive) const
     {
         archive.saveBinaryValue(reinterpret_cast<const char*>(memory.data()), memory.size() * sizeof(uhword), "memory");
     }
 
-    template<class Archive>
-    void load(Archive & archive)
-    {     
+    template <class Archive>
+    void load(Archive& archive)
+    {
         archive.loadBinaryValue(reinterpret_cast<const char*>(memory.data()), memory.size() * sizeof(uhword), "memory");
     }
 };

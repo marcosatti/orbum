@@ -46,14 +46,13 @@ public:
     IopDmacChannelRegister_Bcr bcr;
     IopDmacChannelRegister_Chcr_Ty chcr;
 
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(madr),
             CEREAL_NVP(bcr),
-            CEREAL_NVP(chcr)
-        );
+            CEREAL_NVP(chcr));
     }
 };
 
@@ -70,12 +69,11 @@ public:
     SizedWordRegister tadr;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<IopDmacChannel_Base<IopDmacChannelRegister_Chcr_Ty>>(this),
-            CEREAL_NVP(tadr)
-        );
+            CEREAL_NVP(tadr));
     }
 };

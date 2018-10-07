@@ -9,8 +9,7 @@ I can only work on this in my spare time, so I am thankful for any help!
 ## Current status
 
 Status as of 2018/08/06:
-- Primary focus for now is on the GIF/VU's/VIF.
-- Work started on the VIFs and VUs, mostly just implementing instructions left.
+- Primary focus for now is on the GIF/VIF.
 - Work started on the SPU2 (DMA and IOP communication done, sound generation still to be done).
 - Work started on the SIO/SIO2 (controllers and MC's), IOP communication done.
 - No work done yet on the IPU and GSCore.
@@ -32,7 +31,7 @@ Run the following commands to invoke a build:
 
 `cmake ..` optionally specifying `-DBOOST_ROOT={path}` depending on your environment.
 
-`make` (or equivilant)
+`make` (or equivalent)
 
 ## Running
 `./orbumfront`

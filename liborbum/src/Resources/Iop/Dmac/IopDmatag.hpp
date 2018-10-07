@@ -61,12 +61,11 @@ public:
     uword tag1;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(tag0),
-            CEREAL_NVP(tag1)
-        );
+            CEREAL_NVP(tag1));
     }
 };

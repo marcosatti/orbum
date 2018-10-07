@@ -47,11 +47,10 @@ private:
     bool read_only;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
-            CEREAL_NVP(b)
-        );
+            CEREAL_NVP(b));
     }
 };

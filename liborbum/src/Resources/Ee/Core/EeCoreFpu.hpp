@@ -40,14 +40,13 @@ public:
     EeCoreCop0* cop0;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(fpr),
             CEREAL_NVP(acc),
             CEREAL_NVP(irr),
-            CEREAL_NVP(csr)
-        );
+            CEREAL_NVP(csr));
     }
 };

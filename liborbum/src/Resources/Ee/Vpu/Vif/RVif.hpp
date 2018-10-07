@@ -16,12 +16,11 @@ public:
     VifUnit_Base unit_1;
     VifUnit_Base* units[Constants::EE::VPU::VIF::NUMBER_VIF_CORES];
 
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(unit_0),
-            CEREAL_NVP(unit_1)
-        );
+            CEREAL_NVP(unit_1));
     }
 };

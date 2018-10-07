@@ -27,8 +27,8 @@ private:
     double microseconds;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(second),
@@ -37,7 +37,6 @@ public:
             CEREAL_NVP(day),
             CEREAL_NVP(month),
             CEREAL_NVP(year),
-            CEREAL_NVP(microseconds)
-        );
+            CEREAL_NVP(microseconds));
     }
 };

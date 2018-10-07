@@ -48,8 +48,8 @@ public:
     ArrayByteMemory memory_2000;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(crtc),
@@ -77,7 +77,6 @@ public:
             CEREAL_NVP(siglblid),
             CEREAL_NVP(memory_1090),
             CEREAL_NVP(memory_1100),
-            CEREAL_NVP(memory_2000)
-        );
+            CEREAL_NVP(memory_2000));
     }
 };

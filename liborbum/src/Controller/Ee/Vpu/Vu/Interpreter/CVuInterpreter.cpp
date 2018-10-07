@@ -1,5 +1,6 @@
-#include <boost/format.hpp>
 #include <variant>
+
+#include <boost/format.hpp>
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 
@@ -105,7 +106,7 @@ int CVuInterpreter::time_step(const int ticks_available)
 
         // Register writing priority, if both upper and lower inst write to the same
         // register, the priority is: COP2 Transfer > Upper Inst > Lower Inst
-        try 
+        try
         {
             // Try obtaining the destination (will throw if the instruction writes to non-VF/VI regs)
             const uword upper_dest = *decoder.upper_dest();
@@ -119,7 +120,7 @@ int CVuInterpreter::time_step(const int ticks_available)
                 {
                     SizedQwordRegister original_vf = unit->vf[upper_dest];
                     execute_lower_instruction(unit, upper_inst, upper_info, decoder);
-                    
+
                     // The result produced by lower instruction is discarded
                     unit->vf[upper_dest] = original_vf;
                     execute_upper_instruction(unit, lower_inst, lower_info, decoder);
@@ -156,83 +157,86 @@ int CVuInterpreter::execute_lower_instruction(VuUnit_Base* unit, const VuInstruc
     unit->lsu.consume_cycle(1);
 
     // If the units have finished execution, replace the original regs with new ones
-    if (!unit->efu.is_running()) unit->p = unit->efu.new_p;
-    if (!unit->fdiv.is_running()) unit->q = unit->fdiv.new_q;
+    if (!unit->efu.is_running())
+        unit->p = unit->efu.new_p;
+    if (!unit->fdiv.is_running())
+        unit->q = unit->fdiv.new_q;
 
     // If there's a data hazard, stall
-    if (check_data_hazard(unit, decoder)) return 1;
+    if (check_data_hazard(unit, decoder))
+        return 1;
 
     switch (info.pipeline)
     {
-        case VuPipeline::EFU:
+    case VuPipeline::EFU:
+    {
+        if (!unit->efu.is_running())
         {
-            if (!unit->efu.is_running())
-            {
-                // The 3 cycles: Fetch, obtain VPU register, write-back. As the
-                // EFU handles only the execution stage, other cycles are ignored
-                unit->efu = EfuPipeline(info.cpi - 3);
+            // The 3 cycles: Fetch, obtain VPU register, write-back. As the
+            // EFU handles only the execution stage, other cycles are ignored
+            unit->efu = EfuPipeline(info.cpi - 3);
 
-                // Store original unit->p in new_p temporarily before executing the
-                // instruction (since it operates on unit->p) and swap it back later.
-                std::swap(unit->p, unit->efu.new_p);
-                (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
-                std::swap(unit->p, unit->efu.new_p);
-            }
-
-            break;
-        }
-
-        case VuPipeline::FDIV:
-        {
-            if (!unit->fdiv.is_running())
-            {
-                // The 2 cycles: Fetch, obtain VPU register. As the FDIV handles
-                // both execution & write-back stage, other cycles are ignored
-                unit->fdiv = FdivPipeline(info.cpi - 2);
-
-                // See EFU.
-                std::swap(unit->q, unit->fdiv.new_q);
-                (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
-                std::swap(unit->q, unit->fdiv.new_q);
-            }
-
-            break;
-        }
-
-        case VuPipeline::IALU:
-        {
-            if (!unit->ialu.is_running())
-            {
-                // Try to get the destination
-                int dest = decoder.lower_dest().value_or(0);
-
-                // See FDIV
-                unit->ialu = IaluPipeline(info.cpi - 2, dest);
-            }
-
-            // The results are bypassed to other instructions directly, so
-            // there's no need to swap stuff around
+            // Store original unit->p in new_p temporarily before executing the
+            // instruction (since it operates on unit->p) and swap it back later.
+            std::swap(unit->p, unit->efu.new_p);
             (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
-
-            break;
+            std::swap(unit->p, unit->efu.new_p);
         }
 
-        case VuPipeline::LSU:
-        {
-            if (!unit->lsu.is_running())
-            {
-                int dest = decoder.lower_dest().value_or(0);
-                
-                unit->lsu = LsuPipeline(info.cpi - 2, dest);
-            }
+        break;
+    }
 
-            break;
-        }
-
-        case VuPipeline::Basic:
+    case VuPipeline::FDIV:
+    {
+        if (!unit->fdiv.is_running())
         {
+            // The 2 cycles: Fetch, obtain VPU register. As the FDIV handles
+            // both execution & write-back stage, other cycles are ignored
+            unit->fdiv = FdivPipeline(info.cpi - 2);
+
+            // See EFU.
+            std::swap(unit->q, unit->fdiv.new_q);
             (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
+            std::swap(unit->q, unit->fdiv.new_q);
         }
+
+        break;
+    }
+
+    case VuPipeline::IALU:
+    {
+        if (!unit->ialu.is_running())
+        {
+            // Try to get the destination
+            int dest = decoder.lower_dest().value_or(0);
+
+            // See FDIV
+            unit->ialu = IaluPipeline(info.cpi - 2, dest);
+        }
+
+        // The results are bypassed to other instructions directly, so
+        // there's no need to swap stuff around
+        (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
+
+        break;
+    }
+
+    case VuPipeline::LSU:
+    {
+        if (!unit->lsu.is_running())
+        {
+            int dest = decoder.lower_dest().value_or(0);
+
+            unit->lsu = LsuPipeline(info.cpi - 2, dest);
+        }
+
+        break;
+    }
+
+    case VuPipeline::Basic:
+    {
+        (this->*VU_INSTRUCTION_TABLE[info.impl_index])(unit, inst);
+    }
     }
 
     return 1;
@@ -246,10 +250,11 @@ int CVuInterpreter::execute_upper_instruction(VuUnit_Base* unit, VuInstruction i
     }
 
     // If there's a data hazard, stall
-    if (check_data_hazard(unit, decoder)) return 1;
+    if (check_data_hazard(unit, decoder))
+        return 1;
 
     for (FmacPipeline& fmac : unit->fmac)
-    {        
+    {
         if (!fmac.is_running())
         {
             fmac = FmacPipeline(info.cpi - 2, decoder.upper_dest().value_or(0), inst.dest());
@@ -266,27 +271,28 @@ bool CVuInterpreter::check_data_hazard(VuUnit_Base* unit, const VuInstructionDec
     // Obtain the registers to be read by the instruction
     // If the instruction does not specify the field(s), use 0 as placeholder,
     // as VF0/VI0 is hardwired to 0 (and the manual did this too)
-    const int upper_read[3] = { 
-        decoder.upper_src(0).value_or(0), 
-        decoder.upper_src(1).value_or(0), 
+    const int upper_read[3] = {
+        decoder.upper_src(0).value_or(0),
+        decoder.upper_src(1).value_or(0),
         decoder.upper_src(2).value_or(-1) // this one's special because only MADD/MSUB uses this
     };
 
-    const int lower_read[2] = { 
-        decoder.lower_src(0).value_or(-1), 
-        decoder.lower_src(1).value_or(-1)
-    };
+    const int lower_read[2] = {
+        decoder.lower_src(0).value_or(-1),
+        decoder.lower_src(1).value_or(-1)};
 
     // If the instruction is WAITP, return true if EFU is running
     if ((decoder.get_lower_inst().value) & 0x7FF == 0x7BF)
     {
-        if (unit->efu.is_running()) return true;
+        if (unit->efu.is_running())
+            return true;
     }
 
     // If the instruction is WAITQ, return true if FDIV is running
     if ((decoder.get_lower_inst().value) & 0x7FF == 0x3BF)
     {
-        if (unit->fdiv.is_running()) return true;
+        if (unit->fdiv.is_running())
+            return true;
     }
 
     // Upper Instructions data hazard check
@@ -301,16 +307,20 @@ bool CVuInterpreter::check_data_hazard(VuUnit_Base* unit, const VuInstructionDec
             {
                 for (FmacPipeline& fmac : unit->fmac)
                 {
-                    if (fmac.is_using_register(upper_read[0], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[1], 1 << (3 - inst.bc()))) return true;
+                    if (fmac.is_using_register(upper_read[0], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[1], 1 << (3 - inst.bc())))
+                        return true;
                 }
             }
             else if (decoder.decode_upper().field == VuDecodedInst::Dest)
             {
                 for (FmacPipeline& fmac : unit->fmac)
                 {
-                    if (fmac.is_using_register(upper_read[0], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[1], inst.dest())) return true;
+                    if (fmac.is_using_register(upper_read[0], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[1], inst.dest()))
+                        return true;
                 }
             }
         }
@@ -320,18 +330,24 @@ bool CVuInterpreter::check_data_hazard(VuUnit_Base* unit, const VuInstructionDec
             {
                 for (FmacPipeline& fmac : unit->fmac)
                 {
-                    if (fmac.is_using_register(upper_read[0], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[1], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[2], 1 << (3 - inst.bc()))) return true;
+                    if (fmac.is_using_register(upper_read[0], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[1], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[2], 1 << (3 - inst.bc())))
+                        return true;
                 }
             }
             else if (decoder.decode_upper().field == VuDecodedInst::Dest)
             {
                 for (FmacPipeline& fmac : unit->fmac)
                 {
-                    if (fmac.is_using_register(upper_read[0], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[1], inst.dest())) return true;
-                    if (fmac.is_using_register(upper_read[2], inst.dest())) return true;
+                    if (fmac.is_using_register(upper_read[0], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[1], inst.dest()))
+                        return true;
+                    if (fmac.is_using_register(upper_read[2], inst.dest()))
+                        return true;
                 }
             }
         }
@@ -345,21 +361,26 @@ bool CVuInterpreter::check_data_hazard(VuUnit_Base* unit, const VuInstructionDec
         {
             for (FmacPipeline& fmac : unit->fmac)
             {
-                if (fmac.is_using_register(lower_read[0], inst.fsf())) return true;
-                if (fmac.is_using_register(lower_read[1], inst.ftf())) return true;
+                if (fmac.is_using_register(lower_read[0], inst.fsf()))
+                    return true;
+                if (fmac.is_using_register(lower_read[1], inst.ftf()))
+                    return true;
             }
         }
         else if (decoder.decode_lower().field == VuDecodedInst::Dest)
         {
             for (FmacPipeline& fmac : unit->fmac)
             {
-                if (fmac.is_using_register(lower_read[0], inst.dest())) return true;
-                if (fmac.is_using_register(lower_read[1], inst.dest())) return true;
+                if (fmac.is_using_register(lower_read[0], inst.dest()))
+                    return true;
+                if (fmac.is_using_register(lower_read[1], inst.dest()))
+                    return true;
             }
         }
         else if (decoder.decode_lower().field == VuDecodedInst::Int)
         {
-            if (unit->lsu.is_using_register(lower_read[0])) return true;
+            if (unit->lsu.is_using_register(lower_read[0]))
+                return true;
         }
     }
 

@@ -40,13 +40,12 @@ public:
     void byte_bus_write_uword(const BusContext context, const usize offset, const uword value) override;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
             CEREAL_NVP(write_latch),
-            CEREAL_NVP(port_transfer_started)
-        );
+            CEREAL_NVP(port_transfer_started));
     }
 };

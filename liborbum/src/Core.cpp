@@ -12,8 +12,8 @@
 #include <boost/log/utility/setup/file.hpp>
 
 #include <Console.hpp>
-#include <Macros.hpp>
 #include <Datetime.hpp>
+#include <Macros.hpp>
 
 #include "Core.hpp"
 
@@ -238,7 +238,7 @@ void Core::init_logging()
     const std::string logs_dir_path = options.logs_dir_path;
     boost::filesystem::create_directory(logs_dir_path);
     boost::log::add_common_attributes();
-    
+
     boost::log::add_file_log(
         boost::log::keywords::file_name = logs_dir_path + "log_" + datetime_fmt(Core::DATETIME_FORMAT) + ".log",
         boost::log::keywords::format = "[%TimeStamp%]: %Message%");
@@ -247,7 +247,7 @@ void Core::init_logging()
         boost::log::keywords::format = "[%TimeStamp%]: %Message%");
 }
 
-void Core::save_state() 
+void Core::save_state()
 {
     const std::string save_states_dir_path = options.save_states_dir_path;
     boost::filesystem::create_directory(save_states_dir_path);

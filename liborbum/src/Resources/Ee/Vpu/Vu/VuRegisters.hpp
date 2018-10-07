@@ -17,7 +17,7 @@ public:
     static constexpr Bitfield TE1 = Bitfield(11, 1);
 
     // Field extraction methods
-    
+
     ubyte fb(uword core_id)
     {
         // Small explanation: core_id << 3 = core_id * 8

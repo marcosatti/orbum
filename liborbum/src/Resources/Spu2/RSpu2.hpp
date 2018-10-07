@@ -45,8 +45,8 @@ public:
     ArrayByteMemory memory_07ce;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(core_0),
@@ -62,7 +62,6 @@ public:
             CEREAL_NVP(memory_0346),
             CEREAL_NVP(memory_0746),
             CEREAL_NVP(memory_07b0),
-            CEREAL_NVP(memory_07ce)
-        );
+            CEREAL_NVP(memory_07ce));
     }
 };

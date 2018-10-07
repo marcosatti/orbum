@@ -32,13 +32,12 @@ public:
     DmaFifoQueue<> data_in;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(ready),
-            CEREAL_NVP(data_in)
-        );
+            CEREAL_NVP(data_in));
     }
 };
 
@@ -64,12 +63,11 @@ public:
     CdvdRegister_Ns_Rdy_Din* ns_rdy_din;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedByteRegister>(this),
-            CEREAL_NVP(write_latch)
-        );
+            CEREAL_NVP(write_latch));
     }
 };

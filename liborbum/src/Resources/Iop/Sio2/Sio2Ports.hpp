@@ -23,14 +23,13 @@ public:
     Sio2PortRegister_Ctrl2 ctrl_2;
     Sio2PortRegister_Ctrl3 ctrl_3;
 
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(ctrl_1),
             CEREAL_NVP(ctrl_2),
-            CEREAL_NVP(ctrl_3)
-        );
+            CEREAL_NVP(ctrl_3));
     }
 };
 
@@ -39,12 +38,11 @@ class Sio2Port_Slim
 {
 public:
     Sio2PortRegister_Ctrl3 ctrl_3;
-    
-    template<class Archive>
-    void serialize(Archive & archive)
+
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
-            CEREAL_NVP(ctrl_3)
-        );
+            CEREAL_NVP(ctrl_3));
     }
 };

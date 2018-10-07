@@ -13,13 +13,12 @@ public:
     IopIntcRegister_Stat stat;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(ctrl),
             CEREAL_NVP(mask),
-            CEREAL_NVP(stat)
-        );
+            CEREAL_NVP(stat));
     }
 };

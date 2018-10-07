@@ -46,8 +46,8 @@ public:
     bool write_latch;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
@@ -55,7 +55,6 @@ public:
             CEREAL_NVP(transfer_port),
             CEREAL_NVP(transfer_port_count),
             CEREAL_NVP(transfer_direction),
-            CEREAL_NVP(write_latch)
-        );
+            CEREAL_NVP(write_latch));
     }
 };

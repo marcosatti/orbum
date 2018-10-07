@@ -60,8 +60,8 @@ public:
     ArrayByteMemory memory_f450;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(core),
@@ -78,7 +78,6 @@ public:
             CEREAL_NVP(memory_f410),
             CEREAL_NVP(register_f420),
             CEREAL_NVP(memory_mch),
-            CEREAL_NVP(memory_f450)
-        );
+            CEREAL_NVP(memory_f450));
     }
 };

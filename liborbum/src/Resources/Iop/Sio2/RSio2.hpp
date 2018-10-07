@@ -46,8 +46,8 @@ public:
     SizedWordRegister intr; // Also known as the STAT register.
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(port_0),
@@ -72,7 +72,6 @@ public:
             CEREAL_NVP(recv3),
             CEREAL_NVP(register_8278),
             CEREAL_NVP(register_827c),
-            CEREAL_NVP(intr)
-        );
+            CEREAL_NVP(intr));
     }
 };

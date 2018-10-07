@@ -15,8 +15,7 @@ struct Spu2CoreConstants
     };
 
     static constexpr Spu2CoreInfo SPU2_STATIC_INFO[Constants::SPU2::NUMBER_CORES] =
-    {
-        {0x2000, 0x2200},
-        {0x2400, 0x2600}
-    };
+        {
+            {0x2000, 0x2200},
+            {0x2400, 0x2600}};
 };

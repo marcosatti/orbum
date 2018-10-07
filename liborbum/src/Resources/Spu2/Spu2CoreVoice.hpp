@@ -25,8 +25,8 @@ public:
     SizedHwordRegister naxl;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(voll),
@@ -42,7 +42,6 @@ public:
             CEREAL_NVP(lsaxh),
             CEREAL_NVP(lsaxl),
             CEREAL_NVP(naxh),
-            CEREAL_NVP(naxl)
-        );
+            CEREAL_NVP(naxl));
     }
 };

@@ -6,7 +6,7 @@
 #include "Common/Types/Bitfield.hpp"
 #include "Resources/Ee/Vpu/Vu/VuInstruction.hpp"
 
-enum class VuSpecialRegs 
+enum class VuSpecialRegs
 {
     ACC,
     CLIP,
@@ -48,8 +48,7 @@ struct VuDecodedInst
         std::optional<VuDecodeInfo> src_1,
         std::optional<VuDecodeInfo> src_2,
         std::optional<VuDecodeInfo> src_3,
-        int dest_field
-    ) :
+        int dest_field) :
         dest_reg(dest),
         source_reg_1(src_1),
         source_reg_2(src_2),
@@ -62,7 +61,7 @@ struct VuDecodedInst
     std::optional<VuDecodeInfo> source_reg_1;
     std::optional<VuDecodeInfo> source_reg_2;
     std::optional<VuDecodeInfo> source_reg_3;
-    
+
     int field;
 };
 

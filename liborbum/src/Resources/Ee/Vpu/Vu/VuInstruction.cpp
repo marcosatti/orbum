@@ -1,10 +1,11 @@
 #include "Resources/Ee/Vpu/Vu/VuInstruction.hpp"
+
 #include "Resources/Ee/Vpu/Vu/VuPipelines.hpp"
 
 MipsInstructionInfo VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTRUCTIONS] =
     {
-        // Most VU instructions (Upper Instructions, Flags, Integer Store/Load...) 
-        // follow the basic FMAC pipeline, which has 3 execution stages. 
+        // Most VU instructions (Upper Instructions, Flags, Integer Store/Load...)
+        // follow the basic FMAC pipeline, which has 3 execution stages.
         // Stalls on data hazard (when the same field of the same register is accessed
         // by following instructions while the first instruction is still running).
 
@@ -14,7 +15,7 @@ MipsInstructionInfo VU_INSTRUCTION_TABLE[Constants::EE::VPU::VU::NUMBER_VU_INSTR
         // unit at the same time). There is no data hazard - the original Q register
         // (containing results from last FDIV operation) is used instead.
 
-        // Instructions prefixed with "E" follow EFU pipeline, which is similar to 
+        // Instructions prefixed with "E" follow EFU pipeline, which is similar to
         // FDIV pipeline, except that EFU is freed when it reaches the write-back
         // stage, whereas FDIV is freed when the register is actually written.
 

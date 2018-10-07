@@ -4,8 +4,8 @@
 class RCrtc
 {
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
     }
 };

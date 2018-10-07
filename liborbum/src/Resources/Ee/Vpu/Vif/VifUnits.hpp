@@ -43,8 +43,8 @@ public:
     VifUnitRegister_Err err;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(r0),
@@ -69,7 +69,6 @@ public:
             CEREAL_NVP(code),
             CEREAL_NVP(stat),
             CEREAL_NVP(fbrst),
-            CEREAL_NVP(err)
-        );
+            CEREAL_NVP(err));
     }
 };

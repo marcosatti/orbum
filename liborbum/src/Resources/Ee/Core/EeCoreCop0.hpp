@@ -77,8 +77,8 @@ public:
     SizedWordRegister* pcr_registers[Constants::EE::EECore::COP0::NUMBER_PCR_REGISTERS];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(index),
@@ -120,7 +120,6 @@ public:
             CEREAL_NVP(dvbm),
             CEREAL_NVP(pccr),
             CEREAL_NVP(pcr0),
-            CEREAL_NVP(pcr1)
-        );
+            CEREAL_NVP(pcr1));
     }
 };

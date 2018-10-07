@@ -68,8 +68,8 @@ public:
     CdvdRtc rtc;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(n_command),
@@ -107,7 +107,6 @@ public:
             CEREAL_NVP(key_xor),
             CEREAL_NVP(dec_set),
             CEREAL_NVP(nvram),
-            CEREAL_NVP(rtc)
-        );
+            CEREAL_NVP(rtc));
     }
 };

@@ -58,7 +58,7 @@ void CIopTimers::tick_timer(const ControllerEvent::Type ce_type)
     {
         auto _lock = unit->mode.scope_lock();
 
-        auto[prescale, event_type] = unit->mode.get_properties(unit->unit_id);
+        auto [prescale, event_type] = unit->mode.get_properties(unit->unit_id);
 
         // Check if we need to perform reset proceedures.
         if (unit->mode.write_latch)

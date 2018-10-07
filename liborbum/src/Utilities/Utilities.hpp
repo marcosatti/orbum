@@ -31,7 +31,7 @@ int count_leading_bits(const sword value);
 int count_trailing_zeros(const uword value);
 
 /// Parses `source` of type U as a N-bit integer, converting it to an int of type T.
-template<typename T, typename U, unsigned int N>
+template <typename T, typename U, unsigned int N>
 constexpr T extend_integer(const U source)
 {
     // For a 5 bit integer, it's the first 4 bits (0b01111)

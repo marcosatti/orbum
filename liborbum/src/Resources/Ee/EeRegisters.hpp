@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cereal/cereal.hpp>
 #include <cereal/access.hpp>
+#include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/string.hpp>
 
@@ -39,13 +39,14 @@ private:
 #endif
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<ArrayByteMemory>(this)
 #if DEBUG_LOG_SIO_MESSAGES
-            ,CEREAL_NVP(sio_buffer)
+                ,
+            CEREAL_NVP(sio_buffer)
 #endif
         );
     }
@@ -74,13 +75,12 @@ private:
     static constexpr int rdram_devices = 2; // Put 8 for TOOL and 2 for PS2 and PSX.
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<ArrayByteMemory>(this),
-            CEREAL_NVP(rdram_sdevid)
-        );
+            CEREAL_NVP(rdram_sdevid));
     }
 };
 

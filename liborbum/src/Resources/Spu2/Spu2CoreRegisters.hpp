@@ -98,13 +98,12 @@ public:
     size_t dma_offset;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedHwordRegister>(this),
-            CEREAL_NVP(dma_offset)
-        );
+            CEREAL_NVP(dma_offset));
     }
 };
 

@@ -71,8 +71,8 @@ public:
     SizedWordRegister register_3800;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(core),
@@ -109,7 +109,6 @@ public:
             CEREAL_NVP(register_1568),
             CEREAL_NVP(register_15f0),
             CEREAL_NVP(register_2070),
-            CEREAL_NVP(register_3800)
-        );
+            CEREAL_NVP(register_3800));
     }
 };

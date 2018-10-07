@@ -21,14 +21,13 @@ public:
     EeTimersUnit units[Constants::EE::Timers::NUMBER_TIMERS];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(unit_0),
             CEREAL_NVP(unit_1),
             CEREAL_NVP(unit_2),
-            CEREAL_NVP(unit_3)
-        );
+            CEREAL_NVP(unit_3));
     }
 };

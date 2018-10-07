@@ -43,11 +43,10 @@ private:
     bool is_match(const uptr vaddress, const int index) const;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
-            CEREAL_NVP(tlb_entries)
-        );
+            CEREAL_NVP(tlb_entries));
     }
 };

@@ -45,8 +45,8 @@ public:
     IopDmacChannel channels[Constants::IOP::DMAC::NUMBER_DMAC_CHANNELS - 1];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(pcr0),
@@ -66,7 +66,6 @@ public:
             CEREAL_NVP(channel_sif0),
             CEREAL_NVP(channel_sif1),
             CEREAL_NVP(channel_tosio2),
-            CEREAL_NVP(channel_fromsio2)
-        );
+            CEREAL_NVP(channel_fromsio2));
     }
 };

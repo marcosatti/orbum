@@ -67,14 +67,13 @@ public:
     IopDmatag dma_tag;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
             CEREAL_NVP(dma_started),
-            CEREAL_NVP(dma_tag)
-        );
+            CEREAL_NVP(dma_tag));
     }
 };
 
@@ -102,13 +101,12 @@ public:
     size_t transfer_length;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
-            CEREAL_NVP(transfer_length)
-        );
+            CEREAL_NVP(transfer_length));
     }
 };
 

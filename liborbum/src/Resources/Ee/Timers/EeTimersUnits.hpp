@@ -34,14 +34,13 @@ public:
     SizedWordRegister compare;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(count),
             CEREAL_NVP(mode),
-            CEREAL_NVP(compare)
-        );
+            CEREAL_NVP(compare));
     }
 };
 
@@ -54,12 +53,11 @@ public:
     SizedWordRegister hold;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<EeTimersUnit_Base>(this),
-            CEREAL_NVP(hold)
-        );
+            CEREAL_NVP(hold));
     }
 };

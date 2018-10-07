@@ -1,5 +1,6 @@
-#include <boost/format.hpp>
 #include <cmath>
+
+#include <boost/format.hpp>
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"

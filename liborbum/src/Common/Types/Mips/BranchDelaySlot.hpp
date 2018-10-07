@@ -81,12 +81,11 @@ protected:
     uptr branch_pc;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(current_slot),
-            CEREAL_NVP(branch_pc)
-        );
+            CEREAL_NVP(branch_pc));
     }
 };

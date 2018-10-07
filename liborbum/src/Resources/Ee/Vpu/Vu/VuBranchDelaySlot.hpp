@@ -9,10 +9,10 @@
 /// BranchDelaySlot, modified slightly for the VUs.
 /// See BranchDelaySlot for more documentation.
 template <size_t slots = 1>
-class VuBranchDelaySlot : public BranchDelaySlot<slots> 
+class VuBranchDelaySlot : public BranchDelaySlot<slots>
 {
 public:
-    VuBranchDelaySlot() : 
+    VuBranchDelaySlot() :
         second_branch_pc(0),
         second_branch_pending(false),
         BranchDelaySlot<slots>()
@@ -98,16 +98,15 @@ private:
     uptr second_branch_pc;
     bool second_branch_pending;
 
-// Serialization
+    // Serialization
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(current_slot),
             CEREAL_NVP(branch_pc),
             CEREAL_NVP(second_branch_pc),
-            CEREAL_NVP(second_branch_pending)
-        );
+            CEREAL_NVP(second_branch_pending));
     }
 };

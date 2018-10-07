@@ -49,14 +49,13 @@ public:
     uword tlb_mask;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(pagemask),
             CEREAL_NVP(evenodd_mask),
-            CEREAL_NVP(tlb_mask)
-        );
+            CEREAL_NVP(tlb_mask));
     }
 };
 
@@ -82,21 +81,20 @@ public:
         bool d;
         bool v;
 
-        template<class Archive>
-        void serialize(Archive & archive)
+        template <class Archive>
+        void serialize(Archive& archive)
         {
             archive(
                 CEREAL_NVP(pfn),
                 CEREAL_NVP(c),
                 CEREAL_NVP(d),
-                CEREAL_NVP(v)
-            );
+                CEREAL_NVP(v));
         }
     } physical_info[2]; // Index 0 = Even, index 1 = Odd.
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(mask),
@@ -104,7 +102,6 @@ public:
             CEREAL_NVP(g),
             CEREAL_NVP(asid),
             CEREAL_NVP(s),
-            CEREAL_NVP(physical_info)
-        );
+            CEREAL_NVP(physical_info));
     }
 };

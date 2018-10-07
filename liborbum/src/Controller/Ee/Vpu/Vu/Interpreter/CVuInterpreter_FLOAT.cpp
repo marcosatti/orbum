@@ -9,7 +9,7 @@
 #include "Utilities/Utilities.hpp"
 
 // All instructions here are related to float arithmetic.
-// 
+//
 // Explaination for the comments:
 // VF[x]    - the x-th register of VF
 // VF[x](f) - the f field of the x-th register of VF, if not specified
@@ -621,7 +621,7 @@ void CVuInterpreter::MULq(VuUnit_Base* unit, const VuInstruction inst)
 
     SizedQwordRegister& reg_source_1 = unit->vf[inst.fs()];
     SizedWordRegister& reg_source_2 = unit->q;
-    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];    
+    SizedQwordRegister& reg_dest = unit->vf[inst.fd()];
 
     FpuFlags flags;
     for (auto field : VuVectorField::VECTOR_FIELDS)
@@ -876,13 +876,13 @@ void CVuInterpreter::MADDi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -909,13 +909,13 @@ void CVuInterpreter::MADDq(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -944,13 +944,13 @@ void CVuInterpreter::MADDbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1001,13 +1001,13 @@ void CVuInterpreter::MADDA(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(field);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1034,13 +1034,13 @@ void CVuInterpreter::MADDAi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1067,13 +1067,13 @@ void CVuInterpreter::MADDAq(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1102,13 +1102,13 @@ void CVuInterpreter::MADDAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c + multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1159,13 +1159,13 @@ void CVuInterpreter::MSUB(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(field);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1192,13 +1192,13 @@ void CVuInterpreter::MSUBi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1225,13 +1225,13 @@ void CVuInterpreter::MSUBq(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1260,13 +1260,13 @@ void CVuInterpreter::MSUBbc(VuUnit_Base* unit, const VuInstruction inst, const i
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1317,13 +1317,13 @@ void CVuInterpreter::MSUBA(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(field);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1350,13 +1350,13 @@ void CVuInterpreter::MSUBAi(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1383,13 +1383,13 @@ void CVuInterpreter::MSUBAq(VuUnit_Base* unit, const VuInstruction inst)
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float();
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1418,13 +1418,13 @@ void CVuInterpreter::MSUBAbc(VuUnit_Base* unit, const VuInstruction inst, const 
             const f32 a = reg_source_1.read_float(field);
             const f32 b = reg_source_2.read_float(bc);
             const f32 c = reg_source_3.read_float(field);
-            
+
             const f32 multiplied = to_ps2_float(a * b, flags); // See MADD for details
             unit->mac.update_vector_field(field, flags);
 
             const f32 result = to_ps2_float(c - multiplied, flags);
             unit->mac.update_vector_field(field, flags);
-            
+
             reg_dest.write_float(field, result);
         }
         else
@@ -1699,24 +1699,24 @@ void CVuInterpreter::OPMSUB(VuUnit_Base* unit, const VuInstruction inst)
 void CVuInterpreter::DIV(VuUnit_Base* unit, const VuInstruction inst)
 {
     // Q = vf[fs] / vs[ft]
-    
+
     SizedWordRegister& q = unit->q;
     SizedQwordRegister& fs = unit->vf[inst.fs()];
     SizedQwordRegister& ft = unit->vf[inst.ft()];
 
     FpuFlags flags;
     const f32 result = to_ps2_float(fs.read_float(inst.fsf()) / ft.read_float(inst.ftf()), flags);
-    
+
     // If ft[ftf] is 0, division by zero occurs...
-    if (ft.read_float(inst.ftf()) == 0.0f) 
+    if (ft.read_float(inst.ftf()) == 0.0f)
     {
         // ...and if the dividend is 0, set the I flag, otherwise the D flag
         // See VU Users Manual pg 40
-        if (fs.read_float(inst.fsf()) == 0.0f) 
+        if (fs.read_float(inst.fsf()) == 0.0f)
         {
             unit->status.set_i_flag_sticky(1);
-        } 
-        else 
+        }
+        else
         {
             unit->status.set_d_flag_sticky(1);
         }
@@ -1735,7 +1735,7 @@ void CVuInterpreter::SQRT(VuUnit_Base* unit, const VuInstruction inst)
     const f32 result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
 
     // If the float is negative, set the I flag
-    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) 
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1)
     {
         unit->status.set_i_flag_sticky(1);
     }
@@ -1756,13 +1756,13 @@ void CVuInterpreter::RSQRT(VuUnit_Base* unit, const VuInstruction inst)
     const f32 result = std::sqrt(std::abs(ft.read_float(inst.ftf())));
 
     // Set the I flag if the number to be sqrt-ed is negative.
-    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1) 
+    if ((ft.read_uword(inst.ftf()) >> 31 & 1) == 1)
     {
         unit->status.set_i_flag_sticky(1);
     }
 
     // Set the D flag if the final result is 1 / 0
-    if (ft.read_float(inst.ftf()) == 0.0f) 
+    if (ft.read_float(inst.ftf()) == 0.0f)
     {
         unit->status.set_d_flag_sticky(1);
     }

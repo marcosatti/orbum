@@ -1,6 +1,6 @@
 #pragma once
 
-enum class VuOperationState 
+enum class VuOperationState
 {
     Ready,
     Run,

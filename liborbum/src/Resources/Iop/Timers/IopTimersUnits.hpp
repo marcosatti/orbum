@@ -19,13 +19,12 @@ public:
     SizedWordRegister compare;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(count),
             CEREAL_NVP(mode),
-            CEREAL_NVP(compare)
-        );
+            CEREAL_NVP(compare));
     }
 };

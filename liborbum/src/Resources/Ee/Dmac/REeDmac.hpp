@@ -60,8 +60,8 @@ public:
     ArrayByteMemory memory_f5a0;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(channel_vif0),
@@ -98,7 +98,6 @@ public:
             CEREAL_NVP(memory_e070),
             CEREAL_NVP(memory_f500),
             CEREAL_NVP(memory_f530),
-            CEREAL_NVP(memory_f5a0)
-        );
+            CEREAL_NVP(memory_f5a0));
     }
 };

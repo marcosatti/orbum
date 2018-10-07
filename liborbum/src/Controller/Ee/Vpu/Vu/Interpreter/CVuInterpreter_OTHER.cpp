@@ -1,5 +1,6 @@
-#include <boost/format.hpp>
 #include <cmath>
+
+#include <boost/format.hpp>
 
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
@@ -30,11 +31,11 @@ void CVuInterpreter::CLIP(VuUnit_Base* unit, const VuInstruction inst)
     const f32 ft = std::abs(reg_source_2.read_float(VuVectorField::W));
 
     clip.shift_judgement();
-    clip.insert_field(VuUnitRegister_Clipping::POSX_0, reg_source_1.read_float(VuVectorField::X) >  ft);
+    clip.insert_field(VuUnitRegister_Clipping::POSX_0, reg_source_1.read_float(VuVectorField::X) > ft);
     clip.insert_field(VuUnitRegister_Clipping::NEGX_0, reg_source_1.read_float(VuVectorField::X) < -ft);
-    clip.insert_field(VuUnitRegister_Clipping::POSY_0, reg_source_1.read_float(VuVectorField::Y) >  ft);
+    clip.insert_field(VuUnitRegister_Clipping::POSY_0, reg_source_1.read_float(VuVectorField::Y) > ft);
     clip.insert_field(VuUnitRegister_Clipping::NEGY_0, reg_source_1.read_float(VuVectorField::Y) < -ft);
-    clip.insert_field(VuUnitRegister_Clipping::POSZ_0, reg_source_1.read_float(VuVectorField::Z) >  ft);
+    clip.insert_field(VuUnitRegister_Clipping::POSZ_0, reg_source_1.read_float(VuVectorField::Z) > ft);
     clip.insert_field(VuUnitRegister_Clipping::NEGZ_0, reg_source_1.read_float(VuVectorField::Z) < -ft);
 }
 
@@ -42,7 +43,7 @@ void CVuInterpreter::RINIT(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedQwordRegister& reg_source = unit->vf[inst.fs()];
     SizedWordRegister& reg_dest = unit->r;
-    
+
     // Writes a float consisting 23 bits of R as mantissa and 001111111 as exp+sign.
     constexpr uword append = 0b001111111 << 23;
     const uword fsf = (reg_source.read_uword(inst.fsf()) & 0x7FFFFF) | append;
@@ -54,9 +55,9 @@ void CVuInterpreter::RGET(VuUnit_Base* unit, const VuInstruction inst)
     SizedWordRegister& reg_source = unit->r;
     SizedQwordRegister& reg_dest = unit->vf[inst.ft()];
 
-    for (auto field : VuVectorField::VECTOR_FIELDS) 
+    for (auto field : VuVectorField::VECTOR_FIELDS)
     {
-        if (inst.test_dest_field(field)) 
+        if (inst.test_dest_field(field))
         {
             reg_dest.write_uword(field, reg_source.read_uword());
         }
@@ -72,7 +73,7 @@ void CVuInterpreter::RNEXT(VuUnit_Base* unit, const VuInstruction inst)
     const int x = (reg_R.read_uword() >> 4) & 1;
     const int y = (reg_R.read_uword() >> 22) & 1;
     reg_R.write_uword(((reg_R.read_uword() << 1) ^ (x ^ y)) & 0x7FFFFF);
-    
+
     // Append the exp+sign to R
     reg_R.write_uword(reg_R.read_uword() | 0b001111111 << 23);
 }
@@ -106,7 +107,7 @@ void CVuInterpreter::IBEQ(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
     SizedHwordRegister& reg_source_2 = unit->vi[inst.it()];
 
-    if (reg_source_1.read_uhword() == reg_source_2.read_uhword()) 
+    if (reg_source_1.read_uhword() == reg_source_2.read_uhword())
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -117,7 +118,7 @@ void CVuInterpreter::IBGEZ(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
 
-    if (reg_source_1.read_uhword() >= 0) 
+    if (reg_source_1.read_uhword() >= 0)
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -128,7 +129,7 @@ void CVuInterpreter::IBGTZ(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
 
-    if (reg_source_1.read_uhword() > 0) 
+    if (reg_source_1.read_uhword() > 0)
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -139,7 +140,7 @@ void CVuInterpreter::IBLEZ(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
 
-    if (reg_source_1.read_uhword() <= 0) 
+    if (reg_source_1.read_uhword() <= 0)
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -150,7 +151,7 @@ void CVuInterpreter::IBLTZ(VuUnit_Base* unit, const VuInstruction inst)
 {
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
 
-    if (reg_source_1.read_uhword() < 0) 
+    if (reg_source_1.read_uhword() < 0)
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -162,7 +163,7 @@ void CVuInterpreter::IBNE(VuUnit_Base* unit, const VuInstruction inst)
     SizedHwordRegister& reg_source_1 = unit->vi[inst.is()];
     SizedHwordRegister& reg_source_2 = unit->vi[inst.it()];
 
-    if (reg_source_1.read_uhword() != reg_source_2.read_uhword()) 
+    if (reg_source_1.read_uhword() != reg_source_2.read_uhword())
     {
         shword offset_by = extend_integer<shword, uhword, 11>(inst.imm11());
         unit->bdelay.set_branch_itype(unit->pc, offset_by);
@@ -262,6 +263,6 @@ void CVuInterpreter::XITOP(VuUnit_Base* unit, const VuInstruction inst)
     const RResources& r = core->get_resources();
 
     VifUnit_Base* vif = r.ee.vpu.vif.units[unit->core_id];
-    
+
     reg_dest.write_uhword(vif->itop.read_uword());
 }

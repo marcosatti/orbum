@@ -23,8 +23,8 @@ public:
     IopTimersUnit_Base* units[Constants::IOP::Timers::NUMBER_TIMERS];
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(unit_0),
@@ -32,7 +32,6 @@ public:
             CEREAL_NVP(unit_2),
             CEREAL_NVP(unit_3),
             CEREAL_NVP(unit_4),
-            CEREAL_NVP(unit_5)
-        );
+            CEREAL_NVP(unit_5));
     }
 };

@@ -21,13 +21,12 @@ public:
     ArrayByteMemory scratchpad_memory;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(r3000),
             CEREAL_NVP(cop0),
-            CEREAL_NVP(scratchpad_memory)
-        );
+            CEREAL_NVP(scratchpad_memory));
     }
 };

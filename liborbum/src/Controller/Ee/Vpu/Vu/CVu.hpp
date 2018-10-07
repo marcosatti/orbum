@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core.hpp"
 #include "Controller/CController.hpp"
 #include "Controller/ControllerEvent.hpp"
+#include "Core.hpp"
 
 class Core;
 

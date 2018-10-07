@@ -71,12 +71,11 @@ public:
     Sio0Register_Stat* stat;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(command_queue),
-            CEREAL_NVP(response_queue)
-        );
+            CEREAL_NVP(response_queue));
     }
 };

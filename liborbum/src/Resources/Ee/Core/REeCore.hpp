@@ -32,15 +32,14 @@ public:
     ArrayByteMemory scratchpad_memory;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(r5900),
             CEREAL_NVP(cop0),
             CEREAL_NVP(fpu),
             CEREAL_NVP(tlb),
-            CEREAL_NVP(scratchpad_memory)
-        );
+            CEREAL_NVP(scratchpad_memory));
     }
 };

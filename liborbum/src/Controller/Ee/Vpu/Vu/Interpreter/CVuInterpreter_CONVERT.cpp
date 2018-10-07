@@ -3,7 +3,7 @@
 #include "Controller/Ee/Vpu/Vu/Interpreter/CVuInterpreter.hpp"
 #include "Core.hpp"
 
-// All instructions here are related to the conversion between floating-points and 
+// All instructions here are related to the conversion between floating-points and
 // fixed-points.
 //
 // FTOIx are the instructions for converting a float to a fixed with (32-x) bits
@@ -45,7 +45,7 @@ void CVuInterpreter::FTOI4(VuUnit_Base* unit, const VuInstruction inst)
 
             // Cast the resultant float into an integer
             const uword result = static_cast<uword>(f);
-            
+
             ft.write_uword(field, result);
         }
     }
@@ -100,7 +100,7 @@ void CVuInterpreter::ITOF0(VuUnit_Base* unit, const VuInstruction inst)
         if (inst.test_dest_field(field))
         {
             uword u = fs.read_uword(field);
-            
+
             // No fractional parts to worry about, just cast it
             const f32 result = static_cast<f32>(u);
 

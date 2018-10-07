@@ -1,9 +1,10 @@
 #include <boost/format.hpp>
 
 #include "Controller/Ee/Vpu/Vu/CVu.hpp"
+
 #include "Resources/RResources.hpp"
 
-CVu::CVu(Core *core) : 
+CVu::CVu(Core* core) :
     CController(core)
 {
 }
@@ -29,7 +30,7 @@ void CVu::handle_event(const ControllerEvent& event)
 int CVu::time_to_ticks(const double time_us)
 {
     int ticks = static_cast<int>(time_us / 1.0e6 * Constants::EE::VPU::VU::VU_CLK_SPEED * core->get_options().system_bias_vu);
-    
+
     if (ticks < 10)
     {
         static bool warned = false;

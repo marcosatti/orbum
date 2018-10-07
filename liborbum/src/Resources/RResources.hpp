@@ -75,14 +75,14 @@ public:
     DmaFifoQueue<> fifo_tosio2;
 
 public:
-    template<class Archive>
+    template <class Archive>
     void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(ee),
-            CEREAL_NVP(gs), 
-            CEREAL_NVP(iop), 
-            CEREAL_NVP(spu2), 
+            CEREAL_NVP(gs),
+            CEREAL_NVP(iop),
+            CEREAL_NVP(spu2),
             CEREAL_NVP(cdvd),
             CEREAL_NVP(boot_rom),
             CEREAL_NVP(rom1),
@@ -114,8 +114,7 @@ public:
             CEREAL_NVP(fifo_spu2c1),
             CEREAL_NVP(fifo_dev9),
             CEREAL_NVP(fifo_fromsio2),
-            CEREAL_NVP(fifo_tosio2)
-        );
+            CEREAL_NVP(fifo_tosio2));
     }
 };
 

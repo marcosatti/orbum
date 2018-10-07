@@ -80,7 +80,6 @@ struct VuInstruction : public MipsInstruction
         return fs();
     }
 
-
     ubyte opcode() const
     {
         return static_cast<ubyte>(OPCODE.extract_from(value));
@@ -101,7 +100,8 @@ struct VuInstruction : public MipsInstruction
         return static_cast<ubyte>(FSF.extract_from(value));
     }
 
-    ubyte imm5() const {
+    ubyte imm5() const
+    {
         // FD is IMM5 in some instructions
         return static_cast<ubyte>(FD.extract_from(value));
     }

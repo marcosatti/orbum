@@ -96,8 +96,8 @@ private:
 class Core
 {
 public:
-    static constexpr const char * DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S";
-    
+    static constexpr const char* DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S";
+
     Core(const CoreOptions& options);
     ~Core();
 
@@ -166,6 +166,6 @@ public:
     /// Save the current emulator state. JSON is used for debugging purposes
     /// (makes it easy to view state).
     /// TODO: for debugging only for now - some things are not serialized,
-    /// but most of the important stuff is. 
+    /// but most of the important stuff is.
     void save_state();
 };

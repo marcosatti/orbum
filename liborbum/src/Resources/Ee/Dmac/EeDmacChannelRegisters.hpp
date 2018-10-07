@@ -73,8 +73,8 @@ public:
     EeDmatag dma_tag;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             cereal::base_class<SizedWordRegister>(this),
@@ -82,8 +82,7 @@ public:
             CEREAL_NVP(tag_exit),
             CEREAL_NVP(tag_stall),
             CEREAL_NVP(tag_irq),
-            CEREAL_NVP(dma_tag)
-        );
+            CEREAL_NVP(dma_tag));
     }
 };
 

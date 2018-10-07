@@ -16,14 +16,13 @@ public:
     Sio0Register_Ctrl ctrl;
 
 public:
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(data),
             CEREAL_NVP(stat),
             CEREAL_NVP(mode),
-            CEREAL_NVP(ctrl)
-        );
+            CEREAL_NVP(ctrl));
     }
 };

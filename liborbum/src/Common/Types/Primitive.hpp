@@ -79,13 +79,12 @@ struct uqword
     {
     }
 
-    template<class Archive>
-    void serialize(Archive & archive)
+    template <class Archive>
+    void serialize(Archive& archive)
     {
         archive(
             CEREAL_NVP(hi),
-            CEREAL_NVP(lo)
-        );
+            CEREAL_NVP(lo));
     }
 };
 
