@@ -73,7 +73,12 @@ int CVuInterpreter::time_step(const int ticks_available)
         // (VU0 only)
         if (((raw_inst >> 61) & 1) && unit->core_id == 0)
         {
-            // TODO
+            VuUnit_Vu0& vu = r.ee.vpu.vu.unit_0;
+            if (vu.transferred_reg.has_value())
+            {
+                *vu.ccr[vu.transferred_reg_location] = vu.transferred_reg.value();
+                vu.transferred_reg = std::nullopt;
+            }
         }
 
         // If D (bit 60) and DE (in FBRST) is set, terminate the micro subroutine and interrupt
@@ -281,7 +286,7 @@ bool CVuInterpreter::check_data_hazard(VuUnit_Base* unit, const VuInstructionDec
     // If the instruction is WAITQ, return true if FDIV is running
     if ((decoder.get_lower_inst().value) & 0x7FF == 0x3BF)
     {
-        if (unit->efu.is_running()) return true;
+        if (unit->fdiv.is_running()) return true;
     }
 
     // Upper Instructions data hazard check

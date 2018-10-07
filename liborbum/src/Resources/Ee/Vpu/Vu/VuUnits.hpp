@@ -2,6 +2,7 @@
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include <optional>
 
 #include "Common/Constants.hpp"
 #include "Common/Types/Bus/ByteBus.hpp"
@@ -134,6 +135,10 @@ public:
 
     /// Reference to the EE Core COP0 coprocessor, needed for the Status register.
     EeCoreCop0* cop0;
+
+    /// When M-bit is specified, this register is placed into its respective CCR.
+    int transferred_reg_location;
+    std::optional<SizedWordRegister> transferred_reg;
 
 public:
     template<class Archive>
