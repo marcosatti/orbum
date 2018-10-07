@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <variant>
 
 #include "Common/Types/Bitfield.hpp"
